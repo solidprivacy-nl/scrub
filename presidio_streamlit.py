@@ -101,7 +101,7 @@ st_threshold = st.sidebar.slider(
     min_value=0.0,
     max_value=1.0,
     value=0.35,
-    help="Define the threshold for accepting a detection as PII. See more here: ",
+    help="Define the threshold for accepting a detection as PII.",
 )
 
 st_return_decision_process = st.sidebar.checkbox(
