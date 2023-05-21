@@ -4,6 +4,8 @@ from json import JSONEncoder
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
+
 from annotated_text import annotated_text
 
 from presidio_helpers import (
@@ -13,6 +15,18 @@ from presidio_helpers import (
     annotate,
     create_fake_data,
     analyzer_engine,
+)
+
+components.html(
+    """
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "h7f8bp42n8");
+    </script>
+    """
 )
 
 st.set_page_config(page_title="Presidio demo", layout="wide")
