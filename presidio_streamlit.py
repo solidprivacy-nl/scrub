@@ -17,6 +17,8 @@ from presidio_helpers import (
     analyzer_engine,
 )
 
+st.set_page_config(page_title="Presidio demo", layout="wide") 
+
 components.html(
     """
     <script type="text/javascript">
@@ -29,7 +31,6 @@ components.html(
     """
 )
 
-st.set_page_config(page_title="Presidio demo", layout="wide")
 
 # Sidebar
 st.sidebar.header(
