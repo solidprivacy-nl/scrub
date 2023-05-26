@@ -1,6 +1,6 @@
 ---
 title: Presidio Demo
-emoji: 🔥
+emoji: 🅿
 colorFrom: purple
 colorTo: gray
 sdk: docker
