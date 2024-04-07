@@ -156,7 +156,7 @@ def set_up_openai_synthesis():
     )
     st_openai_model = st.sidebar.text_input(
         "OpenAI model for text synthesis",
-        value=os.getenv("OPENAI_MODEL", default="text-davinci-003"),
+        value=os.getenv("OPENAI_MODEL", default="gpt-3.5-turbo-instruct"),
         help="See more here: https://platform.openai.com/docs/models/",
     )
     return (
