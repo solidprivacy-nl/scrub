@@ -1,5 +1,5 @@
 # Use the official Python 3.9 image
-FROM python:3.9
+FROM python:3.10
 
 # Set the working directory to /code
 WORKDIR /code
@@ -18,6 +18,9 @@ COPY ./index.md /code/index.md
 
 # Install requirements.txt
 RUN pip install poetry
+
+ENV POETRY_VIRTUALENVS_CREATE=false
+
 RUN poetry install
 
 # Set up a new user named "user" with user ID 1000

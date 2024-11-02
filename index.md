@@ -9,7 +9,8 @@ A live version can be found here: https://huggingface.co/spaces/presidio/presidi
 2. Install dependencies (preferably in a virtual environment)
 
 ```sh
-pip install -r requirements
+pip install poetry
+poetry install
 ```
 > Note: This would install additional packages such as `transformers` and `flair` which are not mandatory for using Presidio.
 
@@ -17,7 +18,7 @@ pip install -r requirements
 4. Start the app:
 
 ```sh
-streamlit run presidio_streamlit.py
+poetry run streamlit run presidio_streamlit.py
 ```
 
 5. Consider adding an `.env` file with the following environment variables, for further customizability:
