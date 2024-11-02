@@ -12,25 +12,24 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
-WORKDIR /code
+WORKDIR /usr/bin/code
+
+
+COPY ./pyproject.toml /usr/bin/code/pyproject.toml
+COPY ./poetry.lock /usr/bin/code/poetry.lock
+COPY ./index.md /usr/bin/code/index.md
 
 # Install Poetry via pip
 RUN pip install --upgrade pip \
     && pip install poetry
 
-# Run poetry
-
-COPY pyproject.toml poetry.lock /code/
-COPY index.md /code/
-
 RUN poetry install --no-root --only=main
-
 
 # Expose the necessary port
 EXPOSE 7860
 
 # Copy the rest of your application code
-COPY . /code
+COPY . /usr/bin/code/
 
 # Create a user and switch to it
 RUN useradd -m -u 1000 user
@@ -47,5 +46,5 @@ COPY --chown=user . $HOME/app
 # Add health check for the application
 HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health
 
-# Run streamlit
-CMD ["poetry", "run", "python", "-m", "streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
+# Command to run your application
+CMD poetry run streamlit run presidio_streamlit.py --server.port 7860 --server.address=0.0.0.0
