@@ -23,7 +23,7 @@ RUN pip install --upgrade pip \
 COPY pyproject.toml poetry.lock /code/
 COPY index.md /code/
 
-RUN pip install poetry && poetry install --no-root --only=main -E server
+RUN poetry install --no-root --only=main
 
 
 # Expose the necessary port
