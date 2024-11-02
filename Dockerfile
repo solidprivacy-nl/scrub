@@ -47,5 +47,5 @@ COPY --chown=user . $HOME/app
 # Add health check for the application
 HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health
 
-# Command to run your application
-CMD ["poetry", "run", "python", "-m", "streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
+# Run streamlit
+CMD ["poetry", "run", "streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
