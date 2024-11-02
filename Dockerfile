@@ -4,6 +4,10 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     software-properties-common \
+    libatlas-base-dev \
+    liblapack-dev \
+    libblas-dev \
+    && rm -rf /var/lib/apt/lists/*
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code
