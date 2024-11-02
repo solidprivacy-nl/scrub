@@ -48,4 +48,4 @@ COPY --chown=user . $HOME/app
 HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health
 
 # Run streamlit
-CMD ["poetry", "run", "streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
+CMD ["poetry", "run", "python", "-m", "streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
