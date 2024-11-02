@@ -1,7 +1,15 @@
 # Use the official Python slim image
 FROM python:3.10-slim
 
-# Install system dependencies needed for building Python packages
+# Create a user and set permissions
+RUN useradd -m -u 1000 user && mkdir -p /app && chown -R user:user /app
+
+# Set working directory to /app and switch to the user
+WORKDIR /app
+USER user
+
+# Install system dependencies needed for building Python packages (as root)
+USER root
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -11,40 +19,26 @@ RUN apt-get update && apt-get install -y \
     libblas-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory in the container
-WORKDIR /usr/bin/code
+# Switch back to the user to avoid permission issues
+USER user
 
-
-COPY ./pyproject.toml /usr/bin/code/pyproject.toml
-COPY ./poetry.lock /usr/bin/code/poetry.lock
-COPY ./index.md /usr/bin/code/index.md
+# Copy pyproject.toml and poetry.lock first for dependency installation
+COPY --chown=user:user pyproject.toml poetry.lock /app/
 
 # Install Poetry via pip
-RUN pip install --upgrade pip \
-    && pip install poetry
+RUN pip install --upgrade pip && pip install poetry
 
+# Install dependencies without installing the project root package itself
 RUN poetry install --no-root --only=main
 
 # Expose the necessary port
 EXPOSE 7860
 
-# Copy the rest of your application code
-COPY . /usr/bin/code/
-
-# Create a user and switch to it
-RUN useradd -m -u 1000 user
-USER user
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH
-
-# Set the working directory for the user
-WORKDIR $HOME/app
-
-# Copy application code to the user's home directory
-COPY --chown=user . $HOME/app
+# Copy the rest of your application code to the container
+COPY --chown=user:user . /app/
 
 # Add health check for the application
 HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health
 
-# Command to run your application
-CMD poetry run streamlit run presidio_streamlit.py --server.port 7860 --server.address=0.0.0.0
+# Run the application using Poetry
+CMD ["poetry", "run", "streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
