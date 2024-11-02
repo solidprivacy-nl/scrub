@@ -17,6 +17,8 @@ st-annotated-text = "^4.0.1"
 flair = "^0.14.0"
 openai = "^1.53.0"
 azure-ai-textanalytics = "^5.3.0"
+en_core_web_lg = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0.tar.gz"}
+
 
 [build-system]
 requires = ["poetry-core"]
