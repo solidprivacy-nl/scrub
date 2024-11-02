@@ -1,44 +1,29 @@
-# Use the official Python slim image
-FROM python:3.10-slim
+# Use the official Python 3.9 image
+FROM python:3.9
 
-# Create a user and set permissions
-RUN useradd -m -u 1000 user && mkdir -p /app && chown -R user:user /app
+# Set the working directory to /code
+WORKDIR /code
 
-# Set working directory to /app and switch to the user
-WORKDIR /app
+# Copy the current directory contents into the container at /code
+COPY ./pyproject.toml /code/pyproject.toml
+COPY ./poetry.lock /code/poetry.lock
+COPY ./index.md /code/index.md
+
+# Install requirements.txt 
+RUN pip install poetry && poetry install --only=main
+
+# Set up a new user named "user" with user ID 1000
+RUN useradd -m -u 1000 user
+# Switch to the "user" user
 USER user
+# Set home to the user's home directory
+ENV HOME=/home/user \
+	PATH=/home/user/.local/bin:$PATH
 
-# Install system dependencies needed for building Python packages (as root)
-USER root
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    software-properties-common \
-    libatlas-base-dev \
-    liblapack-dev \
-    libblas-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Set the working directory to the user's home directory
+WORKDIR $HOME/app
 
-# Switch back to the user to avoid permission issues
-USER user
+# Copy the current directory contents into the container at $HOME/app setting the owner to the user
+COPY --chown=user . $HOME/app
 
-# Copy pyproject.toml and poetry.lock first for dependency installation
-COPY --chown=user:user pyproject.toml poetry.lock /app/
-
-# Install Poetry via pip
-RUN pip install --upgrade pip && pip install poetry
-
-# Install dependencies without installing the project root package itself
-RUN poetry install --no-root --only=main
-
-# Expose the necessary port
-EXPOSE 7860
-
-# Copy the rest of your application code to the container
-COPY --chown=user:user . /app/
-
-# Add health check for the application
-HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health
-
-# Run the application using Poetry
 CMD ["poetry", "run", "streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
