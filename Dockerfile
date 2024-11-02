@@ -4,13 +4,21 @@ FROM python:3.9
 # Set the working directory to /code
 WORKDIR /code
 
+# Install system dependencies required for building Python packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy the current directory contents into the container at /code
 COPY ./pyproject.toml /code/pyproject.toml
 COPY ./poetry.lock /code/poetry.lock
 COPY ./index.md /code/index.md
 
-# Install requirements.txt 
-RUN pip install poetry && poetry install --only=main
+# Install requirements.txt
+RUN pip install poetry
+RUN poetry install
 
 # Set up a new user named "user" with user ID 1000
 RUN useradd -m -u 1000 user
