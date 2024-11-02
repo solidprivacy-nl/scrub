@@ -18,11 +18,13 @@ WORKDIR /code
 RUN pip install --upgrade pip \
     && pip install poetry
 
-# Copy the pyproject.toml and poetry.lock files
-COPY pyproject.toml poetry.lock /code/
+# Run poetry
 
-# Install project dependencies
-RUN poetry install --only main
+COPY pyproject.toml poetry.lock /code/
+COPY index.md /code/
+
+RUN pip install poetry && poetry install --no-root --only=main -E server
+
 
 # Expose the necessary port
 EXPOSE 7860
