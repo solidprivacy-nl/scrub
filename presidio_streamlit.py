@@ -66,7 +66,7 @@ if not allow_other_models:
 st_model = st.sidebar.selectbox(
     "NER model package",
     model_list,
-    index=2,
+    index=1,
     help=model_help_text,
 )
 
