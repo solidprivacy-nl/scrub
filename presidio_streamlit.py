@@ -37,6 +37,12 @@ from replacement_memory import (
     get_memory_file_path,
 )
 
+try:
+    from dutch_recognizers import get_dutch_entity_names
+except Exception:  # keep app usable while the new file is being added
+    def get_dutch_entity_names():
+        return []
+
 st.set_page_config(
     page_title="Presidio demo",
     layout="wide",
@@ -118,6 +124,16 @@ st.sidebar.warning("Note: Models might take some time to download. ")
 
 analyzer_params = (st_model_package, st_model, st_ta_key, st_ta_endpoint)
 logger.debug(f"analyzer_params: {analyzer_params}")
+
+st_recognition_profile = st.sidebar.selectbox(
+    "Recognition profile",
+    ["Dutch / EU", "General / International"],
+    index=0,
+    help=(
+        "Dutch / EU enables Dutch pattern recognizers such as BSN, postcode, "
+        "KvK, BTW/VAT, Dutch IBAN, Dutch phone numbers and Dutch license plates."
+    ),
+)
 
 st_operator = st.sidebar.selectbox(
     "De-identification approach",
@@ -285,6 +301,14 @@ analyzer_load_state = st.info("Starting Presidio analyzer...")
 
 analyzer_load_state.empty()
 
+if st_recognition_profile == "Dutch / EU":
+    st.info(
+        "Dutch / EU mode is active. The app adds Dutch pattern recognizers "
+        "for BSN, postcode, KvK, BTW/VAT, Dutch IBAN, Dutch phone numbers, "
+        "license plates, rijbewijs-style numbers and BIG numbers. Always review "
+        "the editable replacement table before exporting."
+    )
+
 # Read default text
 with open("demo_text.txt") as f:
     demo_text = f.readlines()
@@ -322,14 +346,35 @@ st_text = col1.text_area(
 
 try:
     # Choose entities
+    all_supported_entities = list(get_supported_entities(*analyzer_params))
+    dutch_entities = set(get_dutch_entity_names())
+
+    if st_recognition_profile == "Dutch / EU":
+        preferred_entities = {
+            "PERSON",
+            "LOCATION",
+            "ORGANIZATION",
+            "EMAIL_ADDRESS",
+            "PHONE_NUMBER",
+            "IBAN_CODE",
+            "URL",
+            "IP_ADDRESS",
+            "GENERIC_PII",
+        } | dutch_entities
+        default_entities = [
+            entity for entity in all_supported_entities if entity in preferred_entities
+        ]
+    else:
+        default_entities = list(all_supported_entities)
+
     st_entities_expander = st.sidebar.expander("Choose entities to look for")
     st_entities = st_entities_expander.multiselect(
         label="Which entities to look for?",
-        options=get_supported_entities(*analyzer_params),
-        default=list(get_supported_entities(*analyzer_params)),
+        options=all_supported_entities,
+        default=default_entities,
         help="Limit the list of PII entities detected. "
-        "This list is dynamic and based on the NER model and registered recognizers. "
-        "More information can be found here: https://microsoft.github.io/presidio/analyzer/adding_recognizers/",
+        "Dutch / EU mode adds recognizers such as NL_BSN, NL_POSTCODE, "
+        "NL_KVK_NUMBER, NL_VAT_NUMBER, NL_IBAN and NL_PHONE_NUMBER.",
     )
 
     # Before
@@ -337,6 +382,9 @@ try:
     analyzer = analyzer_engine(*analyzer_params)
     analyzer_load_state.empty()
 
+    # The current demo uses English NER models. Dutch/EU pattern recognizers
+    # are registered under language="en" so they can run without requiring a
+    # separate Dutch NLP model.
     st_analyze_results = analyze(
         *analyzer_params,
         text=st_text,
