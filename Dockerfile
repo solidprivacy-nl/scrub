@@ -17,11 +17,15 @@ COPY ./poetry.lock /code/poetry.lock
 COPY ./index.md /code/index.md
 
 # Install requirements.txt
-RUN pip install poetry
+RUN pip install --upgrade pip setuptools wheel
+
+RUN pip install "poetry==1.8.5"
 
 ENV POETRY_VIRTUALENVS_CREATE=false
 
-RUN poetry install
+RUN poetry install --no-root
+
+RUN pip install --upgrade "packaging>=24.2,<27"
 
 # Set up a new user named "user" with user ID 1000
 RUN useradd -m -u 1000 user
@@ -37,4 +41,4 @@ WORKDIR $HOME/app
 # Copy the current directory contents into the container at $HOME/app setting the owner to the user
 COPY --chown=user . $HOME/app
 
-CMD ["poetry", "run", "streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "presidio_streamlit.py", "--server.port=7860", "--server.address=0.0.0.0"]
