@@ -27,6 +27,8 @@ RUN poetry install --no-root
 
 RUN pip install --upgrade "packaging>=24.2,<27"
 
+RUN pip install --no-cache-dir python-docx pymupdf reportlab
+
 # Set up a new user named "user" with user ID 1000
 RUN useradd -m -u 1000 user
 # Switch to the "user" user
