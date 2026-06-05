@@ -1,6 +1,7 @@
 from io import BytesIO, StringIO
 from html import escape
 import csv
+import re
 
 import fitz  # PyMuPDF
 from docx import Document
@@ -9,10 +10,108 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 
 
+PLACEHOLDER_LABELS = {
+    "PERSON": "PERSOON",
+    "LOCATION": "LOCATIE",
+    "ORGANIZATION": "ORGANISATIE",
+    "EMAIL_ADDRESS": "EMAIL",
+    "PHONE_NUMBER": "TELEFOON",
+    "IBAN_CODE": "IBAN",
+    "CREDIT_CARD": "BETAALKAART",
+    "DATE_TIME": "DATUM",
+    "URL": "URL",
+    "IP_ADDRESS": "IP_ADRES",
+    "NL_BSN": "BSN",
+    "NL_POSTCODE": "POSTCODE",
+    "NL_IBAN": "IBAN",
+    "NL_KVK_NUMBER": "KVK_NUMMER",
+    "NL_VAT_NUMBER": "BTW_NUMMER",
+    "NL_PHONE_NUMBER": "TELEFOON",
+    "NL_LICENSE_PLATE": "KENTEKEN",
+    "NL_DRIVER_LICENSE": "RIJBEWIJS",
+    "NL_BIG_NUMBER": "BIG_NUMMER",
+    "GENERIC_PII": "VERTROUWELIJK",
+}
+
+STRUCTURED_ENTITY_TYPES = {
+    "EMAIL_ADDRESS",
+    "PHONE_NUMBER",
+    "IBAN_CODE",
+    "CREDIT_CARD",
+    "DATE_TIME",
+    "URL",
+    "IP_ADDRESS",
+    "NL_BSN",
+    "NL_POSTCODE",
+    "NL_IBAN",
+    "NL_KVK_NUMBER",
+    "NL_VAT_NUMBER",
+    "NL_PHONE_NUMBER",
+    "NL_LICENSE_PLATE",
+    "NL_DRIVER_LICENSE",
+    "NL_BIG_NUMBER",
+}
+
+# Common headings and document-structure words that should not become global replacements.
+DOCUMENT_WORD_DENYLIST = {
+    "chapter",
+    "section",
+    "article",
+    "paragraph",
+    "appendix",
+    "annex",
+    "schedule",
+    "table",
+    "figure",
+    "introduction",
+    "background",
+    "summary",
+    "conclusion",
+    "scope",
+    "purpose",
+    "definitions",
+    "agreement",
+    "contract",
+    "party",
+    "parties",
+    "client",
+    "supplier",
+    "service",
+    "services",
+    "project",
+    "document",
+    "version",
+    "draft",
+    "review",
+    "confidential",
+    "hoofdstuk",
+    "paragraaf",
+    "artikel",
+    "bijlage",
+    "inleiding",
+    "samenvatting",
+    "conclusie",
+    "doel",
+    "definities",
+    "overeenkomst",
+    "contract",
+    "partij",
+    "partijen",
+    "klant",
+    "leverancier",
+    "dienst",
+    "diensten",
+    "project",
+    "document",
+    "versie",
+    "concept",
+    "vertrouwelijk",
+}
+
+
 def uploaded_file_to_text(uploaded_file):
-    """
-    Convert uploaded .txt, .docx, or text-based .pdf to plain text.
-    """
+    """Convert uploaded .txt, .docx, or text-based .pdf to plain text."""
+
     filename = uploaded_file.name.lower()
     data = uploaded_file.getvalue()
 
@@ -53,10 +152,8 @@ def extract_pdf_text(pdf_bytes):
 
 
 def iter_docx_paragraphs(doc):
-    """
-    Yield paragraphs from body, tables, headers and footers.
-    This does not cover every exotic Word object, but it is a good MVP.
-    """
+    """Yield paragraphs from body, tables, headers and footers."""
+
     for paragraph in doc.paragraphs:
         yield paragraph
 
@@ -89,14 +186,52 @@ def iter_table_paragraphs(table):
                 yield from iter_table_paragraphs(nested_table)
 
 
-def build_placeholder_replacements(text, analyze_results):
-    """
-    Build stable placeholders from Presidio results.
+def normalize_detected_text(value: str) -> str:
+    return re.sub(r"\s+", " ", (value or "").strip())
 
-    Example:
-    John Smith -> [PERSON_01]
-    Rotterdam -> [LOCATION_01]
-    """
+
+def should_skip_detection(original: str, entity_type: str, score: float) -> bool:
+    """Reduce false-positive global replacements in exported documents."""
+
+    if not original:
+        return True
+
+    original_clean = normalize_detected_text(original)
+    original_lower = original_clean.lower()
+
+    if original_lower in DOCUMENT_WORD_DENYLIST:
+        return True
+
+    if not any(char.isalnum() for char in original_clean):
+        return True
+
+    if original_clean.isdigit() and entity_type not in STRUCTURED_ENTITY_TYPES:
+        return True
+
+    if len(original_clean) < 4 and entity_type not in STRUCTURED_ENTITY_TYPES:
+        return True
+
+    # Organization detection is useful, but often false-positives on headings.
+    if entity_type == "ORGANIZATION":
+        if score < 0.85:
+            return True
+        if len(original_clean.split()) == 1 and "." not in original_clean:
+            return True
+
+    if entity_type == "LOCATION" and score < 0.60:
+        return True
+
+    return False
+
+
+def placeholder_for_entity(entity_type: str, count: int) -> str:
+    label = PLACEHOLDER_LABELS.get(entity_type, entity_type)
+    return f"[{label}_{count:02d}]"
+
+
+def build_placeholder_replacements(text, analyze_results):
+    """Build stable placeholder suggestions from Presidio results."""
+
     counters = {}
     replacements = {}
     report_rows = []
@@ -104,17 +239,18 @@ def build_placeholder_replacements(text, analyze_results):
     sorted_results = sorted(analyze_results, key=lambda r: (r.start, r.end))
 
     for result in sorted_results:
-        original = text[result.start:result.end].strip()
+        original = normalize_detected_text(text[result.start : result.end])
+        entity_type = result.entity_type
+        score = float(getattr(result, "score", 0.0) or 0.0)
 
-        if not original:
+        if should_skip_detection(original, entity_type, score):
             continue
 
         if original in replacements:
             continue
 
-        entity_type = result.entity_type
         counters[entity_type] = counters.get(entity_type, 0) + 1
-        placeholder = f"[{entity_type}_{counters[entity_type]:02d}]"
+        placeholder = placeholder_for_entity(entity_type, counters[entity_type])
 
         replacements[original] = placeholder
 
@@ -123,7 +259,7 @@ def build_placeholder_replacements(text, analyze_results):
                 "entity_type": entity_type,
                 "detected_text": original,
                 "placeholder": placeholder,
-                "score": round(float(result.score), 3),
+                "score": round(score, 3),
             }
         )
 
@@ -131,9 +267,8 @@ def build_placeholder_replacements(text, analyze_results):
 
 
 def apply_replacements_to_text(text, replacements):
-    """
-    Apply longest replacements first to avoid partial replacement problems.
-    """
+    """Apply longest replacements first to avoid partial replacement problems."""
+
     output = text
 
     for original, placeholder in sorted(
@@ -145,10 +280,8 @@ def apply_replacements_to_text(text, replacements):
 
 
 def anonymized_docx_from_original(uploaded_file, replacements):
-    """
-    Open original .docx and replace detected text inside existing paragraphs/runs.
-    This preserves most normal Word formatting, but not all complex Word features.
-    """
+    """Replace detected text inside the original .docx, preserving most formatting."""
+
     doc = Document(BytesIO(uploaded_file.getvalue()))
 
     for paragraph in iter_docx_paragraphs(doc):
@@ -169,12 +302,8 @@ def replace_in_paragraph_runs(paragraph, replacements):
 
 
 def replace_once_in_runs(paragraph, old_text, new_text):
-    """
-    Replace one occurrence across Word runs.
+    """Replace one occurrence across Word runs."""
 
-    Word splits text into runs for formatting. This method tries to replace
-    text without rebuilding the whole paragraph.
-    """
     if not paragraph.runs:
         return False
 
