@@ -357,22 +357,135 @@ try:
                 label="De-identified", value=st_anonymize_results.text, height=400
             )
             # Build stable placeholder exports
+            # Build stable placeholder suggestions from Presidio
             replacements, report_rows = build_placeholder_replacements(
                 st_text,
                 st_analyze_results,
             )
             
-            export_text = apply_replacements_to_text(st_text, replacements)
-            
             st.divider()
-            st.subheader("Export anonymized files")
+            st.subheader("Review replacement table before export")
             
             st.caption(
-                "The exports below use stable placeholders such as [PERSON_01] and [LOCATION_01]. "
-                "For Word uploads, the .docx export tries to preserve the original document structure and styling."
+                "Untick false positives, change placeholders, or add your own word pairs. "
+                "The downloads below are generated from this edited table."
             )
             
-            # Debug info, useful while testing
+            # Convert detected replacements into editable table rows
+            default_editor_rows = []
+            
+            for row in report_rows:
+                default_editor_rows.append(
+                    {
+                        "include": True,
+                        "find": row.get("detected_text", ""),
+                        "replace_with": row.get("placeholder", ""),
+                        "entity_type": row.get("entity_type", ""),
+                        "score": row.get("score", None),
+                    }
+                )
+            
+            # If nothing was detected, still show an empty editable row
+            if not default_editor_rows:
+                default_editor_rows = [
+                    {
+                        "include": True,
+                        "find": "",
+                        "replace_with": "",
+                        "entity_type": "MANUAL",
+                        "score": None,
+                    }
+                ]
+            
+            replacement_editor_df = pd.DataFrame(default_editor_rows)
+            
+            edited_replacements_df = st.data_editor(
+                replacement_editor_df,
+                hide_index=True,
+                num_rows="dynamic",
+                use_container_width=True,
+                column_order=["include", "find", "replace_with", "entity_type", "score"],
+                column_config={
+                    "include": st.column_config.CheckboxColumn(
+                        "Use",
+                        help="Untick to exclude this replacement from the export.",
+                        default=True,
+                    ),
+                    "find": st.column_config.TextColumn(
+                        "Find text",
+                        help="The exact text that should be replaced.",
+                    ),
+                    "replace_with": st.column_config.TextColumn(
+                        "Replace with",
+                        help="The placeholder to insert.",
+                    ),
+                    "entity_type": st.column_config.TextColumn(
+                        "Entity type",
+                        help="Presidio entity type or MANUAL.",
+                    ),
+                    "score": st.column_config.NumberColumn(
+                        "Score",
+                        help="Presidio confidence score, if available.",
+                        format="%.3f",
+                    ),
+                },
+                key="replacement_editor",
+            )
+            
+            def safe_cell(value):
+                if value is None:
+                    return ""
+                try:
+                    if pd.isna(value):
+                        return ""
+                except Exception:
+                    pass
+                return str(value).strip()
+            
+            
+            # Build final replacements from edited table
+            edited_replacements = {}
+            edited_report_rows = []
+            
+            for _, row in edited_replacements_df.iterrows():
+                include = bool(row.get("include", False))
+                find_text = safe_cell(row.get("find", ""))
+                replace_text = safe_cell(row.get("replace_with", ""))
+                entity_type = safe_cell(row.get("entity_type", "MANUAL")) or "MANUAL"
+                score = row.get("score", None)
+            
+                if not include:
+                    continue
+            
+                if not find_text or not replace_text:
+                    continue
+            
+                edited_replacements[find_text] = replace_text
+            
+                edited_report_rows.append(
+                    {
+                        "entity_type": entity_type,
+                        "detected_text": find_text,
+                        "placeholder": replace_text,
+                        "score": score if score is not None else "",
+                    }
+                )
+            
+            st.info(f"{len(edited_replacements)} replacement pair(s) will be applied to the exports.")
+            
+            # Apply edited replacements
+            export_text = apply_replacements_to_text(st_text, edited_replacements)
+            
+            with st.expander("Preview anonymized text generated from edited table", expanded=False):
+                st.text_area(
+                    label="Preview",
+                    value=export_text,
+                    height=300,
+                    key="edited_export_preview",
+                )
+            
+            st.subheader("Export anonymized files")
+            
             if uploaded_file is not None:
                 st.info(f"Uploaded file detected for export: {uploaded_file.name}")
             else:
@@ -387,11 +500,11 @@ try:
                 key="download_txt",
             )
             
-            # CSV replacement report
+            # CSV replacement report / reusable mapping
             st.download_button(
-                label="Download replacement report (.csv)",
-                data=replacement_report_csv(report_rows),
-                file_name="replacement_report.csv",
+                label="Download replacement table (.csv)",
+                data=replacement_report_csv(edited_report_rows),
+                file_name="replacement_table.csv",
                 mime="text/csv",
                 key="download_csv",
             )
@@ -399,7 +512,7 @@ try:
             # DOCX export
             try:
                 if uploaded_file is not None and uploaded_file.name.lower().endswith(".docx"):
-                    docx_bytes = anonymized_docx_from_original(uploaded_file, replacements)
+                    docx_bytes = anonymized_docx_from_original(uploaded_file, edited_replacements)
                     docx_filename = "anonymized_" + uploaded_file.name
                 else:
                     docx_bytes = docx_from_text(export_text)
@@ -427,7 +540,7 @@ try:
                 )
             
             except Exception as pdf_error:
-                st.error(f"Could not create PDF export: {pdf_error}") 
+                st.error(f"Could not create PDF export: {pdf_error}")
 
 
 
