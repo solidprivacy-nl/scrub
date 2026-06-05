@@ -396,6 +396,9 @@ try:
             if not default_editor_rows:
                 remembered_rows = load_remembered_replacements()
                 
+                # Build editable table rows from remembered replacements + Presidio suggestions
+                remembered_rows = load_remembered_replacements()
+                
                 default_editor_rows = []
                 seen_find_values = set()
                 
@@ -406,7 +409,16 @@ try:
                     if not find_text:
                         continue
                 
-                    default_editor_rows.append(row)
+                    default_editor_rows.append(
+                        {
+                            "include": row.get("include", True),
+                            "remember": row.get("remember", True),
+                            "find": find_text,
+                            "replace_with": row.get("replace_with", ""),
+                            "entity_type": row.get("entity_type", "REMEMBERED"),
+                            "score": row.get("score", ""),
+                        }
+                    )
                     seen_find_values.add(find_text)
                 
                 # Then add Presidio suggestions
@@ -431,6 +443,7 @@ try:
                         }
                     )
                 
+                # If nothing was detected and nothing was remembered, still show an empty editable row
                 if not default_editor_rows:
                     default_editor_rows = [
                         {
