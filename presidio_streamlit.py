@@ -372,42 +372,62 @@ try:
                 "For Word uploads, the .docx export tries to preserve the original document structure and styling."
             )
             
+            # Debug info, useful while testing
+            if uploaded_file is not None:
+                st.info(f"Uploaded file detected for export: {uploaded_file.name}")
+            else:
+                st.info("No uploaded file detected for export. Exporting from text area only.")
+            
+            # TXT export
             st.download_button(
                 label="Download anonymized text (.txt)",
                 data=export_text.encode("utf-8"),
                 file_name="anonymized_text.txt",
                 mime="text/plain",
+                key="download_txt",
             )
             
+            # CSV replacement report
             st.download_button(
                 label="Download replacement report (.csv)",
                 data=replacement_report_csv(report_rows),
                 file_name="replacement_report.csv",
                 mime="text/csv",
+                key="download_csv",
             )
             
             # DOCX export
-            if uploaded_file is not None and uploaded_file.name.lower().endswith(".docx"):
-                docx_bytes = anonymized_docx_from_original(uploaded_file, replacements)
-                docx_filename = "anonymized_" + uploaded_file.name
-            else:
-                docx_bytes = docx_from_text(export_text)
-                docx_filename = "anonymized_text.docx"
+            try:
+                if uploaded_file is not None and uploaded_file.name.lower().endswith(".docx"):
+                    docx_bytes = anonymized_docx_from_original(uploaded_file, replacements)
+                    docx_filename = "anonymized_" + uploaded_file.name
+                else:
+                    docx_bytes = docx_from_text(export_text)
+                    docx_filename = "anonymized_text.docx"
             
-            st.download_button(
-                label="Download anonymized Word file (.docx)",
-                data=docx_bytes,
-                file_name=docx_filename,
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            )
+                st.download_button(
+                    label="Download anonymized Word file (.docx)",
+                    data=docx_bytes,
+                    file_name=docx_filename,
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    key="download_docx",
+                )
             
-            # PDF export: generated from anonymized text, not original layout-preserving PDF redaction
-            st.download_button(
-                label="Download anonymized PDF (.pdf)",
-                data=pdf_from_text(export_text),
-                file_name="anonymized_text.pdf",
-                mime="application/pdf",
-            )    
+            except Exception as docx_error:
+                st.error(f"Could not create DOCX export: {docx_error}")
+            
+            # PDF export
+            try:
+                st.download_button(
+                    label="Download anonymized PDF (.pdf)",
+                    data=pdf_from_text(export_text),
+                    file_name="anonymized_text.pdf",
+                    mime="application/pdf",
+                    key="download_pdf",
+                )
+            
+            except Exception as pdf_error:
+                st.error(f"Could not create PDF export: {pdf_error}") 
 
 
 
