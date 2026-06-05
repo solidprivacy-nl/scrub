@@ -20,6 +20,16 @@ from presidio_helpers import (
     analyzer_engine,
 )
 
+from document_tools import (
+    uploaded_file_to_text,
+    build_placeholder_replacements,
+    apply_replacements_to_text,
+    anonymized_docx_from_original,
+    docx_from_text,
+    pdf_from_text,
+    replacement_report_csv,
+)
+
 st.set_page_config(
     page_title="Presidio demo",
     layout="wide",
@@ -272,13 +282,35 @@ analyzer_load_state.empty()
 with open("demo_text.txt") as f:
     demo_text = f.readlines()
 
+st.subheader("Document input")
+
+uploaded_file = st.file_uploader(
+    "Upload a .txt, .docx, or text-based .pdf file",
+    type=["txt", "docx", "pdf"],
+    help="For legal/confidential material, use only approved environments. This public demo should be used with fake or test documents.",
+)
+
+uploaded_file_type = None
+input_text = "".join(demo_text)
+
+if uploaded_file is not None:
+    try:
+        input_text, uploaded_file_type = uploaded_file_to_text(uploaded_file)
+        st.success(f"Loaded file: {uploaded_file.name}")
+    except Exception as upload_error:
+        st.error(f"Could not read uploaded file: {upload_error}")
+
 # Create two columns for before and after
 col1, col2 = st.columns(2)
 
 # Before:
 col1.subheader("Input")
+
 st_text = col1.text_area(
-    label="Enter text", value="".join(demo_text), height=400, key="text_input"
+    label="Enter text or review extracted document text",
+    value=input_text,
+    height=400,
+    key="text_input",
 )
 
 try:
@@ -324,6 +356,62 @@ try:
             st.text_area(
                 label="De-identified", value=st_anonymize_results.text, height=400
             )
+            # Build stable placeholder exports
+            replacements, report_rows = build_placeholder_replacements(
+                st_text,
+                st_analyze_results,
+            )
+            
+            export_text = apply_replacements_to_text(st_text, replacements)
+            
+            st.divider()
+            st.subheader("Export anonymized files")
+            
+            st.caption(
+                "The exports below use stable placeholders such as [PERSON_01] and [LOCATION_01]. "
+                "For Word uploads, the .docx export tries to preserve the original document structure and styling."
+            )
+            
+            st.download_button(
+                label="Download anonymized text (.txt)",
+                data=export_text.encode("utf-8"),
+                file_name="anonymized_text.txt",
+                mime="text/plain",
+            )
+            
+            st.download_button(
+                label="Download replacement report (.csv)",
+                data=replacement_report_csv(report_rows),
+                file_name="replacement_report.csv",
+                mime="text/csv",
+            )
+            
+            # DOCX export
+            if uploaded_file is not None and uploaded_file.name.lower().endswith(".docx"):
+                docx_bytes = anonymized_docx_from_original(uploaded_file, replacements)
+                docx_filename = "anonymized_" + uploaded_file.name
+            else:
+                docx_bytes = docx_from_text(export_text)
+                docx_filename = "anonymized_text.docx"
+            
+            st.download_button(
+                label="Download anonymized Word file (.docx)",
+                data=docx_bytes,
+                file_name=docx_filename,
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            )
+            
+            # PDF export: generated from anonymized text, not original layout-preserving PDF redaction
+            st.download_button(
+                label="Download anonymized PDF (.pdf)",
+                data=pdf_from_text(export_text),
+                file_name="anonymized_text.pdf",
+                mime="application/pdf",
+            )    
+
+
+
+            
     elif st_operator == "synthesize":
         with col2:
             st.subheader(f"OpenAI Generated output")
