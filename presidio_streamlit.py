@@ -30,6 +30,13 @@ from document_tools import (
     replacement_report_csv,
 )
 
+from replacement_memory import (
+    load_remembered_replacements,
+    save_remembered_replacements,
+    clear_remembered_replacements,
+    get_memory_file_path,
+)
+
 st.set_page_config(
     page_title="Presidio demo",
     layout="wide",
@@ -387,29 +394,68 @@ try:
             
             # If nothing was detected, still show an empty editable row
             if not default_editor_rows:
-                default_editor_rows = [
-                    {
-                        "include": True,
-                        "find": "",
-                        "replace_with": "",
-                        "entity_type": "MANUAL",
-                        "score": None,
-                    }
-                ]
-            
-            replacement_editor_df = pd.DataFrame(default_editor_rows)
+                remembered_rows = load_remembered_replacements()
+                
+                default_editor_rows = []
+                seen_find_values = set()
+                
+                # First load remembered pairs
+                for row in remembered_rows:
+                    find_text = str(row.get("find", "")).strip()
+                
+                    if not find_text:
+                        continue
+                
+                    default_editor_rows.append(row)
+                    seen_find_values.add(find_text)
+                
+                # Then add Presidio suggestions
+                for row in report_rows:
+                    find_text = str(row.get("detected_text", "")).strip()
+                
+                    if not find_text:
+                        continue
+                
+                    # Avoid duplicate rows if a remembered replacement already exists
+                    if find_text in seen_find_values:
+                        continue
+                
+                    default_editor_rows.append(
+                        {
+                            "include": True,
+                            "remember": False,
+                            "find": find_text,
+                            "replace_with": row.get("placeholder", ""),
+                            "entity_type": row.get("entity_type", ""),
+                            "score": row.get("score", None),
+                        }
+                    )
+                
+                if not default_editor_rows:
+                    default_editor_rows = [
+                        {
+                            "include": True,
+                            "remember": False,
+                            "find": "",
+                            "replace_with": "",
+                            "entity_type": "MANUAL",
+                            "score": None,
+                        }
+                    ]
+                
+                replacement_editor_df = pd.DataFrame(default_editor_rows)
             
             edited_replacements_df = st.data_editor(
                 replacement_editor_df,
                 hide_index=True,
                 num_rows="dynamic",
                 use_container_width=True,
-                column_order=["include", "find", "replace_with", "entity_type", "score"],
+                column_order=["include", "remember", "find", "replace_with", "entity_type", "score"],
                 column_config={
-                    "include": st.column_config.CheckboxColumn(
-                        "Use",
-                        help="Untick to exclude this replacement from the export.",
-                        default=True,
+                    "remember": st.column_config.CheckboxColumn(
+                        "Remember",
+                        help="Save this replacement pair for future documents/sessions.",
+                        default=False,
                     ),
                     "find": st.column_config.TextColumn(
                         "Find text",
@@ -490,8 +536,41 @@ try:
                 st.info(f"Uploaded file detected for export: {uploaded_file.name}")
             else:
                 st.info("No uploaded file detected for export. Exporting from text area only.")
+
             
-            # TXT export
+            remember_rows_to_save = []
+            
+            for _, row in edited_replacements_df.iterrows():
+                include = bool(row.get("include", False))
+                remember = bool(row.get("remember", False))
+                find_text = safe_cell(row.get("find", ""))
+                replace_text = safe_cell(row.get("replace_with", ""))
+                entity_type = safe_cell(row.get("entity_type", "REMEMBERED")) or "REMEMBERED"
+            
+                if include and remember and find_text and replace_text:
+                    remember_rows_to_save.append(
+                        {
+                            "find": find_text,
+                            "replace_with": replace_text,
+                            "entity_type": entity_type,
+                        }
+                    )
+            
+            memory_col1, memory_col2 = st.columns(2)
+            
+            with memory_col1:
+                if st.button("Save remembered replacements"):
+                    saved_count = save_remembered_replacements(remember_rows_to_save)
+                    st.success(f"Saved {saved_count} remembered replacement pair(s).")
+                    st.info(f"Memory file: {get_memory_file_path()}")
+            
+            with memory_col2:
+                if st.button("Clear remembered replacements"):
+                    clear_remembered_replacements()
+                    st.warning("Remembered replacements cleared.")
+
+
+            # TXT export            
             st.download_button(
                 label="Download anonymized text (.txt)",
                 data=export_text.encode("utf-8"),
