@@ -1,25 +1,22 @@
 """Dutch legal reference taxonomy for SolidPrivacy Scrub.
 
-This file centralises context words for Dutch legal/administrative reference
-numbers. The recognizer keeps the context word readable and masks only the
-reference value next to it.
+V8.1 broadens the taxonomy from one-off recognizers to category-level
+reference intelligence. It keeps legal/admin context readable and masks only the
+sensitive value next to that context.
 
 Examples:
-- "Cliëntnummer: CL-FAM-55201" -> "Cliëntnummer: <NL_CLIENT_REFERENCE>"
-- "schoolreferentie HRZ-SAM-2026-04" -> "schoolreferentie <NL_SCHOOL_REFERENCE>"
-- "factuur met nummer FACT-2026-4481" -> "factuur met nummer <NL_INVOICE_NUMBER>"
+- "Zaaknummer: 10598721 / UE VERZ 26-441" -> value is NL_LEGAL_CASE_NUMBER
+- "intern incidentnummer INC-2026-0912" -> value is NL_INCIDENT_NUMBER
+- "Claimreferentie verzekeraar: CLM-2026-112233" -> value is NL_CLAIM_NUMBER
+- "camerabeeld met referentie CAM-MAAS-2026-0518" -> value is NL_OTHER_REFERENCE
 
-All entries are local, deterministic and offline-compatible. They are intended
-for Dutch Legal Strict mode and should be conservative: context is required.
-
-V8 adds vehicle/object reference categories and a separate candidate-review
-strategy. Auto-masking stays conservative; suspicious leftovers can be shown in
-the UI as review candidates instead of silently remaining invisible.
+The app is deliberately local/offline and deterministic. Context is required for
+generic reference codes; legal role/context words remain readable.
 """
 
 from __future__ import annotations
 
-from typing import Dict, List, TypedDict
+from typing import List, TypedDict
 
 
 class ReferenceCategory(TypedDict):
@@ -32,6 +29,30 @@ class ReferenceCategory(TypedDict):
 
 
 LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
+    {
+        "entity_type": "NL_LEGAL_CASE_NUMBER",
+        "placeholder": "ZAAKNUMMER",
+        "domain": "court_or_matter",
+        "score": 0.92,
+        "keywords": [
+            "zaaknummer",
+            "zaaknr",
+            "zaak nr",
+            "zaak-/rolnummer",
+            "zaak- en rolnummer",
+            "rol-/zaaknummer",
+            "procedure nummer",
+            "procedurenummer",
+            "nummer van de zaak",
+        ],
+        "examples": [
+            "10598721 / UE VERZ 26-441",
+            "ARN 26/4412",
+            "NL26.12345",
+            "GEM-HLM-2026-2210",
+            "200.345.678/01 OK",
+        ],
+    },
     {
         "entity_type": "NL_DOSSIER_NUMBER",
         "placeholder": "DOSSIERNUMMER",
@@ -139,6 +160,38 @@ LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
         "examples": ["FACT-2026-4481", "DECL-2026-1104"],
     },
     {
+        "entity_type": "NL_CLAIM_NUMBER",
+        "placeholder": "CLAIMNUMMER",
+        "domain": "insurance_injury",
+        "score": 0.91,
+        "keywords": [
+            "claimreferentie verzekeraar",
+            "claimreferentie",
+            "claim referentie",
+            "claimnummer",
+            "claimnr",
+            "schadeclaimnummer",
+            "schadeclaim referentie",
+        ],
+        "examples": ["CLM-2026-112233", "CLAIM-2026-7781"],
+    },
+    {
+        "entity_type": "NL_INSURANCE_REFERENCE",
+        "placeholder": "VERZEKERINGSREFERENTIE",
+        "domain": "insurance_injury",
+        "score": 0.86,
+        "keywords": [
+            "polisnummer",
+            "polisnr",
+            "schadenummer",
+            "schadenr",
+            "letselschadenummer",
+            "verzekeringsreferentie",
+            "aansprakelijkheidsreferentie",
+        ],
+        "examples": ["POL-44556677", "LS-2026-009812"],
+    },
+    {
         "entity_type": "NL_ORDER_OR_CONTRACT_NUMBER",
         "placeholder": "CONTRACT_OF_ORDERNUMMER",
         "domain": "commercial_admin",
@@ -155,6 +208,60 @@ LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
             "licentienummer",
         ],
         "examples": ["CNTR-2026-9981", "LOAN-2026-5512", "ORD-2026-3312"],
+    },
+    {
+        "entity_type": "NL_INCIDENT_NUMBER",
+        "placeholder": "INCIDENTNUMMER",
+        "domain": "criminal_or_internal_incident",
+        "score": 0.90,
+        "keywords": [
+            "intern incidentnummer",
+            "incidentnummer",
+            "incidentnr",
+            "incident nr",
+            "incidentreferentie",
+            "incident kenmerk",
+        ],
+        "examples": ["INC-2026-0912", "INC-WM-559812"],
+    },
+    {
+        "entity_type": "NL_POLICE_REFERENCE",
+        "placeholder": "POLITIE_OF_OM_REFERENTIE",
+        "domain": "criminal_law",
+        "score": 0.87,
+        "keywords": [
+            "proces-verbaalnummer",
+            "proces-verbaal nr",
+            "pv-nummer",
+            "pv nummer",
+            "aangiftenummer",
+            "mutatienummer",
+            "politieregistratienummer",
+            "bvh-nummer",
+            "detentienummer",
+            "reclasseringsnummer",
+        ],
+        "examples": ["PL1700-20260518-334455", "PV-AMS-2026-77812"],
+    },
+    {
+        "entity_type": "NL_OTHER_REFERENCE",
+        "placeholder": "OVERIGE_REFERENTIE",
+        "domain": "other_contextual_reference",
+        "score": 0.82,
+        "keywords": [
+            "camerabeeld met referentie",
+            "camerareferentie",
+            "camera referentie",
+            "beeldreferentie",
+            "videoreferentie",
+            "reparatienummer",
+            "reparatie nummer",
+            "meldingsnummer",
+            "meldingnummer",
+            "rapportnummer",
+            "verslagreferentie",
+        ],
+        "examples": ["CAM-MAAS-2026-0518", "REP-2026-4410", "MELD-2026-7711"],
     },
     {
         "entity_type": "NL_SCHOOL_REFERENCE",
@@ -210,24 +317,6 @@ LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
         "examples": ["HR-2026-7731", "UWV-WIA-2026-11902", "ARB-2026-00421"],
     },
     {
-        "entity_type": "NL_INSURANCE_REFERENCE",
-        "placeholder": "VERZEKERINGSREFERENTIE",
-        "domain": "insurance_injury",
-        "score": 0.86,
-        "keywords": [
-            "polisnummer",
-            "polisnr",
-            "schadenummer",
-            "schadenr",
-            "claimnummer",
-            "claimnr",
-            "letselschadenummer",
-            "verzekeringsreferentie",
-            "aansprakelijkheidsreferentie",
-        ],
-        "examples": ["POL-44556677", "LS-2026-009812", "CLAIM-2026-7781"],
-    },
-    {
         "entity_type": "NL_HEALTHCARE_REFERENCE",
         "placeholder": "ZORGREFERENTIE",
         "domain": "medical_injury",
@@ -243,26 +332,6 @@ LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
             "zorgreferentie",
         ],
         "examples": ["PAT-2026-1148", "MD-2026-4412", "DBC-2026-7711"],
-    },
-    {
-        "entity_type": "NL_POLICE_REFERENCE",
-        "placeholder": "POLITIE_OF_OM_REFERENTIE",
-        "domain": "criminal_law",
-        "score": 0.87,
-        "keywords": [
-            "proces-verbaalnummer",
-            "proces-verbaal nr",
-            "pv-nummer",
-            "pv nummer",
-            "aangiftenummer",
-            "incidentnummer",
-            "mutatienummer",
-            "politieregistratienummer",
-            "bvh-nummer",
-            "detentienummer",
-            "reclasseringsnummer",
-        ],
-        "examples": ["PL1700-20260518-334455", "PV-AMS-2026-77812", "INC-WM-559812"],
     },
     {
         "entity_type": "NL_IMMIGRATION_REFERENCE",
@@ -287,6 +356,7 @@ LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
         "score": 0.85,
         "keywords": [
             "besluitnummer",
+            "besluitnummer gemeente",
             "beschikkingsnummer",
             "aanvraagnummer",
             "vergunningnummer",
@@ -360,8 +430,6 @@ LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
 
 REFERENCE_ENTITY_TYPES: List[str] = [entry["entity_type"] for entry in LEGAL_REFERENCE_CATEGORIES]
 
-# These generic words are weaker than explicit labels like "cliëntnummer".
-# The recognizer lowers confidence for these words unless the value pattern is strong.
 WEAK_REFERENCE_KEYWORDS = {
     "referentie",
     "kenmerk",
@@ -370,11 +438,7 @@ WEAK_REFERENCE_KEYWORDS = {
     "referentienr",
 }
 
-# Candidate scanner categories are intentionally not always auto-masked. They
-# are used by candidate_scanner.py to surface suspicious unmasked values in the
-# review table. The user can then decide whether to include them.
 CANDIDATE_ENTITY_TYPES = [
     "NL_SUSPICIOUS_REFERENCE_CANDIDATE",
     "NL_POSSIBLE_LICENSE_PLATE",
 ]
-
