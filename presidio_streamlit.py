@@ -8,9 +8,11 @@ Phase 1-3 update:
 - keeps current workflow: upload -> detect -> editable replacement table -> export.
 """
 
+import ast
 import logging
 import os
 import traceback
+from pathlib import Path
 
 import dotenv
 import pandas as pd
@@ -85,17 +87,56 @@ Verweerder Peter Bakker woont aan Laan van Meerdervoort 55, 2517 AM Den Haag.
 """,
 }
 
+
+def _load_legal_test_cases_from_file():
+    """Load legal examples as data instead of importing the module.
+
+    Streamlit can re-run scripts while modules are still initializing. A normal
+    `from legal_test_examples import TEST_CASES` can therefore fail with a
+    misleading circular-import warning. The examples file is pure data, so we
+    parse the TEST_CASES literal directly from disk and avoid executing imports.
+    """
+    examples_path = Path(__file__).with_name("legal_test_examples.py")
+    if not examples_path.exists():
+        raise FileNotFoundError(f"{examples_path} does not exist")
+
+    tree = ast.parse(examples_path.read_text(encoding="utf-8"), filename=str(examples_path))
+    for node in tree.body:
+        is_test_cases = (
+            isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "TEST_CASES" for target in node.targets)
+        ) or (
+            isinstance(node, ast.AnnAssign)
+            and isinstance(node.target, ast.Name)
+            and node.target.id == "TEST_CASES"
+        )
+        if is_test_cases:
+            value = node.value
+            cases = ast.literal_eval(value)
+            if not isinstance(cases, list):
+                raise ValueError("TEST_CASES is not a list")
+            return cases
+    raise ValueError("TEST_CASES assignment not found in legal_test_examples.py")
+
+
 try:
-    from legal_test_examples import TEST_CASES, get_example_names, get_example_text
+    TEST_CASES = _load_legal_test_cases_from_file()
 except Exception as exc:
     LEGAL_EXAMPLES_IMPORT_ERROR = exc
     TEST_CASES = []
 
-    def get_example_names():
-        return list(EMBEDDED_LEGAL_TEST_CASES.keys())
 
-    def get_example_text(name: str):
-        return EMBEDDED_LEGAL_TEST_CASES.get(name, "")
+def get_example_names():
+    if TEST_CASES:
+        return [str(case.get("name", "Unnamed example")) for case in TEST_CASES]
+    return list(EMBEDDED_LEGAL_TEST_CASES.keys())
+
+
+def get_example_text(name: str):
+    for case in TEST_CASES:
+        if str(case.get("name", "")) == name:
+            return str(case.get("text", ""))
+    return EMBEDDED_LEGAL_TEST_CASES.get(name, "")
 
 
 st.set_page_config(
