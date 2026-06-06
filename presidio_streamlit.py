@@ -3,6 +3,7 @@
 Phase 1-3 update:
 - Dutch Legal Strict recognition profile;
 - Dutch legal test examples;
+- Dutch Legal Reference Taxonomy for context-based reference codes;
 - legal-aware replacement labels and scrub report download;
 - keeps current workflow: upload -> detect -> editable replacement table -> export.
 """
@@ -386,7 +387,9 @@ try:
         help=(
             "Dutch / EU mode adds recognizers such as NL_BSN, NL_POSTCODE, NL_KVK_NUMBER, "
             "NL_VAT_NUMBER, NL_IBAN and NL_PHONE_NUMBER. Dutch Legal Strict additionally adds "
-            "NL_ECLI, NL_LEGAL_CASE_NUMBER, NL_PARKETNUMMER, NL_DOSSIER_NUMBER, NL_CLIENT_NUMBER and related legal IDs."
+            "NL_ECLI, NL_LEGAL_CASE_NUMBER, NL_PARKETNUMMER, NL_DOSSIER_NUMBER, NL_CLIENT_NUMBER, "
+            "plus contextual references such as NL_CLIENT_REFERENCE, NL_SCHOOL_REFERENCE, "
+            "NL_INVOICE_NUMBER, NL_CASE_REFERENCE and related legal/admin IDs."
         ),
     )
 
