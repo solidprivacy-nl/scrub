@@ -26,9 +26,70 @@ This prevents one-off fixes and protects existing behaviour.
 
 ---
 
-## v12.2 — Review focus filters
+## v12.3 — Review table simplification
 
 Status: implemented; awaiting GitHub Actions and Hugging Face verification.
+
+Purpose:
+
+- Reduce visual noise in the replacement table.
+- Keep the main review table focused on the columns legal users actually need to edit.
+- Preserve technical/audit information in a separate details view.
+- Keep recognizer and export semantics unchanged.
+
+Files added or changed:
+
+- `review_table_config.py`
+- `tests/test_review_table_config.py`
+- `fix_streamlit_nested_expanders.py`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Added a central table configuration module.
+- Main editable review table now focuses on:
+  - `Meenemen`
+  - `Onthouden`
+  - `Status`
+  - `Gevonden tekst`
+  - `Vervangen door`
+  - `Type gegeven`
+  - `Zekerheid`
+- Technical and audit-oriented columns are moved out of the primary editing view:
+  - `Bron`
+  - `Reden`
+  - `Context`
+  - `Technisch type`
+  - `Technische score`
+  - `Technische bron`
+- Added a separate `Technische details bij de vervangtabel` expander.
+- Added tests to enforce that technical fields are not part of the main review columns.
+
+Important design decision:
+
+- The full data remains present in the underlying dataframe.
+- The main table is simplified visually, but exports and reports still use the available row data.
+- The technical details remain accessible for debugging, auditability and future tuning.
+
+Testing:
+
+- Added unit tests for `review_table_config.py`.
+- GitHub Actions status still needs to be checked after this changelog update.
+- Hugging Face app should be checked after sync.
+
+Intentionally not changed:
+
+- No recognizer changes.
+- No entity-type expansion.
+- No export semantics change.
+- No MSI/local installer work.
+- No LLM/cloud feature.
+
+---
+
+## v12.2 — Review focus filters
+
+Status: completed and green in GitHub Actions.
 
 Purpose:
 
@@ -51,24 +112,7 @@ Main changes:
   - `Alleen juridische referenties`
   - `Alleen namen/adressen`
   - `Alleen lage zekerheid`
-- Added filter groups for legal/admin reference entity types, including:
-  - legal case numbers;
-  - rolnummers;
-  - rekestnummers;
-  - parketnummers;
-  - dossier/client numbers;
-  - incident/claim/reference numbers;
-  - invoice/order/contract references;
-  - immigration, municipal, police, healthcare and insurance references;
-  - ECLI, KvK, VAT, BIG and vehicle/object references.
-- Added filter group for names/address-like data, including:
-  - `PERSON`;
-  - `NL_LEGAL_PARTY_NAME`;
-  - `LOCATION`;
-  - `NL_ADDRESS`;
-  - `NL_POSTCODE`;
-  - `ORGANIZATION`;
-  - `NL_COURT_OR_AUTHORITY`.
+- Added filter groups for legal/admin reference entity types, names and address-like data.
 - Added low-confidence filtering based on either Dutch confidence label `Laag` or numeric score below `0.60`.
 - Added tests for all filter modes.
 - Extended the Streamlit startup patch so the review step gets a `Focusfilter voor controle` selectbox.
@@ -84,8 +128,8 @@ Important design decision:
 Testing:
 
 - Added unit tests for `review_filters.py`.
-- GitHub Actions status still needs to be checked after this changelog update.
-- Hugging Face app should be checked after sync.
+- GitHub Actions `Tests` passed.
+- GitHub → Hugging Face sync passed.
 
 Intentionally not changed:
 
@@ -128,17 +172,7 @@ Main changes:
   - `Onthouden vervanging`
 - Added sorting order so rows needing review appear before automatically applied rows.
 - Added tests for source-to-status mapping and ordering.
-- Extended the existing Streamlit startup patch so the replacement table gets:
-  - a visible `Status` column;
-  - hidden/internal `review_status` and `review_order` fields;
-  - a compact status summary above the editor;
-  - status values included in report rows where supported by downstream exports.
-
-Important design decision:
-
-- v12.1 introduced status only.
-- It did not add filters yet.
-- Filters and further table simplification were reserved for v12.2 and v12.3.
+- Extended the existing Streamlit startup patch so the replacement table gets a visible `Status` column, internal status fields and a compact status summary above the editor.
 
 Testing:
 
@@ -186,11 +220,7 @@ Main changes:
   - `GEM-HLM-2026-2210` → `NL_LEGAL_CASE_NUMBER`
   - `200.345.678/01 OK` → `NL_LEGAL_CASE_NUMBER`
   - `76543210` after KvK context → `NL_KVK_NUMBER`
-- Verified value-only behavior:
-  - context such as `Zaaknummer:` must remain readable;
-  - context such as `intern incidentnummer` must remain readable;
-  - context such as `Claimreferentie verzekeraar:` must remain readable;
-  - context such as `KvK-nummer vennootschap:` must remain readable.
+- Verified value-only behavior so context such as `Zaaknummer:`, `intern incidentnummer`, `Claimreferentie verzekeraar:` and `KvK-nummer vennootschap:` remains readable.
 
 Testing:
 
@@ -225,29 +255,16 @@ Files changed:
 Main changes:
 
 - Expanded the regression set with concrete Dutch legal/admin examples reported during testing.
-- Added/validated cases for:
-  - court / case numbers;
-  - incident numbers;
-  - camera/video references;
-  - insurance claim references;
-  - repair numbers;
-  - administrative law case numbers;
-  - immigration case numbers;
-  - municipal case references;
-  - enterprise chamber / appellate style case numbers;
-  - KvK numbers in labelled context.
-- Added a lightweight KvK fallback to the candidate scanner:
-  - `KvK-nummer vennootschap: 76543210` now yields value-only candidate `76543210` as `NL_KVK_NUMBER` when not already detected.
-- Kept the candidate scanner as a review/audit layer:
-  - candidates remain unchecked by default in the UI;
-  - the user decides whether to include them.
+- Added/validated cases for court/case numbers, incident numbers, camera/video references, insurance claim references, repair numbers, immigration numbers, municipal references and KvK numbers in labelled context.
+- Added a lightweight KvK fallback to the candidate scanner.
+- Kept the candidate scanner as a review/audit layer with candidates unchecked by default.
 - Updated the case-reference contract test to use the broader contextual value regex instead of only the strict formal court-number regex.
 
 Important design decision:
 
 - `GEM-HLM-2026-2210` is not a classic court-number format by itself.
 - It becomes a legal case number because it appears near context such as `zaaknummer`.
-- Therefore the test should reflect contextual recognition, not only raw pattern recognition.
+- Therefore the test reflects contextual recognition, not only raw pattern recognition.
 
 Testing:
 
@@ -284,15 +301,8 @@ Main changes:
 
 - Added synthetic Dutch legal regression cases.
 - Added candidate scanner tests for expected reference-like values.
-- Added false-positive guards for:
-  - legal article references, e.g. `7:669 BW`;
-  - dates, e.g. `15-12-2025`;
-  - money/amount context, e.g. `EUR 1.250,00`.
-- Added context preservation contract tests:
-  - `Slachtoffer` must stay readable;
-  - `minderjarige` must stay readable;
-  - `Verzoeker` must stay readable;
-  - role/context words must not be swallowed into the replacement span.
+- Added false-positive guards for legal article references, dates and money/amount context.
+- Added context preservation contract tests for words such as `Slachtoffer`, `minderjarige` and `Verzoeker`.
 - Added a GitHub Actions workflow for Python regression tests.
 - Fixed import path handling by setting `PYTHONPATH` to the repository root.
 - Kept early tests lightweight to avoid unnecessary full Streamlit/Presidio/spaCy startup cost.
@@ -361,33 +371,11 @@ Files added or changed:
 
 Main changes:
 
-- Added Dutch product language:
-  - `Scrub Legal`
-  - `Lokale juridische documentcontrole`
-  - `Controlemodus`
-  - `Manier van vervangen`
-  - `Voeg document of tekst toe`
-  - `Controleer gevonden gegevens`
-  - `Mogelijke gemiste waarden`
-  - `Download opgeschoonde bestanden`
-- Added a separate Dutch UI copy layer in `ui_texts_nl.py`.
-- Added Dutch display labels for technical entity types in `display_labels_nl.py`.
+- Added Dutch product language and workflow language such as `Scrub Legal`, `Lokale juridische documentcontrole`, `Controlemodus`, `Voeg document of tekst toe`, `Controleer gevonden gegevens`, `Mogelijke gemiste waarden` and `Download opgeschoonde bestanden`.
+- Added a separate Dutch UI copy layer and Dutch display labels for technical entity types.
 - Reworked the main Streamlit app to make the workflow more legal-user oriented.
-- Kept technical settings under advanced sections.
-- Kept technical recognizer labels available, but made them less central in the interface.
-- Restored/kept synthetic legal test example loading in the interface.
+- Restored/kept synthetic legal test example loading.
 - Added a startup hotfix for Streamlit’s nested-expander limitation.
-
-Important bug fixed:
-
-- Streamlit does not allow an expander inside another expander.
-- The first v9 implementation nested `Woordenlijsten` inside `Geavanceerde instellingen`.
-- Added `fix_streamlit_nested_expanders.py` and updated the Docker startup command to patch this before Streamlit starts.
-
-Testing:
-
-- GitHub → Hugging Face sync passed.
-- User confirmed app startup and interface were working.
 
 Known limitation:
 
@@ -413,21 +401,8 @@ Main changes:
 
 - Added a GitHub Actions workflow for syncing to Hugging Face.
 - Initial `huggingface/hub-sync` approach failed on SDK and API-rate issues.
-- Replaced it with a simpler direct Git push workflow:
-  - checkout GitHub repo;
-  - add Hugging Face Space as remote;
-  - force-push `HEAD:main` to the Space.
+- Replaced it with a simpler direct Git push workflow.
 - Added concurrency handling to avoid overlapping sync runs.
-
-Problems encountered and fixed:
-
-- Missing or insufficient Hugging Face token caused initial `Space not found` / authentication behavior.
-- Space SDK mismatch was corrected from `streamlit` to `docker`.
-- API `429 Too Many Requests` from `huggingface/hub-sync` was avoided by switching to direct Git push.
-
-Testing:
-
-- Sync workflow passed repeatedly after direct Git push implementation.
 
 Security/ops note:
 
@@ -452,46 +427,31 @@ Main themes:
 - Recognition of Dutch legal references, case numbers and administrative identifiers.
 - Candidate scanner / audit-layer idea.
 - Synthetic legal examples for testing.
-- Context preservation principle:
-  - do not mask role words such as `slachtoffer`, `minderjarige`, `verzoeker`, `verweerder`;
-  - mask the person/value, not the legal meaning of the sentence.
+- Context preservation principle: do not mask role words such as `slachtoffer`, `minderjarige`, `verzoeker`, `verweerder`; mask the person/value, not the legal meaning of the sentence.
 
 Important design conclusions:
 
 - A local deterministic scrubber is a better MVP path than relying on cloud LLMs.
 - Local LLMs may be useful later, but they are not the best first layer for a fast legal scrubber.
-- The MVP should combine:
-  - deterministic recognizers;
-  - Dutch legal/admin taxonomy;
-  - review table;
-  - candidate scanner;
-  - regression tests;
-  - eventually local packaging.
+- The MVP should combine deterministic recognizers, Dutch legal/admin taxonomy, review table, candidate scanner, regression tests and eventually local packaging.
 
 ---
 
-## Planned next phase — v12.3 Table simplification
+## Planned next phase — v12.4 Review guidance text
 
 Status: planned, not yet implemented.
 
 Goal:
 
-- Reduce visual noise in the replacement table while preserving technical auditability.
+- Add clearer user guidance around review workflow and candidate handling.
 
 Planned scope:
 
-- Keep essential columns prominent:
-  - include;
-  - remember;
-  - status;
-  - found text;
-  - replacement;
-  - type;
-  - confidence.
-- Move technical source/reason/context/score/entity-type fields into a separate technical details view where feasible.
-- Preserve the full data for exports and reports.
+- Explain the difference between automatically applied rows and candidate rows.
+- Add short help text near the focus filter and technical details expander.
+- Make it clearer that only checked rows are exported.
 
-Non-goals for v12.3:
+Non-goals for v12.4:
 
 - No recognizer changes.
 - No MSI/local desktop packaging yet.
@@ -503,18 +463,7 @@ Non-goals for v12.3:
 
 Possible directions:
 
-- Further recognizer expansion by legal domain:
-  - family law;
-  - criminal law;
-  - labour law;
-  - immigration law;
-  - administrative law;
-  - housing/real estate;
-  - insurance / personal injury.
-- Local packaging research:
-  - Windows desktop app;
-  - local-only processing;
-  - MSI installer path;
-  - model/runtime size constraints.
+- Further recognizer expansion by legal domain: family law, criminal law, labour law, immigration law, administrative law, housing/real estate and insurance/personal injury.
+- Local packaging research: Windows desktop app, local-only processing, MSI installer path and model/runtime size constraints.
 - More advanced DOCX/PDF preservation.
 - Better synthetic long-form legal test documents.
