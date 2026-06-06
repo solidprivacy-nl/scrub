@@ -8,6 +8,7 @@ Patches currently applied:
 - v9: remove nested Streamlit expander usage for Woordenlijsten.
 - v12.1: add a user-facing review status model to the replacement table.
 - v12.2: add safe review-focus filters without changing export semantics.
+- v12.3: simplify the main review table and move audit details to a technical view.
 """
 
 from pathlib import Path
@@ -40,21 +41,30 @@ nested_new = '''    st.markdown("**Woordenlijsten**")
 
 text = replace_once(text, nested_old, nested_new)
 
-# v12.1/v12.2: import review helpers.
+# v12.1/v12.2/v12.3: import review helpers.
 text = replace_once(
     text,
     'from display_labels_nl import entity_label, source_label, confidence_label\n',
     'from display_labels_nl import entity_label, source_label, confidence_label\n'
     'from review_status import review_status_for_source, review_status_label, review_status_order\n'
-    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n',
+    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n'
+    'from review_table_config import main_review_columns, technical_display_columns\n',
 )
 
-# If v12.1 already added review_status but v12.2 is not present yet, extend imports only.
+# If v12.1 already added review_status but v12.2/v12.3 is not present yet, extend imports only.
 text = replace_once(
     text,
     'from review_status import review_status_for_source, review_status_label, review_status_order\n',
     'from review_status import review_status_for_source, review_status_label, review_status_order\n'
+    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n'
+    'from review_table_config import main_review_columns, technical_display_columns\n',
+)
+
+text = replace_once(
+    text,
     'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n',
+    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n'
+    'from review_table_config import main_review_columns, technical_display_columns\n',
 )
 
 # v12.1: add review status fields to remembered rows.
@@ -121,7 +131,7 @@ text = replace_once(
 ''',
 )
 
-# v12.1/v12.2: sort review rows, show a status summary and add focus filters.
+# v12.1/v12.2/v12.3: sort review rows, show status summary, focus filters and technical view.
 text = replace_once(
     text,
     '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
@@ -151,6 +161,12 @@ text = replace_once(
                 use_container_width=True,
             )
             st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
+        with st.expander("Technische details bij de vervangtabel", expanded=False):
+            technical_columns = technical_display_columns(replacement_editor_df.columns)
+            if technical_columns:
+                st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
+            else:
+                st.caption("Geen technische detailkolommen beschikbaar.")
         edited_replacements_df = st.data_editor(
 ''',
 )
@@ -166,6 +182,29 @@ text = replace_once(
                 "remember",
                 "review_status_label",
                 "find",
+''',
+)
+
+# v12.3: reduce the editable table to user-facing columns only.
+text = replace_once(
+    text,
+    '''            column_order=[
+                "include",
+                "remember",
+                "review_status_label",
+                "find",
+                "replace_with",
+                "type_label",
+                "confidence",
+                "source_label",
+                "reason",
+                "context",
+                "entity_type",
+                "score",
+                "source",
+            ],
+''',
+    '''            column_order=main_review_columns(replacement_editor_df.columns),
 ''',
 )
 
