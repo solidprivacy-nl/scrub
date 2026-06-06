@@ -7,6 +7,7 @@ refactors are being staged.
 Patches currently applied:
 - v9: remove nested Streamlit expander usage for Woordenlijsten.
 - v12.1: add a user-facing review status model to the replacement table.
+- v12.2: add safe review-focus filters without changing export semantics.
 """
 
 from pathlib import Path
@@ -39,12 +40,21 @@ nested_new = '''    st.markdown("**Woordenlijsten**")
 
 text = replace_once(text, nested_old, nested_new)
 
-# v12.1: import review-status helpers.
+# v12.1/v12.2: import review helpers.
 text = replace_once(
     text,
     'from display_labels_nl import entity_label, source_label, confidence_label\n',
     'from display_labels_nl import entity_label, source_label, confidence_label\n'
+    'from review_status import review_status_for_source, review_status_label, review_status_order\n'
+    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n',
+)
+
+# If v12.1 already added review_status but v12.2 is not present yet, extend imports only.
+text = replace_once(
+    text,
     'from review_status import review_status_for_source, review_status_label, review_status_order\n',
+    'from review_status import review_status_for_source, review_status_label, review_status_order\n'
+    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n',
 )
 
 # v12.1: add review status fields to remembered rows.
@@ -111,7 +121,7 @@ text = replace_once(
 ''',
 )
 
-# v12.1: sort review rows and show a compact status summary above the editor.
+# v12.1/v12.2: sort review rows, show a status summary and add focus filters.
 text = replace_once(
     text,
     '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
@@ -127,6 +137,20 @@ text = replace_once(
             status_parts = [f"{label}: {count}" for label, count in status_counts.items()]
             if status_parts:
                 st.caption("Reviewstatus: " + " · ".join(status_parts))
+        review_filter = st.selectbox(
+            "Focusfilter voor controle",
+            REVIEW_FILTER_OPTIONS,
+            index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
+            help="Gebruik dit als overzichtsfilter. De volledige vervangtabel hieronder blijft leidend voor de export.",
+        )
+        if review_filter != FILTER_SHOW_ALL:
+            focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
+            st.caption(f"{len(focus_df)} van {len(replacement_editor_df)} rij(en) zichtbaar in dit focusoverzicht.")
+            st.dataframe(
+                focus_df[[col for col in ["review_status_label", "find", "replace_with", "type_label", "confidence", "source_label"] if col in focus_df.columns]],
+                use_container_width=True,
+            )
+            st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
         edited_replacements_df = st.data_editor(
 ''',
 )
