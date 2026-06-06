@@ -339,8 +339,8 @@ Verzoekers verzoeken de Ondernemingskamer een onderzoek te bevelen, een tijdelij
             "NL_LEGAL_CASE_NUMBER",
             "NL_DOSSIER_NUMBER",
             "NL_CLIENT_NUMBER",
-            "NL_KVK",
-            "NL_VAT",
+            "NL_KVK_NUMBER",
+            "NL_VAT_NUMBER",
             "NL_LEGAL_PARTY_NAME",
             "NL_ADDRESS",
             "NL_IBAN",
@@ -370,6 +370,51 @@ De persoon Test Persoon treedt op als eiser en de persoon Voorbeeld Gedaagde tre
             "NL_CLIENT_NUMBER",
             "NL_PHONE_NUMBER",
             "NL_ADDRESS",
+            "NL_LEGAL_PARTY_NAME",
+        ],
+        "should_not_contain": ["NL_BSN"],
+    },
+    {
+        "name": "Referenties en administratieve nummers - lange stress test",
+        "text": """REFERENTIE- EN ADMINISTRATIENUMMER STRESS TEST
+
+Dit synthetische document is bedoeld om de nieuwe Dutch Legal Reference Taxonomy te testen. Het bevat geen echte persoonsgegevens. De bedoeling is dat contextwoorden zoals cliëntnummer, schoolreferentie, factuurnummer, zaakreferentie en interne klantreferentie zichtbaar blijven, terwijl alleen de concrete waarde wordt gemaskeerd.
+
+Familierechtelijk gedeelte:
+Cliëntnummer: CL-FAM-55201.
+De schoolreferentie is HRZ-SAM-2026-04.
+In het verslag van Stichting Horizonzorg wordt dezelfde referentie HRZ-SAM-2026-04 genoemd. De intern begeleider Sophie de Graaf schrijft dat de minderjarige Sami El Amrani op 12-04-2026 gespannen was voorafgaand aan de overdracht. Het woord minderjarige moet behouden blijven, maar de naam van de minderjarige moet worden gemaskeerd. De Veilig Thuis-melding heeft kenmerk VT-2026-44918 en de Raad voor de Kinderbescherming gebruikt RvdK-kenmerk RVDK-2026-01772. De OTS-nummer OTS-2026-1188 wordt genoemd in het conceptadvies.
+
+Civiel en financieel gedeelte:
+De factuur met nummer FACT-2026-4481 is onbetaald gebleven. De declaratie met declaratienummer DECL-2026-1104 is later ingetrokken. De interne klantreferentie van eiser is WR-KLANT-2026-7712. De zaakreferentie is ZK-WOON-55091. In het dossier staat ook contractnummer CNTR-2026-9981 en leningsovereenkomst LOAN-2026-5512. Het IBAN NL91 ABNA 0417 1643 00 moet als bankrekening worden gemaskeerd. Het bedrag EUR 1.250,00 is alleen een bedrag en mag niet als referentie worden gezien.
+
+Strafrechtelijk gedeelte:
+Het parketnummer is 13/123456-26. Het proces-verbaalnummer is PL1700-20260518-334455. Daarnaast noemt de politie incidentnummer INC-WM-559812, aangiftenummer AANG-2026-7811 en mutatienummer MUT-AMS-2026-1199. Verdachte Mohamed Ait Said en slachtoffer Emma Smit worden genoemd. De rollen verdachte en slachtoffer moeten blijven staan, maar de namen moeten worden gemaskeerd.
+
+Arbeidsrechtelijk gedeelte:
+Het personeelsnummer van werknemer is PERS-2026-5520. De HR-referentie is HR-2026-7731. Het UWV-zaaknummer is UWV-WIA-2026-11902. Het verzuimnummer is VZ-2026-6612. Werknemer Jan Jansen stelt dat werkgever BrightCare B.V. het re-integratiedossier ARB-2026-00421 onvolledig heeft overgelegd.
+
+Bestuursrecht en vreemdelingenrecht:
+Het besluitnummer is BESL-2026-9912. Het gemeentelijk kenmerk is GEM-AMS-2026-1148. De aanvraagnummer is AANV-2026-4410. Het IND-nummer is IND-2026-44129 en het V-nummer is V-1234567890. De datum 15-12-2026, artikel 7:669 BW, artikel 6:162 BW, productie 12, bijlage 3, pagina 4 en tijdstip 10:30 uur mogen niet als generieke referentie worden gemaskeerd.
+
+Vastgoed en huurrecht:
+De huurovereenkomstnummer HUUR-2026-8891, objectnummer OBJ-55091, VvE-nummer VVE-AMS-2026-04 en servicekostenreferentie SK-2026-4421 worden in de conclusie van antwoord genoemd. Verhuurder Woonstad Voorbeeld B.V. en huurder Pieter de Groot worden als procespartijen genoemd.
+""",
+        "should_contain": [
+            "NL_CLIENT_REFERENCE",
+            "NL_SCHOOL_REFERENCE",
+            "NL_CONTEXTUAL_REFERENCE",
+            "NL_CHILD_PROTECTION_REFERENCE",
+            "NL_INVOICE_NUMBER",
+            "NL_CASE_REFERENCE",
+            "NL_ORDER_OR_CONTRACT_NUMBER",
+            "NL_IBAN",
+            "NL_PARKETNUMMER",
+            "NL_POLICE_REFERENCE",
+            "NL_EMPLOYMENT_REFERENCE",
+            "NL_MUNICIPAL_REFERENCE",
+            "NL_IMMIGRATION_REFERENCE",
+            "NL_REAL_ESTATE_REFERENCE",
             "NL_LEGAL_PARTY_NAME",
         ],
         "should_not_contain": ["NL_BSN"],
