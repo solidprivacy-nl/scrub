@@ -5,8 +5,18 @@ before adding more recognizers.
 """
 
 CANDIDATE_SCANNER_TEXT = """
-De verhuurder heeft de melding geregistreerd onder reparatienummer REP-2026-4410.
+Zaaknummer: 10598721 / UE VERZ 26-441.
 De wederpartij verwees naar intern incidentnummer INC-2026-0912.
+In het dossier wordt daarnaast verwezen naar camerabeeld met referentie CAM-MAAS-2026-0518.
+Claimreferentie verzekeraar: CLM-2026-112233.
+De verhuurder heeft de melding geregistreerd onder reparatienummer REP-2026-4410.
+Afdeling bestuursrecht
+Zaaknummer: ARN 26/4412
+Afdeling vreemdelingenzaken
+Zaaknummer: NL26.12345
+De gemeente gebruikt zaaknummer GEM-HLM-2026-2210.
+Zaaknummer: 200.345.678/01 OK
+KvK-nummer vennootschap: 76543210
 Het kenteken XX123X staat in het proces-verbaal.
 De interne klantreferentie van eiser is WR-KLANT-2026-7712.
 Het dossiernummer is DOSS/2026/1189.
@@ -16,11 +26,35 @@ Het bedrag EUR 1.250,00 is alleen een bedrag.
 """
 
 EXPECTED_CANDIDATES = {
-    "REP-2026-4410",
+    "10598721 / UE VERZ 26-441",
     "INC-2026-0912",
+    "CAM-MAAS-2026-0518",
+    "CLM-2026-112233",
+    "REP-2026-4410",
+    "ARN 26/4412",
+    "NL26.12345",
+    "GEM-HLM-2026-2210",
+    "200.345.678/01 OK",
+    "76543210",
     "XX123X",
     "WR-KLANT-2026-7712",
     "DOSS/2026/1189",
+}
+
+EXPECTED_CANDIDATE_TYPES = {
+    "10598721 / UE VERZ 26-441": "NL_LEGAL_CASE_NUMBER",
+    "INC-2026-0912": "NL_INCIDENT_NUMBER",
+    "CAM-MAAS-2026-0518": "NL_OTHER_REFERENCE",
+    "CLM-2026-112233": "NL_CLAIM_NUMBER",
+    "REP-2026-4410": "NL_OTHER_REFERENCE",
+    "ARN 26/4412": "NL_LEGAL_CASE_NUMBER",
+    "NL26.12345": "NL_LEGAL_CASE_NUMBER",
+    "GEM-HLM-2026-2210": "NL_LEGAL_CASE_NUMBER",
+    "200.345.678/01 OK": "NL_LEGAL_CASE_NUMBER",
+    "76543210": "NL_KVK_NUMBER",
+    "XX123X": "NL_VEHICLE_REFERENCE",
+    "WR-KLANT-2026-7712": "NL_CLIENT_REFERENCE",
+    "DOSS/2026/1189": "NL_DOSSIER_NUMBER",
 }
 
 NEGATIVE_VALUES = {
@@ -47,6 +81,7 @@ CASE_NUMBER_EXAMPLES = [
     "10598721 / UE VERZ 26-441",
     "ARN 26/4412",
     "NL26.12345",
+    "GEM-HLM-2026-2210",
     "200.345.678/01 OK",
     "C/13/701234 / FA RK 26-321",
 ]
