@@ -68,6 +68,10 @@ PLACEHOLDER_LABELS = {
     "NL_IMMIGRATION_REFERENCE": "VREEMDELINGENREFERENTIE",
     "NL_MUNICIPAL_REFERENCE": "BESTUURSREFERENTIE",
     "NL_REAL_ESTATE_REFERENCE": "VASTGOEDREFERENTIE",
+    "NL_VEHICLE_REFERENCE": "VOERTUIG_OF_KENTEKENREFERENTIE",
+    "NL_OBJECT_REFERENCE": "OBJECTREFERENTIE",
+    "NL_SUSPICIOUS_REFERENCE_CANDIDATE": "MOGELIJKE_REFERENTIE",
+    "NL_POSSIBLE_LICENSE_PLATE": "MOGELIJK_KENTEKEN",
 }
 
 STRUCTURED_ENTITY_TYPES = {
@@ -432,7 +436,8 @@ def pdf_from_text(text):
 
 def replacement_report_csv(report_rows):
     output = StringIO()
-    writer = csv.DictWriter(output, fieldnames=["entity_type", "detected_text", "placeholder", "score"])
+    fieldnames = ["entity_type", "detected_text", "placeholder", "score", "source", "reason"]
+    writer = csv.DictWriter(output, fieldnames=fieldnames, extrasaction="ignore")
     writer.writeheader()
     for row in report_rows:
         writer.writerow(row)
