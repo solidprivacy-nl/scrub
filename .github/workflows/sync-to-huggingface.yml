@@ -1,0 +1,25 @@
+name: Sync to Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sync-to-huggingface:
+    name: Sync GitHub main to Hugging Face Space
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync to Hugging Face Space
+        uses: huggingface/hub-sync@v0.1.0
+        with:
+          github_repo_id: solidprivacy-nl/scrub
+          huggingface_repo_id: solidprivacy/scrub
+          repo_type: space
+          space_sdk: streamlit
+          hf_token: ${{ secrets.HF_TOKEN }}
