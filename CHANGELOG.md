@@ -26,9 +26,80 @@ This prevents one-off fixes and protects existing behaviour.
 
 ---
 
-## v12.1 — Review table status model
+## v12.2 — Review focus filters
 
 Status: implemented; awaiting GitHub Actions and Hugging Face verification.
+
+Purpose:
+
+- Add practical focus filters on top of the v12.1 review-status model.
+- Help the legal reviewer quickly inspect only the rows that matter for a specific task.
+- Keep export semantics safe: the filter is an overview/focus tool, not the authoritative edited replacement table.
+
+Files added or changed:
+
+- `review_filters.py`
+- `tests/test_review_filters.py`
+- `fix_streamlit_nested_expanders.py`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Added pure filter helpers with Dutch filter labels:
+  - `Toon alles`
+  - `Alleen controle nodig`
+  - `Alleen juridische referenties`
+  - `Alleen namen/adressen`
+  - `Alleen lage zekerheid`
+- Added filter groups for legal/admin reference entity types, including:
+  - legal case numbers;
+  - rolnummers;
+  - rekestnummers;
+  - parketnummers;
+  - dossier/client numbers;
+  - incident/claim/reference numbers;
+  - invoice/order/contract references;
+  - immigration, municipal, police, healthcare and insurance references;
+  - ECLI, KvK, VAT, BIG and vehicle/object references.
+- Added filter group for names/address-like data, including:
+  - `PERSON`;
+  - `NL_LEGAL_PARTY_NAME`;
+  - `LOCATION`;
+  - `NL_ADDRESS`;
+  - `NL_POSTCODE`;
+  - `ORGANIZATION`;
+  - `NL_COURT_OR_AUTHORITY`.
+- Added low-confidence filtering based on either Dutch confidence label `Laag` or numeric score below `0.60`.
+- Added tests for all filter modes.
+- Extended the Streamlit startup patch so the review step gets a `Focusfilter voor controle` selectbox.
+- When a focus filter is active, the app shows a read-only filtered overview above the full editable replacement table.
+
+Important design decision:
+
+- v12.2 does **not** filter the editable table itself.
+- The full replacement table remains the source of truth for exports.
+- This prevents hidden rows from being accidentally dropped from the final export.
+- The focus filter is deliberately a safe review aid, not an edit-scope limiter.
+
+Testing:
+
+- Added unit tests for `review_filters.py`.
+- GitHub Actions status still needs to be checked after this changelog update.
+- Hugging Face app should be checked after sync.
+
+Intentionally not changed:
+
+- No recognizer changes.
+- No entity-type expansion.
+- No export semantics change.
+- No MSI/local installer work.
+- No LLM/cloud feature.
+
+---
+
+## v12.1 — Review table status model
+
+Status: completed and green in GitHub Actions; user confirmed the Status column appears in Hugging Face.
 
 Purpose:
 
@@ -65,15 +136,16 @@ Main changes:
 
 Important design decision:
 
-- This phase deliberately does not add filters yet.
-- v12.1 only introduces the status model and visible status column.
-- Filters and further table simplification are planned for v12.2 and v12.3.
+- v12.1 introduced status only.
+- It did not add filters yet.
+- Filters and further table simplification were reserved for v12.2 and v12.3.
 
 Testing:
 
 - Added unit tests for `review_status.py`.
-- GitHub Actions status still needs to be checked after this changelog update.
-- Hugging Face app should be checked after sync.
+- GitHub Actions `Tests` passed.
+- GitHub → Hugging Face sync passed.
+- User confirmed the Status column appeared correctly in the Hugging Face app.
 
 Intentionally not changed:
 
@@ -398,24 +470,28 @@ Important design conclusions:
 
 ---
 
-## Planned next phase — v12.2 Review filters
+## Planned next phase — v12.3 Table simplification
 
 Status: planned, not yet implemented.
 
 Goal:
 
-- Add filters on top of the v12.1 status model.
+- Reduce visual noise in the replacement table while preserving technical auditability.
 
 Planned scope:
 
-- Show all.
-- Show only `Controle nodig`.
-- Show only legal references.
-- Show only names/addresses.
-- Show only low-confidence items.
-- Keep technical columns hidden by default where possible.
+- Keep essential columns prominent:
+  - include;
+  - remember;
+  - status;
+  - found text;
+  - replacement;
+  - type;
+  - confidence.
+- Move technical source/reason/context/score/entity-type fields into a separate technical details view where feasible.
+- Preserve the full data for exports and reports.
 
-Non-goals for v12.2:
+Non-goals for v12.3:
 
 - No recognizer changes.
 - No MSI/local desktop packaging yet.
