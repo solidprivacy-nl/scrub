@@ -79,6 +79,16 @@ STANDALONE_CODE_RE = re.compile(
     r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){1,10}\b"
 )
 
+# Pure lightweight fallback for KvK numbers. The main recognizer stack also has
+# an NL_KVK_NUMBER recognizer, but this keeps the audit/candidate layer useful if
+# the automatic recognizer misses a labelled 8-digit value.
+KVK_LABELLED_VALUE_RE = re.compile(
+    r"\b(?:kvk(?:[-\s]?nummer|\s?nr\.)?|kamer\s+van\s+koophandel|handelsregister)"
+    r"(?:[ \t]+(?:vennootschap|bedrijf|organisatie|rechtspersoon|vereniging|stichting))?"
+    r"\s*(?:is|:|#|-)?\s*(?P<value>\d{8})\b",
+    flags=re.IGNORECASE | re.MULTILINE,
+)
+
 DUTCH_PLATE_CONTEXT = {
     "kenteken",
     "kentekennummer",
@@ -206,6 +216,7 @@ def _placeholder_for(entity_type: str) -> str:
         "NL_CLAIM_NUMBER": "<CLAIMNUMMER>",
         "NL_OTHER_REFERENCE": "<OVERIGE_REFERENTIE>",
         "NL_LEGAL_CASE_NUMBER": "<ZAAKNUMMER>",
+        "NL_KVK_NUMBER": "<KVK_NUMMER>",
     }
     for category in LEGAL_REFERENCE_CATEGORIES:
         if category.get("entity_type") == entity_type:
@@ -284,7 +295,28 @@ def scan_unmasked_candidates(text: str, analyzer_results=None, max_candidates: i
                     )
                 )
 
-    # 2) License plate / vehicle compact candidates. These are context-bound, not
+    # 2) Structured labelled KvK values. The value is numeric-only, so it needs a
+    # dedicated context-bound fallback instead of the generic uppercase code logic.
+    for match in KVK_LABELLED_VALUE_RE.finditer(source):
+        start, end = match.span("value")
+        value = source[start:end]
+        ctx = _window(source, start, end)
+        if _overlaps(start, end, existing_spans):
+            continue
+        candidates.append(
+            Candidate(
+                text=value,
+                entity_type="NL_KVK_NUMBER",
+                placeholder=_placeholder_for("NL_KVK_NUMBER"),
+                score=0.78,
+                start=start,
+                end=end,
+                reason="Eight-digit value after KvK/handelsregister context",
+                context=_normalise_space(ctx),
+            )
+        )
+
+    # 3) License plate / vehicle compact candidates. These are context-bound, not
     # blind plate recognition, because fake/test material often uses compact
     # examples such as XX123X.
     for match in re.finditer(r"\b(?=[A-Z0-9]{5,12}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{5,12}\b", source):
@@ -307,7 +339,7 @@ def scan_unmasked_candidates(text: str, analyzer_results=None, max_candidates: i
                 )
             )
 
-    # 3) Remaining standalone codes with generic legal/admin context nearby.
+    # 4) Remaining standalone codes with generic legal/admin context nearby.
     for match in STANDALONE_CODE_RE.finditer(source):
         start, end = match.span()
         value = match.group(0)
