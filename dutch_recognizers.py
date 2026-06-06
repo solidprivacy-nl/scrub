@@ -1,5 +1,8 @@
 """Dutch / European + Dutch legal recognizers for SolidPrivacy Scrub.
 
+Phase 1-3 v8.1 update:
+- adds category-level handling for broader Dutch court case numbers, incident numbers, claim references, other contextual references and KVK label variants;
+
 Phase 1-3 v8 update:
 - extends the taxonomy strategy with vehicle/object reference categories;
 - broadens context-bound reference values to include compact values such as
@@ -303,26 +306,38 @@ class RegexCaptureRecognizer(EntityRecognizer):
         return results
 
 
-REFERENCE_VALUE_REGEX = re.compile(
-    r"\b(?:"
-    # Common uppercase/legal admin codes: CL-FAM-55201, FACT-2026-4481,
-    # WR-KLANT-2026-7712, HRZ-SAM-2026-04, PL1700-20260518-334455.
-    r"(?=[A-Z0-9][A-Z0-9./_-]{4,49}\b)(?=[A-Z0-9./_-]*[A-Z])(?=[A-Z0-9./_-]*\d)"
-    r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){1,8}"
+CASE_NUMBER_VALUE_REGEX = (
+    r"(?:"
+    # Civil/family court references: C/13/701234 / FA RK 26-321.
+    r"C/\d{2}/\d{5,6}\s*/\s*(?:[A-Z]{1,5}\s+){1,4}\d{2}[-/]\d{1,6}"
     r"|"
-    # Compact context-bound reference values such as XX123X after "kenteken"
-    # or HR2026A after an explicit reference label. These are not used blindly;
-    # DutchContextualReferenceRecognizer only applies them when a taxonomy
-    # keyword is nearby.
-    r"(?=[A-Z0-9]{5,12}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{5,12}"
-    r"|"
-    # Dutch appellate / court formats like 200.345.678/01 OK.
-    r"\d{3}\.\d{3}\.\d{3}/\d{2}\s+[A-Z]{1,5}"
-    r"|"
-    # Case references with procedure blocks, e.g. 10598721 / UE VERZ 26-441.
+    # Numeric court plus procedure block: 10598721 / UE VERZ 26-441.
     r"\d{6,9}\s*/\s*(?:[A-Z]{1,5}\s+){1,4}\d{2}[-/]\d{1,6}"
-    r")\b"
+    r"|"
+    # Administrative law: ARN 26/4412.
+    r"[A-Z]{2,5}\s+\d{2}/\d{1,6}"
+    r"|"
+    # Immigration: NL26.12345.
+    r"NL\d{2}\.\d{3,8}"
+    r"|"
+    # Enterprise chamber / appellate style: 200.345.678/01 OK.
+    r"\d{3}\.\d{3}\.\d{3}/\d{2}\s+[A-Z]{1,5}"
+    r")"
 )
+
+GENERIC_REFERENCE_VALUE_REGEX = (
+    r"(?:"
+    # Common uppercase/legal admin codes: CL-FAM-55201, FACT-2026-4481,
+    # WR-KLANT-2026-7712, HRZ-SAM-2026-04, GEM-HLM-2026-2210.
+    r"(?=[A-Z0-9][A-Z0-9./_-]{4,59}\b)(?=[A-Z0-9./_-]*[A-Z])(?=[A-Z0-9./_-]*\d)"
+    r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){1,10}"
+    r"|"
+    # Compact context-bound reference values such as XX123X after \"kenteken\".
+    r"(?=[A-Z0-9]{5,12}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{5,12}"
+    r")"
+)
+
+REFERENCE_VALUE_REGEX = re.compile(r"\b(?:" + CASE_NUMBER_VALUE_REGEX + r"|" + GENERIC_REFERENCE_VALUE_REGEX + r")\b")
 
 
 def _keyword_to_regex(keyword: str) -> str:
@@ -628,7 +643,7 @@ def get_dutch_recognizers(supported_language: str = "en") -> List[EntityRecogniz
             patterns=[
                 (
                     "kvk_labeled_value",
-                    r"\b(?:kvk(?:[-\s]?nummer|\s?nr\.)?|kamer\s+van\s+koophandel)\s*(?:is|:|#|-)?\s*(?P<value>\d{8})\b",
+                    r"\b(?:kvk(?:[-\s]?nummer|\s?nr\.)?|kamer\s+van\s+koophandel)(?:[ \t]+(?:vennootschap|bedrijf|organisatie|rechtspersoon|vereniging|stichting))?\s*(?:is|:|#|-)?\s*(?P<value>\d{8})\b",
                 ),
             ],
             score=0.88,
@@ -754,7 +769,7 @@ def get_dutch_recognizers(supported_language: str = "en") -> List[EntityRecogniz
             patterns=[
                 (
                     "legal_case_labeled_value",
-                    r"\b(?:zaaknummer|zaaknr\.?|zaak\s?nr\.?|zaak-/rolnummer)\s*(?:is|:|#|-)?\s*(?P<value>C/\d{2}/\d{5,6}\s*/\s*(?:HA|KG|FA|JE|CV|RK|ZA|EXPL|VERZ|BESL)\s*[A-Z]{0,3}\s*\d{2}[-/]\d{1,5}|[A-Z0-9]{1,8}[-_/][A-Z0-9]{2,12}(?:[-_/][A-Z0-9]{1,12})?)\b",
+                    rf"\b(?:zaaknummer|zaaknr\.?|zaak\s?nr\.?|zaak-/rolnummer|zaak- en rolnummer|rol-/zaaknummer)\s*(?:is|:|#|-)?\s*(?P<value>{CASE_NUMBER_VALUE_REGEX}|{GENERIC_REFERENCE_VALUE_REGEX})\b",
                 ),
             ],
             score=0.86,
@@ -850,6 +865,42 @@ def get_dutch_recognizers(supported_language: str = "en") -> List[EntityRecogniz
             ],
             score=0.87,
             context=["schadenummer", "claimnummer", "polisnummer", "verzekeraar"],
+            supported_language=supported_language,
+        ),
+        RegexCaptureRecognizer(
+            entity="NL_INCIDENT_NUMBER",
+            patterns=[
+                (
+                    "incident_labeled_value",
+                    rf"\b(?:intern[ \t]+incidentnummer|incidentnummer|incidentnr\.?|incident[ \t]+nr\.?)\s*(?:is|:|#|-)?\s*(?P<value>{GENERIC_REFERENCE_VALUE_REGEX})\b",
+                ),
+            ],
+            score=0.91,
+            context=["incidentnummer", "incident", "intern incident", "melding"],
+            supported_language=supported_language,
+        ),
+        RegexCaptureRecognizer(
+            entity="NL_CLAIM_NUMBER",
+            patterns=[
+                (
+                    "claim_labeled_value",
+                    rf"\b(?:claimreferentie(?:[ \t]+verzekeraar)?|claim[ \t]+referentie|claimnummer|claimnr\.?)\s*(?:is|:|#|-)?\s*(?P<value>{GENERIC_REFERENCE_VALUE_REGEX})\b",
+                ),
+            ],
+            score=0.92,
+            context=["claimreferentie", "claimnummer", "verzekeraar", "schade"],
+            supported_language=supported_language,
+        ),
+        RegexCaptureRecognizer(
+            entity="NL_OTHER_REFERENCE",
+            patterns=[
+                (
+                    "other_reference_labeled_value",
+                    rf"\b(?:camerabeeld[ \t]+met[ \t]+referentie|camerareferentie|camera[ \t]+referentie|beeldreferentie|videoreferentie|reparatienummer|reparatie[ \t]+nummer|meldingsnummer|meldingnummer|rapportnummer|verslagreferentie)\s*(?:is|:|#|-)?\s*(?P<value>{GENERIC_REFERENCE_VALUE_REGEX})\b",
+                ),
+            ],
+            score=0.86,
+            context=["camerabeeld", "camera", "reparatienummer", "melding", "rapport", "verslag"],
             supported_language=supported_language,
         ),
         RegexCaptureRecognizer(
