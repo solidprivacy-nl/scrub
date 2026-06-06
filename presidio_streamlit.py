@@ -61,16 +61,41 @@ except Exception:  # keep app usable while new file is being added
     def get_dutch_legal_entity_names():
         return []
 
+LEGAL_EXAMPLES_IMPORT_ERROR = None
+
+EMBEDDED_LEGAL_TEST_CASES = {
+    "Fallback - referenties en administratieve nummers": """Cliëntnummer: CL-FAM-55201.
+De schoolreferentie is HRZ-SAM-2026-04.
+In het verslag van Stichting Horizonzorg wordt dezelfde referentie HRZ-SAM-2026-04 genoemd.
+De factuur met nummer FACT-2026-4481 is onbetaald gebleven.
+De interne klantreferentie van eiser is WR-KLANT-2026-7712.
+De zaakreferentie is ZK-WOON-55091.
+Het artikel 7:669 BW mag niet worden gemaskeerd.
+De datum 15-12-2026 mag niet als referentie worden gezien.
+Het bedrag € 1.250,00 mag niet als referentie worden gezien.
+""",
+    "Fallback - familierecht contextbehoud": """Aan de Rechtbank Amsterdam
+
+Zaaknummer C/13/701234 / FA RK 26-321
+Rekestnummer RK-2026-887
+
+Verzoeker Fatima El Amrani verzoekt wijziging van de omgangsregeling
+met betrekking tot de minderjarige Sami El Amrani.
+Verweerder Peter Bakker woont aan Laan van Meerdervoort 55, 2517 AM Den Haag.
+""",
+}
+
 try:
     from legal_test_examples import TEST_CASES, get_example_names, get_example_text
-except Exception:
+except Exception as exc:
+    LEGAL_EXAMPLES_IMPORT_ERROR = exc
     TEST_CASES = []
 
     def get_example_names():
-        return []
+        return list(EMBEDDED_LEGAL_TEST_CASES.keys())
 
     def get_example_text(name: str):
-        return ""
+        return EMBEDDED_LEGAL_TEST_CASES.get(name, "")
 
 
 st.set_page_config(
@@ -324,15 +349,32 @@ uploaded_file = st.file_uploader(
 uploaded_file_type = None
 input_text = "".join(demo_text)
 
-if st_recognition_profile == "Dutch Legal Strict" and TEST_CASES:
+if st_recognition_profile == "Dutch Legal Strict":
     with st.expander("Use a fake Dutch legal test example", expanded=False):
+        example_names = get_example_names()
+        if LEGAL_EXAMPLES_IMPORT_ERROR is not None:
+            st.warning(
+                "Could not import legal_test_examples.py. Showing embedded fallback examples. "
+                "Check that legal_test_examples.py exists in the Space root. "
+                f"Import error: {LEGAL_EXAMPLES_IMPORT_ERROR}"
+            )
+        elif not example_names:
+            st.warning(
+                "No legal examples were loaded from legal_test_examples.py. "
+                "Check that TEST_CASES contains examples and that get_example_names() returns names."
+            )
+            example_names = list(EMBEDDED_LEGAL_TEST_CASES.keys())
+
         sample_name = st.selectbox(
             "Load synthetic legal example",
-            ["Do not load a test example"] + get_example_names(),
+            ["Do not load a test example"] + example_names,
             index=0,
         )
         if sample_name != "Do not load a test example" and uploaded_file is None:
-            input_text = get_example_text(sample_name)
+            example_text = get_example_text(sample_name)
+            if not example_text and sample_name in EMBEDDED_LEGAL_TEST_CASES:
+                example_text = EMBEDDED_LEGAL_TEST_CASES[sample_name]
+            input_text = example_text
             st.caption("Loaded synthetic example text. No real personal data is included.")
 
 if uploaded_file is not None:
