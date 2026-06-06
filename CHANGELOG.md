@@ -26,6 +26,64 @@ This prevents one-off fixes and protects existing behaviour.
 
 ---
 
+## v12.1 — Review table status model
+
+Status: implemented; awaiting GitHub Actions and Hugging Face verification.
+
+Purpose:
+
+- Start the v12 Review UX phase with a simple, explicit review-status model.
+- Make it clearer to a legal user which rows are already applied, which need review, which are manual, and which come from remembered replacements.
+- Keep recognizer logic unchanged.
+
+Files added or changed:
+
+- `review_status.py`
+- `tests/test_review_status.py`
+- `fix_streamlit_nested_expanders.py`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Added a pure review-status model with stable internal values:
+  - `auto_detected`
+  - `needs_review`
+  - `manual`
+  - `remembered`
+- Added Dutch user-facing labels:
+  - `Automatisch vervangen`
+  - `Controle nodig`
+  - `Handmatig toegevoegd`
+  - `Onthouden vervanging`
+- Added sorting order so rows needing review appear before automatically applied rows.
+- Added tests for source-to-status mapping and ordering.
+- Extended the existing Streamlit startup patch so the replacement table gets:
+  - a visible `Status` column;
+  - hidden/internal `review_status` and `review_order` fields;
+  - a compact status summary above the editor;
+  - status values included in report rows where supported by downstream exports.
+
+Important design decision:
+
+- This phase deliberately does not add filters yet.
+- v12.1 only introduces the status model and visible status column.
+- Filters and further table simplification are planned for v12.2 and v12.3.
+
+Testing:
+
+- Added unit tests for `review_status.py`.
+- GitHub Actions status still needs to be checked after this changelog update.
+- Hugging Face app should be checked after sync.
+
+Intentionally not changed:
+
+- No recognizer changes.
+- No new entity types.
+- No MSI/local installer work.
+- No LLM/cloud feature.
+
+---
+
 ## v11.2 — Dutch recognizer integration tests
 
 Status: completed and green in GitHub Actions.
@@ -340,39 +398,28 @@ Important design conclusions:
 
 ---
 
-## Planned next phase — v12 Review UX
+## Planned next phase — v12.2 Review filters
 
 Status: planned, not yet implemented.
 
 Goal:
 
-- Improve the review experience after recognizer and test foundations are stable.
+- Add filters on top of the v12.1 status model.
 
 Planned scope:
 
-- Clear row status:
-  - automatically replaced;
-  - needs review;
-  - manually added;
-  - remembered replacement.
-- Better replacement table layout:
-  - compact default columns;
-  - less technical noise;
-  - clearer Dutch labels.
-- Filters:
-  - show only “controle nodig”;
-  - show only legal references;
-  - show only names/addresses;
-  - show only low-confidence items.
-- Better candidate warnings:
-  - clearly explain that candidates are not automatically replaced unless selected.
-- Hide technical entity types and raw scores by default; keep them available in an advanced/technical view.
+- Show all.
+- Show only `Controle nodig`.
+- Show only legal references.
+- Show only names/addresses.
+- Show only low-confidence items.
+- Keep technical columns hidden by default where possible.
 
-Non-goals for v12:
+Non-goals for v12.2:
 
+- No recognizer changes.
 - No MSI/local desktop packaging yet.
 - No LLM integration.
-- No broad new recognizer families unless required to support the review UX.
 
 ---
 
