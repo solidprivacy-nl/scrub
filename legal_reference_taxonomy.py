@@ -11,6 +11,10 @@ Examples:
 
 All entries are local, deterministic and offline-compatible. They are intended
 for Dutch Legal Strict mode and should be conservative: context is required.
+
+V8 adds vehicle/object reference categories and a separate candidate-review
+strategy. Auto-masking stays conservative; suspicious leftovers can be shown in
+the UI as review candidates instead of silently remaining invisible.
 """
 
 from __future__ import annotations
@@ -28,6 +32,24 @@ class ReferenceCategory(TypedDict):
 
 
 LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
+    {
+        "entity_type": "NL_DOSSIER_NUMBER",
+        "placeholder": "DOSSIERNUMMER",
+        "domain": "general_legal",
+        "score": 0.88,
+        "keywords": [
+            "dossiernummer",
+            "dossiernr",
+            "dossier nr",
+            "ons dossier",
+            "uw dossier",
+            "kantoordossier",
+            "procesdossier",
+            "zaakdossier",
+            "advocaatdossier",
+        ],
+        "examples": ["DOSS/2026/1189", "FAM-2026-88721", "ARB-2026-00421"],
+    },
     {
         "entity_type": "NL_CLIENT_REFERENCE",
         "placeholder": "CLIENT_REFERENTIE",
@@ -297,6 +319,42 @@ LEGAL_REFERENCE_CATEGORIES: List[ReferenceCategory] = [
         ],
         "examples": ["HUUR-2026-8891", "VVE-AMS-2026-04", "OBJ-55091"],
     },
+    {
+        "entity_type": "NL_VEHICLE_REFERENCE",
+        "placeholder": "VOERTUIG_OF_KENTEKENREFERENTIE",
+        "domain": "vehicle_traffic_injury",
+        "score": 0.84,
+        "keywords": [
+            "kenteken",
+            "kentekennummer",
+            "nummerplaat",
+            "voertuigkenteken",
+            "voertuigidentificatie",
+            "voertuigreferentie",
+            "chassisnummer",
+            "vin",
+            "rdw-kenmerk",
+            "leaseautonummer",
+            "wagenparknummer",
+        ],
+        "examples": ["XX123X", "12-ABC-3", "VIN-2026-77812"],
+    },
+    {
+        "entity_type": "NL_OBJECT_REFERENCE",
+        "placeholder": "OBJECTREFERENTIE",
+        "domain": "objects_assets_property",
+        "score": 0.82,
+        "keywords": [
+            "objectreferentie",
+            "objectcode",
+            "inventarisnummer",
+            "assetnummer",
+            "serienummer",
+            "apparaatnummer",
+            "zaakobject",
+        ],
+        "examples": ["OBJ-WOON-55091", "ASSET-2026-4410"],
+    },
 ]
 
 
@@ -311,4 +369,12 @@ WEAK_REFERENCE_KEYWORDS = {
     "referentienummer",
     "referentienr",
 }
+
+# Candidate scanner categories are intentionally not always auto-masked. They
+# are used by candidate_scanner.py to surface suspicious unmasked values in the
+# review table. The user can then decide whether to include them.
+CANDIDATE_ENTITY_TYPES = [
+    "NL_SUSPICIOUS_REFERENCE_CANDIDATE",
+    "NL_POSSIBLE_LICENSE_PLATE",
+]
 
