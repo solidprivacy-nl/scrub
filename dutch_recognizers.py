@@ -1,5 +1,11 @@
 """Dutch / European + Dutch legal recognizers for SolidPrivacy Scrub.
 
+Phase 1-3 v8 update:
+- extends the taxonomy strategy with vehicle/object reference categories;
+- broadens context-bound reference values to include compact values such as
+  "XX123X" after a strong context word like "kenteken";
+- prepares the recognizer layer for a separate audit/candidate review layer.
+
 Phase 1-3 v7 update:
 - adds a central Dutch legal reference taxonomy and contextual reference
   recognizer for client references, school references, invoice numbers,
@@ -127,6 +133,12 @@ LEGAL_IDENTIFIER_CONTEXT = [
     "zaakreferentie",
     "factuurnummer",
     "interne klantreferentie",
+    "kenteken",
+    "kentekennummer",
+    "voertuigreferentie",
+    "chassisnummer",
+    "objectnummer",
+    "assetnummer",
 ]
 
 # Presidio PatternRecognizer uses case-insensitive matching. For names and Dutch
@@ -297,6 +309,12 @@ REFERENCE_VALUE_REGEX = re.compile(
     # WR-KLANT-2026-7712, HRZ-SAM-2026-04, PL1700-20260518-334455.
     r"(?=[A-Z0-9][A-Z0-9./_-]{4,49}\b)(?=[A-Z0-9./_-]*[A-Z])(?=[A-Z0-9./_-]*\d)"
     r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){1,8}"
+    r"|"
+    # Compact context-bound reference values such as XX123X after "kenteken"
+    # or HR2026A after an explicit reference label. These are not used blindly;
+    # DutchContextualReferenceRecognizer only applies them when a taxonomy
+    # keyword is nearby.
+    r"(?=[A-Z0-9]{5,12}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{5,12}"
     r"|"
     # Dutch appellate / court formats like 200.345.678/01 OK.
     r"\d{3}\.\d{3}\.\d{3}/\d{2}\s+[A-Z]{1,5}"
