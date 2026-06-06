@@ -1,5 +1,10 @@
 """Dutch / European + Dutch legal recognizers for SolidPrivacy Scrub.
 
+Phase 1-3 v5 hotfix update:
+- adds value-only rolnummer detection for Dutch court role-number formats
+  with spaced procedure codes such as "CV EXPL 26-9921", while preserving
+  the label/context text.
+
 Phase 1-3 v4 hotfix update:
 - fixes Presidio context-enhancer crash by adding AnalysisExplanation metadata
   to custom capture recognizer results;
@@ -559,11 +564,18 @@ def get_dutch_recognizers(supported_language: str = "en") -> List[EntityRecogniz
             entity="NL_ROLNUMMER",
             patterns=[
                 (
-                    "rolnummer_labeled_value",
+                    "rolnummer_spaced_procedure_code",
+                    # Examples: "rolnummer CV EXPL 26-9921", "rolnr HA ZA 24-123".
+                    # The role/procedure label remains readable; only the actual
+                    # number/code is returned as the sensitive span.
+                    r"\b(?:rolnummer|rolnr\.?|rol\s?nr\.?)\s*(?:is|:|#|-)?\s*(?P<value>(?:[A-Z]{1,5}\s+){1,4}\d{2}[-/]\d{1,6})\b",
+                ),
+                (
+                    "rolnummer_compact_labeled_value",
                     r"\b(?:rolnummer|rolnr\.?|rol\s?nr\.?)\s*(?:is|:|#|-)?\s*(?P<value>[A-Z0-9]{1,8}[-_/][A-Z0-9]{2,12}(?:[-_/][A-Z0-9]{1,12})?)\b",
                 ),
             ],
-            score=0.84,
+            score=0.86,
             context=["rolnummer", "rolnr", "civiel", "procedure"],
             supported_language=supported_language,
         ),
