@@ -1,5 +1,12 @@
 """Dutch / European + Dutch legal recognizers for SolidPrivacy Scrub.
 
+Phase 1-3 v7 update:
+- adds a central Dutch legal reference taxonomy and contextual reference
+  recognizer for client references, school references, invoice numbers,
+  internal references, administrative references and domain-specific
+  reference codes;
+- keeps context words readable and masks only the sensitive reference value.
+
 Phase 1-3 v5 hotfix update:
 - adds value-only rolnummer detection for Dutch court role-number formats
   with spaced procedure codes such as "CV EXPL 26-9921", while preserving
@@ -26,6 +33,12 @@ from __future__ import annotations
 
 import re
 from typing import Iterable, List, Sequence, Tuple
+
+from legal_reference_taxonomy import (
+    LEGAL_REFERENCE_CATEGORIES,
+    REFERENCE_ENTITY_TYPES,
+    WEAK_REFERENCE_KEYWORDS,
+)
 
 from presidio_analyzer import AnalysisExplanation, EntityRecognizer, Pattern, PatternRecognizer, RecognizerResult
 
@@ -57,6 +70,7 @@ DUTCH_LEGAL_ENTITY_NAMES = [
     "NL_INSURANCE_CLAIM_NUMBER",
     "NL_LEGAL_PARTY_NAME",
     "NL_COURT_OR_AUTHORITY",
+    *REFERENCE_ENTITY_TYPES,
 ]
 
 DUTCH_ENTITY_NAMES = DUTCH_GENERAL_ENTITY_NAMES + DUTCH_LEGAL_ENTITY_NAMES
@@ -106,6 +120,13 @@ LEGAL_IDENTIFIER_CONTEXT = [
     "pv-nummer",
     "schadenummer",
     "polisnummer",
+    "cliëntnummer",
+    "clientnummer",
+    "klantnummer",
+    "schoolreferentie",
+    "zaakreferentie",
+    "factuurnummer",
+    "interne klantreferentie",
 ]
 
 # Presidio PatternRecognizer uses case-insensitive matching. For names and Dutch
@@ -267,6 +288,168 @@ class RegexCaptureRecognizer(EntityRecognizer):
                         },
                     )
                 )
+        return results
+
+
+REFERENCE_VALUE_REGEX = re.compile(
+    r"\b(?:"
+    # Common uppercase/legal admin codes: CL-FAM-55201, FACT-2026-4481,
+    # WR-KLANT-2026-7712, HRZ-SAM-2026-04, PL1700-20260518-334455.
+    r"(?=[A-Z0-9][A-Z0-9./_-]{4,49}\b)(?=[A-Z0-9./_-]*[A-Z])(?=[A-Z0-9./_-]*\d)"
+    r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){1,8}"
+    r"|"
+    # Dutch appellate / court formats like 200.345.678/01 OK.
+    r"\d{3}\.\d{3}\.\d{3}/\d{2}\s+[A-Z]{1,5}"
+    r"|"
+    # Case references with procedure blocks, e.g. 10598721 / UE VERZ 26-441.
+    r"\d{6,9}\s*/\s*(?:[A-Z]{1,5}\s+){1,4}\d{2}[-/]\d{1,6}"
+    r")\b"
+)
+
+
+def _keyword_to_regex(keyword: str) -> str:
+    """Turn a taxonomy keyword into a forgiving but bounded regex."""
+    escaped = re.escape(keyword.strip())
+    escaped = escaped.replace(r"\ ", r"[ \t]+")
+    # Allow optional punctuation after common abbreviations by keeping dots literal
+    # where the taxonomy includes them, but still use word-ish boundaries around
+    # the phrase so "kenmerk" does not match inside another word.
+    return rf"(?<!\w){escaped}(?!\w)"
+
+
+def _next_line_or_sentence_end(text: str, start: int, max_chars: int = 120) -> int:
+    """Return a local search boundary after a context keyword.
+
+    Reference values are usually on the same line or in the same short phrase.
+    Keeping a short boundary prevents the recognizer from swallowing remote codes
+    later in the paragraph.
+    """
+    hard_end = min(len(text), start + max_chars)
+    candidates = [hard_end]
+    for sep in ["\n", "\r", ";"]:
+        idx = text.find(sep, start, hard_end)
+        if idx != -1:
+            candidates.append(idx)
+    # A full stop may be part of appellate numbers (200.345.678/01 OK), so only
+    # use it as a boundary when it appears after a reasonable distance.
+    dot = text.find(".", start, hard_end)
+    if dot != -1 and dot - start > 25:
+        candidates.append(dot)
+    return min(candidates)
+
+
+def _is_negative_reference_value(value: str) -> bool:
+    candidate = (value or "").strip()
+    if not candidate:
+        return True
+    if _looks_like_date(candidate) or _looks_like_amount(candidate):
+        return True
+    if re.fullmatch(r"\d{1,2}[.:]\d{2}", candidate):
+        return True
+    # Legal article references must remain readable and should not be treated as
+    # matter references merely because they contain numbers and separators.
+    if re.fullmatch(r"\d{1,2}:\d{1,4}[a-z]?", candidate, flags=re.IGNORECASE):
+        return True
+    if re.fullmatch(r"[1-9][0-9]{3}\s?[A-Z]{2}", candidate):
+        return True
+    return False
+
+
+def _is_strong_reference_value(value: str) -> bool:
+    candidate = (value or "").strip()
+    separators = sum(candidate.count(ch) for ch in "-_/.")
+    has_letters = bool(re.search(r"[A-Z]", candidate))
+    has_digits = bool(re.search(r"\d", candidate))
+    return has_letters and has_digits and (separators >= 2 or len(candidate) >= 9)
+
+
+class DutchContextualReferenceRecognizer(EntityRecognizer):
+    """Recognize Dutch legal/admin reference values using context taxonomy.
+
+    This is deliberately not a blind uppercase-code recognizer. It only returns a
+    value when a legal/administrative context word is nearby. The context word is
+    preserved and only the value span is returned.
+    """
+
+    def __init__(self, supported_language: str = "en") -> None:
+        super().__init__(
+            supported_entities=REFERENCE_ENTITY_TYPES,
+            supported_language=supported_language,
+            name="DutchContextualReferenceRecognizer",
+        )
+        self.categories = LEGAL_REFERENCE_CATEGORIES
+
+    def load(self) -> None:
+        return None
+
+    def analyze(self, text: str, entities: List[str], nlp_artifacts=None) -> List[RecognizerResult]:
+        wanted = set(entities or REFERENCE_ENTITY_TYPES)
+        results: List[RecognizerResult] = []
+        seen = set()
+        source_text = text or ""
+
+        for category in self.categories:
+            entity_type = category["entity_type"]
+            if entity_type not in wanted:
+                continue
+            base_score = float(category.get("score", 0.76))
+            for keyword in category.get("keywords", []):
+                keyword_pattern = re.compile(_keyword_to_regex(keyword), flags=re.IGNORECASE | re.MULTILINE)
+                for keyword_match in keyword_pattern.finditer(source_text):
+                    search_start = keyword_match.end()
+                    search_end = _next_line_or_sentence_end(source_text, search_start)
+                    local_text = source_text[search_start:search_end]
+                    value_match = REFERENCE_VALUE_REGEX.search(local_text)
+                    if not value_match:
+                        continue
+
+                    start = search_start + value_match.start()
+                    end = search_start + value_match.end()
+                    value = source_text[start:end].strip()
+                    trim_left = len(source_text[start:end]) - len(source_text[start:end].lstrip(" \t:=-#"))
+                    trim_right = len(source_text[start:end]) - len(source_text[start:end].rstrip(" \t.,;:"))
+                    start += trim_left
+                    if trim_right:
+                        end -= trim_right
+                    value = source_text[start:end]
+
+                    if start >= end or _is_negative_reference_value(value):
+                        continue
+
+                    score = base_score
+                    if keyword.lower() in WEAK_REFERENCE_KEYWORDS and not _is_strong_reference_value(value):
+                        score = max(0.55, score - 0.16)
+                    elif keyword.lower() in WEAK_REFERENCE_KEYWORDS:
+                        score = max(0.68, score - 0.06)
+
+                    key = (entity_type, start, end)
+                    if key in seen:
+                        continue
+                    seen.add(key)
+
+                    explanation = AnalysisExplanation(
+                        recognizer=self.name,
+                        original_score=score,
+                        pattern_name=f"taxonomy_keyword:{keyword}",
+                        pattern=REFERENCE_VALUE_REGEX.pattern,
+                        textual_explanation=(
+                            f"Detected Dutch legal/admin reference value after context keyword '{keyword}'. "
+                            "Only the value span is returned so the legal context remains readable."
+                        ),
+                    )
+                    results.append(
+                        RecognizerResult(
+                            entity_type=entity_type,
+                            start=start,
+                            end=end,
+                            score=score,
+                            analysis_explanation=explanation,
+                            recognition_metadata={
+                                RecognizerResult.RECOGNIZER_NAME_KEY: self.name,
+                                RecognizerResult.RECOGNIZER_IDENTIFIER_KEY: getattr(self, "id", self.name),
+                            },
+                        )
+                    )
         return results
 
 
@@ -675,5 +858,8 @@ def get_dutch_recognizers(supported_language: str = "en") -> List[EntityRecogniz
             supported_language=supported_language,
         ),
     ]
+
+
+    legal_recognizers.append(DutchContextualReferenceRecognizer(supported_language=supported_language))
 
     return general_recognizers + legal_recognizers
