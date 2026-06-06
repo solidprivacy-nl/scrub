@@ -51,20 +51,32 @@ class Candidate:
 # Broad value shapes used only after a context cue has been found.
 # This catches values like CL-FAM-55201, WR-KLANT-2026-7712, FACT-2026-4481,
 # DOSS/2026/1189 and compact context-bound values such as XX123X after "kenteken".
-CONTEXTUAL_VALUE_RE = re.compile(
-    r"\b(?:"
-    r"(?=[A-Z0-9][A-Z0-9./_-]{4,49}\b)(?=[A-Z0-9./_-]*[A-Z])(?=[A-Z0-9./_-]*\d)"
-    r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){0,8}"
-    r"|"
-    r"\d{3}\.\d{3}\.\d{3}/\d{2}\s+[A-Z]{1,5}"
-    r")\b"
+CASE_NUMBER_VALUE_RE_PART = (
+    r"(?:"
+    r"C/\d{2}/\d{5,6}\s*/\s*(?:[A-Z]{1,5}\s+){1,4}\d{2}[-/]\d{1,6}"
+    r"|\d{6,9}\s*/\s*(?:[A-Z]{1,5}\s+){1,4}\d{2}[-/]\d{1,6}"
+    r"|[A-Z]{2,5}\s+\d{2}/\d{1,6}"
+    r"|NL\d{2}\.\d{3,8}"
+    r"|\d{3}\.\d{3}\.\d{3}/\d{2}\s+[A-Z]{1,5}"
+    r")"
 )
+
+GENERIC_CONTEXTUAL_VALUE_RE_PART = (
+    r"(?:"
+    r"(?=[A-Z0-9][A-Z0-9./_-]{4,59}\b)(?=[A-Z0-9./_-]*[A-Z])(?=[A-Z0-9./_-]*\d)"
+    r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){0,10}"
+    r"|"
+    r"(?=[A-Z0-9]{5,12}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{5,12}"
+    r")"
+)
+
+CONTEXTUAL_VALUE_RE = re.compile(r"\b(?:" + CASE_NUMBER_VALUE_RE_PART + r"|" + GENERIC_CONTEXTUAL_VALUE_RE_PART + r")\b")
 
 # Stand-alone suspicious codes. These are shown as candidates only when they are
 # not already detected and not obviously a date/article/amount.
 STANDALONE_CODE_RE = re.compile(
-    r"\b(?=[A-Z0-9][A-Z0-9./_-]{5,49}\b)(?=[A-Z0-9./_-]*[A-Z])(?=[A-Z0-9./_-]*\d)"
-    r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){1,8}\b"
+    r"\b(?=[A-Z0-9][A-Z0-9./_-]{5,59}\b)(?=[A-Z0-9./_-]*[A-Z])(?=[A-Z0-9./_-]*\d)"
+    r"[A-Z0-9]+(?:[./_-][A-Z0-9]+){1,10}\b"
 )
 
 DUTCH_PLATE_CONTEXT = {
@@ -190,6 +202,10 @@ def _placeholder_for(entity_type: str) -> str:
         "NL_POSSIBLE_LICENSE_PLATE": "<MOGELIJK_KENTEKEN>",
         "NL_VEHICLE_REFERENCE": "<VOERTUIG_OF_KENTEKENREFERENTIE>",
         "NL_OBJECT_REFERENCE": "<OBJECTREFERENTIE>",
+        "NL_INCIDENT_NUMBER": "<INCIDENTNUMMER>",
+        "NL_CLAIM_NUMBER": "<CLAIMNUMMER>",
+        "NL_OTHER_REFERENCE": "<OVERIGE_REFERENTIE>",
+        "NL_LEGAL_CASE_NUMBER": "<ZAAKNUMMER>",
     }
     for category in LEGAL_REFERENCE_CATEGORIES:
         if category.get("entity_type") == entity_type:
@@ -234,7 +250,7 @@ def scan_unmasked_candidates(text: str, analyzer_results=None, max_candidates: i
     for category in LEGAL_REFERENCE_CATEGORIES:
         entity_type = category.get("entity_type", "NL_CONTEXTUAL_REFERENCE")
         keywords = category.get("keywords", [])
-        base_score = min(float(category.get("score", 0.70)), 0.74)
+        base_score = max(0.50, float(category.get("score", 0.70)) - 0.10)
         for keyword in keywords:
             for kw_match in _keyword_regex(keyword).finditer(source):
                 search_start = kw_match.end()
