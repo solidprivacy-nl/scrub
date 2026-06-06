@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: sync-to-huggingface
+  cancel-in-progress: true
+
 jobs:
   sync-to-huggingface:
     name: Sync GitHub main to Hugging Face Space
@@ -14,12 +18,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Sync to Hugging Face Space
-        uses: huggingface/hub-sync@v0.1.0
         with:
-          github_repo_id: solidprivacy-nl/scrub
-          huggingface_repo_id: solidprivacy/scrub
-          repo_type: space
-          space_sdk: docker
-          hf_token: ${{ secrets.HF_TOKEN }}
+          fetch-depth: 0
+
+      - name: Push main to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git remote add huggingface "https://hf:${HF_TOKEN}@huggingface.co/spaces/solidprivacy/scrub"
+          git push --force huggingface HEAD:main
