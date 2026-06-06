@@ -1,5 +1,10 @@
 """Streamlit app for SolidPrivacy Scrub / Microsoft Presidio.
 
+Phase 1-3 v8 update:
+- adds an Audit & Candidate Review layer for suspicious values not automatically masked;
+- keeps candidate values unchecked by default, so the user decides whether to include them;
+- supports a structured observation workflow instead of one-off after-the-fact patches.
+
 Phase 1-3 update:
 - Dutch Legal Strict recognition profile;
 - Dutch legal test examples;
@@ -46,6 +51,12 @@ from replacement_memory import (
     clear_remembered_replacements,
     get_memory_file_path,
 )
+
+try:
+    from candidate_scanner import scan_unmasked_candidates
+except Exception:
+    def scan_unmasked_candidates(text, analyzer_results=None, max_candidates=50):
+        return []
 
 try:
     from dutch_recognizers import (
@@ -367,7 +378,8 @@ if st_recognition_profile == "Dutch Legal Strict":
     st.info(
         "Dutch Legal Strict mode is active. The app adds Dutch/EU recognizers plus legal/matter identifiers: "
         "zaaknummer, rolnummer, rekestnummer, parketnummer, dossiernummer, cliëntnummer, CJIB, ECLI, "
-        "legal party references and court/authority references. Always review the editable replacement table."
+        "legal party references and court/authority references. It also shows possible unmasked "
+        "reference candidates for review. Always review the editable replacement table."
     )
 elif st_recognition_profile == "Dutch / EU":
     st.info(
@@ -507,13 +519,41 @@ try:
             st.text_area(label="De-identified", value=st_anonymize_results.text, height=400)
 
         _, report_rows = build_placeholder_replacements(st_text, st_analyze_results)
+        candidate_rows = []
+        if st_recognition_profile == "Dutch Legal Strict":
+            candidate_rows = scan_unmasked_candidates(st_text, st_analyze_results, max_candidates=50)
 
         st.divider()
         st.subheader("Review replacement table before export")
         st.caption(
             "Untick false positives, change placeholders, add your own word pairs, "
-            "and tick Remember for pairs you want to reuse in future documents."
+            "and tick Remember for pairs you want to reuse in future documents. "
+            "Candidate rows are suggestions and are unchecked by default."
         )
+
+        if st_recognition_profile == "Dutch Legal Strict":
+            with st.expander("Audit: possible unmasked candidates", expanded=bool(candidate_rows)):
+                if candidate_rows:
+                    st.warning(
+                        "These values were not automatically masked, but look like possible legal/admin references. "
+                        "They are added to the review table below as unchecked suggestions."
+                    )
+                    candidate_display_df = pd.DataFrame(candidate_rows)
+                    candidate_display_df = candidate_display_df[
+                        ["entity_type", "text", "placeholder", "score", "reason", "context"]
+                    ].rename(
+                        columns={
+                            "entity_type": "Candidate type",
+                            "text": "Text",
+                            "placeholder": "Suggested replacement",
+                            "score": "Score",
+                            "reason": "Reason",
+                            "context": "Nearby context",
+                        }
+                    )
+                    st.dataframe(candidate_display_df, use_container_width=True)
+                else:
+                    st.success("No suspicious unmasked reference candidates found by the audit layer.")
 
         remembered_rows = load_remembered_replacements()
         default_editor_rows = []
@@ -532,6 +572,9 @@ try:
                     "replace_with": replace_with,
                     "entity_type": row.get("entity_type", "REMEMBERED"),
                     "score": None,
+                    "source": "remembered",
+                    "reason": "Saved reusable replacement",
+                    "context": "",
                 }
             )
             seen_find_values.add(find_text)
@@ -548,8 +591,30 @@ try:
                     "replace_with": row.get("placeholder", ""),
                     "entity_type": row.get("entity_type", ""),
                     "score": row.get("score", None),
+                    "source": "detected",
+                    "reason": "Automatically detected by recognizer",
+                    "context": "",
                 }
             )
+
+        for candidate in candidate_rows:
+            find_text = str(candidate.get("text", "")).strip()
+            if not find_text or find_text in seen_find_values:
+                continue
+            default_editor_rows.append(
+                {
+                    "include": False,
+                    "remember": False,
+                    "find": find_text,
+                    "replace_with": candidate.get("placeholder", "<MOGELIJKE_REFERENTIE>"),
+                    "entity_type": candidate.get("entity_type", "NL_SUSPICIOUS_REFERENCE_CANDIDATE"),
+                    "score": candidate.get("score", None),
+                    "source": "candidate",
+                    "reason": candidate.get("reason", "Possible unmasked value"),
+                    "context": candidate.get("context", ""),
+                }
+            )
+            seen_find_values.add(find_text)
 
         if not default_editor_rows:
             default_editor_rows = [
@@ -560,6 +625,9 @@ try:
                     "replace_with": "",
                     "entity_type": "MANUAL",
                     "score": None,
+                    "source": "manual",
+                    "reason": "Manual replacement row",
+                    "context": "",
                 }
             ]
 
@@ -569,7 +637,7 @@ try:
             hide_index=True,
             num_rows="dynamic",
             use_container_width=True,
-            column_order=["include", "remember", "find", "replace_with", "entity_type", "score"],
+            column_order=["include", "remember", "find", "replace_with", "entity_type", "score", "source", "reason", "context"],
             column_config={
                 "include": st.column_config.CheckboxColumn(
                     "Use", help="Untick to exclude this replacement from the export.", default=True
@@ -587,7 +655,16 @@ try:
                     "Entity type", help="Presidio entity type or MANUAL."
                 ),
                 "score": st.column_config.NumberColumn(
-                    "Score", help="Presidio confidence score, if available.", format="%.3f"
+                    "Score", help="Presidio/candidate confidence score, if available.", format="%.3f"
+                ),
+                "source": st.column_config.TextColumn(
+                    "Source", help="detected, candidate, remembered or manual."
+                ),
+                "reason": st.column_config.TextColumn(
+                    "Reason", help="Why this row was suggested or detected."
+                ),
+                "context": st.column_config.TextColumn(
+                    "Nearby context", help="Nearby text for candidate-review rows."
                 ),
             },
             key="replacement_editor",
@@ -634,6 +711,8 @@ try:
                     "detected_text": find_text,
                     "placeholder": replace_text,
                     "score": score if score is not None else "",
+                    "source": safe_cell(row.get("source", "")),
+                    "reason": safe_cell(row.get("reason", "")),
                 }
             )
 
