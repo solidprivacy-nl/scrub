@@ -1,5 +1,9 @@
 """Dutch / European + Dutch legal recognizers for SolidPrivacy Scrub.
 
+Phase 1-3 v4 hotfix update:
+- fixes Presidio context-enhancer crash by adding AnalysisExplanation metadata
+  to custom capture recognizer results;
+
 Phase 1-3 v3 update:
 - tightens legal-party name spans so role/context words such as "slachtoffer",
   "minderjarige", "verzoeker" and "verweerder" are preserved;
@@ -18,7 +22,7 @@ from __future__ import annotations
 import re
 from typing import Iterable, List, Sequence, Tuple
 
-from presidio_analyzer import EntityRecognizer, Pattern, PatternRecognizer, RecognizerResult
+from presidio_analyzer import AnalysisExplanation, EntityRecognizer, Pattern, PatternRecognizer, RecognizerResult
 
 
 DUTCH_GENERAL_ENTITY_NAMES = [
@@ -234,12 +238,28 @@ class RegexCaptureRecognizer(EntityRecognizer):
                 if start >= end:
                     continue
 
+                explanation = AnalysisExplanation(
+                    recognizer=self.name,
+                    original_score=self.score,
+                    pattern_name=_name,
+                    pattern=pattern.pattern,
+                    textual_explanation=(
+                        f"Detected by `{self.name}` using capture-group pattern `{_name}`; "
+                        "only the named value span is returned so Dutch legal context remains readable."
+                    ),
+                )
+
                 results.append(
                     RecognizerResult(
                         entity_type=self.entity,
                         start=start,
                         end=end,
                         score=self.score,
+                        analysis_explanation=explanation,
+                        recognition_metadata={
+                            RecognizerResult.RECOGNIZER_NAME_KEY: self.name,
+                            RecognizerResult.RECOGNIZER_IDENTIFIER_KEY: getattr(self, "id", self.name),
+                        },
                     )
                 )
         return results
