@@ -1,5 +1,6 @@
 APP_TITLE = "Scrub Legal"
 APP_SUBTITLE = "Lokale juridische documentcontrole"
+APP_VERSION = "v9.1"
 APP_INTRO = (
     "Schoon processtukken, brieven en juridische notities op voordat je ze deelt "
     "of gebruikt in AI-tools. Scrub zoekt namen, adressen, zaaknummers, "
@@ -17,7 +18,7 @@ PROFILE_HELP = (
 PROFILE_DESCRIPTIONS = {
     "Juridische controle — streng": (
         "Extra herkenning voor zaaknummers, rolnummers, parketnummers, dossiernummers, "
-        "clientreferenties, ECLI's, claimnummers, incidentnummers en andere juridische of "
+        "cliëntreferenties, ECLI's, claimnummers, incidentnummers en andere juridische of "
         "administratieve verwijzingen. Ook worden mogelijke gemiste referenties apart getoond."
     ),
     "Algemene Nederlandse controle": (
