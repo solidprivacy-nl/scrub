@@ -283,11 +283,9 @@ Outcome:
 
 ---
 
-## Active / next recommended workpackage
+### WP7A / WP7B — v13.3 Deterministic reinsert helper
 
-### WP7A — v13.3 Deterministic reinsert helper, pure helper and tests
-
-Status: implemented; awaiting GitHub Actions and Hugging Face sync.
+Status: implemented; awaiting coordinator verification of Actions/sync.
 
 Implemented files:
 
@@ -296,6 +294,8 @@ Implemented files:
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `handover/workpackages/20260607_1745_v13_3_reinsert_helper.md`
+- `handover/workpackages/20260607_1815_v13_3_reinsert_helper.md`
+- `handover/workpackages/20260607_1830_v13_3_reinsert_helper_closeout.md`
 
 Implemented helper behavior:
 
@@ -315,14 +315,16 @@ Implemented tests:
 
 Validation status:
 
-- Local targeted validation in this worker environment passed on the available/reconstructed subset:
+- Local targeted validation in the implementation worker environment passed on the available/reconstructed subset:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
-- GitHub Actions pending for WP7A.
-- Hugging Face sync pending for WP7A.
+- GitHub Actions: not visible through connector during WP7B closeout; coordinator verification required.
+- Hugging Face sync: not visible through connector during WP7B closeout; coordinator verification required.
+- App verification: not applicable for this helper-only package.
 
 Boundaries preserved:
 
-- No UI files changed by this worker.
+- No code files changed in WP7B closeout.
+- No UI files changed in WP7A/WP7B.
 - No direct edit to `presidio_streamlit.py`.
 - No direct edit to `fix_streamlit_nested_expanders.py`.
 - No AI calls.
@@ -334,15 +336,13 @@ Boundaries preserved:
 
 Next step:
 
-- Verify GitHub Actions and Hugging Face sync for WP7A.
-- After green checks, plan a separate WP7B closeout.
-- Only after helper verification, consider a separate v13.3 UI workpackage.
+- Coordinator should verify GitHub Actions and Hugging Face sync for `07d33ca` or the latest closeout commit.
+- Only after verification, plan v13.3 reinsert UI as a separate workpackage.
 
 ---
 
 ## Recommended execution order
 
-1. Verify WP7A helper tests and sync.
-2. Close WP7A after external verification.
-3. Plan UI integration separately, with no AI-output flow unless explicitly approved.
-4. Keep AI-output workflow separate and explicitly reviewed before UI integration.
+1. Coordinator verifies WP7A/WP7B Actions and sync.
+2. Only after deterministic reinsert is stable, consider a separate v13.3 UI workpackage.
+3. Keep AI-output workflow separate and explicitly reviewed before UI integration.
