@@ -12,6 +12,7 @@ Patches currently applied:
 - v12.4: add clear review guidance text around the review workflow.
 - v12.5: show a final review summary before download/export.
 - v12.6: show advisory export sanity warnings before download/export.
+- v13.1: add local Scrub Key JSON export after review.
 """
 
 from pathlib import Path
@@ -43,6 +44,13 @@ nested_new = '''    st.markdown("**Woordenlijsten**")
 '''
 
 text = replace_once(text, nested_old, nested_new)
+
+# v13.1: timestamp Scrub Key mappings in the UI/export layer, not inside the pure model.
+text = replace_once(
+    text,
+    'from pathlib import Path\n',
+    'from pathlib import Path\nfrom datetime import datetime, timezone\n',
+)
 
 # v12.1/v12.2/v12.3/v12.4/v12.5: import review helpers.
 text = replace_once(
@@ -139,6 +147,14 @@ text = replace_once(
     'from review_summary import build_review_summary, review_summary_markdown\n',
     'from review_summary import build_review_summary, review_summary_markdown\n'
     'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n',
+)
+
+# v13.1: import Scrub Key JSON export helpers.
+text = replace_once(
+    text,
+    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n',
+    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n'
+    'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n',
 )
 
 # v12.1: add review status fields to remembered rows.
@@ -351,10 +367,31 @@ review_summary_block = '''        st.subheader("4. Download opgeschoonde bestand
         for export_sanity_warning in export_sanity_warnings(export_sanity_checks):
             st.warning(export_sanity_warning)
         st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
+        st.markdown("**Scrub Key (JSON)**")
+        st.warning("Let op: een Scrub Key maakt de vervangen waarden lokaal herleidbaar. Dit is pseudonimisering, geen volledige anonimisering. Deel deze sleutel niet met AI-diensten of derden tenzij dat bewust en toegestaan is.")
+        scrub_key_rows = edited_replacements_df.copy()
+        scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        if "timestamp" not in scrub_key_rows.columns:
+            scrub_key_rows["timestamp"] = scrub_key_timestamp
+        else:
+            scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
+        scrub_key = build_scrub_key(scrub_key_rows)
+        scrub_key_issues = validate_scrub_key(scrub_key)
+        if scrub_key_issues:
+            st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
+        else:
+            if scrub_key.get("item_count", 0) == 0:
+                st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")
+            st.download_button(
+                "Download Scrub Key (.json)",
+                data=scrub_key_to_json(scrub_key),
+                file_name="solidprivacy_scrub_key.json",
+                mime="application/json",
+            )
         st.warning(EXPORT_GUIDANCE)
 '''
 
-# v12.5/v12.6: add final review summary and advisory export sanity warnings before downloads.
+# v12.5/v12.6/v13.1: add final review summary, advisory export sanity warnings and Scrub Key JSON export.
 # Handle both unpatched and v12.4-patched app text.
 text = replace_once(
     text,
@@ -383,6 +420,38 @@ text = replace_once(
         for export_sanity_warning in export_sanity_warnings(export_sanity_checks):
             st.warning(export_sanity_warning)
         st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
+        st.warning(EXPORT_GUIDANCE)
+''',
+)
+
+# v13.1: extend an existing v12.6 block with Scrub Key JSON export.
+text = replace_once(
+    text,
+    '''        st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
+        st.warning(EXPORT_GUIDANCE)
+''',
+    '''        st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
+        st.markdown("**Scrub Key (JSON)**")
+        st.warning("Let op: een Scrub Key maakt de vervangen waarden lokaal herleidbaar. Dit is pseudonimisering, geen volledige anonimisering. Deel deze sleutel niet met AI-diensten of derden tenzij dat bewust en toegestaan is.")
+        scrub_key_rows = edited_replacements_df.copy()
+        scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        if "timestamp" not in scrub_key_rows.columns:
+            scrub_key_rows["timestamp"] = scrub_key_timestamp
+        else:
+            scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
+        scrub_key = build_scrub_key(scrub_key_rows)
+        scrub_key_issues = validate_scrub_key(scrub_key)
+        if scrub_key_issues:
+            st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
+        else:
+            if scrub_key.get("item_count", 0) == 0:
+                st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")
+            st.download_button(
+                "Download Scrub Key (.json)",
+                data=scrub_key_to_json(scrub_key),
+                file_name="solidprivacy_scrub_key.json",
+                mime="application/json",
+            )
         st.warning(EXPORT_GUIDANCE)
 ''',
 )
