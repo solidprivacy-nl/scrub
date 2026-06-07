@@ -26,6 +26,57 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v12.6 — Export sanity checks UI integration
+
+Status: UI integration implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Purpose:
+
+- Show advisory export sanity warnings near the final review/download section.
+- Make remaining review risk visible before the user downloads files.
+- Preserve existing export/download behavior.
+- Keep the warnings advisory only.
+
+Files added or changed:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_export_sanity_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1445_v12_6_export_sanity_ui.md`
+
+Main changes:
+
+- Integrated the existing `export_sanity.py` helper into the Streamlit startup patch flow.
+- Added UI text for `Extra exportcontrole` near the existing v12.5 `Eindcontrole vóór download` block.
+- The UI can show advisory warnings for:
+  - unchecked `Controle nodig` rows;
+  - candidate rows not included;
+  - no replacements selected;
+  - user review still required;
+  - export not guaranteeing full anonymization.
+- Added a patch-level test file to guard that the export sanity helper is wired into the UI patch.
+
+Testing and verification:
+
+- `tests/test_export_sanity_ui_patch.py` was added.
+- The WP3B worker could not run pytest locally from the connector environment.
+- Earlier helper validation was reconciled by the coordinator: `Tests #58` green and `Sync to Hugging Face Space #72` green for commit `b0bf8ae`.
+- GitHub Actions and Hugging Face sync for the UI integration commits still need coordinator verification.
+- Hugging Face app verification is still required: confirm `Extra exportcontrole` appears before downloads and downloads remain available.
+
+Intentionally not changed:
+
+- No direct edit to `presidio_streamlit.py`.
+- No export/download blocking.
+- No change to which rows are included in export.
+- No change to TXT, CSV, DOCX or PDF download logic.
+- No Scrub Key logic added.
+- No reinsert workflow added.
+- No cloud processing introduced.
+
+---
+
 ## WP Status Reconciliation — WP3/WP4 verification evidence
 
 Status: reconciliation completed; GitHub Actions and Hugging Face sync could not be independently confirmed through the connector.
@@ -37,36 +88,12 @@ Purpose:
   - v13.0 Scrub Key commits, especially `d65364373e4d3612044d8688ac17e11de81c07e5`.
 - Update project control files without changing code or UI behavior.
 
-Verification attempted:
-
-- WP3/v12.6 commits checked:
-  - `5342e0eef663817036e91f823b4389b338b9223c` — Add v12.6 export sanity helper.
-  - `704ae03788702ce33263343743a69f8139f16319` — Add v12.6 export sanity tests.
-  - `869e3804edf04e0cbdf7ab69b034e7bc707de8c3` — Update workpackage status for export sanity helper.
-  - `4d721e3aed3bf28cfdaeb096c0e9cd227885f1a6` — Add v12.6 export sanity handover.
-- WP4/v13.0 target commit checked:
-  - `d65364373e4d3612044d8688ac17e11de81c07e5` — Record v13.0 Scrub Key model in changelog.
-
-Connector findings:
-
-- GitHub combined status returned `statuses: []` for checked WP3 commits.
-- Commit workflow-run lookup returned `workflow_runs: []` for checked WP3 commits.
-- GitHub combined status returned `statuses: []` for `d65364373e4d3612044d8688ac17e11de81c07e5`.
-- Commit workflow-run lookup returned `workflow_runs: []` for `d65364373e4d3612044d8688ac17e11de81c07e5`.
-- Because of this, this worker did not mark Actions/sync as green.
-
 Recorded repo evidence:
 
 - WP3 handover records local targeted validation:
   - `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
 - WP4 changelog records local targeted validation:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1425_wp3_wp4_status_reconciliation.md`
 
 Intentionally not changed:
 
@@ -76,15 +103,11 @@ Intentionally not changed:
 - No export semantics.
 - No Hugging Face app behavior.
 
-Next step:
-
-- Coordinator should verify the latest GitHub Actions `Tests` and GitHub to Hugging Face sync in the GitHub UI, because the connector did not expose workflow-run evidence for these commits.
-
 ---
 
 ## v13.0 — Scrub Key specification and pure model
 
-Status: implemented; local targeted tests passed; GitHub Actions and Hugging Face sync not independently confirmed by this worker.
+Status: implemented; coordinator later showed `Tests #56` green and `Sync #70` green for commit `d653643`.
 
 Purpose:
 
@@ -119,7 +142,7 @@ Main changes:
 - Added required safety language explaining that a Scrub Key makes scrubbed text reversible.
 - Explicitly classified the Scrub Key model as pseudonymization, not full anonymization.
 - Added local/protected key handling guidance and external-AI sharing warning.
-- Added a deterministic pure helper model:
+- Added deterministic pure helpers:
   - `build_scrub_key(rows, document_label=None)`;
   - `scrub_key_to_json(scrub_key)`;
   - `scrub_key_from_json(text)`;
@@ -131,14 +154,13 @@ Testing:
 
 - Added `tests/test_scrub_key.py`.
 - Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-- Tests cover valid key creation, excluded-row omission, required fields, JSON roundtrip, validation errors, and synthetic Dutch legal examples only.
-- Connector check attempted for commit `d65364373e4d3612044d8688ac17e11de81c07e5`, but no check/status evidence was exposed.
+- Coordinator evidence later confirmed GitHub Actions and Hugging Face sync green for `d653643`.
 
 Intentionally not changed:
 
 - No direct edit to `presidio_streamlit.py`.
-- No direct edit to `fix_streamlit_nested_expanders.py`.
-- No export/download buttons.
+- No direct edit to `fix_streamlit_nested_expanders.py` for v13.
+- No export/download buttons for Scrub Key yet.
 - No reinsert UI.
 - No cloud processing.
 - No secret storage.
@@ -149,7 +171,7 @@ Intentionally not changed:
 
 ## v12.6 — Export sanity checks helper and tests
 
-Status: helper implemented; local targeted tests passed; GitHub Actions and Hugging Face sync not independently confirmed by this worker.
+Status: helper implemented; coordinator reconciled helper verification as green before UI integration.
 
 Purpose:
 
@@ -188,12 +210,12 @@ Testing:
 - Added `tests/test_export_sanity.py`.
 - Local targeted validation passed in the WP3 handover:
   - `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
-- Connector check attempted for WP3 commits `5342e0eef663817036e91f823b4389b338b9223c`, `704ae03788702ce33263343743a69f8139f16319`, `869e3804edf04e0cbdf7ab69b034e7bc707de8c3`, and `4d721e3aed3bf28cfdaeb096c0e9cd227885f1a6`, but no check/status evidence was exposed.
+- Coordinator later reconciled helper verification: `Tests #58` green and `Sync to Hugging Face Space #72` green for commit `b0bf8ae`.
 
 Intentionally not changed:
 
 - No direct edit to `presidio_streamlit.py`.
-- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No direct edit to `fix_streamlit_nested_expanders.py` in the helper-only phase.
 - No change to `review_summary.py`.
 - No export/download blocking.
 - No change to which rows are included in export.
@@ -226,15 +248,7 @@ Files added or changed:
 Main changes:
 
 - Added a pure helper that accepts review rows as dictionaries or DataFrame-like records.
-- Added summary counts for:
-  - total rows;
-  - automatically detected rows;
-  - rows needing review;
-  - manually added rows;
-  - remembered replacement rows;
-  - checked rows included in export;
-  - unchecked rows excluded from export;
-  - open unchecked candidate rows.
+- Added summary counts for automatically detected rows, rows needing review, manual rows, remembered rows, checked rows, unchecked rows and open candidate warnings.
 - Added conservative include-flag parsing for boolean, numeric and Dutch/string values.
 - Added status inference from stable status values, Dutch status labels, source fields and manual/remembered entity markers.
 - Added Dutch readiness labels and markdown summary lines.
@@ -255,7 +269,6 @@ Testing and verification:
 Intentionally not changed:
 
 - No direct edit to `presidio_streamlit.py` during closeout.
-- No direct edit to `fix_streamlit_nested_expanders.py` during closeout.
 - No recognizer changes.
 - No entity-type expansion.
 - No export/download blocking.
@@ -335,337 +348,92 @@ Main changes:
 
 ---
 
-## v12.3 — Review table simplification
+## Earlier completed work
+
+### v12.3 — Review table simplification
 
 Status: completed and user-confirmed after pandas Index bugfix.
 
-Purpose:
+Summary:
 
-- Reduce visual noise in the replacement table.
-- Keep the main review table focused on the columns legal users actually need to edit.
-- Preserve technical/audit information in a separate details view.
-- Keep recognizer and export semantics unchanged.
+- Added `review_table_config.py` and tests.
+- Simplified the main editable review table to the legal-user fields.
+- Moved technical/audit fields to `Technische details bij de vervangtabel`.
+- Fixed pandas Index truth-value handling.
+- Preserved export semantics.
 
-Files added or changed:
-
-- `review_table_config.py`
-- `tests/test_review_table_config.py`
-- `fix_streamlit_nested_expanders.py`
-- `CHANGELOG.md`
-
-Main changes:
-
-- Added a central table configuration module.
-- Main editable review table now focuses on:
-  - `Meenemen`
-  - `Onthouden`
-  - `Status`
-  - `Gevonden tekst`
-  - `Vervangen door`
-  - `Type gegeven`
-  - `Zekerheid`
-- Technical and audit-oriented columns are moved out of the primary editing view.
-- Added a separate `Technische details bij de vervangtabel` expander.
-- Fixed pandas Index truth-value handling by explicitly converting available columns to list/set.
-
-Important design decision:
-
-- The full data remains present in the underlying dataframe.
-- The main table is simplified visually, but exports and reports still use the available row data.
-- The technical details remain accessible for debugging, auditability and future tuning.
-
-Testing:
-
-- Added unit tests for `review_table_config.py`.
-- User confirmed the simplified review table and technical-details flow worked after the bugfix.
-
-Intentionally not changed:
-
-- No recognizer changes.
-- No entity-type expansion.
-- No export semantics change.
-- No MSI/local installer work.
-- No LLM/cloud feature.
-
----
-
-## v12.2 — Review focus filters
+### v12.2 — Review focus filters
 
 Status: completed and green in GitHub Actions.
 
-Purpose:
+Summary:
 
-- Add practical focus filters on top of the v12.1 review-status model.
-- Help the legal reviewer quickly inspect only the rows that matter for a specific task.
-- Keep export semantics safe: the filter is an overview/focus tool, not the authoritative edited replacement table.
+- Added `review_filters.py` and tests.
+- Added safe focus filters such as `Toon alles`, `Alleen controle nodig`, `Alleen juridische referenties`, `Alleen namen/adressen` and `Alleen lage zekerheid`.
+- Kept the full editable table as the source of truth for exports.
 
-Files added or changed:
-
-- `review_filters.py`
-- `tests/test_review_filters.py`
-- `fix_streamlit_nested_expanders.py`
-- `CHANGELOG.md`
-
-Main changes:
-
-- Added pure filter helpers with Dutch filter labels.
-- Added filter groups for legal/admin reference entity types, names and address-like data.
-- Added low-confidence filtering based on either Dutch confidence label `Laag` or numeric score below `0.60`.
-- Added tests for all filter modes.
-- Extended the Streamlit startup patch so the review step gets a `Focusfilter voor controle` selectbox.
-- When a focus filter is active, the app shows a read-only filtered overview above the full editable replacement table.
-
-Important design decision:
-
-- v12.2 does **not** filter the editable table itself.
-- The full replacement table remains the source of truth for exports.
-- This prevents hidden rows from being accidentally dropped from the final export.
-- The focus filter is deliberately a safe review aid, not an edit-scope limiter.
-
-Testing:
-
-- Added unit tests for `review_filters.py`.
-- GitHub Actions `Tests` passed.
-- GitHub → Hugging Face sync passed.
-
-Intentionally not changed:
-
-- No recognizer changes.
-- No entity-type expansion.
-- No export semantics change.
-- No MSI/local installer work.
-- No LLM/cloud feature.
-
----
-
-## v12.1 — Review table status model
+### v12.1 — Review table status model
 
 Status: completed and green in GitHub Actions; user confirmed the Status column appears in Hugging Face.
 
-Purpose:
+Summary:
 
-- Start the v12 Review UX phase with a simple, explicit review-status model.
-- Make it clearer to a legal user which rows are already applied, which need review, which are manual, and which come from remembered replacements.
-- Keep recognizer logic unchanged.
+- Added `review_status.py` and tests.
+- Added Dutch review statuses: `Automatisch vervangen`, `Controle nodig`, `Handmatig toegevoegd`, `Onthouden vervanging`.
+- Added review status fields and status ordering in the review table.
 
-Files added or changed:
-
-- `review_status.py`
-- `tests/test_review_status.py`
-- `fix_streamlit_nested_expanders.py`
-- `CHANGELOG.md`
-
-Main changes:
-
-- Added a pure review-status model with stable internal values:
-  - `auto_detected`
-  - `needs_review`
-  - `manual`
-  - `remembered`
-- Added Dutch user-facing labels:
-  - `Automatisch vervangen`
-  - `Controle nodig`
-  - `Handmatig toegevoegd`
-  - `Onthouden vervanging`
-- Added sorting order so rows needing review appear before automatically applied rows.
-- Added tests for source-to-status mapping and ordering.
-- Extended the existing Streamlit startup patch so the replacement table gets a visible `Status` column, internal status fields and a compact status summary above the editor.
-
-Testing:
-
-- Added unit tests for `review_status.py`.
-- GitHub Actions `Tests` passed.
-- GitHub → Hugging Face sync passed.
-- User confirmed the Status column appeared correctly in the Hugging Face app.
-
-Intentionally not changed:
-
-- No recognizer changes.
-- No new entity types.
-- No MSI/local installer work.
-- No LLM/cloud feature.
-
----
-
-## v11.2 — Dutch recognizer integration tests
+### v11.2 — Dutch recognizer integration tests
 
 Status: completed and green in GitHub Actions.
 
-Purpose:
+Summary:
 
-- Prove that the real Dutch recognizer layer works, not only the candidate scanner / audit layer.
-- Test recognizer output at value/span level.
-- Confirm that context labels remain readable and are not swallowed into the sensitive span.
-
-Files added or changed:
-
-- `.github/workflows/tests.yml`
-- `tests/test_dutch_recognizers_integration.py`
-
-Main changes:
-
-- Added lightweight recognizer integration tests using `get_dutch_recognizers()` directly.
-- Verified that v11.1 legal reference values are detected by the actual recognizers.
-- Verified expected entity types for representative court/case numbers, incident numbers, camera/video references, insurance claim references, repair numbers, immigration numbers, municipal references and KvK numbers.
+- Added recognizer integration tests using `get_dutch_recognizers()`.
+- Verified Dutch legal/admin references at value/span level.
 - Verified value-only behavior so context labels remain readable.
 
-Testing:
-
-- GitHub Actions `Tests` passed.
-- GitHub → Hugging Face sync passed.
-
-Intentionally not changed:
-
-- No UI changes.
-- No MSI/local installer work.
-- No new cloud dependency.
-
----
-
-## v11.1 — Legal reference recognizer hardening
+### v11.1 — Legal reference recognizer hardening
 
 Status: completed and green in GitHub Actions.
 
-Purpose:
+Summary:
 
-- Harden recognition and review of Dutch legal/admin reference values.
-- Move from isolated examples to category-level reference recognition.
-- Preserve legal context while only selecting the sensitive value.
+- Hardened Dutch legal/admin reference detection.
+- Expanded synthetic regression cases.
+- Added/validated court/case numbers, incident numbers, camera/video references, insurance claim references, repair numbers, immigration numbers, municipal references and KvK numbers in labelled context.
+- Preserved context words and legal meaning.
 
-Files changed:
-
-- `candidate_scanner.py`
-- `test_cases/legal_regression_cases.py`
-- `tests/test_candidate_scanner_regression.py`
-- `tests/test_case_number_pattern_contract.py`
-
-Main changes:
-
-- Expanded the regression set with concrete Dutch legal/admin examples reported during testing.
-- Added/validated cases for court/case numbers, incident numbers, camera/video references, insurance claim references, repair numbers, immigration numbers, municipal references and KvK numbers in labelled context.
-- Added a lightweight KvK fallback to the candidate scanner.
-- Kept the candidate scanner as a review/audit layer with candidates unchecked by default.
-- Updated the case-reference contract test to use the broader contextual value regex instead of only the strict formal court-number regex.
-
-Important design decision:
-
-- Context can make a generic-looking reference legally relevant.
-- Tests reflect contextual recognition, not only raw pattern recognition.
-
-Testing:
-
-- GitHub Actions `Tests` passed after the contextual-value test correction.
-- GitHub → Hugging Face sync passed.
-
-Intentionally not changed:
-
-- No broad blind masking of every uppercase/digit code.
-- No automatic masking of weak candidates without context.
-- No masking of article references, dates, amounts, postcodes or document navigation references as legal reference numbers.
-
----
-
-## v10 — Regression test layer
+### v10 — Regression test layer
 
 Status: completed and green in GitHub Actions.
 
-Purpose:
+Summary:
 
-- Stop relying only on manual interface testing.
-- Create a repeatable regression safety net before further recognizer changes.
-- Protect context preservation and false-positive behavior.
-
-Files added or changed:
-
-- `test_cases/legal_regression_cases.py`
-- `tests/test_candidate_scanner_regression.py`
-- `tests/test_context_preservation_contract.py`
-- `tests/test_case_number_pattern_contract.py`
-- `.github/workflows/tests.yml`
-
-Main changes:
-
-- Added synthetic Dutch legal regression cases.
-- Added candidate scanner tests for expected reference-like values.
+- Added synthetic Dutch legal regression cases and candidate scanner tests.
 - Added false-positive guards for legal article references, dates and money/amount context.
-- Added context preservation contract tests for words such as `Slachtoffer`, `minderjarige` and `Verzoeker`.
-- Added a GitHub Actions workflow for Python regression tests.
-- Fixed import path handling by setting `PYTHONPATH` to the repository root.
-- Kept early tests lightweight to avoid unnecessary full Streamlit/Presidio/spaCy startup cost.
+- Added context preservation tests.
+- Added GitHub Actions test workflow.
 
-Testing:
-
-- GitHub Actions `Tests` passed.
-- GitHub → Hugging Face sync passed.
-
-Intentionally not changed:
-
-- No major recognizer changes in v10 itself.
-- No UI redesign.
-
----
-
-## v9.1 — UI polish and baseline stabilization
+### v9.1 — UI polish and baseline stabilization
 
 Status: completed and working in Hugging Face.
 
-Purpose:
-
-- Polish Dutch UI text after the v9 conversion.
-- Keep the app stable before adding deeper regression infrastructure.
-
-Files changed:
-
-- `ui_texts_nl.py`
-
-Main changes:
+Summary:
 
 - Added `APP_VERSION = "v9.1"`.
-- Corrected UI wording:
-  - `clientreferenties` → `cliëntreferenties`.
+- Corrected Dutch UI wording.
 - Kept recognizer behavior unchanged.
 
-Testing:
-
-- GitHub → Hugging Face sync passed.
-- User confirmed the app was working.
-
-Intentionally not changed:
-
-- No recognizer changes.
-- No major UX redesign.
-
----
-
-## v9 — Dutch Legal UI Layer
+### v9 — Dutch Legal UI Layer
 
 Status: completed and working in Hugging Face after startup hotfix.
 
-Purpose:
+Summary:
 
-- Move the app away from a technical “Presidio demo” feel.
-- Present it as a Dutch legal document scrubber.
-- Keep the underlying recognition engine, but make the user workflow more understandable for legal users.
-
-Files added or changed:
-
-- `ui_texts_nl.py`
-- `display_labels_nl.py`
-- `presidio_streamlit.py`
-- `fix_streamlit_nested_expanders.py`
-- `Dockerfile`
-
-Main changes:
-
-- Added Dutch product language and workflow language such as `Scrub Legal`, `Lokale juridische documentcontrole`, `Controlemodus`, `Voeg document of tekst toe`, `Controleer gevonden gegevens`, `Mogelijke gemiste waarden` and `Download opgeschoonde bestanden`.
-- Added a separate Dutch UI copy layer and Dutch display labels for technical entity types.
-- Reworked the main Streamlit app to make the workflow more legal-user oriented.
-- Restored/kept synthetic legal test example loading.
-- Added a startup hotfix for Streamlit’s nested-expander limitation.
-
-Known limitation:
-
-- Some Streamlit-native widget labels remain English, such as upload button internals (`Browse files`, `Drag and drop file here`). These come from Streamlit itself and are not fully controlled by normal UI strings.
+- Moved the app away from a technical Presidio demo feel.
+- Added Dutch legal product language and workflow labels.
+- Added `ui_texts_nl.py`, `display_labels_nl.py`, updates to `presidio_streamlit.py`, `fix_streamlit_nested_expanders.py` and `Dockerfile`.
+- Added a startup hotfix for Streamlit nested expander limitations.
 
 ---
 
@@ -686,14 +454,8 @@ Files added or changed:
 Main changes:
 
 - Added a GitHub Actions workflow for syncing to Hugging Face.
-- Initial `huggingface/hub-sync` approach failed on SDK and API-rate issues.
-- Replaced it with a simpler direct Git push workflow.
+- Replaced an initial hub-sync approach with a simpler direct Git push workflow.
 - Added concurrency handling to avoid overlapping sync runs.
-
-Security/ops note:
-
-- The workflow expects a GitHub Actions secret named `HF_TOKEN`.
-- This should be a Hugging Face token with write access to `solidprivacy/scrub`.
 
 ---
 
@@ -701,11 +463,7 @@ Security/ops note:
 
 Status: superseded by GitHub workflow, but historically important.
 
-Purpose:
-
-- Improve the Hugging Face app through manual file replacement while the GitHub workflow was not yet connected.
-
-Main themes:
+Summary:
 
 - Dutch/EU recognizer direction.
 - Legal-profession focus.
@@ -713,13 +471,7 @@ Main themes:
 - Recognition of Dutch legal references, case numbers and administrative identifiers.
 - Candidate scanner / audit-layer idea.
 - Synthetic legal examples for testing.
-- Context preservation principle: do not mask role words such as `slachtoffer`, `minderjarige`, `verzoeker`, `verweerder`; mask the person/value, not the legal meaning of the sentence.
-
-Important design conclusions:
-
-- A local deterministic scrubber is a better MVP path than relying on cloud LLMs.
-- Local LLMs may be useful later, but they are not the best first layer for a fast legal scrubber.
-- The MVP should combine deterministic recognizers, Dutch legal/admin taxonomy, review table, candidate scanner, regression tests and eventually local packaging.
+- Context preservation principle: mask the person/value, not the legal meaning of the sentence.
 
 ---
 
@@ -727,7 +479,10 @@ Important design conclusions:
 
 Possible directions:
 
-- Further recognizer expansion by legal domain: family law, criminal law, labour law, immigration law, administrative law, housing/real estate and insurance/personal injury.
-- Local packaging research: Windows desktop app, local-only processing, MSI installer path and model/runtime size constraints.
+- Scrub Key JSON export UI.
+- Scrub Key import/reload.
+- AI-output reinsert.
+- Further recognizer expansion by legal domain.
+- Local packaging research.
 - More advanced DOCX/PDF preservation.
 - Better synthetic long-form legal test documents.
