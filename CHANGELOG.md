@@ -26,6 +26,89 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v13.3 — Deterministic reinsert UI planning
+
+Status: implemented; reinsert UI implementation can start as a separate sequential workpackage.
+
+Purpose:
+
+- Plan deterministic local reinsert UI before changing Streamlit UI code.
+- Define where the UI should appear, what labels it should use, what state it should rely on, and which warnings and audit fields it must show.
+- Keep AI-output behavior separate unless explicitly approved.
+
+Files added or changed:
+
+- `REINSERT_UI_SPEC.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1900_v13_3_reinsert_ui_planning.md`
+
+Main planning decisions:
+
+- Future UI block should appear after the existing Scrub Key import/reload section near the download/export area.
+- Suggested section label: `Originele waarden terugzetten`.
+- Suggested input label: `Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten`.
+- Suggested action button: `Zet originele waarden lokaal terug`.
+- Suggested output label: `Herstelde tekst`.
+- Suggested download label: `Download herstelde tekst (.txt)`.
+- Future UI should call `reinsert_from_scrub_key(text, scrub_key)` and render the helper result instead of duplicating reinsert logic.
+- Future UI should use a validated Scrub Key from import/reload first, or a key built from the current reviewed replacement table if no imported key exists.
+- Reinsertion must require a separate visible user action and must not happen automatically when a Scrub Key is loaded.
+- First UI implementation should produce restored text and `.txt` download only; no DOCX/PDF rehydration in the first UI step.
+
+Required warnings specified:
+
+- Reinsertion restores original sensitive values.
+- Restored text may again contain personal or confidential information.
+- Restored output must be manually reviewed before sharing.
+- A Scrub Key is reversible/pseudonymization, not full anonymization.
+- The key must remain local and protected.
+- No AI/cloud processing is involved in the local reinsert step.
+
+Required audit summary specified:
+
+- mapping item count;
+- active item count;
+- excluded item count;
+- replacement count;
+- placeholders not found;
+- unknown placeholders;
+- duplicate placeholders;
+- validation issues;
+- local-only status;
+- no-AI status;
+- no-cloud status.
+
+Future UI test requirements specified:
+
+- Add a future patch test file such as `tests/test_scrub_key_reinsert_ui_patch.py`.
+- Guard helper import, UI labels, warning text, audit fields, button-gated helper call, no AI/cloud behavior, no `st.stop()`, existing Scrub Key export, existing import/reload UI, and existing export/download markers.
+
+Testing and validation:
+
+- Tests: not applicable; planning/specification-only workpackage.
+- App verification: not applicable; no UI behavior changed.
+
+Intentionally not changed:
+
+- No UI code changed.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No direct edit to `presidio_streamlit.py`.
+- No tests added or changed.
+- No AI calls.
+- No cloud processing.
+- No automatic document rehydration.
+- No TXT, CSV, DOCX or PDF export behavior changed.
+- No Scrub Key JSON export behavior changed.
+- No Scrub Key import/reload behavior changed.
+- No secrets, tokens or real personal data.
+
+Outcome:
+
+- v13.3 deterministic reinsert UI is planned and ready for a separate sequential implementation workpackage.
+
+---
+
 ## v13.3 — Deterministic reinsert helper verification reconciliation
 
 Status: completed and formally closed after Actions/sync verification.
@@ -250,6 +333,6 @@ Outcome:
 
 Possible directions:
 
-- Deterministic reinsert UI after verification.
+- Deterministic reinsert UI implementation.
 - AI-output reinsert.
 - Further recognizer expansion by legal domain.
