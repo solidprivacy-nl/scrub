@@ -26,9 +26,65 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## WP Status Reconciliation — WP3/WP4 verification evidence
+
+Status: reconciliation completed; GitHub Actions and Hugging Face sync could not be independently confirmed through the connector.
+
+Purpose:
+
+- Verify and reconcile status for:
+  - v12.6 export sanity commits;
+  - v13.0 Scrub Key commits, especially `d65364373e4d3612044d8688ac17e11de81c07e5`.
+- Update project control files without changing code or UI behavior.
+
+Verification attempted:
+
+- WP3/v12.6 commits checked:
+  - `5342e0eef663817036e91f823b4389b338b9223c` — Add v12.6 export sanity helper.
+  - `704ae03788702ce33263343743a69f8139f16319` — Add v12.6 export sanity tests.
+  - `869e3804edf04e0cbdf7ab69b034e7bc707de8c3` — Update workpackage status for export sanity helper.
+  - `4d721e3aed3bf28cfdaeb096c0e9cd227885f1a6` — Add v12.6 export sanity handover.
+- WP4/v13.0 target commit checked:
+  - `d65364373e4d3612044d8688ac17e11de81c07e5` — Record v13.0 Scrub Key model in changelog.
+
+Connector findings:
+
+- GitHub combined status returned `statuses: []` for checked WP3 commits.
+- Commit workflow-run lookup returned `workflow_runs: []` for checked WP3 commits.
+- GitHub combined status returned `statuses: []` for `d65364373e4d3612044d8688ac17e11de81c07e5`.
+- Commit workflow-run lookup returned `workflow_runs: []` for `d65364373e4d3612044d8688ac17e11de81c07e5`.
+- Because of this, this worker did not mark Actions/sync as green.
+
+Recorded repo evidence:
+
+- WP3 handover records local targeted validation:
+  - `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
+- WP4 changelog records local targeted validation:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1425_wp3_wp4_status_reconciliation.md`
+
+Intentionally not changed:
+
+- No code files.
+- No UI files.
+- No tests.
+- No export semantics.
+- No Hugging Face app behavior.
+
+Next step:
+
+- Coordinator should verify the latest GitHub Actions `Tests` and GitHub to Hugging Face sync in the GitHub UI, because the connector did not expose workflow-run evidence for these commits.
+
+---
+
 ## v13.0 — Scrub Key specification and pure model
 
-Status: implemented; pending GitHub Actions and Hugging Face sync confirmation.
+Status: implemented; local targeted tests passed; GitHub Actions and Hugging Face sync not independently confirmed by this worker.
 
 Purpose:
 
@@ -76,6 +132,7 @@ Testing:
 - Added `tests/test_scrub_key.py`.
 - Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
 - Tests cover valid key creation, excluded-row omission, required fields, JSON roundtrip, validation errors, and synthetic Dutch legal examples only.
+- Connector check attempted for commit `d65364373e4d3612044d8688ac17e11de81c07e5`, but no check/status evidence was exposed.
 
 Intentionally not changed:
 
@@ -87,6 +144,61 @@ Intentionally not changed:
 - No secret storage.
 - No real personal data in tests or examples.
 - No change to active review UI or export semantics.
+
+---
+
+## v12.6 — Export sanity checks helper and tests
+
+Status: helper implemented; local targeted tests passed; GitHub Actions and Hugging Face sync not independently confirmed by this worker.
+
+Purpose:
+
+- Prepare advisory export sanity-check logic before UI integration.
+- Warn users when review risk remains.
+- Preserve existing export semantics and download behavior.
+
+Files added or changed:
+
+- `export_sanity.py`
+- `tests/test_export_sanity.py`
+- `WORKPACKAGES.md`
+- `handover/workpackages/20260607_1405_v12_6_export_sanity_helper.md`
+
+Main changes:
+
+- Added pure helper logic for advisory export readiness checks.
+- Added Dutch user-facing warning text for:
+  - unchecked `Controle nodig` rows;
+  - candidate rows not included;
+  - no replacements selected;
+  - user review still required;
+  - export not guaranteeing full anonymization.
+- Added readiness labels:
+  - `Geen vervangregels gevonden — controleer handmatig`;
+  - `Geen vervangingen geselecteerd`;
+  - `Controle nodig vóór export`;
+  - `Klaar voor export na gebruikerscontrole`.
+- Explicitly preserved helper flags:
+  - `blocks_export = False`;
+  - `changes_export_semantics = False`.
+- Reused review-summary normalization logic where helpful.
+
+Testing:
+
+- Added `tests/test_export_sanity.py`.
+- Local targeted validation passed in the WP3 handover:
+  - `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
+- Connector check attempted for WP3 commits `5342e0eef663817036e91f823b4389b338b9223c`, `704ae03788702ce33263343743a69f8139f16319`, `869e3804edf04e0cbdf7ab69b034e7bc707de8c3`, and `4d721e3aed3bf28cfdaeb096c0e9cd227885f1a6`, but no check/status evidence was exposed.
+
+Intentionally not changed:
+
+- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No change to `review_summary.py`.
+- No export/download blocking.
+- No change to which rows are included in export.
+- No Scrub Key or reinsert implementation.
+- No LLM/cloud feature.
 
 ---
 
