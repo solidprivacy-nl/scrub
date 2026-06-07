@@ -26,23 +26,25 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
-## v13.3 — Deterministic reinsert helper
+## v13.3 — Deterministic reinsert helper closeout
 
-Status: implemented; awaiting GitHub Actions and Hugging Face sync.
+Status: implemented; awaiting coordinator verification of Actions/sync.
 
 Purpose:
 
-- Add a pure deterministic helper that can reinsert original values into scrubbed text using a valid Scrub Key.
-- Prepare the future `Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit` workflow without adding UI or AI behavior.
-- Keep reinsertion local, deterministic and auditable.
+- Verify and close out the v13.3 deterministic reinsert helper workpackage as far as possible from the connector environment.
+- Record that the helper remains pure, local and deterministic.
+- Preserve the boundary that no UI, AI-output flow, cloud processing or export/download behavior change was added.
 
-Files added or changed:
+Files added or changed in the full v13.3 helper line:
 
 - `scrub_key_reinsert.py`
 - `tests/test_scrub_key_reinsert.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `handover/workpackages/20260607_1745_v13_3_reinsert_helper.md`
+- `handover/workpackages/20260607_1815_v13_3_reinsert_helper.md`
+- `handover/workpackages/20260607_1830_v13_3_reinsert_helper_closeout.md`
 
 Main changes:
 
@@ -56,30 +58,25 @@ Main changes:
 - Audit output includes item count, active item count, excluded item count, replacement count, placeholders not found, unknown placeholders, duplicate placeholders and validation issues.
 - Audit output explicitly records local/no-AI/no-cloud behavior through `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
 
-Testing:
+Testing and verification:
 
 - Added `tests/test_scrub_key_reinsert.py`.
-- Tests cover:
-  - valid reinsert with one placeholder;
-  - valid reinsert with multiple placeholders;
-  - repeated placeholder occurrences in text;
-  - placeholder from key not found in text;
-  - unknown placeholder in text not present in key;
-  - invalid Scrub Key validation issues;
-  - duplicate placeholder detection;
-  - excluded rows not being reinserted;
-  - synthetic Dutch legal values only;
-  - input Scrub Key immutability;
-  - explicit no-AI/no-cloud flags;
-  - deterministic placeholder detection.
-- Local targeted validation in this worker environment passed on the available/reconstructed subset:
+- Tests cover valid reinsert, multiple placeholders, repeated placeholders, missing placeholders, unknown placeholders, invalid Scrub Key validation issues, duplicate placeholder detection, excluded rows not being reinserted, synthetic values only, input immutability and no-AI/no-cloud flags.
+- Local targeted validation recorded by the implementation worker on the available/reconstructed subset:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
+- GitHub Actions lookup for `07d33cad10dacbcd634125f82ab234388f84729b` returned `workflow_runs: []` through the connector.
+- GitHub Actions status is therefore not visible to this closeout worker.
+- Hugging Face sync status is not visible to this closeout worker.
+- App verification is not applicable because this is a helper-only package.
 
 Intentionally not changed:
 
+- No code files changed in WP7B closeout.
 - No UI added.
 - No direct edit to `presidio_streamlit.py`.
 - No direct edit to `fix_streamlit_nested_expanders.py`.
+- No edit to `scrub_key.py`.
+- No edit to `scrub_key_import.py`.
 - No AI calls.
 - No cloud processing.
 - No automatic document rehydration.
@@ -87,6 +84,12 @@ Intentionally not changed:
 - No change to Scrub Key export behavior.
 - No change to Scrub Key import UI behavior.
 - No secrets, tokens or real personal data.
+
+Outcome:
+
+- v13.3 deterministic reinsert helper is implemented.
+- Formal external Actions/sync verification remains pending coordinator verification.
+- A separate v13.3 reinsert UI workpackage should only start after verification.
 
 ---
 
@@ -157,260 +160,12 @@ Outcome:
 
 ---
 
-## v13.2 — Scrub Key import/reload UI integration
-
-Status: implemented; Actions/sync verified green in closeout; app verification completed in app closeout.
-
-Purpose:
-
-- Integrate the existing Scrub Key import/reload helper into the Streamlit startup patch flow.
-- Let the user upload or paste a previously exported Scrub Key JSON.
-- Validate imported Scrub Keys before loading mappings into the current review/replacement table.
-- Keep import/reload local and separate from deterministic reinsert or AI-output workflows.
-
-Files added or changed:
-
-- `fix_streamlit_nested_expanders.py`
-- `tests/test_scrub_key_import_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1645_v13_2_scrub_key_import_ui.md`
-
-Main changes:
-
-- Added the `Scrub Key laden` UI section near the existing `Scrub Key (JSON)` export block.
-- Added upload support for Scrub Key JSON files.
-- Added paste support for Scrub Key JSON text.
-- Reused the existing `build_scrub_key_import_result(...)` helper instead of duplicating parsing or validation logic.
-- Added visible validation feedback before mapping rows are loaded.
-- Added warnings that a Scrub Key makes values locally reversible and is pseudonymization, not full anonymization.
-- Added warning text that the key must stay local and protected and should not be shared with AI services or third parties unless consciously intended and allowed.
-- Loaded validated mapping rows into the current replacement table only after the visible `Valideer en laad Scrub Key` user action.
-- Kept the existing `Download Scrub Key (.json)` export block.
-
-Testing:
-
-- Added `tests/test_scrub_key_import_ui_patch.py`.
-- Local targeted validation on the reconstructed connector subset passed:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py` → 8 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import_ui_patch.py` → 9 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py` → 12 passed.
-  - `PYTHONPATH=. pytest -q` on the available subset → 35 passed.
-- Coordinator evidence after implementation confirmed green tests and sync for commits `83353e4`, `4a1ef55`, `4d8bfe9` and `ff8321f`.
-
-Intentionally not changed:
-
-- No direct edit to `presidio_streamlit.py`.
-- No deterministic reinsert behavior.
-- No AI-output flow.
-- No automatic document rehydration.
-- No silent replacement of review rows without a visible user action.
-- No change to TXT, CSV, DOCX or PDF export behavior.
-- No change to existing Scrub Key JSON export behavior.
-- No cloud processing.
-- No server-side Scrub Key storage.
-- No secrets, tokens or real personal data.
-
----
-
-## v13.2 — Scrub Key import/reload helper and tests
-
-Status: completed.
-
-Purpose:
-
-- Prepare reliable import/reload of a previously saved Scrub Key JSON file.
-- Keep this work pure and helper-only before UI integration.
-- Prepare future mapping reuse, session continuation and deterministic reinsert work.
-- Preserve local-only handling and warning language for sensitive Scrub Keys.
-
-Files added or changed:
-
-- `scrub_key_import.py`
-- `tests/test_scrub_key_import.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1605_v13_2_scrub_key_import_helper.md`
-
-Main changes:
-
-- Added `scrub_key_import.py` as a pure helper module.
-- Added `validate_scrub_key_import_text(json_text)` for safe validation errors.
-- Added `normalise_scrub_key_items(scrub_key)` to convert Scrub Key items into review-table-like mapping rows.
-- Added `build_scrub_key_import_result(json_text)` with a UI-friendly result shape:
-  - `ok`;
-  - `errors`;
-  - `warnings`;
-  - `scrub_key`;
-  - `mapping_rows`;
-  - `item_count`;
-  - `reversible`;
-  - `privacy_model`;
-  - `document_label`.
-- Reused the existing `scrub_key_from_json(...)` and `validate_scrub_key(...)` model helpers.
-- Added safe Dutch user-facing errors for empty input, invalid JSON syntax, invalid top-level structure and invalid Scrub Key content.
-- Added a local-only privacy warning explaining that imported Scrub Keys make replacements locally reversible and should not be shared with AI services or third parties unless consciously intended and allowed.
-
-Testing:
-
-- Added `tests/test_scrub_key_import.py`.
-- Tests cover valid Scrub Key JSON import, normalized row mapping, privacy warning, empty JSON text, invalid JSON syntax, invalid top-level format, structural validation errors, no input mutation and synthetic Dutch legal values only.
-- Coordinator evidence supplied for green checks before UI integration:
-  - Tests #83 green;
-  - Tests #84 green;
-  - Sync to Hugging Face Space #98 green;
-  - Tests #85 green;
-  - Sync to Hugging Face Space #99 green;
-  - Tests #86 green;
-  - Sync to Hugging Face Space #100 green.
-
-Intentionally not changed in helper phase:
-
-- No UI changes.
-- No direct edit to `fix_streamlit_nested_expanders.py`.
-- No direct edit to `presidio_streamlit.py`.
-- No edit to existing Scrub Key export UI.
-- No reinsert behavior.
-- No AI-output flow.
-- No cloud processing.
-- No server-side Scrub Key storage.
-- No real personal data in tests.
-- No change to TXT, CSV, DOCX or PDF download behavior.
-
----
-
-## v13.1 — Scrub Key JSON export UI closeout
-
-Status: completed and app verified after mapping hotfix.
-
-Purpose:
-
-- Close v13.1 after confirming that the local Scrub Key JSON export works in the Hugging Face app.
-- Record that the earlier `original_value` validation error was fixed.
-- Preserve the boundary that Scrub Key import/reload and reinsert are not implemented yet.
-
-Files added or changed in the full v13.1 line:
-
-- `fix_streamlit_nested_expanders.py`
-- `tests/test_scrub_key_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1535_v13_1_scrub_key_json_export_ui.md`
-- `handover/workpackages/20260607_1535_v13_1_scrub_key_ui_mapping_hotfix.md`
-- `handover/workpackages/20260607_1550_v13_1_scrub_key_json_export_closeout.md`
-
-Main changes:
-
-- Added a `Scrub Key (JSON)` section to the download/export flow.
-- Added a `Download Scrub Key (.json)` button.
-- Added warning text explaining that the Scrub Key makes replaced values locally reversible.
-- Added warning text that this is pseudonymization, not full anonymization.
-- Added warning text not to share the key with AI services or third parties unless consciously intended and allowed.
-- Added timestamp creation in the UI/export layer so the pure `scrub_key.py` model remains deterministic and side-effect free.
-- Added the mapping hotfix so app review-table rows are converted into Scrub Key model rows before calling `build_scrub_key(...)`.
-
-Mapping hotfix:
-
-- `find` → `original_value`
-- `replace_with` → `placeholder`
-- `entity_type` → `entity_type`
-- `type_label` → `type_label`
-- `source` → `source`
-- `review_status` → `review_status`
-- `include` → `include`
-
-Testing and verification:
-
-- Initial v13.1 UI implementation:
-  - `Tests #73` green for commit `9d349bb`.
-  - `Sync to Hugging Face Space #87` green for commit `9d349bb`.
-- Mapping hotfix:
-  - `Tests #78` green for commit `8d33941`.
-  - `Sync to Hugging Face Space #92` green for commit `8d33941`.
-- User verified in the Hugging Face app:
-  - `Scrub Key (JSON)` section is visible.
-  - pseudonymization / reversibility warning is visible.
-  - `Item has empty required field: original_value` is gone.
-  - `Download Scrub Key (.json)` is visible.
-  - Scrub Key JSON download works.
-
-Intentionally not changed:
-
-- No edit to `scrub_key.py` in the mapping hotfix.
-- No direct edit to `presidio_streamlit.py`.
-- No Scrub Key import/reload.
-- No reinsert UI.
-- No AI-output flow.
-- No cloud processing.
-- No server-side Scrub Key storage.
-- No change to TXT, CSV, DOCX or PDF download behavior.
-- No change to existing replacement/export semantics.
-- No `st.stop()` or export blocking behavior added.
-
-Outcome:
-
-- v13.1 Scrub Key JSON export is complete.
-
----
-
-## v12.6 — Export sanity checks closeout
-
-Status: completed and administratively closed after coordinator closeout instruction.
-
-Purpose:
-
-- Close the v12.6 export sanity workpackage after helper and UI integration were completed.
-- Record that the UI warning block is advisory only.
-- Preserve the documented boundary that export/download behavior was not changed.
-
-Files added or changed in the full v12.6 line:
-
-- `export_sanity.py`
-- `tests/test_export_sanity.py`
-- `tests/test_export_sanity_ui_patch.py`
-- `fix_streamlit_nested_expanders.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1405_v12_6_export_sanity_helper.md`
-- `handover/workpackages/20260607_1445_v12_6_export_sanity_ui.md`
-- `handover/workpackages/20260607_1515_v12_6_export_sanity_closeout.md`
-
-Main changes:
-
-- Added pure helper logic for advisory export readiness checks.
-- Added Dutch user-facing warning text for unchecked `Controle nodig` rows, candidate rows not included, no replacements selected, required user review and export not guaranteeing full anonymization.
-- Integrated the existing `export_sanity.py` helper into the Streamlit startup patch flow.
-- Added UI text for `Extra exportcontrole` near the existing v12.5 `Eindcontrole vóór download` block.
-- Added patch-level tests to guard that the export sanity helper is wired into the UI patch.
-- Administratively closed WP3C without changing code files.
-
-Testing and verification:
-
-- Helper validation recorded in WP3A handover: `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
-- Coordinator reconciled helper verification: `Tests #58` green, `Sync to Hugging Face Space #72` green, commit `b0bf8ae`.
-- WP3C was administrative closeout only; no new local pytest run was performed by that worker.
-
-Intentionally not changed:
-
-- No code files changed in WP3C closeout.
-- No direct edit to `presidio_streamlit.py`.
-- No export/download blocking.
-- No change to which rows are included in export.
-- No change to TXT, CSV, DOCX or PDF download logic.
-- No Scrub Key logic added in v12.6.
-- No reinsert workflow added in v12.6.
-- No cloud processing introduced.
-
-Outcome:
-
-- v12.6 is closed.
-- v12 Review UX is complete through guidance, final review summary and export sanity warnings.
-
----
-
 ## Earlier completed work
 
+- v13.2 Scrub Key import/reload UI integration.
+- v13.2 Scrub Key import/reload helper and tests.
+- v13.1 Scrub Key JSON export UI closeout.
+- v12.6 Export sanity checks closeout.
 - v13.0 Scrub Key specification and pure model.
 - v12.5 Final review summary.
 - v12.4 Review guidance text.
@@ -430,6 +185,6 @@ Outcome:
 
 Possible directions:
 
-- Deterministic reinsert UI.
+- Deterministic reinsert UI after verification.
 - AI-output reinsert.
 - Further recognizer expansion by legal domain.
