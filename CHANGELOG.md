@@ -26,13 +26,73 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
-## v13.3 — Deterministic reinsert helper closeout
+## v13.3 — Deterministic reinsert helper verification reconciliation
 
-Status: implemented; awaiting coordinator verification of Actions/sync.
+Status: completed and formally closed after Actions/sync verification.
 
 Purpose:
 
-- Verify and close out the v13.3 deterministic reinsert helper workpackage as far as possible from the connector environment.
+- Administratively reconcile the v13.3 deterministic reinsert helper after coordinator-provided verification evidence.
+- Replace the previous `awaiting coordinator verification of Actions/sync` status with formal closeout.
+- Confirm that the helper remains pure, local and deterministic.
+- Preserve the boundary that no UI, AI-output flow, cloud processing or export/download behavior change was added.
+
+Files added or changed in this reconciliation:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1845_v13_3_reinsert_helper_verification_reconciliation.md`
+
+Verification evidence:
+
+- Tests #106 green — commit `5854dbf`.
+- Sync to Hugging Face Space #120 green — commit `5854dbf`.
+- Tests #107 green — commit `43ecad4`.
+- Sync to Hugging Face Space #121 green — commit `43ecad4`.
+- Tests #108 green — commit `6e4ec9b`.
+- Sync to Hugging Face Space #122 green — commit `6e4ec9b`.
+- Tests #109 green — commit `eaf036a`.
+- Sync to Hugging Face Space #123 green — commit `eaf036a`.
+
+Validation status:
+
+- GitHub Actions: green based on coordinator evidence.
+- Hugging Face sync: green based on coordinator evidence.
+- App verification: not applicable, helper-only package.
+
+Intentionally not changed in this reconciliation:
+
+- No code files changed.
+- No tests changed.
+- No UI added.
+- No direct edit to `scrub_key_reinsert.py`.
+- No direct edit to `tests/test_scrub_key_reinsert.py`.
+- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No edit to `scrub_key.py`.
+- No edit to `scrub_key_import.py`.
+- No edit to `tests/*`.
+- No AI calls.
+- No cloud processing.
+- No automatic document rehydration.
+- No change to TXT, CSV, DOCX or PDF export behavior.
+- No change to Scrub Key export behavior.
+- No change to Scrub Key import UI behavior.
+- No secrets, tokens or real personal data.
+
+Outcome:
+
+- v13.3 deterministic reinsert helper is completed and formally closed.
+
+---
+
+## v13.3 — Deterministic reinsert helper closeout
+
+Status: completed and formally closed after Actions/sync verification.
+
+Purpose:
+
+- Verify and close out the v13.3 deterministic reinsert helper workpackage.
 - Record that the helper remains pure, local and deterministic.
 - Preserve the boundary that no UI, AI-output flow, cloud processing or export/download behavior change was added.
 
@@ -45,6 +105,7 @@ Files added or changed in the full v13.3 helper line:
 - `handover/workpackages/20260607_1745_v13_3_reinsert_helper.md`
 - `handover/workpackages/20260607_1815_v13_3_reinsert_helper.md`
 - `handover/workpackages/20260607_1830_v13_3_reinsert_helper_closeout.md`
+- `handover/workpackages/20260607_1845_v13_3_reinsert_helper_verification_reconciliation.md`
 
 Main changes:
 
@@ -64,14 +125,20 @@ Testing and verification:
 - Tests cover valid reinsert, multiple placeholders, repeated placeholders, missing placeholders, unknown placeholders, invalid Scrub Key validation issues, duplicate placeholder detection, excluded rows not being reinserted, synthetic values only, input immutability and no-AI/no-cloud flags.
 - Local targeted validation recorded by the implementation worker on the available/reconstructed subset:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
-- GitHub Actions lookup for `07d33cad10dacbcd634125f82ab234388f84729b` returned `workflow_runs: []` through the connector.
-- GitHub Actions status is therefore not visible to this closeout worker.
-- Hugging Face sync status is not visible to this closeout worker.
+- Coordinator verification evidence confirms Actions and sync green:
+  - Tests #106 green — commit `5854dbf`.
+  - Sync to Hugging Face Space #120 green — commit `5854dbf`.
+  - Tests #107 green — commit `43ecad4`.
+  - Sync to Hugging Face Space #121 green — commit `43ecad4`.
+  - Tests #108 green — commit `6e4ec9b`.
+  - Sync to Hugging Face Space #122 green — commit `6e4ec9b`.
+  - Tests #109 green — commit `eaf036a`.
+  - Sync to Hugging Face Space #123 green — commit `eaf036a`.
 - App verification is not applicable because this is a helper-only package.
 
 Intentionally not changed:
 
-- No code files changed in WP7B closeout.
+- No code files changed in WP7B-FINAL reconciliation.
 - No UI added.
 - No direct edit to `presidio_streamlit.py`.
 - No direct edit to `fix_streamlit_nested_expanders.py`.
@@ -87,9 +154,7 @@ Intentionally not changed:
 
 Outcome:
 
-- v13.3 deterministic reinsert helper is implemented.
-- Formal external Actions/sync verification remains pending coordinator verification.
-- A separate v13.3 reinsert UI workpackage should only start after verification.
+- v13.3 deterministic reinsert helper is implemented, verified and formally closed.
 
 ---
 
