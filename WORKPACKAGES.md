@@ -283,9 +283,9 @@ Outcome:
 
 ---
 
-### WP7A / WP7B — v13.3 Deterministic reinsert helper
+### WP7A / WP7B / WP7B-FINAL — v13.3 Deterministic reinsert helper
 
-Status: implemented; awaiting coordinator verification of Actions/sync.
+Status: completed and formally closed after Actions/sync verification.
 
 Implemented files:
 
@@ -296,6 +296,7 @@ Implemented files:
 - `handover/workpackages/20260607_1745_v13_3_reinsert_helper.md`
 - `handover/workpackages/20260607_1815_v13_3_reinsert_helper.md`
 - `handover/workpackages/20260607_1830_v13_3_reinsert_helper_closeout.md`
+- `handover/workpackages/20260607_1845_v13_3_reinsert_helper_verification_reconciliation.md`
 
 Implemented helper behavior:
 
@@ -317,14 +318,23 @@ Validation status:
 
 - Local targeted validation in the implementation worker environment passed on the available/reconstructed subset:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
-- GitHub Actions: not visible through connector during WP7B closeout; coordinator verification required.
-- Hugging Face sync: not visible through connector during WP7B closeout; coordinator verification required.
+- Coordinator verification evidence:
+  - Tests #106 green — commit `5854dbf`.
+  - Sync to Hugging Face Space #120 green — commit `5854dbf`.
+  - Tests #107 green — commit `43ecad4`.
+  - Sync to Hugging Face Space #121 green — commit `43ecad4`.
+  - Tests #108 green — commit `6e4ec9b`.
+  - Sync to Hugging Face Space #122 green — commit `6e4ec9b`.
+  - Tests #109 green — commit `eaf036a`.
+  - Sync to Hugging Face Space #123 green — commit `eaf036a`.
+- GitHub Actions: green based on coordinator evidence.
+- Hugging Face sync: green based on coordinator evidence.
 - App verification: not applicable for this helper-only package.
 
 Boundaries preserved:
 
-- No code files changed in WP7B closeout.
-- No UI files changed in WP7A/WP7B.
+- No code files changed in WP7B-FINAL reconciliation.
+- No UI files changed in WP7A/WP7B/WP7B-FINAL.
 - No direct edit to `presidio_streamlit.py`.
 - No direct edit to `fix_streamlit_nested_expanders.py`.
 - No AI calls.
@@ -334,15 +344,34 @@ Boundaries preserved:
 - No Scrub Key export/import UI behavior changes.
 - Synthetic test values only.
 
-Next step:
+Outcome:
 
-- Coordinator should verify GitHub Actions and Hugging Face sync for `07d33ca` or the latest closeout commit.
-- Only after verification, plan v13.3 reinsert UI as a separate workpackage.
+- v13.3 deterministic reinsert helper is completed and formally closed.
+
+---
+
+## Active / next recommended workpackage
+
+### WP8 — v13.3 Deterministic reinsert UI planning
+
+Status: recommended next workpackage; not started here.
+
+Goal:
+
+- Plan UI integration for deterministic local reinsert using the verified helper.
+- Keep AI-output behavior separate unless explicitly approved.
+
+Boundaries:
+
+- Do not add AI calls by default.
+- Do not add cloud processing.
+- Do not silently rehydrate documents.
+- Do not change existing TXT/CSV/DOCX/PDF export behavior.
 
 ---
 
 ## Recommended execution order
 
-1. Coordinator verifies WP7A/WP7B Actions and sync.
-2. Only after deterministic reinsert is stable, consider a separate v13.3 UI workpackage.
-3. Keep AI-output workflow separate and explicitly reviewed before UI integration.
+1. Plan v13.3 deterministic reinsert UI as a separate workpackage.
+2. Keep AI-output workflow separate and explicitly reviewed before UI integration.
+3. Preserve local-only Scrub Key handling and pseudonymization warnings.
