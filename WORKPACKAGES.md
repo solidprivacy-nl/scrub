@@ -225,6 +225,60 @@ Outcome:
 
 ---
 
+## Active workpackage
+
+### WP4B — v13.1 Scrub Key JSON export UI integration
+
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Goal:
+
+- Add a local Scrub Key JSON download option after review, without adding import, reload, reinsert or AI-output flows.
+
+Implemented foundation from WP4:
+
+- `SCRUB_KEY_SPEC.md`
+- `scrub_key.py`
+- `tests/test_scrub_key.py`
+
+Implemented UI integration:
+
+- `fix_streamlit_nested_expanders.py` imports `build_scrub_key`, `scrub_key_to_json` and `validate_scrub_key`.
+- The app shows `Scrub Key (JSON)` near the existing final review/download section.
+- The app shows a warning that a Scrub Key is pseudonymization, not full anonymization.
+- The app warns users not to share the key with AI services or third parties unless consciously intended and allowed.
+- The app offers `Download Scrub Key (.json)` with filename `solidprivacy_scrub_key.json`.
+- The UI layer adds timestamps at export time, preserving the pure model decision that `scrub_key.py` does not create timestamps itself.
+
+Implemented tests:
+
+- `tests/test_scrub_key_ui_patch.py`
+
+Boundaries preserved:
+
+- No direct edit to `presidio_streamlit.py`.
+- No Scrub Key import/reload.
+- No reinsert UI.
+- No AI-output flow.
+- No cloud processing.
+- No secret storage.
+- No real personal data.
+- No change to TXT, CSV, DOCX or PDF export/download behavior.
+
+Validation status:
+
+- Local pytest not run from this connector environment.
+- GitHub Actions pending for commits:
+  - `a9011ccc3fdb981c3101490fdc8b8996696f75e3` — Integrate Scrub Key JSON export into UI patch.
+  - `adb676000d07e6f00b39a378da40adfa9701e0d1` — Add Scrub Key UI patch tests.
+
+Next step:
+
+- Verify GitHub Actions and Hugging Face sync.
+- Ask the user/coordinator to verify in the Hugging Face app that `Download Scrub Key (.json)` appears and that existing TXT/CSV/DOCX/PDF downloads still work.
+
+---
+
 ## Parallel strategic workpackage
 
 ### WP4 — v13.0 Scrub Key specification and pure model
@@ -283,21 +337,17 @@ Validation:
 Boundaries respected:
 
 - No edit to `presidio_streamlit.py`.
-- No edit to `fix_streamlit_nested_expanders.py` for v13.
-- No export/download buttons added for v13.
+- No edit to `fix_streamlit_nested_expanders.py` for v13.0.
+- No export/download buttons added for v13.0.
 - No reinsert UI added.
 - No cloud processing introduced.
 - No secrets or real personal data stored.
-
-Parallelization:
-
-- Safe to continue non-UI v13 model/spec work if needed.
-- Do not integrate into UI until v12.4–v12.6 are stable.
 
 ---
 
 ## Recommended execution order
 
-1. Start v13 Scrub Key JSON export UI only after coordinator approval.
-2. Keep v13 UI integration sequential because it may touch the same review/export flow.
-3. Preserve v12 export semantics unless a future workpackage explicitly changes them.
+1. Verify GitHub Actions `Tests` and GitHub to Hugging Face sync for WP4B.
+2. Ask the user/coordinator to verify the Hugging Face app shows `Download Scrub Key (.json)` and the pseudonymization warning.
+3. Confirm TXT/CSV/DOCX/PDF downloads still work.
+4. After v13.1 is verified, plan v13.2 Scrub Key import/reload as a separate sequential UI workpackage.
