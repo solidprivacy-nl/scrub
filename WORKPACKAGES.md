@@ -82,11 +82,11 @@ Outcome:
 
 ---
 
-## Active workpackage
+## Completed / verification-pending UI workpackages
 
 ### WP1 — v12.4 Review guidance text
 
-Status: implemented; awaiting latest GitHub Actions and Hugging Face verification.
+Status: implemented; GitHub Actions and Hugging Face sync confirmed green by coordinator; app guidance visually confirmed earlier by user.
 
 Goal:
 
@@ -108,17 +108,17 @@ Files:
 
 Verification:
 
-- GitHub Actions tests must pass.
-- GitHub to Hugging Face sync must pass.
-- Hugging Face app must show guidance around the review step.
+- GitHub Actions tests passed.
+- GitHub to Hugging Face sync passed.
+- Hugging Face app showed guidance around the review step.
 
 ---
 
-## Next sequential UI workpackages
+## Active workpackage
 
 ### WP2 — v12.5 Final review summary
 
-Status: helper and tests implemented; UI integration pending WP1 verification.
+Status: UI integration implemented; awaiting GitHub Actions, Hugging Face sync, and app verification.
 
 Goal:
 
@@ -131,6 +131,7 @@ Implemented helper module:
 Implemented tests:
 
 - `tests/test_review_summary.py`
+- `tests/test_review_summary_ui_patch.py`
 
 Implemented summary values:
 
@@ -143,14 +144,17 @@ Implemented summary values:
 - open candidate warning;
 - Dutch readiness label and markdown lines.
 
-Dependency:
+UI integration:
 
-- UI integration after WP1 verification.
+- `fix_streamlit_nested_expanders.py` imports the review summary helpers.
+- The app shows `Eindcontrole vóór download` immediately above the download/export section.
+- The summary is advisory and does not change export/download semantics.
 
-Parallelization:
+Verification required:
 
-- Helper and tests have been prepared without touching the UI flow.
-- UI integration should wait.
+- GitHub Actions tests must pass.
+- GitHub to Hugging Face sync must pass.
+- Hugging Face app must show the final review summary before downloads.
 
 ---
 
@@ -225,9 +229,9 @@ Parallelization:
 
 ## Recommended execution order
 
-1. Verify WP1 / v12.4 in GitHub Actions and Hugging Face.
-2. Integrate WP2 UI after WP1 verification.
+1. Verify WP2 / v12.5 in GitHub Actions and Hugging Face.
+2. Ask the user to confirm the final review summary appears before downloads.
 3. Prepare WP3 helper and tests.
-4. Integrate WP3 UI.
+4. Integrate WP3 UI after WP2 is stable.
 5. In parallel, start WP4 Scrub Key spec and pure tests.
 6. After v12 is complete, begin v13 UI integration.
