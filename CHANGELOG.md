@@ -26,9 +26,84 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v13.3 — Deterministic reinsert UI app verification closeout
+
+Status: completed and app-verified after Actions/sync verification.
+
+Purpose:
+
+- Administratively close the v13.3 deterministic reinsert UI after technical verification and app verification.
+- Record that local deterministic reinsert works in the Hugging Face app.
+- Preserve the boundary that no AI calls, cloud processing, automatic document rehydration, DOCX/PDF reinsert or existing scrubbed export/download behavior changes were added.
+
+Files added or changed in this closeout:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1930_v13_3_reinsert_ui_app_closeout.md`
+
+Technical evidence:
+
+- Local validation recorded in WP8B: 57 passed.
+- Tests #120 green — commit `7725182`.
+- Sync to Hugging Face Space #134 green — commit `7725182`.
+- Tests #121 green — commit `84f5312`.
+- Sync to Hugging Face Space #135 green — commit `84f5312`.
+- Tests #122 green — commit `1a8e87e`.
+- Sync to Hugging Face Space #136 green — commit `1a8e87e`.
+
+App verification:
+
+- Confirmed by coordinator/user.
+- `Originele waarden terugzetten` is visible.
+- Warning about sensitive/confidential information is visible.
+- Local-only / no-AI / no-cloud text is visible.
+- Text input works.
+- Button `Zet originele waarden lokaal terug` works.
+- Reinsert works with a valid Scrub Key.
+- Placeholders are correctly restored.
+- Result message appears: `37 waarde(n) lokaal teruggezet.`
+- `Herstelde tekst` appears with restored original values.
+
+Closeout notes:
+
+- Restored output may contain sensitive/confidential information again.
+- Existing Scrub Key export remains available.
+- Existing Scrub Key import/reload remains available.
+- Existing TXT, CSV, DOCX and PDF scrubbed downloads remain available based on prior verification and no intentional export changes.
+- No AI calls were added.
+- No cloud processing was added.
+- No automatic document rehydration was added.
+- No DOCX/PDF reinsert was added.
+- No existing scrubbed export/download behavior was intentionally changed.
+
+Intentionally not changed in this closeout:
+
+- No code files changed.
+- No tests changed.
+- No edit to `fix_streamlit_nested_expanders.py`.
+- No edit to `presidio_streamlit.py`.
+- No edit to `scrub_key_reinsert.py`.
+- No edit to `scrub_key.py`.
+- No edit to `scrub_key_import.py`.
+- No edit to `tests/*`.
+- No UI changes.
+- No AI calls.
+- No cloud processing.
+- No automatic document rehydration.
+- No TXT, CSV, DOCX or PDF export/download behavior changed.
+- No Scrub Key export/import behavior changed.
+- No secrets, tokens or real personal data.
+
+Outcome:
+
+- v13.3 deterministic local reinsert UI is completed, app-verified and formally closed.
+
+---
+
 ## v13.3 — Deterministic reinsert UI implementation
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed and app-verified after Actions/sync verification.
 
 Purpose:
 
@@ -45,6 +120,7 @@ Files added or changed:
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `handover/workpackages/20260607_1915_v13_3_reinsert_ui_implementation.md`
+- `handover/workpackages/20260607_1930_v13_3_reinsert_ui_app_closeout.md`
 
 Main changes:
 
@@ -70,10 +146,9 @@ Testing and validation:
 - Updated `tests/test_scrub_key_ui_patch.py` so it no longer forbids the intentionally added reinsert flow, while still guarding no-AI, no-cloud and no-automatic-document-rehydration boundaries.
 - Local targeted validation on a reconstructed subset passed:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py tests/test_scrub_key_reinsert_ui_patch.py tests/test_scrub_key_import_ui_patch.py tests/test_scrub_key_ui_patch.py` → 57 passed.
-- Full repository test suite was not run from this connector environment.
-- GitHub Actions are pending for WP8B commits.
-- Hugging Face sync is pending for WP8B commits.
-- App verification is pending because UI behavior changed.
+- GitHub Actions green based on coordinator evidence.
+- Hugging Face sync green based on coordinator evidence.
+- App verification confirmed by coordinator/user.
 
 Intentionally not changed:
 
@@ -93,13 +168,13 @@ Intentionally not changed:
 
 Outcome:
 
-- v13.3 deterministic local reinsert UI is implemented and awaits external verification and app testing.
+- v13.3 deterministic local reinsert UI is completed, app-verified and formally closed.
 
 ---
 
 ## v13.3 — Deterministic reinsert UI planning
 
-Status: implemented; reinsert UI implementation completed in WP8B and awaits verification.
+Status: implemented; reinsert UI implementation completed in WP8B and app-verified in WP8C.
 
 Purpose:
 
@@ -107,71 +182,9 @@ Purpose:
 - Define where the UI should appear, what labels it should use, what state it should rely on, and which warnings and audit fields it must show.
 - Keep AI-output behavior separate unless explicitly approved.
 
-Files added or changed:
-
-- `REINSERT_UI_SPEC.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1900_v13_3_reinsert_ui_planning.md`
-
-Main planning decisions:
-
-- Future UI block should appear after the existing Scrub Key import/reload section near the download/export area.
-- Suggested section label: `Originele waarden terugzetten`.
-- Suggested input label: `Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten`.
-- Suggested action button: `Zet originele waarden lokaal terug`.
-- Suggested output label: `Herstelde tekst`.
-- Suggested download label: `Download herstelde tekst (.txt)`.
-- Future UI should call `reinsert_from_scrub_key(text, scrub_key)` and render the helper result instead of duplicating reinsert logic.
-- Future UI should use a validated Scrub Key from import/reload first, or a key built from the current reviewed replacement table if no imported key exists.
-- Reinsertion must require a separate visible user action and must not happen automatically when a Scrub Key is loaded.
-- First UI implementation should produce restored text and `.txt` download only; no DOCX/PDF rehydration in the first UI step.
-
-Required warnings specified:
-
-- Reinsertion restores original sensitive values.
-- Restored text may again contain personal or confidential information.
-- Restored output must be manually reviewed before sharing.
-- A Scrub Key is reversible/pseudonymization, not full anonymization.
-- The key must remain local and protected.
-- No AI/cloud processing is involved in the local reinsert step.
-
-Required audit summary specified:
-
-- mapping item count;
-- active item count;
-- excluded item count;
-- replacement count;
-- placeholders not found;
-- unknown placeholders;
-- duplicate placeholders;
-- validation issues;
-- local-only status;
-- no-AI status;
-- no-cloud status.
-
-Testing and validation:
-
-- Tests: not applicable; planning/specification-only workpackage.
-- App verification: not applicable; no UI behavior changed in WP8 planning.
-
-Intentionally not changed in planning phase:
-
-- No UI code changed.
-- No direct edit to `fix_streamlit_nested_expanders.py`.
-- No direct edit to `presidio_streamlit.py`.
-- No tests added or changed.
-- No AI calls.
-- No cloud processing.
-- No automatic document rehydration.
-- No TXT, CSV, DOCX or PDF export behavior changed.
-- No Scrub Key JSON export behavior changed.
-- No Scrub Key import/reload behavior changed.
-- No secrets, tokens or real personal data.
-
 Outcome:
 
-- v13.3 deterministic reinsert UI was planned and then implemented in WP8B.
+- v13.3 deterministic reinsert UI was planned and then implemented and app-verified.
 
 ---
 
@@ -182,26 +195,8 @@ Status: completed and formally closed after Actions/sync verification.
 Purpose:
 
 - Administratively reconcile the v13.3 deterministic reinsert helper after coordinator-provided verification evidence.
-- Replace the previous `awaiting coordinator verification of Actions/sync` status with formal closeout.
 - Confirm that the helper remains pure, local and deterministic.
 - Preserve the boundary that no UI, AI-output flow, cloud processing or export/download behavior change was added.
-
-Verification evidence:
-
-- Tests #106 green — commit `5854dbf`.
-- Sync to Hugging Face Space #120 green — commit `5854dbf`.
-- Tests #107 green — commit `43ecad4`.
-- Sync to Hugging Face Space #121 green — commit `43ecad4`.
-- Tests #108 green — commit `6e4ec9b`.
-- Sync to Hugging Face Space #122 green — commit `6e4ec9b`.
-- Tests #109 green — commit `eaf036a`.
-- Sync to Hugging Face Space #123 green — commit `eaf036a`.
-
-Validation status:
-
-- GitHub Actions: green based on coordinator evidence.
-- Hugging Face sync: green based on coordinator evidence.
-- App verification: not applicable, helper-only package.
 
 Outcome:
 
@@ -218,26 +213,6 @@ Purpose:
 - Administratively close the v13.2 Scrub Key import/reload UI after app verification.
 - Record that the implemented import/reload flow works in the Hugging Face app.
 - Preserve the boundary that this phase is import/reload only and does not add AI-output reinsert.
-
-Technical evidence already recorded:
-
-- Tests #89 green — commit `83353e4`.
-- Tests #90 green — commit `4a1ef55`.
-- Sync to Hugging Face Space #104 green — commit `4a1ef55`.
-- Tests #91 green — commit `4d8bfe9`.
-- Sync to Hugging Face Space #105 green — commit `4d8bfe9`.
-- Tests #92 green — commit `ff8321f`.
-- Sync to Hugging Face Space #106 green — commit `ff8321f`.
-
-App verification:
-
-- Confirmed by coordinator/user.
-- `Scrub Key laden` works.
-- Scrub Key import/reload UI is visible.
-- Upload/paste import flow works.
-- Pseudonymization/reversibility warning is visible.
-- Existing `Download Scrub Key (.json)` remains visible.
-- Existing TXT, CSV, DOCX and PDF downloads remain available.
 
 Outcome:
 
@@ -270,6 +245,5 @@ Outcome:
 
 Possible directions:
 
-- Deterministic reinsert UI verification and closeout.
 - AI-output reinsert workflow review.
 - Further recognizer expansion by legal domain.
