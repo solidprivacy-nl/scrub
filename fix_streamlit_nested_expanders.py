@@ -9,6 +9,7 @@ Patches currently applied:
 - v12.1: add a user-facing review status model to the replacement table.
 - v12.2: add safe review-focus filters without changing export semantics.
 - v12.3: simplify the main review table and move audit details to a technical view.
+- v12.4: add clear review guidance text around the review workflow.
 """
 
 from pathlib import Path
@@ -41,30 +42,68 @@ nested_new = '''    st.markdown("**Woordenlijsten**")
 
 text = replace_once(text, nested_old, nested_new)
 
-# v12.1/v12.2/v12.3: import review helpers.
+# v12.1/v12.2/v12.3/v12.4: import review helpers.
 text = replace_once(
     text,
     'from display_labels_nl import entity_label, source_label, confidence_label\n',
     'from display_labels_nl import entity_label, source_label, confidence_label\n'
     'from review_status import review_status_for_source, review_status_label, review_status_order\n'
     'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n'
-    'from review_table_config import main_review_columns, technical_display_columns\n',
+    'from review_table_config import main_review_columns, technical_display_columns\n'
+    'from review_guidance import (\n'
+    '    REVIEW_INTRO_GUIDANCE,\n'
+    '    CANDIDATE_GUIDANCE,\n'
+    '    FOCUS_FILTER_GUIDANCE,\n'
+    '    TECHNICAL_DETAILS_GUIDANCE,\n'
+    '    AI_USAGE_GUIDANCE,\n'
+    '    EXPORT_GUIDANCE,\n'
+    ')\n',
 )
 
-# If v12.1 already added review_status but v12.2/v12.3 is not present yet, extend imports only.
+# If v12.1 already added review_status but v12.2/v12.3/v12.4 is not present yet, extend imports only.
 text = replace_once(
     text,
     'from review_status import review_status_for_source, review_status_label, review_status_order\n',
     'from review_status import review_status_for_source, review_status_label, review_status_order\n'
     'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n'
-    'from review_table_config import main_review_columns, technical_display_columns\n',
+    'from review_table_config import main_review_columns, technical_display_columns\n'
+    'from review_guidance import (\n'
+    '    REVIEW_INTRO_GUIDANCE,\n'
+    '    CANDIDATE_GUIDANCE,\n'
+    '    FOCUS_FILTER_GUIDANCE,\n'
+    '    TECHNICAL_DETAILS_GUIDANCE,\n'
+    '    AI_USAGE_GUIDANCE,\n'
+    '    EXPORT_GUIDANCE,\n'
+    ')\n',
 )
 
 text = replace_once(
     text,
     'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n',
     'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n'
+    'from review_table_config import main_review_columns, technical_display_columns\n'
+    'from review_guidance import (\n'
+    '    REVIEW_INTRO_GUIDANCE,\n'
+    '    CANDIDATE_GUIDANCE,\n'
+    '    FOCUS_FILTER_GUIDANCE,\n'
+    '    TECHNICAL_DETAILS_GUIDANCE,\n'
+    '    AI_USAGE_GUIDANCE,\n'
+    '    EXPORT_GUIDANCE,\n'
+    ')\n',
+)
+
+text = replace_once(
+    text,
     'from review_table_config import main_review_columns, technical_display_columns\n',
+    'from review_table_config import main_review_columns, technical_display_columns\n'
+    'from review_guidance import (\n'
+    '    REVIEW_INTRO_GUIDANCE,\n'
+    '    CANDIDATE_GUIDANCE,\n'
+    '    FOCUS_FILTER_GUIDANCE,\n'
+    '    TECHNICAL_DETAILS_GUIDANCE,\n'
+    '    AI_USAGE_GUIDANCE,\n'
+    '    EXPORT_GUIDANCE,\n'
+    ')\n',
 )
 
 # v12.1: add review status fields to remembered rows.
@@ -131,13 +170,19 @@ text = replace_once(
 ''',
 )
 
-# v12.1/v12.2/v12.3: sort review rows, show status summary, focus filters and technical view.
+# v12.1/v12.2/v12.3/v12.4: sort review rows, show guidance/status summary, focus filters and technical view.
 text = replace_once(
     text,
     '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
         edited_replacements_df = st.data_editor(
 ''',
     '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+        st.info(REVIEW_INTRO_GUIDANCE)
+        with st.expander("Uitleg bij deze controle", expanded=False):
+            st.markdown(f"- {CANDIDATE_GUIDANCE}")
+            st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
+            st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
+            st.markdown(f"- {AI_USAGE_GUIDANCE}")
         if "review_order" in replacement_editor_df.columns:
             replacement_editor_df = replacement_editor_df.sort_values(
                 by=["review_order", "type_label", "find"], kind="stable"
@@ -151,7 +196,7 @@ text = replace_once(
             "Focusfilter voor controle",
             REVIEW_FILTER_OPTIONS,
             index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
-            help="Gebruik dit als overzichtsfilter. De volledige vervangtabel hieronder blijft leidend voor de export.",
+            help=FOCUS_FILTER_GUIDANCE,
         )
         if review_filter != FILTER_SHOW_ALL:
             focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
@@ -162,12 +207,47 @@ text = replace_once(
             )
             st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
         with st.expander("Technische details bij de vervangtabel", expanded=False):
+            st.caption(TECHNICAL_DETAILS_GUIDANCE)
             technical_columns = technical_display_columns(replacement_editor_df.columns)
             if technical_columns:
                 st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
             else:
                 st.caption("Geen technische detailkolommen beschikbaar.")
         edited_replacements_df = st.data_editor(
+''',
+)
+
+# v12.4: if v12.1/v12.2/v12.3 block is already present, add guidance to that block.
+text = replace_once(
+    text,
+    '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+        if "review_order" in replacement_editor_df.columns:
+''',
+    '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+        st.info(REVIEW_INTRO_GUIDANCE)
+        with st.expander("Uitleg bij deze controle", expanded=False):
+            st.markdown(f"- {CANDIDATE_GUIDANCE}")
+            st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
+            st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
+            st.markdown(f"- {AI_USAGE_GUIDANCE}")
+        if "review_order" in replacement_editor_df.columns:
+''',
+)
+
+text = replace_once(
+    text,
+    '            help="Gebruik dit als overzichtsfilter. De volledige vervangtabel hieronder blijft leidend voor de export.",\n',
+    '            help=FOCUS_FILTER_GUIDANCE,\n',
+)
+
+text = replace_once(
+    text,
+    '''        with st.expander("Technische details bij de vervangtabel", expanded=False):
+            technical_columns = technical_display_columns(replacement_editor_df.columns)
+''',
+    '''        with st.expander("Technische details bij de vervangtabel", expanded=False):
+            st.caption(TECHNICAL_DETAILS_GUIDANCE)
+            technical_columns = technical_display_columns(replacement_editor_df.columns)
 ''',
 )
 
@@ -220,6 +300,16 @@ text = replace_once(
                 "find": st.column_config.TextColumn(
                     "Gevonden tekst", help="Exacte tekst die vervangen moet worden."
                 ),
+''',
+)
+
+# v12.4: add export guidance before downloads if a download section marker is present.
+text = replace_once(
+    text,
+    '''        st.subheader("4. Download opgeschoonde bestanden")
+''',
+    '''        st.subheader("4. Download opgeschoonde bestanden")
+        st.warning(EXPORT_GUIDANCE)
 ''',
 )
 
