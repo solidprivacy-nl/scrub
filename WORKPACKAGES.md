@@ -196,7 +196,7 @@ Outcome:
 
 ### WP5 — v13.2 Scrub Key import/reload helper and tests
 
-Status: helper and tests implemented; coordinator evidence reported green checks before UI integration.
+Status: completed.
 
 Implemented files:
 
@@ -223,13 +223,13 @@ Boundaries preserved:
 
 Outcome:
 
-- v13.2 helper layer is ready for UI integration.
+- v13.2 helper layer was ready for UI integration and is now part of the completed v13.2 import/reload flow.
 
 ---
 
 ### WP6 — v13.2 Scrub Key import/reload UI integration
 
-Status: completed and formally closed after Actions/sync verification; app verification pending user/coordinator confirmation.
+Status: completed and app-verified.
 
 Implemented files:
 
@@ -239,6 +239,7 @@ Implemented files:
 - `CHANGELOG.md`
 - `handover/workpackages/20260607_1645_v13_2_scrub_key_import_ui.md`
 - `handover/workpackages/20260607_1715_v13_2_scrub_key_import_ui_closeout.md`
+- `handover/workpackages/20260607_1730_v13_2_scrub_key_import_ui_app_closeout.md`
 
 Implemented behavior:
 
@@ -266,12 +267,20 @@ Validation evidence:
   - Tests #92 green — commit `ff8321f`.
   - Sync to Hugging Face Space #106 green — commit `ff8321f`.
 
+App verification:
+
+- Confirmed by coordinator/user.
+- `Scrub Key laden` works.
+- Scrub Key import/reload UI is visible.
+- Upload/paste import flow works.
+- Pseudonymization/reversibility warning is visible.
+- Existing `Download Scrub Key (.json)` remains visible.
+- Existing TXT, CSV, DOCX and PDF downloads remain available.
+
 Closeout notes:
 
 - GitHub Actions tests are green based on coordinator evidence.
 - GitHub to Hugging Face sync is green based on coordinator evidence.
-- App verification is pending user/coordinator confirmation.
-- Existing Scrub Key JSON export remains in place.
 - Import/reload remains local and uses existing helper logic.
 - The key remains pseudonymization/reversible and must be protected.
 - No AI-output reinsert behavior was added.
@@ -280,7 +289,9 @@ Closeout notes:
 
 Boundaries preserved:
 
-- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `presidio_streamlit.py` during closeout.
+- No code files changed during this app-verification closeout.
+- No tests changed during this app-verification closeout.
 - No AI-output reinsert.
 - No automatic document rehydration.
 - No silent replacement of current review rows without a visible user action.
@@ -289,14 +300,35 @@ Boundaries preserved:
 - No cloud processing.
 - No secret, token or real personal data storage.
 
+Outcome:
+
+- v13.2 Scrub Key import/reload UI is completed, app-verified and closed.
+
+---
+
+## Active / next recommended workpackage
+
+### WP7 — v13.3 Deterministic reinsert helper
+
+Status: recommended next workpackage; not started here.
+
+Goal:
+
+- Add a pure helper that can apply a loaded Scrub Key mapping to scrubbed text locally.
+- Keep this helper-only before any UI integration.
+
+Boundaries:
+
+- No AI-output UI yet.
+- No automatic document rehydration.
+- No cloud processing.
+- No changes to existing TXT/CSV/DOCX/PDF export behavior.
+
 ---
 
 ## Recommended execution order
 
-1. Ask the coordinator/user to visually verify the Hugging Face app:
-   - `Scrub Key laden` visible;
-   - import/reload warning visible;
-   - existing Scrub Key export still visible;
-   - existing downloads still available.
-2. After import/reload is visually verified, implement a deterministic reinsert helper as a separate non-UI workpackage.
-3. Only after deterministic reinsert is stable, consider AI-output reinsert UI.
+1. Start WP7 as a helper-only deterministic reinsert workpackage.
+2. Add tests for placeholder-to-original replacement using synthetic values only.
+3. Only after deterministic reinsert is stable, consider a separate v13.3 UI workpackage.
+4. Keep AI-output workflow separate and explicitly reviewed before UI integration.
