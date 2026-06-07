@@ -22,13 +22,134 @@ From v10 onward, recognizer work follows this order:
 5. Let GitHub sync to Hugging Face automatically.
 6. Test the app in Hugging Face.
 
-This prevents one-off fixes and protects existing behaviour.
+For UI/UX-only work, prefer pure helper modules and tests before touching Streamlit UI flow.
+
+---
+
+## v12.5 — Final review summary helper
+
+Status: helper and tests implemented; UI integration pending WP1/v12.4 verification.
+
+Purpose:
+
+- Prepare the final export readiness summary before downloads.
+- Count export scope and review risk without changing export semantics.
+- Keep this work safely outside the active Streamlit review/download UI until v12.4 is fully verified.
+
+Files added or changed:
+
+- `review_summary.py`
+- `tests/test_review_summary.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Added a pure helper that accepts review rows as dictionaries or DataFrame-like records.
+- Added summary counts for:
+  - total rows;
+  - automatically detected rows;
+  - rows needing review;
+  - manually added rows;
+  - remembered replacement rows;
+  - checked rows included in export;
+  - unchecked rows excluded from export;
+  - open unchecked candidate rows.
+- Added conservative include-flag parsing for boolean, numeric and Dutch/string values.
+- Added status inference from stable status values, Dutch status labels, source fields and manual/remembered entity markers.
+- Added Dutch readiness labels and markdown summary lines for later UI integration.
+
+Testing:
+
+- Added unit tests for `review_summary.py`.
+- Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_review_summary.py` → 5 passed.
+- GitHub Actions status for the latest commits still needs external confirmation because the connector returned no workflow runs for push commits.
+- Hugging Face sync status for the latest commits still needs external confirmation.
+
+Intentionally not changed:
+
+- No Streamlit UI integration yet.
+- No edits to `presidio_streamlit.py`.
+- No edits to `fix_streamlit_nested_expanders.py`.
+- No recognizer changes.
+- No export/download semantics change.
+- No Scrub Key or reinsert implementation.
+- No LLM/cloud feature.
+
+---
+
+## v12.4 — Review guidance text
+
+Status: implemented; app visually confirmed by user; latest Actions/sync confirmation still pending for later governance commits.
+
+Purpose:
+
+- Make the review workflow self-explanatory for non-technical legal users.
+- Explain that only checked rows are included in export.
+- Explain that `Controle nodig` rows require manual review.
+- Explain that the focus filter is a viewing aid, not the export scope.
+- Explain that technical details are mainly for audit/debugging.
+- Add AI-use guidance: scrub first, then use AI.
+
+Files added or changed:
+
+- `review_guidance.py`
+- `tests/test_review_guidance.py`
+- `fix_streamlit_nested_expanders.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Added short Dutch review guidance strings.
+- Added markdown helper for guidance bullets.
+- Patched the review flow to show guidance near the replacement table and export step.
+- Kept the guidance advisory only; it does not alter replacement selection or export behavior.
+
+Testing:
+
+- Added unit tests for guidance text coverage.
+- User visually confirmed the guidance block appeared correctly in Hugging Face.
+
+Intentionally not changed:
+
+- No recognizer changes.
+- No export semantics change.
+- No desktop/MSI work.
+- No LLM/cloud feature.
+
+---
+
+## Project governance setup
+
+Status: implemented; latest Actions/sync confirmation still pending at the time it was handed over.
+
+Purpose:
+
+- Make GitHub the operational source of truth for SolidPrivacy Scrub workpackages.
+- Establish a central project prompt, roadmap, workpackage plan and handover convention.
+- Prepare continuation across fresh chats/workers.
+
+Files added or changed:
+
+- `PROJECT_PROMPT.md`
+- `PROJECT_PROMPT_SHORT.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `handover/workpackages/20260607_1057_project_prompt_governance_handover.md`
+
+Main changes:
+
+- Added a full worker prompt with repository boundaries, source-of-truth rules, testing/sync rules and handover discipline.
+- Added a short project prompt for ChatGPT Project Instructions.
+- Added the central roadmap and executable workpackage plan.
+- Established `handover/workpackages/` as the coordinator-readable handover directory.
 
 ---
 
 ## v12.3 — Review table simplification
 
-Status: implemented; awaiting GitHub Actions and Hugging Face verification.
+Status: completed and user-confirmed after pandas Index bugfix.
 
 Purpose:
 
@@ -63,7 +184,7 @@ Main changes:
   - `Technische score`
   - `Technische bron`
 - Added a separate `Technische details bij de vervangtabel` expander.
-- Added tests to enforce that technical fields are not part of the main review columns.
+- Fixed pandas Index truth-value handling by explicitly converting available columns to list/set.
 
 Important design decision:
 
@@ -74,8 +195,7 @@ Important design decision:
 Testing:
 
 - Added unit tests for `review_table_config.py`.
-- GitHub Actions status still needs to be checked after this changelog update.
-- Hugging Face app should be checked after sync.
+- User confirmed the simplified review table and technical-details flow worked after the bugfix.
 
 Intentionally not changed:
 
@@ -209,18 +329,8 @@ Main changes:
 
 - Added lightweight recognizer integration tests using `get_dutch_recognizers()` directly.
 - Verified that v11.1 legal reference values are detected by the actual recognizers.
-- Verified expected entity types for values such as:
-  - `10598721 / UE VERZ 26-441` → `NL_LEGAL_CASE_NUMBER`
-  - `INC-2026-0912` → `NL_INCIDENT_NUMBER`
-  - `CAM-MAAS-2026-0518` → `NL_OTHER_REFERENCE`
-  - `CLM-2026-112233` → `NL_CLAIM_NUMBER`
-  - `REP-2026-4410` → `NL_OTHER_REFERENCE`
-  - `ARN 26/4412` → `NL_LEGAL_CASE_NUMBER`
-  - `NL26.12345` → `NL_LEGAL_CASE_NUMBER`
-  - `GEM-HLM-2026-2210` → `NL_LEGAL_CASE_NUMBER`
-  - `200.345.678/01 OK` → `NL_LEGAL_CASE_NUMBER`
-  - `76543210` after KvK context → `NL_KVK_NUMBER`
-- Verified value-only behavior so context such as `Zaaknummer:`, `intern incidentnummer`, `Claimreferentie verzekeraar:` and `KvK-nummer vennootschap:` remains readable.
+- Verified expected entity types for representative court/case numbers, incident numbers, camera/video references, insurance claim references, repair numbers, immigration numbers, municipal references and KvK numbers.
+- Verified value-only behavior so context labels remain readable.
 
 Testing:
 
@@ -262,9 +372,8 @@ Main changes:
 
 Important design decision:
 
-- `GEM-HLM-2026-2210` is not a classic court-number format by itself.
-- It becomes a legal case number because it appears near context such as `zaaknummer`.
-- Therefore the test reflects contextual recognition, not only raw pattern recognition.
+- Context can make a generic-looking reference legally relevant.
+- Tests reflect contextual recognition, not only raw pattern recognition.
 
 Testing:
 
@@ -434,28 +543,6 @@ Important design conclusions:
 - A local deterministic scrubber is a better MVP path than relying on cloud LLMs.
 - Local LLMs may be useful later, but they are not the best first layer for a fast legal scrubber.
 - The MVP should combine deterministic recognizers, Dutch legal/admin taxonomy, review table, candidate scanner, regression tests and eventually local packaging.
-
----
-
-## Planned next phase — v12.4 Review guidance text
-
-Status: planned, not yet implemented.
-
-Goal:
-
-- Add clearer user guidance around review workflow and candidate handling.
-
-Planned scope:
-
-- Explain the difference between automatically applied rows and candidate rows.
-- Add short help text near the focus filter and technical details expander.
-- Make it clearer that only checked rows are exported.
-
-Non-goals for v12.4:
-
-- No recognizer changes.
-- No MSI/local desktop packaging yet.
-- No LLM integration.
 
 ---
 
