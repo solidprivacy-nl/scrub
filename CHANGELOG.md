@@ -26,23 +26,23 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
-## v13.2 — Scrub Key import/reload UI closeout
+## v13.2 — Scrub Key import/reload UI app verification closeout
 
-Status: completed and formally closed after Actions/sync verification; app verification pending user/coordinator confirmation.
+Status: completed, app-verified and closed.
 
 Purpose:
 
-- Administratively close the v13.2 Scrub Key import/reload UI workpackage.
-- Record coordinator evidence that GitHub Actions tests and GitHub to Hugging Face sync are green.
+- Administratively close the v13.2 Scrub Key import/reload UI after app verification.
+- Record that the implemented import/reload flow works in the Hugging Face app.
 - Preserve the boundary that this phase is import/reload only and does not add AI-output reinsert.
 
 Files added or changed:
 
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `handover/workpackages/20260607_1715_v13_2_scrub_key_import_ui_closeout.md`
+- `handover/workpackages/20260607_1730_v13_2_scrub_key_import_ui_app_closeout.md`
 
-Closeout evidence:
+Technical evidence already recorded:
 
 - Tests #89 green — commit `83353e4`.
 - Tests #90 green — commit `4a1ef55`.
@@ -52,21 +52,27 @@ Closeout evidence:
 - Tests #92 green — commit `ff8321f`.
 - Sync to Hugging Face Space #106 green — commit `ff8321f`.
 
-Closeout notes:
-
-- Scrub Key import/reload UI was implemented.
-- GitHub Actions tests are green based on coordinator evidence.
-- GitHub to Hugging Face sync is green based on coordinator evidence.
-- Existing Scrub Key JSON export remains in place.
-- Import/reload remains local and uses existing helper logic.
-- The key remains pseudonymization/reversible and must be protected.
-- Existing TXT, CSV, DOCX and PDF downloads were not intentionally changed.
-
 App verification:
 
-- App verification: pending user/coordinator confirmation.
+- Confirmed by coordinator/user.
+- `Scrub Key laden` works.
+- Scrub Key import/reload UI is visible.
+- Upload/paste import flow works.
+- Pseudonymization/reversibility warning is visible.
+- Existing `Download Scrub Key (.json)` remains visible.
+- Existing TXT, CSV, DOCX and PDF downloads remain available.
 
-Intentionally not changed in closeout:
+Closeout notes:
+
+- GitHub Actions tests were green based on coordinator evidence.
+- GitHub to Hugging Face sync was green based on coordinator evidence.
+- Import/reload remains local and uses the existing helper logic.
+- The key remains pseudonymization/reversible and must be protected.
+- No AI-output reinsert behavior was added.
+- No automatic document rehydration was added.
+- No export/download behavior was intentionally changed.
+
+Intentionally not changed in this app-verification closeout:
 
 - No code files changed.
 - No tests changed.
@@ -81,11 +87,15 @@ Intentionally not changed in closeout:
 - No cloud processing.
 - No secrets, tokens or real personal data.
 
+Outcome:
+
+- v13.2 Scrub Key import/reload UI is completed, app-verified and closed.
+
 ---
 
 ## v13.2 — Scrub Key import/reload UI integration
 
-Status: implemented; Actions/sync later verified green in closeout.
+Status: implemented; Actions/sync verified green in closeout; app verification completed in app closeout.
 
 Purpose:
 
@@ -123,6 +133,7 @@ Testing:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key_import_ui_patch.py` → 9 passed.
   - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py` → 12 passed.
   - `PYTHONPATH=. pytest -q` on the available subset → 35 passed.
+- Coordinator evidence after implementation confirmed green tests and sync for commits `83353e4`, `4a1ef55`, `4d8bfe9` and `ff8321f`.
 
 Intentionally not changed:
 
@@ -141,7 +152,7 @@ Intentionally not changed:
 
 ## v13.2 — Scrub Key import/reload helper and tests
 
-Status: helper and tests implemented; coordinator evidence reported green checks before UI integration.
+Status: completed.
 
 Purpose:
 
