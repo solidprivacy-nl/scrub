@@ -246,7 +246,7 @@ Outcome:
 
 ### WP8 — v13.3 Deterministic reinsert UI planning
 
-Status: implemented; reinsert UI implementation can start as a separate sequential workpackage.
+Status: implemented; reinsert UI implementation completed in WP8B and app-verified in WP8C.
 
 Implemented files:
 
@@ -257,13 +257,13 @@ Implemented files:
 
 Outcome:
 
-- v13.3 deterministic reinsert UI is planned and ready for implementation.
+- v13.3 deterministic reinsert UI was planned before implementation.
 
 ---
 
-### WP8B — v13.3 Deterministic reinsert UI implementation
+### WP8B / WP8C — v13.3 Deterministic reinsert UI implementation and app verification closeout
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed and app-verified after Actions/sync verification.
 
 Implemented files:
 
@@ -273,6 +273,7 @@ Implemented files:
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `handover/workpackages/20260607_1915_v13_3_reinsert_ui_implementation.md`
+- `handover/workpackages/20260607_1930_v13_3_reinsert_ui_app_closeout.md`
 
 Implemented behavior:
 
@@ -288,14 +289,45 @@ Implemented behavior:
 
 Validation status:
 
-- Local targeted validation on a reconstructed subset passed:
+- Local targeted validation recorded in WP8B:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py tests/test_scrub_key_reinsert_ui_patch.py tests/test_scrub_key_import_ui_patch.py tests/test_scrub_key_ui_patch.py` → 57 passed.
-- GitHub Actions: pending for WP8B commits.
-- Hugging Face sync: pending for WP8B commits.
-- App verification: pending because UI behavior changed.
+- GitHub Actions: green based on coordinator evidence:
+  - Tests #120 green — commit `7725182`.
+  - Tests #121 green — commit `84f5312`.
+  - Tests #122 green — commit `1a8e87e`.
+- Hugging Face sync: green based on coordinator evidence:
+  - Sync to Hugging Face Space #134 green — commit `7725182`.
+  - Sync to Hugging Face Space #135 green — commit `84f5312`.
+  - Sync to Hugging Face Space #136 green — commit `1a8e87e`.
+- App verification: confirmed by coordinator/user.
+
+App verification evidence:
+
+- `Originele waarden terugzetten` is visible.
+- Warning about sensitive/confidential information is visible.
+- Local-only / no-AI / no-cloud text is visible.
+- Text input works.
+- Button `Zet originele waarden lokaal terug` works.
+- Reinsert works with a valid Scrub Key.
+- Placeholders are correctly restored.
+- Result message appears: `37 waarde(n) lokaal teruggezet.`
+- `Herstelde tekst` appears with restored original values.
+
+Closeout notes:
+
+- Restored output may contain sensitive/confidential information again.
+- Existing Scrub Key export remains available.
+- Existing Scrub Key import/reload remains available.
+- Existing TXT, CSV, DOCX and PDF scrubbed downloads remain available based on prior verification and no intentional export changes.
+- No AI calls were added.
+- No cloud processing was added.
+- No automatic document rehydration was added.
+- No DOCX/PDF reinsert was added.
+- No existing scrubbed export/download behavior was intentionally changed.
 
 Boundaries preserved:
 
+- No code files changed in WP8C closeout.
 - No direct edit to `presidio_streamlit.py`.
 - No AI calls.
 - No cloud processing.
@@ -309,35 +341,33 @@ Boundaries preserved:
 
 Outcome:
 
-- v13.3 deterministic local reinsert UI is implemented and awaits external verification and app testing.
+- v13.3 deterministic local reinsert UI is completed, app-verified and formally closed.
 
 ---
 
 ## Active / next recommended workpackage
 
-### WP8C — v13.3 Deterministic reinsert UI verification and closeout
+### WP9 — AI-output reinsert workflow review
 
 Status: recommended next workpackage; not started here.
 
 Goal:
 
-- Verify GitHub Actions and Hugging Face sync for WP8B.
-- Ask coordinator/user to verify the Hugging Face app shows the local reinsert UI and can restore mapped placeholders.
-- Confirm existing Scrub Key export/import and TXT/CSV/DOCX/PDF scrubbed downloads remain available.
+- Review whether AI-output-specific behavior is needed beyond accepting pasted text.
+- Keep any AI-related behavior separate, explicit and locally safe.
 
 Boundaries:
 
-- Closeout/status-only unless app verification reveals a bug.
-- Do not add AI calls.
+- Do not add AI calls by default.
 - Do not add cloud processing.
-- Do not change export/download behavior.
+- Do not change existing export/download behavior.
+- Preserve local-only Scrub Key handling and pseudonymization warnings.
 
 ---
 
 ## Recommended execution order
 
-1. Verify GitHub Actions tests for WP8B.
-2. Verify GitHub to Hugging Face sync for WP8B.
-3. Ask for app verification because UI behavior changed.
-4. Close WP8B through WP8C if verification is green.
-5. Keep AI-output workflow separate and explicitly reviewed before AI-specific UI behavior.
+1. Start WP9 as a review/planning workpackage only.
+2. Decide whether AI-output-specific handling is needed.
+3. Keep AI/cloud behavior out unless explicitly approved.
+4. Preserve export/download and Scrub Key import/export semantics.
