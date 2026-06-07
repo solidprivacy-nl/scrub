@@ -26,9 +26,84 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v13.1 — Scrub Key JSON export UI closeout
+
+Status: completed and app verified after mapping hotfix.
+
+Purpose:
+
+- Close v13.1 after confirming that the local Scrub Key JSON export works in the Hugging Face app.
+- Record that the earlier `original_value` validation error was fixed.
+- Preserve the boundary that Scrub Key import/reload and reinsert are not implemented yet.
+
+Files added or changed in the full v13.1 line:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_scrub_key_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1535_v13_1_scrub_key_json_export_ui.md`
+- `handover/workpackages/20260607_1535_v13_1_scrub_key_ui_mapping_hotfix.md`
+- `handover/workpackages/20260607_1550_v13_1_scrub_key_json_export_closeout.md`
+
+Main changes:
+
+- Added a `Scrub Key (JSON)` section to the download/export flow.
+- Added a `Download Scrub Key (.json)` button.
+- Added warning text explaining that the Scrub Key makes replaced values locally reversible.
+- Added warning text that this is pseudonymization, not full anonymization.
+- Added warning text not to share the key with AI services or third parties unless consciously intended and allowed.
+- Added timestamp creation in the UI/export layer so the pure `scrub_key.py` model remains deterministic and side-effect free.
+- Added the mapping hotfix so app review-table rows are converted into Scrub Key model rows before calling `build_scrub_key(...)`.
+
+Mapping hotfix:
+
+- `find` → `original_value`
+- `replace_with` → `placeholder`
+- `entity_type` → `entity_type`
+- `type_label` → `type_label`
+- `source` → `source`
+- `review_status` → `review_status`
+- `include` → `include`
+
+Testing and verification:
+
+- Initial v13.1 UI implementation:
+  - `Tests #73` green for commit `9d349bb`.
+  - `Sync to Hugging Face Space #87` green for commit `9d349bb`.
+- Mapping hotfix:
+  - `Tests #78` green for commit `8d33941`.
+  - `Sync to Hugging Face Space #92` green for commit `8d33941`.
+- User verified in the Hugging Face app:
+  - `Scrub Key (JSON)` section is visible.
+  - pseudonymization / reversibility warning is visible.
+  - `Item has empty required field: original_value` is gone.
+  - `Download Scrub Key (.json)` is visible.
+  - Scrub Key JSON download works.
+
+Intentionally not changed:
+
+- No edit to `scrub_key.py` in the mapping hotfix.
+- No direct edit to `presidio_streamlit.py`.
+- No Scrub Key import/reload.
+- No reinsert UI.
+- No AI-output flow.
+- No cloud processing.
+- No server-side Scrub Key storage.
+- No change to TXT, CSV, DOCX or PDF download behavior.
+- No change to existing replacement/export semantics.
+- No `st.stop()` or export blocking behavior added.
+
+Outcome:
+
+- v13.1 Scrub Key JSON export is complete.
+- The next planned phase is v13.2 Scrub Key import/reload helper and tests.
+
+---
+
 ## WP4B-FIX — Scrub Key UI row mapping hotfix
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed and app verified.
 
 Purpose:
 
@@ -64,13 +139,9 @@ Main changes:
 Testing and verification:
 
 - Updated `tests/test_scrub_key_ui_patch.py` with mapping regression tests.
-- Local pytest was not run from this connector environment.
-- Required follow-up validation:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py`
-  - preferably `PYTHONPATH=. pytest -q`
-- GitHub Actions and Hugging Face sync are pending for the WP4B-FIX commits.
-- Hugging Face app verification is pending.
+- Coordinator confirmed `Tests #78` green for commit `8d33941`.
+- Coordinator confirmed `Sync to Hugging Face Space #92` green for commit `8d33941`.
+- User verified the app behavior and confirmed the JSON download works.
 
 Intentionally not changed:
 
@@ -89,7 +160,7 @@ Intentionally not changed:
 
 ## v13.1 — Scrub Key JSON export UI integration
 
-Status: implemented; hotfix applied in WP4B-FIX; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed after mapping hotfix and app verification.
 
 Purpose:
 
@@ -121,14 +192,9 @@ Main changes:
 Testing and verification:
 
 - Added `tests/test_scrub_key_ui_patch.py`.
-- Local pytest was not run from the connector environment.
-- Required follow-up validation:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py`
-  - `PYTHONPATH=. pytest -q tests/test_export_sanity_ui_patch.py`
-  - preferably `PYTHONPATH=. pytest -q`
-- GitHub Actions and Hugging Face sync are pending for the WP4B/WP4B-FIX commits.
-- Hugging Face app verification is pending.
+- Coordinator confirmed `Tests #73` green and `Sync to Hugging Face Space #87` green for commit `9d349bb`.
+- Mapping hotfix later passed `Tests #78` and `Sync #92`.
+- User verified the app and confirmed Scrub Key JSON download works.
 
 Intentionally not changed:
 
