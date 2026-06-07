@@ -10,6 +10,7 @@ Patches currently applied:
 - v12.2: add safe review-focus filters without changing export semantics.
 - v12.3: simplify the main review table and move audit details to a technical view.
 - v12.4: add clear review guidance text around the review workflow.
+- v12.5: show a final review summary before download/export.
 """
 
 from pathlib import Path
@@ -42,7 +43,7 @@ nested_new = '''    st.markdown("**Woordenlijsten**")
 
 text = replace_once(text, nested_old, nested_new)
 
-# v12.1/v12.2/v12.3/v12.4: import review helpers.
+# v12.1/v12.2/v12.3/v12.4/v12.5: import review helpers.
 text = replace_once(
     text,
     'from display_labels_nl import entity_label, source_label, confidence_label\n',
@@ -57,10 +58,11 @@ text = replace_once(
     '    TECHNICAL_DETAILS_GUIDANCE,\n'
     '    AI_USAGE_GUIDANCE,\n'
     '    EXPORT_GUIDANCE,\n'
-    ')\n',
+    ')\n'
+    'from review_summary import build_review_summary, review_summary_markdown\n',
 )
 
-# If v12.1 already added review_status but v12.2/v12.3/v12.4 is not present yet, extend imports only.
+# If v12.1 already added review_status but later helpers are not present yet, extend imports only.
 text = replace_once(
     text,
     'from review_status import review_status_for_source, review_status_label, review_status_order\n',
@@ -74,7 +76,8 @@ text = replace_once(
     '    TECHNICAL_DETAILS_GUIDANCE,\n'
     '    AI_USAGE_GUIDANCE,\n'
     '    EXPORT_GUIDANCE,\n'
-    ')\n',
+    ')\n'
+    'from review_summary import build_review_summary, review_summary_markdown\n',
 )
 
 text = replace_once(
@@ -89,7 +92,8 @@ text = replace_once(
     '    TECHNICAL_DETAILS_GUIDANCE,\n'
     '    AI_USAGE_GUIDANCE,\n'
     '    EXPORT_GUIDANCE,\n'
-    ')\n',
+    ')\n'
+    'from review_summary import build_review_summary, review_summary_markdown\n',
 )
 
 text = replace_once(
@@ -103,7 +107,29 @@ text = replace_once(
     '    TECHNICAL_DETAILS_GUIDANCE,\n'
     '    AI_USAGE_GUIDANCE,\n'
     '    EXPORT_GUIDANCE,\n'
+    ')\n'
+    'from review_summary import build_review_summary, review_summary_markdown\n',
+)
+
+text = replace_once(
+    text,
+    'from review_guidance import (\n'
+    '    REVIEW_INTRO_GUIDANCE,\n'
+    '    CANDIDATE_GUIDANCE,\n'
+    '    FOCUS_FILTER_GUIDANCE,\n'
+    '    TECHNICAL_DETAILS_GUIDANCE,\n'
+    '    AI_USAGE_GUIDANCE,\n'
+    '    EXPORT_GUIDANCE,\n'
     ')\n',
+    'from review_guidance import (\n'
+    '    REVIEW_INTRO_GUIDANCE,\n'
+    '    CANDIDATE_GUIDANCE,\n'
+    '    FOCUS_FILTER_GUIDANCE,\n'
+    '    TECHNICAL_DETAILS_GUIDANCE,\n'
+    '    AI_USAGE_GUIDANCE,\n'
+    '    EXPORT_GUIDANCE,\n'
+    ')\n'
+    'from review_summary import build_review_summary, review_summary_markdown\n',
 )
 
 # v12.1: add review status fields to remembered rows.
@@ -303,14 +329,31 @@ text = replace_once(
 ''',
 )
 
-# v12.4: add export guidance before downloads if a download section marker is present.
+review_summary_block = '''        st.subheader("4. Download opgeschoonde bestanden")
+        final_review_summary = build_review_summary(edited_replacements_df)
+        st.markdown("**Eindcontrole vóór download**")
+        if final_review_summary.get("open_candidate_warning") or final_review_summary.get("checked_rows_included_in_export", 0) == 0:
+            st.warning(final_review_summary.get("readiness_label", "Controle nodig voor export"))
+        else:
+            st.success(final_review_summary.get("readiness_label", "Klaar voor export na gebruikerscontrole"))
+        st.markdown(review_summary_markdown(final_review_summary))
+        st.warning(EXPORT_GUIDANCE)
+'''
+
+# v12.5: add final review summary before downloads. Handle both unpatched and v12.4-patched app text.
+text = replace_once(
+    text,
+    '''        st.subheader("4. Download opgeschoonde bestanden")
+        st.warning(EXPORT_GUIDANCE)
+''',
+    review_summary_block,
+)
+
 text = replace_once(
     text,
     '''        st.subheader("4. Download opgeschoonde bestanden")
 ''',
-    '''        st.subheader("4. Download opgeschoonde bestanden")
-        st.warning(EXPORT_GUIDANCE)
-''',
+    review_summary_block,
 )
 
 # v12.1: include status in the scrub report rows where downstream exporters keep it.
