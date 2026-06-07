@@ -293,6 +293,9 @@ Implemented files:
 
 - `scrub_key_reinsert.py`
 - `tests/test_scrub_key_reinsert.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1745_v13_3_reinsert_helper.md`
 
 Implemented helper behavior:
 
@@ -310,9 +313,16 @@ Implemented tests:
 
 - `tests/test_scrub_key_reinsert.py`
 
+Validation status:
+
+- Local targeted validation in this worker environment passed on the available/reconstructed subset:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
+- GitHub Actions pending for WP7A.
+- Hugging Face sync pending for WP7A.
+
 Boundaries preserved:
 
-- No UI files changed.
+- No UI files changed by this worker.
 - No direct edit to `presidio_streamlit.py`.
 - No direct edit to `fix_streamlit_nested_expanders.py`.
 - No AI calls.
@@ -322,26 +332,17 @@ Boundaries preserved:
 - No Scrub Key export/import UI behavior changes.
 - Synthetic test values only.
 
-Validation status:
-
-- Local pytest not run from this connector environment.
-- GitHub Actions and Hugging Face sync pending for commits:
-  - `2f230019de017b80bed42c539fda0d64314338a8` — Add deterministic Scrub Key reinsert helper.
-  - `1b58ecf483ba98c3121a059e2c52ca13c3c45d29` — Add deterministic reinsert helper tests.
-
 Next step:
 
-- Verify GitHub Actions and Hugging Face sync.
-- Run targeted tests:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py`
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_reinsert.py`
-- Only after helper verification, plan v13.3 reinsert UI as a separate workpackage.
+- Verify GitHub Actions and Hugging Face sync for WP7A.
+- After green checks, plan a separate WP7B closeout.
+- Only after helper verification, consider a separate v13.3 UI workpackage.
 
 ---
 
 ## Recommended execution order
 
 1. Verify WP7A helper tests and sync.
-2. Only after deterministic reinsert is stable, consider a separate v13.3 UI workpackage.
-3. Keep AI-output workflow separate and explicitly reviewed before UI integration.
+2. Close WP7A after external verification.
+3. Plan UI integration separately, with no AI-output flow unless explicitly approved.
+4. Keep AI-output workflow separate and explicitly reviewed before UI integration.
