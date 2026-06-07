@@ -165,11 +165,9 @@ Outcome:
 
 ---
 
-## Active workpackage
-
 ### WP3 — v12.6 Export sanity checks
 
-Status: UI integration implemented; awaiting GitHub Actions, Hugging Face sync, and app verification.
+Status: completed and formally closed after coordinator closeout instruction.
 
 Goal:
 
@@ -203,23 +201,27 @@ UI integration:
 Validation evidence:
 
 - Helper verification was reconciled externally by coordinator: `Tests #58` green and `Sync to Hugging Face Space #72` green for commit `b0bf8ae`.
-- UI integration commits created:
+- UI integration commits:
   - `c60b9b4bfa8944e620546ca26a4fe42c287edaa0` — Integrate export sanity warnings into UI patch.
   - `f5158c9faf8e7676cb8403da0b42b0465539acfa` — Add export sanity UI patch tests.
-- This worker could not run local pytest from the connector environment.
+  - `7d043d13096518d5dca6a5f187189fa3a8471627` — Update workpackage status for export sanity UI.
+  - `4a84ddb7ca2b298ce2dcdcc5daf8b9f1cc055023` — Add export sanity UI handover.
+- WP3C closeout was requested by the coordinator as administrative closeout only, with no further code changes.
 
 Boundaries preserved:
 
 - No direct edit to `presidio_streamlit.py`.
+- No additional code changes in WP3C.
 - No export/download behavior changed.
 - Downloads are not blocked.
-- No Scrub Key logic added.
+- No Scrub Key logic added in WP3.
 - No cloud processing introduced.
 
-Next step:
+Outcome:
 
-- Verify GitHub Actions `Tests` and GitHub to Hugging Face sync for the UI integration commits.
-- Ask the user/coordinator to verify in the Hugging Face app that `Extra exportcontrole` appears before downloads and that downloads still work.
+- v12.6 is closed.
+- v12 Review UX line is complete from WP1 through WP3.
+- Next UI phase can move to v13 Scrub Key JSON export after coordinator approval.
 
 ---
 
@@ -296,6 +298,6 @@ Parallelization:
 
 ## Recommended execution order
 
-1. Verify GitHub Actions `Tests` and GitHub to Hugging Face sync for WP3B UI integration commits.
-2. Ask the user/coordinator to verify the Hugging Face app shows `Extra exportcontrole` before downloads and that downloads remain available.
-3. After v12.6 is verified, close v12 Review UX and begin v13 UI integration for Scrub Key JSON export.
+1. Start v13 Scrub Key JSON export UI only after coordinator approval.
+2. Keep v13 UI integration sequential because it may touch the same review/export flow.
+3. Preserve v12 export semantics unless a future workpackage explicitly changes them.
