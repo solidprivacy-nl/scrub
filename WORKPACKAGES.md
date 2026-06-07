@@ -75,10 +75,6 @@ Evidence:
 - Simplified review table working.
 - Technical details available in separate expander.
 
-Outcome:
-
-- v12.3 can be treated as stable.
-
 ---
 
 ## Completed UI workpackages
@@ -86,12 +82,6 @@ Outcome:
 ### WP1 — v12.4 Review guidance text
 
 Status: completed.
-
-Evidence:
-
-- GitHub Actions tests passed.
-- GitHub to Hugging Face sync passed.
-- Hugging Face app showed guidance around the review step.
 
 Outcome:
 
@@ -115,13 +105,6 @@ Implemented behavior:
 
 - The app shows `Eindcontrole vóór download` before the download/export section.
 - The summary is advisory and does not change export/download semantics.
-
-Verification evidence:
-
-- Coordinator reported GitHub Actions tests green for the v12.5 review summary line.
-- Coordinator reported GitHub to Hugging Face sync green for the v12.5 review summary line.
-- Hugging Face app was visually verified by the coordinator/user.
-- Downloads were reported as still working: text, CSV, DOCX and PDF.
 
 Outcome:
 
@@ -148,12 +131,6 @@ Implemented behavior:
 - Downloads are not blocked.
 - TXT, CSV, DOCX and PDF export behavior is not changed.
 
-Validation evidence:
-
-- Helper verification was reconciled externally by coordinator: `Tests #58` green and `Sync to Hugging Face Space #72` green for commit `b0bf8ae`.
-- UI integration and closeout were completed.
-- User visually confirmed `Extra exportcontrole` in the Hugging Face app.
-
 Outcome:
 
 - v12.6 is closed.
@@ -177,18 +154,8 @@ Implemented files:
 Implemented behavior/model:
 
 - Defined the local Scrub Key mapping file concept.
-- Added pure helpers:
-  - `build_scrub_key(rows, document_label=None) -> dict`
-  - `scrub_key_to_json(scrub_key) -> str`
-  - `scrub_key_from_json(text) -> dict`
-  - `validate_scrub_key(scrub_key) -> list[str]`
+- Added pure helpers: `build_scrub_key`, `scrub_key_to_json`, `scrub_key_from_json`, `validate_scrub_key`.
 - Preserved the v13.0 excluded-row policy: unchecked rows are omitted.
-- Kept timestamp handling deterministic: timestamps must be supplied by the caller.
-
-Validation evidence:
-
-- Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-- Coordinator later showed `Tests #56` green and `Sync #70` green for commit `d653643`.
 
 Outcome:
 
@@ -204,8 +171,6 @@ Implemented files:
 
 - `fix_streamlit_nested_expanders.py`
 - `tests/test_scrub_key_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
 - `handover/workpackages/20260607_1535_v13_1_scrub_key_json_export_ui.md`
 - `handover/workpackages/20260607_1535_v13_1_scrub_key_ui_mapping_hotfix.md`
 - `handover/workpackages/20260607_1550_v13_1_scrub_key_json_export_closeout.md`
@@ -232,35 +197,13 @@ Hotfix:
 
 Validation evidence:
 
-- Initial v13.1 UI implementation:
-  - `Tests #73` green for commit `9d349bb`.
-  - `Sync to Hugging Face Space #87` green for commit `9d349bb`.
-- Mapping hotfix:
-  - `Tests #78` green for commit `8d33941`.
-  - `Sync to Hugging Face Space #92` green for commit `8d33941`.
-- User verified in the Hugging Face app:
-  - Scrub Key section is visible.
-  - pseudonymization warning is visible.
-  - `original_value` validation error is gone.
-  - `Download Scrub Key (.json)` is visible.
-  - Scrub Key JSON download works.
-
-Boundaries preserved:
-
-- No edit to `scrub_key.py` in the mapping hotfix.
-- No direct edit to `presidio_streamlit.py`.
-- No Scrub Key import/reload.
-- No reinsert UI.
-- No AI-output flow.
-- No cloud processing.
-- No server-side Scrub Key storage.
-- No change to TXT, CSV, DOCX or PDF export/download behavior.
-- No `st.stop()` or export blocking behavior added.
+- Initial v13.1 UI implementation: `Tests #73` and `Sync #87` green for commit `9d349bb`.
+- Mapping hotfix: `Tests #78` and `Sync #92` green for commit `8d33941`.
+- User verified in the Hugging Face app that the Scrub Key JSON download works.
 
 Outcome:
 
 - v13.1 Scrub Key JSON export is complete.
-- The next phase can start with v13.2 Scrub Key import/reload.
 
 ---
 
@@ -268,42 +211,90 @@ Outcome:
 
 ### WP5 — v13.2 Scrub Key import/reload helper and tests
 
-Status: planned; not started.
+Status: helper and tests implemented; awaiting GitHub Actions and Hugging Face sync confirmation.
 
 Goal:
 
-- Allow the app/model layer to reliably read a previously saved Scrub Key JSON file.
+- Allow the model/helper layer to reliably read a previously saved Scrub Key JSON file.
 - Prepare future workflows for reusing mappings across sessions and documents.
-- Keep this as helper/test work first before any UI integration.
+- Keep this as helper/test work before any UI integration.
 
-Planned files:
+Implemented files:
 
-- `scrub_key_import.py` or extension helpers in `scrub_key.py` if the existing model is the cleaner fit.
+- `scrub_key_import.py`
 - `tests/test_scrub_key_import.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/YYYYMMDD_HHMM_v13_2_scrub_key_import_helper.md`
 
-Planned scope:
+Implemented helper behavior:
 
-- Validate JSON structure from uploaded/imported Scrub Key text.
-- Reuse `validate_scrub_key(...)` where possible.
-- Return safe user-facing validation errors for invalid or incomplete keys.
-- Produce normalized mapping rows suitable for later UI/reinsert work.
+- Parse Scrub Key JSON text.
+- Validate structure using the existing `validate_scrub_key(...)` model helper.
+- Return safe Dutch user-facing validation errors for empty, invalid JSON or invalid Scrub Key content.
+- Return an import result with `ok`, `errors`, `warnings`, `scrub_key`, `mapping_rows`, `item_count`, `reversible`, `privacy_model` and `document_label`.
+- Normalize Scrub Key items to review-table-like mapping rows with both model fields and app-style fields:
+  - `original_value` and `find`
+  - `placeholder` and `replace_with`
+  - `entity_type`
+  - `type_label`
+  - `source`
+  - `review_status`
+  - `include` / `include_state`
+  - `timestamp`
+  - `document_label`
+- Preserve local-only privacy warning for imported keys.
+
+Implemented tests:
+
+- Valid Scrub Key JSON import.
+- Normalized row mapping.
+- Privacy warning.
+- Empty JSON text.
+- Invalid JSON syntax.
+- Invalid top-level format.
+- Structural validation errors.
+- No input mutation.
+- Synthetic Dutch legal values only.
+
+Boundaries preserved:
+
+- No UI changes.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No direct edit to `presidio_streamlit.py`.
+- No reinsert behavior.
+- No AI-output flow.
+- No cloud processing.
+- No server-side Scrub Key storage.
+
+Validation required:
+
+- `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
+- `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py`
+- preferably `PYTHONPATH=. pytest -q`
+
+---
+
+## Next planned UI workpackage
+
+### WP5B — v13.2 Scrub Key import/reload UI integration
+
+Status: planned; do not start until WP5 helper/tests are green.
+
+Goal:
+
+- Add UI support for loading a previously downloaded Scrub Key JSON file.
 
 Boundaries:
 
-- Do not add UI yet unless explicitly approved as a separate workpackage.
-- Do not add reinsert behavior.
+- Do not add deterministic reinsert yet.
 - Do not add AI-output flow.
-- Do not introduce cloud processing.
 - Do not store keys server-side.
+- Keep import warnings visible.
 
 ---
 
 ## Recommended execution order
 
-1. Start WP5 — v13.2 Scrub Key import/reload helper and tests.
-2. After helper validation is green, plan v13.2 UI import/reload as a separate sequential UI workpackage.
-3. After import/reload is stable, implement deterministic reinsert helper.
-4. Only after deterministic reinsert is stable, consider AI-output reinsert UI.
+1. Verify GitHub Actions and Hugging Face sync for WP5 helper/tests.
+2. After WP5 is green, close out WP5 helper if desired.
+3. Then plan WP5B — v13.2 Scrub Key import/reload UI integration.
+4. After import/reload is stable, implement deterministic reinsert helper.
+5. Only after deterministic reinsert is stable, consider AI-output reinsert UI.
