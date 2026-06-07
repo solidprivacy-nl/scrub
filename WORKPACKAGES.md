@@ -169,7 +169,7 @@ Outcome:
 
 ### WP3 — v12.6 Export sanity checks
 
-Status: helper implemented; local targeted tests passed; GitHub Actions and Hugging Face sync not independently confirmed by this worker.
+Status: UI integration implemented; awaiting GitHub Actions, Hugging Face sync, and app verification.
 
 Goal:
 
@@ -182,6 +182,7 @@ Implemented helper module:
 Implemented tests:
 
 - `tests/test_export_sanity.py`
+- `tests/test_export_sanity_ui_patch.py`
 
 Implemented checks:
 
@@ -191,26 +192,34 @@ Implemented checks:
 - user review remains required;
 - export is advisory and not guaranteed anonymization.
 
-Validation:
+UI integration:
 
-- Local targeted validation passed in the WP3 handover: `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
-- Latest WP3 handover commit checked: `4d721e3aed3bf28cfdaeb096c0e9cd227885f1a6`.
-- Connector check attempted for WP3 commits `5342e0eef663817036e91f823b4389b338b9223c`, `704ae03788702ce33263343743a69f8139f16319`, `869e3804edf04e0cbdf7ab69b034e7bc707de8c3`, and `4d721e3aed3bf28cfdaeb096c0e9cd227885f1a6`.
-- GitHub combined status returned `statuses: []` for checked WP3 commits.
-- Commit workflow-run lookup returned `workflow_runs: []` for checked WP3 commits.
-- Therefore this worker could not independently confirm green GitHub Actions or Hugging Face sync from the connector.
+- `fix_streamlit_nested_expanders.py` imports `build_export_sanity_checks` and `export_sanity_warnings`.
+- The app shows `Extra exportcontrole` near `Eindcontrole vóór download` before the download/export section.
+- The warning block is advisory only and explicitly says downloads remain available and export settings remain unchanged.
+- Downloads are not blocked.
+- TXT, CSV, DOCX and PDF export behavior is not changed.
+
+Validation evidence:
+
+- Helper verification was reconciled externally by coordinator: `Tests #58` green and `Sync to Hugging Face Space #72` green for commit `b0bf8ae`.
+- UI integration commits created:
+  - `c60b9b4bfa8944e620546ca26a4fe42c287edaa0` — Integrate export sanity warnings into UI patch.
+  - `f5158c9faf8e7676cb8403da0b42b0465539acfa` — Add export sanity UI patch tests.
+- This worker could not run local pytest from the connector environment.
 
 Boundaries preserved:
 
-- No UI files changed.
+- No direct edit to `presidio_streamlit.py`.
 - No export/download behavior changed.
 - Downloads are not blocked.
 - No Scrub Key logic added.
+- No cloud processing introduced.
 
 Next step:
 
-- Coordinator should verify the GitHub Actions `Tests` and GitHub to Hugging Face sync status in the GitHub UI for the WP3/WP4 commit line.
-- Integrate WP3 warnings into the export UI only after external Actions/sync verification is green.
+- Verify GitHub Actions `Tests` and GitHub to Hugging Face sync for the UI integration commits.
+- Ask the user/coordinator to verify in the Hugging Face app that `Extra exportcontrole` appears before downloads and that downloads still work.
 
 ---
 
@@ -272,8 +281,8 @@ Validation:
 Boundaries respected:
 
 - No edit to `presidio_streamlit.py`.
-- No edit to `fix_streamlit_nested_expanders.py`.
-- No export/download buttons added.
+- No edit to `fix_streamlit_nested_expanders.py` for v13.
+- No export/download buttons added for v13.
 - No reinsert UI added.
 - No cloud processing introduced.
 - No secrets or real personal data stored.
@@ -287,6 +296,6 @@ Parallelization:
 
 ## Recommended execution order
 
-1. Coordinator verifies GitHub Actions `Tests` and GitHub to Hugging Face sync in the GitHub UI for WP3/WP4, because the connector returned no check-run evidence.
-2. Integrate WP3 UI only after helper tests and external Actions/sync verification are green.
-3. After v12 is complete, begin v13 UI integration for Scrub Key JSON export.
+1. Verify GitHub Actions `Tests` and GitHub to Hugging Face sync for WP3B UI integration commits.
+2. Ask the user/coordinator to verify the Hugging Face app shows `Extra exportcontrole` before downloads and that downloads remain available.
+3. After v12.6 is verified, close v12 Review UX and begin v13 UI integration for Scrub Key JSON export.
