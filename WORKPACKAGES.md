@@ -114,7 +114,7 @@ Outcome:
 
 ### WP3 — v12.6 Export sanity checks
 
-Status: completed and formally closed after coordinator closeout instruction.
+Status: completed and formally closed.
 
 Implemented files:
 
@@ -122,12 +122,11 @@ Implemented files:
 - `tests/test_export_sanity.py`
 - `tests/test_export_sanity_ui_patch.py`
 - `fix_streamlit_nested_expanders.py`
-- `handover/workpackages/20260607_1515_v12_6_export_sanity_closeout.md`
 
 Implemented behavior:
 
 - The app shows `Extra exportcontrole` near `Eindcontrole vóór download` before the download/export section.
-- The warning block is advisory only and explicitly says downloads remain available and export settings remain unchanged.
+- The warning block is advisory only.
 - Downloads are not blocked.
 - TXT, CSV, DOCX and PDF export behavior is not changed.
 
@@ -149,13 +148,6 @@ Implemented files:
 - `SCRUB_KEY_SPEC.md`
 - `scrub_key.py`
 - `tests/test_scrub_key.py`
-- `handover/workpackages/20260607_1342_v13_0_scrub_key_spec_model.md`
-
-Implemented behavior/model:
-
-- Defined the local Scrub Key mapping file concept.
-- Added pure helpers: `build_scrub_key`, `scrub_key_to_json`, `scrub_key_from_json`, `validate_scrub_key`.
-- Preserved the v13.0 excluded-row policy: unchecked rows are omitted.
 
 Outcome:
 
@@ -165,15 +157,12 @@ Outcome:
 
 ### WP4B / WP4B-FIX — v13.1 Scrub Key JSON export UI and mapping hotfix
 
-Status: completed and formally closed after hotfix verification.
+Status: completed and app-verified.
 
 Implemented files:
 
 - `fix_streamlit_nested_expanders.py`
 - `tests/test_scrub_key_ui_patch.py`
-- `handover/workpackages/20260607_1535_v13_1_scrub_key_json_export_ui.md`
-- `handover/workpackages/20260607_1535_v13_1_scrub_key_ui_mapping_hotfix.md`
-- `handover/workpackages/20260607_1550_v13_1_scrub_key_json_export_closeout.md`
 
 Implemented behavior:
 
@@ -181,12 +170,6 @@ Implemented behavior:
 - The app shows a pseudonymization / reversibility warning.
 - The app shows `Download Scrub Key (.json)`.
 - The Scrub Key JSON download works after the mapping hotfix.
-
-Validation evidence:
-
-- Initial v13.1 UI implementation: `Tests #73` and `Sync #87` green for commit `9d349bb`.
-- Mapping hotfix: `Tests #78` and `Sync #92` green for commit `8d33941`.
-- User verified in the Hugging Face app that the Scrub Key JSON download works.
 
 Outcome:
 
@@ -203,24 +186,6 @@ Implemented files:
 - `scrub_key_import.py`
 - `tests/test_scrub_key_import.py`
 
-Implemented helper behavior:
-
-- Parse Scrub Key JSON text.
-- Validate structure using the existing `validate_scrub_key(...)` model helper.
-- Return safe Dutch user-facing validation errors for empty, invalid JSON or invalid Scrub Key content.
-- Return an import result with `ok`, `errors`, `warnings`, `scrub_key`, `mapping_rows`, `item_count`, `reversible`, `privacy_model` and `document_label`.
-- Normalize Scrub Key items to review-table-like mapping rows with both model fields and app-style fields.
-- Preserve local-only privacy warning for imported keys.
-
-Boundaries preserved:
-
-- No UI changes in the helper workpackage.
-- No direct edit to `presidio_streamlit.py`.
-- No reinsert behavior.
-- No AI-output flow.
-- No cloud processing.
-- No server-side Scrub Key storage.
-
 Outcome:
 
 - v13.2 helper layer was ready for UI integration and is now part of the completed v13.2 import/reload flow.
@@ -235,47 +200,14 @@ Implemented files:
 
 - `fix_streamlit_nested_expanders.py`
 - `tests/test_scrub_key_import_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1645_v13_2_scrub_key_import_ui.md`
-- `handover/workpackages/20260607_1715_v13_2_scrub_key_import_ui_closeout.md`
-- `handover/workpackages/20260607_1730_v13_2_scrub_key_import_ui_app_closeout.md`
 
 Implemented behavior:
 
 - Adds a `Scrub Key laden` section near the existing `Scrub Key (JSON)` export block.
 - Allows upload of a Scrub Key `.json` file or pasted Scrub Key JSON.
-- Validates the imported key using the existing `build_scrub_key_import_result(...)` helper before loading.
+- Validates the imported key using `build_scrub_key_import_result(...)` before loading.
 - Shows pseudonymization/reversibility and local-protection warnings.
-- Loads validated mapping rows into the current replacement table only after the visible `Valideer en laad Scrub Key` user action.
 - Preserves the existing `Download Scrub Key (.json)` export block.
-
-Validation evidence:
-
-- Local targeted validation recorded in the implementation handover:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py` → 8 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import_ui_patch.py` → 9 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py` → 12 passed.
-  - `PYTHONPATH=. pytest -q` on the available subset → 35 passed.
-- Coordinator evidence after implementation:
-  - Tests #89 green — commit `83353e4`.
-  - Tests #90 green — commit `4a1ef55`.
-  - Sync to Hugging Face Space #104 green — commit `4a1ef55`.
-  - Tests #91 green — commit `4d8bfe9`.
-  - Sync to Hugging Face Space #105 green — commit `4d8bfe9`.
-  - Tests #92 green — commit `ff8321f`.
-  - Sync to Hugging Face Space #106 green — commit `ff8321f`.
-
-App verification:
-
-- Confirmed by coordinator/user.
-- `Scrub Key laden` works.
-- Scrub Key import/reload UI is visible.
-- Upload/paste import flow works.
-- Pseudonymization/reversibility warning is visible.
-- Existing `Download Scrub Key (.json)` remains visible.
-- Existing TXT, CSV, DOCX and PDF downloads remain available.
 
 Outcome:
 
@@ -291,58 +223,20 @@ Implemented files:
 
 - `scrub_key_reinsert.py`
 - `tests/test_scrub_key_reinsert.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1745_v13_3_reinsert_helper.md`
-- `handover/workpackages/20260607_1815_v13_3_reinsert_helper.md`
-- `handover/workpackages/20260607_1830_v13_3_reinsert_helper_closeout.md`
-- `handover/workpackages/20260607_1845_v13_3_reinsert_helper_verification_reconciliation.md`
 
 Implemented helper behavior:
 
-- Added `detect_placeholders(text)` for conservative placeholder-token detection.
-- Added `build_reinsert_mapping(scrub_key)` to build a deterministic placeholder-to-original mapping from included Scrub Key items.
-- Added `reinsert_from_scrub_key(text, scrub_key)` to return reinserted text and an audit summary.
+- Added `detect_placeholders(text)`.
+- Added `build_reinsert_mapping(scrub_key)`.
+- Added `reinsert_from_scrub_key(text, scrub_key)`.
 - Reuses existing `validate_scrub_key(...)` validation.
-- Reports validation issues instead of silently proceeding with invalid keys.
-- Reports mapping item count, active item count, excluded item count, replacement count, missing placeholders, unknown placeholders and duplicate placeholders.
-- Detects duplicate placeholder entries and excludes ambiguous duplicates from reinsertion.
-- Ignores excluded items even if malformed/imported data contains them.
+- Reports validation issues, mapping item count, active item count, excluded item count, replacement count, missing placeholders, unknown placeholders and duplicate placeholders.
 - Reports `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
 
-Implemented tests:
+Validation evidence:
 
-- `tests/test_scrub_key_reinsert.py`
-
-Validation status:
-
-- Local targeted validation in the implementation worker environment passed on the available/reconstructed subset:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
-- Coordinator verification evidence:
-  - Tests #106 green — commit `5854dbf`.
-  - Sync to Hugging Face Space #120 green — commit `5854dbf`.
-  - Tests #107 green — commit `43ecad4`.
-  - Sync to Hugging Face Space #121 green — commit `43ecad4`.
-  - Tests #108 green — commit `6e4ec9b`.
-  - Sync to Hugging Face Space #122 green — commit `6e4ec9b`.
-  - Tests #109 green — commit `eaf036a`.
-  - Sync to Hugging Face Space #123 green — commit `eaf036a`.
-- GitHub Actions: green based on coordinator evidence.
-- Hugging Face sync: green based on coordinator evidence.
-- App verification: not applicable for this helper-only package.
-
-Boundaries preserved:
-
-- No code files changed in WP7B-FINAL reconciliation.
-- No UI files changed in WP7A/WP7B/WP7B-FINAL.
-- No direct edit to `presidio_streamlit.py`.
-- No direct edit to `fix_streamlit_nested_expanders.py`.
-- No AI calls.
-- No cloud processing.
-- No automatic document rehydration.
-- No TXT, CSV, DOCX or PDF export behavior changes.
-- No Scrub Key export/import UI behavior changes.
-- Synthetic test values only.
+- Local targeted validation: `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
+- Coordinator verification evidence confirmed Tests #106-#109 and Sync #120-#123 green.
 
 Outcome:
 
@@ -361,78 +255,89 @@ Implemented files:
 - `CHANGELOG.md`
 - `handover/workpackages/20260607_1900_v13_3_reinsert_ui_planning.md`
 
-Planning outcome:
+Outcome:
 
-- Specifies that the future UI block should appear after the existing Scrub Key import/reload section near the download/export area.
-- Defines Dutch UI labels including `Originele waarden terugzetten`, `Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten`, `Zet originele waarden lokaal terug`, `Herstelde tekst` and `Download herstelde tekst (.txt)`.
-- Specifies how the user pastes scrubbed or AI-generated text.
-- Specifies how the UI should use a validated Scrub Key.
-- Specifies the helper call contract for `reinsert_from_scrub_key(text, scrub_key)`.
-- Specifies output behavior and `.txt` download behavior for restored text.
-- Specifies required audit summary fields.
-- Specifies required warnings for restored sensitive values, manual review, pseudonymization/reversibility, local key protection and no-AI/no-cloud processing.
-- Specifies what must not happen automatically.
-- Specifies required future UI patch tests.
+- v13.3 deterministic reinsert UI is planned and ready for implementation.
+
+---
+
+### WP8B — v13.3 Deterministic reinsert UI implementation
+
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Implemented files:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_scrub_key_reinsert_ui_patch.py`
+- `tests/test_scrub_key_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1915_v13_3_reinsert_ui_implementation.md`
+
+Implemented behavior:
+
+- Adds `Originele waarden terugzetten` after the existing `Scrub Key laden` / Scrub Key area.
+- Lets the user paste scrubbed or AI-generated text into `Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten`.
+- Requires explicit button action: `Zet originele waarden lokaal terug`.
+- Calls `reinsert_from_scrub_key(reinsert_input_text, active_reinsert_scrub_key)`.
+- Shows `Herstelde tekst`.
+- Adds `Download herstelde tekst (.txt)`.
+- Shows `Controleverslag terugzetten` with mapping item count, active item count, excluded item count, replacement count, placeholders not found, unknown placeholders, duplicate placeholders, validation issues, local-only status, no-AI status and no-cloud status.
+- Shows warning that restored text can again contain personal or confidential information and must be reviewed before sharing.
+- Uses the imported validated Scrub Key from session state when available, otherwise the current Scrub Key built from reviewed replacement rows.
 
 Validation status:
 
-- Tests: not applicable; planning/specification-only workpackage.
-- App verification: not applicable; no UI behavior changed.
+- Local targeted validation on a reconstructed subset passed:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py tests/test_scrub_key_reinsert_ui_patch.py tests/test_scrub_key_import_ui_patch.py tests/test_scrub_key_ui_patch.py` → 57 passed.
+- GitHub Actions: pending for WP8B commits.
+- Hugging Face sync: pending for WP8B commits.
+- App verification: pending because UI behavior changed.
 
 Boundaries preserved:
 
-- No UI code changed in WP8.
-- No edit to `fix_streamlit_nested_expanders.py`.
-- No edit to `presidio_streamlit.py`.
-- No tests added or changed.
+- No direct edit to `presidio_streamlit.py`.
 - No AI calls.
 - No cloud processing.
 - No automatic document rehydration.
-- No TXT, CSV, DOCX or PDF export behavior changed.
-- No Scrub Key JSON export behavior changed.
-- No Scrub Key import/reload behavior changed.
+- No DOCX/PDF reinsert added.
+- No TXT, CSV, DOCX or PDF scrubbed export behavior changed.
+- No Scrub Key JSON export behavior intentionally changed.
+- No Scrub Key import/reload behavior intentionally changed except storing the validated imported key in session state for reinsert use.
+- No silent overwrite of existing review rows.
 - No secrets, tokens or real personal data stored.
 
 Outcome:
 
-- v13.3 deterministic reinsert UI is planned and ready for a separate sequential implementation workpackage.
+- v13.3 deterministic local reinsert UI is implemented and awaits external verification and app testing.
 
 ---
 
 ## Active / next recommended workpackage
 
-### WP8B — v13.3 Deterministic reinsert UI implementation
+### WP8C — v13.3 Deterministic reinsert UI verification and closeout
 
 Status: recommended next workpackage; not started here.
 
 Goal:
 
-- Implement the planned local deterministic reinsert UI using `reinsert_from_scrub_key(...)`.
-- Keep AI-output behavior separate unless explicitly approved.
-
-Likely files:
-
-- `fix_streamlit_nested_expanders.py`
-- `tests/test_scrub_key_reinsert_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/YYYYMMDD_HHMM_v13_3_reinsert_ui_implementation.md`
+- Verify GitHub Actions and Hugging Face sync for WP8B.
+- Ask coordinator/user to verify the Hugging Face app shows the local reinsert UI and can restore mapped placeholders.
+- Confirm existing Scrub Key export/import and TXT/CSV/DOCX/PDF scrubbed downloads remain available.
 
 Boundaries:
 
-- UI integration must be sequential.
-- Do not add AI calls by default.
+- Closeout/status-only unless app verification reveals a bug.
+- Do not add AI calls.
 - Do not add cloud processing.
-- Do not silently rehydrate documents.
-- Do not change existing TXT/CSV/DOCX/PDF export behavior.
-- Preserve local-only Scrub Key handling and pseudonymization warnings.
+- Do not change export/download behavior.
 
 ---
 
 ## Recommended execution order
 
-1. Start WP8B deterministic reinsert UI implementation as a separate sequential UI workpackage.
-2. Add UI patch tests before/with UI integration.
-3. Verify GitHub Actions and Hugging Face sync.
-4. Ask for app verification because UI behavior will change.
+1. Verify GitHub Actions tests for WP8B.
+2. Verify GitHub to Hugging Face sync for WP8B.
+3. Ask for app verification because UI behavior changed.
+4. Close WP8B through WP8C if verification is green.
 5. Keep AI-output workflow separate and explicitly reviewed before AI-specific UI behavior.
