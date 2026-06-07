@@ -78,7 +78,6 @@ Evidence:
 Outcome:
 
 - v12.3 can be treated as stable.
-- Work may continue with v12.4.
 
 ---
 
@@ -86,31 +85,18 @@ Outcome:
 
 ### WP1 — v12.4 Review guidance text
 
-Status: implemented; GitHub Actions and Hugging Face sync confirmed green by coordinator; app guidance visually confirmed earlier by user.
+Status: completed.
 
-Goal:
-
-- Make the review workflow self-explanatory for non-technical legal users.
-
-Scope:
-
-- Explain that only checked rows are included in export.
-- Explain that `Controle nodig` rows require manual review.
-- Explain that the focus filter is a viewing aid, not the export scope.
-- Explain that technical details are mainly for audit/debugging.
-- Add AI-use guidance: scrub first, then use AI.
-
-Files:
-
-- `review_guidance.py`
-- `tests/test_review_guidance.py`
-- `fix_streamlit_nested_expanders.py`
-
-Verification:
+Evidence:
 
 - GitHub Actions tests passed.
 - GitHub to Hugging Face sync passed.
 - Hugging Face app showed guidance around the review step.
+
+Outcome:
+
+- Review workflow guidance is visible.
+- Export semantics were not changed.
 
 ---
 
@@ -118,50 +104,28 @@ Verification:
 
 Status: completed and formally closed after verification.
 
-Goal:
-
-- Show export readiness before downloads.
-
-Implemented helper module:
+Implemented files:
 
 - `review_summary.py`
-
-Implemented tests:
-
 - `tests/test_review_summary.py`
 - `tests/test_review_summary_ui_patch.py`
+- `fix_streamlit_nested_expanders.py`
 
-Implemented summary values:
+Implemented behavior:
 
-- automatically detected rows;
-- rows needing review;
-- manually added rows;
-- remembered replacements;
-- checked rows included in export;
-- unchecked rows excluded from export;
-- open candidate warning;
-- Dutch readiness label and markdown lines.
-
-UI integration:
-
-- `fix_streamlit_nested_expanders.py` imports the review summary helpers.
-- The app shows `Eindcontrole vóór download` immediately above the download/export section.
+- The app shows `Eindcontrole vóór download` before the download/export section.
 - The summary is advisory and does not change export/download semantics.
 
 Verification evidence:
 
-- Latest implementation handover commit before closeout: `ab1c926dfb6a1587f1ec57c3f895d1a5211fd645`.
 - Coordinator reported GitHub Actions tests green for the v12.5 review summary line.
 - Coordinator reported GitHub to Hugging Face sync green for the v12.5 review summary line.
 - Hugging Face app was visually verified by the coordinator/user.
-- The app showed `Eindcontrole vóór download` before the download section.
-- Downloads were reported as still working after visual verification: text, CSV, DOCX and PDF.
+- Downloads were reported as still working: text, CSV, DOCX and PDF.
 
 Outcome:
 
 - v12.5 is complete.
-- No export semantics were changed.
-- WP3 can continue as the next active workpackage.
 
 ---
 
@@ -169,30 +133,16 @@ Outcome:
 
 Status: completed and formally closed after coordinator closeout instruction.
 
-Goal:
-
-- Warn users before export if review risk remains.
-
-Implemented helper module:
+Implemented files:
 
 - `export_sanity.py`
-
-Implemented tests:
-
 - `tests/test_export_sanity.py`
 - `tests/test_export_sanity_ui_patch.py`
+- `fix_streamlit_nested_expanders.py`
+- `handover/workpackages/20260607_1515_v12_6_export_sanity_closeout.md`
 
-Implemented checks:
+Implemented behavior:
 
-- `Controle nodig` rows remain unchecked;
-- candidate rows exist but are not included;
-- no replacements selected;
-- user review remains required;
-- export is advisory and not guaranteed anonymization.
-
-UI integration:
-
-- `fix_streamlit_nested_expanders.py` imports `build_export_sanity_checks` and `export_sanity_warnings`.
 - The app shows `Extra exportcontrole` near `Eindcontrole vóór download` before the download/export section.
 - The warning block is advisory only and explicitly says downloads remain available and export settings remain unchanged.
 - Downloads are not blocked.
@@ -201,102 +151,21 @@ UI integration:
 Validation evidence:
 
 - Helper verification was reconciled externally by coordinator: `Tests #58` green and `Sync to Hugging Face Space #72` green for commit `b0bf8ae`.
-- UI integration commits:
-  - `c60b9b4bfa8944e620546ca26a4fe42c287edaa0` — Integrate export sanity warnings into UI patch.
-  - `f5158c9faf8e7676cb8403da0b42b0465539acfa` — Add export sanity UI patch tests.
-  - `7d043d13096518d5dca6a5f187189fa3a8471627` — Update workpackage status for export sanity UI.
-  - `4a84ddb7ca2b298ce2dcdcc5daf8b9f1cc055023` — Add export sanity UI handover.
-- WP3C closeout was requested by the coordinator as administrative closeout only, with no further code changes.
-
-Boundaries preserved:
-
-- No direct edit to `presidio_streamlit.py`.
-- No additional code changes in WP3C.
-- No export/download behavior changed.
-- Downloads are not blocked.
-- No Scrub Key logic added in WP3.
-- No cloud processing introduced.
+- UI integration and closeout were completed.
+- User visually confirmed `Extra exportcontrole` in the Hugging Face app.
 
 Outcome:
 
 - v12.6 is closed.
 - v12 Review UX line is complete from WP1 through WP3.
-- Next UI phase can move to v13 Scrub Key JSON export after coordinator approval.
 
 ---
 
-## Active workpackage
-
-### WP4B-FIX — Scrub Key UI row mapping hotfix
-
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
-
-Goal:
-
-- Fix Scrub Key JSON export so reviewed replacement rows can be exported as a valid Scrub Key JSON file.
-- Prevent `Item has empty required field: original_value` by mapping app review-table columns to Scrub Key model fields before building the key.
-
-Problem fixed:
-
-- The UI integration copied `edited_replacements_df` directly into `build_scrub_key(...)`.
-- Streamlit review rows use `find` and `replace_with`.
-- The Scrub Key model expects `original_value` and `placeholder`.
-
-Implemented mapping:
-
-- `find` → `original_value`
-- `replace_with` → `placeholder`
-- `entity_type` → `entity_type`
-- `type_label` → `type_label`
-- `source` → `source`
-- `review_status` → `review_status`
-- `include` → `include`
-
-Files changed:
-
-- `fix_streamlit_nested_expanders.py`
-- `tests/test_scrub_key_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Validation status:
-
-- `tests/test_scrub_key_ui_patch.py` now guards the required mapping and safety boundaries.
-- Local pytest was not run from this connector environment.
-- Required follow-up validation:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py`
-  - preferably `PYTHONPATH=. pytest -q`
-
-Boundaries preserved:
-
-- No edit to `scrub_key.py`.
-- No direct edit to `presidio_streamlit.py`.
-- No Scrub Key import/reload.
-- No reinsert UI.
-- No AI-output flow.
-- No cloud processing.
-- No server-side Scrub Key storage.
-- No change to TXT, CSV, DOCX or PDF export/download behavior.
-- No `st.stop()` or export blocking behavior added.
-- Pseudonymization warning preserved.
-
-Next step:
-
-- Verify GitHub Actions and Hugging Face sync.
-- Ask the user/coordinator to verify in the Hugging Face app that the Scrub Key JSON download no longer shows `Item has empty required field: original_value` and that TXT/CSV/DOCX/PDF downloads still work.
-
----
-
-## Parallel strategic workpackage
+## Completed strategic workpackages
 
 ### WP4 — v13.0 Scrub Key specification and pure model
 
-Status: implemented; local targeted tests passed; GitHub Actions and Hugging Face sync not independently confirmed by this worker.
-
-Goal:
-
-- Prepare the strategic v13 Scrub Key / Reinsert phase without touching the active review UI yet.
+Status: completed.
 
 Implemented files:
 
@@ -305,58 +174,136 @@ Implemented files:
 - `tests/test_scrub_key.py`
 - `handover/workpackages/20260607_1342_v13_0_scrub_key_spec_model.md`
 
-Implemented Scrub Key fields:
+Implemented behavior/model:
 
-- original value;
-- placeholder;
-- entity type;
-- user-facing type label;
-- source;
-- review status;
-- include state;
-- timestamp;
-- optional document/project/dossier label.
+- Defined the local Scrub Key mapping file concept.
+- Added pure helpers:
+  - `build_scrub_key(rows, document_label=None) -> dict`
+  - `scrub_key_to_json(scrub_key) -> str`
+  - `scrub_key_from_json(text) -> dict`
+  - `validate_scrub_key(scrub_key) -> list[str]`
+- Preserved the v13.0 excluded-row policy: unchecked rows are omitted.
+- Kept timestamp handling deterministic: timestamps must be supplied by the caller.
 
-Implemented safety/spec decisions:
-
-- A Scrub Key makes scrubbed text reversible.
-- This is pseudonymization, not full anonymization.
-- The key must stay local and protected.
-- Users should not share the key with external AI services unless explicitly intended and allowed.
-- Scrub Key export/import must not silently change document meaning.
-- v13.0 excluded-row policy is `omitted`.
-- The pure model does not generate timestamps itself; timestamps must be supplied by the caller and validation catches missing timestamps.
-
-Implemented helper functions:
-
-- `build_scrub_key(rows, document_label=None) -> dict`
-- `scrub_key_to_json(scrub_key) -> str`
-- `scrub_key_from_json(text) -> dict`
-- `validate_scrub_key(scrub_key) -> list[str]`
-
-Validation:
+Validation evidence:
 
 - Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-- Full local test run not performed because the container could not clone the full repository.
-- Latest WP4 target/head commit checked: `d65364373e4d3612044d8688ac17e11de81c07e5`.
-- GitHub combined status returned `statuses: []` for `d65364373e4d3612044d8688ac17e11de81c07e5`.
-- Commit workflow-run lookup returned `workflow_runs: []` for `d65364373e4d3612044d8688ac17e11de81c07e5`.
-- Therefore this worker could not independently confirm green GitHub Actions or Hugging Face sync from the connector.
+- Coordinator later showed `Tests #56` green and `Sync #70` green for commit `d653643`.
 
-Boundaries respected:
+Outcome:
 
-- No edit to `presidio_streamlit.py`.
-- No edit to `fix_streamlit_nested_expanders.py` for v13.0.
-- No export/download buttons added for v13.0.
-- No reinsert UI added.
-- No cloud processing introduced.
-- No secrets or real personal data stored.
+- v13.0 model/spec is complete.
+
+---
+
+### WP4B / WP4B-FIX — v13.1 Scrub Key JSON export UI and mapping hotfix
+
+Status: completed and formally closed after hotfix verification.
+
+Implemented files:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_scrub_key_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1535_v13_1_scrub_key_json_export_ui.md`
+- `handover/workpackages/20260607_1535_v13_1_scrub_key_ui_mapping_hotfix.md`
+- `handover/workpackages/20260607_1550_v13_1_scrub_key_json_export_closeout.md`
+
+Implemented behavior:
+
+- The app shows a `Scrub Key (JSON)` section in the download/export flow.
+- The app shows a pseudonymization / reversibility warning.
+- The app shows `Download Scrub Key (.json)`.
+- The Scrub Key JSON download works after the mapping hotfix.
+
+Hotfix:
+
+- Fixed app-row-to-Scrub-Key-row mapping:
+  - `find` → `original_value`
+  - `replace_with` → `placeholder`
+  - `entity_type` → `entity_type`
+  - `type_label` → `type_label`
+  - `source` → `source`
+  - `review_status` → `review_status`
+  - `include` → `include`
+- Fixed the app-visible validation error:
+  - `Item has empty required field: original_value`
+
+Validation evidence:
+
+- Initial v13.1 UI implementation:
+  - `Tests #73` green for commit `9d349bb`.
+  - `Sync to Hugging Face Space #87` green for commit `9d349bb`.
+- Mapping hotfix:
+  - `Tests #78` green for commit `8d33941`.
+  - `Sync to Hugging Face Space #92` green for commit `8d33941`.
+- User verified in the Hugging Face app:
+  - Scrub Key section is visible.
+  - pseudonymization warning is visible.
+  - `original_value` validation error is gone.
+  - `Download Scrub Key (.json)` is visible.
+  - Scrub Key JSON download works.
+
+Boundaries preserved:
+
+- No edit to `scrub_key.py` in the mapping hotfix.
+- No direct edit to `presidio_streamlit.py`.
+- No Scrub Key import/reload.
+- No reinsert UI.
+- No AI-output flow.
+- No cloud processing.
+- No server-side Scrub Key storage.
+- No change to TXT, CSV, DOCX or PDF export/download behavior.
+- No `st.stop()` or export blocking behavior added.
+
+Outcome:
+
+- v13.1 Scrub Key JSON export is complete.
+- The next phase can start with v13.2 Scrub Key import/reload.
+
+---
+
+## Active workpackage
+
+### WP5 — v13.2 Scrub Key import/reload helper and tests
+
+Status: planned; not started.
+
+Goal:
+
+- Allow the app/model layer to reliably read a previously saved Scrub Key JSON file.
+- Prepare future workflows for reusing mappings across sessions and documents.
+- Keep this as helper/test work first before any UI integration.
+
+Planned files:
+
+- `scrub_key_import.py` or extension helpers in `scrub_key.py` if the existing model is the cleaner fit.
+- `tests/test_scrub_key_import.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/YYYYMMDD_HHMM_v13_2_scrub_key_import_helper.md`
+
+Planned scope:
+
+- Validate JSON structure from uploaded/imported Scrub Key text.
+- Reuse `validate_scrub_key(...)` where possible.
+- Return safe user-facing validation errors for invalid or incomplete keys.
+- Produce normalized mapping rows suitable for later UI/reinsert work.
+
+Boundaries:
+
+- Do not add UI yet unless explicitly approved as a separate workpackage.
+- Do not add reinsert behavior.
+- Do not add AI-output flow.
+- Do not introduce cloud processing.
+- Do not store keys server-side.
 
 ---
 
 ## Recommended execution order
 
-1. Verify GitHub Actions `Tests` and GitHub to Hugging Face sync for WP4B-FIX.
-2. Ask the user/coordinator to verify the Hugging Face app exports Scrub Key JSON without empty `original_value` validation errors.
-3. Confirm TXT/CSV/DOCX/PDF downloads still work.
-4. After v13.1 is verified, plan v13.2 Scrub Key import/reload as a separate sequential UI workpackage.
+1. Start WP5 — v13.2 Scrub Key import/reload helper and tests.
+2. After helper validation is green, plan v13.2 UI import/reload as a separate sequential UI workpackage.
+3. After import/reload is stable, implement deterministic reinsert helper.
+4. Only after deterministic reinsert is stable, consider AI-output reinsert UI.
