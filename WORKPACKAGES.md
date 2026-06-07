@@ -215,33 +215,67 @@ Next step:
 
 ### WP4 — v13.0 Scrub Key specification and pure model
 
-Status: planned.
+Status: implemented; pending GitHub Actions and Hugging Face sync confirmation.
 
 Goal:
 
 - Prepare the strategic v13 Scrub Key / Reinsert phase without touching the active review UI yet.
 
-Planned files:
+Implemented files:
 
 - `SCRUB_KEY_SPEC.md`
 - `scrub_key.py`
 - `tests/test_scrub_key.py`
+- `handover/workpackages/20260607_1342_v13_0_scrub_key_spec_model.md`
 
-Initial Scrub Key fields:
+Implemented Scrub Key fields:
 
 - original value;
 - placeholder;
 - entity type;
-- type label;
+- user-facing type label;
 - source;
 - review status;
 - include state;
 - timestamp;
 - optional document/project/dossier label.
 
+Implemented safety/spec decisions:
+
+- A Scrub Key makes scrubbed text reversible.
+- This is pseudonymization, not full anonymization.
+- The key must stay local and protected.
+- Users should not share the key with external AI services unless explicitly intended and allowed.
+- Scrub Key export/import must not silently change document meaning.
+- v13.0 excluded-row policy is `omitted`.
+- The pure model does not generate timestamps itself; timestamps must be supplied by the caller and validation catches missing timestamps.
+
+Implemented helper functions:
+
+- `build_scrub_key(rows, document_label=None) -> dict`
+- `scrub_key_to_json(scrub_key) -> str`
+- `scrub_key_from_json(text) -> dict`
+- `validate_scrub_key(scrub_key) -> list[str]`
+
+Validation:
+
+- Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
+- Full local test run not performed because the container could not clone the full repository.
+- GitHub Actions status pending after latest commits.
+- GitHub to Hugging Face sync status pending after latest commits.
+
+Boundaries respected:
+
+- No edit to `presidio_streamlit.py`.
+- No edit to `fix_streamlit_nested_expanders.py`.
+- No export/download buttons added.
+- No reinsert UI added.
+- No cloud processing introduced.
+- No secrets or real personal data stored.
+
 Parallelization:
 
-- Safe to start while v12 UI work continues.
+- Safe to continue non-UI v13 model/spec work if needed.
 - Do not integrate into UI until v12.4–v12.6 are stable.
 
 ---
@@ -249,6 +283,6 @@ Parallelization:
 ## Recommended execution order
 
 1. Verify WP3 helper commits in GitHub Actions and Hugging Face sync.
-2. Integrate WP3 UI only after helper tests are stable.
-3. In parallel, start WP4 Scrub Key spec and pure tests.
-4. After v12 is complete, begin v13 UI integration.
+2. Verify WP4 Scrub Key commits in GitHub Actions and Hugging Face sync.
+3. Integrate WP3 UI only after helper tests are stable.
+4. After v12 is complete, begin v13 UI integration for Scrub Key JSON export.
