@@ -182,19 +182,6 @@ Implemented behavior:
 - The app shows `Download Scrub Key (.json)`.
 - The Scrub Key JSON download works after the mapping hotfix.
 
-Hotfix:
-
-- Fixed app-row-to-Scrub-Key-row mapping:
-  - `find` → `original_value`
-  - `replace_with` → `placeholder`
-  - `entity_type` → `entity_type`
-  - `type_label` → `type_label`
-  - `source` → `source`
-  - `review_status` → `review_status`
-  - `include` → `include`
-- Fixed the app-visible validation error:
-  - `Item has empty required field: original_value`
-
 Validation evidence:
 
 - Initial v13.1 UI implementation: `Tests #73` and `Sync #87` green for commit `9d349bb`.
@@ -207,17 +194,9 @@ Outcome:
 
 ---
 
-## Active workpackage
-
 ### WP5 — v13.2 Scrub Key import/reload helper and tests
 
-Status: helper and tests implemented; awaiting GitHub Actions and Hugging Face sync confirmation.
-
-Goal:
-
-- Allow the model/helper layer to reliably read a previously saved Scrub Key JSON file.
-- Prepare future workflows for reusing mappings across sessions and documents.
-- Keep this as helper/test work before any UI integration.
+Status: helper and tests implemented; coordinator evidence reported green checks before UI integration.
 
 Implemented files:
 
@@ -230,71 +209,81 @@ Implemented helper behavior:
 - Validate structure using the existing `validate_scrub_key(...)` model helper.
 - Return safe Dutch user-facing validation errors for empty, invalid JSON or invalid Scrub Key content.
 - Return an import result with `ok`, `errors`, `warnings`, `scrub_key`, `mapping_rows`, `item_count`, `reversible`, `privacy_model` and `document_label`.
-- Normalize Scrub Key items to review-table-like mapping rows with both model fields and app-style fields:
-  - `original_value` and `find`
-  - `placeholder` and `replace_with`
-  - `entity_type`
-  - `type_label`
-  - `source`
-  - `review_status`
-  - `include` / `include_state`
-  - `timestamp`
-  - `document_label`
+- Normalize Scrub Key items to review-table-like mapping rows with both model fields and app-style fields.
 - Preserve local-only privacy warning for imported keys.
-
-Implemented tests:
-
-- Valid Scrub Key JSON import.
-- Normalized row mapping.
-- Privacy warning.
-- Empty JSON text.
-- Invalid JSON syntax.
-- Invalid top-level format.
-- Structural validation errors.
-- No input mutation.
-- Synthetic Dutch legal values only.
 
 Boundaries preserved:
 
-- No UI changes.
-- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No UI changes in the helper workpackage.
 - No direct edit to `presidio_streamlit.py`.
 - No reinsert behavior.
 - No AI-output flow.
 - No cloud processing.
 - No server-side Scrub Key storage.
 
-Validation required:
+Outcome:
 
-- `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
-- `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py`
-- preferably `PYTHONPATH=. pytest -q`
+- v13.2 helper layer is ready for UI integration.
 
 ---
 
-## Next planned UI workpackage
+## Active workpackage
 
-### WP5B — v13.2 Scrub Key import/reload UI integration
+### WP6 — v13.2 Scrub Key import/reload UI integration
 
-Status: planned; do not start until WP5 helper/tests are green.
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Goal:
 
 - Add UI support for loading a previously downloaded Scrub Key JSON file.
+- Validate imported keys before loading their mappings into the current replacement/review workflow.
+- Keep import/reload local and separate from deterministic reinsert or AI-output workflows.
 
-Boundaries:
+Implemented files:
 
-- Do not add deterministic reinsert yet.
-- Do not add AI-output flow.
-- Do not store keys server-side.
-- Keep import warnings visible.
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_scrub_key_import_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1645_v13_2_scrub_key_import_ui.md`
+
+Implemented behavior:
+
+- Adds a `Scrub Key laden` section near the existing `Scrub Key (JSON)` export block.
+- Allows upload of a Scrub Key `.json` file or pasted Scrub Key JSON.
+- Validates the imported key using the existing `build_scrub_key_import_result(...)` helper before loading.
+- Shows pseudonymization/reversibility and local-protection warnings.
+- Loads validated mapping rows into the current replacement table only after the visible `Valideer en laad Scrub Key` user action.
+- Preserves the existing `Download Scrub Key (.json)` export block.
+
+Validation:
+
+- Local targeted validation on the reconstructed connector subset passed:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py` → 8 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import_ui_patch.py` → 9 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py` → 12 passed.
+  - `PYTHONPATH=. pytest -q` on the available subset → 35 passed.
+- GitHub Actions status pending after latest commits.
+- GitHub to Hugging Face sync status pending after latest commits.
+- Hugging Face app verification pending.
+
+Boundaries preserved:
+
+- No direct edit to `presidio_streamlit.py`.
+- No AI-output reinsert.
+- No automatic document rehydration.
+- No silent replacement of current review rows without a visible user action.
+- No change to TXT, CSV, DOCX or PDF export behavior.
+- No change to existing Scrub Key JSON export behavior.
+- No cloud processing.
+- No secret, token or real personal data storage.
 
 ---
 
 ## Recommended execution order
 
-1. Verify GitHub Actions and Hugging Face sync for WP5 helper/tests.
-2. After WP5 is green, close out WP5 helper if desired.
-3. Then plan WP5B — v13.2 Scrub Key import/reload UI integration.
-4. After import/reload is stable, implement deterministic reinsert helper.
-5. Only after deterministic reinsert is stable, consider AI-output reinsert UI.
+1. Verify GitHub Actions and Hugging Face sync for WP6.
+2. Ask the coordinator/user to verify that `Scrub Key laden` is visible and can load a valid exported key.
+3. After import/reload is stable, implement a deterministic reinsert helper.
+4. Only after deterministic reinsert is stable, consider AI-output reinsert UI.
