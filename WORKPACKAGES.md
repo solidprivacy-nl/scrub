@@ -86,7 +86,7 @@ Outcome:
 
 ### WP1 — v12.4 Review guidance text
 
-Status: implemented; awaiting GitHub Actions and Hugging Face verification.
+Status: implemented; awaiting latest GitHub Actions and Hugging Face verification.
 
 Goal:
 
@@ -118,21 +118,21 @@ Verification:
 
 ### WP2 — v12.5 Final review summary
 
-Status: planned.
+Status: helper and tests implemented; UI integration pending WP1 verification.
 
 Goal:
 
 - Show export readiness before downloads.
 
-Planned helper module:
+Implemented helper module:
 
 - `review_summary.py`
 
-Planned tests:
+Implemented tests:
 
 - `tests/test_review_summary.py`
 
-Expected summary values:
+Implemented summary values:
 
 - automatically detected rows;
 - rows needing review;
@@ -140,7 +140,8 @@ Expected summary values:
 - remembered replacements;
 - checked rows included in export;
 - unchecked rows excluded from export;
-- open candidate warning.
+- open candidate warning;
+- Dutch readiness label and markdown lines.
 
 Dependency:
 
@@ -148,7 +149,7 @@ Dependency:
 
 Parallelization:
 
-- Helper and tests can be prepared in parallel with WP1 verification.
+- Helper and tests have been prepared without touching the UI flow.
 - UI integration should wait.
 
 ---
@@ -225,9 +226,8 @@ Parallelization:
 ## Recommended execution order
 
 1. Verify WP1 / v12.4 in GitHub Actions and Hugging Face.
-2. Prepare WP2 helper and tests.
-3. Integrate WP2 UI.
-4. Prepare WP3 helper and tests.
-5. Integrate WP3 UI.
-6. In parallel, start WP4 Scrub Key spec and pure tests.
-7. After v12 is complete, begin v13 UI integration.
+2. Integrate WP2 UI after WP1 verification.
+3. Prepare WP3 helper and tests.
+4. Integrate WP3 UI.
+5. In parallel, start WP4 Scrub Key spec and pure tests.
+6. After v12 is complete, begin v13 UI integration.
