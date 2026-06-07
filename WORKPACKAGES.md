@@ -227,55 +227,64 @@ Outcome:
 
 ## Active workpackage
 
-### WP4B — v13.1 Scrub Key JSON export UI integration
+### WP4B-FIX — Scrub Key UI row mapping hotfix
 
 Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Goal:
 
-- Add a local Scrub Key JSON download option after review, without adding import, reload, reinsert or AI-output flows.
+- Fix Scrub Key JSON export so reviewed replacement rows can be exported as a valid Scrub Key JSON file.
+- Prevent `Item has empty required field: original_value` by mapping app review-table columns to Scrub Key model fields before building the key.
 
-Implemented foundation from WP4:
+Problem fixed:
 
-- `SCRUB_KEY_SPEC.md`
-- `scrub_key.py`
-- `tests/test_scrub_key.py`
+- The UI integration copied `edited_replacements_df` directly into `build_scrub_key(...)`.
+- Streamlit review rows use `find` and `replace_with`.
+- The Scrub Key model expects `original_value` and `placeholder`.
 
-Implemented UI integration:
+Implemented mapping:
 
-- `fix_streamlit_nested_expanders.py` imports `build_scrub_key`, `scrub_key_to_json` and `validate_scrub_key`.
-- The app shows `Scrub Key (JSON)` near the existing final review/download section.
-- The app shows a warning that a Scrub Key is pseudonymization, not full anonymization.
-- The app warns users not to share the key with AI services or third parties unless consciously intended and allowed.
-- The app offers `Download Scrub Key (.json)` with filename `solidprivacy_scrub_key.json`.
-- The UI layer adds timestamps at export time, preserving the pure model decision that `scrub_key.py` does not create timestamps itself.
+- `find` → `original_value`
+- `replace_with` → `placeholder`
+- `entity_type` → `entity_type`
+- `type_label` → `type_label`
+- `source` → `source`
+- `review_status` → `review_status`
+- `include` → `include`
 
-Implemented tests:
+Files changed:
 
+- `fix_streamlit_nested_expanders.py`
 - `tests/test_scrub_key_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Validation status:
+
+- `tests/test_scrub_key_ui_patch.py` now guards the required mapping and safety boundaries.
+- Local pytest was not run from this connector environment.
+- Required follow-up validation:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py`
+  - preferably `PYTHONPATH=. pytest -q`
 
 Boundaries preserved:
 
+- No edit to `scrub_key.py`.
 - No direct edit to `presidio_streamlit.py`.
 - No Scrub Key import/reload.
 - No reinsert UI.
 - No AI-output flow.
 - No cloud processing.
-- No secret storage.
-- No real personal data.
+- No server-side Scrub Key storage.
 - No change to TXT, CSV, DOCX or PDF export/download behavior.
-
-Validation status:
-
-- Local pytest not run from this connector environment.
-- GitHub Actions pending for commits:
-  - `a9011ccc3fdb981c3101490fdc8b8996696f75e3` — Integrate Scrub Key JSON export into UI patch.
-  - `adb676000d07e6f00b39a378da40adfa9701e0d1` — Add Scrub Key UI patch tests.
+- No `st.stop()` or export blocking behavior added.
+- Pseudonymization warning preserved.
 
 Next step:
 
 - Verify GitHub Actions and Hugging Face sync.
-- Ask the user/coordinator to verify in the Hugging Face app that `Download Scrub Key (.json)` appears and that existing TXT/CSV/DOCX/PDF downloads still work.
+- Ask the user/coordinator to verify in the Hugging Face app that the Scrub Key JSON download no longer shows `Item has empty required field: original_value` and that TXT/CSV/DOCX/PDF downloads still work.
 
 ---
 
@@ -347,7 +356,7 @@ Boundaries respected:
 
 ## Recommended execution order
 
-1. Verify GitHub Actions `Tests` and GitHub to Hugging Face sync for WP4B.
-2. Ask the user/coordinator to verify the Hugging Face app shows `Download Scrub Key (.json)` and the pseudonymization warning.
+1. Verify GitHub Actions `Tests` and GitHub to Hugging Face sync for WP4B-FIX.
+2. Ask the user/coordinator to verify the Hugging Face app exports Scrub Key JSON without empty `original_value` validation errors.
 3. Confirm TXT/CSV/DOCX/PDF downloads still work.
 4. After v13.1 is verified, plan v13.2 Scrub Key import/reload as a separate sequential UI workpackage.
