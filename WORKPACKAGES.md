@@ -82,7 +82,7 @@ Outcome:
 
 ---
 
-## Completed / verification-pending UI workpackages
+## Completed UI workpackages
 
 ### WP1 — v12.4 Review guidance text
 
@@ -114,11 +114,9 @@ Verification:
 
 ---
 
-## Active workpackage
-
 ### WP2 — v12.5 Final review summary
 
-Status: UI integration implemented; awaiting GitHub Actions, Hugging Face sync, and app verification.
+Status: completed and formally closed after verification.
 
 Goal:
 
@@ -150,17 +148,28 @@ UI integration:
 - The app shows `Eindcontrole vóór download` immediately above the download/export section.
 - The summary is advisory and does not change export/download semantics.
 
-Verification required:
+Verification evidence:
 
-- GitHub Actions tests must pass.
-- GitHub to Hugging Face sync must pass.
-- Hugging Face app must show the final review summary before downloads.
+- Latest implementation handover commit before closeout: `ab1c926dfb6a1587f1ec57c3f895d1a5211fd645`.
+- Coordinator reported GitHub Actions tests green for the v12.5 review summary line.
+- Coordinator reported GitHub to Hugging Face sync green for the v12.5 review summary line.
+- Hugging Face app was visually verified by the coordinator/user.
+- The app showed `Eindcontrole vóór download` before the download section.
+- Downloads were reported as still working after visual verification: text, CSV, DOCX and PDF.
+
+Outcome:
+
+- v12.5 is complete.
+- No export semantics were changed.
+- WP3 can continue as the next active workpackage.
 
 ---
 
+## Active workpackage
+
 ### WP3 — v12.6 Export sanity checks
 
-Status: planned.
+Status: planned; next active workpackage after v12.5 closeout.
 
 Goal:
 
@@ -183,12 +192,12 @@ Checks:
 
 Dependency:
 
-- Best after WP2 because it can reuse summary counts.
+- WP2 is completed and can be reused for summary counts where helpful.
 
 Parallelization:
 
 - Helper and tests can be prepared early.
-- UI integration should wait until WP2 UI is stable.
+- UI integration should wait until the helper and tests are stable.
 
 ---
 
@@ -229,9 +238,7 @@ Parallelization:
 
 ## Recommended execution order
 
-1. Verify WP2 / v12.5 in GitHub Actions and Hugging Face.
-2. Ask the user to confirm the final review summary appears before downloads.
-3. Prepare WP3 helper and tests.
-4. Integrate WP3 UI after WP2 is stable.
-5. In parallel, start WP4 Scrub Key spec and pure tests.
-6. After v12 is complete, begin v13 UI integration.
+1. Start WP3 helper and tests for v12.6 Export sanity checks.
+2. Integrate WP3 UI only after helper tests are stable.
+3. In parallel, start WP4 Scrub Key spec and pure tests.
+4. After v12 is complete, begin v13 UI integration.
