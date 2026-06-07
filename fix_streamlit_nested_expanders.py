@@ -14,6 +14,7 @@ Patches currently applied:
 - v12.6: show advisory export sanity warnings before download/export.
 - v13.1: add local Scrub Key JSON export after review.
 - v13.1 hotfix: map Streamlit review-table columns to Scrub Key fields before JSON export.
+- v13.2: add local Scrub Key import/reload UI using the pure import helper.
 """
 
 from pathlib import Path
@@ -53,7 +54,7 @@ text = replace_once(
     'from pathlib import Path\nfrom datetime import datetime, timezone\n',
 )
 
-# v12.1/v12.2/v12.3/v12.4/v12.5: import review helpers.
+# v12/v13: import review, export sanity, Scrub Key export and Scrub Key import helpers.
 text = replace_once(
     text,
     'from display_labels_nl import entity_label, source_label, confidence_label\n',
@@ -69,93 +70,35 @@ text = replace_once(
     '    AI_USAGE_GUIDANCE,\n'
     '    EXPORT_GUIDANCE,\n'
     ')\n'
-    'from review_summary import build_review_summary, review_summary_markdown\n',
+    'from review_summary import build_review_summary, review_summary_markdown\n'
+    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n'
+    'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
+    'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
 )
 
-# If v12.1 already added review_status but later helpers are not present yet, extend imports only.
-text = replace_once(
-    text,
-    'from review_status import review_status_for_source, review_status_label, review_status_order\n',
-    'from review_status import review_status_for_source, review_status_label, review_status_order\n'
-    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n'
-    'from review_table_config import main_review_columns, technical_display_columns\n'
-    'from review_guidance import (\n'
-    '    REVIEW_INTRO_GUIDANCE,\n'
-    '    CANDIDATE_GUIDANCE,\n'
-    '    FOCUS_FILTER_GUIDANCE,\n'
-    '    TECHNICAL_DETAILS_GUIDANCE,\n'
-    '    AI_USAGE_GUIDANCE,\n'
-    '    EXPORT_GUIDANCE,\n'
-    ')\n'
-    'from review_summary import build_review_summary, review_summary_markdown\n',
-)
-
-text = replace_once(
-    text,
-    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n',
-    'from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe\n'
-    'from review_table_config import main_review_columns, technical_display_columns\n'
-    'from review_guidance import (\n'
-    '    REVIEW_INTRO_GUIDANCE,\n'
-    '    CANDIDATE_GUIDANCE,\n'
-    '    FOCUS_FILTER_GUIDANCE,\n'
-    '    TECHNICAL_DETAILS_GUIDANCE,\n'
-    '    AI_USAGE_GUIDANCE,\n'
-    '    EXPORT_GUIDANCE,\n'
-    ')\n'
-    'from review_summary import build_review_summary, review_summary_markdown\n',
-)
-
-text = replace_once(
-    text,
-    'from review_table_config import main_review_columns, technical_display_columns\n',
-    'from review_table_config import main_review_columns, technical_display_columns\n'
-    'from review_guidance import (\n'
-    '    REVIEW_INTRO_GUIDANCE,\n'
-    '    CANDIDATE_GUIDANCE,\n'
-    '    FOCUS_FILTER_GUIDANCE,\n'
-    '    TECHNICAL_DETAILS_GUIDANCE,\n'
-    '    AI_USAGE_GUIDANCE,\n'
-    '    EXPORT_GUIDANCE,\n'
-    ')\n'
-    'from review_summary import build_review_summary, review_summary_markdown\n',
-)
-
-text = replace_once(
-    text,
-    'from review_guidance import (\n'
-    '    REVIEW_INTRO_GUIDANCE,\n'
-    '    CANDIDATE_GUIDANCE,\n'
-    '    FOCUS_FILTER_GUIDANCE,\n'
-    '    TECHNICAL_DETAILS_GUIDANCE,\n'
-    '    AI_USAGE_GUIDANCE,\n'
-    '    EXPORT_GUIDANCE,\n'
-    ')\n',
-    'from review_guidance import (\n'
-    '    REVIEW_INTRO_GUIDANCE,\n'
-    '    CANDIDATE_GUIDANCE,\n'
-    '    FOCUS_FILTER_GUIDANCE,\n'
-    '    TECHNICAL_DETAILS_GUIDANCE,\n'
-    '    AI_USAGE_GUIDANCE,\n'
-    '    EXPORT_GUIDANCE,\n'
-    ')\n'
-    'from review_summary import build_review_summary, review_summary_markdown\n',
-)
-
-# v12.6: import advisory export sanity helpers without changing export behavior.
+# v12.6/v13.1/v13.2: extend imports on already partially patched app files.
 text = replace_once(
     text,
     'from review_summary import build_review_summary, review_summary_markdown\n',
     'from review_summary import build_review_summary, review_summary_markdown\n'
-    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n',
+    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n'
+    'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
+    'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
 )
 
-# v13.1: import Scrub Key JSON export helpers.
 text = replace_once(
     text,
     'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n',
     'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n'
+    'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
+    'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
+)
+
+text = replace_once(
+    text,
     'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n',
+    'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
+    'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
 )
 
 # v12.1: add review status fields to remembered rows.
@@ -222,6 +165,46 @@ text = replace_once(
 ''',
 )
 
+scrub_key_import_merge_block = '''        if "scrub_key_import_rows" in st.session_state:
+            imported_scrub_key_rows = st.session_state.pop("scrub_key_import_rows")
+            added_scrub_key_rows = 0
+            existing_find_values = {str(row.get("find", "")).strip() for row in default_editor_rows}
+            if len(default_editor_rows) == 1 and not str(default_editor_rows[0].get("find", "")).strip():
+                default_editor_rows = []
+                existing_find_values = set()
+            for imported_scrub_key_row in imported_scrub_key_rows:
+                imported_find = str(imported_scrub_key_row.get("find", "")).strip()
+                imported_replace = str(imported_scrub_key_row.get("replace_with", "")).strip()
+                if not imported_find or not imported_replace or imported_find in existing_find_values:
+                    continue
+                imported_row = dict(imported_scrub_key_row)
+                imported_row.setdefault("include", True)
+                imported_row.setdefault("remember", False)
+                imported_row.setdefault("source", "scrub_key_import")
+                imported_row.setdefault("source_label", "Scrub Key")
+                imported_row.setdefault("reason", "Geladen uit Scrub Key")
+                imported_row.setdefault("context", "")
+                imported_row.setdefault("confidence", "")
+                imported_row.setdefault("score", None)
+                imported_row.setdefault("type_label", entity_label(imported_row.get("entity_type", "MANUAL")))
+                imported_row.setdefault("review_status_label", review_status_label(imported_row.get("review_status", "manual")))
+                imported_row.setdefault("review_order", review_status_order(imported_row.get("review_status", "manual")))
+                default_editor_rows.append(imported_row)
+                existing_find_values.add(imported_find)
+                added_scrub_key_rows += 1
+            if added_scrub_key_rows:
+                st.success(f"{added_scrub_key_rows} Scrub Key regel(s) geladen in de vervangtabel.")
+'''
+
+# v13.2: merge imported Scrub Key mappings into the review table only after a visible user action.
+text = replace_once(
+    text,
+    '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+''',
+    scrub_key_import_merge_block + '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+''',
+)
+
 # v12.1/v12.2/v12.3/v12.4: sort review rows, show guidance/status summary, focus filters and technical view.
 text = replace_once(
     text,
@@ -269,38 +252,10 @@ text = replace_once(
 ''',
 )
 
-# v12.4: if v12.1/v12.2/v12.3 block is already present, add guidance to that block.
-text = replace_once(
-    text,
-    '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
-        if "review_order" in replacement_editor_df.columns:
-''',
-    '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
-        st.info(REVIEW_INTRO_GUIDANCE)
-        with st.expander("Uitleg bij deze controle", expanded=False):
-            st.markdown(f"- {CANDIDATE_GUIDANCE}")
-            st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
-            st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
-            st.markdown(f"- {AI_USAGE_GUIDANCE}")
-        if "review_order" in replacement_editor_df.columns:
-''',
-)
-
 text = replace_once(
     text,
     '            help="Gebruik dit als overzichtsfilter. De volledige vervangtabel hieronder blijft leidend voor de export.",\n',
     '            help=FOCUS_FILTER_GUIDANCE,\n',
-)
-
-text = replace_once(
-    text,
-    '''        with st.expander("Technische details bij de vervangtabel", expanded=False):
-            technical_columns = technical_display_columns(replacement_editor_df.columns)
-''',
-    '''        with st.expander("Technische details bij de vervangtabel", expanded=False):
-            st.caption(TECHNICAL_DETAILS_GUIDANCE)
-            technical_columns = technical_display_columns(replacement_editor_df.columns)
-''',
 )
 
 # v12.1: make status visible in the editor.
@@ -376,6 +331,48 @@ scrub_key_mapping_block = '''        scrub_key_rows = edited_replacements_df.cop
         scrub_key = build_scrub_key(scrub_key_rows)
 '''
 
+scrub_key_import_ui_block = '''        st.markdown("**Scrub Key laden**")
+        st.warning("Let op: een Scrub Key maakt vervangen waarden lokaal herleidbaar. Dit is pseudonimisering, geen volledige anonimisering. Bewaar deze sleutel lokaal en deel deze niet met AI-diensten of derden tenzij dat bewust en toegestaan is.")
+        st.caption("Upload of plak een eerder geëxporteerde Scrub Key JSON. De sleutel wordt eerst gevalideerd en daarna pas na jouw klik aan de vervangtabel toegevoegd.")
+        scrub_key_import_file = st.file_uploader(
+            "Upload Scrub Key JSON (.json)",
+            type=["json"],
+            key="scrub_key_import_file",
+            help="Gebruik alleen een lokale Scrub Key die bij dit dossier of document hoort.",
+        )
+        scrub_key_import_paste = st.text_area(
+            "Of plak Scrub Key JSON",
+            value="",
+            height=120,
+            key="scrub_key_import_paste",
+        )
+        scrub_key_import_text = ""
+        scrub_key_import_decode_error = None
+        if scrub_key_import_file is not None:
+            try:
+                scrub_key_import_text = scrub_key_import_file.getvalue().decode("utf-8")
+            except UnicodeDecodeError:
+                scrub_key_import_decode_error = "Scrub Key bestand is geen geldige UTF-8 tekst."
+        elif scrub_key_import_paste.strip():
+            scrub_key_import_text = scrub_key_import_paste
+        if st.button("Valideer en laad Scrub Key", key="load_scrub_key_import"):
+            if scrub_key_import_decode_error:
+                st.error(scrub_key_import_decode_error)
+            else:
+                scrub_key_import_result = build_scrub_key_import_result(scrub_key_import_text)
+                for scrub_key_import_warning in scrub_key_import_result.get("warnings", [IMPORT_PRIVACY_WARNING]):
+                    st.warning(scrub_key_import_warning)
+                if scrub_key_import_result.get("ok"):
+                    st.success(f"Scrub Key geldig: {scrub_key_import_result.get('item_count', 0)} mappingregel(s) gevonden.")
+                    st.session_state["scrub_key_import_rows"] = scrub_key_import_result.get("mapping_rows", [])
+                    if "replacement_editor" in st.session_state:
+                        del st.session_state["replacement_editor"]
+                    st.rerun()
+                else:
+                    for scrub_key_import_error in scrub_key_import_result.get("errors", []):
+                        st.error(scrub_key_import_error)
+'''
+
 review_summary_block = '''        st.subheader("4. Download opgeschoonde bestanden")
         final_review_summary = build_review_summary(edited_replacements_df)
         st.markdown("**Eindcontrole vóór download**")
@@ -398,16 +395,17 @@ review_summary_block = '''        st.subheader("4. Download opgeschoonde bestand
             if scrub_key.get("item_count", 0) == 0:
                 st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")
             st.download_button(
-                "Download Scrub Key (.json)",
+                "Download Scrub Key (.json)
+",
                 data=scrub_key_to_json(scrub_key),
                 file_name="solidprivacy_scrub_key.json",
                 mime="application/json",
             )
-        st.warning(EXPORT_GUIDANCE)
+''' + scrub_key_import_ui_block + '''        st.warning(EXPORT_GUIDANCE)
 '''
 
-# v12.5/v12.6/v13.1: add final review summary, advisory export sanity warnings and Scrub Key JSON export.
-# Handle both unpatched and v12.4-patched app text.
+# v12.5/v12.6/v13.1/v13.2: add final review summary, advisory export sanity warnings,
+# Scrub Key JSON export and Scrub Key import/reload.
 text = replace_once(
     text,
     '''        st.subheader("4. Download opgeschoonde bestanden")
@@ -423,44 +421,24 @@ text = replace_once(
     review_summary_block,
 )
 
-# v12.6: extend an existing v12.5 review-summary block with advisory sanity warnings.
+# v13.2: extend an already patched Scrub Key JSON export block with import/reload UI.
 text = replace_once(
     text,
-    '''        st.markdown(review_summary_markdown(final_review_summary))
-        st.warning(EXPORT_GUIDANCE)
-''',
-    '''        st.markdown(review_summary_markdown(final_review_summary))
-        export_sanity_checks = build_export_sanity_checks(edited_replacements_df)
-        st.markdown("**Extra exportcontrole**")
-        for export_sanity_warning in export_sanity_warnings(export_sanity_checks):
-            st.warning(export_sanity_warning)
-        st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
-        st.warning(EXPORT_GUIDANCE)
-''',
-)
-
-# v13.1: extend an existing v12.6 block with Scrub Key JSON export.
-text = replace_once(
-    text,
-    '''        st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
-        st.warning(EXPORT_GUIDANCE)
-''',
-    '''        st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
-        st.markdown("**Scrub Key (JSON)**")
-        st.warning("Let op: een Scrub Key maakt de vervangen waarden lokaal herleidbaar. Dit is pseudonimisering, geen volledige anonimisering. Deel deze sleutel niet met AI-diensten of derden tenzij dat bewust en toegestaan is.")
-''' + scrub_key_mapping_block + '''        scrub_key_issues = validate_scrub_key(scrub_key)
-        if scrub_key_issues:
-            st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
-        else:
-            if scrub_key.get("item_count", 0) == 0:
-                st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")
-            st.download_button(
+    '''            st.download_button(
                 "Download Scrub Key (.json)",
                 data=scrub_key_to_json(scrub_key),
                 file_name="solidprivacy_scrub_key.json",
                 mime="application/json",
             )
         st.warning(EXPORT_GUIDANCE)
+''',
+    '''            st.download_button(
+                "Download Scrub Key (.json)",
+                data=scrub_key_to_json(scrub_key),
+                file_name="solidprivacy_scrub_key.json",
+                mime="application/json",
+            )
+''' + scrub_key_import_ui_block + '''        st.warning(EXPORT_GUIDANCE)
 ''',
 )
 
