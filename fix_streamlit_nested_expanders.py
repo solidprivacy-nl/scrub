@@ -13,6 +13,7 @@ Patches currently applied:
 - v12.5: show a final review summary before download/export.
 - v12.6: show advisory export sanity warnings before download/export.
 - v13.1: add local Scrub Key JSON export after review.
+- v13.1 hotfix: map Streamlit review-table columns to Scrub Key fields before JSON export.
 """
 
 from pathlib import Path
@@ -354,6 +355,27 @@ text = replace_once(
 ''',
 )
 
+scrub_key_mapping_block = '''        scrub_key_rows = edited_replacements_df.copy()
+        scrub_key_field_map = {
+            "find": "original_value",
+            "replace_with": "placeholder",
+            "entity_type": "entity_type",
+            "type_label": "type_label",
+            "source": "source",
+            "review_status": "review_status",
+            "include": "include",
+        }
+        for scrub_key_source_column, scrub_key_target_column in scrub_key_field_map.items():
+            if scrub_key_source_column in scrub_key_rows.columns:
+                scrub_key_rows[scrub_key_target_column] = scrub_key_rows[scrub_key_source_column]
+        scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        if "timestamp" not in scrub_key_rows.columns:
+            scrub_key_rows["timestamp"] = scrub_key_timestamp
+        else:
+            scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
+        scrub_key = build_scrub_key(scrub_key_rows)
+'''
+
 review_summary_block = '''        st.subheader("4. Download opgeschoonde bestanden")
         final_review_summary = build_review_summary(edited_replacements_df)
         st.markdown("**Eindcontrole vóór download**")
@@ -369,14 +391,7 @@ review_summary_block = '''        st.subheader("4. Download opgeschoonde bestand
         st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
         st.markdown("**Scrub Key (JSON)**")
         st.warning("Let op: een Scrub Key maakt de vervangen waarden lokaal herleidbaar. Dit is pseudonimisering, geen volledige anonimisering. Deel deze sleutel niet met AI-diensten of derden tenzij dat bewust en toegestaan is.")
-        scrub_key_rows = edited_replacements_df.copy()
-        scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-        if "timestamp" not in scrub_key_rows.columns:
-            scrub_key_rows["timestamp"] = scrub_key_timestamp
-        else:
-            scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
-        scrub_key = build_scrub_key(scrub_key_rows)
-        scrub_key_issues = validate_scrub_key(scrub_key)
+''' + scrub_key_mapping_block + '''        scrub_key_issues = validate_scrub_key(scrub_key)
         if scrub_key_issues:
             st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
         else:
@@ -433,14 +448,7 @@ text = replace_once(
     '''        st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
         st.markdown("**Scrub Key (JSON)**")
         st.warning("Let op: een Scrub Key maakt de vervangen waarden lokaal herleidbaar. Dit is pseudonimisering, geen volledige anonimisering. Deel deze sleutel niet met AI-diensten of derden tenzij dat bewust en toegestaan is.")
-        scrub_key_rows = edited_replacements_df.copy()
-        scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-        if "timestamp" not in scrub_key_rows.columns:
-            scrub_key_rows["timestamp"] = scrub_key_timestamp
-        else:
-            scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
-        scrub_key = build_scrub_key(scrub_key_rows)
-        scrub_key_issues = validate_scrub_key(scrub_key)
+''' + scrub_key_mapping_block + '''        scrub_key_issues = validate_scrub_key(scrub_key)
         if scrub_key_issues:
             st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
         else:
@@ -454,6 +462,20 @@ text = replace_once(
             )
         st.warning(EXPORT_GUIDANCE)
 ''',
+)
+
+# v13.1 hotfix: map rows in an already-patched Scrub Key block before building the key.
+text = replace_once(
+    text,
+    '''        scrub_key_rows = edited_replacements_df.copy()
+        scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        if "timestamp" not in scrub_key_rows.columns:
+            scrub_key_rows["timestamp"] = scrub_key_timestamp
+        else:
+            scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
+        scrub_key = build_scrub_key(scrub_key_rows)
+''',
+    scrub_key_mapping_block,
 )
 
 # v12.1: include status in the scrub report rows where downstream exporters keep it.
