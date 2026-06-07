@@ -227,17 +227,9 @@ Outcome:
 
 ---
 
-## Active workpackage
-
 ### WP6 — v13.2 Scrub Key import/reload UI integration
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
-
-Goal:
-
-- Add UI support for loading a previously downloaded Scrub Key JSON file.
-- Validate imported keys before loading their mappings into the current replacement/review workflow.
-- Keep import/reload local and separate from deterministic reinsert or AI-output workflows.
+Status: completed and formally closed after Actions/sync verification; app verification pending user/coordinator confirmation.
 
 Implemented files:
 
@@ -246,6 +238,7 @@ Implemented files:
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `handover/workpackages/20260607_1645_v13_2_scrub_key_import_ui.md`
+- `handover/workpackages/20260607_1715_v13_2_scrub_key_import_ui_closeout.md`
 
 Implemented behavior:
 
@@ -256,17 +249,34 @@ Implemented behavior:
 - Loads validated mapping rows into the current replacement table only after the visible `Valideer en laad Scrub Key` user action.
 - Preserves the existing `Download Scrub Key (.json)` export block.
 
-Validation:
+Validation evidence:
 
-- Local targeted validation on the reconstructed connector subset passed:
+- Local targeted validation recorded in the implementation handover:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
   - `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py` → 8 passed.
   - `PYTHONPATH=. pytest -q tests/test_scrub_key_import_ui_patch.py` → 9 passed.
   - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py` → 12 passed.
   - `PYTHONPATH=. pytest -q` on the available subset → 35 passed.
-- GitHub Actions status pending after latest commits.
-- GitHub to Hugging Face sync status pending after latest commits.
-- Hugging Face app verification pending.
+- Coordinator evidence after implementation:
+  - Tests #89 green — commit `83353e4`.
+  - Tests #90 green — commit `4a1ef55`.
+  - Sync to Hugging Face Space #104 green — commit `4a1ef55`.
+  - Tests #91 green — commit `4d8bfe9`.
+  - Sync to Hugging Face Space #105 green — commit `4d8bfe9`.
+  - Tests #92 green — commit `ff8321f`.
+  - Sync to Hugging Face Space #106 green — commit `ff8321f`.
+
+Closeout notes:
+
+- GitHub Actions tests are green based on coordinator evidence.
+- GitHub to Hugging Face sync is green based on coordinator evidence.
+- App verification is pending user/coordinator confirmation.
+- Existing Scrub Key JSON export remains in place.
+- Import/reload remains local and uses existing helper logic.
+- The key remains pseudonymization/reversible and must be protected.
+- No AI-output reinsert behavior was added.
+- No automatic document rehydration was added.
+- Existing TXT, CSV, DOCX and PDF downloads were not intentionally changed.
 
 Boundaries preserved:
 
@@ -283,7 +293,10 @@ Boundaries preserved:
 
 ## Recommended execution order
 
-1. Verify GitHub Actions and Hugging Face sync for WP6.
-2. Ask the coordinator/user to verify that `Scrub Key laden` is visible and can load a valid exported key.
-3. After import/reload is stable, implement a deterministic reinsert helper.
-4. Only after deterministic reinsert is stable, consider AI-output reinsert UI.
+1. Ask the coordinator/user to visually verify the Hugging Face app:
+   - `Scrub Key laden` visible;
+   - import/reload warning visible;
+   - existing Scrub Key export still visible;
+   - existing downloads still available.
+2. After import/reload is visually verified, implement a deterministic reinsert helper as a separate non-UI workpackage.
+3. Only after deterministic reinsert is stable, consider AI-output reinsert UI.
