@@ -11,6 +11,7 @@ Patches currently applied:
 - v12.3: simplify the main review table and move audit details to a technical view.
 - v12.4: add clear review guidance text around the review workflow.
 - v12.5: show a final review summary before download/export.
+- v12.6: show advisory export sanity warnings before download/export.
 """
 
 from pathlib import Path
@@ -130,6 +131,14 @@ text = replace_once(
     '    EXPORT_GUIDANCE,\n'
     ')\n'
     'from review_summary import build_review_summary, review_summary_markdown\n',
+)
+
+# v12.6: import advisory export sanity helpers without changing export behavior.
+text = replace_once(
+    text,
+    'from review_summary import build_review_summary, review_summary_markdown\n',
+    'from review_summary import build_review_summary, review_summary_markdown\n'
+    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n',
 )
 
 # v12.1: add review status fields to remembered rows.
@@ -337,10 +346,16 @@ review_summary_block = '''        st.subheader("4. Download opgeschoonde bestand
         else:
             st.success(final_review_summary.get("readiness_label", "Klaar voor export na gebruikerscontrole"))
         st.markdown(review_summary_markdown(final_review_summary))
+        export_sanity_checks = build_export_sanity_checks(edited_replacements_df)
+        st.markdown("**Extra exportcontrole**")
+        for export_sanity_warning in export_sanity_warnings(export_sanity_checks):
+            st.warning(export_sanity_warning)
+        st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
         st.warning(EXPORT_GUIDANCE)
 '''
 
-# v12.5: add final review summary before downloads. Handle both unpatched and v12.4-patched app text.
+# v12.5/v12.6: add final review summary and advisory export sanity warnings before downloads.
+# Handle both unpatched and v12.4-patched app text.
 text = replace_once(
     text,
     '''        st.subheader("4. Download opgeschoonde bestanden")
@@ -354,6 +369,22 @@ text = replace_once(
     '''        st.subheader("4. Download opgeschoonde bestanden")
 ''',
     review_summary_block,
+)
+
+# v12.6: extend an existing v12.5 review-summary block with advisory sanity warnings.
+text = replace_once(
+    text,
+    '''        st.markdown(review_summary_markdown(final_review_summary))
+        st.warning(EXPORT_GUIDANCE)
+''',
+    '''        st.markdown(review_summary_markdown(final_review_summary))
+        export_sanity_checks = build_export_sanity_checks(edited_replacements_df)
+        st.markdown("**Extra exportcontrole**")
+        for export_sanity_warning in export_sanity_warnings(export_sanity_checks):
+            st.warning(export_sanity_warning)
+        st.caption("Deze exportcontrole is adviserend: downloads blijven beschikbaar en de exportinstellingen blijven ongewijzigd.")
+        st.warning(EXPORT_GUIDANCE)
+''',
 )
 
 # v12.1: include status in the scrub report rows where downstream exporters keep it.
