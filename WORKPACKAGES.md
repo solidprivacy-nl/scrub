@@ -169,35 +169,45 @@ Outcome:
 
 ### WP3 — v12.6 Export sanity checks
 
-Status: planned; next active workpackage after v12.5 closeout.
+Status: helper implemented; local targeted tests passed; UI integration pending.
 
 Goal:
 
 - Warn users before export if review risk remains.
 
-Planned helper module:
+Implemented helper module:
 
 - `export_sanity.py`
 
-Planned tests:
+Implemented tests:
 
 - `tests/test_export_sanity.py`
 
-Checks:
+Implemented checks:
 
 - `Controle nodig` rows remain unchecked;
 - candidate rows exist but are not included;
 - no replacements selected;
-- reminder that user review remains required.
+- user review remains required;
+- export is advisory and not guaranteed anonymization.
 
-Dependency:
+Validation:
 
-- WP2 is completed and can be reused for summary counts where helpful.
+- Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
+- GitHub Actions status pending after latest commits.
+- GitHub to Hugging Face sync status pending after latest commits.
 
-Parallelization:
+Boundaries preserved:
 
-- Helper and tests can be prepared early.
-- UI integration should wait until the helper and tests are stable.
+- No UI files changed.
+- No export/download behavior changed.
+- Downloads are not blocked.
+- No Scrub Key logic added.
+
+Next step:
+
+- Verify GitHub Actions and Hugging Face sync.
+- Integrate WP3 warnings into the export UI only after helper validation is green.
 
 ---
 
@@ -238,7 +248,7 @@ Parallelization:
 
 ## Recommended execution order
 
-1. Start WP3 helper and tests for v12.6 Export sanity checks.
+1. Verify WP3 helper commits in GitHub Actions and Hugging Face sync.
 2. Integrate WP3 UI only after helper tests are stable.
 3. In parallel, start WP4 Scrub Key spec and pure tests.
 4. After v12 is complete, begin v13 UI integration.
