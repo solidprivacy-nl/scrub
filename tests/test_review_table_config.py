@@ -47,3 +47,16 @@ def test_technical_display_columns_preserve_audit_fields_when_available():
 def test_hidden_technical_columns_only_returns_existing_technical_columns():
     available = ["include", "source_label", "reason", "score", "replace_with"]
     assert hidden_technical_columns(available) == ["source_label", "reason", "score"]
+
+
+def test_column_helpers_accept_pandas_index_like_objects_without_truth_value_check():
+    class PandasIndexLike:
+        def __iter__(self):
+            return iter(["include", "find", "replace_with", "score"])
+
+        def __bool__(self):
+            raise ValueError("The truth value of a Index is ambiguous")
+
+    available = PandasIndexLike()
+    assert main_review_columns(available) == ["include", "find", "replace_with"]
+    assert technical_display_columns(available) == ["find", "score"]
