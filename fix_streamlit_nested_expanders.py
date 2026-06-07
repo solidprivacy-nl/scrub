@@ -6,14 +6,8 @@ refactors are being staged.
 
 Patches currently applied:
 - v9: remove nested Streamlit expander usage for Woordenlijsten.
-- v12.1: add a user-facing review status model to the replacement table.
-- v12.2: add safe review-focus filters without changing export semantics.
-- v12.3: simplify the main review table and move audit details to a technical view.
-- v12.4: add clear review guidance text around the review workflow.
-- v12.5: show a final review summary before download/export.
-- v12.6: show advisory export sanity warnings before download/export.
+- v12.1-v12.6: add review status, focus filters, guidance, summary and advisory export checks.
 - v13.1: add local Scrub Key JSON export after review.
-- v13.1 hotfix: map Streamlit review-table columns to Scrub Key fields before JSON export.
 - v13.2: add local Scrub Key import/reload UI using the pure import helper.
 """
 
@@ -29,32 +23,8 @@ def replace_once(source: str, old: str, new: str) -> str:
     return source
 
 
-# v9 compatibility: Streamlit does not allow an expander inside another expander.
-nested_old = '''    st_deny_allow_expander = st.expander("Woordenlijsten", expanded=False)
-    with st_deny_allow_expander:
-        st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
-        st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
-        st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
-        st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
-'''
+text = replace_once(text, 'from pathlib import Path\n', 'from pathlib import Path\nfrom datetime import datetime, timezone\n')
 
-nested_new = '''    st.markdown("**Woordenlijsten**")
-    st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
-    st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
-    st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
-    st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
-'''
-
-text = replace_once(text, nested_old, nested_new)
-
-# v13.1: timestamp Scrub Key mappings in the UI/export layer, not inside the pure model.
-text = replace_once(
-    text,
-    'from pathlib import Path\n',
-    'from pathlib import Path\nfrom datetime import datetime, timezone\n',
-)
-
-# v12/v13: import review, export sanity, Scrub Key export and Scrub Key import helpers.
 text = replace_once(
     text,
     'from display_labels_nl import entity_label, source_label, confidence_label\n',
@@ -76,24 +46,6 @@ text = replace_once(
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
 )
 
-# v12.6/v13.1/v13.2: extend imports on already partially patched app files.
-text = replace_once(
-    text,
-    'from review_summary import build_review_summary, review_summary_markdown\n',
-    'from review_summary import build_review_summary, review_summary_markdown\n'
-    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n'
-    'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
-    'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
-)
-
-text = replace_once(
-    text,
-    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n',
-    'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n'
-    'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
-    'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
-)
-
 text = replace_once(
     text,
     'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n',
@@ -101,69 +53,78 @@ text = replace_once(
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
 )
 
-# v12.1: add review status fields to remembered rows.
 text = replace_once(
     text,
-    '''                    "source_label": source_label("remembered"),
+    '''    st_deny_allow_expander = st.expander("Woordenlijsten", expanded=False)
+    with st_deny_allow_expander:
+        st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
+        st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
+        st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
+        st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
+''',
+    '''    st.markdown("**Woordenlijsten**")
+    st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
+    st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
+    st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
+    st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
+''',
+)
+
+for old, new in [
+    (
+        '''                    "source_label": source_label("remembered"),
                     "source": "remembered",
                     "reason": "Opgeslagen herbruikbare vervanging",
 ''',
-    '''                    "source_label": source_label("remembered"),
+        '''                    "source_label": source_label("remembered"),
                     "source": "remembered",
                     "review_status": review_status_for_source("remembered", entity_type, None),
                     "review_status_label": review_status_label(review_status_for_source("remembered", entity_type, None)),
                     "review_order": review_status_order(review_status_for_source("remembered", entity_type, None)),
                     "reason": "Opgeslagen herbruikbare vervanging",
 ''',
-)
-
-# v12.1: add review status fields to automatically detected rows.
-text = replace_once(
-    text,
-    '''                    "source_label": source_label("detected"),
+    ),
+    (
+        '''                    "source_label": source_label("detected"),
                     "source": "detected",
                     "reason": "Automatisch herkend",
 ''',
-    '''                    "source_label": source_label("detected"),
+        '''                    "source_label": source_label("detected"),
                     "source": "detected",
                     "review_status": review_status_for_source("detected", entity_type, score),
                     "review_status_label": review_status_label(review_status_for_source("detected", entity_type, score)),
                     "review_order": review_status_order(review_status_for_source("detected", entity_type, score)),
                     "reason": "Automatisch herkend",
 ''',
-)
-
-# v12.1: add review status fields to candidate rows.
-text = replace_once(
-    text,
-    '''                    "source_label": source_label("candidate"),
+    ),
+    (
+        '''                    "source_label": source_label("candidate"),
                     "source": "candidate",
                     "reason": candidate.get("reason", "Mogelijke gemiste waarde"),
 ''',
-    '''                    "source_label": source_label("candidate"),
+        '''                    "source_label": source_label("candidate"),
                     "source": "candidate",
                     "review_status": review_status_for_source("candidate", entity_type, score),
                     "review_status_label": review_status_label(review_status_for_source("candidate", entity_type, score)),
                     "review_order": review_status_order(review_status_for_source("candidate", entity_type, score)),
                     "reason": candidate.get("reason", "Mogelijke gemiste waarde"),
 ''',
-)
-
-# v12.1: add review status fields to empty/manual fallback rows.
-text = replace_once(
-    text,
-    '''                    "source_label": source_label("manual"),
+    ),
+    (
+        '''                    "source_label": source_label("manual"),
                     "source": "manual",
                     "reason": "Handmatige vervangingsregel",
 ''',
-    '''                    "source_label": source_label("manual"),
+        '''                    "source_label": source_label("manual"),
                     "source": "manual",
                     "review_status": review_status_for_source("manual", "MANUAL", None),
                     "review_status_label": review_status_label(review_status_for_source("manual", "MANUAL", None)),
                     "review_order": review_status_order(review_status_for_source("manual", "MANUAL", None)),
                     "reason": "Handmatige vervangingsregel",
 ''',
-)
+    ),
+]:
+    text = replace_once(text, old, new)
 
 scrub_key_import_merge_block = '''        if "scrub_key_import_rows" in st.session_state:
             imported_scrub_key_rows = st.session_state.pop("scrub_key_import_rows")
@@ -196,7 +157,6 @@ scrub_key_import_merge_block = '''        if "scrub_key_import_rows" in st.sessi
                 st.success(f"{added_scrub_key_rows} Scrub Key regel(s) geladen in de vervangtabel.")
 '''
 
-# v13.2: merge imported Scrub Key mappings into the review table only after a visible user action.
 text = replace_once(
     text,
     '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
@@ -205,13 +165,7 @@ text = replace_once(
 ''',
 )
 
-# v12.1/v12.2/v12.3/v12.4: sort review rows, show guidance/status summary, focus filters and technical view.
-text = replace_once(
-    text,
-    '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
-        edited_replacements_df = st.data_editor(
-''',
-    '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+review_table_intro_block = '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
         st.info(REVIEW_INTRO_GUIDANCE)
         with st.expander("Uitleg bij deze controle", expanded=False):
             st.markdown(f"- {CANDIDATE_GUIDANCE}")
@@ -249,16 +203,16 @@ text = replace_once(
             else:
                 st.caption("Geen technische detailkolommen beschikbaar.")
         edited_replacements_df = st.data_editor(
-''',
-)
+'''
 
 text = replace_once(
     text,
-    '            help="Gebruik dit als overzichtsfilter. De volledige vervangtabel hieronder blijft leidend voor de export.",\n',
-    '            help=FOCUS_FILTER_GUIDANCE,\n',
+    '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+        edited_replacements_df = st.data_editor(
+''',
+    review_table_intro_block,
 )
 
-# v12.1: make status visible in the editor.
 text = replace_once(
     text,
     '''                "include",
@@ -272,7 +226,6 @@ text = replace_once(
 ''',
 )
 
-# v12.3: reduce the editable table to user-facing columns only.
 text = replace_once(
     text,
     '''            column_order=[
@@ -395,8 +348,7 @@ review_summary_block = '''        st.subheader("4. Download opgeschoonde bestand
             if scrub_key.get("item_count", 0) == 0:
                 st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")
             st.download_button(
-                "Download Scrub Key (.json)
-",
+                "Download Scrub Key (.json)",
                 data=scrub_key_to_json(scrub_key),
                 file_name="solidprivacy_scrub_key.json",
                 mime="application/json",
@@ -404,8 +356,6 @@ review_summary_block = '''        st.subheader("4. Download opgeschoonde bestand
 ''' + scrub_key_import_ui_block + '''        st.warning(EXPORT_GUIDANCE)
 '''
 
-# v12.5/v12.6/v13.1/v13.2: add final review summary, advisory export sanity warnings,
-# Scrub Key JSON export and Scrub Key import/reload.
 text = replace_once(
     text,
     '''        st.subheader("4. Download opgeschoonde bestanden")
@@ -421,7 +371,6 @@ text = replace_once(
     review_summary_block,
 )
 
-# v13.2: extend an already patched Scrub Key JSON export block with import/reload UI.
 text = replace_once(
     text,
     '''            st.download_button(
@@ -442,21 +391,6 @@ text = replace_once(
 ''',
 )
 
-# v13.1 hotfix: map rows in an already-patched Scrub Key block before building the key.
-text = replace_once(
-    text,
-    '''        scrub_key_rows = edited_replacements_df.copy()
-        scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-        if "timestamp" not in scrub_key_rows.columns:
-            scrub_key_rows["timestamp"] = scrub_key_timestamp
-        else:
-            scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
-        scrub_key = build_scrub_key(scrub_key_rows)
-''',
-    scrub_key_mapping_block,
-)
-
-# v12.1: include status in the scrub report rows where downstream exporters keep it.
 text = replace_once(
     text,
     '''                    "source": safe_cell(row.get("source", "")),
