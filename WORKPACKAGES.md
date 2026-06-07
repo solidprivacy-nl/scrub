@@ -4,9 +4,36 @@ This file translates `ROADMAP.md` into executable workpackages.
 
 Use:
 
+- `PROJECT_PROMPT.md` for full worker instructions and operating rules.
+- `PROJECT_PROMPT_SHORT.md` for the compact ChatGPT Project Instructions version.
 - `ROADMAP.md` for product direction and phase order.
 - `WORKPACKAGES.md` for immediate execution planning and parallelization.
 - `CHANGELOG.md` for implementation history.
+
+---
+
+## Mandatory worker start sequence
+
+Every worker must start by reading, in order:
+
+1. `PROJECT_PROMPT.md`
+2. `ROADMAP.md`
+3. `WORKPACKAGES.md`
+4. `CHANGELOG.md`
+
+If the active repository is not `solidprivacy-nl/scrub`, stop and report the mismatch.
+
+Every worker must end with a handover summary and write that summary to:
+
+```text
+handover/workpackages/
+```
+
+Filename format:
+
+```text
+handover/workpackages/YYYYMMDD_HHMM_<workpackage_slug>.md
+```
 
 ---
 
