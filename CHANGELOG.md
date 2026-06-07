@@ -26,9 +26,66 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v13.2 — Scrub Key import/reload UI closeout
+
+Status: completed and formally closed after Actions/sync verification; app verification pending user/coordinator confirmation.
+
+Purpose:
+
+- Administratively close the v13.2 Scrub Key import/reload UI workpackage.
+- Record coordinator evidence that GitHub Actions tests and GitHub to Hugging Face sync are green.
+- Preserve the boundary that this phase is import/reload only and does not add AI-output reinsert.
+
+Files added or changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1715_v13_2_scrub_key_import_ui_closeout.md`
+
+Closeout evidence:
+
+- Tests #89 green — commit `83353e4`.
+- Tests #90 green — commit `4a1ef55`.
+- Sync to Hugging Face Space #104 green — commit `4a1ef55`.
+- Tests #91 green — commit `4d8bfe9`.
+- Sync to Hugging Face Space #105 green — commit `4d8bfe9`.
+- Tests #92 green — commit `ff8321f`.
+- Sync to Hugging Face Space #106 green — commit `ff8321f`.
+
+Closeout notes:
+
+- Scrub Key import/reload UI was implemented.
+- GitHub Actions tests are green based on coordinator evidence.
+- GitHub to Hugging Face sync is green based on coordinator evidence.
+- Existing Scrub Key JSON export remains in place.
+- Import/reload remains local and uses existing helper logic.
+- The key remains pseudonymization/reversible and must be protected.
+- Existing TXT, CSV, DOCX and PDF downloads were not intentionally changed.
+
+App verification:
+
+- App verification: pending user/coordinator confirmation.
+
+Intentionally not changed in closeout:
+
+- No code files changed.
+- No tests changed.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No direct edit to `presidio_streamlit.py`.
+- No edit to `scrub_key.py`.
+- No edit to `scrub_key_import.py`.
+- No edit to `tests/*`.
+- No AI-output reinsert behavior.
+- No automatic document rehydration.
+- No change to TXT, CSV, DOCX or PDF export/download behavior.
+- No cloud processing.
+- No secrets, tokens or real personal data.
+
+---
+
 ## v13.2 — Scrub Key import/reload UI integration
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: implemented; Actions/sync later verified green in closeout.
 
 Purpose:
 
