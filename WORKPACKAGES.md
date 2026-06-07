@@ -350,28 +350,89 @@ Outcome:
 
 ---
 
+### WP8 — v13.3 Deterministic reinsert UI planning
+
+Status: implemented; reinsert UI implementation can start as a separate sequential workpackage.
+
+Implemented files:
+
+- `REINSERT_UI_SPEC.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1900_v13_3_reinsert_ui_planning.md`
+
+Planning outcome:
+
+- Specifies that the future UI block should appear after the existing Scrub Key import/reload section near the download/export area.
+- Defines Dutch UI labels including `Originele waarden terugzetten`, `Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten`, `Zet originele waarden lokaal terug`, `Herstelde tekst` and `Download herstelde tekst (.txt)`.
+- Specifies how the user pastes scrubbed or AI-generated text.
+- Specifies how the UI should use a validated Scrub Key.
+- Specifies the helper call contract for `reinsert_from_scrub_key(text, scrub_key)`.
+- Specifies output behavior and `.txt` download behavior for restored text.
+- Specifies required audit summary fields.
+- Specifies required warnings for restored sensitive values, manual review, pseudonymization/reversibility, local key protection and no-AI/no-cloud processing.
+- Specifies what must not happen automatically.
+- Specifies required future UI patch tests.
+
+Validation status:
+
+- Tests: not applicable; planning/specification-only workpackage.
+- App verification: not applicable; no UI behavior changed.
+
+Boundaries preserved:
+
+- No UI code changed in WP8.
+- No edit to `fix_streamlit_nested_expanders.py`.
+- No edit to `presidio_streamlit.py`.
+- No tests added or changed.
+- No AI calls.
+- No cloud processing.
+- No automatic document rehydration.
+- No TXT, CSV, DOCX or PDF export behavior changed.
+- No Scrub Key JSON export behavior changed.
+- No Scrub Key import/reload behavior changed.
+- No secrets, tokens or real personal data stored.
+
+Outcome:
+
+- v13.3 deterministic reinsert UI is planned and ready for a separate sequential implementation workpackage.
+
+---
+
 ## Active / next recommended workpackage
 
-### WP8 — v13.3 Deterministic reinsert UI planning
+### WP8B — v13.3 Deterministic reinsert UI implementation
 
 Status: recommended next workpackage; not started here.
 
 Goal:
 
-- Plan UI integration for deterministic local reinsert using the verified helper.
+- Implement the planned local deterministic reinsert UI using `reinsert_from_scrub_key(...)`.
 - Keep AI-output behavior separate unless explicitly approved.
+
+Likely files:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_scrub_key_reinsert_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/YYYYMMDD_HHMM_v13_3_reinsert_ui_implementation.md`
 
 Boundaries:
 
+- UI integration must be sequential.
 - Do not add AI calls by default.
 - Do not add cloud processing.
 - Do not silently rehydrate documents.
 - Do not change existing TXT/CSV/DOCX/PDF export behavior.
+- Preserve local-only Scrub Key handling and pseudonymization warnings.
 
 ---
 
 ## Recommended execution order
 
-1. Plan v13.3 deterministic reinsert UI as a separate workpackage.
-2. Keep AI-output workflow separate and explicitly reviewed before UI integration.
-3. Preserve local-only Scrub Key handling and pseudonymization warnings.
+1. Start WP8B deterministic reinsert UI implementation as a separate sequential UI workpackage.
+2. Add UI patch tests before/with UI integration.
+3. Verify GitHub Actions and Hugging Face sync.
+4. Ask for app verification because UI behavior will change.
+5. Keep AI-output workflow separate and explicitly reviewed before AI-specific UI behavior.
