@@ -26,60 +26,84 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
-## v12.6 — Export sanity checks UI integration
+## v12.6 — Export sanity checks closeout
 
-Status: UI integration implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed and administratively closed after coordinator closeout instruction.
 
 Purpose:
 
-- Show advisory export sanity warnings near the final review/download section.
-- Make remaining review risk visible before the user downloads files.
-- Preserve existing export/download behavior.
-- Keep the warnings advisory only.
+- Close the v12.6 export sanity workpackage after helper and UI integration were completed.
+- Record that the UI warning block is advisory only.
+- Preserve the documented boundary that export/download behavior was not changed.
 
-Files added or changed:
+Files added or changed in the full v12.6 line:
 
-- `fix_streamlit_nested_expanders.py`
+- `export_sanity.py`
+- `tests/test_export_sanity.py`
 - `tests/test_export_sanity_ui_patch.py`
+- `fix_streamlit_nested_expanders.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
+- `handover/workpackages/20260607_1405_v12_6_export_sanity_helper.md`
 - `handover/workpackages/20260607_1445_v12_6_export_sanity_ui.md`
+- `handover/workpackages/20260607_1515_v12_6_export_sanity_closeout.md`
 
 Main changes:
 
-- Integrated the existing `export_sanity.py` helper into the Streamlit startup patch flow.
-- Added UI text for `Extra exportcontrole` near the existing v12.5 `Eindcontrole vóór download` block.
-- The UI can show advisory warnings for:
+- Added pure helper logic for advisory export readiness checks.
+- Added Dutch user-facing warning text for:
   - unchecked `Controle nodig` rows;
   - candidate rows not included;
   - no replacements selected;
   - user review still required;
   - export not guaranteeing full anonymization.
-- Added a patch-level test file to guard that the export sanity helper is wired into the UI patch.
+- Added readiness labels:
+  - `Geen vervangregels gevonden — controleer handmatig`;
+  - `Geen vervangingen geselecteerd`;
+  - `Controle nodig vóór export`;
+  - `Klaar voor export na gebruikerscontrole`.
+- Integrated the existing `export_sanity.py` helper into the Streamlit startup patch flow.
+- Added UI text for `Extra exportcontrole` near the existing v12.5 `Eindcontrole vóór download` block.
+- Added patch-level tests to guard that the export sanity helper is wired into the UI patch.
+- Administratively closed WP3C without changing code files.
 
 Testing and verification:
 
-- `tests/test_export_sanity_ui_patch.py` was added.
-- The WP3B worker could not run pytest locally from the connector environment.
-- Earlier helper validation was reconciled by the coordinator: `Tests #58` green and `Sync to Hugging Face Space #72` green for commit `b0bf8ae`.
-- GitHub Actions and Hugging Face sync for the UI integration commits still need coordinator verification.
-- Hugging Face app verification is still required: confirm `Extra exportcontrole` appears before downloads and downloads remain available.
+- Helper validation recorded in WP3A handover:
+  - `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
+- Coordinator reconciled helper verification:
+  - `Tests #58` green.
+  - `Sync to Hugging Face Space #72` green.
+  - commit `b0bf8ae`.
+- UI integration commits recorded:
+  - `c60b9b4bfa8944e620546ca26a4fe42c287edaa0` — Integrate export sanity warnings into UI patch.
+  - `f5158c9faf8e7676cb8403da0b42b0465539acfa` — Add export sanity UI patch tests.
+  - `7d043d13096518d5dca6a5f187189fa3a8471627` — Update workpackage status for export sanity UI.
+  - `4a84ddb7ca2b298ce2dcdcc5daf8b9f1cc055023` — Add export sanity UI handover.
+- WP3C was administrative closeout only; no new local pytest run was performed by this worker.
 
 Intentionally not changed:
 
+- No code files changed in WP3C closeout.
 - No direct edit to `presidio_streamlit.py`.
 - No export/download blocking.
 - No change to which rows are included in export.
 - No change to TXT, CSV, DOCX or PDF download logic.
-- No Scrub Key logic added.
-- No reinsert workflow added.
+- No Scrub Key logic added in v12.6.
+- No reinsert workflow added in v12.6.
 - No cloud processing introduced.
+
+Outcome:
+
+- v12.6 is closed.
+- v12 Review UX is complete through guidance, final review summary and export sanity warnings.
+- Next UI work should move to v13 Scrub Key JSON export only after coordinator approval.
 
 ---
 
 ## WP Status Reconciliation — WP3/WP4 verification evidence
 
-Status: reconciliation completed; GitHub Actions and Hugging Face sync could not be independently confirmed through the connector.
+Status: reconciliation completed; GitHub Actions and Hugging Face sync could not be independently confirmed through the connector at that time.
 
 Purpose:
 
@@ -166,61 +190,6 @@ Intentionally not changed:
 - No secret storage.
 - No real personal data in tests or examples.
 - No change to active review UI or export semantics.
-
----
-
-## v12.6 — Export sanity checks helper and tests
-
-Status: helper implemented; coordinator reconciled helper verification as green before UI integration.
-
-Purpose:
-
-- Prepare advisory export sanity-check logic before UI integration.
-- Warn users when review risk remains.
-- Preserve existing export semantics and download behavior.
-
-Files added or changed:
-
-- `export_sanity.py`
-- `tests/test_export_sanity.py`
-- `WORKPACKAGES.md`
-- `handover/workpackages/20260607_1405_v12_6_export_sanity_helper.md`
-
-Main changes:
-
-- Added pure helper logic for advisory export readiness checks.
-- Added Dutch user-facing warning text for:
-  - unchecked `Controle nodig` rows;
-  - candidate rows not included;
-  - no replacements selected;
-  - user review still required;
-  - export not guaranteeing full anonymization.
-- Added readiness labels:
-  - `Geen vervangregels gevonden — controleer handmatig`;
-  - `Geen vervangingen geselecteerd`;
-  - `Controle nodig vóór export`;
-  - `Klaar voor export na gebruikerscontrole`.
-- Explicitly preserved helper flags:
-  - `blocks_export = False`;
-  - `changes_export_semantics = False`.
-- Reused review-summary normalization logic where helpful.
-
-Testing:
-
-- Added `tests/test_export_sanity.py`.
-- Local targeted validation passed in the WP3 handover:
-  - `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
-- Coordinator later reconciled helper verification: `Tests #58` green and `Sync to Hugging Face Space #72` green for commit `b0bf8ae`.
-
-Intentionally not changed:
-
-- No direct edit to `presidio_streamlit.py`.
-- No direct edit to `fix_streamlit_nested_expanders.py` in the helper-only phase.
-- No change to `review_summary.py`.
-- No export/download blocking.
-- No change to which rows are included in export.
-- No Scrub Key or reinsert implementation.
-- No LLM/cloud feature.
 
 ---
 
