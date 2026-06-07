@@ -26,6 +26,62 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v13.1 — Scrub Key JSON export UI integration
+
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Purpose:
+
+- Add a local Scrub Key JSON download option after review.
+- Make the reversible mapping workflow visible without adding import, reload, reinsert or AI-output behavior.
+- Warn users that a Scrub Key is pseudonymization, not full anonymization.
+- Preserve existing TXT, CSV, DOCX and PDF export/download behavior.
+
+Files added or changed:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_scrub_key_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Integrated the existing `scrub_key.py` pure model into the Streamlit startup patch flow.
+- Added imports for `build_scrub_key`, `scrub_key_to_json` and `validate_scrub_key`.
+- Added a `Scrub Key (JSON)` UI block near the existing final review/download section.
+- Added a `Download Scrub Key (.json)` button with filename `solidprivacy_scrub_key.json`.
+- Added user-facing warning text explaining that the Scrub Key makes replaced values locally reversible.
+- Added user-facing warning text that this is pseudonymization, not full anonymization.
+- Added user-facing warning text not to share the key with AI services or third parties unless consciously intended and allowed.
+- Added timestamp creation in the UI/export layer so the pure `scrub_key.py` model remains deterministic and side-effect free.
+- Added patch-level tests guarding the UI wiring and boundaries.
+
+Testing and verification:
+
+- Added `tests/test_scrub_key_ui_patch.py`.
+- Local pytest was not run from the connector environment.
+- Required follow-up validation:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py`
+  - `PYTHONPATH=. pytest -q tests/test_export_sanity_ui_patch.py`
+  - preferably `PYTHONPATH=. pytest -q`
+- GitHub Actions and Hugging Face sync are pending for the WP4B commits.
+- Hugging Face app verification is pending.
+
+Intentionally not changed:
+
+- No direct edit to `presidio_streamlit.py`.
+- No Scrub Key import/reload.
+- No reinsert UI.
+- No AI-output flow.
+- No cloud processing.
+- No secret storage.
+- No real personal data.
+- No change to TXT, CSV, DOCX or PDF download behavior.
+- No change to existing replacement/export semantics.
+
+---
+
 ## v12.6 — Export sanity checks closeout
 
 Status: completed and administratively closed after coordinator closeout instruction.
@@ -51,17 +107,7 @@ Files added or changed in the full v12.6 line:
 Main changes:
 
 - Added pure helper logic for advisory export readiness checks.
-- Added Dutch user-facing warning text for:
-  - unchecked `Controle nodig` rows;
-  - candidate rows not included;
-  - no replacements selected;
-  - user review still required;
-  - export not guaranteeing full anonymization.
-- Added readiness labels:
-  - `Geen vervangregels gevonden — controleer handmatig`;
-  - `Geen vervangingen geselecteerd`;
-  - `Controle nodig vóór export`;
-  - `Klaar voor export na gebruikerscontrole`.
+- Added Dutch user-facing warning text for unchecked `Controle nodig` rows, candidate rows not included, no replacements selected, required user review and export not guaranteeing full anonymization.
 - Integrated the existing `export_sanity.py` helper into the Streamlit startup patch flow.
 - Added UI text for `Extra exportcontrole` near the existing v12.5 `Eindcontrole vóór download` block.
 - Added patch-level tests to guard that the export sanity helper is wired into the UI patch.
@@ -69,18 +115,9 @@ Main changes:
 
 Testing and verification:
 
-- Helper validation recorded in WP3A handover:
-  - `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
-- Coordinator reconciled helper verification:
-  - `Tests #58` green.
-  - `Sync to Hugging Face Space #72` green.
-  - commit `b0bf8ae`.
-- UI integration commits recorded:
-  - `c60b9b4bfa8944e620546ca26a4fe42c287edaa0` — Integrate export sanity warnings into UI patch.
-  - `f5158c9faf8e7676cb8403da0b42b0465539acfa` — Add export sanity UI patch tests.
-  - `7d043d13096518d5dca6a5f187189fa3a8471627` — Update workpackage status for export sanity UI.
-  - `4a84ddb7ca2b298ce2dcdcc5daf8b9f1cc055023` — Add export sanity UI handover.
-- WP3C was administrative closeout only; no new local pytest run was performed by this worker.
+- Helper validation recorded in WP3A handover: `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
+- Coordinator reconciled helper verification: `Tests #58` green, `Sync to Hugging Face Space #72` green, commit `b0bf8ae`.
+- WP3C was administrative closeout only; no new local pytest run was performed by that worker.
 
 Intentionally not changed:
 
@@ -97,35 +134,6 @@ Outcome:
 
 - v12.6 is closed.
 - v12 Review UX is complete through guidance, final review summary and export sanity warnings.
-- Next UI work should move to v13 Scrub Key JSON export only after coordinator approval.
-
----
-
-## WP Status Reconciliation — WP3/WP4 verification evidence
-
-Status: reconciliation completed; GitHub Actions and Hugging Face sync could not be independently confirmed through the connector at that time.
-
-Purpose:
-
-- Verify and reconcile status for:
-  - v12.6 export sanity commits;
-  - v13.0 Scrub Key commits, especially `d65364373e4d3612044d8688ac17e11de81c07e5`.
-- Update project control files without changing code or UI behavior.
-
-Recorded repo evidence:
-
-- WP3 handover records local targeted validation:
-  - `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
-- WP4 changelog records local targeted validation:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-
-Intentionally not changed:
-
-- No code files.
-- No UI files.
-- No tests.
-- No export semantics.
-- No Hugging Face app behavior.
 
 ---
 
@@ -151,26 +159,11 @@ Files added or changed:
 
 Main changes:
 
-- Added a Scrub Key specification for the future workflow:
-  - `Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit`.
-- Defined required mapping fields:
-  - original value;
-  - placeholder;
-  - entity type;
-  - user-facing type label;
-  - source;
-  - review status;
-  - include state;
-  - timestamp;
-  - optional document/project/dossier label.
+- Added a Scrub Key specification for the future workflow: `Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit`.
+- Defined required mapping fields: original value, placeholder, entity type, user-facing type label, source, review status, include state, timestamp and optional document/project/dossier label.
 - Added required safety language explaining that a Scrub Key makes scrubbed text reversible.
 - Explicitly classified the Scrub Key model as pseudonymization, not full anonymization.
-- Added local/protected key handling guidance and external-AI sharing warning.
-- Added deterministic pure helpers:
-  - `build_scrub_key(rows, document_label=None)`;
-  - `scrub_key_to_json(scrub_key)`;
-  - `scrub_key_from_json(text)`;
-  - `validate_scrub_key(scrub_key)`.
+- Added deterministic pure helpers: `build_scrub_key`, `scrub_key_to_json`, `scrub_key_from_json` and `validate_scrub_key`.
 - Set the v13.0 excluded-row policy to `omitted`, so unchecked rows are not written into the key.
 - Kept timestamp handling deterministic: the model does not create timestamps itself; validation catches missing timestamps.
 
@@ -183,8 +176,8 @@ Testing:
 Intentionally not changed:
 
 - No direct edit to `presidio_streamlit.py`.
-- No direct edit to `fix_streamlit_nested_expanders.py` for v13.
-- No export/download buttons for Scrub Key yet.
+- No direct edit to `fix_streamlit_nested_expanders.py` for v13.0.
+- No export/download buttons for Scrub Key in v13.0.
 - No reinsert UI.
 - No cloud processing.
 - No secret storage.
@@ -218,9 +211,6 @@ Main changes:
 
 - Added a pure helper that accepts review rows as dictionaries or DataFrame-like records.
 - Added summary counts for automatically detected rows, rows needing review, manual rows, remembered rows, checked rows, unchecked rows and open candidate warnings.
-- Added conservative include-flag parsing for boolean, numeric and Dutch/string values.
-- Added status inference from stable status values, Dutch status labels, source fields and manual/remembered entity markers.
-- Added Dutch readiness labels and markdown summary lines.
 - Integrated the summary into the existing startup UI patch so the app shows `Eindcontrole vóór download` immediately above the download section.
 - Kept the summary advisory only: it displays counts and readiness labels but does not block or alter downloads.
 - Formally closed v12.5 after coordinator/user verification.
@@ -230,10 +220,8 @@ Testing and verification:
 - Added unit tests for `review_summary.py`.
 - Added a UI patch contract test to verify that the summary helper is imported and displayed before downloads.
 - Local targeted validation before UI integration passed: `PYTHONPATH=. pytest -q tests/test_review_summary.py` → 5 passed.
-- Coordinator reported GitHub Actions tests green for the v12.5 review summary line.
-- Coordinator reported GitHub to Hugging Face sync green for the v12.5 review summary line.
-- Hugging Face app was visually verified and showed `Eindcontrole vóór download` before the download section.
-- Downloads were reported as still working after verification: text, CSV, DOCX and PDF.
+- Coordinator reported GitHub Actions tests green and GitHub to Hugging Face sync green for the v12.5 review summary line.
+- Hugging Face app was visually verified and downloads were reported as still working: text, CSV, DOCX and PDF.
 
 Intentionally not changed:
 
@@ -448,7 +436,6 @@ Summary:
 
 Possible directions:
 
-- Scrub Key JSON export UI.
 - Scrub Key import/reload.
 - AI-output reinsert.
 - Further recognizer expansion by legal domain.
