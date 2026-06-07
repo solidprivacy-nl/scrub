@@ -26,9 +26,65 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v13.2 — Scrub Key import/reload UI integration
+
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Purpose:
+
+- Integrate the existing Scrub Key import/reload helper into the Streamlit startup patch flow.
+- Let the user upload or paste a previously exported Scrub Key JSON.
+- Validate imported Scrub Keys before loading mappings into the current review/replacement table.
+- Keep import/reload local and separate from deterministic reinsert or AI-output workflows.
+
+Files added or changed:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_scrub_key_import_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1645_v13_2_scrub_key_import_ui.md`
+
+Main changes:
+
+- Added the `Scrub Key laden` UI section near the existing `Scrub Key (JSON)` export block.
+- Added upload support for Scrub Key JSON files.
+- Added paste support for Scrub Key JSON text.
+- Reused the existing `build_scrub_key_import_result(...)` helper instead of duplicating parsing or validation logic.
+- Added visible validation feedback before mapping rows are loaded.
+- Added warnings that a Scrub Key makes values locally reversible and is pseudonymization, not full anonymization.
+- Added warning text that the key must stay local and protected and should not be shared with AI services or third parties unless consciously intended and allowed.
+- Loaded validated mapping rows into the current replacement table only after the visible `Valideer en laad Scrub Key` user action.
+- Kept the existing `Download Scrub Key (.json)` export block.
+
+Testing:
+
+- Added `tests/test_scrub_key_import_ui_patch.py`.
+- Local targeted validation on the reconstructed connector subset passed:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py` → 8 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import_ui_patch.py` → 9 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py` → 12 passed.
+  - `PYTHONPATH=. pytest -q` on the available subset → 35 passed.
+
+Intentionally not changed:
+
+- No direct edit to `presidio_streamlit.py`.
+- No deterministic reinsert behavior.
+- No AI-output flow.
+- No automatic document rehydration.
+- No silent replacement of review rows without a visible user action.
+- No change to TXT, CSV, DOCX or PDF export behavior.
+- No change to existing Scrub Key JSON export behavior.
+- No cloud processing.
+- No server-side Scrub Key storage.
+- No secrets, tokens or real personal data.
+
+---
+
 ## v13.2 — Scrub Key import/reload helper and tests
 
-Status: helper and tests implemented; awaiting GitHub Actions and Hugging Face sync confirmation.
+Status: helper and tests implemented; coordinator evidence reported green checks before UI integration.
 
 Purpose:
 
@@ -67,23 +123,17 @@ Main changes:
 Testing:
 
 - Added `tests/test_scrub_key_import.py`.
-- Tests cover:
-  - valid Scrub Key JSON import;
-  - normalized row mapping;
-  - privacy warning;
-  - empty JSON text;
-  - invalid JSON syntax;
-  - invalid top-level format;
-  - structural validation errors;
-  - no input mutation;
-  - synthetic Dutch legal values only.
-- Local pytest was not run from this connector environment.
-- Required follow-up validation:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py`
-  - preferably `PYTHONPATH=. pytest -q`
+- Tests cover valid Scrub Key JSON import, normalized row mapping, privacy warning, empty JSON text, invalid JSON syntax, invalid top-level format, structural validation errors, no input mutation and synthetic Dutch legal values only.
+- Coordinator evidence supplied for green checks before UI integration:
+  - Tests #83 green;
+  - Tests #84 green;
+  - Sync to Hugging Face Space #98 green;
+  - Tests #85 green;
+  - Sync to Hugging Face Space #99 green;
+  - Tests #86 green;
+  - Sync to Hugging Face Space #100 green.
 
-Intentionally not changed:
+Intentionally not changed in helper phase:
 
 - No UI changes.
 - No direct edit to `fix_streamlit_nested_expanders.py`.
@@ -95,11 +145,6 @@ Intentionally not changed:
 - No server-side Scrub Key storage.
 - No real personal data in tests.
 - No change to TXT, CSV, DOCX or PDF download behavior.
-
-Next step:
-
-- Verify GitHub Actions and Hugging Face sync.
-- After green validation, plan `WP5B — v13.2 Scrub Key import/reload UI integration` as a separate sequential UI workpackage.
 
 ---
 
@@ -174,7 +219,6 @@ Intentionally not changed:
 Outcome:
 
 - v13.1 Scrub Key JSON export is complete.
-- The next planned phase is v13.2 Scrub Key import/reload helper and tests.
 
 ---
 
@@ -254,10 +298,6 @@ Outcome:
 
 Possible directions:
 
-- Scrub Key import/reload UI.
 - Deterministic reinsert helper.
 - AI-output reinsert.
 - Further recognizer expansion by legal domain.
-- Local packaging research.
-- More advanced DOCX/PDF preservation.
-- Better synthetic long-form legal test documents.
