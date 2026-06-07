@@ -26,9 +26,70 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
-## v13.1 — Scrub Key JSON export UI integration
+## WP4B-FIX — Scrub Key UI row mapping hotfix
 
 Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Purpose:
+
+- Fix Scrub Key JSON export in the Hugging Face app.
+- Prevent validation errors such as `Item has empty required field: original_value`.
+- Map Streamlit review-table row fields to Scrub Key model fields before calling `build_scrub_key(...)`.
+- Preserve the v13.0 policy that only selected rows are included in the Scrub Key.
+
+Files added or changed:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_scrub_key_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1535_v13_1_scrub_key_ui_mapping_hotfix.md`
+
+Main changes:
+
+- Added a Scrub Key UI mapping layer before `build_scrub_key(scrub_key_rows)`.
+- Added required mapping:
+  - `find` → `original_value`;
+  - `replace_with` → `placeholder`;
+  - `entity_type` → `entity_type`;
+  - `type_label` → `type_label`;
+  - `source` → `source`;
+  - `review_status` → `review_status`;
+  - `include` → `include`.
+- Kept timestamp creation in the UI/export layer.
+- Kept the pseudonymization warning text.
+- Kept `Download Scrub Key (.json)` and `solidprivacy_scrub_key.json`.
+- Added/updated test guards for row mapping, warning text, download button, no import/reinsert/AI flow, and no blocking behavior.
+
+Testing and verification:
+
+- Updated `tests/test_scrub_key_ui_patch.py` with mapping regression tests.
+- Local pytest was not run from this connector environment.
+- Required follow-up validation:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py`
+  - preferably `PYTHONPATH=. pytest -q`
+- GitHub Actions and Hugging Face sync are pending for the WP4B-FIX commits.
+- Hugging Face app verification is pending.
+
+Intentionally not changed:
+
+- No edit to `scrub_key.py`.
+- No direct edit to `presidio_streamlit.py`.
+- No Scrub Key import/reload.
+- No reinsert UI.
+- No AI-output flow.
+- No cloud processing.
+- No server-side Scrub Key storage.
+- No change to TXT, CSV, DOCX or PDF download behavior.
+- No change to existing replacement/export semantics.
+- No `st.stop()` or export blocking behavior added.
+
+---
+
+## v13.1 — Scrub Key JSON export UI integration
+
+Status: implemented; hotfix applied in WP4B-FIX; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Purpose:
 
@@ -55,6 +116,7 @@ Main changes:
 - Added user-facing warning text not to share the key with AI services or third parties unless consciously intended and allowed.
 - Added timestamp creation in the UI/export layer so the pure `scrub_key.py` model remains deterministic and side-effect free.
 - Added patch-level tests guarding the UI wiring and boundaries.
+- WP4B-FIX later corrected app-row-to-Scrub-Key-row mapping.
 
 Testing and verification:
 
@@ -65,7 +127,7 @@ Testing and verification:
   - `PYTHONPATH=. pytest -q tests/test_scrub_key_ui_patch.py`
   - `PYTHONPATH=. pytest -q tests/test_export_sanity_ui_patch.py`
   - preferably `PYTHONPATH=. pytest -q`
-- GitHub Actions and Hugging Face sync are pending for the WP4B commits.
+- GitHub Actions and Hugging Face sync are pending for the WP4B/WP4B-FIX commits.
 - Hugging Face app verification is pending.
 
 Intentionally not changed:
