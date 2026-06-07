@@ -52,10 +52,13 @@ def test_scrub_key_warning_makes_pseudonymization_boundary_clear():
     assert "Deel deze sleutel niet met AI-diensten of derden" in PATCH_TEXT
 
 
-def test_scrub_key_ui_does_not_add_import_or_reinsert_flow():
-    assert "scrub_key_from_json" not in PATCH_TEXT
-    assert "reinsert" not in PATCH_TEXT.lower()
+def test_scrub_key_ui_does_not_add_ai_output_cloud_or_auto_rehydration_flow():
     assert "AI-output" not in PATCH_TEXT
+    assert "openai" not in PATCH_TEXT.lower()
+    assert "requests.post" not in PATCH_TEXT.lower()
+    assert "rehydrat" not in PATCH_TEXT.lower()
+    assert "restore_original_document" not in PATCH_TEXT
+    assert "scrub_key_from_json" not in PATCH_TEXT
 
 
 def test_scrub_key_patch_does_not_remove_existing_download_or_export_markers():
