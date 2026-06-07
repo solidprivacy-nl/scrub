@@ -42,7 +42,7 @@ Files added or changed:
 - `tests/test_scrub_key_reinsert.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `handover/workpackages/20260607_1815_v13_3_reinsert_helper.md`
+- `handover/workpackages/20260607_1745_v13_3_reinsert_helper.md`
 
 Main changes:
 
@@ -72,7 +72,8 @@ Testing:
   - input Scrub Key immutability;
   - explicit no-AI/no-cloud flags;
   - deterministic placeholder detection.
-- Local pytest was not run from the connector environment.
+- Local targeted validation in this worker environment passed on the available/reconstructed subset:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
 
 Intentionally not changed:
 
@@ -237,7 +238,16 @@ Main changes:
 - Added `scrub_key_import.py` as a pure helper module.
 - Added `validate_scrub_key_import_text(json_text)` for safe validation errors.
 - Added `normalise_scrub_key_items(scrub_key)` to convert Scrub Key items into review-table-like mapping rows.
-- Added `build_scrub_key_import_result(json_text)` with a UI-friendly result shape.
+- Added `build_scrub_key_import_result(json_text)` with a UI-friendly result shape:
+  - `ok`;
+  - `errors`;
+  - `warnings`;
+  - `scrub_key`;
+  - `mapping_rows`;
+  - `item_count`;
+  - `reversible`;
+  - `privacy_model`;
+  - `document_label`.
 - Reused the existing `scrub_key_from_json(...)` and `validate_scrub_key(...)` model helpers.
 - Added safe Dutch user-facing errors for empty input, invalid JSON syntax, invalid top-level structure and invalid Scrub Key content.
 - Added a local-only privacy warning explaining that imported Scrub Keys make replacements locally reversible and should not be shared with AI services or third parties unless consciously intended and allowed.
@@ -299,6 +309,16 @@ Main changes:
 - Added warning text not to share the key with AI services or third parties unless consciously intended and allowed.
 - Added timestamp creation in the UI/export layer so the pure `scrub_key.py` model remains deterministic and side-effect free.
 - Added the mapping hotfix so app review-table rows are converted into Scrub Key model rows before calling `build_scrub_key(...)`.
+
+Mapping hotfix:
+
+- `find` → `original_value`
+- `replace_with` → `placeholder`
+- `entity_type` → `entity_type`
+- `type_label` → `type_label`
+- `source` → `source`
+- `review_status` → `review_status`
+- `include` → `include`
 
 Testing and verification:
 
