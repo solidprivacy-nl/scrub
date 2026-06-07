@@ -26,20 +26,23 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
-## v12.5 — Final review summary helper
+## v12.5 — Final review summary
 
-Status: helper and tests implemented; UI integration pending WP1/v12.4 verification.
+Status: UI integration implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Purpose:
 
-- Prepare the final export readiness summary before downloads.
-- Count export scope and review risk without changing export semantics.
-- Keep this work safely outside the active Streamlit review/download UI until v12.4 is fully verified.
+- Show final export readiness before downloads.
+- Make export scope clear before the user downloads files.
+- Warn when candidate rows still need attention.
+- Preserve existing replacement and export semantics.
 
 Files added or changed:
 
 - `review_summary.py`
 - `tests/test_review_summary.py`
+- `tests/test_review_summary_ui_patch.py`
+- `fix_streamlit_nested_expanders.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 
@@ -57,22 +60,24 @@ Main changes:
   - open unchecked candidate rows.
 - Added conservative include-flag parsing for boolean, numeric and Dutch/string values.
 - Added status inference from stable status values, Dutch status labels, source fields and manual/remembered entity markers.
-- Added Dutch readiness labels and markdown summary lines for later UI integration.
+- Added Dutch readiness labels and markdown summary lines.
+- Integrated the summary into the existing startup UI patch so the app shows `Eindcontrole vóór download` immediately above the download section.
+- Kept the summary advisory only: it displays counts and readiness labels but does not block or alter downloads.
 
 Testing:
 
 - Added unit tests for `review_summary.py`.
-- Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_review_summary.py` → 5 passed.
-- GitHub Actions status for the latest commits still needs external confirmation because the connector returned no workflow runs for push commits.
-- Hugging Face sync status for the latest commits still needs external confirmation.
+- Added a UI patch contract test to verify that the summary helper is imported and displayed before downloads.
+- Local targeted validation before UI integration passed: `PYTHONPATH=. pytest -q tests/test_review_summary.py` → 5 passed.
+- GitHub Actions and Hugging Face sync need confirmation for the UI integration commits.
 
 Intentionally not changed:
 
-- No Streamlit UI integration yet.
-- No edits to `presidio_streamlit.py`.
-- No edits to `fix_streamlit_nested_expanders.py`.
+- No direct edit to `presidio_streamlit.py`.
 - No recognizer changes.
-- No export/download semantics change.
+- No entity-type expansion.
+- No export/download blocking.
+- No change to which rows are included in export.
 - No Scrub Key or reinsert implementation.
 - No LLM/cloud feature.
 
@@ -80,7 +85,7 @@ Intentionally not changed:
 
 ## v12.4 — Review guidance text
 
-Status: implemented; app visually confirmed by user; latest Actions/sync confirmation still pending for later governance commits.
+Status: implemented; GitHub Actions and Hugging Face sync confirmed green by coordinator; app visually confirmed by user.
 
 Purpose:
 
@@ -110,6 +115,7 @@ Testing:
 
 - Added unit tests for guidance text coverage.
 - User visually confirmed the guidance block appeared correctly in Hugging Face.
+- Coordinator confirmed latest Actions and Hugging Face sync green for the helper/governance commits through `fffd27b`.
 
 Intentionally not changed:
 
@@ -122,7 +128,7 @@ Intentionally not changed:
 
 ## Project governance setup
 
-Status: implemented; latest Actions/sync confirmation still pending at the time it was handed over.
+Status: implemented; Actions/sync confirmed green by coordinator through latest governance/helper handover commits.
 
 Purpose:
 
@@ -176,13 +182,7 @@ Main changes:
   - `Vervangen door`
   - `Type gegeven`
   - `Zekerheid`
-- Technical and audit-oriented columns are moved out of the primary editing view:
-  - `Bron`
-  - `Reden`
-  - `Context`
-  - `Technisch type`
-  - `Technische score`
-  - `Technische bron`
+- Technical and audit-oriented columns are moved out of the primary editing view.
 - Added a separate `Technische details bij de vervangtabel` expander.
 - Fixed pandas Index truth-value handling by explicitly converting available columns to list/set.
 
@@ -226,12 +226,7 @@ Files added or changed:
 
 Main changes:
 
-- Added pure filter helpers with Dutch filter labels:
-  - `Toon alles`
-  - `Alleen controle nodig`
-  - `Alleen juridische referenties`
-  - `Alleen namen/adressen`
-  - `Alleen lage zekerheid`
+- Added pure filter helpers with Dutch filter labels.
 - Added filter groups for legal/admin reference entity types, names and address-like data.
 - Added low-confidence filtering based on either Dutch confidence label `Laag` or numeric score below `0.60`.
 - Added tests for all filter modes.
