@@ -169,7 +169,7 @@ Outcome:
 
 ### WP3 — v12.6 Export sanity checks
 
-Status: helper implemented; local targeted tests passed; UI integration pending.
+Status: helper implemented; local targeted tests passed; GitHub Actions and Hugging Face sync not independently confirmed by this worker.
 
 Goal:
 
@@ -193,9 +193,12 @@ Implemented checks:
 
 Validation:
 
-- Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
-- GitHub Actions status pending after latest commits.
-- GitHub to Hugging Face sync status pending after latest commits.
+- Local targeted validation passed in the WP3 handover: `PYTHONPATH=. pytest -q tests/test_export_sanity.py tests/test_review_summary.py` → 12 passed.
+- Latest WP3 handover commit checked: `4d721e3aed3bf28cfdaeb096c0e9cd227885f1a6`.
+- Connector check attempted for WP3 commits `5342e0eef663817036e91f823b4389b338b9223c`, `704ae03788702ce33263343743a69f8139f16319`, `869e3804edf04e0cbdf7ab69b034e7bc707de8c3`, and `4d721e3aed3bf28cfdaeb096c0e9cd227885f1a6`.
+- GitHub combined status returned `statuses: []` for checked WP3 commits.
+- Commit workflow-run lookup returned `workflow_runs: []` for checked WP3 commits.
+- Therefore this worker could not independently confirm green GitHub Actions or Hugging Face sync from the connector.
 
 Boundaries preserved:
 
@@ -206,8 +209,8 @@ Boundaries preserved:
 
 Next step:
 
-- Verify GitHub Actions and Hugging Face sync.
-- Integrate WP3 warnings into the export UI only after helper validation is green.
+- Coordinator should verify the GitHub Actions `Tests` and GitHub to Hugging Face sync status in the GitHub UI for the WP3/WP4 commit line.
+- Integrate WP3 warnings into the export UI only after external Actions/sync verification is green.
 
 ---
 
@@ -215,7 +218,7 @@ Next step:
 
 ### WP4 — v13.0 Scrub Key specification and pure model
 
-Status: implemented; pending GitHub Actions and Hugging Face sync confirmation.
+Status: implemented; local targeted tests passed; GitHub Actions and Hugging Face sync not independently confirmed by this worker.
 
 Goal:
 
@@ -261,8 +264,10 @@ Validation:
 
 - Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
 - Full local test run not performed because the container could not clone the full repository.
-- GitHub Actions status pending after latest commits.
-- GitHub to Hugging Face sync status pending after latest commits.
+- Latest WP4 target/head commit checked: `d65364373e4d3612044d8688ac17e11de81c07e5`.
+- GitHub combined status returned `statuses: []` for `d65364373e4d3612044d8688ac17e11de81c07e5`.
+- Commit workflow-run lookup returned `workflow_runs: []` for `d65364373e4d3612044d8688ac17e11de81c07e5`.
+- Therefore this worker could not independently confirm green GitHub Actions or Hugging Face sync from the connector.
 
 Boundaries respected:
 
@@ -282,7 +287,6 @@ Parallelization:
 
 ## Recommended execution order
 
-1. Verify WP3 helper commits in GitHub Actions and Hugging Face sync.
-2. Verify WP4 Scrub Key commits in GitHub Actions and Hugging Face sync.
-3. Integrate WP3 UI only after helper tests are stable.
-4. After v12 is complete, begin v13 UI integration for Scrub Key JSON export.
+1. Coordinator verifies GitHub Actions `Tests` and GitHub to Hugging Face sync in the GitHub UI for WP3/WP4, because the connector returned no check-run evidence.
+2. Integrate WP3 UI only after helper tests and external Actions/sync verification are green.
+3. After v12 is complete, begin v13 UI integration for Scrub Key JSON export.
