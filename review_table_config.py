@@ -38,8 +38,21 @@ TECHNICAL_DISPLAY_COLUMNS = [
 ]
 
 
+def _available_column_set(available_columns):
+    """Return a set of available columns without boolean-testing pandas Index.
+
+    Pandas Index objects intentionally do not define truthiness. Code such as
+    `available_columns or []` raises: "The truth value of a Index is ambiguous".
+    The Streamlit app passes `replacement_editor_df.columns`, so this helper must
+    handle any iterable column container explicitly.
+    """
+    if available_columns is None:
+        return set()
+    return set(list(available_columns))
+
+
 def existing_columns(columns, available_columns):
-    available = set(available_columns or [])
+    available = _available_column_set(available_columns)
     return [column for column in columns if column in available]
 
 
