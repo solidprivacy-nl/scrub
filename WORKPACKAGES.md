@@ -277,29 +277,6 @@ App verification:
 - Existing `Download Scrub Key (.json)` remains visible.
 - Existing TXT, CSV, DOCX and PDF downloads remain available.
 
-Closeout notes:
-
-- GitHub Actions tests are green based on coordinator evidence.
-- GitHub to Hugging Face sync is green based on coordinator evidence.
-- Import/reload remains local and uses existing helper logic.
-- The key remains pseudonymization/reversible and must be protected.
-- No AI-output reinsert behavior was added.
-- No automatic document rehydration was added.
-- Existing TXT, CSV, DOCX and PDF downloads were not intentionally changed.
-
-Boundaries preserved:
-
-- No direct edit to `presidio_streamlit.py` during closeout.
-- No code files changed during this app-verification closeout.
-- No tests changed during this app-verification closeout.
-- No AI-output reinsert.
-- No automatic document rehydration.
-- No silent replacement of current review rows without a visible user action.
-- No change to TXT, CSV, DOCX or PDF export behavior.
-- No change to existing Scrub Key JSON export behavior.
-- No cloud processing.
-- No secret, token or real personal data storage.
-
 Outcome:
 
 - v13.2 Scrub Key import/reload UI is completed, app-verified and closed.
@@ -308,27 +285,63 @@ Outcome:
 
 ## Active / next recommended workpackage
 
-### WP7 — v13.3 Deterministic reinsert helper
+### WP7A — v13.3 Deterministic reinsert helper, pure helper and tests
 
-Status: recommended next workpackage; not started here.
+Status: implemented; awaiting GitHub Actions and Hugging Face sync.
 
-Goal:
+Implemented files:
 
-- Add a pure helper that can apply a loaded Scrub Key mapping to scrubbed text locally.
-- Keep this helper-only before any UI integration.
+- `scrub_key_reinsert.py`
+- `tests/test_scrub_key_reinsert.py`
 
-Boundaries:
+Implemented helper behavior:
 
-- No AI-output UI yet.
-- No automatic document rehydration.
+- Added `detect_placeholders(text)` for conservative placeholder-token detection.
+- Added `build_reinsert_mapping(scrub_key)` to build a deterministic placeholder-to-original mapping from included Scrub Key items.
+- Added `reinsert_from_scrub_key(text, scrub_key)` to return reinserted text and an audit summary.
+- Reuses existing `validate_scrub_key(...)` validation.
+- Reports validation issues instead of silently proceeding with invalid keys.
+- Reports mapping item count, active item count, excluded item count, replacement count, missing placeholders, unknown placeholders and duplicate placeholders.
+- Detects duplicate placeholder entries and excludes ambiguous duplicates from reinsertion.
+- Ignores excluded items even if malformed/imported data contains them.
+- Reports `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
+
+Implemented tests:
+
+- `tests/test_scrub_key_reinsert.py`
+
+Boundaries preserved:
+
+- No UI files changed.
+- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No AI calls.
 - No cloud processing.
-- No changes to existing TXT/CSV/DOCX/PDF export behavior.
+- No automatic document rehydration.
+- No TXT, CSV, DOCX or PDF export behavior changes.
+- No Scrub Key export/import UI behavior changes.
+- Synthetic test values only.
+
+Validation status:
+
+- Local pytest not run from this connector environment.
+- GitHub Actions and Hugging Face sync pending for commits:
+  - `2f230019de017b80bed42c539fda0d64314338a8` — Add deterministic Scrub Key reinsert helper.
+  - `1b58ecf483ba98c3121a059e2c52ca13c3c45d29` — Add deterministic reinsert helper tests.
+
+Next step:
+
+- Verify GitHub Actions and Hugging Face sync.
+- Run targeted tests:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py`
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_import.py`
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_reinsert.py`
+- Only after helper verification, plan v13.3 reinsert UI as a separate workpackage.
 
 ---
 
 ## Recommended execution order
 
-1. Start WP7 as a helper-only deterministic reinsert workpackage.
-2. Add tests for placeholder-to-original replacement using synthetic values only.
-3. Only after deterministic reinsert is stable, consider a separate v13.3 UI workpackage.
-4. Keep AI-output workflow separate and explicitly reviewed before UI integration.
+1. Verify WP7A helper tests and sync.
+2. Only after deterministic reinsert is stable, consider a separate v13.3 UI workpackage.
+3. Keep AI-output workflow separate and explicitly reviewed before UI integration.
