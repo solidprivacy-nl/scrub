@@ -28,7 +28,7 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ## v12.5 — Final review summary
 
-Status: UI integration implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed and app verified.
 
 Purpose:
 
@@ -45,6 +45,7 @@ Files added or changed:
 - `fix_streamlit_nested_expanders.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
+- `handover/workpackages/20260607_1345_v12_5_review_summary_closeout.md`
 
 Main changes:
 
@@ -63,17 +64,22 @@ Main changes:
 - Added Dutch readiness labels and markdown summary lines.
 - Integrated the summary into the existing startup UI patch so the app shows `Eindcontrole vóór download` immediately above the download section.
 - Kept the summary advisory only: it displays counts and readiness labels but does not block or alter downloads.
+- Formally closed v12.5 after coordinator/user verification.
 
-Testing:
+Testing and verification:
 
 - Added unit tests for `review_summary.py`.
 - Added a UI patch contract test to verify that the summary helper is imported and displayed before downloads.
 - Local targeted validation before UI integration passed: `PYTHONPATH=. pytest -q tests/test_review_summary.py` → 5 passed.
-- GitHub Actions and Hugging Face sync need confirmation for the UI integration commits.
+- Coordinator reported GitHub Actions tests green for the v12.5 review summary line.
+- Coordinator reported GitHub to Hugging Face sync green for the v12.5 review summary line.
+- Hugging Face app was visually verified and showed `Eindcontrole vóór download` before the download section.
+- Downloads were reported as still working after verification: text, CSV, DOCX and PDF.
 
 Intentionally not changed:
 
-- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `presidio_streamlit.py` during closeout.
+- No direct edit to `fix_streamlit_nested_expanders.py` during closeout.
 - No recognizer changes.
 - No entity-type expansion.
 - No export/download blocking.
