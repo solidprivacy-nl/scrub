@@ -26,6 +26,70 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v13.0 — Scrub Key specification and pure model
+
+Status: implemented; pending GitHub Actions and Hugging Face sync confirmation.
+
+Purpose:
+
+- Prepare the v13 Scrub Key / Reinsert phase without touching the active review UI.
+- Define the local mapping file concept for future reversible workflows.
+- Add a pure Python model with validation and JSON roundtrip support.
+- Make pseudonymization safety boundaries explicit before UI/export work starts.
+
+Files added or changed:
+
+- `SCRUB_KEY_SPEC.md`
+- `scrub_key.py`
+- `tests/test_scrub_key.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1342_v13_0_scrub_key_spec_model.md`
+
+Main changes:
+
+- Added a Scrub Key specification for the future workflow:
+  - `Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit`.
+- Defined required mapping fields:
+  - original value;
+  - placeholder;
+  - entity type;
+  - user-facing type label;
+  - source;
+  - review status;
+  - include state;
+  - timestamp;
+  - optional document/project/dossier label.
+- Added required safety language explaining that a Scrub Key makes scrubbed text reversible.
+- Explicitly classified the Scrub Key model as pseudonymization, not full anonymization.
+- Added local/protected key handling guidance and external-AI sharing warning.
+- Added a deterministic pure helper model:
+  - `build_scrub_key(rows, document_label=None)`;
+  - `scrub_key_to_json(scrub_key)`;
+  - `scrub_key_from_json(text)`;
+  - `validate_scrub_key(scrub_key)`.
+- Set the v13.0 excluded-row policy to `omitted`, so unchecked rows are not written into the key.
+- Kept timestamp handling deterministic: the model does not create timestamps itself; validation catches missing timestamps.
+
+Testing:
+
+- Added `tests/test_scrub_key.py`.
+- Local targeted validation passed: `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
+- Tests cover valid key creation, excluded-row omission, required fields, JSON roundtrip, validation errors, and synthetic Dutch legal examples only.
+
+Intentionally not changed:
+
+- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No export/download buttons.
+- No reinsert UI.
+- No cloud processing.
+- No secret storage.
+- No real personal data in tests or examples.
+- No change to active review UI or export semantics.
+
+---
+
 ## v12.5 — Final review summary
 
 Status: completed and app verified.
