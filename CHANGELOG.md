@@ -26,6 +26,69 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## v13.3 — Deterministic reinsert helper
+
+Status: implemented; awaiting GitHub Actions and Hugging Face sync.
+
+Purpose:
+
+- Add a pure deterministic helper that can reinsert original values into scrubbed text using a valid Scrub Key.
+- Prepare the future `Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit` workflow without adding UI or AI behavior.
+- Keep reinsertion local, deterministic and auditable.
+
+Files added or changed:
+
+- `scrub_key_reinsert.py`
+- `tests/test_scrub_key_reinsert.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260607_1815_v13_3_reinsert_helper.md`
+
+Main changes:
+
+- Added `detect_placeholders(text)` for conservative placeholder-token detection.
+- Added `build_reinsert_mapping(scrub_key)` to build a deterministic placeholder-to-original mapping from included Scrub Key items.
+- Added `reinsert_from_scrub_key(text, scrub_key)` to return reinserted text and an audit summary.
+- Reused existing `validate_scrub_key(...)` validation.
+- Invalid Scrub Keys return validation issues and do not modify the input text.
+- Duplicate placeholder entries are detected and excluded from reinsertion to avoid ambiguity.
+- Excluded Scrub Key items are ignored even if malformed/imported data contains them.
+- Audit output includes item count, active item count, excluded item count, replacement count, placeholders not found, unknown placeholders, duplicate placeholders and validation issues.
+- Audit output explicitly records local/no-AI/no-cloud behavior through `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
+
+Testing:
+
+- Added `tests/test_scrub_key_reinsert.py`.
+- Tests cover:
+  - valid reinsert with one placeholder;
+  - valid reinsert with multiple placeholders;
+  - repeated placeholder occurrences in text;
+  - placeholder from key not found in text;
+  - unknown placeholder in text not present in key;
+  - invalid Scrub Key validation issues;
+  - duplicate placeholder detection;
+  - excluded rows not being reinserted;
+  - synthetic Dutch legal values only;
+  - input Scrub Key immutability;
+  - explicit no-AI/no-cloud flags;
+  - deterministic placeholder detection.
+- Local pytest was not run from the connector environment.
+
+Intentionally not changed:
+
+- No UI added.
+- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No AI calls.
+- No cloud processing.
+- No automatic document rehydration.
+- No change to TXT, CSV, DOCX or PDF export behavior.
+- No change to Scrub Key export behavior.
+- No change to Scrub Key import UI behavior.
+- No secrets, tokens or real personal data.
+
+---
+
 ## v13.2 — Scrub Key import/reload UI app verification closeout
 
 Status: completed, app-verified and closed.
@@ -174,16 +237,7 @@ Main changes:
 - Added `scrub_key_import.py` as a pure helper module.
 - Added `validate_scrub_key_import_text(json_text)` for safe validation errors.
 - Added `normalise_scrub_key_items(scrub_key)` to convert Scrub Key items into review-table-like mapping rows.
-- Added `build_scrub_key_import_result(json_text)` with a UI-friendly result shape:
-  - `ok`;
-  - `errors`;
-  - `warnings`;
-  - `scrub_key`;
-  - `mapping_rows`;
-  - `item_count`;
-  - `reversible`;
-  - `privacy_model`;
-  - `document_label`.
+- Added `build_scrub_key_import_result(json_text)` with a UI-friendly result shape.
 - Reused the existing `scrub_key_from_json(...)` and `validate_scrub_key(...)` model helpers.
 - Added safe Dutch user-facing errors for empty input, invalid JSON syntax, invalid top-level structure and invalid Scrub Key content.
 - Added a local-only privacy warning explaining that imported Scrub Keys make replacements locally reversible and should not be shared with AI services or third parties unless consciously intended and allowed.
@@ -245,16 +299,6 @@ Main changes:
 - Added warning text not to share the key with AI services or third parties unless consciously intended and allowed.
 - Added timestamp creation in the UI/export layer so the pure `scrub_key.py` model remains deterministic and side-effect free.
 - Added the mapping hotfix so app review-table rows are converted into Scrub Key model rows before calling `build_scrub_key(...)`.
-
-Mapping hotfix:
-
-- `find` → `original_value`
-- `replace_with` → `placeholder`
-- `entity_type` → `entity_type`
-- `type_label` → `type_label`
-- `source` → `source`
-- `review_status` → `review_status`
-- `include` → `include`
 
 Testing and verification:
 
@@ -366,6 +410,6 @@ Outcome:
 
 Possible directions:
 
-- Deterministic reinsert helper.
+- Deterministic reinsert UI.
 - AI-output reinsert.
 - Further recognizer expansion by legal domain.
