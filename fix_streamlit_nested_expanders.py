@@ -12,6 +12,7 @@ Patches currently applied:
 - v13.3: add deterministic local reinsert UI using the pure reinsert helper.
 - v13.6: add two-mode UI content separation for Anonimiseren / Originele waarden terugzetten.
 - v13.6 hotfix: keep reinsert branch indentation syntactically valid.
+- v13.7: add TXT upload/download support for local reinsert in Originele waarden terugzetten.
 """
 
 from pathlib import Path
@@ -52,7 +53,8 @@ text = replace_once(
     'from export_sanity import build_export_sanity_checks, export_sanity_warnings\n'
     'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n'
-    'from scrub_key_reinsert import reinsert_from_scrub_key\n',
+    'from scrub_key_reinsert import reinsert_from_scrub_key\n'
+    'from scrub_key_document_reinsert import reinsert_txt_bytes\n',
 )
 
 text = replace_once(
@@ -60,14 +62,16 @@ text = replace_once(
     'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n',
     'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n'
-    'from scrub_key_reinsert import reinsert_from_scrub_key\n',
+    'from scrub_key_reinsert import reinsert_from_scrub_key\n'
+    'from scrub_key_document_reinsert import reinsert_txt_bytes\n',
 )
 
 text = replace_once(
     text,
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n'
-    'from scrub_key_reinsert import reinsert_from_scrub_key\n',
+    'from scrub_key_reinsert import reinsert_from_scrub_key\n'
+    'from scrub_key_document_reinsert import reinsert_txt_bytes\n',
 )
 
 text = replace_once(
@@ -400,6 +404,69 @@ reinsert_ui_block = '''    st.markdown("**Originele waarden terugzetten**")
             st.caption("Niet alle mappingregels kwamen voor in de ingevoerde tekst.")
 '''
 
+txt_reinsert_ui_block = '''    st.markdown("**TXT-bestand terugzetten**")
+    st.warning("Let op: terugzetten herstelt originele gevoelige waarden. De uitvoer kan weer persoonsgegevens of vertrouwelijke informatie bevatten. Controleer het resultaat zorgvuldig voordat u het deelt.")
+    st.caption("Upload een TXT-bestand met placeholders. Deze stap wordt lokaal uitgevoerd met uw Scrub Key. Er wordt geen AI- of cloudverwerking gebruikt voor het terugzetten.")
+    active_txt_reinsert_scrub_key = st.session_state.get("active_scrub_key", {})
+    txt_reinsert_file = st.file_uploader(
+        "Upload een TXT-bestand met placeholders",
+        type=["txt"],
+        key="txt_reinsert_file",
+        help="Gebruik een lokaal TXT-bestand met Scrub placeholders die bij de geladen Scrub Key horen.",
+    )
+    if st.button("Zet TXT-bestand lokaal terug", key="run_txt_file_reinsert"):
+        if not active_txt_reinsert_scrub_key or not active_txt_reinsert_scrub_key.get("items"):
+            st.warning("Laad eerst een geldige Scrub Key voordat u een TXT-bestand lokaal terugzet.")
+        elif txt_reinsert_file is None:
+            st.warning("Upload eerst een TXT-bestand met placeholders.")
+        else:
+            st.session_state["txt_reinsert_result"] = reinsert_txt_bytes(
+                txt_reinsert_file.getvalue(),
+                active_txt_reinsert_scrub_key,
+                encoding="utf-8",
+            )
+    if "txt_reinsert_result" in st.session_state:
+        txt_reinsert_result = st.session_state["txt_reinsert_result"]
+        txt_reinsert_validation_issues = txt_reinsert_result.get("validation_issues", [])
+        if txt_reinsert_validation_issues:
+            st.warning("TXT terugzetten kan niet betrouwbaar worden uitgevoerd: " + "; ".join(txt_reinsert_validation_issues[:3]))
+        elif txt_reinsert_result.get("replacement_count", 0) > 0:
+            st.success(f"{txt_reinsert_result.get('replacement_count', 0)} waarde(n) lokaal teruggezet in het TXT-bestand.")
+        else:
+            st.info("Er zijn geen placeholders teruggezet in het TXT-bestand. Controleer of de tekst placeholders bevat die in de Scrub Key staan.")
+        st.text_area(
+            "Herstelde TXT-tekst",
+            value=txt_reinsert_result.get("text", ""),
+            height=220,
+            key="txt_reinsert_output_text",
+        )
+        st.download_button(
+            "Download hersteld TXT-bestand (.txt)",
+            data=txt_reinsert_result.get("content_bytes", txt_reinsert_result.get("text", "").encode("utf-8")),
+            file_name="solidprivacy_hersteld_txt_bestand.txt",
+            mime="text/plain",
+        )
+        with st.expander("Controleverslag TXT terugzetten", expanded=True):
+            st.markdown(f"- Documenttype: {txt_reinsert_result.get('document_type', 'txt')}")
+            st.markdown(f"- Mappingregels totaal: {txt_reinsert_result.get('item_count', 0)}")
+            st.markdown(f"- Actieve mappingregels: {txt_reinsert_result.get('active_item_count', 0)}")
+            st.markdown(f"- Uitgesloten mappingregels: {txt_reinsert_result.get('excluded_item_count', 0)}")
+            st.markdown(f"- Aantal teruggezette waarden: {txt_reinsert_result.get('replacement_count', 0)}")
+            st.markdown(f"- Niet gevonden placeholders: {txt_reinsert_result.get('placeholders_not_found', [])}")
+            st.markdown(f"- Onbekende placeholders in tekst: {txt_reinsert_result.get('unknown_placeholders', [])}")
+            st.markdown(f"- Dubbele placeholders in sleutel: {txt_reinsert_result.get('duplicate_placeholders', [])}")
+            st.markdown(f"- Validatieproblemen: {txt_reinsert_validation_issues}")
+            st.markdown(f"- Lokaal uitgevoerd: {txt_reinsert_result.get('local_only') is True}")
+            st.markdown(f"- AI-verwerking: {txt_reinsert_result.get('ai_processing') is True}")
+            st.markdown(f"- Cloudverwerking: {txt_reinsert_result.get('cloud_processing') is True}")
+        if txt_reinsert_result.get("unknown_placeholders"):
+            st.warning("Het TXT-bestand bevat placeholders die niet in de actieve Scrub Key staan.")
+        if txt_reinsert_result.get("duplicate_placeholders"):
+            st.warning("De Scrub Key bevat dubbele placeholders. Deze zijn niet automatisch teruggezet.")
+        if txt_reinsert_result.get("placeholders_not_found"):
+            st.caption("Niet alle mappingregels kwamen voor in het TXT-bestand.")
+'''
+
 review_summary_block = '''        st.subheader("4. Download opgeschoonde bestanden")
         final_review_summary = build_review_summary(edited_replacements_df)
         st.markdown("**Eindcontrole vóór download**")
@@ -480,7 +547,7 @@ solidprivacy_work_mode = st.radio(
 )
 if solidprivacy_work_mode == "Originele waarden terugzetten":
     st.caption("Originele waarden terugzetten: laad een Scrub Key en herstel placeholders lokaal in geplakte tekst.")
-''' + scrub_key_import_ui_block + reinsert_ui_block + '''else:
+''' + scrub_key_import_ui_block + reinsert_ui_block + txt_reinsert_ui_block + '''else:
 '''
 
 mode_marker = 'st.info(LOCAL_PROCESSING_NOTE)\n\nwith st.expander("Over deze app", expanded=False):\n'
