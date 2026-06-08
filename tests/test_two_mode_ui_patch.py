@@ -14,6 +14,7 @@ def _extract_triple_quoted_assignment(name: str) -> str:
 def _generated_two_mode_source_snippet() -> str:
     scrub_key_import_ui_block = _extract_triple_quoted_assignment("scrub_key_import_ui_block")
     reinsert_ui_block = _extract_triple_quoted_assignment("reinsert_ui_block")
+    txt_reinsert_ui_block = _extract_triple_quoted_assignment("txt_reinsert_ui_block")
     anonymization_flow = "    with st.expander(\"Over deze app\", expanded=False):\n        st.write(\"anonimiseren\")\n"
     return (
         "st.markdown(\"**Kies werkmodus**\")\n"
@@ -28,6 +29,7 @@ def _generated_two_mode_source_snippet() -> str:
         "    st.caption(\"Originele waarden terugzetten: laad een Scrub Key en herstel placeholders lokaal in geplakte tekst.\")\n"
         + scrub_key_import_ui_block
         + reinsert_ui_block
+        + txt_reinsert_ui_block
         + "else:\n"
         + anonymization_flow
     )
@@ -48,23 +50,25 @@ def test_two_mode_patch_uses_conditional_work_mode_rendering():
 
 
 def test_generated_two_mode_source_compiles_without_indentation_or_syntax_error():
-    # Guards the Hugging Face runtime failure:
-    # IndentationError: unexpected indent at st.markdown("**Scrub Key laden**")
+    # Guards runtime failures in the generated mode branch.
     compile(_generated_two_mode_source_snippet(), "generated_two_mode_source.py", "exec")
 
 
 def test_reinsert_blocks_start_at_single_branch_indent():
     scrub_key_import_ui_block = _extract_triple_quoted_assignment("scrub_key_import_ui_block")
     reinsert_ui_block = _extract_triple_quoted_assignment("reinsert_ui_block")
+    txt_reinsert_ui_block = _extract_triple_quoted_assignment("txt_reinsert_ui_block")
     assert scrub_key_import_ui_block.startswith('    st.markdown("**Scrub Key laden**")')
     assert reinsert_ui_block.startswith('    st.markdown("**Originele waarden terugzetten**")')
+    assert txt_reinsert_ui_block.startswith('    st.markdown("**TXT-bestand terugzetten**")')
     assert not scrub_key_import_ui_block.startswith('        st.markdown("**Scrub Key laden**")')
     assert not reinsert_ui_block.startswith('        st.markdown("**Originele waarden terugzetten**")')
+    assert not txt_reinsert_ui_block.startswith('        st.markdown("**TXT-bestand terugzetten**")')
 
 
-def test_reinsert_mode_gets_own_scrub_key_and_reinsert_content():
+def test_reinsert_mode_gets_own_scrub_key_reinsert_and_txt_content():
     mode_index = PATCH_TEXT.index('if solidprivacy_work_mode == "Originele waarden terugzetten":')
-    import_index = PATCH_TEXT.index("scrub_key_import_ui_block + reinsert_ui_block")
+    import_index = PATCH_TEXT.index("scrub_key_import_ui_block + reinsert_ui_block + txt_reinsert_ui_block")
     assert mode_index < import_index
     assert "Scrub Key laden" in PATCH_TEXT
     assert "Upload Scrub Key JSON (.json)" in PATCH_TEXT
@@ -75,6 +79,11 @@ def test_reinsert_mode_gets_own_scrub_key_and_reinsert_content():
     assert "Herstelde tekst" in PATCH_TEXT
     assert "Download herstelde tekst (.txt)" in PATCH_TEXT
     assert "Controleverslag terugzetten" in PATCH_TEXT
+    assert "TXT-bestand terugzetten" in PATCH_TEXT
+    assert "Upload een TXT-bestand met placeholders" in PATCH_TEXT
+    assert "Zet TXT-bestand lokaal terug" in PATCH_TEXT
+    assert "Herstelde TXT-tekst" in PATCH_TEXT
+    assert "Download hersteld TXT-bestand (.txt)" in PATCH_TEXT
 
 
 def test_anonymization_flow_is_under_else_branch():
@@ -98,7 +107,9 @@ def test_reinsert_flow_is_not_embedded_in_anonymization_review_summary_block():
     assert "Download Scrub Key (.json)" in review_summary_block
     assert "scrub_key_import_ui_block" not in review_summary_block
     assert "reinsert_ui_block" not in review_summary_block
+    assert "txt_reinsert_ui_block" not in review_summary_block
     assert "Download herstelde tekst (.txt)" not in review_summary_block
+    assert "Download hersteld TXT-bestand (.txt)" not in review_summary_block
 
 
 def test_existing_scrub_key_export_and_import_labels_remain_present():
@@ -129,12 +140,9 @@ def test_scrubbed_download_behavior_markers_are_not_removed_or_rewired():
     assert "export_text = apply_replacements_to_text" not in PATCH_TEXT
 
 
-def test_two_mode_patch_does_not_add_txt_docx_or_pdf_reinsert_upload_ui():
+def test_two_mode_patch_does_not_add_docx_or_pdf_reinsert_upload_ui():
     forbidden_markers = [
-        "reinsert_txt_bytes",
         "reinsert_docx_bytes",
-        "Upload TXT",
-        "Upload .txt",
         "Upload DOCX",
         "Upload .docx",
         "hersteld DOCX",
