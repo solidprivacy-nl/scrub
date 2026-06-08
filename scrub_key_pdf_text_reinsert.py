@@ -5,9 +5,11 @@ It deliberately does not perform OCR, reconstruct PDF output, call AI services,
 use cloud processing, write files, change UI behavior, or change export semantics.
 
 Dependency decision:
-- Uses pypdf for local PDF text extraction.
+- Uses pypdf for local PDF text extraction when the dependency is installed.
 - pypdf is a Python PDF parser/reader dependency and does not require OCR,
   external services, AI calls, or PDF-to-DOCX reconstruction.
+- The module remains import-safe when pypdf is unavailable, because GitHub
+  Actions may not install project requirements in every test job.
 - Extraction is deterministic for a given parser/input, but PDF text order and
   completeness are not guaranteed. Callers must surface limitations clearly.
 """
@@ -17,7 +19,13 @@ from __future__ import annotations
 from io import BytesIO
 from typing import Any
 
-from pypdf import PdfReader
+try:  # Keep module import-safe when optional dependency is absent in CI.
+    from pypdf import PdfReader
+except ImportError as exc:  # pragma: no cover - exercised by monkeypatch tests.
+    PdfReader = None  # type: ignore[assignment]
+    PYPDF_IMPORT_ERROR: Exception | None = exc
+else:
+    PYPDF_IMPORT_ERROR = None
 
 from scrub_key_document_reinsert import reinsert_text_document
 
@@ -29,6 +37,7 @@ PDF_TEXT_LIMITATIONS = [
 ]
 
 UNSUPPORTED_NO_TEXT_REASON = "Geen bruikbare tekstlaag gevonden. OCR is niet ondersteund in deze versie."
+PYPDF_MISSING_REASON = "pypdf is niet geïnstalleerd. Installeer requirements.txt om lokale PDF-tekstextractie te gebruiken."
 
 
 def _base_result() -> dict[str, Any]:
@@ -74,6 +83,12 @@ def extract_text_from_pdf_bytes(content: bytes) -> dict[str, Any]:
     """
     if not isinstance(content, (bytes, bytearray)):
         return _validation_result("PDF content must be bytes.")
+
+    if PdfReader is None:
+        reason = PYPDF_MISSING_REASON
+        if PYPDF_IMPORT_ERROR is not None:
+            reason = f"{reason} Importfout: {PYPDF_IMPORT_ERROR}"
+        return _validation_result(reason)
 
     raw_content = bytes(content)
     try:
