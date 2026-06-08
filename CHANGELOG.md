@@ -26,16 +26,26 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
-## WP12-FIX — v13.6 Two-mode UI content separation cleanup
+## WP12-FIX2 — v13.6 Two-mode indentation/runtime hotfix
 
 Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Purpose:
 
-- Fix the WP12 app-verification issue where mode navigation existed but content was not separated enough.
-- Ensure `Originele waarden terugzetten` does not show the full anonymization/review/export workflow above the reinsert flow.
-- Keep `Anonimiseren` focused on the existing anonymization workflow.
-- Keep `Originele waarden terugzetten` focused on Scrub Key load + local pasted-text reinsert.
+- Fix the blocking Hugging Face runtime failure introduced by WP12-FIX.
+- Restore app startup.
+- Preserve the two-mode behavior:
+  - `Anonimiseren`;
+  - `Originele waarden terugzetten`.
+
+Blocking runtime error:
+
+```text
+File "/home/user/app/presidio_streamlit.py", line 380
+    st.markdown("**Scrub Key laden**")
+    ^
+IndentationError: unexpected indent
+```
 
 Files added or changed:
 
@@ -43,55 +53,39 @@ Files added or changed:
 - Changed `tests/test_two_mode_ui_patch.py`.
 - Changed `WORKPACKAGES.md`.
 - Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0000_v13_6_two_mode_content_separation_cleanup.md`.
+- Added `handover/workpackages/20260608_0000_v13_6_two_mode_indentation_hotfix.md`.
 
 Main change:
 
-- The earlier WP12 two-mode skeleton already existed, but only added visible mode navigation.
-- WP12-FIX replaces skeleton-only rendering with conditional mode rendering using `solidprivacy_work_mode = st.radio(...)`.
-- If the user selects `Originele waarden terugzetten`, the app renders only:
-  - `Scrub Key laden`;
-  - Scrub Key upload/paste validation;
-  - pasted-text local reinsert;
-  - restored-output warning;
-  - local-only/no-AI/no-cloud text;
-  - `Zet originele waarden lokaal terug`;
-  - `Herstelde tekst`;
-  - `Download herstelde tekst (.txt)`;
-  - `Controleverslag terugzetten`.
-- The existing anonymization workflow is rendered under the `Anonimiseren` branch.
-- The anonymization/export review summary keeps Scrub Key JSON export, but no longer embeds Scrub Key import/reinsert inside the scrubbed export block.
+- Corrected generated indentation around `Scrub Key laden` and the local reinsert UI block.
+- Reinsert branch blocks now start with one branch indentation level under:
+  - `if solidprivacy_work_mode == "Originele waarden terugzetten":`.
+- The anonymization branch still uses `indent_block(anonymization_flow)` under `else:`.
+- No feature scope was added.
 
 Tests updated:
 
-- `tests/test_two_mode_ui_patch.py` now checks:
-  - both mode labels exist;
-  - conditional work-mode rendering exists;
-  - reinsert markers are associated with `Originele waarden terugzetten`;
-  - anonymization markers are associated with the `Anonimiseren` branch;
-  - reinsert flow is not embedded in the anonymization review/export summary block;
-  - existing Scrub Key export/import labels remain;
-  - existing scrubbed download markers remain;
-  - no TXT upload reinsert UI was added;
-  - no DOCX upload reinsert UI was added;
-  - no PDF reinsert was added;
-  - no AI/cloud/rehydration behavior was added;
-  - `apply_replacements_to_text` was not altered.
+- `tests/test_two_mode_ui_patch.py` now includes a compile guard that reconstructs the generated two-mode source snippet and calls:
+  - `compile(..., "generated_two_mode_source.py", "exec")`.
+- This guards against:
+  - `IndentationError`;
+  - `SyntaxError`;
+  - the specific unexpected-indent failure at `st.markdown("**Scrub Key laden**")`.
+- The tests also assert that the reinsert block strings start with exactly one branch indentation level, not two.
 
 Validation:
 
-- Coordinator evidence for prior WP12 showed green Actions/sync, but app verification found the content separation issue:
-  - `Tests #145 green — commit 5d879cc`;
-  - `Sync #159 green — commit 5d879cc`;
-  - `Tests #146 green — commit 79d771e`;
-  - `Sync #160 green — commit 79d771e`;
-  - `Tests #147 green — commit e106f7c`;
-  - `Sync #161 green — commit e106f7c`.
-- Local clone/test run for WP12-FIX could not be performed in the container because outbound GitHub DNS failed:
+- Prior WP12-FIX technical evidence was:
+  - `Tests #150 green — commit de01c0b`;
+  - `Sync #164 green — commit de01c0b`;
+  - `Tests #151 green — commit 911e093`;
+  - `Sync #165 green — commit 911e093`.
+- App verification then failed with the runtime `IndentationError` shown above.
+- Local clone/test run for WP12-FIX2 could not be performed in the container because outbound GitHub DNS failed:
   - `Could not resolve host: github.com`.
-- GitHub Actions: awaiting verification for WP12-FIX commits.
-- Hugging Face sync: awaiting verification for WP12-FIX commits.
-- App verification: required because UI behavior changed.
+- GitHub Actions: awaiting verification for WP12-FIX2 commits.
+- Hugging Face sync: awaiting verification for WP12-FIX2 commits.
+- App verification: required because this was a blocking runtime failure.
 
 Intentionally not changed:
 
@@ -102,29 +96,39 @@ Intentionally not changed:
 - No AI calls added.
 - No cloud processing added.
 - No automatic document rehydration added.
-- No existing TXT, CSV, DOCX or PDF scrubbed export/download semantics intentionally changed inside `Anonimiseren`.
-- No Scrub Key JSON export behavior intentionally changed inside `Anonimiseren`.
+- No existing TXT, CSV, DOCX or PDF scrubbed export/download semantics intentionally changed.
+- No Scrub Key JSON export/import semantics intentionally changed except fixing generated runtime validity.
 - No Scrub Key storage, secrets, tokens or real personal data added.
 
 Outcome:
 
-- WP12-FIX is implemented and awaits GitHub Actions, Hugging Face sync and app verification.
-- Next recommended workpackage is `WP12-FIX-CLOSEOUT — v13.6 Two-mode content separation app verification closeout`.
+- WP12-FIX2 is implemented and awaits GitHub Actions, Hugging Face sync and app verification.
+- Next recommended workpackage is `WP12-FIX2-CLOSEOUT — v13.6 Two-mode indentation/runtime app verification closeout`.
+
+---
+
+## WP12-FIX — v13.6 Two-mode UI content separation cleanup
+
+Status: implemented; produced a blocking runtime indentation error and required WP12-FIX2.
+
+Purpose:
+
+- Fix the WP12 app-verification issue where mode navigation existed but content was not separated enough.
+- Ensure `Originele waarden terugzetten` does not show the full anonymization/review/export workflow above the reinsert flow.
+- Keep `Anonimiseren` focused on the existing anonymization workflow.
+- Keep `Originele waarden terugzetten` focused on Scrub Key load + local pasted-text reinsert.
+
+Outcome:
+
+- WP12-FIX separated the intended content paths conceptually.
+- App verification showed the generated Python source was syntactically invalid because the reinsert branch block indentation was too deep.
+- WP12-FIX2 was created as the blocking runtime hotfix.
 
 ---
 
 ## WP12 — v13.6 Two-mode UI skeleton and tab separation
 
 Status: implemented; coordinator evidence showed Actions/sync green, but app verification found insufficient content separation.
-
-Purpose:
-
-- Implement the first two-mode UI structure with minimal risk.
-- Make the two main user intents visible:
-  - `Anonimiseren`;
-  - `Originele waarden terugzetten`.
-- Keep existing behavior working.
-- Avoid a full landing-page refactor.
 
 Outcome:
 
@@ -217,7 +221,7 @@ Outcome:
 
 Possible directions:
 
-- WP12-FIX-CLOSEOUT app verification closeout.
+- WP12-FIX2-CLOSEOUT app verification closeout.
 - TXT reinsert upload/download UI.
 - DOCX reinsert upload/download UI.
 - PDF text extraction research only after separate reliability review.
