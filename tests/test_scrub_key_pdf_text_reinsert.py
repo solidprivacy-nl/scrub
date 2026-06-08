@@ -3,15 +3,20 @@ from __future__ import annotations
 from copy import deepcopy
 from io import BytesIO
 
-from pypdf import PdfWriter
+import pytest
 
 from scrub_key import build_scrub_key
+import scrub_key_pdf_text_reinsert as pdf_reinsert
 from scrub_key_pdf_text_reinsert import (
     PDF_TEXT_LIMITATIONS,
+    PYPDF_MISSING_REASON,
     UNSUPPORTED_NO_TEXT_REASON,
     extract_text_from_pdf_bytes,
     reinsert_pdf_text_bytes,
 )
+
+pypdf = pytest.importorskip("pypdf", reason="pypdf is required for PDF text extraction tests")
+PdfWriter = pypdf.PdfWriter
 
 
 VALID_SYNTHETIC_ROWS = [
@@ -213,6 +218,18 @@ def test_limitations_are_reported():
     assert result["limitations"] == PDF_TEXT_LIMITATIONS
     assert any("OCR" in limitation for limitation in result["limitations"])
     assert any("TXT" in limitation for limitation in result["limitations"])
+
+
+def test_missing_pypdf_dependency_is_reported(monkeypatch):
+    monkeypatch.setattr(pdf_reinsert, "PdfReader", None)
+    monkeypatch.setattr(pdf_reinsert, "PYPDF_IMPORT_ERROR", ImportError("synthetic missing dependency"))
+
+    result = pdf_reinsert.extract_text_from_pdf_bytes(b"%PDF-1.4")
+
+    assert result["validation_issues"]
+    assert PYPDF_MISSING_REASON in result["validation_issues"][0]
+    assert result["ocr_used"] is False
+    assert result["pdf_output"] is False
 
 
 def test_examples_use_synthetic_values_only():
