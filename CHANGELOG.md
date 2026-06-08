@@ -26,9 +26,112 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## WP13B — v13.7 TXT reinsert upload/download UI app verification closeout
+
+Status: implemented; Actions/sync verified; awaiting app verification.
+
+Purpose:
+
+- Administratively record technical verification for WP13.
+- Keep WP13 open for app verification because no confirmed Hugging Face app verification evidence was supplied in this closeout request.
+- Do not change code, tests, UI behavior, export behavior or Scrub Key behavior.
+
+Technical verification evidence:
+
+```text
+Tests #164 green — commit e442d28
+Sync to Hugging Face Space #178 green — commit e442d28
+
+Tests #165 green — commit ce7721d
+Sync to Hugging Face Space #179 green — commit ce7721d
+
+Tests #166 green — commit 6bf359f
+Sync to Hugging Face Space #180 green — commit 6bf359f
+
+Tests #167 green — commit 443d6af
+Sync to Hugging Face Space #181 green — commit 443d6af
+```
+
+Latest WP13 implementation commit:
+
+```text
+443d6af99cfac47ed007d0d1cd666d1549e855d5
+```
+
+Files added or changed:
+
+- Changed `WORKPACKAGES.md`.
+- Changed `CHANGELOG.md`.
+- Added `handover/workpackages/20260608_0000_v13_7_txt_reinsert_upload_download_ui_app_closeout.md`.
+
+Tests:
+
+- No new tests were added because WP13B is closeout-only.
+- Existing validation is based on coordinator evidence:
+  - GitHub Actions green;
+  - GitHub to Hugging Face sync green.
+- App verification remains pending.
+
+Closeout result:
+
+- WP13 is not yet marked completed/app-verified.
+- WP13 is recorded as:
+  - `implemented; Actions/sync verified; awaiting app verification`.
+
+Required app verification before full closeout:
+
+- `Scrub Key laden` remains visible.
+- Scrub Key upload/paste validation remains visible.
+- Pasted-text reinsert remains visible.
+- `TXT-bestand terugzetten` is visible.
+- TXT upload accepts `.txt`.
+- `Zet TXT-bestand lokaal terug` works with a valid Scrub Key.
+- `Herstelde TXT-tekst` appears.
+- `Download hersteld TXT-bestand (.txt)` works.
+- `Controleverslag TXT terugzetten` appears.
+- Warning about restored sensitive/confidential data is visible.
+- Local-only / no-AI / no-cloud text is visible.
+- Normal anonymization workflow remains available in `Anonimiseren`.
+- Source text/file input remains visible.
+- Review table appears.
+- Scrubbed TXT/CSV/DOCX/PDF downloads remain available.
+- Scrub Key JSON export remains available.
+- TXT reinsert upload UI is not shown as part of the anonymization workflow.
+- No DOCX upload reinsert UI appears yet.
+- No PDF reinsert appears.
+- No AI/cloud behavior appears.
+- Existing Scrub Key export/import remains available.
+- Existing scrubbed export/download semantics are unchanged.
+
+Intentionally not changed:
+
+- No code files were changed in WP13B.
+- `fix_streamlit_nested_expanders.py` was not changed in WP13B.
+- `presidio_streamlit.py` was not changed.
+- `scrub_key_document_reinsert.py` was not changed.
+- `scrub_key_reinsert.py` was not changed.
+- `scrub_key.py` was not changed.
+- `scrub_key_import.py` was not changed.
+- No test files were changed in WP13B.
+- No DOCX upload reinsert UI added.
+- No PDF reinsert added.
+- No AI calls added.
+- No cloud processing added.
+- No automatic document rehydration added.
+- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior intentionally changed.
+- No Scrub Key JSON export/import behavior intentionally changed.
+- No Scrub Key storage, secrets, tokens or real personal data added.
+
+Outcome:
+
+- Next recommended step is `WP13B-APPVERIFY — v13.7 TXT reinsert upload/download UI app verification completion`.
+- After app verification is confirmed, WP13 can be closed as completed and app-verified after Actions/sync verification.
+
+---
+
 ## WP13 — v13.7 TXT reinsert upload/download UI
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: implemented; Actions/sync verified; awaiting app verification.
 
 Purpose:
 
@@ -91,11 +194,9 @@ The tests check:
 
 Validation:
 
-- Local clone/test run could not be performed in the container because outbound GitHub DNS was unavailable:
-  - `Could not resolve host: github.com`.
-- GitHub Actions: awaiting verification for WP13 commits.
-- Hugging Face sync: awaiting verification for WP13 commits.
-- App verification: required because UI behavior changed.
+- GitHub Actions: green based on coordinator evidence.
+- Hugging Face sync: green based on coordinator evidence.
+- App verification: pending.
 
 Intentionally not changed:
 
@@ -110,144 +211,16 @@ Intentionally not changed:
 - No Scrub Key import/reload behavior intentionally changed except reusing the loaded key for TXT reinsert.
 - No Scrub Key storage, secrets, tokens or real personal data added.
 
-Outcome:
-
-- WP13 is implemented and awaits GitHub Actions, Hugging Face sync and app verification.
-- Next recommended workpackage is `WP13-CLOSEOUT — v13.7 TXT reinsert upload/download UI app verification closeout`.
-
 ---
 
 ## WP12B — v13.6 Two-mode UI app verification closeout
 
 Status: completed and app-verified after Actions/sync verification.
 
-Purpose:
-
-- Administratively close WP12, WP12-FIX and WP12-FIX2 after successful technical verification and app verification.
-- Record that v13.6 two-mode UI is now complete.
-- Confirm that no further closeout blocker remains before WP13.
-
-Implementation sequence closed:
-
-- WP12 introduced the two-mode UI skeleton.
-- WP12-FIX cleaned up content separation.
-- WP12-FIX2 fixed the indentation/runtime error.
-- WP12B records successful Actions/sync and app verification.
-
-Technical verification evidence:
-
-```text
-Tests #155 green — commit b27d115
-Sync to Hugging Face Space #169 green — commit b27d115
-
-Tests #156 green — commit 0e357bb
-Sync to Hugging Face Space #170 green — commit 0e357bb
-
-Tests #157 green — commit 268234d
-Sync to Hugging Face Space #171 green — commit 268234d
-```
-
-Latest verified WP12-FIX2 commit:
-
-```text
-268234d9d1aeb9c82658c4c30702f51cfdd58c96
-```
-
 Outcome:
 
 - v13.6 two-mode UI is closed as completed and app-verified.
-- Next recommended workpackage is `WP13 — v13.7 TXT reinsert upload/download UI`.
-
----
-
-## WP12-FIX2 — v13.6 Two-mode indentation/runtime hotfix
-
-Status: completed and app-verified through WP12B closeout.
-
-Outcome:
-
-- Generated indentation around `Scrub Key laden` and the local reinsert UI block was corrected.
-- GitHub Actions and Hugging Face sync were later verified green by the coordinator.
-- App verification confirmed the script execution error is gone.
-
----
-
-## WP12-FIX — v13.6 Two-mode UI content separation cleanup
-
-Status: completed through WP12B closeout after WP12-FIX2 runtime hotfix.
-
-Outcome:
-
-- WP12-FIX separated the intended content paths conceptually.
-- WP12-FIX2 corrected the runtime indentation issue.
-- WP12B confirmed app verification.
-
----
-
-## WP12 — v13.6 Two-mode UI skeleton and tab separation
-
-Status: completed and app-verified through WP12B closeout.
-
-Outcome:
-
-- WP12 created the first visible mode skeleton.
-- WP12-FIX improved actual content separation.
-- WP12-FIX2 fixed the runtime indentation error.
-- WP12B closed v13.6 after Actions/sync and app verification.
-
----
-
-## WP11 — v13.5 Two-mode reinsert UI planning
-
-Status: completed; planning/specification-only workpackage.
-
-Outcome:
-
-- WP11 planning is complete.
-- Next recommended implementation workpackage was `WP12 — v13.6 Two-mode UI skeleton and tab separation`.
-
----
-
-## WP10B — v13.4 TXT/DOCX reinsert foundation verification and closeout
-
-Status: completed; Actions/sync not visible through connector, coordinator verification required.
-
-Outcome:
-
-- WP10B closeout is complete.
-- Coordinator should verify Actions/sync externally before marking WP10 formally closed.
-
----
-
-## WP10 — v13.4 TXT/DOCX reinsert foundation helper and tests
-
-Status: implemented; awaiting coordinator verification of Actions/sync.
-
-Outcome:
-
-- WP10 helper/test foundation is implemented.
-- WP10 awaits coordinator verification of GitHub Actions and Hugging Face sync.
-
----
-
-## WP9 — AI-output / document reinsert workflow UX and architecture review
-
-Status: completed; review-only workpackage.
-
-Outcome:
-
-- WP9 is complete.
-- Product direction for reinsert is documented before implementation.
-
----
-
-## v13.3 — Deterministic reinsert UI app verification closeout
-
-Status: completed and app-verified after Actions/sync verification.
-
-Outcome:
-
-- v13.3 deterministic local reinsert UI is completed, app-verified and formally closed.
+- Next implementation workpackage was `WP13 — v13.7 TXT reinsert upload/download UI`.
 
 ---
 
@@ -281,7 +254,7 @@ Outcome:
 
 Possible directions:
 
-- WP13-CLOSEOUT app verification closeout.
+- WP13B-APPVERIFY — v13.7 TXT reinsert upload/download UI app verification completion.
 - WP14 — v13.8 DOCX reinsert upload/download UI.
 - PDF text extraction research only after separate reliability review.
 - Further recognizer expansion by legal domain.
