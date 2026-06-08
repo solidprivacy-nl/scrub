@@ -1,24 +1,90 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP15 — PDF text extraction reliability review only
+## WP16 — Text-based PDF extraction helper spike, restored TXT output only
 
-Status: completed review/specification only.
+Status: implemented; awaiting GitHub Actions and Hugging Face sync.
 
 Purpose:
 
-- Evaluate whether PDF input can be supported safely and reliably in the reinsert workflow.
-- Challenge whether Scrub should support PDF reinsert at all.
-- Keep this as review-only with no code, UI, dependency or export behavior changes.
+- Add a pure helper spike for text-based PDF extraction.
+- Restore Scrub Key placeholders into extracted PDF text using existing deterministic reinsert logic.
+- Return restored TXT/text output only.
+- Keep full PDF reinsert, OCR, UI and cloud/AI behavior out of scope.
 
 Files added:
 
-- `PDF_TEXT_EXTRACTION_RELIABILITY_REVIEW.md`
-- `handover/workpackages/20260608_0115_pdf_text_extraction_reliability_review.md`
+- `scrub_key_pdf_text_reinsert.py`
+- `tests/test_scrub_key_pdf_text_reinsert.py`
+- `handover/workpackages/20260609_0000_pdf_text_extraction_helper_spike.md`
 
 Files changed:
 
+- `requirements.txt`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
+
+Dependency decision:
+
+- Added `pypdf`.
+- Reason: `pypdf` provides local selectable-text extraction for PDFs and does not require OCR, AI, cloud services, PDF-to-DOCX conversion or layout reconstruction.
+- This dependency is used only for helper-level text extraction.
+
+Implemented behavior:
+
+- Added `extract_text_from_pdf_bytes(content)`.
+- Added `reinsert_pdf_text_bytes(content, scrub_key)`.
+- Text-based PDFs can be extracted locally.
+- Extracted text is fed into the existing deterministic Scrub Key reinsert path.
+- Restored output is text/TXT only.
+- No PDF bytes are produced.
+- Blank/no-text PDFs are clearly marked unsupported.
+- Audit fields include local-only, no-AI, no-cloud, OCR-not-used and PDF-output-false indicators.
+
+Tests added:
+
+- `tests/test_scrub_key_pdf_text_reinsert.py`
+
+Test coverage includes:
+
+- text-based PDF with one placeholder;
+- text-based PDF with multiple placeholders;
+- deterministic reinsert reuse;
+- restored output is TXT/text only;
+- no PDF bytes are produced;
+- unknown placeholders remain unchanged and are reported;
+- mapped placeholders not found are reported;
+- blank/no-text PDF is unsupported;
+- local-only/no-AI/no-cloud audit fields;
+- `ocr_used=False`;
+- `pdf_output=False`;
+- invalid Scrub Key returns validation issues;
+- helper does not mutate input Scrub Key;
+- synthetic values only.
+
+Validation:
+
+- Syntax-level validation of the new helper and test file was performed in the Python environment.
+- Repository pytest execution was not available in this connector session.
+- GitHub Actions: awaiting verification.
+- Hugging Face sync: awaiting verification.
+- App verification: not applicable because no UI behavior changed.
+
+Intentionally not changed:
+
+- No UI files changed.
+- No PDF reinsert UI added.
+- No OCR added.
+- No cloud processing added.
+- No AI calls added.
+- No PDF output added.
+- No PDF-to-DOCX reconstruction added.
+- Existing pasted-text, TXT and DOCX reinsert UI behavior unchanged.
+- Existing scrubbed TXT/CSV/DOCX/PDF export/download behavior unchanged.
+- Existing Scrub Key export/import behavior unchanged.
+
+## WP15 — PDF text extraction reliability review only
+
+Status: completed review/specification only.
 
 Review conclusion:
 
@@ -29,62 +95,15 @@ Review conclusion:
 - DOCX remains the preferred document-level reinsert path.
 - A future helper-only package may evaluate text-based PDF extraction to restored TXT output.
 
-Recommended next phase:
-
-```text
-WP16 — Text-based PDF extraction helper spike, restored TXT output only
-```
-
-Recommended WP16 boundaries:
-
-- pure helper only;
-- text-based PDFs only;
-- local deterministic extraction;
-- restored TXT output only;
-- synthetic tests only;
-- no UI;
-- no OCR;
-- no AI calls;
-- no cloud processing;
-- no restored PDF output;
-- no Scrub Key import/export behavior change;
-- no scrubbed export/download behavior change.
-
-Validation:
-
-- Tests: not applicable; review-only workpackage.
-- GitHub Actions: not required unless documentation checks exist.
-- Hugging Face sync: not functionally relevant; no app behavior changed.
-- App verification: not applicable; no UI behavior changed.
-
 ## WP14C — v13.8 DOCX reinsert upload/download UI final verification reconciliation
 
 Status: completed.
 
 WP14 DOCX reinsert UI is completed and app-verified after Actions/sync verification.
 
-Technical verification and app verification were supplied by coordinator/user.
-
-## WP14B — v13.8 DOCX reinsert upload/download UI app verification closeout
-
-Status: superseded by WP14C final reconciliation.
-
-## WP14 — v13.8 DOCX reinsert upload/download UI
-
-Status: completed and app-verified after Actions/sync verification.
-
-WP14 added controlled DOCX upload/download reinsert in `Originele waarden terugzetten` using `reinsert_docx_bytes(content, scrub_key)`.
-
-Existing pasted-text reinsert and TXT reinsert remain available.
-
-DOCX limitations remain visible in the UI.
-
-## WP13B — v13.7 TXT reinsert upload/download UI app verification closeout
-
-Status: completed and app-verified after Actions/sync verification.
-
 ## Earlier completed work
 
+- v13.8 DOCX reinsert upload/download UI.
 - v13.7 TXT reinsert upload/download UI.
 - v13.6 two-mode UI.
 - v13.3 deterministic reinsert UI.
@@ -94,4 +113,5 @@ Status: completed and app-verified after Actions/sync verification.
 
 ## Planned later phase
 
-- WP16 — Text-based PDF extraction helper spike, restored TXT output only.
+- WP16B — Text-based PDF extraction helper spike verification and closeout.
+- WP17 — PDF text extraction reinsert UI planning only, only after WP16B closes green.
