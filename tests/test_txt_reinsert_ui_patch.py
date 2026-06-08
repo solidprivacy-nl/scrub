@@ -42,11 +42,14 @@ def test_txt_reinsert_accepts_txt_only_and_requires_key():
     assert 'st.session_state.get("active_scrub_key", {})' in txt_block
 
 
-def test_txt_reinsert_is_inside_reinsert_mode_only():
-    mode_index = PATCH_TEXT.index('if solidprivacy_work_mode == "Originele waarden terugzetten":')
-    txt_block_index = PATCH_TEXT.index("txt_reinsert_ui_block")
-    else_index = PATCH_TEXT.index("'''else:\n'''")
-    assert mode_index < txt_block_index < else_index
+def test_txt_reinsert_is_injected_inside_reinsert_mode_only():
+    mode_start = PATCH_TEXT.index("two_mode_selection_block = '''")
+    mode_end = PATCH_TEXT.index("mode_marker =", mode_start)
+    mode_block = PATCH_TEXT[mode_start:mode_end]
+    mode_index = mode_block.index('if solidprivacy_work_mode == "Originele waarden terugzetten":')
+    txt_injection_index = mode_block.index("scrub_key_import_ui_block + reinsert_ui_block + txt_reinsert_ui_block")
+    else_index = mode_block.index("'''else:\n'''")
+    assert mode_index < txt_injection_index < else_index
     review_summary_start = PATCH_TEXT.index("review_summary_block =")
     review_summary_end = PATCH_TEXT.index("text = replace_once(\n    text,\n    '''        st.subheader", review_summary_start)
     review_summary_block = PATCH_TEXT[review_summary_start:review_summary_end]
