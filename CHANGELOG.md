@@ -26,6 +26,98 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## WP9 — AI-output / document reinsert workflow UX and architecture review
+
+Status: completed; review-only workpackage.
+
+Purpose:
+
+- Decide what Scrub should do next for AI-output and document-level reinsert before implementation starts.
+- Challenge whether pasted-text reinsert is enough.
+- Challenge whether direct DOCX/PDF reinsert should be added immediately.
+- Challenge whether anonymization and de-anonymization should remain in one combined long screen.
+- Recommend a model architecture, product direction, tactical sequence, operational safety position and visual/UX direction.
+
+Files added or changed:
+
+- Added `AI_OUTPUT_REINSERT_WORKFLOW_REVIEW.md`.
+- Changed `WORKPACKAGES.md`.
+- Changed `CHANGELOG.md`.
+- Added `handover/workpackages/20260608_0000_ai_output_reinsert_workflow_review.md`.
+
+Main recommendation:
+
+- Keep pasted-text reinsert as a safe baseline and fallback, but do not treat it as the final legal-document workflow.
+- Move toward a two-mode interface:
+  - `Anonimiseren`;
+  - `Originele waarden terugzetten`.
+- Add document-level reinsert in phases.
+- Prioritize TXT and DOCX before PDF.
+- Keep PDF as investigation/reliability-review work only for now.
+- Keep all reinsert behavior local-only, deterministic and helper-first.
+- Do not add AI calls.
+- Do not add cloud processing.
+
+First three obvious ideas challenged:
+
+1. `Keep only pasted-text reinsert` was limited: useful fallback, not enough for final legal-document workflow because of usability burden, formatting loss, legal workflow friction, incomplete-copy risk and poor DOCX/PDF fit.
+2. `Add direct PDF/DOCX reinsert immediately` was rejected as too broad: DOCX is feasible but needs careful replacement; PDF is high-risk because of extraction, layout reconstruction, scanned documents, OCR and metadata hygiene.
+3. `Add one combined screen for everything` was rejected as main UX direction: it creates cognitive overload and mixes anonymization with reversible de-anonymization risk.
+
+Recommended implementation sequence:
+
+1. Keep current text-paste reinsert and improve guidance when the UI is next touched.
+2. Add TXT upload/download reinsert.
+3. Add DOCX reinsert helper, pure helper + tests.
+4. Add DOCX reinsert UI only after helper validation.
+5. Investigate PDF text extraction only.
+6. Consider PDF output only after a reliability review.
+
+Next recommended implementation workpackage:
+
+```text
+WP10 — v13.4 TXT/DOCX reinsert foundation helper and tests
+```
+
+Recommended WP10 boundaries:
+
+- helper/test-first;
+- no UI changes;
+- no edit to `fix_streamlit_nested_expanders.py`;
+- no edit to `presidio_streamlit.py`;
+- no existing export/download behavior changes;
+- no Scrub Key export/import behavior changes;
+- no PDF reinsert implementation;
+- no AI calls;
+- no cloud processing;
+- synthetic data only.
+
+Testing and validation:
+
+- Tests: not applicable; planning/review-only workpackage.
+- App verification: not applicable; no UI behavior changed.
+- GitHub Actions: not checked for this docs-only change at handover time.
+- Hugging Face sync: not checked for this docs-only change at handover time.
+
+Intentionally not changed:
+
+- No code files changed.
+- No tests changed.
+- No UI changed.
+- No export/download behavior changed.
+- No Scrub Key export/import behavior changed.
+- No TXT/DOCX/PDF reinsert implementation added.
+- No AI calls added.
+- No cloud processing added.
+- No secrets, tokens or real personal data stored.
+
+Outcome:
+
+- WP9 is complete.
+- Product direction for reinsert is now documented before implementation.
+
+---
+
 ## v13.3 — Deterministic reinsert UI app verification closeout
 
 Status: completed and app-verified after Actions/sync verification.
@@ -245,5 +337,6 @@ Outcome:
 
 Possible directions:
 
-- AI-output reinsert workflow review.
+- TXT/DOCX document-level reinsert foundation.
+- Two-mode UI planning for `Anonimiseren` and `Originele waarden terugzetten`.
 - Further recognizer expansion by legal domain.
