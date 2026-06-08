@@ -153,24 +153,6 @@ Outcome:
 
 Status: completed and app-verified after Actions/sync verification.
 
-Implementation sequence:
-
-- WP12 introduced the two-mode UI skeleton.
-- WP12-FIX cleaned up content separation.
-- WP12-FIX2 fixed the generated indentation/runtime error around `Scrub Key laden`.
-- WP12B closed the v13.6 two-mode UI line after successful technical verification and app verification.
-
-Technical verification evidence:
-
-```text
-Tests #155 green — commit b27d115
-Sync to Hugging Face Space #169 green — commit b27d115
-Tests #156 green — commit 0e357bb
-Sync to Hugging Face Space #170 green — commit 0e357bb
-Tests #157 green — commit 268234d
-Sync to Hugging Face Space #171 green — commit 268234d
-```
-
 Latest verified WP12-FIX2 commit:
 
 ```text
@@ -186,27 +168,6 @@ WP13 implemented latest commit:
 ```text
 443d6af99cfac47ed007d0d1cd666d1549e855d5
 ```
-
-WP13 added:
-
-- `tests/test_txt_reinsert_ui_patch.py`
-- `handover/workpackages/20260608_0000_v13_7_txt_reinsert_upload_download_ui.md`
-
-WP13B added:
-
-- `handover/workpackages/20260608_0015_v13_7_txt_reinsert_upload_download_ui_app_closeout.md`
-
-WP13 changed:
-
-- `fix_streamlit_nested_expanders.py`
-- `tests/test_two_mode_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-WP13B changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
 
 Implemented behavior inside `Originele waarden terugzetten`:
 
@@ -227,68 +188,145 @@ reinsert_txt_bytes(content, scrub_key, encoding="utf-8")
 
 Pasted-text reinsert remains available as fallback.
 
-Technical verification evidence:
-
-```text
-Tests #164 green — commit e442d28
-Sync to Hugging Face Space #178 green — commit e442d28
-Tests #165 green — commit ce7721d
-Sync to Hugging Face Space #179 green — commit ce7721d
-Tests #166 green — commit 6bf359f
-Sync to Hugging Face Space #180 green — commit 6bf359f
-Tests #167 green — commit 443d6af
-Sync to Hugging Face Space #181 green — commit 443d6af
-```
-
-App verification confirmed by coordinator/user:
-
-- `Originele waarden terugzetten` mode is active.
-- `Scrub Key laden` is visible.
-- Scrub Key JSON is loaded.
-- Pasted-text reinsert remains available.
-- `TXT-bestand terugzetten` is visible.
-- TXT file upload works.
-- `Zet TXT-bestand lokaal terug` works with a valid Scrub Key.
-- Result message appears: `37 waarde(n) lokaal teruggezet in het TXT-bestand.`
-- `Herstelde TXT-tekst` appears.
-- `Download hersteld TXT-bestand (.txt)` is visible.
-- `Controleverslag TXT terugzetten` appears.
-- Audit shows document type `txt`.
-- Audit shows mapping counts, restored value count, not-found placeholders, unknown placeholders and validation issues.
-- Audit shows `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
+App verification was confirmed by coordinator/user for TXT upload/download reinsert.
 
 Boundaries preserved:
 
-- No code or test files changed in WP13B.
-- No DOCX upload reinsert UI added.
-- No PDF reinsert added.
-- No AI/cloud behavior added.
-- Existing scrubbed TXT/CSV/DOCX/PDF export/download behavior remains unchanged.
-- Existing Scrub Key export/import behavior remains unchanged.
-- Existing pasted-text reinsert remains available.
+- No DOCX upload reinsert UI was added in WP13.
+- No PDF reinsert was added.
+- No AI/cloud behavior was added.
+- Existing scrubbed TXT/CSV/DOCX/PDF export/download behavior remained unchanged.
+- Existing Scrub Key export/import behavior remained unchanged.
+- Existing pasted-text reinsert remained available.
+
+---
+
+## Current implementation workpackages
+
+### WP14 — v13.8 DOCX reinsert upload/download UI
+
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Implementation commits:
+
+```text
+83f7ebb0afea4798e4295b088b0a3f8058a9a64d
+292d34ea8e4f179b5e93ebfcd93397891cf6e659
+e36915b61d21d10a2fb30ebe9f7d5b8581c561f3
+22b7066cd89c98f3e81e87ec5cf96ee07e5b58b5
+```
+
+Changed files:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_two_mode_ui_patch.py`
+- `tests/test_txt_reinsert_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Added files:
+
+- `tests/test_docx_reinsert_ui_patch.py`
+- `handover/workpackages/20260608_0000_v13_8_docx_reinsert_upload_download_ui.md`
+
+Implemented behavior inside `Originele waarden terugzetten`:
+
+```text
+DOCX-bestand terugzetten
+Upload een DOCX-bestand met placeholders
+Zet DOCX-bestand lokaal terug
+DOCX-bestand lokaal teruggezet
+Download hersteld DOCX-bestand (.docx)
+Controleverslag DOCX terugzetten
+```
+
+The UI uses the existing deterministic local helper:
+
+```python
+reinsert_docx_bytes(content, scrub_key)
+```
+
+Existing pasted-text reinsert remains available.
+
+Existing TXT upload/download reinsert remains available.
+
+DOCX limitations are shown in the UI:
+
+- supports normal document text and tables in this version;
+- headers, footers, comments, tracked changes and placeholders split over multiple Word text fragments are not fully supported;
+- no perfect DOCX formatting preservation is claimed.
+
+Validation status:
+
+- Added `tests/test_docx_reinsert_ui_patch.py` to verify DOCX helper import/use, labels, `.docx` upload-only configuration, Scrub Key requirement, reinsert-mode-only placement, limitations warning, audit summary, existing pasted-text/TXT flows, existing anonymization/export markers, no PDF reinsert, no AI/cloud behavior and no export rewiring.
+- Updated `tests/test_two_mode_ui_patch.py` to include DOCX in the reinsert branch and continue guarding mode separation, anonymization flow and no PDF/AI/cloud behavior.
+- Updated `tests/test_txt_reinsert_ui_patch.py` so TXT remains guarded while DOCX is now an allowed WP14 feature.
+- Local test execution was not performed in this connector session.
+- GitHub Actions: awaiting verification.
+- Hugging Face sync: awaiting verification.
+- App verification: required because UI behavior changed.
+
+Boundaries preserved:
+
+- `presidio_streamlit.py` was not directly edited.
+- No PDF reinsert was added.
+- No AI calls were added.
+- No cloud processing was added.
+- No automatic document rehydration beyond the documented local DOCX helper was added.
+- Existing scrubbed TXT/CSV/DOCX/PDF export/download behavior was not intentionally changed.
+- Existing TXT reinsert upload/download behavior was not intentionally changed.
+- Existing pasted-text reinsert was not removed.
+- Existing Scrub Key JSON export/import behavior was not intentionally changed.
+- No Scrub Keys, secrets, tokens or real personal data were stored.
 
 ---
 
 ## Active / next recommended workpackage
 
-### WP14 — v13.8 DOCX reinsert upload/download UI
+### WP14-CLOSEOUT — v13.8 DOCX reinsert upload/download UI app verification closeout
 
-Status: recommended next implementation workpackage after v13.7 app verification closeout.
+Status: recommended next workpackage after coordinator evidence.
 
 Goal:
 
-- Add controlled DOCX upload/download support for local reinsert in `Originele waarden terugzetten`.
-- Reuse the existing `reinsert_docx_bytes(content, scrub_key)` helper.
-- Keep pasted-text reinsert and TXT reinsert upload/download available.
-- Preserve existing anonymization export/download semantics.
-- Do not add PDF reinsert.
-- Do not add AI/cloud behavior.
+- Verify GitHub Actions tests.
+- Verify GitHub to Hugging Face sync.
+- App-verify DOCX upload/download reinsert behavior.
+- Close WP14 only after evidence confirms the UI works safely within documented DOCX helper limits.
 
-Known DOCX helper limitations from v13.4 foundation:
+Required app verification:
 
-- Supports `word/document.xml`, normal body paragraphs and tables inside `word/document.xml`.
-- Does not yet support placeholders split across multiple Word runs, headers, footers, comments, tracked changes or metadata cleaning.
-- Do not claim perfect DOCX formatting preservation.
+In `Anonimiseren`:
+
+- anonymization workflow remains available;
+- source text/file input remains visible;
+- review table remains visible;
+- scrubbed TXT/CSV/DOCX/PDF downloads remain available;
+- Scrub Key JSON export remains available;
+- DOCX reinsert upload UI is not shown as part of the anonymization workflow.
+
+In `Originele waarden terugzetten`:
+
+- `Scrub Key laden` remains visible;
+- Scrub Key upload/paste validation remains visible;
+- pasted-text reinsert remains visible;
+- TXT reinsert upload/download remains visible;
+- `DOCX-bestand terugzetten` is visible;
+- DOCX upload accepts `.docx`;
+- `Zet DOCX-bestand lokaal terug` works with a valid Scrub Key;
+- restored DOCX download appears;
+- `Download hersteld DOCX-bestand (.docx)` works;
+- `Controleverslag DOCX terugzetten` appears;
+- DOCX limitations warning is visible;
+- warning about restored sensitive/confidential data is visible;
+- local-only / no-AI / no-cloud text is visible.
+
+Also confirm:
+
+- no PDF reinsert appears;
+- no AI/cloud behavior appears;
+- existing Scrub Key export/import remains available;
+- existing scrubbed export/download semantics are unchanged.
 
 Recommended later workpackage:
 
@@ -300,11 +338,9 @@ WP15 — PDF text extraction reliability review only
 
 ## Recommended execution order
 
-1. Start WP14 only after v13.7 closeout is recorded.
-2. Implement DOCX reinsert upload/download UI sequentially.
-3. Verify GitHub Actions tests.
-4. Verify GitHub to Hugging Face sync.
-5. App-verify DOCX reinsert behavior.
-6. Keep PDF full reinsert out of scope until a separate reliability review.
-7. Keep AI/cloud behavior out unless explicitly approved.
-8. Preserve export/download and Scrub Key import/export semantics.
+1. Verify WP14 GitHub Actions and Hugging Face sync.
+2. Verify DOCX reinsert upload/download behavior in the app.
+3. Close WP14 through closeout if verification is green.
+4. Keep PDF full reinsert out of scope until a separate reliability review.
+5. Keep AI/cloud behavior out unless explicitly approved.
+6. Preserve export/download and Scrub Key import/export semantics.
