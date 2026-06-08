@@ -1,82 +1,73 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP15 — PDF text extraction reliability review only
+
+Status: completed review/specification only.
+
+Purpose:
+
+- Evaluate whether PDF input can be supported safely and reliably in the reinsert workflow.
+- Challenge whether Scrub should support PDF reinsert at all.
+- Keep this as review-only with no code, UI, dependency or export behavior changes.
+
+Files added:
+
+- `PDF_TEXT_EXTRACTION_RELIABILITY_REVIEW.md`
+- `handover/workpackages/20260608_0115_pdf_text_extraction_reliability_review.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Review conclusion:
+
+- Do not implement full PDF reinsert now.
+- Do not implement OCR now.
+- Restored PDF output remains out of scope.
+- PDF-to-DOCX reconstruction remains out of scope.
+- DOCX remains the preferred document-level reinsert path.
+- A future helper-only package may evaluate text-based PDF extraction to restored TXT output.
+
+Recommended next phase:
+
+```text
+WP16 — Text-based PDF extraction helper spike, restored TXT output only
+```
+
+Recommended WP16 boundaries:
+
+- pure helper only;
+- text-based PDFs only;
+- local deterministic extraction;
+- restored TXT output only;
+- synthetic tests only;
+- no UI;
+- no OCR;
+- no AI calls;
+- no cloud processing;
+- no restored PDF output;
+- no Scrub Key import/export behavior change;
+- no scrubbed export/download behavior change.
+
+Validation:
+
+- Tests: not applicable; review-only workpackage.
+- GitHub Actions: not required unless documentation checks exist.
+- Hugging Face sync: not functionally relevant; no app behavior changed.
+- App verification: not applicable; no UI behavior changed.
+
 ## WP14C — v13.8 DOCX reinsert upload/download UI final verification reconciliation
 
 Status: completed.
 
-WP14 DOCX reinsert UI is now completed and app-verified after Actions/sync verification.
+WP14 DOCX reinsert UI is completed and app-verified after Actions/sync verification.
 
-Purpose:
-
-- Reconcile WP14 final status after coordinator/user verification evidence was supplied.
-- Supersede the cautious WP14B status, which was recorded before evidence was available to that worker.
-- Update project status only.
-
-Files changed or added in WP14C:
-
-- Changed `WORKPACKAGES.md`.
-- Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0045_v13_8_docx_reinsert_upload_download_ui_final_reconciliation.md`.
-
-No code files were changed.
-
-Technical verification evidence supplied by coordinator:
-
-```text
-Tests #177 green — commit 22b7066
-Sync to Hugging Face Space #191 green — commit 22b7066
-Tests #178 green — commit 68379c6
-Sync to Hugging Face Space #192 green — commit 68379c6
-Tests #179 green — commit 03fd2cd
-Sync to Hugging Face Space #193 green — commit 03fd2cd
-Tests #180 green — commit 8651fc7
-Sync to Hugging Face Space #194 green — commit 8651fc7
-```
-
-Latest WP14 implementation commit:
-
-```text
-8651fc7520cebc321b4b893557fce57afc314fe4
-```
-
-App verification supplied by coordinator/user confirms:
-
-- `Originele waarden terugzetten` is active.
-- `Scrub Key laden` is visible.
-- Scrub Key JSON is loaded.
-- Pasted-text reinsert remains available.
-- TXT reinsert remains available.
-- `DOCX-bestand terugzetten` is visible.
-- DOCX limitations warning is visible.
-- DOCX file upload works.
-- `Zet DOCX-bestand lokaal terug` works with a valid Scrub Key.
-- `DOCX-bestand lokaal teruggezet` appears.
-- `15 waarde(n) lokaal teruggezet in het DOCX-bestand.` appears.
-- `Download hersteld DOCX-bestand (.docx)` is visible.
-- `Controleverslag DOCX terugzetten` appears.
-- Audit shows document type `docx`, mapping counts, restored value count, placeholder checks, validation issues and DOCX limitations.
-- Audit shows `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
-
-Also confirmed:
-
-- No PDF reinsert was added.
-- No AI/cloud behavior was added.
-- Existing pasted-text reinsert remains available.
-- Existing TXT reinsert remains available.
-- Existing Scrub Key import/export remains available.
-- Existing scrubbed export/download semantics remain unchanged.
-
-Validation:
-
-- GitHub Actions: green based on coordinator evidence.
-- Hugging Face sync: green based on coordinator evidence.
-- App verification: confirmed by coordinator/user.
+Technical verification and app verification were supplied by coordinator/user.
 
 ## WP14B — v13.8 DOCX reinsert upload/download UI app verification closeout
 
 Status: superseded by WP14C final reconciliation.
-
-WP14B was cautious because explicit app-verification evidence was not available to that worker at that time.
 
 ## WP14 — v13.8 DOCX reinsert upload/download UI
 
@@ -103,4 +94,4 @@ Status: completed and app-verified after Actions/sync verification.
 
 ## Planned later phase
 
-- WP15 — PDF text extraction reliability review only.
+- WP16 — Text-based PDF extraction helper spike, restored TXT output only.
