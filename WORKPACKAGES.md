@@ -298,6 +298,34 @@ Outcome:
 
 ### WP12-FIX — v13.6 Two-mode UI content separation cleanup
 
+Status: implemented; produced a blocking runtime indentation error in Hugging Face and required WP12-FIX2.
+
+Coordinator evidence:
+
+```text
+Tests #150 green — commit de01c0b
+Sync #164 green — commit de01c0b
+Tests #151 green — commit 911e093
+Sync #165 green — commit 911e093
+```
+
+Runtime failure:
+
+```text
+File "/home/user/app/presidio_streamlit.py", line 380
+    st.markdown("**Scrub Key laden**")
+    ^
+IndentationError: unexpected indent
+```
+
+Outcome:
+
+- WP12-FIX separated the intended content paths conceptually.
+- The generated Python source was syntactically invalid because the reinsert branch block indentation was too deep.
+- Do not start closeout from WP12-FIX; use WP12-FIX2 instead.
+
+### WP12-FIX2 — v13.6 Two-mode indentation/runtime hotfix
+
 Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Changed files:
@@ -309,44 +337,32 @@ Changed files:
 
 Added files:
 
-- `handover/workpackages/20260608_0000_v13_6_two_mode_content_separation_cleanup.md`
+- `handover/workpackages/20260608_0000_v13_6_two_mode_indentation_hotfix.md`
 
 Implemented behavior:
 
-- Replaced skeleton-only tab captions with an actual work-mode selector using `solidprivacy_work_mode = st.radio(...)`.
-- If mode is `Originele waarden terugzetten`, the patched app renders only:
-  - `Scrub Key laden`;
-  - Scrub Key upload/paste validation;
-  - local pasted-text reinsert;
-  - restored-output warning;
-  - local-only/no-AI/no-cloud text;
-  - `Zet originele waarden lokaal terug`;
-  - `Herstelde tekst`;
-  - `Download herstelde tekst (.txt)`;
-  - `Controleverslag terugzetten`.
-- The existing anonymization workflow is placed under the `else` branch for `Anonimiseren`.
-- The anonymization/export review summary keeps Scrub Key export, but no longer embeds Scrub Key import/reinsert inside the export block.
+- Corrected the generated indentation for `Scrub Key laden` and the reinsert UI block under:
+  - `if solidprivacy_work_mode == "Originele waarden terugzetten":`.
+- Reinsert branch injected blocks now start with a single branch indentation level.
+- The anonymization branch still uses `indent_block(anonymization_flow)` under `else:`.
+- Two-mode behavior remains:
+  - `Anonimiseren` shows the anonymization/review/export workflow;
+  - `Originele waarden terugzetten` shows Scrub Key load + local pasted-text reinsert.
 
 Validation status:
 
-- Updated `tests/test_two_mode_ui_patch.py` to verify:
-  - both modes exist;
-  - conditional work-mode rendering exists;
-  - reinsert markers are associated with the reinsert branch;
-  - anonymization markers are associated with the `else` branch;
-  - reinsert flow is not embedded in the anonymization review/export summary block;
-  - existing Scrub Key export/import labels remain;
-  - existing scrubbed download markers remain;
-  - no TXT upload reinsert UI;
-  - no DOCX upload reinsert UI;
-  - no PDF reinsert;
-  - no AI/cloud/rehydration behavior;
-  - no direct alteration of `apply_replacements_to_text`.
+- Updated `tests/test_two_mode_ui_patch.py` with a compile guard that reconstructs the generated two-mode source snippet and calls:
+  - `compile(..., "generated_two_mode_source.py", "exec")`.
+- The test specifically guards against:
+  - `IndentationError`;
+  - `SyntaxError`;
+  - the known `st.markdown("**Scrub Key laden**")` unexpected-indent failure.
+- The test also asserts that reinsert block strings start with exactly one branch indentation level, not two.
 - Local clone/test run could not be performed in the container because outbound GitHub DNS failed:
   - `Could not resolve host: github.com`.
 - GitHub Actions: awaiting verification.
 - Hugging Face sync: awaiting verification.
-- App verification: required because UI behavior changed.
+- App verification: required because this was a blocking runtime failure.
 
 Boundaries preserved:
 
@@ -357,15 +373,15 @@ Boundaries preserved:
 - No AI calls added.
 - No cloud processing added.
 - No automatic document rehydration added.
-- No existing scrubbed export/download semantics intentionally changed inside `Anonimiseren`.
-- No Scrub Key JSON export behavior intentionally changed inside `Anonimiseren`.
+- No existing scrubbed export/download semantics intentionally changed.
+- No Scrub Key JSON export/import semantics intentionally changed beyond fixing generated runtime validity.
 - No secrets, tokens or real personal data stored.
 
 ---
 
 ## Active / next recommended workpackage
 
-### WP12-FIX-CLOSEOUT — v13.6 Two-mode content separation app verification closeout
+### WP12-FIX2-CLOSEOUT — v13.6 Two-mode indentation/runtime app verification closeout
 
 Status: recommended next closeout workpackage after coordinator evidence.
 
@@ -373,41 +389,24 @@ Goal:
 
 - Verify GitHub Actions tests.
 - Verify GitHub to Hugging Face sync.
+- Verify the Hugging Face app starts without script execution error.
 - Verify app behavior for both modes.
-- Close WP12-FIX only after evidence shows the UI content is truly separated.
+- Close WP12-FIX2 only after evidence confirms the runtime error is gone.
 
 Required app verification:
 
-In `Anonimiseren`:
-
-- anonymization workflow is visible;
-- source text/file input is visible;
-- review table still appears;
-- Scrub Key JSON export still appears;
-- scrubbed TXT/CSV/DOCX/PDF downloads remain available;
-- pasted-text reinsert is not presented as part of the anonymization workflow.
-
-In `Originele waarden terugzetten`:
-
-- anonymization source input is not shown as the main workflow;
-- review table is not shown;
-- scrubbed export section is not shown;
-- `Scrub Key laden` is visible;
-- Scrub Key upload/paste validation is visible;
-- pasted-text reinsert is visible;
-- `Zet originele waarden lokaal terug` works;
-- `Herstelde tekst` appears after reinsert;
-- `Download herstelde tekst (.txt)` works;
-- audit summary / `Controleverslag terugzetten` appears;
-- warning about restored sensitive/confidential data is visible;
-- local-only/no-AI/no-cloud text is visible.
-
-Also confirm:
-
-- no TXT upload reinsert UI appears yet;
-- no DOCX upload reinsert UI appears yet;
-- no PDF reinsert appears;
-- no AI/cloud behavior appears.
+- No script execution error appears.
+- No `IndentationError` appears.
+- No `SyntaxError` appears.
+- `Anonimiseren` mode is visible.
+- `Originele waarden terugzetten` mode is visible.
+- `Anonimiseren` shows the anonymization flow.
+- `Originele waarden terugzetten` shows Scrub Key load + pasted-text reinsert only.
+- Reinsert still works.
+- Existing downloads remain available.
+- No TXT/DOCX upload reinsert UI appears yet.
+- No PDF reinsert appears.
+- No AI/cloud behavior appears.
 
 Recommended later workpackages:
 
@@ -421,11 +420,12 @@ WP15 — PDF text extraction reliability review only
 
 ## Recommended execution order
 
-1. Verify WP12-FIX GitHub Actions and Hugging Face sync.
-2. Verify the Hugging Face app for actual two-mode content separation.
-3. Close WP12-FIX through closeout if verification is green.
-4. After WP12-FIX is app-verified, implement TXT reinsert upload/download UI.
-5. After TXT UI is verified, implement DOCX reinsert upload/download UI.
-6. Keep PDF full reinsert out of scope until a separate reliability review.
-7. Keep AI/cloud behavior out unless explicitly approved.
-8. Preserve export/download and Scrub Key import/export semantics.
+1. Verify WP12-FIX2 GitHub Actions and Hugging Face sync.
+2. Verify the Hugging Face app starts without script execution error.
+3. Verify the actual two-mode content separation in the app.
+4. Close WP12-FIX2 through closeout if verification is green.
+5. After WP12-FIX2 is app-verified, implement TXT reinsert upload/download UI.
+6. After TXT UI is verified, implement DOCX reinsert upload/download UI.
+7. Keep PDF full reinsert out of scope until a separate reliability review.
+8. Keep AI/cloud behavior out unless explicitly approved.
+9. Preserve export/download and Scrub Key import/export semantics.
