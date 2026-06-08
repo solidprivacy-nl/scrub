@@ -11,11 +11,11 @@ def _slice_between(start_marker: str, end_marker: str) -> str:
 
 
 def _txt_reinsert_block() -> str:
-    return _slice_between("txt_reinsert_ui_block = '''", "'''\n\nreview_summary_block =")
+    return _slice_between("txt_reinsert_ui_block = '''", "'''\n\ndocx_reinsert_ui_block =")
 
 
 def test_txt_reinsert_helper_is_imported_and_used():
-    assert "from scrub_key_document_reinsert import reinsert_txt_bytes" in PATCH_TEXT
+    assert "from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes" in PATCH_TEXT
     assert "reinsert_txt_bytes(" in PATCH_TEXT
     assert "txt_reinsert_file.getvalue()" in PATCH_TEXT
     assert 'encoding="utf-8"' in PATCH_TEXT
@@ -57,7 +57,7 @@ def test_txt_reinsert_is_injected_inside_reinsert_mode_only():
     assert "Download hersteld TXT-bestand (.txt)" not in review_summary_block
 
 
-def test_pasted_text_reinsert_and_scrub_key_load_remain_present():
+def test_pasted_text_docx_reinsert_and_scrub_key_load_remain_present():
     for marker in [
         "Scrub Key laden",
         "Upload Scrub Key JSON (.json)",
@@ -68,6 +68,10 @@ def test_pasted_text_reinsert_and_scrub_key_load_remain_present():
         "Herstelde tekst",
         "Download herstelde tekst (.txt)",
         "Controleverslag terugzetten",
+        "DOCX-bestand terugzetten",
+        "Upload een DOCX-bestand met placeholders",
+        "Zet DOCX-bestand lokaal terug",
+        "Download hersteld DOCX-bestand (.docx)",
     ]:
         assert marker in PATCH_TEXT
 
@@ -129,22 +133,15 @@ def test_txt_reinsert_warnings_are_present():
     assert "Scrub Key" in txt_block
 
 
-def test_no_docx_pdf_ai_cloud_or_export_rewire_added():
+def test_no_pdf_ai_cloud_or_export_rewire_added():
     lower_patch = PATCH_TEXT.lower()
     for marker in [
-        "reinsert_docx_bytes",
-        "Upload DOCX",
-        "Upload .docx",
-        "hersteld DOCX",
-        "Download hersteld DOCX",
-        "download_docx_reinserted",
         "download_pdf_reinserted",
         "PDF reinsert",
         "pdf reinsert",
         "requests.post",
         "httpx.post",
         "cloud processing call",
-        "rehydrat",
         "restore_original_document",
         "server-side key storage",
         "durable key vault",
