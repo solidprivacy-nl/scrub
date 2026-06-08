@@ -26,6 +26,97 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## WP13 — v13.7 TXT reinsert upload/download UI
+
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Purpose:
+
+- Add controlled TXT upload/download support inside `Originele waarden terugzetten`.
+- Keep the existing pasted-text reinsert flow available as fallback.
+- Reuse the existing deterministic local TXT helper.
+- Keep DOCX upload reinsert UI, PDF reinsert, AI and cloud behavior out of scope.
+
+Files added or changed:
+
+- Changed `fix_streamlit_nested_expanders.py`.
+- Changed `tests/test_two_mode_ui_patch.py`.
+- Changed `WORKPACKAGES.md`.
+- Changed `CHANGELOG.md`.
+- Added `tests/test_txt_reinsert_ui_patch.py`.
+- Added `handover/workpackages/20260608_0000_v13_7_txt_reinsert_upload_download_ui.md`.
+
+Main change:
+
+- Added section `TXT-bestand terugzetten` inside the `Originele waarden terugzetten` mode.
+- Added TXT upload label `Upload een TXT-bestand met placeholders`.
+- Added action button `Zet TXT-bestand lokaal terug`.
+- Added output label `Herstelde TXT-tekst`.
+- Added download label `Download hersteld TXT-bestand (.txt)`.
+- The UI calls:
+  - `reinsert_txt_bytes(content, scrub_key, encoding="utf-8")`.
+- TXT reinsert requires a loaded Scrub Key before running.
+- The restored TXT result shows text output and an audit summary.
+- The existing pasted-text reinsert flow remains available.
+- The existing anonymization workflow remains in `Anonimiseren`.
+
+Safety/warnings:
+
+- The TXT reinsert UI warns that restored output may contain personal/confidential data again.
+- The UI states that reinsert is local-only and uses no AI/cloud processing.
+- The Scrub Key warning remains present and keeps the pseudonymization/reversibility context.
+
+Tests added/updated:
+
+- Added `tests/test_txt_reinsert_ui_patch.py`.
+- Updated `tests/test_two_mode_ui_patch.py`.
+
+The tests check:
+
+- `reinsert_txt_bytes` is imported and used;
+- TXT UI labels are present;
+- TXT upload accepts `.txt` only;
+- TXT reinsert requires a loaded Scrub Key;
+- TXT reinsert is injected only in the `Originele waarden terugzetten` mode;
+- pasted-text reinsert labels remain present;
+- `Scrub Key laden` remains present;
+- `Anonimiseren` remains present;
+- existing anonymization/export markers remain present;
+- existing Scrub Key export remains present;
+- no DOCX upload reinsert UI is added;
+- no PDF reinsert is added;
+- no AI/cloud behavior is added;
+- `apply_replacements_to_text` is not altered;
+- existing scrubbed download markers are not rewired.
+
+Validation:
+
+- Local clone/test run could not be performed in the container because outbound GitHub DNS was unavailable:
+  - `Could not resolve host: github.com`.
+- GitHub Actions: awaiting verification for WP13 commits.
+- Hugging Face sync: awaiting verification for WP13 commits.
+- App verification: required because UI behavior changed.
+
+Intentionally not changed:
+
+- `presidio_streamlit.py` was not directly edited.
+- No DOCX upload reinsert UI added.
+- No PDF reinsert added.
+- No AI calls added.
+- No cloud processing added.
+- No automatic document rehydration beyond TXT local reinsert added.
+- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior intentionally changed.
+- No Scrub Key JSON export behavior intentionally changed.
+- No Scrub Key import/reload behavior intentionally changed except reusing the loaded key for TXT reinsert.
+- No Scrub Key storage, secrets, tokens or real personal data added.
+
+Outcome:
+
+- WP13 is implemented and awaits GitHub Actions, Hugging Face sync and app verification.
+- Next recommended workpackage is `WP13-CLOSEOUT — v13.7 TXT reinsert upload/download UI app verification closeout`.
+
+---
+
 ## WP12B — v13.6 Two-mode UI app verification closeout
 
 Status: completed and app-verified after Actions/sync verification.
@@ -62,56 +153,6 @@ Latest verified WP12-FIX2 commit:
 268234d9d1aeb9c82658c4c30702f51cfdd58c96
 ```
 
-App verification confirmed:
-
-- The app starts without Script execution error.
-- No `IndentationError` appears.
-- `Anonimiseren` mode remains available.
-- `Originele waarden terugzetten` mode remains available and selectable.
-- `Originele waarden terugzetten` now focuses on Scrub Key load + local pasted-text reinsert.
-- The full anonymization workflow is no longer shown as the main content inside the reinsert mode.
-- Existing anonymization workflow remains available in `Anonimiseren`.
-- Existing Scrub Key export/import remains available.
-- Existing pasted-text reinsert remains available.
-- `Scrub Key laden` is visible.
-- Scrub Key upload/paste is visible.
-- `Valideer en laad Scrub Key` is visible.
-- Local pasted-text reinsert section is visible.
-- Warning about restored sensitive/confidential values is visible.
-- Local-only / no-AI / no-cloud text is visible.
-- Text field for reinsert is visible.
-- Button `Zet originele waarden lokaal terug` is visible.
-
-Files added or changed:
-
-- Changed `WORKPACKAGES.md`.
-- Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0000_v13_6_two_mode_ui_app_closeout.md`.
-
-Tests:
-
-- No new tests were added because WP12B is closeout-only.
-- Existing validation is based on coordinator evidence:
-  - GitHub Actions green;
-  - GitHub to Hugging Face sync green;
-  - app verification confirmed.
-
-Intentionally not changed:
-
-- No code files were changed in WP12B.
-- `fix_streamlit_nested_expanders.py` was not changed in WP12B.
-- `presidio_streamlit.py` was not changed.
-- No test files were changed.
-- No TXT upload reinsert UI added.
-- No DOCX upload reinsert UI added.
-- No PDF reinsert added.
-- No AI calls added.
-- No cloud processing added.
-- No automatic document rehydration added.
-- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior intentionally changed.
-- No Scrub Key JSON export/import behavior intentionally changed.
-- No Scrub Key storage, secrets, tokens or real personal data added.
-
 Outcome:
 
 - v13.6 two-mode UI is closed as completed and app-verified.
@@ -122,23 +163,6 @@ Outcome:
 ## WP12-FIX2 — v13.6 Two-mode indentation/runtime hotfix
 
 Status: completed and app-verified through WP12B closeout.
-
-Purpose:
-
-- Fix the blocking Hugging Face runtime failure introduced by WP12-FIX.
-- Restore app startup.
-- Preserve the two-mode behavior:
-  - `Anonimiseren`;
-  - `Originele waarden terugzetten`.
-
-Blocking runtime error fixed:
-
-```text
-File "/home/user/app/presidio_streamlit.py", line 380
-    st.markdown("**Scrub Key laden**")
-    ^
-IndentationError: unexpected indent
-```
 
 Outcome:
 
@@ -151,13 +175,6 @@ Outcome:
 ## WP12-FIX — v13.6 Two-mode UI content separation cleanup
 
 Status: completed through WP12B closeout after WP12-FIX2 runtime hotfix.
-
-Purpose:
-
-- Fix the WP12 app-verification issue where mode navigation existed but content was not separated enough.
-- Ensure `Originele waarden terugzetten` does not show the full anonymization/review/export workflow above the reinsert flow.
-- Keep `Anonimiseren` focused on the existing anonymization workflow.
-- Keep `Originele waarden terugzetten` focused on Scrub Key load + local pasted-text reinsert.
 
 Outcome:
 
@@ -264,7 +281,7 @@ Outcome:
 
 Possible directions:
 
-- WP13 — v13.7 TXT reinsert upload/download UI.
+- WP13-CLOSEOUT app verification closeout.
 - WP14 — v13.8 DOCX reinsert upload/download UI.
 - PDF text extraction research only after separate reliability review.
 - Further recognizer expansion by legal domain.
