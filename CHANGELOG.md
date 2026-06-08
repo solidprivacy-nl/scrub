@@ -26,9 +26,78 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## WP10B — v13.4 TXT/DOCX reinsert foundation verification and closeout
+
+Status: completed; Actions/sync not visible through connector, coordinator verification required.
+
+Purpose:
+
+- Verify and formally close, or pending-close, WP10.
+- Check GitHub Actions and Hugging Face sync visibility for implementation commit `eb0c1ed2397ec1a4dc256d6e7e615ac4c026c0ee`.
+- Update control files without changing code.
+
+Files added or changed:
+
+- Changed `WORKPACKAGES.md`.
+- Changed `CHANGELOG.md`.
+- Added `handover/workpackages/20260608_0000_v13_4_txt_docx_reinsert_foundation_closeout.md`.
+
+Verification result:
+
+- Commit metadata was visible for `eb0c1ed2397ec1a4dc256d6e7e615ac4c026c0ee`.
+- GitHub combined commit status returned an empty status list.
+- GitHub workflow-runs query for the commit returned no visible workflow runs.
+- GitHub Actions: not visible through connector.
+- Hugging Face sync: not visible through connector.
+- App verification: not applicable; WP10 was helper/test-only and added no UI behavior.
+
+Recorded existing validation:
+
+- Local reconstructed targeted validation:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_reinsert.py` → 12 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_document_reinsert.py` → 14 passed.
+- Available reconstructed subset:
+  - `PYTHONPATH=. pytest -q` → 32 passed.
+- Important nuance preserved:
+  - Container clone from GitHub failed because of DNS/outbound GitHub issues.
+  - Tests were run on reconstructed files from GitHub-fetched content plus the new helper/tests.
+
+Closeout decision:
+
+- WP10 remains `implemented; awaiting coordinator verification of Actions/sync`.
+- WP10 was not marked as formally closed because Actions/sync were not visible through the connector.
+
+Intentionally not changed:
+
+- No code files changed.
+- No tests changed.
+- No UI files changed.
+- No edit to `scrub_key_document_reinsert.py`.
+- No edit to `tests/test_scrub_key_document_reinsert.py`.
+- No edit to `scrub_key_reinsert.py`.
+- No edit to `scrub_key.py`.
+- No edit to `scrub_key_import.py`.
+- No edit to `fix_streamlit_nested_expanders.py`.
+- No edit to `presidio_streamlit.py`.
+- No PDF reinsert added.
+- No AI calls added.
+- No cloud processing added.
+- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior changed.
+- No Scrub Key export/import behavior changed.
+- No secrets, tokens or real personal data stored.
+
+Outcome:
+
+- WP10B closeout is complete.
+- Coordinator should verify Actions/sync externally before marking WP10 formally closed.
+- Next recommended workpackage remains WP11 — v13.5 Two-mode reinsert UI planning.
+
+---
+
 ## WP10 — v13.4 TXT/DOCX reinsert foundation helper and tests
 
-Status: implemented; GitHub Actions and Hugging Face sync pending coordinator/app-independent verification.
+Status: implemented; awaiting coordinator verification of Actions/sync.
 
 Purpose:
 
@@ -119,6 +188,7 @@ Intentionally not changed:
 Outcome:
 
 - WP10 helper/test foundation is implemented.
+- WP10 awaits coordinator verification of GitHub Actions and Hugging Face sync.
 - Next recommended workpackage is WP11 — v13.5 Two-mode reinsert UI planning.
 
 ---
@@ -135,26 +205,6 @@ Purpose:
 - Challenge whether anonymization and de-anonymization should remain in one combined long screen.
 - Recommend a model architecture, product direction, tactical sequence, operational safety position and visual/UX direction.
 
-Files added or changed:
-
-- Added `AI_OUTPUT_REINSERT_WORKFLOW_REVIEW.md`.
-- Changed `WORKPACKAGES.md`.
-- Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0000_ai_output_reinsert_workflow_review.md`.
-
-Main recommendation:
-
-- Keep pasted-text reinsert as a safe baseline and fallback, but do not treat it as the final legal-document workflow.
-- Move toward a two-mode interface:
-  - `Anonimiseren`;
-  - `Originele waarden terugzetten`.
-- Add document-level reinsert in phases.
-- Prioritize TXT and DOCX before PDF.
-- Keep PDF as investigation/reliability-review work only for now.
-- Keep all reinsert behavior local-only, deterministic and helper-first.
-- Do not add AI calls.
-- Do not add cloud processing.
-
 Outcome:
 
 - WP9 is complete.
@@ -166,12 +216,6 @@ Outcome:
 
 Status: completed and app-verified after Actions/sync verification.
 
-Purpose:
-
-- Administratively close the v13.3 deterministic reinsert UI after technical verification and app verification.
-- Record that local deterministic reinsert works in the Hugging Face app.
-- Preserve the boundary that no AI calls, cloud processing, automatic document rehydration, DOCX/PDF reinsert or existing scrubbed export/download behavior changes were added.
-
 Outcome:
 
 - v13.3 deterministic local reinsert UI is completed, app-verified and formally closed.
@@ -181,13 +225,6 @@ Outcome:
 ## v13.3 — Deterministic reinsert UI implementation
 
 Status: completed and app-verified after Actions/sync verification.
-
-Purpose:
-
-- Add the deterministic local reinsert UI described in `REINSERT_UI_SPEC.md`.
-- Let the user paste scrubbed or AI-generated text and locally restore mapped placeholders using a validated Scrub Key.
-- Show restored text, an audit summary and a `.txt` download for restored text.
-- Keep the step local and deterministic, with no AI calls and no cloud processing.
 
 Outcome:
 
@@ -199,12 +236,6 @@ Outcome:
 
 Status: implemented; reinsert UI implementation completed in WP8B and app-verified in WP8C.
 
-Purpose:
-
-- Plan deterministic local reinsert UI before changing Streamlit UI code.
-- Define where the UI should appear, what labels it should use, what state it should rely on, and which warnings and audit fields it must show.
-- Keep AI-output behavior separate unless explicitly approved.
-
 Outcome:
 
 - v13.3 deterministic reinsert UI was planned and then implemented and app-verified.
@@ -215,12 +246,6 @@ Outcome:
 
 Status: completed and formally closed after Actions/sync verification.
 
-Purpose:
-
-- Administratively reconcile the v13.3 deterministic reinsert helper after coordinator-provided verification evidence.
-- Confirm that the helper remains pure, local and deterministic.
-- Preserve the boundary that no UI, AI-output flow, cloud processing or export/download behavior change was added.
-
 Outcome:
 
 - v13.3 deterministic reinsert helper is completed and formally closed.
@@ -230,12 +255,6 @@ Outcome:
 ## v13.2 — Scrub Key import/reload UI app verification closeout
 
 Status: completed, app-verified and closed.
-
-Purpose:
-
-- Administratively close the v13.2 Scrub Key import/reload UI after app verification.
-- Record that the implemented import/reload flow works in the Hugging Face app.
-- Preserve the boundary that this phase is import/reload only and does not add AI-output reinsert.
 
 Outcome:
 
@@ -268,6 +287,7 @@ Outcome:
 
 Possible directions:
 
+- Coordinator verification of WP10 Actions/sync.
 - Two-mode UI planning for `Anonimiseren` and `Originele waarden terugzetten`.
 - TXT/DOCX reinsert UI integration after helper verification.
 - PDF text extraction research only after separate reliability review.
