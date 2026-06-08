@@ -271,147 +271,95 @@ Outcome:
 - Recommended landing cards as longer-term product direction.
 - Planned TXT/DOCX reinsert UI phasing and kept PDF out of implementation scope.
 
----
+### WP12 / WP12-FIX / WP12-FIX2 / WP12B — v13.6 Two-mode UI implementation and app verification closeout
 
-## Current implementation workpackages
+Status: completed and app-verified after Actions/sync verification.
 
-### WP12 — v13.6 Two-mode UI skeleton and tab separation
+Implementation sequence:
 
-Status: implemented; coordinator evidence showed Actions/sync green, but app verification found insufficient content separation.
+- WP12 introduced the two-mode UI skeleton.
+- WP12-FIX cleaned up content separation so `Originele waarden terugzetten` no longer shows the full anonymization workflow as its main content.
+- WP12-FIX2 fixed the generated indentation/runtime error around `Scrub Key laden`.
+- WP12B administratively closed the v13.6 two-mode UI line after successful technical verification and app verification.
 
-Coordinator evidence:
-
-```text
-Tests #145 green — commit 5d879cc
-Sync #159 green — commit 5d879cc
-Tests #146 green — commit 79d771e
-Sync #160 green — commit 79d771e
-Tests #147 green — commit e106f7c
-Sync #161 green — commit e106f7c
-```
-
-Outcome:
-
-- The visual mode navigation existed.
-- App verification showed the full anonymization workflow still appeared above the reinsert flow when using `Originele waarden terugzetten`.
-- This required WP12-FIX.
-
-### WP12-FIX — v13.6 Two-mode UI content separation cleanup
-
-Status: implemented; produced a blocking runtime indentation error in Hugging Face and required WP12-FIX2.
-
-Coordinator evidence:
+Technical verification evidence:
 
 ```text
-Tests #150 green — commit de01c0b
-Sync #164 green — commit de01c0b
-Tests #151 green — commit 911e093
-Sync #165 green — commit 911e093
+Tests #155 green — commit b27d115
+Sync to Hugging Face Space #169 green — commit b27d115
+
+Tests #156 green — commit 0e357bb
+Sync to Hugging Face Space #170 green — commit 0e357bb
+
+Tests #157 green — commit 268234d
+Sync to Hugging Face Space #171 green — commit 268234d
 ```
 
-Runtime failure:
+Latest verified WP12-FIX2 commit:
 
 ```text
-File "/home/user/app/presidio_streamlit.py", line 380
-    st.markdown("**Scrub Key laden**")
-    ^
-IndentationError: unexpected indent
+268234d9d1aeb9c82658c4c30702f51cfdd58c96
 ```
 
-Outcome:
+App verification confirmed:
 
-- WP12-FIX separated the intended content paths conceptually.
-- The generated Python source was syntactically invalid because the reinsert branch block indentation was too deep.
-- Do not start closeout from WP12-FIX; use WP12-FIX2 instead.
-
-### WP12-FIX2 — v13.6 Two-mode indentation/runtime hotfix
-
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
-
-Changed files:
-
-- `fix_streamlit_nested_expanders.py`
-- `tests/test_two_mode_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Added files:
-
-- `handover/workpackages/20260608_0000_v13_6_two_mode_indentation_hotfix.md`
-
-Implemented behavior:
-
-- Corrected the generated indentation for `Scrub Key laden` and the reinsert UI block under:
-  - `if solidprivacy_work_mode == "Originele waarden terugzetten":`.
-- Reinsert branch injected blocks now start with a single branch indentation level.
-- The anonymization branch still uses `indent_block(anonymization_flow)` under `else:`.
-- Two-mode behavior remains:
-  - `Anonimiseren` shows the anonymization/review/export workflow;
-  - `Originele waarden terugzetten` shows Scrub Key load + local pasted-text reinsert.
-
-Validation status:
-
-- Updated `tests/test_two_mode_ui_patch.py` with a compile guard that reconstructs the generated two-mode source snippet and calls:
-  - `compile(..., "generated_two_mode_source.py", "exec")`.
-- The test specifically guards against:
-  - `IndentationError`;
-  - `SyntaxError`;
-  - the known `st.markdown("**Scrub Key laden**")` unexpected-indent failure.
-- The test also asserts that reinsert block strings start with exactly one branch indentation level, not two.
-- Local clone/test run could not be performed in the container because outbound GitHub DNS failed:
-  - `Could not resolve host: github.com`.
-- GitHub Actions: awaiting verification.
-- Hugging Face sync: awaiting verification.
-- App verification: required because this was a blocking runtime failure.
+- The app starts without Script execution error.
+- No `IndentationError` appears.
+- `Anonimiseren` mode remains available.
+- `Originele waarden terugzetten` mode remains available and selectable.
+- In `Originele waarden terugzetten`, the full anonymization workflow is no longer shown above the reinsert flow.
+- `Scrub Key laden` is visible.
+- Scrub Key upload/paste is visible.
+- `Valideer en laad Scrub Key` is visible.
+- Local pasted-text reinsert is visible.
+- Warning about restored sensitive/confidential values is visible.
+- Local-only / no-AI / no-cloud text is visible.
+- Text field for reinsert is visible.
+- Button `Zet originele waarden lokaal terug` is visible.
+- No TXT upload reinsert UI appears.
+- No DOCX upload reinsert UI appears.
+- No PDF reinsert appears.
+- No AI/cloud behavior appears.
 
 Boundaries preserved:
 
-- `presidio_streamlit.py` was not directly edited.
+- No code files changed in WP12B.
 - No TXT upload reinsert UI added.
 - No DOCX upload reinsert UI added.
 - No PDF reinsert added.
 - No AI calls added.
 - No cloud processing added.
 - No automatic document rehydration added.
-- No existing scrubbed export/download semantics intentionally changed.
-- No Scrub Key JSON export/import semantics intentionally changed beyond fixing generated runtime validity.
+- No existing scrubbed TXT/CSV/DOCX/PDF export/download behavior intentionally changed.
+- No Scrub Key export/import behavior intentionally changed.
 - No secrets, tokens or real personal data stored.
+
+Closeout files:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `handover/workpackages/20260608_0000_v13_6_two_mode_ui_app_closeout.md`
 
 ---
 
 ## Active / next recommended workpackage
 
-### WP12-FIX2-CLOSEOUT — v13.6 Two-mode indentation/runtime app verification closeout
+### WP13 — v13.7 TXT reinsert upload/download UI
 
-Status: recommended next closeout workpackage after coordinator evidence.
+Status: recommended next workpackage after v13.6 app verification closeout.
 
 Goal:
 
-- Verify GitHub Actions tests.
-- Verify GitHub to Hugging Face sync.
-- Verify the Hugging Face app starts without script execution error.
-- Verify app behavior for both modes.
-- Close WP12-FIX2 only after evidence confirms the runtime error is gone.
-
-Required app verification:
-
-- No script execution error appears.
-- No `IndentationError` appears.
-- No `SyntaxError` appears.
-- `Anonimiseren` mode is visible.
-- `Originele waarden terugzetten` mode is visible.
-- `Anonimiseren` shows the anonymization flow.
-- `Originele waarden terugzetten` shows Scrub Key load + pasted-text reinsert only.
-- Reinsert still works.
-- Existing downloads remain available.
-- No TXT/DOCX upload reinsert UI appears yet.
-- No PDF reinsert appears.
-- No AI/cloud behavior appears.
+- Add controlled TXT upload/download support for local reinsert.
+- Keep pasted-text reinsert as fallback.
+- Preserve existing anonymization export/download semantics.
+- Do not add DOCX upload reinsert UI in this workpackage.
+- Do not add PDF reinsert.
+- Do not add AI/cloud behavior.
 
 Recommended later workpackages:
 
 ```text
-WP13 — v13.7 TXT reinsert upload/download UI
 WP14 — v13.8 DOCX reinsert upload/download UI
 WP15 — PDF text extraction reliability review only
 ```
@@ -420,11 +368,11 @@ WP15 — PDF text extraction reliability review only
 
 ## Recommended execution order
 
-1. Verify WP12-FIX2 GitHub Actions and Hugging Face sync.
-2. Verify the Hugging Face app starts without script execution error.
-3. Verify the actual two-mode content separation in the app.
-4. Close WP12-FIX2 through closeout if verification is green.
-5. After WP12-FIX2 is app-verified, implement TXT reinsert upload/download UI.
+1. Start WP13 only after v13.6 closeout is recorded.
+2. Implement TXT reinsert upload/download UI with helper-first tests.
+3. Verify GitHub Actions tests.
+4. Verify GitHub to Hugging Face sync.
+5. App-verify TXT reinsert behavior.
 6. After TXT UI is verified, implement DOCX reinsert upload/download UI.
 7. Keep PDF full reinsert out of scope until a separate reliability review.
 8. Keep AI/cloud behavior out unless explicitly approved.
