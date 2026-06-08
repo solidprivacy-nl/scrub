@@ -26,6 +26,103 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## WP10 — v13.4 TXT/DOCX reinsert foundation helper and tests
+
+Status: implemented; GitHub Actions and Hugging Face sync pending coordinator/app-independent verification.
+
+Purpose:
+
+- Prepare document-level reinsert without changing UI first.
+- Add pure helper/test foundation for TXT and DOCX reinsert.
+- Reuse the existing deterministic Scrub Key reinsert logic.
+- Keep PDF, UI, AI calls and cloud processing out of scope.
+
+Files added or changed:
+
+- Added `scrub_key_document_reinsert.py`.
+- Added `tests/test_scrub_key_document_reinsert.py`.
+- Changed `WORKPACKAGES.md`.
+- Changed `CHANGELOG.md`.
+- Added `handover/workpackages/20260608_0000_v13_4_txt_docx_reinsert_foundation.md`.
+
+Main helper behavior:
+
+- Added `reinsert_text_document(text, scrub_key)` for plain text document-level reinsert.
+- Added `reinsert_txt_bytes(content, scrub_key, encoding="utf-8")` for TXT bytes input/output.
+- Added `reinsert_docx_bytes(content, scrub_key)` for DOCX main-document text-node reinsert.
+- Reuses `reinsert_from_scrub_key(...)` from `scrub_key_reinsert.py`.
+- Returns restored content and audit summary.
+- Reports `document_type`, `replacement_count`, `item_count`, `active_item_count`, `excluded_item_count`, `placeholders_not_found`, `unknown_placeholders`, `duplicate_placeholders`, `validation_issues`, `local_only`, `ai_processing` and `cloud_processing`.
+- Remains deterministic and side-effect free.
+- Does not mutate the input Scrub Key.
+
+TXT behavior:
+
+- Accepts plain text through `reinsert_text_document(...)`.
+- Accepts bytes through `reinsert_txt_bytes(...)`.
+- Decodes bytes strictly with UTF-8 by default.
+- Returns restored text and restored bytes.
+- Reports decode/type issues as validation issues instead of silently changing input.
+
+DOCX behavior and limitations:
+
+- Uses Python standard library only: `zipfile`, `BytesIO` and `xml.etree.ElementTree`.
+- Processes only `word/document.xml` text nodes.
+- Supports normal body paragraphs and tables in `word/document.xml`.
+- Returns restored DOCX bytes.
+- Leaves the original uploaded bytes untouched.
+- Does not restore placeholders split across multiple Word runs/text nodes.
+- Does not process headers, footers, comments, tracked changes or metadata.
+- Does not claim perfect formatting preservation.
+- Records limitations in returned `limitations` and `unsupported_parts` fields.
+
+Tests added:
+
+- TXT text reinsert with one placeholder.
+- TXT bytes reinsert with multiple placeholders.
+- TXT unknown placeholder remains unchanged and is reported.
+- Invalid Scrub Key returns validation issues.
+- DOCX reinsert with one placeholder in a paragraph.
+- DOCX reinsert with multiple placeholders.
+- DOCX table text replacement in `word/document.xml`.
+- DOCX output remains a valid DOCX package.
+- DOCX paragraph text is restored correctly.
+- DOCX helper returns audit summary.
+- DOCX unsupported areas / limitations are documented.
+- Helper does not mutate input Scrub Key.
+- No AI/cloud behavior.
+- Synthetic values only.
+
+Testing and validation:
+
+- Local reconstructed targeted validation:
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_reinsert.py` → 12 passed.
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_document_reinsert.py` → 14 passed.
+- Local reconstructed full available subset:
+  - `PYTHONPATH=. pytest -q` → 32 passed.
+- Repository clone via container was not possible because outbound GitHub DNS was unavailable, so validation was performed on reconstructed files from GitHub-fetched content plus the new helper/tests.
+
+Intentionally not changed:
+
+- No UI files changed.
+- No edit to `fix_streamlit_nested_expanders.py`.
+- No edit to `presidio_streamlit.py`.
+- No PDF reinsert implementation added.
+- No AI calls added.
+- No cloud processing added.
+- No automatic app document rehydration added.
+- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior changed.
+- No Scrub Key JSON export/import behavior changed.
+- No secrets, tokens or real personal data stored.
+
+Outcome:
+
+- WP10 helper/test foundation is implemented.
+- Next recommended workpackage is WP11 — v13.5 Two-mode reinsert UI planning.
+
+---
+
 ## WP9 — AI-output / document reinsert workflow UX and architecture review
 
 Status: completed; review-only workpackage.
@@ -58,63 +155,10 @@ Main recommendation:
 - Do not add AI calls.
 - Do not add cloud processing.
 
-First three obvious ideas challenged:
-
-1. `Keep only pasted-text reinsert` was limited: useful fallback, not enough for final legal-document workflow because of usability burden, formatting loss, legal workflow friction, incomplete-copy risk and poor DOCX/PDF fit.
-2. `Add direct PDF/DOCX reinsert immediately` was rejected as too broad: DOCX is feasible but needs careful replacement; PDF is high-risk because of extraction, layout reconstruction, scanned documents, OCR and metadata hygiene.
-3. `Add one combined screen for everything` was rejected as main UX direction: it creates cognitive overload and mixes anonymization with reversible de-anonymization risk.
-
-Recommended implementation sequence:
-
-1. Keep current text-paste reinsert and improve guidance when the UI is next touched.
-2. Add TXT upload/download reinsert.
-3. Add DOCX reinsert helper, pure helper + tests.
-4. Add DOCX reinsert UI only after helper validation.
-5. Investigate PDF text extraction only.
-6. Consider PDF output only after a reliability review.
-
-Next recommended implementation workpackage:
-
-```text
-WP10 — v13.4 TXT/DOCX reinsert foundation helper and tests
-```
-
-Recommended WP10 boundaries:
-
-- helper/test-first;
-- no UI changes;
-- no edit to `fix_streamlit_nested_expanders.py`;
-- no edit to `presidio_streamlit.py`;
-- no existing export/download behavior changes;
-- no Scrub Key export/import behavior changes;
-- no PDF reinsert implementation;
-- no AI calls;
-- no cloud processing;
-- synthetic data only.
-
-Testing and validation:
-
-- Tests: not applicable; planning/review-only workpackage.
-- App verification: not applicable; no UI behavior changed.
-- GitHub Actions: not checked for this docs-only change at handover time.
-- Hugging Face sync: not checked for this docs-only change at handover time.
-
-Intentionally not changed:
-
-- No code files changed.
-- No tests changed.
-- No UI changed.
-- No export/download behavior changed.
-- No Scrub Key export/import behavior changed.
-- No TXT/DOCX/PDF reinsert implementation added.
-- No AI calls added.
-- No cloud processing added.
-- No secrets, tokens or real personal data stored.
-
 Outcome:
 
 - WP9 is complete.
-- Product direction for reinsert is now documented before implementation.
+- Product direction for reinsert is documented before implementation.
 
 ---
 
@@ -127,65 +171,6 @@ Purpose:
 - Administratively close the v13.3 deterministic reinsert UI after technical verification and app verification.
 - Record that local deterministic reinsert works in the Hugging Face app.
 - Preserve the boundary that no AI calls, cloud processing, automatic document rehydration, DOCX/PDF reinsert or existing scrubbed export/download behavior changes were added.
-
-Files added or changed in this closeout:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1930_v13_3_reinsert_ui_app_closeout.md`
-
-Technical evidence:
-
-- Local validation recorded in WP8B: 57 passed.
-- Tests #120 green — commit `7725182`.
-- Sync to Hugging Face Space #134 green — commit `7725182`.
-- Tests #121 green — commit `84f5312`.
-- Sync to Hugging Face Space #135 green — commit `84f5312`.
-- Tests #122 green — commit `1a8e87e`.
-- Sync to Hugging Face Space #136 green — commit `1a8e87e`.
-
-App verification:
-
-- Confirmed by coordinator/user.
-- `Originele waarden terugzetten` is visible.
-- Warning about sensitive/confidential information is visible.
-- Local-only / no-AI / no-cloud text is visible.
-- Text input works.
-- Button `Zet originele waarden lokaal terug` works.
-- Reinsert works with a valid Scrub Key.
-- Placeholders are correctly restored.
-- Result message appears: `37 waarde(n) lokaal teruggezet.`
-- `Herstelde tekst` appears with restored original values.
-
-Closeout notes:
-
-- Restored output may contain sensitive/confidential information again.
-- Existing Scrub Key export remains available.
-- Existing Scrub Key import/reload remains available.
-- Existing TXT, CSV, DOCX and PDF scrubbed downloads remain available based on prior verification and no intentional export changes.
-- No AI calls were added.
-- No cloud processing was added.
-- No automatic document rehydration was added.
-- No DOCX/PDF reinsert was added.
-- No existing scrubbed export/download behavior was intentionally changed.
-
-Intentionally not changed in this closeout:
-
-- No code files changed.
-- No tests changed.
-- No edit to `fix_streamlit_nested_expanders.py`.
-- No edit to `presidio_streamlit.py`.
-- No edit to `scrub_key_reinsert.py`.
-- No edit to `scrub_key.py`.
-- No edit to `scrub_key_import.py`.
-- No edit to `tests/*`.
-- No UI changes.
-- No AI calls.
-- No cloud processing.
-- No automatic document rehydration.
-- No TXT, CSV, DOCX or PDF export/download behavior changed.
-- No Scrub Key export/import behavior changed.
-- No secrets, tokens or real personal data.
 
 Outcome:
 
@@ -203,60 +188,6 @@ Purpose:
 - Let the user paste scrubbed or AI-generated text and locally restore mapped placeholders using a validated Scrub Key.
 - Show restored text, an audit summary and a `.txt` download for restored text.
 - Keep the step local and deterministic, with no AI calls and no cloud processing.
-
-Files added or changed:
-
-- `fix_streamlit_nested_expanders.py`
-- `tests/test_scrub_key_reinsert_ui_patch.py`
-- `tests/test_scrub_key_ui_patch.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `handover/workpackages/20260607_1915_v13_3_reinsert_ui_implementation.md`
-- `handover/workpackages/20260607_1930_v13_3_reinsert_ui_app_closeout.md`
-
-Main changes:
-
-- Added import/wiring for the verified helper:
-  - `from scrub_key_reinsert import reinsert_from_scrub_key`.
-- Added the section `Originele waarden terugzetten` after the existing Scrub Key import/reload area.
-- Added the input label `Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten`.
-- Added the explicit action button `Zet originele waarden lokaal terug`.
-- Added local helper call:
-  - `reinsert_from_scrub_key(reinsert_input_text, active_reinsert_scrub_key)`.
-- Added output label `Herstelde tekst`.
-- Added `Download herstelde tekst (.txt)` with `text/plain` output.
-- Added `Controleverslag terugzetten` audit summary.
-- Added audit rendering for item count, active item count, excluded item count, replacement count, placeholders not found, unknown placeholders, duplicate placeholders, validation issues, local-only status, AI-processing status and cloud-processing status.
-- Added visible warning that restored text may again contain personal or confidential information and must be reviewed before sharing.
-- Added local/no-AI/no-cloud wording.
-- Stores a successfully imported Scrub Key in `st.session_state["active_scrub_key"]` for local reinsert use.
-- Falls back to the currently built Scrub Key from reviewed replacement rows if no imported key is active.
-
-Testing and validation:
-
-- Added `tests/test_scrub_key_reinsert_ui_patch.py`.
-- Updated `tests/test_scrub_key_ui_patch.py` so it no longer forbids the intentionally added reinsert flow, while still guarding no-AI, no-cloud and no-automatic-document-rehydration boundaries.
-- Local targeted validation on a reconstructed subset passed:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py tests/test_scrub_key_reinsert_ui_patch.py tests/test_scrub_key_import_ui_patch.py tests/test_scrub_key_ui_patch.py` → 57 passed.
-- GitHub Actions green based on coordinator evidence.
-- Hugging Face sync green based on coordinator evidence.
-- App verification confirmed by coordinator/user.
-
-Intentionally not changed:
-
-- No direct edit to `presidio_streamlit.py`.
-- No edit to `scrub_key_reinsert.py`.
-- No edit to `scrub_key.py`.
-- No edit to `scrub_key_import.py`.
-- No AI calls.
-- No cloud processing.
-- No automatic document rehydration.
-- No DOCX/PDF reinsert.
-- No TXT, CSV, DOCX or PDF scrubbed export behavior changed.
-- No Scrub Key JSON export behavior intentionally changed.
-- No Scrub Key import/reload behavior intentionally changed except storing the validated imported key in session state for reinsert use.
-- No silent overwrite of existing review rows.
-- No secrets, tokens or real personal data.
 
 Outcome:
 
@@ -337,6 +268,7 @@ Outcome:
 
 Possible directions:
 
-- TXT/DOCX document-level reinsert foundation.
 - Two-mode UI planning for `Anonimiseren` and `Originele waarden terugzetten`.
+- TXT/DOCX reinsert UI integration after helper verification.
+- PDF text extraction research only after separate reliability review.
 - Further recognizer expansion by legal domain.
