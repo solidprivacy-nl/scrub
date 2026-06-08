@@ -26,9 +26,102 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## WP12B — v13.6 Two-mode UI app verification closeout
+
+Status: completed and app-verified after Actions/sync verification.
+
+Purpose:
+
+- Administratively close WP12, WP12-FIX and WP12-FIX2 after successful technical verification and app verification.
+- Record that v13.6 two-mode UI is now complete.
+- Confirm that no further closeout blocker remains before WP13.
+
+Implementation sequence closed:
+
+- WP12 introduced the two-mode UI skeleton.
+- WP12-FIX cleaned up content separation.
+- WP12-FIX2 fixed the indentation/runtime error.
+- WP12B records successful Actions/sync and app verification.
+
+Technical verification evidence:
+
+```text
+Tests #155 green — commit b27d115
+Sync to Hugging Face Space #169 green — commit b27d115
+
+Tests #156 green — commit 0e357bb
+Sync to Hugging Face Space #170 green — commit 0e357bb
+
+Tests #157 green — commit 268234d
+Sync to Hugging Face Space #171 green — commit 268234d
+```
+
+Latest verified WP12-FIX2 commit:
+
+```text
+268234d9d1aeb9c82658c4c30702f51cfdd58c96
+```
+
+App verification confirmed:
+
+- The app starts without Script execution error.
+- No `IndentationError` appears.
+- `Anonimiseren` mode remains available.
+- `Originele waarden terugzetten` mode remains available and selectable.
+- `Originele waarden terugzetten` now focuses on Scrub Key load + local pasted-text reinsert.
+- The full anonymization workflow is no longer shown as the main content inside the reinsert mode.
+- Existing anonymization workflow remains available in `Anonimiseren`.
+- Existing Scrub Key export/import remains available.
+- Existing pasted-text reinsert remains available.
+- `Scrub Key laden` is visible.
+- Scrub Key upload/paste is visible.
+- `Valideer en laad Scrub Key` is visible.
+- Local pasted-text reinsert section is visible.
+- Warning about restored sensitive/confidential values is visible.
+- Local-only / no-AI / no-cloud text is visible.
+- Text field for reinsert is visible.
+- Button `Zet originele waarden lokaal terug` is visible.
+
+Files added or changed:
+
+- Changed `WORKPACKAGES.md`.
+- Changed `CHANGELOG.md`.
+- Added `handover/workpackages/20260608_0000_v13_6_two_mode_ui_app_closeout.md`.
+
+Tests:
+
+- No new tests were added because WP12B is closeout-only.
+- Existing validation is based on coordinator evidence:
+  - GitHub Actions green;
+  - GitHub to Hugging Face sync green;
+  - app verification confirmed.
+
+Intentionally not changed:
+
+- No code files were changed in WP12B.
+- `fix_streamlit_nested_expanders.py` was not changed in WP12B.
+- `presidio_streamlit.py` was not changed.
+- No test files were changed.
+- No TXT upload reinsert UI added.
+- No DOCX upload reinsert UI added.
+- No PDF reinsert added.
+- No AI calls added.
+- No cloud processing added.
+- No automatic document rehydration added.
+- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior intentionally changed.
+- No Scrub Key JSON export/import behavior intentionally changed.
+- No Scrub Key storage, secrets, tokens or real personal data added.
+
+Outcome:
+
+- v13.6 two-mode UI is closed as completed and app-verified.
+- Next recommended workpackage is `WP13 — v13.7 TXT reinsert upload/download UI`.
+
+---
+
 ## WP12-FIX2 — v13.6 Two-mode indentation/runtime hotfix
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed and app-verified through WP12B closeout.
 
 Purpose:
 
@@ -38,7 +131,7 @@ Purpose:
   - `Anonimiseren`;
   - `Originele waarden terugzetten`.
 
-Blocking runtime error:
+Blocking runtime error fixed:
 
 ```text
 File "/home/user/app/presidio_streamlit.py", line 380
@@ -47,69 +140,17 @@ File "/home/user/app/presidio_streamlit.py", line 380
 IndentationError: unexpected indent
 ```
 
-Files added or changed:
-
-- Changed `fix_streamlit_nested_expanders.py`.
-- Changed `tests/test_two_mode_ui_patch.py`.
-- Changed `WORKPACKAGES.md`.
-- Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0000_v13_6_two_mode_indentation_hotfix.md`.
-
-Main change:
-
-- Corrected generated indentation around `Scrub Key laden` and the local reinsert UI block.
-- Reinsert branch blocks now start with one branch indentation level under:
-  - `if solidprivacy_work_mode == "Originele waarden terugzetten":`.
-- The anonymization branch still uses `indent_block(anonymization_flow)` under `else:`.
-- No feature scope was added.
-
-Tests updated:
-
-- `tests/test_two_mode_ui_patch.py` now includes a compile guard that reconstructs the generated two-mode source snippet and calls:
-  - `compile(..., "generated_two_mode_source.py", "exec")`.
-- This guards against:
-  - `IndentationError`;
-  - `SyntaxError`;
-  - the specific unexpected-indent failure at `st.markdown("**Scrub Key laden**")`.
-- The tests also assert that the reinsert block strings start with exactly one branch indentation level, not two.
-
-Validation:
-
-- Prior WP12-FIX technical evidence was:
-  - `Tests #150 green — commit de01c0b`;
-  - `Sync #164 green — commit de01c0b`;
-  - `Tests #151 green — commit 911e093`;
-  - `Sync #165 green — commit 911e093`.
-- App verification then failed with the runtime `IndentationError` shown above.
-- Local clone/test run for WP12-FIX2 could not be performed in the container because outbound GitHub DNS failed:
-  - `Could not resolve host: github.com`.
-- GitHub Actions: awaiting verification for WP12-FIX2 commits.
-- Hugging Face sync: awaiting verification for WP12-FIX2 commits.
-- App verification: required because this was a blocking runtime failure.
-
-Intentionally not changed:
-
-- `presidio_streamlit.py` was not directly edited.
-- No TXT upload reinsert UI added.
-- No DOCX upload reinsert UI added.
-- No PDF reinsert added.
-- No AI calls added.
-- No cloud processing added.
-- No automatic document rehydration added.
-- No existing TXT, CSV, DOCX or PDF scrubbed export/download semantics intentionally changed.
-- No Scrub Key JSON export/import semantics intentionally changed except fixing generated runtime validity.
-- No Scrub Key storage, secrets, tokens or real personal data added.
-
 Outcome:
 
-- WP12-FIX2 is implemented and awaits GitHub Actions, Hugging Face sync and app verification.
-- Next recommended workpackage is `WP12-FIX2-CLOSEOUT — v13.6 Two-mode indentation/runtime app verification closeout`.
+- Generated indentation around `Scrub Key laden` and the local reinsert UI block was corrected.
+- GitHub Actions and Hugging Face sync were later verified green by the coordinator.
+- App verification confirmed the script execution error is gone.
 
 ---
 
 ## WP12-FIX — v13.6 Two-mode UI content separation cleanup
 
-Status: implemented; produced a blocking runtime indentation error and required WP12-FIX2.
+Status: completed through WP12B closeout after WP12-FIX2 runtime hotfix.
 
 Purpose:
 
@@ -121,20 +162,21 @@ Purpose:
 Outcome:
 
 - WP12-FIX separated the intended content paths conceptually.
-- App verification showed the generated Python source was syntactically invalid because the reinsert branch block indentation was too deep.
-- WP12-FIX2 was created as the blocking runtime hotfix.
+- WP12-FIX2 corrected the runtime indentation issue.
+- WP12B confirmed app verification.
 
 ---
 
 ## WP12 — v13.6 Two-mode UI skeleton and tab separation
 
-Status: implemented; coordinator evidence showed Actions/sync green, but app verification found insufficient content separation.
+Status: completed and app-verified through WP12B closeout.
 
 Outcome:
 
 - WP12 created the first visible mode skeleton.
-- App verification showed that content was not yet separated clearly enough.
-- WP12-FIX was created to address this.
+- WP12-FIX improved actual content separation.
+- WP12-FIX2 fixed the runtime indentation error.
+- WP12B closed v13.6 after Actions/sync and app verification.
 
 ---
 
@@ -194,6 +236,7 @@ Outcome:
 
 ## Earlier completed work
 
+- v13.6 two-mode UI implementation and app verification closeout.
 - v13.3 deterministic reinsert UI implementation.
 - v13.3 deterministic reinsert UI planning.
 - v13.3 deterministic reinsert helper verification reconciliation.
@@ -221,8 +264,7 @@ Outcome:
 
 Possible directions:
 
-- WP12-FIX2-CLOSEOUT app verification closeout.
-- TXT reinsert upload/download UI.
-- DOCX reinsert upload/download UI.
+- WP13 — v13.7 TXT reinsert upload/download UI.
+- WP14 — v13.8 DOCX reinsert upload/download UI.
 - PDF text extraction research only after separate reliability review.
 - Further recognizer expansion by legal domain.
