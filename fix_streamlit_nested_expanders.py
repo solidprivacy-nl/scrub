@@ -10,6 +10,7 @@ Patches currently applied:
 - v13.1: add local Scrub Key JSON export after review.
 - v13.2: add local Scrub Key import/reload UI using the pure import helper.
 - v13.3: add deterministic local reinsert UI using the pure reinsert helper.
+- v13.6: add a two-mode UI skeleton with Anonimiseren / Originele waarden terugzetten tabs.
 """
 
 from pathlib import Path
@@ -487,6 +488,26 @@ text = replace_once(
                     "review_status": safe_cell(row.get("review_status", "")),
                     "review_status_label": safe_cell(row.get("review_status_label", "")),
                     "reason": safe_cell(row.get("reason", "")),
+''',
+)
+
+two_mode_intro_block = '''st.markdown("**Kies werkmodus**")
+two_mode_anon_tab, two_mode_reinsert_tab = st.tabs(["Anonimiseren", "Originele waarden terugzetten"])
+with two_mode_anon_tab:
+    st.caption("Anonimiseren: upload of plak brontekst, controleer gevonden gegevens en download opgeschoonde uitvoer.")
+with two_mode_reinsert_tab:
+    st.caption("Originele waarden terugzetten: laad een Scrub Key en gebruik de bestaande lokale tekst-terugzetflow verderop in deze app.")
+'''
+
+text = replace_once(
+    text,
+    '''st.info(LOCAL_PROCESSING_NOTE)
+
+with st.expander("Over deze app", expanded=False):
+''',
+    '''st.info(LOCAL_PROCESSING_NOTE)
+''' + two_mode_intro_block + '''
+with st.expander("Over deze app", expanded=False):
 ''',
 )
 
