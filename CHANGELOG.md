@@ -26,48 +26,52 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
-## WP12 — v13.6 Two-mode UI skeleton and tab separation
+## WP12-FIX — v13.6 Two-mode UI content separation cleanup
 
 Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Purpose:
 
-- Implement the first two-mode UI structure with minimal risk.
-- Make the two main user intents visible:
-  - `Anonimiseren`;
-  - `Originele waarden terugzetten`.
-- Keep existing behavior working.
-- Avoid a full landing-page refactor.
+- Fix the WP12 app-verification issue where mode navigation existed but content was not separated enough.
+- Ensure `Originele waarden terugzetten` does not show the full anonymization/review/export workflow above the reinsert flow.
+- Keep `Anonimiseren` focused on the existing anonymization workflow.
+- Keep `Originele waarden terugzetten` focused on Scrub Key load + local pasted-text reinsert.
 
 Files added or changed:
 
 - Changed `fix_streamlit_nested_expanders.py`.
-- Added `tests/test_two_mode_ui_patch.py`.
+- Changed `tests/test_two_mode_ui_patch.py`.
 - Changed `WORKPACKAGES.md`.
 - Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0000_v13_6_two_mode_ui_skeleton.md`.
+- Added `handover/workpackages/20260608_0000_v13_6_two_mode_content_separation_cleanup.md`.
 
 Main change:
 
-- Added an idempotent startup patch that injects a small two-mode skeleton near the top of the app after the local-processing note.
-- The skeleton uses Streamlit tabs:
-  - `Anonimiseren`;
-  - `Originele waarden terugzetten`.
-- Each tab contains a short caption explaining the mode intent.
-- The existing anonymization/scrub flow is left available.
-- The existing pasted-text reinsert flow is left available.
-- This is a navigation/skeleton step only; it does not move all app content into tabs yet.
+- The earlier WP12 two-mode skeleton already existed, but only added visible mode navigation.
+- WP12-FIX replaces skeleton-only rendering with conditional mode rendering using `solidprivacy_work_mode = st.radio(...)`.
+- If the user selects `Originele waarden terugzetten`, the app renders only:
+  - `Scrub Key laden`;
+  - Scrub Key upload/paste validation;
+  - pasted-text local reinsert;
+  - restored-output warning;
+  - local-only/no-AI/no-cloud text;
+  - `Zet originele waarden lokaal terug`;
+  - `Herstelde tekst`;
+  - `Download herstelde tekst (.txt)`;
+  - `Controleverslag terugzetten`.
+- The existing anonymization workflow is rendered under the `Anonimiseren` branch.
+- The anonymization/export review summary keeps Scrub Key JSON export, but no longer embeds Scrub Key import/reinsert inside the scrubbed export block.
 
-Tests added:
+Tests updated:
 
-- `tests/test_two_mode_ui_patch.py` checks:
-  - `Anonimiseren` is present;
-  - `Originele waarden terugzetten` is present;
-  - `st.tabs` and named tab variables are present;
+- `tests/test_two_mode_ui_patch.py` now checks:
+  - both mode labels exist;
+  - conditional work-mode rendering exists;
+  - reinsert markers are associated with `Originele waarden terugzetten`;
+  - anonymization markers are associated with the `Anonimiseren` branch;
+  - reinsert flow is not embedded in the anonymization review/export summary block;
   - existing Scrub Key export/import labels remain;
-  - existing pasted-text reinsert labels remain;
-  - existing anonymization/download markers remain;
-  - existing scrubbed download behavior markers are not rewired;
+  - existing scrubbed download markers remain;
   - no TXT upload reinsert UI was added;
   - no DOCX upload reinsert UI was added;
   - no PDF reinsert was added;
@@ -76,10 +80,17 @@ Tests added:
 
 Validation:
 
-- Local clone/test run could not be performed in the container because outbound GitHub DNS failed:
+- Coordinator evidence for prior WP12 showed green Actions/sync, but app verification found the content separation issue:
+  - `Tests #145 green — commit 5d879cc`;
+  - `Sync #159 green — commit 5d879cc`;
+  - `Tests #146 green — commit 79d771e`;
+  - `Sync #160 green — commit 79d771e`;
+  - `Tests #147 green — commit e106f7c`;
+  - `Sync #161 green — commit e106f7c`.
+- Local clone/test run for WP12-FIX could not be performed in the container because outbound GitHub DNS failed:
   - `Could not resolve host: github.com`.
-- GitHub Actions: awaiting verification.
-- Hugging Face sync: awaiting verification.
+- GitHub Actions: awaiting verification for WP12-FIX commits.
+- Hugging Face sync: awaiting verification for WP12-FIX commits.
 - App verification: required because UI behavior changed.
 
 Intentionally not changed:
@@ -91,28 +102,41 @@ Intentionally not changed:
 - No AI calls added.
 - No cloud processing added.
 - No automatic document rehydration added.
-- No existing TXT, CSV, DOCX or PDF scrubbed export/download semantics intentionally changed.
-- No Scrub Key export/import behavior intentionally changed.
-- No secrets, tokens or real personal data stored.
+- No existing TXT, CSV, DOCX or PDF scrubbed export/download semantics intentionally changed inside `Anonimiseren`.
+- No Scrub Key JSON export behavior intentionally changed inside `Anonimiseren`.
+- No Scrub Key storage, secrets, tokens or real personal data added.
 
 Outcome:
 
-- WP12 is implemented and awaits GitHub Actions, Hugging Face sync and app verification.
-- Next recommended workpackage is `WP12B — v13.6 Two-mode UI skeleton app verification closeout`.
+- WP12-FIX is implemented and awaits GitHub Actions, Hugging Face sync and app verification.
+- Next recommended workpackage is `WP12-FIX-CLOSEOUT — v13.6 Two-mode content separation app verification closeout`.
+
+---
+
+## WP12 — v13.6 Two-mode UI skeleton and tab separation
+
+Status: implemented; coordinator evidence showed Actions/sync green, but app verification found insufficient content separation.
+
+Purpose:
+
+- Implement the first two-mode UI structure with minimal risk.
+- Make the two main user intents visible:
+  - `Anonimiseren`;
+  - `Originele waarden terugzetten`.
+- Keep existing behavior working.
+- Avoid a full landing-page refactor.
+
+Outcome:
+
+- WP12 created the first visible mode skeleton.
+- App verification showed that content was not yet separated clearly enough.
+- WP12-FIX was created to address this.
 
 ---
 
 ## WP11 — v13.5 Two-mode reinsert UI planning
 
 Status: completed; planning/specification-only workpackage.
-
-Purpose:
-
-- Plan the future two-mode UI before changing Streamlit UI code.
-- Clearly separate `Anonimiseren` from `Originele waarden terugzetten`.
-- Decide where pasted-text, TXT and DOCX reinsert should fit.
-- Compare current single-scroll workflow, tabs and landing-card options.
-- Define the next safe UI implementation workpackage.
 
 Outcome:
 
@@ -193,7 +217,7 @@ Outcome:
 
 Possible directions:
 
-- WP12B app verification closeout.
+- WP12-FIX-CLOSEOUT app verification closeout.
 - TXT reinsert upload/download UI.
 - DOCX reinsert upload/download UI.
 - PDF text extraction research only after separate reliability review.
