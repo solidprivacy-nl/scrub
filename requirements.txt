@@ -10,3 +10,4 @@ torch
 flair
 openai
 azure-ai-textanalytics
+pypdf
