@@ -101,13 +101,10 @@ Implemented files:
 - `tests/test_review_summary_ui_patch.py`
 - `fix_streamlit_nested_expanders.py`
 
-Implemented behavior:
-
-- The app shows `Eindcontrole vóór download` before the download/export section.
-- The summary is advisory and does not change export/download semantics.
-
 Outcome:
 
+- The app shows `Eindcontrole vóór download` before downloads.
+- The summary is advisory and does not change export/download semantics.
 - v12.5 is complete.
 
 ---
@@ -123,16 +120,11 @@ Implemented files:
 - `tests/test_export_sanity_ui_patch.py`
 - `fix_streamlit_nested_expanders.py`
 
-Implemented behavior:
-
-- The app shows `Extra exportcontrole` near `Eindcontrole vóór download` before the download/export section.
-- The warning block is advisory only.
-- Downloads are not blocked.
-- TXT, CSV, DOCX and PDF export behavior is not changed.
-
 Outcome:
 
-- v12.6 is closed.
+- The app shows advisory `Extra exportcontrole` before downloads.
+- Downloads are not blocked.
+- TXT, CSV, DOCX and PDF export behavior is not changed.
 - v12 Review UX line is complete from WP1 through WP3.
 
 ---
@@ -310,7 +302,13 @@ Validation:
 
 ### WP10 — v13.4 TXT/DOCX reinsert foundation helper and tests
 
-Status: implemented; GitHub Actions and Hugging Face sync pending coordinator/app-independent verification.
+Status: implemented; awaiting coordinator verification of Actions/sync.
+
+Latest implementation commit checked by WP10B:
+
+```text
+eb0c1ed2397ec1a4dc256d6e7e615ac4c026c0ee
+```
 
 Added files:
 
@@ -352,6 +350,15 @@ Validation status:
   - `PYTHONPATH=. pytest -q` → 32 passed.
 - Repository clone via container was not possible because outbound GitHub DNS was unavailable, so validation was performed on reconstructed files from GitHub-fetched content plus the new helper/tests.
 
+WP10B verification / closeout status:
+
+- Commit metadata visible for `eb0c1ed2397ec1a4dc256d6e7e615ac4c026c0ee`.
+- GitHub combined commit status returned an empty status list.
+- GitHub workflow-runs query for the commit returned no visible workflow runs.
+- GitHub Actions: not visible through connector.
+- Hugging Face sync: not visible through connector.
+- App verification: not applicable; helper-only package and no UI behavior changed.
+
 Boundaries preserved:
 
 - No UI files changed.
@@ -364,6 +371,28 @@ Boundaries preserved:
 - Existing TXT, CSV, DOCX and PDF scrubbed export/download behavior was not changed.
 - Scrub Key JSON export/import behavior was not changed.
 - Synthetic test data only.
+
+---
+
+### WP10B — v13.4 TXT/DOCX reinsert foundation verification and closeout
+
+Status: completed; Actions/sync not visible through connector, coordinator verification required.
+
+Added files:
+
+- `handover/workpackages/20260608_0000_v13_4_txt_docx_reinsert_foundation_closeout.md`
+
+Changed files:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Outcome:
+
+- WP10 closeout was performed without changing code.
+- Actions/sync could not be verified through connector-visible status data.
+- WP10 remains implemented and awaits coordinator verification of Actions/sync.
+- App verification is not applicable because WP10 added helper/test logic only and no UI behavior.
 
 ---
 
@@ -392,7 +421,7 @@ Recommended scope:
 
 ## Recommended execution order
 
-1. Verify WP10 GitHub Actions and Hugging Face sync.
+1. Coordinator verifies WP10 GitHub Actions and Hugging Face sync, because connector-visible status data was unavailable in WP10B.
 2. Start WP11 as two-mode UI planning only.
 3. After WP11, implement TXT/DOCX reinsert UI sequentially.
 4. Keep PDF full reinsert out of scope until a separate reliability review.
