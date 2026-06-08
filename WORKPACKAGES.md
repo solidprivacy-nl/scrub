@@ -27,7 +27,7 @@ WP14B was recorded cautiously because explicit verification evidence was not ava
 
 WP14C reconciles the status after coordinator/user evidence was supplied.
 
-## Technical verification evidence
+## Technical verification evidence for WP14
 
 Coordinator evidence:
 
@@ -48,25 +48,9 @@ Latest WP14 implementation commit:
 8651fc7520cebc321b4b893557fce57afc314fe4
 ```
 
-## App verification evidence
+## App verification evidence for WP14
 
-Coordinator/user evidence confirms:
-
-- `Originele waarden terugzetten` is active.
-- `Scrub Key laden` is visible.
-- Scrub Key JSON is loaded.
-- Pasted-text reinsert remains available.
-- TXT reinsert remains available.
-- `DOCX-bestand terugzetten` is visible.
-- DOCX limitations warning is visible.
-- DOCX file upload works.
-- `Zet DOCX-bestand lokaal terug` works with a valid Scrub Key.
-- Result message appears: `DOCX-bestand lokaal teruggezet`.
-- Result message appears: `15 waarde(n) lokaal teruggezet in het DOCX-bestand.`
-- `Download hersteld DOCX-bestand (.docx)` is visible.
-- `Controleverslag DOCX terugzetten` appears.
-- Audit shows document type `docx`, mapping counts, restored value count, placeholder checks, validation issues and DOCX limitations.
-- Audit shows `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
+Coordinator/user evidence confirms DOCX reinsert upload/download works with a valid Scrub Key inside documented helper limits.
 
 Also confirmed:
 
@@ -77,18 +61,61 @@ Also confirmed:
 - Existing Scrub Key import/export remains available.
 - Existing scrubbed export/download semantics remain unchanged.
 
-## WP14C — final verification reconciliation
+## WP15 — PDF text extraction reliability review only
 
-Status: completed.
+Status: completed review/specification only.
 
-Scope:
+Added:
+
+- `PDF_TEXT_EXTRACTION_RELIABILITY_REVIEW.md`
+- `handover/workpackages/20260608_0115_pdf_text_extraction_reliability_review.md`
+
+Changed:
 
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `handover/workpackages/20260608_0045_v13_8_docx_reinsert_upload_download_ui_final_reconciliation.md`
 
-No code files were changed in WP14C.
+Review conclusion:
 
-## Next recommended step
+- Do not implement full PDF reinsert now.
+- Do not implement OCR now.
+- Restored PDF output remains out of scope.
+- DOCX remains the preferred document-level reinsert path.
+- A future helper-only spike may evaluate text-based PDF extraction to restored TXT output.
 
-WP15 — PDF text extraction reliability review only.
+Validation:
+
+- Tests: not applicable; review-only workpackage.
+- GitHub Actions: not required unless documentation checks exist.
+- Hugging Face sync: not functionally relevant; no app behavior changed.
+- App verification: not applicable; no UI behavior changed.
+
+## Active / next recommended workpackage
+
+WP16 — Text-based PDF extraction helper spike, restored TXT output only.
+
+Recommended WP16 scope:
+
+- choose and justify a local PDF text extraction dependency;
+- add a pure helper only;
+- support text-based PDFs only;
+- reject or clearly mark scanned/image-only PDFs as unsupported;
+- feed extracted text into existing deterministic reinsert logic;
+- output restored TXT only;
+- add synthetic tests;
+- do not add UI yet;
+- do not add OCR;
+- do not output PDF.
+
+Keep explicitly out of scope:
+
+- full restored PDF output;
+- PDF-to-DOCX reconstruction;
+- OCR;
+- cloud PDF conversion;
+- AI-based extraction;
+- UI upload controls for PDF reinsert;
+- automatic PDF rehydration;
+- layout preservation promises;
+- batch PDF processing;
+- real-data PDF test cases.
