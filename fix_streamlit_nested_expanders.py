@@ -10,7 +10,7 @@ Patches currently applied:
 - v13.1: add local Scrub Key JSON export after review.
 - v13.2: add local Scrub Key import/reload UI using the pure import helper.
 - v13.3: add deterministic local reinsert UI using the pure reinsert helper.
-- v13.6: add a two-mode UI skeleton with Anonimiseren / Originele waarden terugzetten tabs.
+- v13.6: add two-mode UI content separation for Anonimiseren / Originele waarden terugzetten.
 """
 
 from pathlib import Path
@@ -23,6 +23,11 @@ def replace_once(source: str, old: str, new: str) -> str:
     if old in source and new not in source:
         return source.replace(old, new, 1)
     return source
+
+
+def indent_block(block: str, spaces: int = 4) -> str:
+    prefix = " " * spaces
+    return "".join((prefix + line if line.strip() else line) for line in block.splitlines(True))
 
 
 text = replace_once(text, 'from pathlib import Path\n', 'from pathlib import Path\nfrom datetime import datetime, timezone\n')
@@ -297,7 +302,7 @@ scrub_key_mapping_block = '''        scrub_key_rows = edited_replacements_df.cop
 
 scrub_key_import_ui_block = '''        st.markdown("**Scrub Key laden**")
         st.warning("Let op: een Scrub Key maakt vervangen waarden lokaal herleidbaar. Dit is pseudonimisering, geen volledige anonimisering. Bewaar deze sleutel lokaal en deel deze niet met AI-diensten of derden tenzij dat bewust en toegestaan is.")
-        st.caption("Upload of plak een eerder geëxporteerde Scrub Key JSON. De sleutel wordt eerst gevalideerd en daarna pas na jouw klik aan de vervangtabel toegevoegd.")
+        st.caption("Upload of plak een eerder geëxporteerde Scrub Key JSON. De sleutel wordt eerst gevalideerd en daarna pas na jouw klik gebruikt voor lokaal terugzetten.")
         scrub_key_import_file = st.file_uploader(
             "Upload Scrub Key JSON (.json)",
             type=["json"],
@@ -341,7 +346,7 @@ scrub_key_import_ui_block = '''        st.markdown("**Scrub Key laden**")
 reinsert_ui_block = '''        st.markdown("**Originele waarden terugzetten**")
         st.warning("Let op: terugzetten herstelt originele gevoelige waarden. De uitvoer kan weer persoonsgegevens of vertrouwelijke informatie bevatten. Controleer het resultaat zorgvuldig voordat u het deelt.")
         st.caption("Deze stap wordt lokaal uitgevoerd met uw Scrub Key. Er wordt geen AI- of cloudverwerking gebruikt voor het terugzetten.")
-        active_reinsert_scrub_key = st.session_state.get("active_scrub_key", scrub_key)
+        active_reinsert_scrub_key = st.session_state.get("active_scrub_key", {})
         reinsert_input_text = st.text_area(
             "Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten",
             value="",
@@ -421,7 +426,7 @@ review_summary_block = '''        st.subheader("4. Download opgeschoonde bestand
                 file_name="solidprivacy_scrub_key.json",
                 mime="application/json",
             )
-''' + scrub_key_import_ui_block + reinsert_ui_block + '''        st.warning(EXPORT_GUIDANCE)
+        st.warning(EXPORT_GUIDANCE)
 '''
 
 text = replace_once(
@@ -437,46 +442,6 @@ text = replace_once(
     '''        st.subheader("4. Download opgeschoonde bestanden")
 ''',
     review_summary_block,
-)
-
-text = replace_once(
-    text,
-    '''            st.download_button(
-                "Download Scrub Key (.json)",
-                data=scrub_key_to_json(scrub_key),
-                file_name="solidprivacy_scrub_key.json",
-                mime="application/json",
-            )
-        st.warning(EXPORT_GUIDANCE)
-''',
-    '''            st.download_button(
-                "Download Scrub Key (.json)",
-                data=scrub_key_to_json(scrub_key),
-                file_name="solidprivacy_scrub_key.json",
-                mime="application/json",
-            )
-''' + scrub_key_import_ui_block + reinsert_ui_block + '''        st.warning(EXPORT_GUIDANCE)
-''',
-)
-
-text = replace_once(
-    text,
-    '''            st.download_button(
-                "Download Scrub Key (.json)",
-                data=scrub_key_to_json(scrub_key),
-                file_name="solidprivacy_scrub_key.json",
-                mime="application/json",
-            )
-''' + scrub_key_import_ui_block + '''        st.warning(EXPORT_GUIDANCE)
-''',
-    '''            st.download_button(
-                "Download Scrub Key (.json)",
-                data=scrub_key_to_json(scrub_key),
-                file_name="solidprivacy_scrub_key.json",
-                mime="application/json",
-            )
-''' + scrub_key_import_ui_block + reinsert_ui_block + '''        st.warning(EXPORT_GUIDANCE)
-''',
 )
 
 text = replace_once(
@@ -491,24 +456,37 @@ text = replace_once(
 ''',
 )
 
-two_mode_intro_block = '''st.markdown("**Kies werkmodus**")
+# Clean up the v13.6 skeleton-only tabs if this patch runs on an already-patched app file.
+old_two_mode_intro = '''st.info(LOCAL_PROCESSING_NOTE)
+st.markdown("**Kies werkmodus**")
 two_mode_anon_tab, two_mode_reinsert_tab = st.tabs(["Anonimiseren", "Originele waarden terugzetten"])
 with two_mode_anon_tab:
     st.caption("Anonimiseren: upload of plak brontekst, controleer gevonden gegevens en download opgeschoonde uitvoer.")
 with two_mode_reinsert_tab:
     st.caption("Originele waarden terugzetten: laad een Scrub Key en gebruik de bestaande lokale tekst-terugzetflow verderop in deze app.")
+
+with st.expander("Over deze app", expanded=False):
+'''
+text = text.replace(old_two_mode_intro, 'st.info(LOCAL_PROCESSING_NOTE)\n\nwith st.expander("Over deze app", expanded=False):\n')
+
+two_mode_selection_block = '''st.markdown("**Kies werkmodus**")
+solidprivacy_work_mode = st.radio(
+    "Werkmodus",
+    ["Anonimiseren", "Originele waarden terugzetten"],
+    horizontal=True,
+    key="solidprivacy_work_mode",
+    help="Kies Anonimiseren voor opschonen en export. Kies Originele waarden terugzetten voor lokaal terugzetten met een Scrub Key.",
+)
+if solidprivacy_work_mode == "Originele waarden terugzetten":
+    st.caption("Originele waarden terugzetten: laad een Scrub Key en herstel placeholders lokaal in geplakte tekst.")
+''' + scrub_key_import_ui_block + reinsert_ui_block + '''else:
 '''
 
-text = replace_once(
-    text,
-    '''st.info(LOCAL_PROCESSING_NOTE)
-
-with st.expander("Over deze app", expanded=False):
-''',
-    '''st.info(LOCAL_PROCESSING_NOTE)
-''' + two_mode_intro_block + '''
-with st.expander("Over deze app", expanded=False):
-''',
-)
+mode_marker = 'st.info(LOCAL_PROCESSING_NOTE)\n\nwith st.expander("Over deze app", expanded=False):\n'
+if mode_marker in text and 'solidprivacy_work_mode = st.radio(' not in text:
+    head, tail = text.split('with st.expander("Over deze app", expanded=False):\n', 1)
+    if head.endswith('st.info(LOCAL_PROCESSING_NOTE)\n\n'):
+        anonymization_flow = 'with st.expander("Over deze app", expanded=False):\n' + tail
+        text = head + two_mode_selection_block + indent_block(anonymization_flow)
 
 APP_FILE.write_text(text, encoding="utf-8")
