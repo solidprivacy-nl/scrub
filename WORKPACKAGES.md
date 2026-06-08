@@ -345,29 +345,93 @@ Outcome:
 
 ---
 
+### WP9 — AI-output / document reinsert workflow UX and architecture review
+
+Status: completed; review-only workpackage.
+
+Added files:
+
+- `AI_OUTPUT_REINSERT_WORKFLOW_REVIEW.md`
+- `handover/workpackages/20260608_0000_ai_output_reinsert_workflow_review.md`
+
+Changed files:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Outcome:
+
+- Pasted-text reinsert remains a safe baseline and fallback, but is not sufficient as the final legal-document workflow.
+- The first three obvious ideas were explicitly challenged:
+  - keeping only pasted-text reinsert;
+  - immediately adding broad PDF/DOCX upload reinsert;
+  - placing anonymize and de-anonymize in one combined long screen.
+- Recommended UX direction is a two-mode interface:
+  - `Anonimiseren`;
+  - `Originele waarden terugzetten`.
+- Recommended implementation sequence is phased:
+  - keep pasted text;
+  - add TXT upload/download reinsert;
+  - add DOCX reinsert helper and tests;
+  - add DOCX reinsert UI;
+  - investigate PDF text extraction only;
+  - consider PDF output only after reliability review.
+- Recommended architecture remains local-only, deterministic and helper-first.
+- No code files, UI behavior, export/download behavior, Scrub Key export/import behavior, AI calls or cloud processing were changed.
+
+Validation:
+
+- Tests: not applicable; planning/review-only workpackage.
+- App verification: not applicable; no UI behavior changed.
+
+---
+
 ## Active / next recommended workpackage
 
-### WP9 — AI-output reinsert workflow review
+### WP10 — v13.4 TXT/DOCX reinsert foundation helper and tests
 
-Status: recommended next workpackage; not started here.
+Status: recommended next implementation workpackage; not started here.
 
 Goal:
 
-- Review whether AI-output-specific behavior is needed beyond accepting pasted text.
-- Keep any AI-related behavior separate, explicit and locally safe.
+- Prepare document-level reinsert without changing UI first.
+- Add pure helper/test foundation for TXT and DOCX reinsert.
+- Keep the existing pasted-text reinsert path available.
+- Keep PDF out of implementation scope except for later research.
 
-Boundaries:
+Recommended scope:
 
-- Do not add AI calls by default.
+- Add pure TXT file/text reinsert helper behavior if useful beyond existing text helper.
+- Add a pure DOCX placeholder replacement helper or detailed helper contract.
+- Add synthetic tests for TXT and DOCX placeholder replacement.
+- Reuse the existing `reinsert_from_scrub_key(...)` mapping behavior.
+- Return audit summary fields for document-level reinsert.
+- Do not edit UI in the first helper package.
+- Do not edit `fix_streamlit_nested_expanders.py` or `presidio_streamlit.py`.
+- Do not change existing scrubbed export/download semantics.
+- Do not add AI calls.
 - Do not add cloud processing.
-- Do not change existing export/download behavior.
-- Preserve local-only Scrub Key handling and pseudonymization warnings.
+- Do not add PDF reinsert implementation.
+- Do not store secrets, tokens or real personal data.
+
+Recommended later UI workpackage after WP10:
+
+```text
+WP11 — v13.5 Two-mode reinsert UI planning
+```
+
+Purpose:
+
+- Plan the future `Anonimiseren` / `Originele waarden terugzetten` mode structure before Streamlit UI changes.
+- Avoid parallel edits to the current patch-based UI flow.
 
 ---
 
 ## Recommended execution order
 
-1. Start WP9 as a review/planning workpackage only.
-2. Decide whether AI-output-specific handling is needed.
-3. Keep AI/cloud behavior out unless explicitly approved.
-4. Preserve export/download and Scrub Key import/export semantics.
+1. Start WP10 as helper/test-only document-level reinsert foundation.
+2. Keep PDF full reinsert out of scope.
+3. After helper validation, plan the two-mode UI separately.
+4. Only then implement TXT/DOCX reinsert UI sequentially.
+5. Keep AI/cloud behavior out unless explicitly approved.
+6. Preserve export/download and Scrub Key import/export semantics.
