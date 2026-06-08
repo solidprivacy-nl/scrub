@@ -13,6 +13,7 @@ Patches currently applied:
 - v13.6: add two-mode UI content separation for Anonimiseren / Originele waarden terugzetten.
 - v13.6 hotfix: keep reinsert branch indentation syntactically valid.
 - v13.7: add TXT upload/download support for local reinsert in Originele waarden terugzetten.
+- v13.8: add limited DOCX upload/download support for local reinsert in Originele waarden terugzetten.
 """
 
 from pathlib import Path
@@ -54,7 +55,7 @@ text = replace_once(
     'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n'
     'from scrub_key_reinsert import reinsert_from_scrub_key\n'
-    'from scrub_key_document_reinsert import reinsert_txt_bytes\n',
+    'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n',
 )
 
 text = replace_once(
@@ -63,7 +64,7 @@ text = replace_once(
     'from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key\n'
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n'
     'from scrub_key_reinsert import reinsert_from_scrub_key\n'
-    'from scrub_key_document_reinsert import reinsert_txt_bytes\n',
+    'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n',
 )
 
 text = replace_once(
@@ -71,7 +72,7 @@ text = replace_once(
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n',
     'from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result\n'
     'from scrub_key_reinsert import reinsert_from_scrub_key\n'
-    'from scrub_key_document_reinsert import reinsert_txt_bytes\n',
+    'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n',
 )
 
 text = replace_once(
@@ -467,6 +468,67 @@ txt_reinsert_ui_block = '''    st.markdown("**TXT-bestand terugzetten**")
             st.caption("Niet alle mappingregels kwamen voor in het TXT-bestand.")
 '''
 
+docx_reinsert_ui_block = '''    st.markdown("**DOCX-bestand terugzetten**")
+    st.warning("Let op: terugzetten herstelt originele gevoelige waarden. De uitvoer kan weer persoonsgegevens of vertrouwelijke informatie bevatten. Controleer het resultaat zorgvuldig voordat u het deelt.")
+    st.caption("Upload een DOCX-bestand met placeholders. Deze stap wordt lokaal uitgevoerd met uw Scrub Key. Er wordt geen AI- of cloudverwerking gebruikt voor het terugzetten.")
+    st.info("Let op: DOCX-terugzetten ondersteunt in deze versie normale documenttekst en tabellen. Headers, footers, opmerkingen, bijgehouden wijzigingen en placeholders die door Word over meerdere tekstfragmenten zijn gesplitst worden nog niet volledig ondersteund.")
+    active_docx_reinsert_scrub_key = st.session_state.get("active_scrub_key", {})
+    docx_reinsert_file = st.file_uploader(
+        "Upload een DOCX-bestand met placeholders",
+        type=["docx"],
+        key="docx_reinsert_file",
+        help="Gebruik een lokaal DOCX-bestand met Scrub placeholders die bij de geladen Scrub Key horen.",
+    )
+    if st.button("Zet DOCX-bestand lokaal terug", key="run_docx_file_reinsert"):
+        if not active_docx_reinsert_scrub_key or not active_docx_reinsert_scrub_key.get("items"):
+            st.warning("Laad eerst een geldige Scrub Key voordat u een DOCX-bestand lokaal terugzet.")
+        elif docx_reinsert_file is None:
+            st.warning("Upload eerst een DOCX-bestand met placeholders.")
+        else:
+            st.session_state["docx_reinsert_result"] = reinsert_docx_bytes(
+                docx_reinsert_file.getvalue(),
+                active_docx_reinsert_scrub_key,
+            )
+    if "docx_reinsert_result" in st.session_state:
+        docx_reinsert_result = st.session_state["docx_reinsert_result"]
+        docx_reinsert_validation_issues = docx_reinsert_result.get("validation_issues", [])
+        if docx_reinsert_validation_issues:
+            st.warning("DOCX terugzetten kan niet betrouwbaar worden uitgevoerd: " + "; ".join(docx_reinsert_validation_issues[:3]))
+        elif docx_reinsert_result.get("replacement_count", 0) > 0:
+            st.success("DOCX-bestand lokaal teruggezet")
+            st.success(f"{docx_reinsert_result.get('replacement_count', 0)} waarde(n) lokaal teruggezet in het DOCX-bestand.")
+        else:
+            st.info("Er zijn geen placeholders teruggezet in het DOCX-bestand. Controleer of de tekst placeholders bevat die in de Scrub Key staan.")
+        st.download_button(
+            "Download hersteld DOCX-bestand (.docx)",
+            data=docx_reinsert_result.get("docx_bytes", b""),
+            file_name="solidprivacy_hersteld_docx_bestand.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
+        with st.expander("Controleverslag DOCX terugzetten", expanded=True):
+            st.markdown(f"- Documenttype: {docx_reinsert_result.get('document_type', 'docx')}")
+            st.markdown(f"- Mappingregels totaal: {docx_reinsert_result.get('item_count', 0)}")
+            st.markdown(f"- Actieve mappingregels: {docx_reinsert_result.get('active_item_count', 0)}")
+            st.markdown(f"- Uitgesloten mappingregels: {docx_reinsert_result.get('excluded_item_count', 0)}")
+            st.markdown(f"- Aantal teruggezette waarden: {docx_reinsert_result.get('replacement_count', 0)}")
+            st.markdown(f"- Niet gevonden placeholders: {docx_reinsert_result.get('placeholders_not_found', [])}")
+            st.markdown(f"- Onbekende placeholders in tekst: {docx_reinsert_result.get('unknown_placeholders', [])}")
+            st.markdown(f"- Dubbele placeholders in sleutel: {docx_reinsert_result.get('duplicate_placeholders', [])}")
+            st.markdown(f"- Validatieproblemen: {docx_reinsert_validation_issues}")
+            st.markdown(f"- Lokaal uitgevoerd: {docx_reinsert_result.get('local_only') is True}")
+            st.markdown(f"- AI-verwerking: {docx_reinsert_result.get('ai_processing') is True}")
+            st.markdown(f"- Cloudverwerking: {docx_reinsert_result.get('cloud_processing') is True}")
+            st.markdown(f"- DOCX-beperkingen: {docx_reinsert_result.get('limitations', [])}")
+        for docx_limitation in docx_reinsert_result.get("limitations", []):
+            st.caption(docx_limitation)
+        if docx_reinsert_result.get("unknown_placeholders"):
+            st.warning("Het DOCX-bestand bevat placeholders die niet in de actieve Scrub Key staan.")
+        if docx_reinsert_result.get("duplicate_placeholders"):
+            st.warning("De Scrub Key bevat dubbele placeholders. Deze zijn niet automatisch teruggezet.")
+        if docx_reinsert_result.get("placeholders_not_found"):
+            st.caption("Niet alle mappingregels kwamen voor in het DOCX-bestand.")
+'''
+
 review_summary_block = '''        st.subheader("4. Download opgeschoonde bestanden")
         final_review_summary = build_review_summary(edited_replacements_df)
         st.markdown("**Eindcontrole vóór download**")
@@ -547,7 +609,7 @@ solidprivacy_work_mode = st.radio(
 )
 if solidprivacy_work_mode == "Originele waarden terugzetten":
     st.caption("Originele waarden terugzetten: laad een Scrub Key en herstel placeholders lokaal in geplakte tekst.")
-''' + scrub_key_import_ui_block + reinsert_ui_block + txt_reinsert_ui_block + '''else:
+''' + scrub_key_import_ui_block + reinsert_ui_block + txt_reinsert_ui_block + docx_reinsert_ui_block + '''else:
 '''
 
 mode_marker = 'st.info(LOCAL_PROCESSING_NOTE)\n\nwith st.expander("Over deze app", expanded=False):\n'
