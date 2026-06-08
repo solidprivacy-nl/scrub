@@ -28,13 +28,13 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ## WP13B — v13.7 TXT reinsert upload/download UI app verification closeout
 
-Status: implemented; Actions/sync verified; awaiting app verification.
+Status: completed and app-verified after Actions/sync verification.
 
 Purpose:
 
-- Administratively record technical verification for WP13.
-- Keep WP13 open for app verification because no confirmed Hugging Face app verification evidence was supplied in this closeout request.
-- Do not change code, tests, UI behavior, export behavior or Scrub Key behavior.
+- Administratively close WP13 after technical verification and Hugging Face app verification.
+- Record that TXT upload/download reinsert works inside `Originele waarden terugzetten`.
+- Confirm that no code, tests, UI behavior, export behavior or Scrub Key behavior was changed in this closeout.
 
 Technical verification evidence:
 
@@ -58,50 +58,45 @@ Latest WP13 implementation commit:
 443d6af99cfac47ed007d0d1cd666d1549e855d5
 ```
 
-Files added or changed:
+App verification evidence:
+
+- `Originele waarden terugzetten` mode is active.
+- `Scrub Key laden` is visible.
+- Scrub Key JSON is loaded.
+- Pasted-text reinsert remains available.
+- `TXT-bestand terugzetten` is visible.
+- TXT file upload works.
+- `Zet TXT-bestand lokaal terug` works with a valid Scrub Key.
+- Result message appears: `37 waarde(n) lokaal teruggezet in het TXT-bestand.`
+- `Herstelde TXT-tekst` appears.
+- `Download hersteld TXT-bestand (.txt)` is visible.
+- `Controleverslag TXT terugzetten` appears.
+- Audit shows document type `txt`.
+- Audit shows mapping counts, restored value count, not-found placeholders, unknown placeholders and validation issues.
+- Audit shows `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
+
+Closeout result:
+
+- WP13 is now recorded as completed and app-verified after Actions/sync verification.
+- TXT upload/download reinsert is available inside `Originele waarden terugzetten`.
+- Pasted-text reinsert remains available as fallback.
+- Existing anonymization flow remains under `Anonimiseren`.
+- Existing Scrub Key import/export remains available.
+- Existing scrubbed TXT/CSV/DOCX/PDF export/download behavior remains unchanged.
+
+Files added or changed in WP13B:
 
 - Changed `WORKPACKAGES.md`.
 - Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0000_v13_7_txt_reinsert_upload_download_ui_app_closeout.md`.
+- Added `handover/workpackages/20260608_0015_v13_7_txt_reinsert_upload_download_ui_app_closeout.md`.
 
 Tests:
 
 - No new tests were added because WP13B is closeout-only.
 - Existing validation is based on coordinator evidence:
   - GitHub Actions green;
-  - GitHub to Hugging Face sync green.
-- App verification remains pending.
-
-Closeout result:
-
-- WP13 is not yet marked completed/app-verified.
-- WP13 is recorded as:
-  - `implemented; Actions/sync verified; awaiting app verification`.
-
-Required app verification before full closeout:
-
-- `Scrub Key laden` remains visible.
-- Scrub Key upload/paste validation remains visible.
-- Pasted-text reinsert remains visible.
-- `TXT-bestand terugzetten` is visible.
-- TXT upload accepts `.txt`.
-- `Zet TXT-bestand lokaal terug` works with a valid Scrub Key.
-- `Herstelde TXT-tekst` appears.
-- `Download hersteld TXT-bestand (.txt)` works.
-- `Controleverslag TXT terugzetten` appears.
-- Warning about restored sensitive/confidential data is visible.
-- Local-only / no-AI / no-cloud text is visible.
-- Normal anonymization workflow remains available in `Anonimiseren`.
-- Source text/file input remains visible.
-- Review table appears.
-- Scrubbed TXT/CSV/DOCX/PDF downloads remain available.
-- Scrub Key JSON export remains available.
-- TXT reinsert upload UI is not shown as part of the anonymization workflow.
-- No DOCX upload reinsert UI appears yet.
-- No PDF reinsert appears.
-- No AI/cloud behavior appears.
-- Existing Scrub Key export/import remains available.
-- Existing scrubbed export/download semantics are unchanged.
+  - GitHub to Hugging Face sync green;
+  - Hugging Face app verification confirmed.
 
 Intentionally not changed:
 
@@ -124,14 +119,14 @@ Intentionally not changed:
 
 Outcome:
 
-- Next recommended step is `WP13B-APPVERIFY — v13.7 TXT reinsert upload/download UI app verification completion`.
-- After app verification is confirmed, WP13 can be closed as completed and app-verified after Actions/sync verification.
+- Next recommended step is `WP14 — v13.8 DOCX reinsert upload/download UI`.
+- PDF remains out of implementation scope until a separate reliability review.
 
 ---
 
 ## WP13 — v13.7 TXT reinsert upload/download UI
 
-Status: implemented; Actions/sync verified; awaiting app verification.
+Status: completed and app-verified after Actions/sync verification.
 
 Purpose:
 
@@ -196,7 +191,7 @@ Validation:
 
 - GitHub Actions: green based on coordinator evidence.
 - Hugging Face sync: green based on coordinator evidence.
-- App verification: pending.
+- App verification: confirmed by coordinator/user in WP13B.
 
 Intentionally not changed:
 
@@ -254,7 +249,6 @@ Outcome:
 
 Possible directions:
 
-- WP13B-APPVERIFY — v13.7 TXT reinsert upload/download UI app verification completion.
 - WP14 — v13.8 DOCX reinsert upload/download UI.
 - PDF text extraction research only after separate reliability review.
 - Further recognizer expansion by legal domain.
