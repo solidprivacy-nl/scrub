@@ -26,6 +26,108 @@ For UI/UX-only work, prefer pure helper modules and tests before touching Stream
 
 ---
 
+## WP11 — v13.5 Two-mode reinsert UI planning
+
+Status: completed; planning/specification-only workpackage.
+
+Purpose:
+
+- Plan the future two-mode UI before changing Streamlit UI code.
+- Clearly separate `Anonimiseren` from `Originele waarden terugzetten`.
+- Decide where pasted-text, TXT and DOCX reinsert should fit.
+- Compare current single-scroll workflow, tabs and landing-card options.
+- Define the next safe UI implementation workpackage.
+
+Files added or changed:
+
+- Added `TWO_MODE_UI_SPEC.md`.
+- Changed `WORKPACKAGES.md`.
+- Changed `CHANGELOG.md`.
+- Added `handover/workpackages/20260608_0000_v13_5_two_mode_ui_planning.md`.
+
+Main recommendation:
+
+- Move Scrub toward a two-mode interface:
+  - `Anonimiseren`;
+  - `Originele waarden terugzetten`.
+- Use Streamlit tabs or two clear mode panels as the first implementation step.
+- Treat a landing choice with two large cards/buttons as the better long-term product direction, but not the next patch-based implementation step.
+- Keep pasted-text reinsert available as the simplest and safest fallback.
+- Add TXT upload/download reinsert UI after the mode skeleton is verified.
+- Add DOCX upload/download reinsert UI later using the WP10 helper.
+- Keep PDF reinsert excluded until a separate reliability review.
+
+Options compared:
+
+1. Current single-scroll workflow:
+   - lowest short-term cost;
+   - too much cognitive load;
+   - weak separation between scrubbed and restored privacy states.
+2. Streamlit tabs:
+   - recommended first step;
+   - clear mode separation;
+   - lower implementation risk in current app structure.
+3. Landing choice with two large cards/buttons:
+   - best mature product UX;
+   - higher refactor risk;
+   - better later after the patch-based UI has been simplified.
+
+Specified user journeys:
+
+- `Anonimiseren`:
+  - upload/paste source text or document;
+  - review detected replacements;
+  - download currently supported scrubbed TXT/DOCX/PDF outputs;
+  - optionally download Scrub Key JSON;
+  - show warning that Scrub Key is reversible/pseudonymization.
+- `Originele waarden terugzetten`:
+  - load/paste Scrub Key;
+  - choose paste text, upload TXT or upload DOCX;
+  - validate key locally;
+  - reinsert original values locally;
+  - show audit summary;
+  - warn restored output may contain sensitive/confidential data again;
+  - download restored TXT or DOCX where supported.
+
+Recommended implementation sequence:
+
+1. `WP12 — v13.6 Two-mode UI skeleton and tab separation`.
+2. `WP13 — v13.7 TXT reinsert upload/download UI`.
+3. `WP14 — v13.8 DOCX reinsert upload/download UI`.
+4. `WP15 — PDF text extraction reliability review only`.
+
+Validation:
+
+- Tests: not applicable; planning/specification-only workpackage.
+- App verification: not applicable; no UI behavior changed.
+- GitHub Actions: not required for planning-only documentation change.
+- Hugging Face sync: not required for planning-only documentation change.
+
+Intentionally not changed:
+
+- No UI code changed.
+- No edit to `fix_streamlit_nested_expanders.py`.
+- No edit to `presidio_streamlit.py`.
+- No edit to `scrub_key_document_reinsert.py`.
+- No edit to `scrub_key_reinsert.py`.
+- No edit to `scrub_key.py`.
+- No edit to `scrub_key_import.py`.
+- No edit to `tests/*`.
+- No TXT/DOCX reinsert UI added.
+- No PDF reinsert added.
+- No AI calls added.
+- No cloud processing added.
+- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior changed.
+- No Scrub Key export/import behavior changed.
+- No secrets, tokens or real personal data stored.
+
+Outcome:
+
+- WP11 planning is complete.
+- Next recommended implementation workpackage is `WP12 — v13.6 Two-mode UI skeleton and tab separation`.
+
+---
+
 ## WP10B — v13.4 TXT/DOCX reinsert foundation verification and closeout
 
 Status: completed; Actions/sync not visible through connector, coordinator verification required.
@@ -36,12 +138,6 @@ Purpose:
 - Check GitHub Actions and Hugging Face sync visibility for implementation commit `eb0c1ed2397ec1a4dc256d6e7e615ac4c026c0ee`.
 - Update control files without changing code.
 
-Files added or changed:
-
-- Changed `WORKPACKAGES.md`.
-- Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0000_v13_4_txt_docx_reinsert_foundation_closeout.md`.
-
 Verification result:
 
 - Commit metadata was visible for `eb0c1ed2397ec1a4dc256d6e7e615ac4c026c0ee`.
@@ -50,42 +146,6 @@ Verification result:
 - GitHub Actions: not visible through connector.
 - Hugging Face sync: not visible through connector.
 - App verification: not applicable; WP10 was helper/test-only and added no UI behavior.
-
-Recorded existing validation:
-
-- Local reconstructed targeted validation:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_reinsert.py` → 12 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_document_reinsert.py` → 14 passed.
-- Available reconstructed subset:
-  - `PYTHONPATH=. pytest -q` → 32 passed.
-- Important nuance preserved:
-  - Container clone from GitHub failed because of DNS/outbound GitHub issues.
-  - Tests were run on reconstructed files from GitHub-fetched content plus the new helper/tests.
-
-Closeout decision:
-
-- WP10 remains `implemented; awaiting coordinator verification of Actions/sync`.
-- WP10 was not marked as formally closed because Actions/sync were not visible through the connector.
-
-Intentionally not changed:
-
-- No code files changed.
-- No tests changed.
-- No UI files changed.
-- No edit to `scrub_key_document_reinsert.py`.
-- No edit to `tests/test_scrub_key_document_reinsert.py`.
-- No edit to `scrub_key_reinsert.py`.
-- No edit to `scrub_key.py`.
-- No edit to `scrub_key_import.py`.
-- No edit to `fix_streamlit_nested_expanders.py`.
-- No edit to `presidio_streamlit.py`.
-- No PDF reinsert added.
-- No AI calls added.
-- No cloud processing added.
-- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior changed.
-- No Scrub Key export/import behavior changed.
-- No secrets, tokens or real personal data stored.
 
 Outcome:
 
@@ -105,85 +165,6 @@ Purpose:
 - Add pure helper/test foundation for TXT and DOCX reinsert.
 - Reuse the existing deterministic Scrub Key reinsert logic.
 - Keep PDF, UI, AI calls and cloud processing out of scope.
-
-Files added or changed:
-
-- Added `scrub_key_document_reinsert.py`.
-- Added `tests/test_scrub_key_document_reinsert.py`.
-- Changed `WORKPACKAGES.md`.
-- Changed `CHANGELOG.md`.
-- Added `handover/workpackages/20260608_0000_v13_4_txt_docx_reinsert_foundation.md`.
-
-Main helper behavior:
-
-- Added `reinsert_text_document(text, scrub_key)` for plain text document-level reinsert.
-- Added `reinsert_txt_bytes(content, scrub_key, encoding="utf-8")` for TXT bytes input/output.
-- Added `reinsert_docx_bytes(content, scrub_key)` for DOCX main-document text-node reinsert.
-- Reuses `reinsert_from_scrub_key(...)` from `scrub_key_reinsert.py`.
-- Returns restored content and audit summary.
-- Reports `document_type`, `replacement_count`, `item_count`, `active_item_count`, `excluded_item_count`, `placeholders_not_found`, `unknown_placeholders`, `duplicate_placeholders`, `validation_issues`, `local_only`, `ai_processing` and `cloud_processing`.
-- Remains deterministic and side-effect free.
-- Does not mutate the input Scrub Key.
-
-TXT behavior:
-
-- Accepts plain text through `reinsert_text_document(...)`.
-- Accepts bytes through `reinsert_txt_bytes(...)`.
-- Decodes bytes strictly with UTF-8 by default.
-- Returns restored text and restored bytes.
-- Reports decode/type issues as validation issues instead of silently changing input.
-
-DOCX behavior and limitations:
-
-- Uses Python standard library only: `zipfile`, `BytesIO` and `xml.etree.ElementTree`.
-- Processes only `word/document.xml` text nodes.
-- Supports normal body paragraphs and tables in `word/document.xml`.
-- Returns restored DOCX bytes.
-- Leaves the original uploaded bytes untouched.
-- Does not restore placeholders split across multiple Word runs/text nodes.
-- Does not process headers, footers, comments, tracked changes or metadata.
-- Does not claim perfect formatting preservation.
-- Records limitations in returned `limitations` and `unsupported_parts` fields.
-
-Tests added:
-
-- TXT text reinsert with one placeholder.
-- TXT bytes reinsert with multiple placeholders.
-- TXT unknown placeholder remains unchanged and is reported.
-- Invalid Scrub Key returns validation issues.
-- DOCX reinsert with one placeholder in a paragraph.
-- DOCX reinsert with multiple placeholders.
-- DOCX table text replacement in `word/document.xml`.
-- DOCX output remains a valid DOCX package.
-- DOCX paragraph text is restored correctly.
-- DOCX helper returns audit summary.
-- DOCX unsupported areas / limitations are documented.
-- Helper does not mutate input Scrub Key.
-- No AI/cloud behavior.
-- Synthetic values only.
-
-Testing and validation:
-
-- Local reconstructed targeted validation:
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key.py` → 6 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_reinsert.py` → 12 passed.
-  - `PYTHONPATH=. pytest -q tests/test_scrub_key_document_reinsert.py` → 14 passed.
-- Local reconstructed full available subset:
-  - `PYTHONPATH=. pytest -q` → 32 passed.
-- Repository clone via container was not possible because outbound GitHub DNS was unavailable, so validation was performed on reconstructed files from GitHub-fetched content plus the new helper/tests.
-
-Intentionally not changed:
-
-- No UI files changed.
-- No edit to `fix_streamlit_nested_expanders.py`.
-- No edit to `presidio_streamlit.py`.
-- No PDF reinsert implementation added.
-- No AI calls added.
-- No cloud processing added.
-- No automatic app document rehydration added.
-- No existing TXT, CSV, DOCX or PDF scrubbed export/download behavior changed.
-- No Scrub Key JSON export/import behavior changed.
-- No secrets, tokens or real personal data stored.
 
 Outcome:
 
@@ -288,7 +269,8 @@ Outcome:
 Possible directions:
 
 - Coordinator verification of WP10 Actions/sync.
-- Two-mode UI planning for `Anonimiseren` and `Originele waarden terugzetten`.
-- TXT/DOCX reinsert UI integration after helper verification.
+- Two-mode UI skeleton and tab separation.
+- TXT reinsert upload/download UI.
+- DOCX reinsert upload/download UI.
 - PDF text extraction research only after separate reliability review.
 - Further recognizer expansion by legal domain.
