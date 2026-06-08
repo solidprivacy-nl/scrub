@@ -10,18 +10,51 @@ def test_two_mode_labels_are_present_in_patch():
     assert "Kies werkmodus" in PATCH_TEXT
 
 
-def test_two_mode_patch_uses_streamlit_tabs():
-    assert "st.tabs" in PATCH_TEXT
-    assert 'two_mode_anon_tab, two_mode_reinsert_tab = st.tabs(["Anonimiseren", "Originele waarden terugzetten"])' in PATCH_TEXT
-    assert "with two_mode_anon_tab" in PATCH_TEXT
-    assert "with two_mode_reinsert_tab" in PATCH_TEXT
+def test_two_mode_patch_uses_conditional_work_mode_rendering():
+    assert "solidprivacy_work_mode = st.radio(" in PATCH_TEXT
+    assert '["Anonimiseren", "Originele waarden terugzetten"]' in PATCH_TEXT
+    assert 'if solidprivacy_work_mode == "Originele waarden terugzetten":' in PATCH_TEXT
+    assert "else:" in PATCH_TEXT
+    assert "indent_block(anonymization_flow)" in PATCH_TEXT
 
 
-def test_two_mode_captions_explain_privacy_modes():
-    assert "Anonimiseren: upload of plak brontekst" in PATCH_TEXT
-    assert "download opgeschoonde uitvoer" in PATCH_TEXT
-    assert "Originele waarden terugzetten: laad een Scrub Key" in PATCH_TEXT
-    assert "lokale tekst-terugzetflow" in PATCH_TEXT
+def test_reinsert_mode_gets_own_scrub_key_and_reinsert_content():
+    mode_index = PATCH_TEXT.index('if solidprivacy_work_mode == "Originele waarden terugzetten":')
+    import_index = PATCH_TEXT.index("scrub_key_import_ui_block + reinsert_ui_block")
+    assert mode_index < import_index
+    assert "Scrub Key laden" in PATCH_TEXT
+    assert "Upload Scrub Key JSON (.json)" in PATCH_TEXT
+    assert "Of plak Scrub Key JSON" in PATCH_TEXT
+    assert "Valideer en laad Scrub Key" in PATCH_TEXT
+    assert "Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten" in PATCH_TEXT
+    assert "Zet originele waarden lokaal terug" in PATCH_TEXT
+    assert "Herstelde tekst" in PATCH_TEXT
+    assert "Download herstelde tekst (.txt)" in PATCH_TEXT
+    assert "Controleverslag terugzetten" in PATCH_TEXT
+
+
+def test_anonymization_flow_is_under_else_branch():
+    mode_index = PATCH_TEXT.index('if solidprivacy_work_mode == "Originele waarden terugzetten":')
+    else_index = PATCH_TEXT.index("'''else:\n'''")
+    indent_index = PATCH_TEXT.index("anonymization_flow =")
+    assert mode_index < else_index < indent_index
+    assert "with st.expander(\"Over deze app\", expanded=False):" in PATCH_TEXT
+    assert "st.subheader(\"4. Download opgeschoonde bestanden\")" in PATCH_TEXT
+    assert "Scrub Key (JSON)" in PATCH_TEXT
+    assert "Download Scrub Key (.json)" in PATCH_TEXT
+    assert "Eindcontrole vóór download" in PATCH_TEXT
+    assert "Extra exportcontrole" in PATCH_TEXT
+
+
+def test_reinsert_flow_is_not_embedded_in_anonymization_review_summary_block():
+    review_summary_start = PATCH_TEXT.index("review_summary_block =")
+    review_summary_end = PATCH_TEXT.index("text = replace_once(\n    text,\n    '''        st.subheader(\"4. Download opgeschoonde bestanden\")", review_summary_start)
+    review_summary_block = PATCH_TEXT[review_summary_start:review_summary_end]
+    assert "Scrub Key (JSON)" in review_summary_block
+    assert "Download Scrub Key (.json)" in review_summary_block
+    assert "scrub_key_import_ui_block" not in review_summary_block
+    assert "reinsert_ui_block" not in review_summary_block
+    assert "Download herstelde tekst (.txt)" not in review_summary_block
 
 
 def test_existing_scrub_key_export_and_import_labels_remain_present():
@@ -31,14 +64,6 @@ def test_existing_scrub_key_export_and_import_labels_remain_present():
     assert "Upload Scrub Key JSON (.json)" in PATCH_TEXT
     assert "Of plak Scrub Key JSON" in PATCH_TEXT
     assert "Valideer en laad Scrub Key" in PATCH_TEXT
-
-
-def test_existing_pasted_text_reinsert_labels_remain_present():
-    assert "Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten" in PATCH_TEXT
-    assert "Zet originele waarden lokaal terug" in PATCH_TEXT
-    assert "Herstelde tekst" in PATCH_TEXT
-    assert "Download herstelde tekst (.txt)" in PATCH_TEXT
-    assert "Controleverslag terugzetten" in PATCH_TEXT
 
 
 def test_existing_anonymization_and_download_markers_remain_present():
