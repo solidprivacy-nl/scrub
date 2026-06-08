@@ -15,6 +15,7 @@ def _generated_two_mode_source_snippet() -> str:
     scrub_key_import_ui_block = _extract_triple_quoted_assignment("scrub_key_import_ui_block")
     reinsert_ui_block = _extract_triple_quoted_assignment("reinsert_ui_block")
     txt_reinsert_ui_block = _extract_triple_quoted_assignment("txt_reinsert_ui_block")
+    docx_reinsert_ui_block = _extract_triple_quoted_assignment("docx_reinsert_ui_block")
     anonymization_flow = "    with st.expander(\"Over deze app\", expanded=False):\n        st.write(\"anonimiseren\")\n"
     return (
         "st.markdown(\"**Kies werkmodus**\")\n"
@@ -30,6 +31,7 @@ def _generated_two_mode_source_snippet() -> str:
         + scrub_key_import_ui_block
         + reinsert_ui_block
         + txt_reinsert_ui_block
+        + docx_reinsert_ui_block
         + "else:\n"
         + anonymization_flow
     )
@@ -50,7 +52,6 @@ def test_two_mode_patch_uses_conditional_work_mode_rendering():
 
 
 def test_generated_two_mode_source_compiles_without_indentation_or_syntax_error():
-    # Guards runtime failures in the generated mode branch.
     compile(_generated_two_mode_source_snippet(), "generated_two_mode_source.py", "exec")
 
 
@@ -58,17 +59,20 @@ def test_reinsert_blocks_start_at_single_branch_indent():
     scrub_key_import_ui_block = _extract_triple_quoted_assignment("scrub_key_import_ui_block")
     reinsert_ui_block = _extract_triple_quoted_assignment("reinsert_ui_block")
     txt_reinsert_ui_block = _extract_triple_quoted_assignment("txt_reinsert_ui_block")
+    docx_reinsert_ui_block = _extract_triple_quoted_assignment("docx_reinsert_ui_block")
     assert scrub_key_import_ui_block.startswith('    st.markdown("**Scrub Key laden**")')
     assert reinsert_ui_block.startswith('    st.markdown("**Originele waarden terugzetten**")')
     assert txt_reinsert_ui_block.startswith('    st.markdown("**TXT-bestand terugzetten**")')
+    assert docx_reinsert_ui_block.startswith('    st.markdown("**DOCX-bestand terugzetten**")')
     assert not scrub_key_import_ui_block.startswith('        st.markdown("**Scrub Key laden**")')
     assert not reinsert_ui_block.startswith('        st.markdown("**Originele waarden terugzetten**")')
     assert not txt_reinsert_ui_block.startswith('        st.markdown("**TXT-bestand terugzetten**")')
+    assert not docx_reinsert_ui_block.startswith('        st.markdown("**DOCX-bestand terugzetten**")')
 
 
-def test_reinsert_mode_gets_own_scrub_key_reinsert_and_txt_content():
+def test_reinsert_mode_gets_own_scrub_key_reinsert_txt_and_docx_content():
     mode_index = PATCH_TEXT.index('if solidprivacy_work_mode == "Originele waarden terugzetten":')
-    import_index = PATCH_TEXT.index("scrub_key_import_ui_block + reinsert_ui_block + txt_reinsert_ui_block")
+    import_index = PATCH_TEXT.index("scrub_key_import_ui_block + reinsert_ui_block + txt_reinsert_ui_block + docx_reinsert_ui_block")
     assert mode_index < import_index
     assert "Scrub Key laden" in PATCH_TEXT
     assert "Upload Scrub Key JSON (.json)" in PATCH_TEXT
@@ -84,6 +88,12 @@ def test_reinsert_mode_gets_own_scrub_key_reinsert_and_txt_content():
     assert "Zet TXT-bestand lokaal terug" in PATCH_TEXT
     assert "Herstelde TXT-tekst" in PATCH_TEXT
     assert "Download hersteld TXT-bestand (.txt)" in PATCH_TEXT
+    assert "DOCX-bestand terugzetten" in PATCH_TEXT
+    assert "Upload een DOCX-bestand met placeholders" in PATCH_TEXT
+    assert "Zet DOCX-bestand lokaal terug" in PATCH_TEXT
+    assert "DOCX-bestand lokaal teruggezet" in PATCH_TEXT
+    assert "Download hersteld DOCX-bestand (.docx)" in PATCH_TEXT
+    assert "Controleverslag DOCX terugzetten" in PATCH_TEXT
 
 
 def test_anonymization_flow_is_under_else_branch():
@@ -108,8 +118,10 @@ def test_reinsert_flow_is_not_embedded_in_anonymization_review_summary_block():
     assert "scrub_key_import_ui_block" not in review_summary_block
     assert "reinsert_ui_block" not in review_summary_block
     assert "txt_reinsert_ui_block" not in review_summary_block
+    assert "docx_reinsert_ui_block" not in review_summary_block
     assert "Download herstelde tekst (.txt)" not in review_summary_block
     assert "Download hersteld TXT-bestand (.txt)" not in review_summary_block
+    assert "Download hersteld DOCX-bestand (.docx)" not in review_summary_block
 
 
 def test_existing_scrub_key_export_and_import_labels_remain_present():
@@ -130,7 +142,6 @@ def test_existing_anonymization_and_download_markers_remain_present():
 
 
 def test_scrubbed_download_behavior_markers_are_not_removed_or_rewired():
-    # The startup patch must not patch existing scrubbed download widgets directly.
     assert "download_txt" not in PATCH_TEXT
     assert "download_csv" not in PATCH_TEXT
     assert "download_docx" not in PATCH_TEXT
@@ -140,14 +151,8 @@ def test_scrubbed_download_behavior_markers_are_not_removed_or_rewired():
     assert "export_text = apply_replacements_to_text" not in PATCH_TEXT
 
 
-def test_two_mode_patch_does_not_add_docx_or_pdf_reinsert_upload_ui():
+def test_two_mode_patch_does_not_add_pdf_reinsert_upload_ui():
     forbidden_markers = [
-        "reinsert_docx_bytes",
-        "Upload DOCX",
-        "Upload .docx",
-        "hersteld DOCX",
-        "Download hersteld DOCX",
-        "download_docx_reinserted",
         "download_pdf_reinserted",
         "PDF reinsert",
         "pdf reinsert",
@@ -156,13 +161,12 @@ def test_two_mode_patch_does_not_add_docx_or_pdf_reinsert_upload_ui():
         assert marker not in PATCH_TEXT
 
 
-def test_two_mode_patch_does_not_add_ai_cloud_or_rehydration_behavior():
+def test_two_mode_patch_does_not_add_ai_cloud_or_forbidden_rehydration_behavior():
     lower_patch = PATCH_TEXT.lower()
     for marker in [
         "requests.post",
         "httpx.post",
         "cloud processing call",
-        "rehydrat",
         "restore_original_document",
         "server-side key storage",
         "durable key vault",
