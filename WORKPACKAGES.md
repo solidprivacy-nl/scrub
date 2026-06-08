@@ -201,22 +201,10 @@ Implemented files:
 - `scrub_key_reinsert.py`
 - `tests/test_scrub_key_reinsert.py`
 
-Implemented helper behavior:
-
-- Added `detect_placeholders(text)`.
-- Added `build_reinsert_mapping(scrub_key)`.
-- Added `reinsert_from_scrub_key(text, scrub_key)`.
-- Reuses existing `validate_scrub_key(...)` validation.
-- Reports validation issues, mapping item count, active item count, excluded item count, replacement count, missing placeholders, unknown placeholders and duplicate placeholders.
-- Reports `local_only=True`, `ai_processing=False` and `cloud_processing=False`.
-
-Validation evidence:
-
-- Local targeted validation: `PYTHONPATH=. pytest -q tests/test_scrub_key.py tests/test_scrub_key_import.py tests/test_scrub_key_reinsert.py` → 25 passed.
-- Coordinator verification evidence confirmed Tests #106-#109 and Sync #120-#123 green.
-
 Outcome:
 
+- Added deterministic local `reinsert_from_scrub_key(text, scrub_key)`.
+- Helper reports audit fields and no-AI/no-cloud status.
 - v13.3 deterministic reinsert helper is completed and formally closed.
 
 ---
@@ -277,10 +265,6 @@ Changed files:
 Outcome:
 
 - Pasted-text reinsert remains a safe baseline and fallback, but is not sufficient as the final legal-document workflow.
-- The first three obvious ideas were explicitly challenged:
-  - keeping only pasted-text reinsert;
-  - immediately adding broad PDF/DOCX upload reinsert;
-  - placing anonymize and de-anonymize in one combined long screen.
 - Recommended UX direction is a two-mode interface:
   - `Anonimiseren`;
   - `Originele waarden terugzetten`.
@@ -396,34 +380,105 @@ Outcome:
 
 ---
 
-## Active / next recommended workpackage
-
 ### WP11 — v13.5 Two-mode reinsert UI planning
 
-Status: recommended next workpackage; not started here.
+Status: completed; planning/specification-only workpackage.
+
+Added files:
+
+- `TWO_MODE_UI_SPEC.md`
+- `handover/workpackages/20260608_0000_v13_5_two_mode_ui_planning.md`
+
+Changed files:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Outcome:
+
+- Recommended moving Scrub to a two-mode interface:
+  - `Anonimiseren`;
+  - `Originele waarden terugzetten`.
+- Compared the current single-scroll workflow, Streamlit tabs, and a landing choice with two large cards/buttons.
+- Recommended Streamlit tabs or two clear mode panels as the first implementation step.
+- Recommended landing cards as the longer-term mature product direction, not the next patch-based step.
+- Specified the ideal user journey for `Anonimiseren`.
+- Specified the ideal user journey for `Originele waarden terugzetten`.
+- Planned TXT/DOCX reinsert UI phasing:
+  - keep pasted text available;
+  - add TXT upload/download UI after the mode skeleton is verified;
+  - add DOCX upload/download UI later using WP10 helper;
+  - keep PDF reinsert excluded until separate reliability review.
+- Reconfirmed local-only design, no AI calls, no cloud processing, no silent overwrite of review rows, no Scrub Key storage, and no export/download semantics changes.
+
+Validation:
+
+- Tests: not applicable; planning/specification-only workpackage.
+- App verification: not applicable; no UI behavior changed.
+
+Boundaries preserved:
+
+- No UI code changed.
+- No edit to `fix_streamlit_nested_expanders.py`.
+- No edit to `presidio_streamlit.py`.
+- No edit to `scrub_key_document_reinsert.py`.
+- No edit to `scrub_key_reinsert.py`.
+- No edit to `scrub_key.py`.
+- No edit to `scrub_key_import.py`.
+- No edit to `tests/*`.
+- No TXT/DOCX reinsert UI added.
+- No PDF reinsert added.
+- No AI/cloud behavior added.
+- No export/download behavior changed.
+
+---
+
+## Active / next recommended workpackage
+
+### WP12 — v13.6 Two-mode UI skeleton and tab separation
+
+Status: recommended next implementation workpackage; not started here.
 
 Goal:
 
-- Plan the future `Anonimiseren` / `Originele waarden terugzetten` mode structure before Streamlit UI changes.
-- Decide where TXT/DOCX reinsert upload should appear after the helper foundation.
-- Preserve existing pasted-text reinsert as fallback.
-- Keep UI integration sequential and avoid parallel edits to the patch-based UI flow.
+- Implement the first two-mode UI structure with minimal risk.
+- Use Streamlit tabs or two clear mode panels:
+  - `Anonimiseren`;
+  - `Originele waarden terugzetten`.
+- Keep the existing anonymization workflow working.
+- Keep pasted-text reinsert available.
+- Keep Scrub Key export/import behavior unchanged.
+- Keep existing scrubbed TXT/CSV/DOCX/PDF downloads unchanged.
 
 Recommended scope:
 
-- Planning/specification only.
-- Do not edit `fix_streamlit_nested_expanders.py` or `presidio_streamlit.py` yet.
-- Do not change export/download semantics.
+- UI skeleton/navigation only.
+- Move or present current anonymization workflow under `Anonimiseren` where feasible.
+- Move or present current Scrub Key load + pasted-text reinsert flow under `Originele waarden terugzetten` where feasible.
+- Add/adjust patch-level UI tests.
+- Ask for app verification because UI behavior changes.
+- Do not add TXT upload reinsert UI yet.
+- Do not add DOCX upload reinsert UI yet.
 - Do not add PDF reinsert.
 - Do not add AI/cloud behavior.
+- Do not change export/download semantics.
+
+Recommended later workpackages:
+
+```text
+WP13 — v13.7 TXT reinsert upload/download UI
+WP14 — v13.8 DOCX reinsert upload/download UI
+WP15 — PDF text extraction reliability review only
+```
 
 ---
 
 ## Recommended execution order
 
-1. Coordinator verifies WP10 GitHub Actions and Hugging Face sync, because connector-visible status data was unavailable in WP10B.
-2. Start WP11 as two-mode UI planning only.
-3. After WP11, implement TXT/DOCX reinsert UI sequentially.
-4. Keep PDF full reinsert out of scope until a separate reliability review.
-5. Keep AI/cloud behavior out unless explicitly approved.
-6. Preserve export/download and Scrub Key import/export semantics.
+1. Coordinator may still verify WP10 GitHub Actions and Hugging Face sync, because connector-visible status data was unavailable in WP10B.
+2. Start WP12 as the first UI implementation step.
+3. After WP12 is app-verified, implement TXT reinsert upload/download UI.
+4. After TXT UI is verified, implement DOCX reinsert upload/download UI.
+5. Keep PDF full reinsert out of scope until a separate reliability review.
+6. Keep AI/cloud behavior out unless explicitly approved.
+7. Preserve export/download and Scrub Key import/export semantics.
