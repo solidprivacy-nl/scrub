@@ -298,7 +298,7 @@ Sync to Hugging Face Space #171 green — commit 268234d
 Latest verified WP12-FIX2 commit:
 
 ```text
-268234d9d1aeb9c82658c4c30702f51cfdd58c96
+268234d9d1aeb9c82658c4c30702f51cfdd58c4c30702f51cfdd58c96
 ```
 
 App verification confirmed:
@@ -342,20 +342,121 @@ Closeout files:
 
 ---
 
-## Active / next recommended workpackage
+## Current implementation workpackages
 
 ### WP13 — v13.7 TXT reinsert upload/download UI
 
-Status: recommended next workpackage after v13.6 app verification closeout.
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Changed files:
+
+- `fix_streamlit_nested_expanders.py`
+- `tests/test_two_mode_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Added files:
+
+- `tests/test_txt_reinsert_ui_patch.py`
+- `handover/workpackages/20260608_0000_v13_7_txt_reinsert_upload_download_ui.md`
+
+Implemented behavior:
+
+- Added controlled TXT upload/download support inside `Originele waarden terugzetten`.
+- Added section label `TXT-bestand terugzetten`.
+- Added TXT upload label `Upload een TXT-bestand met placeholders`.
+- Added action button `Zet TXT-bestand lokaal terug`.
+- Added output label `Herstelde TXT-tekst`.
+- Added download label `Download hersteld TXT-bestand (.txt)`.
+- TXT reinsert uses existing deterministic local helper:
+  - `reinsert_txt_bytes(content, scrub_key, encoding="utf-8")`.
+- TXT reinsert requires a loaded Scrub Key before running.
+- Existing pasted-text reinsert remains available as fallback.
+- Existing Scrub Key load/import remains available.
+- Existing anonymization workflow remains under `Anonimiseren`.
+- Restored TXT audit summary includes document type, mapping counts, replacement count, missing/unknown/duplicate placeholders, validation issues, local-only, AI and cloud status.
+
+Validation status:
+
+- Added `tests/test_txt_reinsert_ui_patch.py` to verify:
+  - TXT helper import/use;
+  - TXT labels;
+  - `.txt` upload-only configuration;
+  - Scrub Key requirement;
+  - TXT placement inside reinsert mode only;
+  - pasted-text reinsert remains;
+  - anonymization/export markers remain;
+  - audit fields remain;
+  - no DOCX upload reinsert UI;
+  - no PDF reinsert;
+  - no AI/cloud behavior;
+  - no alteration of `apply_replacements_to_text` or existing scrubbed downloads.
+- Updated `tests/test_two_mode_ui_patch.py` so TXT reinsert is allowed in the reinsert mode while DOCX/PDF/AI/cloud remain forbidden.
+- Local clone/test run could not be performed in the container because outbound GitHub DNS was unavailable:
+  - `Could not resolve host: github.com`.
+- GitHub Actions: awaiting verification.
+- Hugging Face sync: awaiting verification.
+- App verification: required because UI behavior changed.
+
+Boundaries preserved:
+
+- `presidio_streamlit.py` was not directly edited.
+- No DOCX upload reinsert UI added.
+- No PDF reinsert added.
+- No AI calls added.
+- No cloud processing added.
+- No automatic document rehydration beyond TXT local reinsert added.
+- No existing scrubbed TXT/CSV/DOCX/PDF export/download behavior intentionally changed.
+- No Scrub Key JSON export behavior intentionally changed.
+- No Scrub Key import/reload behavior intentionally changed except reusing the loaded key for TXT reinsert.
+- No secrets, tokens or real personal data stored.
+
+---
+
+## Active / next recommended workpackage
+
+### WP13-CLOSEOUT — v13.7 TXT reinsert upload/download UI app verification closeout
+
+Status: recommended next workpackage after coordinator evidence.
 
 Goal:
 
-- Add controlled TXT upload/download support for local reinsert.
-- Keep pasted-text reinsert as fallback.
-- Preserve existing anonymization export/download semantics.
-- Do not add DOCX upload reinsert UI in this workpackage.
-- Do not add PDF reinsert.
-- Do not add AI/cloud behavior.
+- Verify GitHub Actions tests.
+- Verify GitHub to Hugging Face sync.
+- App-verify TXT reinsert upload/download behavior.
+- Close WP13 only after evidence confirms the UI works safely.
+
+Required app verification:
+
+In `Anonimiseren`:
+
+- anonymization workflow remains available;
+- source text/file input remains visible;
+- review table remains visible;
+- scrubbed TXT/CSV/DOCX/PDF downloads remain available;
+- Scrub Key JSON export remains available;
+- TXT reinsert upload UI is not presented as part of the anonymization workflow.
+
+In `Originele waarden terugzetten`:
+
+- `Scrub Key laden` remains visible;
+- Scrub Key upload/paste validation remains visible;
+- pasted-text reinsert remains visible;
+- `TXT-bestand terugzetten` is visible;
+- TXT upload accepts `.txt`;
+- `Zet TXT-bestand lokaal terug` works with a valid Scrub Key;
+- restored TXT text appears;
+- `Download hersteld TXT-bestand (.txt)` works;
+- audit summary appears;
+- warning about restored sensitive/confidential data is visible;
+- local-only / no-AI / no-cloud text is visible.
+
+Also confirm:
+
+- no DOCX upload reinsert UI appears yet;
+- no PDF reinsert appears;
+- no AI/cloud behavior appears;
+- existing Scrub Key export/import remains available.
 
 Recommended later workpackages:
 
@@ -368,12 +469,10 @@ WP15 — PDF text extraction reliability review only
 
 ## Recommended execution order
 
-1. Start WP13 only after v13.6 closeout is recorded.
-2. Implement TXT reinsert upload/download UI with helper-first tests.
-3. Verify GitHub Actions tests.
-4. Verify GitHub to Hugging Face sync.
-5. App-verify TXT reinsert behavior.
-6. After TXT UI is verified, implement DOCX reinsert upload/download UI.
-7. Keep PDF full reinsert out of scope until a separate reliability review.
-8. Keep AI/cloud behavior out unless explicitly approved.
-9. Preserve export/download and Scrub Key import/export semantics.
+1. Verify WP13 GitHub Actions and Hugging Face sync.
+2. Verify TXT reinsert upload/download behavior in the app.
+3. Close WP13 through closeout if verification is green.
+4. After TXT UI is verified, implement DOCX reinsert upload/download UI.
+5. Keep PDF full reinsert out of scope until a separate reliability review.
+6. Keep AI/cloud behavior out unless explicitly approved.
+7. Preserve export/download and Scrub Key import/export semantics.
