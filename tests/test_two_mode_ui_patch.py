@@ -4,6 +4,35 @@ from pathlib import Path
 PATCH_TEXT = Path("fix_streamlit_nested_expanders.py").read_text(encoding="utf-8")
 
 
+def _extract_triple_quoted_assignment(name: str) -> str:
+    marker = f"{name} = '''"
+    start = PATCH_TEXT.index(marker) + len(marker)
+    end = PATCH_TEXT.index("'''", start)
+    return PATCH_TEXT[start:end]
+
+
+def _generated_two_mode_source_snippet() -> str:
+    scrub_key_import_ui_block = _extract_triple_quoted_assignment("scrub_key_import_ui_block")
+    reinsert_ui_block = _extract_triple_quoted_assignment("reinsert_ui_block")
+    anonymization_flow = "    with st.expander(\"Over deze app\", expanded=False):\n        st.write(\"anonimiseren\")\n"
+    return (
+        "st.markdown(\"**Kies werkmodus**\")\n"
+        "solidprivacy_work_mode = st.radio(\n"
+        "    \"Werkmodus\",\n"
+        "    [\"Anonimiseren\", \"Originele waarden terugzetten\"],\n"
+        "    horizontal=True,\n"
+        "    key=\"solidprivacy_work_mode\",\n"
+        "    help=\"Kies Anonimiseren voor opschonen en export. Kies Originele waarden terugzetten voor lokaal terugzetten met een Scrub Key.\",\n"
+        ")\n"
+        "if solidprivacy_work_mode == \"Originele waarden terugzetten\":\n"
+        "    st.caption(\"Originele waarden terugzetten: laad een Scrub Key en herstel placeholders lokaal in geplakte tekst.\")\n"
+        + scrub_key_import_ui_block
+        + reinsert_ui_block
+        + "else:\n"
+        + anonymization_flow
+    )
+
+
 def test_two_mode_labels_are_present_in_patch():
     assert "Anonimiseren" in PATCH_TEXT
     assert "Originele waarden terugzetten" in PATCH_TEXT
@@ -16,6 +45,21 @@ def test_two_mode_patch_uses_conditional_work_mode_rendering():
     assert 'if solidprivacy_work_mode == "Originele waarden terugzetten":' in PATCH_TEXT
     assert "else:" in PATCH_TEXT
     assert "indent_block(anonymization_flow)" in PATCH_TEXT
+
+
+def test_generated_two_mode_source_compiles_without_indentation_or_syntax_error():
+    # Guards the Hugging Face runtime failure:
+    # IndentationError: unexpected indent at st.markdown("**Scrub Key laden**")
+    compile(_generated_two_mode_source_snippet(), "generated_two_mode_source.py", "exec")
+
+
+def test_reinsert_blocks_start_at_single_branch_indent():
+    scrub_key_import_ui_block = _extract_triple_quoted_assignment("scrub_key_import_ui_block")
+    reinsert_ui_block = _extract_triple_quoted_assignment("reinsert_ui_block")
+    assert scrub_key_import_ui_block.startswith('    st.markdown("**Scrub Key laden**")')
+    assert reinsert_ui_block.startswith('    st.markdown("**Originele waarden terugzetten**")')
+    assert not scrub_key_import_ui_block.startswith('        st.markdown("**Scrub Key laden**")')
+    assert not reinsert_ui_block.startswith('        st.markdown("**Originele waarden terugzetten**")')
 
 
 def test_reinsert_mode_gets_own_scrub_key_and_reinsert_content():
