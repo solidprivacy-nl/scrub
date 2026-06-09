@@ -1,5 +1,62 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP35 — DOCX hidden content risk review
+
+Status: completed document-hygiene/specification-only.
+
+Purpose:
+
+- Review DOCX hidden content and metadata as leakage risks.
+- Define current DOCX support assumptions and the boundary between visible body-text scrubbing, hidden-content scrubbing, metadata cleaning, unsupported-content warnings and future export blocking.
+- Define audit requirements plus safe extraction and cleaning sequences before any helper implementation.
+
+Files added:
+
+- `DOCX_HIDDEN_CONTENT_RISK_REVIEW.md`
+- `handover/workpackages/20260609_2325_docx_hidden_content_risk_review.md`
+
+Files changed:
+
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main risk findings:
+
+- Current DOCX support covers `word/document.xml` text nodes, including normal body paragraphs and tables, but does not provide full DOCX package hygiene.
+- Headers, footers, comments, tracked changes, metadata, custom XML, footnotes/endnotes, text boxes/shapes and embedded objects can contain sensitive values outside visible body text.
+- Tracked changes are a critical leakage risk because deleted text, author names and timestamps can remain in XML even when not visible in the accepted document view.
+- Metadata and custom XML should be treated as separate cleaning problems, not as normal visible-text scrubbing.
+- Future audit output should distinguish inspected parts, unsupported parts, cleaning actions, warnings and blocking reasons.
+- Blocking export is a product semantics change and must not be introduced silently.
+
+Validation status:
+
+- Documentation/document-hygiene review only.
+- No tests run; no code or test files were changed.
+- GitHub Actions: not checked at changelog update time.
+- Hugging Face sync: not checked at changelog update time.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No DOCX cleaner implemented.
+- No DOCX parser changed.
+- No export semantics changed.
+- No UI changed.
+- No tests added or changed.
+- No real documents added.
+- No cloud processing added.
+- No dependency changes made.
+- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No direct edit to `fix_streamlit_pdf_text_reinsert.py`.
+
+Next recommended step:
+
+- `WP58 — Parallel specification consolidation and next execution queue`.
+- After WP58 reconciliation: `WP36 — DOCX metadata cleaner helper`.
+
 ## WP30 — Placeholder robustness review
 
 Status: completed architecture/specification-only.
