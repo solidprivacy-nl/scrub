@@ -1,0 +1,81 @@
+# SYNTHETIC BENCHMARK FIXTURE — MIXED LEGAL / CARE PROFESSIONAL TEXT
+# Document ID: legal_care_mixed_messy_001
+# Domain: mixed
+# This file is fully synthetic. It combines fake legal, municipal, school and care context for benchmark design only.
+# No real case, client, patient, pupil, employee or customer data is included.
+
+Gemeente Proefdam — afdeling Jeugd en Zorg
+Synthetische memo voor bezwaar, wijkteam en zorgaanbieder
+Datum concept: 22-04-2026
+Kenmerk gemeente: GEM-PROEF-2026-2210
+Zaaknummer bezwaar: ARN 26/4412
+Dossiernummer juridisch loket: BEST-ZORG-2026-0701
+Cliëntnummer wijkteam: WZ-CL-2026-3310
+Schoolreferentie: HRZ-SAM-2026-04
+Incidentnummer school: INC-SCHOOL-2026-1188
+Zorgplan-ID: ZP-JEUGD-2026-9910
+
+Betrokkene minderjarige: Sami El Amrani, geboren op 03-09-2015.
+Ouder/verzoeker: Fatima El Amrani, telefoon +31 6 4455 6677, e-mail fatima.elamrani@example.invalid.
+Andere ouder/verweerder: Peter Bakker, telefoon 070 234 56 78, e-mail peter.bakker@example.invalid.
+Adres minderjarige en verzoeker: Proceslaan 44, 1098 ZX Voorbeeldstad.
+Adres verweerder: Laan van Meerzicht 55, 2517 AM Testhage.
+
+BSN-achtige testwaarden:
+- oud formulier minderjarige: 123456782
+- oud formulier ouder: 111222333
+Deze waarden zijn synthetisch en bestaan alleen voor benchmarkdoeleinden.
+
+IBAN-achtige testwaarden:
+- eigen bijdrage ouder: NL91 ABNA 0417 1643 00
+- terugbetaling gemeente: NL02 RABO 0123 4567 89
+
+Contextwoorden die leesbaar moeten blijven:
+De minderjarige, verzoeker, verweerder, cliënt, zorgmedewerker, school, gemeente, rechtbank en arts zijn rol- of contexttermen.
+De waarden daarnaast, zoals namen, adressen, telefoons, e-mails en referentienummers, moeten later goud-labelbaar zijn.
+
+Samenvatting situatie:
+De gemeente ontving op 14-04-2026 een melding van Basisschool De Horizon.
+Intern begeleider Elise van Roon stuurde een e-mail vanaf elise.vanroon@example.invalid met schoolreferentie HRZ-SAM-2026-04.
+Volgens de school kwam de minderjarige Sami El Amrani meerdere keren te laat en was er spanning rond de omgangsregeling.
+De datum 14-04-2026 is een procesdatum en mag niet als telefoonnummer of BSN worden gezien.
+
+Zorgcontext:
+Zorgaanbieder Stichting ZorgVoorbeeld Jeugd heeft zorgmedewerker Joris de Vries gekoppeld aan het gezin.
+De betrokken arts, dr. Amira Benali, BIG-nummer 12345678901, heeft geen medische diagnose gedeeld in deze memo.
+Het zorgplan ZP-JEUGD-2026-9910 verwijst naar begeleiding op school en thuis.
+Het woord arts is context; dr. Amira Benali en 12345678901 zijn identificerende waarden.
+
+Juridische context:
+De rechtbank ontving eerder een verzoek in procedure C/13/701234 / FA RK 26-321.
+In bezwaar bij de gemeente loopt zaak ARN 26/4412.
+De gemachtigde van verzoeker, mr. Noor van Dijk, gebruikt dossier BEST-ZORG-2026-0701.
+De gemachtigde van verweerder, mr. Sander Meijer, gebruikt kenmerk SM/PB/2026-04.
+Het artikel 1:377a BW en bedrag € 350,00 zijn geen zaaknummers.
+
+Rommelige export uit gemeentelijk systeem:
+Persoon; Rol; Nummer; Contact
+Sami El Amrani ; minderjarige ; WZ-CL-2026-3310 ; school HRZ-SAM-2026-04
+Fatima El Amrani ; verzoeker/ouder ; tel +31 6 4455 6677 ; fatima.elamrani@example.invalid
+Peter Bakker ; verweerder/ouder ; tel 070-2345678 ; peter.bakker@example.invalid
+Joris de Vries ; zorgmedewerker ; team JEUGD-2 ; joris.devries@example.invalid
+
+Bijlagen en verwijzingen:
+1. Schoolnotitie De Horizon, HRZ-SAM-2026-04.
+2. Meldformulier wijkteam WZ-CL-2026-3310.
+3. Incidentregistratie INC-SCHOOL-2026-1188.
+4. Beschikking rechtbank met ECLI: ECLI:NL:RBAMS:2026:1234.
+5. Zorgplan ZP-JEUGD-2026-9910.
+
+Valse-positieve traps:
+- 17.00 uur en 18.00 uur zijn tijden, geen telefoonnummers.
+- 03-09-2015 is een geboortedatum, geen BSN.
+- 2026-04-22 is een datum, geen cliëntnummer.
+- 1:377a BW is een wetsartikel, geen zaaknummer.
+- Groep 7B is een schoolgroep, geen kenteken.
+
+Footertekst herhaald in documentconversie:
+GEM-PROEF-2026-2210 | WZ-CL-2026-3310 | Fatima El Amrani | concept 22-04-2026
+GEM-PROEF-2026-2210 | WZ-CL-2026-3310 | Fatima El Amrani | concept 22-04-2026
+
+Dit document is volledig synthetisch en bedoeld als corpusmateriaal vóór gold-labels en runner bestaan.
