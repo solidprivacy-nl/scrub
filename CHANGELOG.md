@@ -1,8 +1,55 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP16C — Roadmap status reconciliation after v13.8 and PDF helper line
+
+Status: completed documentation-only update.
+
+Purpose:
+
+- Refresh `ROADMAP.md` because it still described v12 as the current line and v13 as the next strategic phase.
+- Align roadmap status with `WORKPACKAGES.md` and `CHANGELOG.md` after v13.8, WP15 and WP16/WP16-FIX.
+- Preserve the strategic direction while updating current phase status and next steps.
+
+Files changed:
+
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Files added:
+
+- `handover/workpackages/20260609_0030_roadmap_status_reconciliation.md`
+
+Main changes:
+
+- Roadmap now records v12 Review UX as completed rather than current.
+- Roadmap now records v13 Scrub Key / Reinsert line as implemented through pasted-text, TXT and DOCX reinsert.
+- Roadmap now records WP15 PDF reliability review conclusion.
+- Roadmap now records WP16 PDF text helper line and WP16-FIX green coordinator evidence.
+- Roadmap now names WP16B as the active next closeout step.
+- Roadmap now positions WP17 as PDF text extraction reinsert UI planning only, after WP16B.
+
+Validation:
+
+- Tests: not applicable; documentation-only update.
+- GitHub Actions: not required unless documentation checks run.
+- Hugging Face sync: not functionally relevant; no app behavior changed.
+- App verification: not applicable; no UI behavior changed.
+
+Intentionally not changed:
+
+- No code files changed.
+- No tests changed.
+- No UI changed.
+- No OCR added.
+- No PDF output added.
+- No AI/cloud behavior added.
+- No existing scrubbed export/download behavior changed.
+- No Scrub Key import/export behavior changed.
+
 ## WP16-FIX — Fix failing PDF text helper tests
 
-Status: implemented; awaiting GitHub Actions and Hugging Face sync.
+Status: implemented; green evidence supplied by coordinator; awaiting formal WP16B closeout.
 
 Purpose:
 
@@ -35,14 +82,25 @@ Files added:
 
 - `handover/workpackages/20260609_0015_pdf_text_helper_tests_fix.md`
 
+Coordinator evidence after WP16-FIX:
+
+```text
+Tests #198 green — commit 4ccd79e
+Sync to Hugging Face Space #212 green — commit 4ccd79e
+Tests #199 green — commit 1fbdf48
+Sync to Hugging Face Space #213 green — commit 1fbdf48
+Tests #200 green — commit 410f04a
+Sync to Hugging Face Space #214 green — commit 410f04a
+Tests #201 green — commit 9354727
+Sync to Hugging Face Space #215 green — commit 9354727
+```
+
 Validation:
 
-- The connector could not retrieve workflow-run logs for the WP16 commits.
 - Root cause was inferred from `.github/workflows/tests.yml` and reconstructed local testing.
 - Local reconstructed assertions for the PDF helper passed in the Python environment.
-- Repository pytest execution was not available in this connector session.
-- GitHub Actions: awaiting verification after WP16-FIX.
-- Hugging Face sync: awaiting verification after WP16-FIX.
+- GitHub Actions: green based on coordinator evidence after WP16-FIX.
+- Hugging Face sync: green based on coordinator evidence after WP16-FIX.
 - App verification: not applicable because no UI behavior changed.
 
 Intentionally not changed:
@@ -58,7 +116,7 @@ Intentionally not changed:
 
 ## WP16 — Text-based PDF extraction helper spike, restored TXT output only
 
-Status: implemented; awaiting GitHub Actions and Hugging Face sync after WP16-FIX.
+Status: implemented; awaiting formal WP16B closeout after green evidence.
 
 Purpose:
 
@@ -120,5 +178,5 @@ Review conclusion:
 
 ## Planned later phase
 
-- WP16B — Text-based PDF extraction helper spike verification and closeout, only after Tests and Hugging Face sync are green.
+- WP16B — Text-based PDF extraction helper spike verification and closeout, after Tests and Hugging Face sync green evidence.
 - WP17 — PDF text extraction reinsert UI planning only, only after WP16B closes green.
