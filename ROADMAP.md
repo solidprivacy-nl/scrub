@@ -1,13 +1,14 @@
 # SolidPrivacy Scrub — Product & Development Roadmap
 
-This document is the central reference for future Scrub development.
+This document is the central roadmap for SolidPrivacy Scrub.
 
-Use it together with `CHANGELOG.md`:
+Use it together with:
 
-- `ROADMAP.md` explains the bigger picture: direction, priorities, phases and why we are doing the current work.
-- `CHANGELOG.md` records what has actually changed, when, and in which version/fase.
+- `WORKPACKAGES.md` for the active execution queue, dependencies and verification gates;
+- `CHANGELOG.md` for the implementation history;
+- `PROJECT_PROMPT.md` for worker rules and project governance.
 
-The roadmap should be updated whenever the product strategy or development sequence changes meaningfully.
+Last roadmap status reconciliation: 2026-06-09.
 
 ---
 
@@ -37,7 +38,7 @@ The long-term product should help professionals safely prepare documents for:
 - reporting;
 - controlled publication.
 
-The key promise:
+The key promise remains:
 
 ```text
 Sensitive information stays local.
@@ -57,7 +58,7 @@ The real problem is:
 How can a professional safely use or share confidential documents without losing context, legal meaning or auditability?
 ```
 
-Therefore Scrub must optimize for:
+Scrub must optimize for:
 
 1. local processing;
 2. context preservation;
@@ -68,85 +69,9 @@ Therefore Scrub must optimize for:
 7. safe export;
 8. eventually desktop/offline deployment.
 
----
+Legal context must be preserved. Scrub should replace sensitive values, not legal meaning.
 
-## 3. Strategic lessons from external products
-
-Two external products shaped this roadmap:
-
-- anonym.plus;
-- CamoText.
-
-### 3.1 Lessons from anonym.plus
-
-Important concepts to learn from:
-
-- offline-first as a main trust message;
-- desktop installer as real product form;
-- clear processing pipeline;
-- multiple anonymization operators;
-- presets/profiles;
-- entity recognition catalogue;
-- batch processing;
-- local encrypted vault/settings;
-- transparent security limitations;
-- documentation and demos as part of the product.
-
-Relevant product lesson:
-
-```text
-Do not sell only detection. Sell a trustworthy local workflow.
-```
-
-### 3.2 Lessons from CamoText
-
-CamoText sharpened the roadmap further because it is focused on AI-safe document preparation.
-
-Important concepts to learn from:
-
-- position the product as an AI-safety workflow;
-- desktop-first / offline-first;
-- human-in-the-loop review;
-- anonymization key / mapping file;
-- reinsert original terms into AI output;
-- priorities / categories / exclusions;
-- category-level review actions;
-- redaction mode as a clear export mode;
-- metadata-free clean output;
-- batch mode for folders;
-- CLI/headless mode later;
-- observable local-security validation.
-
-Most important roadmap addition from CamoText:
-
-```text
-Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit
-```
-
----
-
-## 4. What differentiates Scrub
-
-Scrub should not try to win as a generic international PII anonymizer.
-
-The strongest differentiator is:
-
-```text
-Dutch domain-specific confidential document scrubbing.
-```
-
-For the first product line, this means:
-
-```text
-Dutch legal documents
-Dutch legal identifiers
-Dutch case/document references
-Dutch process roles
-legal context preservation
-AI-ready readable output
-```
-
-Examples of context that must remain readable:
+Examples of legal context that must remain readable:
 
 - slachtoffer;
 - minderjarige;
@@ -159,261 +84,215 @@ Examples of context that must remain readable:
 - claim context;
 - incident context.
 
-The product should mask or replace the sensitive value, not the legal meaning of the sentence.
+---
+
+## 3. Strategic workflow
+
+The current product workflow direction is:
+
+```text
+Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit
+```
+
+This direction was strengthened by external product review of anonym.plus and CamoText.
+
+Important retained lessons:
+
+- do not sell only detection; sell a trustworthy local workflow;
+- position Scrub as an AI-safety workflow for confidential documents;
+- use human-in-the-loop review before export;
+- support a reversible Scrub Key / mapping file for controlled pseudonymization;
+- allow local reinsert into AI output;
+- make pseudonymization risks explicit;
+- keep the future desktop/offline path open.
 
 ---
 
-## 5. Current status
+## 4. Current implementation status
 
-Current development status at the time of this roadmap update:
-
-```text
-v9      Dutch Legal UI Layer                         completed
-v9.1    UI polish                                    completed
-v10     Regression test foundation                   completed
-v11.1   Legal reference hardening / audit layer      completed
-v11.2   Dutch recognizer integration tests           completed
-v12.1   Review status model                          completed
-v12.2   Review focus filters                         completed
-v12.3   Review table simplification                  implemented; pending final verification after bugfix
-```
-
-Important recent bugfix:
+Current implementation status after the v13.8 and PDF-helper line:
 
 ```text
-v12.3 introduced table configuration using pandas DataFrame columns.
-A pandas Index cannot be boolean-tested.
-This was fixed by converting available_columns explicitly to list/set.
+v9       Dutch Legal UI Layer                                      completed
+v9.1     UI polish                                                 completed
+v10      Regression test foundation                                completed
+v11.1    Legal reference hardening / audit layer                   completed
+v11.2    Dutch recognizer integration tests                        completed
+v12      Review UX line                                            completed
+v13.1    Scrub Key JSON export                                     completed
+v13.2    Scrub Key import/reload                                   completed
+v13.3    Deterministic pasted-text reinsert                        completed/app-verified
+v13.6    Two-mode UI: Anonimiseren / Originele waarden terugzetten completed/app-verified
+v13.7    TXT reinsert upload/download UI                           completed/app-verified
+v13.8    DOCX reinsert upload/download UI                          completed/app-verified
+WP15     PDF text extraction reliability review                    completed review/specification only
+WP16     Text-based PDF extraction helper spike                    implemented
+WP16-FIX PDF helper test fix                                       implemented; green evidence supplied; awaiting closeout
 ```
 
-Immediate verification before further work:
+### 4.1 v12 Review UX line
 
-1. GitHub Actions `Tests` must be green.
-2. GitHub → Hugging Face sync must be green.
-3. Hugging Face app must reload successfully.
-4. The same legal test example must no longer show the pandas Index truth-value error.
+The v12 line is no longer the active line. It delivered the safer review workflow foundation:
+
+- review status model;
+- review focus filters;
+- simplified review table;
+- review guidance text;
+- final review summary;
+- export sanity checks.
+
+Export semantics were intentionally preserved: warnings and summaries advise the user but do not silently block or alter exports unless a later workpackage explicitly changes that policy.
+
+### 4.2 v13 Scrub Key / Reinsert line
+
+The v13 line delivered the core reversible pseudonymization workflow:
+
+- Scrub Key JSON export;
+- Scrub Key import/reload;
+- deterministic local pasted-text reinsert;
+- two-mode UI separation between `Anonimiseren` and `Originele waarden terugzetten`;
+- TXT upload/download reinsert;
+- DOCX upload/download reinsert;
+- clear warnings that Scrub Key-based reinsert restores sensitive/confidential values;
+- audit output for reinsert flows;
+- local-only / no-AI / no-cloud positioning.
+
+Current document-level reinsert support:
+
+```text
+Pasted text → restored text
+TXT upload  → restored TXT
+DOCX upload → restored DOCX, within documented helper limits
+```
+
+Known DOCX limitations remain:
+
+- normal `word/document.xml` text and tables are supported;
+- headers, footers, comments, tracked changes and metadata are not fully processed;
+- placeholders split across Word runs may not be restored;
+- no perfect formatting guarantee is made.
+
+### 4.3 PDF review and helper line
+
+WP15 concluded:
+
+- do not implement full PDF reinsert now;
+- do not implement OCR now;
+- restored PDF output remains out of scope;
+- PDF-to-DOCX reconstruction remains out of scope;
+- DOCX remains the preferred document-level reinsert path;
+- a helper-only text-based PDF extraction route to restored TXT output may be evaluated.
+
+WP16 implemented that helper-only spike:
+
+```text
+PDF bytes → local selectable-text extraction → existing Scrub Key reinsert → restored TXT/text output only
+```
+
+WP16 intentionally did not add:
+
+- UI;
+- OCR;
+- PDF output;
+- PDF-to-DOCX reconstruction;
+- cloud PDF conversion;
+- AI-based extraction;
+- layout preservation promises.
+
+WP16-FIX made the PDF helper import-safe when `pypdf` is not installed in the GitHub Actions test job.
+
+Coordinator evidence after WP16-FIX shows:
+
+```text
+Tests #198 green — commit 4ccd79e
+Sync to Hugging Face Space #212 green — commit 4ccd79e
+Tests #199 green — commit 1fbdf48
+Sync to Hugging Face Space #213 green — commit 1fbdf48
+Tests #200 green — commit 410f04a
+Sync to Hugging Face Space #214 green — commit 410f04a
+Tests #201 green — commit 9354727
+Sync to Hugging Face Space #215 green — commit 9354727
+```
+
+The repository still needs an explicit WP16B verification closeout to record this evidence as final status.
 
 ---
 
-## 6. Development governance
+## 5. Current next action
 
-From v10 onward, recognizer work must follow this sequence:
+The active next workpackage is:
 
-1. Add or update synthetic regression cases.
-2. Add or update tests.
-3. Change recognizer/scanner logic.
-4. Verify GitHub Actions tests are green.
-5. Let GitHub sync to Hugging Face automatically.
-6. Test the app in Hugging Face.
-7. Update `CHANGELOG.md`.
-8. If the strategic roadmap changes, update `ROADMAP.md`.
+```text
+WP16B — Text-based PDF extraction helper spike verification and closeout
+```
 
-For UI/UX-only work:
+WP16B should be closeout-only.
 
-1. Add pure helper modules where possible.
-2. Add tests for helper logic.
-3. Patch UI.
-4. Verify GitHub Actions tests.
-5. Verify Hugging Face app.
-6. Update changelog.
+It may update only:
+
+```text
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_pdf_text_helper_verification_closeout.md
+```
+
+WP16B must not change code, tests, UI, dependencies or export semantics.
+
+WP16B should record:
+
+- GitHub Actions tests green based on coordinator evidence;
+- Hugging Face sync green based on coordinator evidence;
+- app verification not applicable because no UI changed;
+- no UI added;
+- no OCR added;
+- no PDF output added;
+- no AI/cloud behavior added.
 
 ---
 
-## 7. Current development line — v12 Review UX
+## 6. Next planning phase after WP16B
 
-The current line of work is v12: make the review workflow safer and easier for legal users.
-
-### v12.1 — Review status model
-
-Status: completed.
-
-Added statuses:
-
-- Automatisch vervangen;
-- Controle nodig;
-- Handmatig toegevoegd;
-- Onthouden vervanging.
-
-Purpose:
+After WP16B closes green, the next recommended planning-only package is:
 
 ```text
-Help users understand what each row means before export.
+WP17 — PDF text extraction reinsert UI planning only
 ```
 
-### v12.2 — Review focus filters
+WP17 must not immediately implement UI. It should specify whether and how the helper from WP16 could be exposed safely.
 
-Status: completed.
-
-Added filters:
-
-- Toon alles;
-- Alleen controle nodig;
-- Alleen juridische referenties;
-- Alleen namen/adressen;
-- Alleen lage zekerheid.
-
-Important design rule:
+Expected planning direction:
 
 ```text
-Filters are focus views only. The full replacement table remains the source of truth.
+PDF upload → text extraction → restored TXT preview/download only
 ```
 
-### v12.3 — Review table simplification
+Required UX principles for a future PDF-to-TXT reinsert UI:
 
-Status: implemented; pending final verification after bugfix.
+- explain that PDF extraction is not guaranteed complete;
+- warn that formatting and layout are not preserved;
+- warn that restored output contains sensitive/confidential values again;
+- show local-only / no-AI / no-cloud;
+- show unknown placeholders;
+- show mapped placeholders not found;
+- reject or clearly mark scanned/image-only PDFs as unsupported;
+- do not imply that restored TXT equals a legally complete reconstruction of the PDF.
 
-Main table should focus on:
+Still out of scope after WP16B unless separately approved:
 
-- Meenemen;
-- Onthouden;
-- Status;
-- Gevonden tekst;
-- Vervangen door;
-- Type gegeven;
-- Zekerheid.
-
-Technical fields should move to:
-
-```text
-Technische details bij de vervangtabel
-```
+- full restored PDF output;
+- OCR;
+- PDF-to-DOCX reconstruction;
+- cloud PDF conversion;
+- AI-based extraction;
+- layout preservation promises;
+- batch PDF processing;
+- real-data PDF test cases.
 
 ---
 
-## 8. Next immediate phase — finish v12
+## 7. Upcoming strategic product phases
 
-### v12.4 — Review guidance text
-
-Goal:
-
-```text
-Make the review workflow self-explanatory.
-```
-
-Planned scope:
-
-- explain that only checked rows are included in export;
-- explain that `Controle nodig` rows are not automatically safe;
-- explain the focus filter is only a view, not the export scope;
-- explain technical details are for audit/debugging;
-- add clearer guidance around AI usage: scrub first, then use AI.
-
-Non-goals:
-
-- no recognizer changes;
-- no export semantics change;
-- no desktop/MSI work.
-
-### v12.5 — Final review summary
-
-Goal:
-
-```text
-Show a final export readiness summary before downloads.
-```
-
-Planned summary:
-
-- automatically detected rows;
-- rows needing review;
-- manually added rows;
-- remembered replacements;
-- checked rows included in export;
-- unchecked rows excluded from export;
-- open candidate warning.
-
-### v12.6 — Export sanity checks
-
-Goal:
-
-```text
-Warn users before exporting if risk remains.
-```
-
-Planned checks:
-
-- warning if `Controle nodig` rows remain unchecked;
-- warning if candidate rows exist but are not included;
-- warning if no replacements are selected;
-- warning if export mode implies redaction vs pseudonymization risk;
-- reminder that user review remains required.
-
----
-
-## 9. Next strategic phase — v13 Scrub Key / Reinsert
-
-This is the most important strategic addition after the v12 review flow.
-
-Inspired by CamoText’s anonymization-key and reinsert workflow.
-
-### v13.1 — Scrub Key JSON export
-
-Goal:
-
-```text
-Create a local mapping file for replacements.
-```
-
-A Scrub Key should contain:
-
-- original value;
-- placeholder;
-- entity type;
-- user-facing type label;
-- source;
-- review status;
-- include/exclude state;
-- timestamp;
-- optional project/dossier label.
-
-### v13.2 — Scrub Key import/reload
-
-Goal:
-
-```text
-Allow users to reuse a previously saved mapping.
-```
-
-Use cases:
-
-- consistent names across multiple documents;
-- same client/case over several files;
-- continue work later;
-- reinsert AI output.
-
-### v13.3 — AI-output reinsert
-
-Goal:
-
-```text
-Paste AI-generated output back into Scrub and locally restore original terms.
-```
-
-Workflow:
-
-1. scrub original document;
-2. send scrubbed text to AI;
-3. paste AI output back into Scrub;
-4. load Scrub Key;
-5. reinsert original values locally.
-
-### v13.4 — Pseudonymization warnings
-
-Goal:
-
-```text
-Make it clear that reversible mapping is pseudonymization, not true anonymization.
-```
-
-Warnings should explain:
-
-- if a Scrub Key exists, the text may be reversible;
-- key security matters;
-- do not share the key with external parties unless intended.
-
----
-
-## 10. v14 — Manual output review / highlight workflow
+### v14 — Manual output review / highlight workflow
 
 Goal:
 
@@ -435,9 +314,7 @@ Why this matters:
 Legal users often see missing sensitive terms while reading, not while editing a table.
 ```
 
----
-
-## 11. v15 — Document hygiene and metadata-clean export
+### v15 — Document hygiene and metadata-clean export
 
 Goal:
 
@@ -453,20 +330,18 @@ DOCX priorities:
 - handle tracked changes policy;
 - include headers/footers in scrubbing;
 - preserve basic layout where feasible;
-- produce new clean output file.
+- produce a clean output file.
 
-PDF priorities:
+PDF policy after WP15/WP16:
 
-- remove metadata where possible;
-- support text-based PDF;
-- warn when scanned/OCR content is not processed;
-- explicitly state limitations.
+- text-based PDF extraction may be used only for text output unless a later approved workpackage changes that;
+- scanned/OCR content remains unsupported;
+- full PDF reinsert remains out of scope;
+- limitations must be explicit.
 
 This phase is strategically important because legal documents often contain hidden metadata.
 
----
-
-## 12. v16 — Desktop/local proof of concept
+### v16 — Desktop/local proof of concept
 
 Goal:
 
@@ -496,16 +371,7 @@ Success criteria:
 - no cloud calls required;
 - Hugging Face no longer needed for real-world use.
 
----
-
-## 13. v17 — Legal profiles / vertical profiles
-
-Original order had legal profiles before Scrub Key, but after CamoText review the order changed:
-
-```text
-First: finish review workflow and Scrub Key.
-Then: expand domain profiles.
-```
+### v17 — Legal profiles / vertical profiles
 
 Planned Legal profiles:
 
@@ -527,9 +393,7 @@ Each profile should have:
 - own review guidance;
 - own regression tests.
 
----
-
-## 14. v18 — Batch / dossiermap
+### v18 — Batch / dossiermap
 
 Goal:
 
@@ -549,9 +413,7 @@ Planned scope:
 
 Batch should not come before single-document flow is reliable.
 
----
-
-## 15. v19 — CLI / automation
+### v19 — CLI / automation
 
 Goal:
 
@@ -567,17 +429,7 @@ scrublegal --input-dir zaakmap --output-dir zaakmap_ai --key-dir keys
 scrublegal --reinsert ai_output.docx --key zaak_key.json
 ```
 
-This is useful for:
-
-- power users;
-- IT-managed workflows;
-- batch processing;
-- future integrations;
-- AI-agent workflows.
-
----
-
-## 16. v20 — Broader vertical markets
+### v20 — Broader vertical markets
 
 Scrub Core should remain one engine, with vertical profiles on top.
 
@@ -593,31 +445,9 @@ Potential future verticals:
 
 Do not build separate apps too early.
 
-Architecture:
-
-```text
-Scrub Core
-  + profile: Legal
-  + profile: Zorg
-  + profile: HR/Arbo
-  + profile: Claims
-  + profile: Gemeente
-  + profile: Finance
-  + profile: Research
-```
-
-Each profile should add:
-
-- recognizers;
-- examples;
-- false-positive guards;
-- UI copy;
-- exports/audit labels;
-- tests.
-
 ---
 
-## 17. Product architecture target
+## 8. Product architecture target
 
 Current prototype architecture:
 
@@ -628,6 +458,9 @@ Presidio/spaCy recognizers
 Dutch legal recognizers
 Candidate scanner
 Review table
+Scrub Key import/export
+Pasted/TXT/DOCX reinsert
+PDF text extraction helper
 Exports
 GitHub Actions tests
 GitHub → Hugging Face sync
@@ -645,11 +478,11 @@ Optional CLI
 No required cloud processing
 ```
 
-The intermediate architecture can remain Streamlit-based while we validate workflow and recognizers.
+The intermediate architecture can remain Streamlit-based while we validate workflow, recognizers, document support and user experience.
 
 ---
 
-## 18. Security and trust principles
+## 9. Security and trust principles
 
 For the final product:
 
@@ -672,25 +505,39 @@ Future security validation should include:
 
 ---
 
-## 19. Current next action
+## 10. Development governance
 
-Before new roadmap work starts:
+For recognizer work:
 
-1. Verify the latest v12.3 pandas Index bugfix.
-2. Confirm GitHub Actions `Tests` are green.
-3. Confirm GitHub → Hugging Face sync is green.
-4. Reload the app.
-5. Confirm the simplified table and technical details expander work.
+1. Add or update synthetic regression cases.
+2. Add or update tests.
+3. Change recognizer/scanner logic.
+4. Verify GitHub Actions tests are green.
+5. Let GitHub sync to Hugging Face automatically.
+6. Test the app in Hugging Face when UI behavior changed.
+7. Update `CHANGELOG.md`.
+8. Update `WORKPACKAGES.md` when status or next steps change.
+9. Update `ROADMAP.md` only when strategy, phase status or sequence changes.
 
-Then continue with:
+For UI/UX work:
 
-```text
-v12.4 — Review guidance text
-```
+1. Prefer pure helper modules first.
+2. Add tests for helper logic.
+3. Patch UI sequentially.
+4. Verify GitHub Actions tests.
+5. Verify Hugging Face sync.
+6. Ask coordinator/user to app-verify visual behavior.
+7. Update changelog and workpackage status.
+
+For documentation-only work:
+
+- no tests are required unless documentation checks exist;
+- record that no code, UI or export behavior changed;
+- write a handover to `handover/workpackages/`.
 
 ---
 
-## 20. Maintenance rule for this roadmap
+## 11. Maintenance rule for this roadmap
 
 Update this file when:
 
