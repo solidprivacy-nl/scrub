@@ -8,7 +8,7 @@ Use it together with:
 - `CHANGELOG.md` for the implementation history;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap status reconciliation: 2026-06-09.
+Last roadmap status reconciliation: 2026-06-09 — WP17B.
 
 ---
 
@@ -110,7 +110,7 @@ Important retained lessons:
 
 ## 4. Current implementation status
 
-Current implementation status after the v13.8 and PDF-helper line:
+Current implementation status after WP17:
 
 ```text
 v9       Dutch Legal UI Layer                                      completed
@@ -126,8 +126,11 @@ v13.6    Two-mode UI: Anonimiseren / Originele waarden terugzetten completed/app
 v13.7    TXT reinsert upload/download UI                           completed/app-verified
 v13.8    DOCX reinsert upload/download UI                          completed/app-verified
 WP15     PDF text extraction reliability review                    completed review/specification only
-WP16     Text-based PDF extraction helper spike                    implemented
-WP16-FIX PDF helper test fix                                       implemented; green evidence supplied; awaiting closeout
+WP16     Text-based PDF extraction helper spike                    completed after Actions/sync verification
+WP16-FIX PDF helper test fix                                       completed after Actions/sync verification
+WP16B    PDF helper verification closeout                          completed closeout-only
+WP17     PDF text extraction reinsert UI planning                  completed planning/specification-only
+WP17B    Roadmap current-status reconciliation after WP17           completed documentation-only
 ```
 
 ### 4.1 v12 Review UX line
@@ -172,7 +175,7 @@ Known DOCX limitations remain:
 - placeholders split across Word runs may not be restored;
 - no perfect formatting guarantee is made.
 
-### 4.3 PDF review and helper line
+### 4.3 PDF review, helper and planning line
 
 WP15 concluded:
 
@@ -189,82 +192,73 @@ WP16 implemented that helper-only spike:
 PDF bytes → local selectable-text extraction → existing Scrub Key reinsert → restored TXT/text output only
 ```
 
-WP16 intentionally did not add:
-
-- UI;
-- OCR;
-- PDF output;
-- PDF-to-DOCX reconstruction;
-- cloud PDF conversion;
-- AI-based extraction;
-- layout preservation promises.
-
-WP16-FIX made the PDF helper import-safe when `pypdf` is not installed in the GitHub Actions test job.
-
-Coordinator evidence after WP16-FIX shows:
+WP16 / WP16-FIX / WP16B status:
 
 ```text
-Tests #198 green — commit 4ccd79e
-Sync to Hugging Face Space #212 green — commit 4ccd79e
-Tests #199 green — commit 1fbdf48
-Sync to Hugging Face Space #213 green — commit 1fbdf48
-Tests #200 green — commit 410f04a
-Sync to Hugging Face Space #214 green — commit 410f04a
-Tests #201 green — commit 9354727
-Sync to Hugging Face Space #215 green — commit 9354727
+Completed after Actions/sync verification; app verification not applicable because no UI behavior changed.
 ```
 
-The repository still needs an explicit WP16B verification closeout to record this evidence as final status.
+WP17 completed planning/specification-only. It specified that any future PDF UI must be limited to:
+
+```text
+PDF upload → local text extraction → restored TXT preview/download only
+```
+
+The PDF boundaries remain:
+
+- no restored PDF output;
+- no OCR;
+- no PDF-to-DOCX reconstruction;
+- no cloud PDF conversion;
+- no AI-based extraction;
+- no layout preservation promises;
+- no batch PDF processing;
+- no real-data PDF test cases;
+- no automatic PDF rehydration.
 
 ---
 
-## 5. Current next action
+## 5. Current next possible workpackage
 
-The active next workpackage is:
-
-```text
-WP16B — Text-based PDF extraction helper spike verification and closeout
-```
-
-WP16B should be closeout-only.
-
-It may update only:
+The current next possible workpackage is:
 
 ```text
-WORKPACKAGES.md
-CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_pdf_text_helper_verification_closeout.md
+WP18 — PDF text extraction to restored TXT UI implementation
 ```
 
-WP16B must not change code, tests, UI, dependencies or export semantics.
+WP18 has **not** started.
 
-WP16B should record:
+WP18 must not start unless explicitly approved as a separate implementation workpackage.
 
-- GitHub Actions tests green based on coordinator evidence;
-- Hugging Face sync green based on coordinator evidence;
-- app verification not applicable because no UI changed;
-- no UI added;
-- no OCR added;
-- no PDF output added;
-- no AI/cloud behavior added.
+If approved later, WP18 should remain limited to:
+
+- `Originele waarden terugzetten` only;
+- PDF upload;
+- local text extraction via the WP16 helper;
+- restored TXT preview;
+- restored TXT download;
+- audit report;
+- strong warnings;
+- no PDF output;
+- no OCR;
+- no AI/cloud behavior;
+- no export/download semantic changes outside the approved PDF-to-TXT reinsert path.
 
 ---
 
-## 6. Next planning phase after WP16B
+## 6. PDF UI implementation boundaries for WP18
 
-After WP16B closes green, the next recommended planning-only package is:
+WP18, if explicitly approved, must preserve these boundaries:
 
-```text
-WP17 — PDF text extraction reinsert UI planning only
-```
-
-WP17 must not immediately implement UI. It should specify whether and how the helper from WP16 could be exposed safely.
-
-Expected planning direction:
-
-```text
-PDF upload → text extraction → restored TXT preview/download only
-```
+- no restored PDF output;
+- no OCR;
+- no PDF-to-DOCX reconstruction;
+- no cloud PDF conversion;
+- no AI-based extraction;
+- no layout preservation promises;
+- no batch PDF processing;
+- no real-data PDF test cases;
+- no automatic PDF rehydration.
 
 Required UX principles for a future PDF-to-TXT reinsert UI:
 
@@ -276,17 +270,6 @@ Required UX principles for a future PDF-to-TXT reinsert UI:
 - show mapped placeholders not found;
 - reject or clearly mark scanned/image-only PDFs as unsupported;
 - do not imply that restored TXT equals a legally complete reconstruction of the PDF.
-
-Still out of scope after WP16B unless separately approved:
-
-- full restored PDF output;
-- OCR;
-- PDF-to-DOCX reconstruction;
-- cloud PDF conversion;
-- AI-based extraction;
-- layout preservation promises;
-- batch PDF processing;
-- real-data PDF test cases.
 
 ---
 
@@ -332,11 +315,12 @@ DOCX priorities:
 - preserve basic layout where feasible;
 - produce a clean output file.
 
-PDF policy after WP15/WP16:
+PDF policy after WP15/WP16/WP17:
 
-- text-based PDF extraction may be used only for text output unless a later approved workpackage changes that;
+- text-based PDF extraction may be used only for restored TXT output unless a later approved workpackage changes that;
 - scanned/OCR content remains unsupported;
 - full PDF reinsert remains out of scope;
+- restored PDF output remains out of scope;
 - limitations must be explicit.
 
 This phase is strategically important because legal documents often contain hidden metadata.
@@ -461,6 +445,7 @@ Review table
 Scrub Key import/export
 Pasted/TXT/DOCX reinsert
 PDF text extraction helper
+PDF text reinsert UI plan
 Exports
 GitHub Actions tests
 GitHub → Hugging Face sync
@@ -519,33 +504,10 @@ For recognizer work:
 8. Update `WORKPACKAGES.md` when status or next steps change.
 9. Update `ROADMAP.md` only when strategy, phase status or sequence changes.
 
-For UI/UX work:
+For UI implementation work:
 
-1. Prefer pure helper modules first.
-2. Add tests for helper logic.
-3. Patch UI sequentially.
-4. Verify GitHub Actions tests.
-5. Verify Hugging Face sync.
-6. Ask coordinator/user to app-verify visual behavior.
-7. Update changelog and workpackage status.
-
-For documentation-only work:
-
-- no tests are required unless documentation checks exist;
-- record that no code, UI or export behavior changed;
-- write a handover to `handover/workpackages/`.
-
----
-
-## 11. Maintenance rule for this roadmap
-
-Update this file when:
-
-- the development sequence changes;
-- external product research changes priorities;
-- a new major phase is introduced;
-- a phase is completed and its status changes;
-- we decide to target a new vertical market;
-- desktop/MSI direction changes.
-
-Do not use this file for every small code change. Use `CHANGELOG.md` for implementation history.
+1. Prefer helper modules and tests before UI changes.
+2. Keep UI workpackages small and sequential.
+3. Do not silently change export/download semantics.
+4. Ask for app verification whenever UI behavior changes.
+5. Preserve local-only, no-AI and no-cloud boundaries unless explicitly approved otherwise.
