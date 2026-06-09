@@ -192,17 +192,81 @@ Validation:
 - Hugging Face sync: green based on coordinator evidence.
 - App verification: not applicable; no UI behavior changed.
 
+## WP17 — PDF text extraction reinsert UI planning only
+
+Status: completed planning/specification-only.
+
+Purpose:
+
+- Specify whether and how the WP16 PDF text helper may be exposed safely in the future UI.
+- Keep implementation out of scope.
+- Preserve all current code, tests, UI behavior, dependencies and export semantics.
+
+Planning conclusion:
+
+- PDF text extraction may be exposed only as text-based PDF extraction to restored TXT output.
+- Future placement must be only in `Originele waarden terugzetten`.
+- The UI must not appear in `Anonimiseren`.
+- DOCX remains the preferred document-level reinsert route.
+- The future workflow should be PDF upload → local text extraction → restored TXT preview/download only.
+- Strong warnings must explain incomplete PDF extraction, no layout preservation, restored sensitive values, unsupported scanned/image-only PDFs and TXT-only output.
+- The future UI must show audit fields for document type, extracted text length, restored value count, mapping counts, placeholder issues, validation issues, unsupported reason, local-only status, AI/cloud status, OCR-used status and PDF-output status.
+- Unsupported cases must not silently succeed.
+
+Files added:
+
+- `PDF_TEXT_REINSERT_UI_PLAN.md`
+- `handover/workpackages/20260609_1130_pdf_text_reinsert_ui_planning.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Validation:
+
+- Tests: not applicable; planning-only.
+- GitHub Actions: not required unless documentation checks run.
+- Hugging Face sync: not functionally relevant; no app behavior changed.
+- App verification: not applicable; no UI behavior changed.
+
+Out-of-scope boundaries preserved:
+
+- No code changed.
+- No tests changed.
+- No UI changed.
+- No dependencies changed.
+- No OCR added.
+- No PDF output added.
+- No PDF-to-DOCX reconstruction added.
+- No cloud PDF conversion added.
+- No AI-based extraction added.
+- No layout preservation promises added.
+- No batch PDF processing added.
+- No real-data PDF test cases added.
+- No automatic PDF rehydration added.
+- Existing pasted-text, TXT and DOCX reinsert behavior unchanged.
+- Existing scrubbed TXT/CSV/DOCX/PDF export/download behavior unchanged.
+- Existing Scrub Key import/export behavior unchanged.
+
 ## Active / next recommended workpackage
 
-WP17 — PDF text extraction reinsert UI planning only.
+WP18 — PDF text extraction to restored TXT UI implementation.
 
-WP17 must be planning/specification-only and must not start UI implementation directly.
+WP18 must not start unless explicitly approved as a separate implementation workpackage.
 
-Recommended WP17 planning scope:
+Recommended WP18 scope:
 
-- plan whether and how the WP16 helper can be exposed safely as PDF upload → local text extraction → restored TXT preview/download only;
-- document warnings for incomplete PDF extraction, unsupported scanned/image-only PDFs, no layout preservation and sensitive-value restoration;
-- keep restored PDF output, OCR, PDF-to-DOCX reconstruction, cloud PDF conversion, AI-based extraction and layout preservation promises out of scope unless separately approved.
+- `Originele waarden terugzetten` only;
+- PDF upload;
+- local text extraction via WP16 helper;
+- restored TXT preview;
+- restored TXT download;
+- audit report;
+- strong warnings;
+- no PDF output;
+- no OCR;
+- no AI/cloud.
 
 Keep explicitly out of scope until separately approved:
 
@@ -211,4 +275,7 @@ Keep explicitly out of scope until separately approved:
 - PDF-to-DOCX reconstruction;
 - cloud PDF conversion;
 - AI-based extraction;
-- layout preservation promises.
+- layout preservation promises;
+- batch PDF processing;
+- real-data PDF test cases;
+- automatic PDF rehydration.
