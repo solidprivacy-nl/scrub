@@ -13,6 +13,7 @@ Repository: `solidprivacy-nl/scrub`.
 
 Also read when relevant:
 
+- `AGENTS.md`
 - `RISK_REGISTER.md`
 - `DECISION_LOG.md`
 - `STATUS_MONITORING_RUNBOOK.md`
@@ -36,6 +37,7 @@ WP18 — PDF text extraction to restored TXT UI implementation: completed and ap
 WP18R — Risk-driven roadmap and operating model reset: completed documentation/governance-only.
 WP18-FIX — Fix failing PDF text to TXT UI tests: completed after Actions/sync verification; WP18 app verification completed.
 WP18B — PDF text to restored TXT UI app verification closeout: completed closeout-only.
+WP18C — Add Codex worker governance instructions: completed documentation/governance-only.
 ```
 
 ## Closed UI line: WP18 PDF text to restored TXT
@@ -120,6 +122,41 @@ handover/workpackages/20260609_1315_pdf_text_to_txt_ui_app_closeout.md
 ```
 
 No code, tests, dependencies or UI files were changed.
+
+## Governance setup: WP18C Codex worker governance
+
+### WP18C — Add Codex worker governance instructions
+
+Status: completed documentation/governance-only.
+
+Purpose:
+
+- Add repository-level Codex/agent worker instructions.
+- Make handover-by-file the default workflow for parallel Codex workers.
+- Avoid full handover copy-paste into the coordinator chat when the handover is committed to GitHub.
+
+Files added:
+
+```text
+AGENTS.md
+handover/workpackages/20260609_1330_codex_worker_governance.md
+```
+
+Files changed:
+
+```text
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+No code, tests, UI, dependencies, runtime behavior or product behavior were changed.
+
+Codex worker rule:
+
+```text
+Workers must write full handovers to handover/workpackages/.
+Coordinator chat only needs handover path, commit/PR, status and short summary unless commit failed or GitHub access is unavailable.
+```
 
 ## Active / next recommended workpackages
 
