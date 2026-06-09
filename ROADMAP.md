@@ -1,14 +1,17 @@
-# SolidPrivacy Scrub — Product & Development Roadmap
+# SolidPrivacy Scrub — Risk-driven Product & Development Roadmap
 
 This document is the central roadmap for SolidPrivacy Scrub.
 
 Use it together with:
 
 - `WORKPACKAGES.md` for the active execution queue, dependencies and verification gates;
-- `CHANGELOG.md` for the implementation history;
+- `CHANGELOG.md` for internal implementation history;
+- `RELEASE_NOTES.md` for user-facing product changes;
+- `RISK_REGISTER.md` for trust, privacy and product risks;
+- `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap status reconciliation: 2026-06-09 — WP17B.
+Last roadmap status reconciliation: 2026-06-09 — WP18R.
 
 ---
 
@@ -16,11 +19,11 @@ Last roadmap status reconciliation: 2026-06-09 — WP17B.
 
 Scrub is evolving from a technical Presidio demo into a local-first professional document scrubber for confidential Dutch documents.
 
-The primary starting market is:
+The first product wedge is confidential Dutch professional documents, with two early validation markets:
 
 ```text
-Scrub Legal
-A local Dutch legal scrubber for process documents, case files and AI use.
+Scrub Legal — Dutch legal process documents, case files and AI use.
+Scrub Zorg  — Dutch care/healthcare operational documents and AI use.
 ```
 
 The broader product direction is:
@@ -44,6 +47,7 @@ The key promise remains:
 Sensitive information stays local.
 The user remains in control.
 The document stays readable.
+Residual risk is visible.
 ```
 
 ---
@@ -55,23 +59,25 @@ The product is not just a generic anonymizer.
 The real problem is:
 
 ```text
-How can a professional safely use or share confidential documents without losing context, legal meaning or auditability?
+How can a professional safely use or share confidential documents without losing context, legal meaning, control or auditability?
 ```
 
 Scrub must optimize for:
 
 1. local processing;
-2. context preservation;
-3. human review;
-4. consistent placeholders;
-5. auditability;
-6. domain-specific recognition;
-7. safe export;
-8. eventually desktop/offline deployment.
+2. high recall for sensitive data;
+3. context preservation;
+4. human review;
+5. consistent placeholders;
+6. secure Scrub Key lifecycle;
+7. auditability and residual-risk reporting;
+8. domain-specific recognition;
+9. safe export;
+10. desktop/offline deployment.
 
-Legal context must be preserved. Scrub should replace sensitive values, not legal meaning.
+Legal and professional context must be preserved. Scrub should replace sensitive values, not legal meaning.
 
-Examples of legal context that must remain readable:
+Examples of context that must remain readable:
 
 - slachtoffer;
 - minderjarige;
@@ -82,35 +88,47 @@ Examples of legal context that must remain readable:
 - rechtbank;
 - zaaknummer label;
 - claim context;
-- incident context.
+- incident context;
+- zorgrelatie context;
+- functionele rolbenamingen.
 
 ---
 
 ## 3. Strategic workflow
 
-The current product workflow direction is:
+The product workflow direction remains:
 
 ```text
 Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit
 ```
 
-This direction was strengthened by external product review of anonym.plus and CamoText.
+The roadmap is now risk-driven rather than feature-driven.
 
-Important retained lessons:
+The highest priority risks are:
 
-- do not sell only detection; sell a trustworthy local workflow;
-- position Scrub as an AI-safety workflow for confidential documents;
-- use human-in-the-loop review before export;
-- support a reversible Scrub Key / mapping file for controlled pseudonymization;
-- allow local reinsert into AI output;
-- make pseudonymization risks explicit;
-- keep the future desktop/offline path open.
+1. false negatives: sensitive values missed by the scrubber;
+2. Scrub Key leakage or accidental sharing;
+3. hidden document content and metadata leakage;
+4. cloud-demo trust gap versus local-first promise;
+5. placeholder corruption during AI roundtrip;
+6. table-centric review that does not match how professionals review documents;
+7. unsupported PDF/scanned content being misunderstood as safely processed.
+
+The product should not sell only detection. It should sell a trustworthy local workflow with:
+
+- measurable recall;
+- human-in-the-loop review;
+- reversible pseudonymization under user control;
+- secure Scrub Key handling;
+- visible limitations;
+- residual-risk/audit reporting;
+- a clear future path to local desktop/offline use.
 
 ---
 
 ## 4. Current implementation status
 
-Current implementation status after WP17:
+Current implementation status after WP18 implementation and WP18R roadmap reset:
 
 ```text
 v9       Dutch Legal UI Layer                                      completed
@@ -131,6 +149,8 @@ WP16-FIX PDF helper test fix                                       completed aft
 WP16B    PDF helper verification closeout                          completed closeout-only
 WP17     PDF text extraction reinsert UI planning                  completed planning/specification-only
 WP17B    Roadmap current-status reconciliation after WP17           completed documentation-only
+WP18     PDF text extraction to restored TXT UI implementation      implemented; tests failing; fix required
+WP18R    Risk-driven roadmap and operating model reset              completed documentation/governance-only
 ```
 
 ### 4.1 v12 Review UX line
@@ -175,7 +195,7 @@ Known DOCX limitations remain:
 - placeholders split across Word runs may not be restored;
 - no perfect formatting guarantee is made.
 
-### 4.3 PDF review, helper and planning line
+### 4.3 PDF review, helper and UI line
 
 WP15 concluded:
 
@@ -192,17 +212,13 @@ WP16 implemented that helper-only spike:
 PDF bytes → local selectable-text extraction → existing Scrub Key reinsert → restored TXT/text output only
 ```
 
-WP16 / WP16-FIX / WP16B status:
-
-```text
-Completed after Actions/sync verification; app verification not applicable because no UI behavior changed.
-```
-
-WP17 completed planning/specification-only. It specified that any future PDF UI must be limited to:
+WP17 specified that any future PDF UI must be limited to:
 
 ```text
 PDF upload → local text extraction → restored TXT preview/download only
 ```
+
+WP18 implemented the UI but currently has failing GitHub Actions tests. WP18 must be fixed and verified before app verification or closeout.
 
 The PDF boundaries remain:
 
@@ -218,220 +234,249 @@ The PDF boundaries remain:
 
 ---
 
-## 5. Current next possible workpackage
+## 5. Active next workpackage
 
-The current next possible workpackage is:
+The active next workpackage is:
 
 ```text
-WP18 — PDF text extraction to restored TXT UI implementation
+WP18-FIX — Fix failing PDF text to TXT UI tests
 ```
 
-WP18 has **not** started.
+Do not start WP18B until:
 
-WP18 must not start unless explicitly approved as a separate implementation workpackage.
+- GitHub Actions tests are green after WP18-FIX;
+- Hugging Face sync is green after WP18-FIX;
+- the coordinator/user has verified the Hugging Face app behavior.
 
-If approved later, WP18 should remain limited to:
+WP18 app verification must confirm:
 
-- `Originele waarden terugzetten` only;
-- PDF upload;
-- local text extraction via the WP16 helper;
-- restored TXT preview;
-- restored TXT download;
-- audit report;
-- strong warnings;
-- no PDF output;
-- no OCR;
-- no AI/cloud behavior;
-- no export/download semantic changes outside the approved PDF-to-TXT reinsert path.
+- `Originele waarden terugzetten` shows the new PDF-to-TXT section;
+- `Anonimiseren` does not show the PDF reinsert section;
+- a valid Scrub Key can be loaded;
+- a text-based PDF with placeholders can be uploaded;
+- PDF text can be restored locally to TXT;
+- restored TXT preview appears;
+- restored TXT download appears;
+- audit report appears;
+- UI clearly says no OCR, no AI, no cloud and no PDF output;
+- scanned/image-only PDFs are rejected or clearly marked unsupported;
+- existing pasted-text, TXT and DOCX reinsert still work;
+- existing anonymization/export behavior is unchanged.
 
 ---
 
-## 6. PDF UI implementation boundaries for WP18
+## 6. New risk-driven phase order
 
-WP18, if explicitly approved, must preserve these boundaries:
+After WP18-FIX, WP18 app verification and WP18B closeout, do not continue with batch, CLI or more PDF features first.
 
-- no restored PDF output;
-- no OCR;
-- no PDF-to-DOCX reconstruction;
-- no cloud PDF conversion;
-- no AI-based extraction;
-- no layout preservation promises;
-- no batch PDF processing;
-- no real-data PDF test cases;
-- no automatic PDF rehydration.
+The next development phases are:
 
-Required UX principles for a future PDF-to-TXT reinsert UI:
+```text
+Phase 1 — Trust & recall foundation
+Phase 2 — Scrub Key security and lifecycle
+Phase 3 — Placeholder robustness for AI roundtrip
+Phase 4 — Hidden content and document hygiene
+Phase 5 — Document-centric review UX
+Phase 6 — Local-first runtime
+Phase 7 — Pilot validation: Legal vs Zorg
+Phase 8 — Scale features: profiles, batch, CLI, enterprise
+```
 
-- explain that PDF extraction is not guaranteed complete;
-- warn that formatting and layout are not preserved;
-- warn that restored output contains sensitive/confidential values again;
-- show local-only / no-AI / no-cloud;
-- show unknown placeholders;
-- show mapped placeholders not found;
-- reject or clearly mark scanned/image-only PDFs as unsupported;
-- do not imply that restored TXT equals a legally complete reconstruction of the PDF.
-
----
-
-## 7. Upcoming strategic product phases
-
-### v14 — Manual output review / highlight workflow
+### Phase 1 — Trust & recall foundation
 
 Goal:
 
 ```text
-Allow users to manually mark text from the output/review area and replace it everywhere.
+Make detection quality measurable and treat false negatives as a product-critical risk.
 ```
 
-Planned scope:
+Recommended workpackages:
 
-- search in scrubbed output;
-- manually add selected text to replacement table;
-- choose replacement type;
-- replace selected text everywhere;
-- add manual replacement to Scrub Key.
+- WP19 — Recall benchmark specification.
+- WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
+- WP21 — Gold-label entity schema.
+- WP22 — Recall/precision test runner.
+- WP23 — Entity-class scorecard in CI.
+- WP24 — False-negative residual-risk report.
 
-Why this matters:
+Outputs:
 
-```text
-Legal users often see missing sensitive terms while reading, not while editing a table.
-```
+- per-entity recall/precision metrics;
+- known failure classes;
+- residual-risk summary;
+- CI guard for benchmark regressions.
 
-### v15 — Document hygiene and metadata-clean export
+### Phase 2 — Scrub Key security and lifecycle
 
 Goal:
 
 ```text
-Produce clean outputs that do not leak metadata or hidden document content.
+Treat the Scrub Key as sensitive data because it can re-identify scrubbed content.
 ```
 
-DOCX priorities:
+Recommended workpackages:
 
-- remove document metadata;
-- remove author information where possible;
-- handle comments;
-- handle tracked changes policy;
-- include headers/footers in scrubbing;
-- preserve basic layout where feasible;
-- produce a clean output file.
+- WP25 — Scrub Key threat model.
+- WP26 — Scrub Key encryption/lifecycle specification.
+- WP27 — Scrub Key warning UX plan.
+- WP28 — Scrub Key expiry/delete policy.
+- WP29 — Scrub Key secure import/export tests.
 
-PDF policy after WP15/WP16/WP17:
+Do not implement encryption before the threat model and lifecycle specification are complete.
 
-- text-based PDF extraction may be used only for restored TXT output unless a later approved workpackage changes that;
-- scanned/OCR content remains unsupported;
-- full PDF reinsert remains out of scope;
-- restored PDF output remains out of scope;
-- limitations must be explicit.
-
-This phase is strategically important because legal documents often contain hidden metadata.
-
-### v16 — Desktop/local proof of concept
+### Phase 3 — Placeholder robustness for AI roundtrip
 
 Goal:
 
 ```text
-Prove that Scrub can run locally outside Hugging Face.
+Ensure placeholders survive AI rewriting, translation and summarization well enough for deterministic reinsert.
 ```
 
-Preferred direction:
+Recommended workpackages:
 
-- Python backend remains local;
-- frontend can be Streamlit initially, then desktop wrapper;
-- portable Windows build first;
-- MSI later;
-- no internet required for core processing.
+- WP30 — Placeholder robustness review.
+- WP31 — LLM-resistant placeholder format proposal.
+- WP32 — Placeholder checksum/validation helper.
+- WP33 — Unknown/changed placeholder audit hardening.
+- WP34 — Synthetic AI-output placeholder corruption tests.
 
-Possible technical paths:
+Example future direction:
 
-- Streamlit local launcher;
-- Tauri + local Python service;
-- Electron + local Python service;
-- PyInstaller/Nuitka for local packaging experiments.
+```text
+[[SP_NAME_0001_A7F3]]
+[[SP_BSN_0002_C91B]]
+```
 
-Success criteria:
-
-- app starts locally;
-- sample document can be scrubbed offline;
-- no cloud calls required;
-- Hugging Face no longer needed for real-world use.
-
-### v17 — Legal profiles / vertical profiles
-
-Planned Legal profiles:
-
-- algemeen juridisch;
-- familierecht;
-- strafrecht;
-- arbeidsrecht;
-- bestuursrecht;
-- vreemdelingenrecht;
-- letselschade / verzekering;
-- huurrecht / vastgoed;
-- medisch-juridisch.
-
-Each profile should have:
-
-- own example texts;
-- own recognizer emphasis;
-- own false-positive guards;
-- own review guidance;
-- own regression tests.
-
-### v18 — Batch / dossiermap
+### Phase 4 — Hidden content and document hygiene
 
 Goal:
 
 ```text
-Process multiple documents or full case folders.
+Prevent hidden document content and metadata from leaking sensitive information.
 ```
 
-Planned scope:
+Recommended workpackages:
 
-- input folder;
-- output folder;
-- preserve folder structure;
-- scrub keys per file or per dossier;
-- summary report;
-- ZIP export;
-- later parallel processing.
+- WP35 — DOCX hidden content risk review.
+- WP36 — DOCX metadata cleaner helper.
+- WP37 — Headers/footers/comments/tracked-changes extraction helper.
+- WP38 — DOCX hygiene audit report.
+- WP39 — Clean DOCX export policy.
+
+This phase must precede batch/CLI scale features.
+
+### Phase 5 — Document-centric review UX
+
+Goal:
+
+```text
+Move review from table-first to document-first, because professionals review documents, not only rows of detected spans.
+```
+
+Recommended workpackages:
+
+- WP40 — Document-centric review UX specification.
+- WP41 — Highlight-based review prototype decision.
+- WP42 — Streamlit feasibility boundary review.
+- WP43 — Frontend architecture decision: Streamlit vs React/Tauri/Electron.
+- WP44 — Click-to-mark sensitive text prototype.
+
+Streamlit may remain the prototype UI, but the final professional review UI may need a separate frontend.
+
+### Phase 6 — Local-first runtime
+
+Goal:
+
+```text
+Resolve the trust gap between the local-first promise and the current Hugging Face cloud demo.
+```
+
+Recommended workpackages:
+
+- WP45 — Local runtime architecture plan.
+- WP46 — Minimal local Streamlit launcher.
+- WP47 — Local file handling/privacy test.
+- WP48 — Portable Windows proof of concept.
+- WP49 — Desktop packaging decision: PyInstaller/Tauri/Electron.
+
+Hugging Face remains useful for demo and development, but should not be the trust environment for confidential real-world documents.
+
+### Phase 7 — Pilot validation: Legal vs Zorg
+
+Goal:
+
+```text
+Test whether real users trust, use and pay for the workflow.
+```
+
+Recommended workpackages:
+
+- WP50 — Pilot design: Legal vs Zorg.
+- WP51 — ICP and pricing hypothesis.
+- WP52 — Pilot intake and NDA process.
+- WP53 — 10-document controlled pilot protocol.
+- WP54 — Missers/false negatives feedback loop.
+- WP55 — Residual-risk report as consultancy deliverable.
+
+Because SolidPrivacy already has care-sector context, Scrub Zorg may be the fastest validation wedge even while Scrub Legal remains the initial product concept.
+
+### Phase 8 — Scale features
+
+Only after single-document trust, security, review and local runtime are credible:
+
+- vertical profiles;
+- batch / dossiermap;
+- CLI / automation;
+- enterprise deployment;
+- broader markets.
 
 Batch should not come before single-document flow is reliable.
 
-### v19 — CLI / automation
+---
 
-Goal:
+## 7. Parallelization strategy
 
-```text
-Support headless and enterprise workflows.
-```
-
-Possible commands:
+After WP18-FIX is resolved, these can run safely in parallel because they do not touch the same UI flow:
 
 ```text
-scrublegal --input dossier.docx --output dossier_scrubbed.docx --profile arbeidsrecht
-scrublegal --input-dir zaakmap --output-dir zaakmap_ai --key-dir keys
-scrublegal --reinsert ai_output.docx --key zaak_key.json
+WP19 — Recall benchmark specification
+WP25 — Scrub Key threat model
+WP30 — Placeholder robustness review
+WP35 — DOCX hidden content risk review
+WP45 — Local runtime architecture plan
+WP50 — Pilot design: Legal vs Zorg
+WP56 — User-facing release notes split and documentation hygiene
+WP57 — Workflow status monitoring runbook and checks
 ```
 
-### v20 — Broader vertical markets
+Do not run in parallel:
 
-Scrub Core should remain one engine, with vertical profiles on top.
-
-Potential future verticals:
-
-1. Scrub Legal;
-2. Scrub Zorg;
-3. Scrub HR / Arbo;
-4. Scrub Claims / Verzekering;
-5. Scrub Gemeente / Sociaal Domein;
-6. Scrub Finance / Accountancy;
-7. Scrub Research.
-
-Do not build separate apps too early.
+- WP18-FIX and any other UI patch work;
+- multiple changes to `Dockerfile` startup patch order;
+- multiple changes to `fix_streamlit_nested_expanders.py` or `presidio_streamlit.py`;
+- export/download flow changes.
 
 ---
 
-## 8. Product architecture target
+## 8. Documentation model
+
+The documentation model is now split:
+
+```text
+ROADMAP.md         = strategic risk-driven direction and phase order
+WORKPACKAGES.md    = active queue and execution dependencies
+CHANGELOG.md       = internal implementation/workpackage log
+RELEASE_NOTES.md   = user-facing product capability changes
+DECISION_LOG.md    = accepted strategic/architecture/product decisions
+RISK_REGISTER.md   = active privacy/product/security risks and mitigations
+handover/          = worker handovers
+```
+
+This avoids mixing user-facing release information with agent/process worklogs.
+
+---
+
+## 9. Product architecture target
 
 Current prototype architecture:
 
@@ -445,7 +490,7 @@ Review table
 Scrub Key import/export
 Pasted/TXT/DOCX reinsert
 PDF text extraction helper
-PDF text reinsert UI plan
+PDF-to-restored-TXT UI implementation
 Exports
 GitHub Actions tests
 GitHub → Hugging Face sync
@@ -456,18 +501,32 @@ Target architecture:
 ```text
 Local desktop app
 Local recognition engine
+Local benchmark/evaluation layer
 Local review workflow
-Local Scrub Key vault/files
+Secure local Scrub Key vault/files
 Local exports
+Residual-risk/audit reports
 Optional CLI
 No required cloud processing
 ```
 
-The intermediate architecture can remain Streamlit-based while we validate workflow, recognizers, document support and user experience.
+Layered architecture target:
+
+```text
+1. Core detection engine
+2. Evaluation and recall layer
+3. Review and decision layer
+4. Scrub Key security layer
+5. Reinsert layer
+6. UI layer
+7. Runtime/deployment layer
+```
+
+The Python core should remain reusable. Streamlit can remain the prototype/demo surface while the future document-centric review UI is evaluated separately.
 
 ---
 
-## 9. Security and trust principles
+## 10. Security and trust principles
 
 For the final product:
 
@@ -478,7 +537,9 @@ For the final product:
 - local-only processing as default;
 - metadata-aware exports;
 - audit report;
-- clear distinction between anonymization, pseudonymization and redaction.
+- residual-risk report;
+- clear distinction between anonymization, pseudonymization and redaction;
+- explicit Scrub Key lifecycle and deletion policy.
 
 Future security validation should include:
 
@@ -486,23 +547,25 @@ Future security validation should include:
 - network traffic check;
 - clear file storage locations;
 - local key storage explanation;
-- user-controlled deletion.
+- user-controlled deletion;
+- encrypted or protected Scrub Key strategy.
 
 ---
 
-## 10. Development governance
+## 11. Development governance
 
 For recognizer work:
 
-1. Add or update synthetic regression cases.
+1. Add or update benchmark/gold-label cases.
 2. Add or update tests.
 3. Change recognizer/scanner logic.
 4. Verify GitHub Actions tests are green.
-5. Let GitHub sync to Hugging Face automatically.
+5. Verify GitHub to Hugging Face sync when relevant.
 6. Test the app in Hugging Face when UI behavior changed.
 7. Update `CHANGELOG.md`.
-8. Update `WORKPACKAGES.md` when status or next steps change.
-9. Update `ROADMAP.md` only when strategy, phase status or sequence changes.
+8. Update `RELEASE_NOTES.md` for user-facing changes.
+9. Update `WORKPACKAGES.md` when status or next steps change.
+10. Update `ROADMAP.md` only when strategy, phase status or sequence changes.
 
 For UI implementation work:
 
@@ -511,3 +574,10 @@ For UI implementation work:
 3. Do not silently change export/download semantics.
 4. Ask for app verification whenever UI behavior changes.
 5. Preserve local-only, no-AI and no-cloud boundaries unless explicitly approved otherwise.
+
+For status monitoring:
+
+1. Check GitHub Actions status directly when possible.
+2. Check GitHub to Hugging Face sync directly when possible.
+3. Fetch failing job logs before proposing a fix.
+4. Ask the coordinator only for app verification or permissions gaps.
