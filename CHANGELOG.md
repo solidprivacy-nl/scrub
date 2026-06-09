@@ -1,5 +1,72 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP17 — PDF text extraction reinsert UI planning only
+
+Status: completed planning/specification-only.
+
+Purpose:
+
+- Create a safe future UI specification for exposing the WP16 PDF text extraction helper.
+- Decide whether PDF support should appear in the UI and under which boundaries.
+- Keep implementation, UI changes, code changes, tests and dependencies out of scope.
+
+Files added:
+
+- `PDF_TEXT_REINSERT_UI_PLAN.md`
+- `handover/workpackages/20260609_1130_pdf_text_reinsert_ui_planning.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Planning conclusion:
+
+- PDF text extraction may be exposed in the future UI only as text-based PDF extraction to restored TXT output.
+- The future UI must live only in `Originele waarden terugzetten`.
+- The PDF text workflow must not appear in `Anonimiseren`.
+- DOCX remains the preferred document-level reinsert route.
+- The future workflow should be PDF upload → local text extraction → restored TXT preview/download only.
+- Strong PDF limitation warnings are required.
+- The future UI must warn that restored output may contain sensitive/confidential values again.
+- Scanned/image-only PDFs remain unsupported because OCR is not available.
+- Scrub must not offer restored PDF output.
+- Unsupported PDF cases must show clear messages and must not silently succeed.
+- Required audit fields are specified in `PDF_TEXT_REINSERT_UI_PLAN.md`.
+
+Validation:
+
+- Tests: not applicable; planning-only.
+- GitHub Actions: not required unless documentation checks run.
+- Hugging Face sync: not functionally relevant; no app behavior changed.
+- App verification: not applicable; no UI behavior changed.
+
+Intentionally not changed:
+
+- No code files changed.
+- No tests changed.
+- No UI changed.
+- No dependencies changed.
+- No OCR added.
+- No PDF output added.
+- No PDF-to-DOCX reconstruction added.
+- No cloud PDF conversion added.
+- No AI-based extraction added.
+- No layout preservation promises added.
+- No batch PDF processing added.
+- No real-data PDF test cases added.
+- No automatic PDF rehydration added.
+- No existing export/download semantics changed.
+- No existing scrubbed TXT/CSV/DOCX/PDF export/download behavior changed.
+- No existing pasted-text, TXT or DOCX reinsert behavior changed.
+- No Scrub Key import/export behavior changed.
+
+Next recommended step:
+
+- WP18 — PDF text extraction to restored TXT UI implementation.
+- WP18 must be explicitly approved as a separate implementation workpackage before starting.
+- Recommended WP18 scope: `Originele waarden terugzetten` only, PDF upload, local text extraction via WP16 helper, restored TXT preview, restored TXT download, audit report, strong warnings, no PDF output, no OCR and no AI/cloud.
+
 ## WP16B — Text-based PDF extraction helper spike verification and closeout
 
 Status: completed closeout-only.
@@ -234,4 +301,4 @@ Review conclusion:
 
 ## Planned later phase
 
-- WP17 — PDF text extraction reinsert UI planning only, only after WP16B closes green.
+- WP18 — PDF text extraction to restored TXT UI implementation, only if explicitly approved as a separate implementation workpackage.
