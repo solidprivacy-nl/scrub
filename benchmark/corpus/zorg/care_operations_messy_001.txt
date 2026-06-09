@@ -1,0 +1,75 @@
+# SYNTHETIC BENCHMARK FIXTURE — CARE / HEALTHCARE OPERATIONAL TEXT
+# Document ID: care_operations_messy_001
+# Domain: zorg
+# This file is fully synthetic. It contains fake names, fake identifiers and fake care context for benchmark design only.
+# No real client, patient, employee or care-record data is included.
+
+Zorgorganisatie: Stichting ZorgVoorbeeld Noord
+Locatie: Woonzorgcentrum De Testtuin, afdeling Magnolia 2
+Adres locatie: Proefstraat 88, 3811 BB Zorgdam
+
+Dagrapportage / MDO-fragment / incidentmelding — ALLE GEGEVENS SYNTHETISCH
+Datum verslag: 09-04-2026
+Tijdstip eerste melding: 07:45 uur
+Cliëntnummer: ZORG-CL-2026-00441
+Zorgdossier: ZD-2026-99121
+EPD-referentie: EPD-MAG2-2026-7788
+Verpleegoproepreferentie: VOS-2026-000778
+Incidentnummer: MIC-2026-0188
+Kamer: B-214
+Afdeling: Magnolia 2
+
+Betrokken cliënt: Nora van der Laan, geboren op 04-11-1942.
+BSN-achtig testnummer in oud intakeformulier: 123456782.
+Adres cliënt volgens oud administratief overzicht:
+Testlaan 45
+3812 CC Zorgdam
+
+Contactpersoon 1: Ahmed El Idrissi, zoon, telefoon 06 3344 5566, e-mail ahmed.elidrissi@example.invalid.
+Contactpersoon 2: Mevrouw Sara Oomen, mantelzorger, telefoon +31 30 221 44 55.
+Financiële administratie vermeldt IBAN NL91 ABNA 0417 1643 00 voor automatische incasso.
+
+Contextwoorden voor benchmark:
+De woorden cliënt, zorgmedewerker, arts, mantelzorger, verpleegkundige en afdeling zijn contextwoorden.
+Zij moeten in beginsel leesbaar blijven. Namen, nummers en concrete herleidbare waarden moeten wel worden gevonden.
+
+MDO-notitie:
+De cliënt kreeg ondersteuning van zorgmedewerker Joris de Vries tijdens de ochtendzorg.
+De arts dr. Amira Benali, BIG-nummer 12345678901, beoordeelde het wondbeleid op 08-04-2026.
+De verpleegkundige noteerde dat kamer B-214 extra toezicht nodig had na een valrisico-observatie.
+Het woord arts mag niet op zichzelf worden gemaskeerd; de naam dr. Amira Benali en het BIG-nummer zijn wel benchmarkwaarden.
+
+Rommelige tabel uit rooster/export:
+Naam cliënt       Nora van der Laan     cliëntnr ZORG-CL-2026-00441     kamer B-214
+EVV'er            Joris de Vries        mobiel 06-77889900              team MAG-2
+Arts              dr. Amira Benali      BIG 12345678901                 consult 08/04/2026
+Contactpersoon    Ahmed El Idrissi      ahmed.elidrissi@example.invalid 06 3344 5566
+
+Incidentbeschrijving:
+Om 07:45 uur kwam via VOS-2026-000778 een oproep binnen vanuit kamer B-214.
+Zorgmedewerker Joris de Vries vond cliënt Nora van der Laan naast het bed.
+Er was geen zichtbaar letsel. De huisartsenzorg is niet gebeld. Wel is volgens protocol
+MIC-2026-0188 aangemaakt. De datum 09-04-2026 en tijd 07:45 mogen niet als telefoonnummer of BSN worden gezien.
+
+Valse-positieve traps:
+- Medicatiecode PAR-500-2D is een synthetische medicatie-instructie, geen dossiernummer tenzij context dat later bepaalt.
+- Dosering 2 x daags en bedrag € 12,50 zijn geen identificerende referenties.
+- Kamer B-214 is mogelijk identificerend in zorgcontext, maar het woord kamer is een label/contextwoord.
+- De datum 04-11-1942 is een geboortedatum, geen BSN.
+- Artikel 7:453 BW in een klachtenbrief is een juridisch artikel, geen zaaknummer.
+
+Aanvullende administratieve waarden:
+Verzekeraar: ProefZeker Zorg N.V.
+Polisnummer: POL-ZORG-2026-44018
+Declaratiereferentie: DECL-2026-778899
+Klachtnummer familie: KLACHT-MAG2-2026-0032
+Interne klantreferentie: WR-KLANT-2026-7712
+
+E-mail aan familie:
+Aan: ahmed.elidrissi@example.invalid
+Cc: zorgcoordinator.mag2@example.invalid
+Onderwerp: Synthetische terugkoppeling MIC-2026-0188 / Nora van der Laan
+
+Beste mantelzorger,
+De verpleegkundige heeft de situatie besproken met de arts. De cliënt blijft voorlopig op afdeling Magnolia 2.
+Dit document is volledig synthetisch en bedoeld voor benchmarkontwikkeling.
