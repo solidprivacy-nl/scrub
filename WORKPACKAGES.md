@@ -37,7 +37,7 @@ Review conclusion:
 
 ## WP16 — Text-based PDF extraction helper spike, restored TXT output only
 
-Status: implemented; awaiting formal WP16B closeout after green evidence.
+Status: completed after Actions/sync verification; app verification not applicable because no UI behavior changed.
 
 Added:
 
@@ -69,9 +69,16 @@ Implemented behavior:
 - Blank/no-text PDFs are clearly marked unsupported.
 - Audit includes local-only, no-AI, no-cloud, OCR-not-used and PDF-output-false fields.
 
+Verification closeout:
+
+- WP16 added the helper-only text-based PDF extraction path.
+- Tests are green based on coordinator evidence after WP16-FIX.
+- Hugging Face sync is green based on coordinator evidence after WP16-FIX.
+- App verification is not applicable because no UI changed.
+
 ## WP16-FIX — Fix failing PDF text helper tests
 
-Status: implemented; green evidence supplied by coordinator; awaiting formal WP16B closeout.
+Status: completed after Actions/sync verification; app verification not applicable because no UI behavior changed.
 
 Cause found:
 
@@ -111,7 +118,12 @@ Tests #201 green — commit 9354727
 Sync to Hugging Face Space #215 green — commit 9354727
 ```
 
-App verification: not applicable because no UI behavior changed.
+Verification closeout:
+
+- WP16-FIX fixed the failing tests by making `pypdf` optional/import-safe.
+- Tests are green based on coordinator evidence.
+- Hugging Face sync is green based on coordinator evidence.
+- App verification is not applicable because no UI changed.
 
 Boundaries preserved:
 
@@ -154,26 +166,43 @@ Validation:
 - Hugging Face sync: not functionally relevant; no app behavior changed.
 - App verification: not applicable; no UI behavior changed.
 
+## WP16B — Text-based PDF extraction helper spike verification and closeout
+
+Status: completed closeout-only.
+
+Purpose:
+
+- Formally close WP16 and WP16-FIX as verified after coordinator-supplied Actions/sync evidence.
+- Record that app verification is not applicable because no UI behavior changed.
+- Preserve all implementation, UI, dependency and export boundaries.
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Handover added:
+
+- `handover/workpackages/20260609_1123_pdf_text_helper_verification_closeout.md`
+
+Validation:
+
+- Local tests: not required; closeout-only.
+- GitHub Actions: green based on coordinator evidence.
+- Hugging Face sync: green based on coordinator evidence.
+- App verification: not applicable; no UI behavior changed.
+
 ## Active / next recommended workpackage
 
-WP16B — Text-based PDF extraction helper spike verification and closeout.
+WP17 — PDF text extraction reinsert UI planning only.
 
-WP16B can now use coordinator evidence already supplied for:
+WP17 must be planning/specification-only and must not start UI implementation directly.
 
-- green GitHub Actions tests after WP16-FIX;
-- green Hugging Face sync after WP16-FIX;
-- app verification not applicable because no UI changed.
+Recommended WP17 planning scope:
 
-Recommended WP16B scope:
-
-- close WP16/WP16-FIX as Actions/sync verified;
-- record that app verification is not applicable;
-- do not add UI;
-- do not change code or tests.
-
-Future implementation after WP16B, if desired:
-
-- WP17 — PDF text extraction reinsert UI planning only.
+- plan whether and how the WP16 helper can be exposed safely as PDF upload → local text extraction → restored TXT preview/download only;
+- document warnings for incomplete PDF extraction, unsupported scanned/image-only PDFs, no layout preservation and sensitive-value restoration;
+- keep restored PDF output, OCR, PDF-to-DOCX reconstruction, cloud PDF conversion, AI-based extraction and layout preservation promises out of scope unless separately approved.
 
 Keep explicitly out of scope until separately approved:
 
