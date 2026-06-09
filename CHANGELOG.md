@@ -1,5 +1,56 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP19 — Recall benchmark specification
+
+Status: completed specification-only.
+
+Purpose:
+
+- Define how Scrub will measure recall and precision on messy synthetic Dutch legal and care documents.
+- Make the highest product risk, false negatives / missed sensitive data, measurable before implementing a benchmark runner.
+- Define context-preservation expectations so legal and care meaning is not destroyed by over-masking.
+
+Files added:
+
+- `RECALL_BENCHMARK_SPEC.md`
+- `handover/workpackages/20260609_2200_recall_benchmark_spec.md`
+
+Files changed:
+
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main specification decisions:
+
+- The benchmark taxonomy includes `PERSON`, `ADDRESS`, `EMAIL`, `PHONE`, `BSN`, `IBAN`, `DATE`, `NL_POSTCODE`, `CASE_NUMBER`, `DOSSIER_NUMBER`, `CLIENT_NUMBER`, `CLAIM_NUMBER`, `INCIDENT_NUMBER`, `ECLI`, `ORGANIZATION`, `MEDICAL_OR_CARE_REFERENCE` and `ROLE_OR_CONTEXT_TERM_TO_PRESERVE`.
+- Gold labels should use zero-based inclusive/exclusive character offsets against synthetic plain-text sources.
+- Reporting should include overall, per-domain and per-entity recall/precision, with false-negative, false-positive and context-preservation failure lists.
+- Context terms such as `slachtoffer`, `minderjarige`, `verzoeker`, `verweerder`, `eiser`, `rechtbank`, `arts`, `cliënt` and `zorgmedewerker` should not automatically be treated as sensitive values unless identifying context makes them sensitive.
+- CI should start as report-only, then add malformed-label failures, regression gates and later accepted per-entity thresholds.
+
+Validation status:
+
+- Documentation/specification review only.
+- No tests run; no code or test files were changed.
+- GitHub Actions: not checked at changelog update time.
+- Hugging Face sync: not checked at changelog update time.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No benchmark runner implemented.
+- No tests added or changed.
+- No UI changed.
+- No dependencies changed.
+- No real data added.
+- No export or reinsert behavior changed.
+
+Next recommended step:
+
+- `WP20 — Synthetic messy Dutch legal/zorg benchmark corpus`.
+
 ## WP18C — Add Codex worker governance instructions
 
 Status: completed documentation/governance-only.
