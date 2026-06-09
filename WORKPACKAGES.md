@@ -38,6 +38,7 @@ WP18R — Risk-driven roadmap and operating model reset: completed documentation
 WP18-FIX — Fix failing PDF text to TXT UI tests: completed after Actions/sync verification; WP18 app verification completed.
 WP18B — PDF text to restored TXT UI app verification closeout: completed closeout-only.
 WP18C — Add Codex worker governance instructions: completed documentation/governance-only.
+WP19 — Recall benchmark specification: completed specification-only.
 ```
 
 ## Closed UI line: WP18 PDF text to restored TXT
@@ -158,32 +159,66 @@ Workers must write full handovers to handover/workpackages/.
 Coordinator chat only needs handover path, commit/PR, status and short summary unless commit failed or GitHub access is unavailable.
 ```
 
-## Active / next recommended workpackages
-
-The WP18 UI line is now closed.
-
-The following workpackages can be prepared and run in parallel because they do not touch the same UI flow:
+## Phase 1: Trust & recall foundation
 
 ### WP19 — Recall benchmark specification
 
-Type: specification/test-design.
+Status: completed specification-only.
 
 Purpose:
 
 - Define a benchmark for measuring recall/precision on messy synthetic Dutch legal and care texts.
 - Define entity classes, scoring rules, minimum metrics and reporting format.
+- Make false negatives / missed sensitive data measurable before benchmark implementation.
 
-Likely files:
+Files added:
 
 ```text
 RECALL_BENCHMARK_SPEC.md
+handover/workpackages/20260609_2200_recall_benchmark_spec.md
+```
+
+Files changed:
+
+```text
 RISK_REGISTER.md
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_recall_benchmark_spec.md
 ```
 
-No recognizer logic changes in WP19.
+Main specification decisions:
+
+- Benchmark classes include `PERSON`, `ADDRESS`, `EMAIL`, `PHONE`, `BSN`, `IBAN`, `DATE`, `NL_POSTCODE`, `CASE_NUMBER`, `DOSSIER_NUMBER`, `CLIENT_NUMBER`, `CLAIM_NUMBER`, `INCIDENT_NUMBER`, `ECLI`, `ORGANIZATION`, `MEDICAL_OR_CARE_REFERENCE` and `ROLE_OR_CONTEXT_TERM_TO_PRESERVE`.
+- Gold labels should use zero-based character offsets against synthetic plain text.
+- Recall and precision should be reported overall, per domain and per entity class.
+- Context terms such as `slachtoffer`, `minderjarige`, `verzoeker`, `verweerder`, `eiser`, `rechtbank`, `arts`, `cliënt` and `zorgmedewerker` should normally remain readable unless identifying context makes them sensitive.
+- CI should start report-only, then move toward malformed-label failures, regression gates and later per-entity thresholds.
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No benchmark runner implemented.
+- No tests added or changed.
+- No UI changed.
+- No dependencies changed.
+- No real data added.
+- No export or reinsert behavior changed.
+
+Next recommended step:
+
+- WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
+
+## Active / next recommended workpackages
+
+The WP18 UI line is closed and WP19 is complete.
+
+The next recommended workpackage for Phase 1 is:
+
+```text
+WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
+```
+
+The following workpackages can also be prepared and run in parallel because they do not touch the same UI flow:
 
 ### WP25 — Scrub Key threat model
 
@@ -338,7 +373,7 @@ No GitHub workflow changes unless separately approved.
 Safe in parallel after WP18B closeout:
 
 ```text
-WP19, WP25, WP30, WP35, WP45, WP50, WP56, WP57
+WP25, WP30, WP35, WP45, WP50, WP56, WP57
 ```
 
 Do not run in parallel:
