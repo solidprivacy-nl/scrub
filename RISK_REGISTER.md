@@ -82,22 +82,27 @@ Current mitigations:
 - Local-only/no-AI/no-cloud positioning for reinsert.
 - `SCRUB_KEY_SPEC.md` states that Scrub Key-based output is pseudonymization, not full anonymization.
 - WP25 created `SCRUB_KEY_THREAT_MODEL.md`, defining accidental sharing, local storage, download-folder, e-mail/AI-upload, shared-computer, retention, loss-of-key, tampering, malformed-key and import/export risks.
+- WP26 created `SCRUB_KEY_LIFECYCLE_SPEC.md`, defining lifecycle states, retention/deletion expectations, loss-of-key and tampering consequences, audit/logging expectations and protection options.
 
 Gaps:
 
 - No encryption/protection implementation.
-- No implemented lifecycle/expiry/delete policy.
+- No implemented expiry/delete policy or automated lifecycle behavior.
 - No dedicated warning UX plan for all key touchpoints.
 - No tamper-proof or authenticated Scrub Key format.
 - No secure import/export regression test package focused on key handling.
 - No automatic cleanup for browser Downloads or unmanaged local storage.
+- No local vault / managed key store.
+- No approved key recovery model.
 
 Recommended workpackages:
 
-- WP26 — Scrub Key encryption/lifecycle specification.
 - WP27 — Scrub Key warning UX plan.
 - WP28 — Scrub Key expiry/delete policy.
 - WP29 — Scrub Key secure import/export tests.
+- Later implementation package — protected local file handling.
+- Later implementation package — encrypted key container.
+- Later implementation package — local vault / managed key store.
 
 ---
 
