@@ -34,17 +34,18 @@ Supported reinsert paths:
 Pasted text → restored text
 TXT upload  → restored TXT
 DOCX upload → restored DOCX, within documented helper limits
-PDF upload  → restored TXT only, pending WP18 verification
+PDF upload  → restored TXT only
 ```
 
 PDF support is intentionally limited:
 
+- restored output is TXT only;
 - no restored PDF output;
 - no OCR;
 - no PDF-to-DOCX reconstruction;
 - no layout preservation guarantee;
 - scanned/image-only PDFs are unsupported;
-- PDF-to-TXT UI is pending WP18 test/app verification.
+- the UI must clearly show no OCR, no AI, no cloud and no PDF output.
 
 ---
 
@@ -55,12 +56,13 @@ PDF support is intentionally limited:
 - The Scrub Key is sensitive because it can re-identify scrubbed content.
 - DOCX metadata, comments, tracked changes, headers and footers require further document-hygiene work.
 - Detection quality needs formal recall/precision benchmarking before strong trust claims can be made.
+- PDF text extraction depends on a usable selectable-text layer and may lose layout, tables, columns, headers, footers and visual reading order.
 
 ---
 
 ## Upcoming focus
 
-After WP18 is fixed and verified, the roadmap prioritizes:
+After the verified PDF-to-restored-TXT UI line, the roadmap prioritizes:
 
 1. recall and trust benchmarking;
 2. Scrub Key security and lifecycle;
