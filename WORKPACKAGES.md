@@ -37,7 +37,7 @@ Review conclusion:
 
 ## WP16 — Text-based PDF extraction helper spike, restored TXT output only
 
-Status: implemented; awaiting GitHub Actions and Hugging Face sync after WP16-FIX.
+Status: implemented; awaiting formal WP16B closeout after green evidence.
 
 Added:
 
@@ -71,7 +71,7 @@ Implemented behavior:
 
 ## WP16-FIX — Fix failing PDF text helper tests
 
-Status: implemented; awaiting GitHub Actions and Hugging Face sync.
+Status: implemented; green evidence supplied by coordinator; awaiting formal WP16B closeout.
 
 Cause found:
 
@@ -98,15 +98,20 @@ Handover added:
 
 - `handover/workpackages/20260609_0015_pdf_text_helper_tests_fix.md`
 
-Validation status:
+Coordinator evidence after WP16-FIX:
 
-- The connector could not retrieve workflow-run logs for the WP16 commits.
-- Root cause was inferred from `.github/workflows/tests.yml` and reconstructed local testing.
-- Local reconstructed assertions for the PDF helper passed in the Python environment.
-- Repository pytest execution was not available in this connector session.
-- GitHub Actions: awaiting verification after WP16-FIX.
-- Hugging Face sync: awaiting verification after WP16-FIX.
-- App verification: not applicable because no UI behavior changed.
+```text
+Tests #198 green — commit 4ccd79e
+Sync to Hugging Face Space #212 green — commit 4ccd79e
+Tests #199 green — commit 1fbdf48
+Sync to Hugging Face Space #213 green — commit 1fbdf48
+Tests #200 green — commit 410f04a
+Sync to Hugging Face Space #214 green — commit 410f04a
+Tests #201 green — commit 9354727
+Sync to Hugging Face Space #215 green — commit 9354727
+```
+
+App verification: not applicable because no UI behavior changed.
 
 Boundaries preserved:
 
@@ -122,22 +127,49 @@ Boundaries preserved:
 - Existing Scrub Key export/import behavior unchanged.
 - Tests use synthetic values only.
 
+## WP16C — Roadmap status reconciliation after v13.8 and PDF helper line
+
+Status: completed documentation-only update.
+
+Purpose:
+
+- Refresh `ROADMAP.md` because it still described v12 as the current line and v13 as the next strategic phase.
+- Align roadmap status with `WORKPACKAGES.md` and `CHANGELOG.md` after v13.8, WP15 and WP16/WP16-FIX.
+- Preserve strategic direction while updating current phase status and next steps.
+
+Files changed:
+
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Handover added:
+
+- `handover/workpackages/20260609_0030_roadmap_status_reconciliation.md`
+
+Validation:
+
+- Tests: not applicable; documentation-only update.
+- GitHub Actions: not required unless documentation checks run.
+- Hugging Face sync: not functionally relevant; no app behavior changed.
+- App verification: not applicable; no UI behavior changed.
+
 ## Active / next recommended workpackage
 
 WP16B — Text-based PDF extraction helper spike verification and closeout.
 
-Do not start WP16B until:
+WP16B can now use coordinator evidence already supplied for:
 
-- Tests are green after WP16-FIX.
-- Hugging Face sync is green after WP16-FIX.
+- green GitHub Actions tests after WP16-FIX;
+- green Hugging Face sync after WP16-FIX;
+- app verification not applicable because no UI changed.
 
 Recommended WP16B scope:
 
-- verify GitHub Actions tests are green;
-- verify Hugging Face sync is green;
-- record that app verification is not applicable because no UI changed;
-- close WP16 if validation is green;
-- do not add UI yet.
+- close WP16/WP16-FIX as Actions/sync verified;
+- record that app verification is not applicable;
+- do not add UI;
+- do not change code or tests.
 
 Future implementation after WP16B, if desired:
 
