@@ -32,46 +32,19 @@ WP16-FIX — PDF helper test fix: completed after Actions/sync verification.
 WP16B — PDF helper verification closeout: completed closeout-only.
 WP17 — PDF text extraction reinsert UI planning: completed planning/specification-only.
 WP17B — Roadmap current-status reconciliation after WP17: completed documentation-only.
-WP18 — PDF text extraction to restored TXT UI implementation: implemented; GitHub Actions tests failing; fix required.
+WP18 — PDF text extraction to restored TXT UI implementation: completed and app-verified after Actions/sync verification.
 WP18R — Risk-driven roadmap and operating model reset: completed documentation/governance-only.
-WP18-FIX — Fix failing PDF text to TXT UI tests: implemented; awaiting GitHub Actions and Hugging Face sync.
+WP18-FIX — Fix failing PDF text to TXT UI tests: completed after Actions/sync verification; WP18 app verification completed.
+WP18B — PDF text to restored TXT UI app verification closeout: completed closeout-only.
 ```
 
-## Active status
+## Closed UI line: WP18 PDF text to restored TXT
 
-### WP18-FIX — Fix failing PDF text to TXT UI tests
+### WP18 — PDF text extraction to restored TXT UI implementation
 
-Status: implemented; awaiting GitHub Actions and Hugging Face sync.
+Status: completed and app-verified after Actions/sync verification.
 
-Current evidence before fix:
-
-```text
-WP18 implemented the PDF-to-restored-TXT UI.
-Hugging Face sync for WP18 commits was green in coordinator evidence.
-GitHub Actions tests for WP18 commits were red in coordinator evidence.
-App verification is blocked until Actions are green.
-```
-
-Investigation result:
-
-- `STATUS_MONITORING_RUNBOOK.md` was read and followed where connector permissions allowed.
-- Commit-to-workflow lookup returned no workflow runs for the relevant WP18 commits.
-- The visible run numbers #220–#223 were not accepted by the connector as workflow run IDs or job IDs.
-- Failing job logs could therefore not be fetched via connector.
-- The failure was reconstructed from the current `tests/test_pdf_text_reinsert_ui_patch.py` and `fix_streamlit_pdf_text_reinsert.py` contents.
-
-Root cause:
-
-- The new PDF UI patch test had a brittle `else:` anchor expectation for a triple-quoted marker.
-- The patch file contains the real newline form of the marker, while the test expectation was not robust enough for the stored source text.
-
-Fix applied:
-
-- Updated `tests/test_pdf_text_reinsert_ui_patch.py` only.
-- The test now asserts the actual triple-quoted `else:` marker form used by the patch file.
-- No UI code, Dockerfile behavior, helper code, dependencies or feature behavior were changed.
-
-Preserved WP18 behavior:
+Implemented workflow:
 
 ```text
 Originele waarden terugzetten
@@ -83,16 +56,7 @@ Originele waarden terugzetten
 → audit report
 ```
 
-Allowed files changed in WP18-FIX:
-
-```text
-tests/test_pdf_text_reinsert_ui_patch.py
-WORKPACKAGES.md
-CHANGELOG.md
-handover/workpackages/20260609_1245_pdf_text_to_txt_ui_tests_fix.md
-```
-
-Out of scope and not changed:
+Preserved boundaries:
 
 - no OCR;
 - no restored PDF output;
@@ -103,28 +67,35 @@ Out of scope and not changed:
 - no real-data tests;
 - no automatic PDF rehydration;
 - no changes to existing pasted-text/TXT/DOCX reinsert semantics;
-- no changes to existing anonymization/export semantics;
-- no direct `presidio_streamlit.py` edit.
+- no changes to existing anonymization/export semantics.
 
-Required validation after WP18-FIX:
+### WP18-FIX — Fix failing PDF text to TXT UI tests
 
-```bash
-PYTHONPATH=. pytest -q tests/test_pdf_text_reinsert_ui_patch.py
-PYTHONPATH=. pytest -q tests/test_two_mode_ui_patch.py
-PYTHONPATH=. pytest -q tests/test_txt_reinsert_ui_patch.py
-PYTHONPATH=. pytest -q tests/test_docx_reinsert_ui_patch.py
-PYTHONPATH=. pytest -q tests/test_scrub_key_pdf_text_reinsert.py
-```
+Status: completed after Actions/sync verification; WP18 app verification completed.
 
-Then verify GitHub Actions and Hugging Face sync using `STATUS_MONITORING_RUNBOOK.md` where connector permissions allow.
+Fix summary:
 
-## Next after WP18-FIX
+- Updated `tests/test_pdf_text_reinsert_ui_patch.py` only.
+- Corrected a brittle test expectation around the triple-quoted `else:` insertion marker.
+- No UI code, Dockerfile behavior, helper code, dependencies or feature behavior were changed.
 
-### WP18 app verification
+Verification note:
 
-Only after WP18-FIX has green Actions and sync.
+- Connector status lookup for the WP18-FIX commit returned no statuses and no workflow runs.
+- WP18B was approved by the coordinator/user as closeout-only after external verification.
+- This closeout records coordinator/user evidence that Actions/sync and app verification gates are satisfied.
 
-Coordinator/user must verify in the Hugging Face app:
+### WP18B — PDF text to restored TXT UI app verification closeout
+
+Status: completed closeout-only.
+
+Closeout evidence recorded:
+
+- GitHub Actions: green based on coordinator/user closeout approval.
+- Hugging Face sync: green based on coordinator/user closeout approval.
+- App verification: confirmed by coordinator/user closeout approval.
+
+App verification scope covered:
 
 - `Originele waarden terugzetten` shows the new PDF-to-TXT section;
 - `Anonimiseren` does not show the PDF reinsert section;
@@ -139,24 +110,20 @@ Coordinator/user must verify in the Hugging Face app:
 - existing pasted-text, TXT and DOCX reinsert still work;
 - existing anonymization/export behavior is unchanged.
 
-### WP18B — PDF text to restored TXT UI app verification closeout
-
-Status: blocked until WP18-FIX green and app verification confirmed.
-
-Closeout-only.
-
-Allowed files:
+Files changed in WP18B:
 
 ```text
 WORKPACKAGES.md
 CHANGELOG.md
 RELEASE_NOTES.md
-handover/workpackages/YYYYMMDD_HHMM_pdf_text_to_txt_ui_app_closeout.md
+handover/workpackages/20260609_1315_pdf_text_to_txt_ui_app_closeout.md
 ```
 
-No code, tests, dependencies or UI changes.
+No code, tests, dependencies or UI files were changed.
 
-## Parallelizable work after WP18-FIX is green
+## Active / next recommended workpackages
+
+The WP18 UI line is now closed.
 
 The following workpackages can be prepared and run in parallel because they do not touch the same UI flow:
 
@@ -331,7 +298,7 @@ No GitHub workflow changes unless separately approved.
 
 ## Parallelization rules
 
-Safe in parallel after WP18-FIX is green:
+Safe in parallel after WP18B closeout:
 
 ```text
 WP19, WP25, WP30, WP35, WP45, WP50, WP56, WP57
@@ -339,7 +306,6 @@ WP19, WP25, WP30, WP35, WP45, WP50, WP56, WP57
 
 Do not run in parallel:
 
-- WP18-FIX with other UI patch work;
 - multiple edits to Docker startup patch order;
 - multiple edits to `presidio_streamlit.py` or `fix_streamlit_nested_expanders.py`;
 - multiple changes to export/download flow;
