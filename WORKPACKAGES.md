@@ -34,15 +34,16 @@ WP17 — PDF text extraction reinsert UI planning: completed planning/specificat
 WP17B — Roadmap current-status reconciliation after WP17: completed documentation-only.
 WP18 — PDF text extraction to restored TXT UI implementation: implemented; GitHub Actions tests failing; fix required.
 WP18R — Risk-driven roadmap and operating model reset: completed documentation/governance-only.
+WP18-FIX — Fix failing PDF text to TXT UI tests: implemented; awaiting GitHub Actions and Hugging Face sync.
 ```
 
-## Active workpackage
+## Active status
 
 ### WP18-FIX — Fix failing PDF text to TXT UI tests
 
-Status: active / required next.
+Status: implemented; awaiting GitHub Actions and Hugging Face sync.
 
-Current evidence:
+Current evidence before fix:
 
 ```text
 WP18 implemented the PDF-to-restored-TXT UI.
@@ -51,11 +52,26 @@ GitHub Actions tests for WP18 commits were red in coordinator evidence.
 App verification is blocked until Actions are green.
 ```
 
-Goal:
+Investigation result:
 
-- Read failing GitHub Actions logs.
-- Fix the failing WP18 tests without expanding scope.
-- Preserve the approved WP18 behavior:
+- `STATUS_MONITORING_RUNBOOK.md` was read and followed where connector permissions allowed.
+- Commit-to-workflow lookup returned no workflow runs for the relevant WP18 commits.
+- The visible run numbers #220–#223 were not accepted by the connector as workflow run IDs or job IDs.
+- Failing job logs could therefore not be fetched via connector.
+- The failure was reconstructed from the current `tests/test_pdf_text_reinsert_ui_patch.py` and `fix_streamlit_pdf_text_reinsert.py` contents.
+
+Root cause:
+
+- The new PDF UI patch test had a brittle `else:` anchor expectation for a triple-quoted marker.
+- The patch file contains the real newline form of the marker, while the test expectation was not robust enough for the stored source text.
+
+Fix applied:
+
+- Updated `tests/test_pdf_text_reinsert_ui_patch.py` only.
+- The test now asserts the actual triple-quoted `else:` marker form used by the patch file.
+- No UI code, Dockerfile behavior, helper code, dependencies or feature behavior were changed.
+
+Preserved WP18 behavior:
 
 ```text
 Originele waarden terugzetten
@@ -67,18 +83,16 @@ Originele waarden terugzetten
 → audit report
 ```
 
-Allowed files if needed:
+Allowed files changed in WP18-FIX:
 
 ```text
-fix_streamlit_pdf_text_reinsert.py
 tests/test_pdf_text_reinsert_ui_patch.py
-Dockerfile
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_pdf_text_to_txt_ui_tests_fix.md
+handover/workpackages/20260609_1245_pdf_text_to_txt_ui_tests_fix.md
 ```
 
-Out of scope:
+Out of scope and not changed:
 
 - no OCR;
 - no restored PDF output;
@@ -90,9 +104,9 @@ Out of scope:
 - no automatic PDF rehydration;
 - no changes to existing pasted-text/TXT/DOCX reinsert semantics;
 - no changes to existing anonymization/export semantics;
-- no direct `presidio_streamlit.py` edit unless the logs prove there is no safe patch-file alternative and the coordinator explicitly approves.
+- no direct `presidio_streamlit.py` edit.
 
-Required validation:
+Required validation after WP18-FIX:
 
 ```bash
 PYTHONPATH=. pytest -q tests/test_pdf_text_reinsert_ui_patch.py
