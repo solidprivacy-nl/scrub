@@ -141,7 +141,7 @@ Recommended workpackages:
 
 ## R4 — Hidden document content and metadata leakage
 
-Status: open  
+Status: mitigating  
 Impact: high
 
 Risk:
@@ -154,17 +154,20 @@ Current mitigations:
 
 - DOCX reinsert limitations are documented.
 - Roadmap already recognizes document hygiene and metadata-clean export as important.
+- Current DOCX helper reports limitations and unsupported parts for headers, footers, comments, tracked changes, metadata and split-run placeholders.
+- WP35 created `DOCX_HIDDEN_CONTENT_RISK_REVIEW.md`, defining current assumptions, hidden-content leakage risks, audit requirements, safe extraction/cleaning sequence and future warning/blocking policy boundaries.
 
 Gaps:
 
-- No complete hidden-content extraction policy.
-- No metadata cleaner helper.
-- No tracked-changes/comments policy.
-- No DOCX hygiene audit report.
+- No DOCX metadata cleaner helper yet.
+- No headers/footers/comments/tracked-changes extraction helper yet.
+- No DOCX hygiene audit report yet.
+- No clean DOCX export policy yet.
+- No implementation for footnotes/endnotes, custom XML, text boxes/shapes or embedded object handling.
+- No approved export-blocking policy for high-risk hidden content.
 
 Recommended workpackages:
 
-- WP35 — DOCX hidden content risk review.
 - WP36 — DOCX metadata cleaner helper.
 - WP37 — Headers/footers/comments/tracked-changes extraction helper.
 - WP38 — DOCX hygiene audit report.
