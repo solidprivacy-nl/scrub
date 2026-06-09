@@ -45,12 +45,6 @@ Added:
 - `tests/test_scrub_key_pdf_text_reinsert.py`
 - `handover/workpackages/20260609_0000_pdf_text_extraction_helper_spike.md`
 
-Changed:
-
-- `requirements.txt`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
 Dependency decision:
 
 - Added `pypdf` as a local text-extraction dependency.
@@ -68,13 +62,6 @@ Implemented behavior:
 - No restored PDF bytes are produced.
 - Blank/no-text PDFs are clearly marked unsupported.
 - Audit includes local-only, no-AI, no-cloud, OCR-not-used and PDF-output-false fields.
-
-Verification closeout:
-
-- WP16 added the helper-only text-based PDF extraction path.
-- Tests are green based on coordinator evidence after WP16-FIX.
-- Hugging Face sync is green based on coordinator evidence after WP16-FIX.
-- App verification is not applicable because no UI changed.
 
 ## WP16-FIX — Fix failing PDF text helper tests
 
@@ -94,17 +81,6 @@ Fix applied:
 - `tests/test_scrub_key_pdf_text_reinsert.py` now uses `pytest.importorskip("pypdf")` for PDF extraction tests.
 - A test was added for the missing-`pypdf` path via monkeypatch.
 
-Files changed in WP16-FIX:
-
-- `scrub_key_pdf_text_reinsert.py`
-- `tests/test_scrub_key_pdf_text_reinsert.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Handover added:
-
-- `handover/workpackages/20260609_0015_pdf_text_helper_tests_fix.md`
-
 Coordinator evidence after WP16-FIX:
 
 ```text
@@ -118,54 +94,6 @@ Tests #201 green — commit 9354727
 Sync to Hugging Face Space #215 green — commit 9354727
 ```
 
-Verification closeout:
-
-- WP16-FIX fixed the failing tests by making `pypdf` optional/import-safe.
-- Tests are green based on coordinator evidence.
-- Hugging Face sync is green based on coordinator evidence.
-- App verification is not applicable because no UI changed.
-
-Boundaries preserved:
-
-- No UI files changed.
-- No PDF reinsert UI added.
-- No OCR added.
-- No cloud processing added.
-- No AI calls added.
-- No PDF output added.
-- No PDF-to-DOCX reconstruction added.
-- Existing pasted-text, TXT and DOCX reinsert UI behavior unchanged.
-- Existing scrubbed TXT/CSV/DOCX/PDF export/download behavior unchanged.
-- Existing Scrub Key export/import behavior unchanged.
-- Tests use synthetic values only.
-
-## WP16C — Roadmap status reconciliation after v13.8 and PDF helper line
-
-Status: completed documentation-only update.
-
-Purpose:
-
-- Refresh `ROADMAP.md` because it still described v12 as the current line and v13 as the next strategic phase.
-- Align roadmap status with `WORKPACKAGES.md` and `CHANGELOG.md` after v13.8, WP15 and WP16/WP16-FIX.
-- Preserve strategic direction while updating current phase status and next steps.
-
-Files changed:
-
-- `ROADMAP.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Handover added:
-
-- `handover/workpackages/20260609_0030_roadmap_status_reconciliation.md`
-
-Validation:
-
-- Tests: not applicable; documentation-only update.
-- GitHub Actions: not required unless documentation checks run.
-- Hugging Face sync: not functionally relevant; no app behavior changed.
-- App verification: not applicable; no UI behavior changed.
-
 ## WP16B — Text-based PDF extraction helper spike verification and closeout
 
 Status: completed closeout-only.
@@ -175,22 +103,6 @@ Purpose:
 - Formally close WP16 and WP16-FIX as verified after coordinator-supplied Actions/sync evidence.
 - Record that app verification is not applicable because no UI behavior changed.
 - Preserve all implementation, UI, dependency and export boundaries.
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Handover added:
-
-- `handover/workpackages/20260609_1123_pdf_text_helper_verification_closeout.md`
-
-Validation:
-
-- Local tests: not required; closeout-only.
-- GitHub Actions: green based on coordinator evidence.
-- Hugging Face sync: green based on coordinator evidence.
-- App verification: not applicable; no UI behavior changed.
 
 ## WP17 — PDF text extraction reinsert UI planning only
 
@@ -213,24 +125,34 @@ Planning conclusion:
 - The future UI must show audit fields for document type, extracted text length, restored value count, mapping counts, placeholder issues, validation issues, unsupported reason, local-only status, AI/cloud status, OCR-used status and PDF-output status.
 - Unsupported cases must not silently succeed.
 
-Files added:
+## WP17B — Roadmap current-status reconciliation after WP17
 
-- `PDF_TEXT_REINSERT_UI_PLAN.md`
-- `handover/workpackages/20260609_1130_pdf_text_reinsert_ui_planning.md`
+Status: completed documentation-only update.
+
+Purpose:
+
+- Reconcile stale `ROADMAP.md` wording that still pointed to WP16B/WP17 as the active next steps.
+- Align `ROADMAP.md`, `WORKPACKAGES.md` and `CHANGELOG.md` after WP17.
+- Record that WP18 is the current next possible workpackage, but only after explicit approval.
 
 Files changed:
 
+- `ROADMAP.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 
+Handover added:
+
+- `handover/workpackages/20260609_1200_roadmap_status_reconciliation_after_wp17.md`
+
 Validation:
 
-- Tests: not applicable; planning-only.
-- GitHub Actions: not required unless documentation checks run.
+- Tests: not required; documentation-only update.
+- GitHub Actions: not required unless documentation checks run automatically.
 - Hugging Face sync: not functionally relevant; no app behavior changed.
 - App verification: not applicable; no UI behavior changed.
 
-Out-of-scope boundaries preserved:
+Intentionally not changed:
 
 - No code changed.
 - No tests changed.
@@ -239,23 +161,16 @@ Out-of-scope boundaries preserved:
 - No OCR added.
 - No PDF output added.
 - No PDF-to-DOCX reconstruction added.
-- No cloud PDF conversion added.
-- No AI-based extraction added.
-- No layout preservation promises added.
-- No batch PDF processing added.
-- No real-data PDF test cases added.
-- No automatic PDF rehydration added.
-- Existing pasted-text, TXT and DOCX reinsert behavior unchanged.
-- Existing scrubbed TXT/CSV/DOCX/PDF export/download behavior unchanged.
-- Existing Scrub Key import/export behavior unchanged.
+- No AI/cloud behavior added.
+- No export/download semantics changed.
 
-## Active / next recommended workpackage
+## Active / next possible workpackage
 
 WP18 — PDF text extraction to restored TXT UI implementation.
 
 WP18 must not start unless explicitly approved as a separate implementation workpackage.
 
-Recommended WP18 scope:
+Recommended WP18 scope if approved:
 
 - `Originele waarden terugzetten` only;
 - PDF upload;
