@@ -27,7 +27,7 @@ RUN poetry install --no-root
 
 RUN pip install --upgrade "packaging>=24.2,<27"
 
-RUN pip install --no-cache-dir python-docx pymupdf reportlab
+RUN pip install --no-cache-dir python-docx pymupdf reportlab pypdf
 
 # Set up a new user named "user" with user ID 1000
 RUN useradd -m -u 1000 user
@@ -43,4 +43,4 @@ WORKDIR $HOME/app
 # Copy the current directory contents into the container at $HOME/app setting the owner to the user
 COPY --chown=user . $HOME/app
 
-CMD ["sh", "-c", "python fix_streamlit_nested_expanders.py && streamlit run presidio_streamlit.py --server.port=7860 --server.address=0.0.0.0 --server.enableXsrfProtection=false --server.enableCORS=false"]
+CMD ["sh", "-c", "python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py && streamlit run presidio_streamlit.py --server.port=7860 --server.address=0.0.0.0 --server.enableXsrfProtection=false --server.enableCORS=false"]
