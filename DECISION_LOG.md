@@ -155,3 +155,27 @@ Implications:
 - WP26 should define the Scrub Key encryption/lifecycle specification before any encryption implementation.
 - No worker should silently change Scrub Key JSON schema, import/export semantics or storage behavior while implementing unrelated work.
 - Loss-of-key and loss-of-passphrase behavior must be specified before encryption is added.
+
+---
+
+## 2026-06-09 — D008 — Placeholder robustness must be additive and validation-led
+
+Status: accepted
+
+Decision:
+
+```text
+Placeholder robustness for AI roundtrip must be handled through an explicit proposal and validation/audit path before any placeholder migration. Future robust formats are proposals only until accepted, and legacy placeholders must remain restorable until a separate compatibility/migration decision says otherwise.
+```
+
+Rationale:
+
+Current reinsert is deterministic and exact-match based. This is safe, but placeholders can be corrupted by AI rewriting, translation, summarization, punctuation changes, markdown/HTML formatting and document conversion. A stronger placeholder format may help, but changing placeholder semantics too early could break existing scrubbed documents and Scrub Keys.
+
+Implications:
+
+- WP30 remains architecture/specification-only.
+- WP31 should propose and compare an LLM-resistant placeholder format without implementing migration.
+- WP32 should define/implement validation or checksum helpers only after the format proposal is accepted.
+- Legacy placeholders such as `[PERSOON_1]` must remain part of the compatibility plan.
+- Placeholder repair must not silently guess original intent; unknown, missing, changed and near-miss placeholders should be visible in audit output.
