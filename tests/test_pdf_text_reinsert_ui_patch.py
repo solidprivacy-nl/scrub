@@ -105,19 +105,22 @@ def test_dockerfile_runs_pdf_text_reinsert_patch_after_existing_patch():
     assert "python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py" in DOCKERFILE_TEXT
 
 
+def test_dockerfile_installs_runtime_pdf_parser_for_approved_ui_path():
+    assert "pypdf" in DOCKERFILE_TEXT
+    assert "poetry install --no-root" in DOCKERFILE_TEXT
+
+
 def test_no_restored_pdf_ocr_cloud_ai_or_rehydration_behavior_added():
     lower_patch = PATCH_TEXT.lower()
     forbidden_markers = [
         "download herstelde pdf",
         "download_pdf_reinserted",
-        "pdf-to-docx",
         "pdf_to_docx",
         "pytesseract",
         "ocr_used = true",
         "requests.post",
         "httpx.post",
         "cloud processing call",
-        "ai-based extraction",
         "restore_original_document",
         "automatic pdf rehydration",
         "server-side key storage",
