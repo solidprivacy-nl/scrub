@@ -1,0 +1,65 @@
+# SYNTHETIC BENCHMARK FIXTURE — LEGAL PROCESS TEXT
+# Document ID: legal_process_messy_001
+# Domain: legal
+# This file is fully synthetic. It contains fake names, fake identifiers and fake professional context for benchmark design only.
+# Do not treat this as legal advice or real case material.
+
+RECHTBANK TESTSTAD
+Team kanton en handelsrecht, locatie Teststad
+
+Zaaknr.: 10876543 / TS VERZ 26-884
+Rolnummer :  9966123 / TS EXPL 26-441
+Dossiernummer advocaat:  ARB-FAKE-2026-00421
+Cliëntnummer: CL-TEST-55201
+Claimreferentie: CLM-2026-112233
+Incidentnummer werkgever: INC-BRIGHT-2026-0912
+ECLI: ECLI:NL:RBTS:2026:4321
+
+BETREFT: synthetisch verweerschrift in arbeidsrechtelijke procedure
+
+Namens cliënt Lina van Maaren, geboren op 12-05-1988, wonende aan Voorbeeldkade 123-B,
+1015 ZZ Teststad, wordt verweer gevoerd tegen het verzoek van werkgever BrightCare Fictief B.V.
+BrightCare Fictief B.V. is gevestigd aan Zorgplein 7, 3521 QQ Proefdam.
+
+Contactgegevens cliënt:
+- e-mail: lina.vanmaaren@example.invalid
+- mobiel: 06 1234 5678
+- alternatief tel.nr.: +31 20 765 43 21
+- IBAN voor salaris: NL91 ABNA 0417 1643 00
+- BSN-achtig testnummer: 123456782
+
+LET OP VOOR BENCHMARK:
+De woorden cliënt, verzoeker, verweerder, eiser, slachtoffer, rechtbank en gemachtigde zijn contextwoorden.
+Zij moeten leesbaar kunnen blijven tenzij de context er een identificerende waarde van maakt.
+
+Procesverloop:
+Op 14-03-2026 ontving verzoeker een brief met kenmerk BR-CASUS-2026-7781.
+In de brief stond dat verweerder op 13-03-2026 niet op het rooster zou zijn verschenen.
+De datum 13-03-2026 is een procesdatum en mag niet als telefoonnummer of BSN worden gezien.
+De gemachtigde van werkgever, mr. Noor de Wit, gebruikte in e-mailcorrespondentie het kenmerk NDW/BrightCare/LvM/2026-04.
+
+Tabelachtige tekst uit DOCX-conversie:
+Naam werknemer        Lina van Maaren        personeelsnummer PERS-2026-1187
+Naam teamleider       Karin de Waal          telefoon 06-87654321
+Adres oud dossier     Oudeweg 44             3011 AA Testhaven
+Zaakreferentie        ZK-ARB-TEST-2026-7712  status: concept
+
+Rommelige regels:
+- Dossier nr :ARB-FAKE-2026-00421;  Cliënt nr:CL-TEST-55201.
+- Claim / ref: CLM-2026-112233, incident: INC-BRIGHT-2026-0912.
+- Art. 7:669 BW en bedrag € 1.250,00 zijn geen zaaknummers.
+- De tijd 17:00 uur en datum 2026-04-22 zijn geen telefoonnummers.
+
+De bedrijfsarts, dr. Pieter El Idrissi, BIG-nummer 12345678901, schreef op 18-03-2026
+alleen dat sprake was van arbeidsongeschiktheid. Het woord arts is een rol/contextterm.
+De naam van de arts en het BIG-nummer zijn wel benchmarkwaarden.
+
+Bijlagenlijst:
+1. Synthetische arbeidsovereenkomst van Lina van Maaren met personeelsnummer PERS-2026-1187.
+2. E-mail van karin.dewaal@example.invalid aan lina.vanmaaren@example.invalid.
+3. Interne melding INC-BRIGHT-2026-0912 met camerareferentie CAM-TEST-2026-0314.
+4. Conceptbeschikking met ECLI:NL:RBTS:2026:4321.
+
+Slot:
+De rechtbank wordt verzocht het verzoek af te wijzen. Verweerder blijft beschikbaar via
+lina.vanmaaren@example.invalid of 06 1234 5678. Dit document is volledig synthetisch.
