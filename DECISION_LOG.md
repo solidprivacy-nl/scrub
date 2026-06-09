@@ -179,3 +179,28 @@ Implications:
 - WP32 should define/implement validation or checksum helpers only after the format proposal is accepted.
 - Legacy placeholders such as `[PERSOON_1]` must remain part of the compatibility plan.
 - Placeholder repair must not silently guess original intent; unknown, missing, changed and near-miss placeholders should be visible in audit output.
+
+---
+
+## 2026-06-09 — D009 — WP58 next execution queue after parallel specifications
+
+Status: accepted
+
+Decision:
+
+```text
+After consolidating WP19, WP25, WP30 and WP35, the next safe parallel execution queue is WP20, WP26, WP31 and WP45. WP36 remains blocked until a tighter DOCX metadata-cleaner helper boundary is approved, because DOCX cleaning may affect document and export semantics.
+```
+
+Rationale:
+
+WP19 confirms false negatives remain the highest product risk, so WP20 should start the synthetic benchmark corpus. WP25, WP30 and WP45 are separable specification/architecture tracks that do not touch the same UI or export flow. WP35 identifies serious DOCX hygiene risks, but metadata cleaning and clean-export claims need tighter boundaries before implementation.
+
+Implications:
+
+- WP20 may create synthetic benchmark corpus artifacts but must not change recognizer logic.
+- WP26 may specify Scrub Key lifecycle/protection but must not implement encryption or schema migration.
+- WP31 may propose an LLM-resistant placeholder format but must not implement placeholder migration or reinsert changes.
+- WP45 may plan local runtime architecture but must not implement packaging or runtime changes.
+- WP36 must not start as an implementation package until its metadata-only/helper-only/no-export-semantics boundary is approved.
+- WP50, WP56 and WP57 remain lower-risk optional parallel candidates if worker capacity exists.
