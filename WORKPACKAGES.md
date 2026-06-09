@@ -40,6 +40,7 @@ WP18B — PDF text to restored TXT UI app verification closeout: completed close
 WP18C — Add Codex worker governance instructions: completed documentation/governance-only.
 WP19 — Recall benchmark specification: completed specification-only.
 WP25 — Scrub Key threat model: completed security/specification-only.
+WP30 — Placeholder robustness review: completed architecture/specification-only.
 ```
 
 ## Closed UI line: WP18 PDF text to restored TXT
@@ -260,9 +261,61 @@ Next recommended step:
 
 - WP26 — Scrub Key encryption/lifecycle specification.
 
+## Phase 3: Placeholder robustness for AI roundtrip
+
+### WP30 — Placeholder robustness review
+
+Status: completed architecture/specification-only.
+
+Purpose:
+
+- Review how placeholders survive AI rewriting, translation, summarization and formatting changes.
+- Document current placeholder format and deterministic reinsert assumptions.
+- Identify corruption risks and candidate future validation directions before any implementation.
+
+Files added:
+
+```text
+PLACEHOLDER_ROBUSTNESS_REVIEW.md
+handover/workpackages/20260609_2310_placeholder_robustness_review.md
+```
+
+Files changed:
+
+```text
+RISK_REGISTER.md
+DECISION_LOG.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Main architecture findings:
+
+- Current placeholders such as `[PERSOON_1]`, `[ZAAKNUMMER_1]` and `[ADRES_1]` are readable and deterministic, but fragile under AI translation, summarization, punctuation changes, markdown/HTML formatting and document conversion.
+- Current reinsert depends on exact placeholder strings from the Scrub Key mapping.
+- Existing audit reporting for unknown, duplicate and not-found placeholders is a useful foundation but does not yet detect checksum failures, near-misses or semantic placeholder merges.
+- Candidate robust formats such as `[[SP_PERSON_0001_A7F3]]` should remain proposal-only until WP31.
+- Checksum design must avoid leaking original sensitive values.
+- Backward compatibility with legacy placeholders is mandatory.
+
+Intentionally not changed:
+
+- No placeholder migration.
+- No Scrub Key schema change.
+- No reinsert helper change.
+- No UI change.
+- No AI/cloud integration.
+- No tests added or changed.
+- No export behavior change.
+- No final placeholder format mandated.
+
+Next recommended step:
+
+- WP31 — LLM-resistant placeholder format proposal.
+
 ## Active / next recommended workpackages
 
-The WP18 UI line is closed, WP19 is complete and WP25 is complete.
+The WP18 UI line is closed. WP19, WP25 and WP30 are complete.
 
 The next recommended workpackage for Phase 1 is:
 
@@ -276,29 +329,13 @@ The next recommended workpackage for Phase 2 is:
 WP26 — Scrub Key encryption/lifecycle specification
 ```
 
-The following workpackages can also be prepared and run in parallel because they do not touch the same UI flow:
-
-### WP30 — Placeholder robustness review
-
-Type: architecture/specification.
-
-Purpose:
-
-- Review how placeholders survive AI rewriting, translation and summarization.
-- Propose an LLM-resistant placeholder format and validation direction.
-
-Likely files:
+The next recommended workpackage for Phase 3 is:
 
 ```text
-PLACEHOLDER_ROBUSTNESS_REVIEW.md
-DECISION_LOG.md
-RISK_REGISTER.md
-WORKPACKAGES.md
-CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_placeholder_robustness_review.md
+WP31 — LLM-resistant placeholder format proposal
 ```
 
-No placeholder format migration in WP30.
+The following workpackages can also be prepared and run in parallel because they do not touch the same UI flow:
 
 ### WP35 — DOCX hidden content risk review
 
@@ -409,7 +446,7 @@ No GitHub workflow changes unless separately approved.
 Safe in parallel after WP18B closeout:
 
 ```text
-WP30, WP35, WP45, WP50, WP56, WP57
+WP35, WP45, WP50, WP56, WP57
 ```
 
 Do not run in parallel:
