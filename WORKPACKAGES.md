@@ -40,6 +40,7 @@ WP18B — PDF text to restored TXT UI app verification closeout: completed close
 WP18C — Add Codex worker governance instructions: completed documentation/governance-only.
 WP19 — Recall benchmark specification: completed specification-only.
 WP25 — Scrub Key threat model: completed security/specification-only.
+WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
 WP58 — Parallel specification consolidation and next execution queue: completed documentation/planning-only.
@@ -155,6 +156,57 @@ Next recommended step from WP25:
 WP26 — Scrub Key encryption/lifecycle specification
 ```
 
+### WP26 — Scrub Key encryption/lifecycle specification
+
+Status: completed security/lifecycle-specification-only.
+
+Files added:
+
+```text
+SCRUB_KEY_LIFECYCLE_SPEC.md
+handover/workpackages/20260610_0015_scrub_key_lifecycle_spec.md
+```
+
+Files changed:
+
+```text
+DECISION_LOG.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Summary:
+
+- Defines Scrub Key lifecycle states from creation, download/export, local storage, import/reload and active use through sharing risk, expiry and deletion.
+- Defines loss-of-key, tampering, password/passphrase, key recovery, metadata and audit/logging expectations.
+- Compares warning-only, protected local file, encrypted local file and local vault / managed key store options.
+- Recommends warning-only plus explicit lifecycle/protected-local-file guidance for MVP.
+- Recommends encrypted files, vault/managed key stores and integrity protection only for later professional/local desktop versions after separate implementation workpackages.
+
+Intentionally not changed:
+
+- No encryption implemented.
+- No Scrub Key JSON schema migration.
+- No helper logic changed.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No UI changed.
+- No tests or dependencies changed.
+- No secrets or real data added.
+
+Next recommended step from WP26:
+
+```text
+WP27 — Scrub Key warning UX plan
+```
+
+Alternative next step depending on consolidation:
+
+```text
+WP29 — Scrub Key secure import/export tests
+```
+
 ### WP30 — Placeholder robustness review
 
 Status: completed architecture/specification-only.
@@ -252,9 +304,9 @@ The next recommended parallel set is:
 
 ```text
 Worker 1: WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
-Worker 2: WP26 — Scrub Key encryption/lifecycle specification
-Worker 3: WP31 — LLM-resistant placeholder format proposal
-Worker 4: WP45 — Local runtime architecture plan
+Worker 2: WP31 — LLM-resistant placeholder format proposal
+Worker 3: WP45 — Local runtime architecture plan
+Worker 4: WP27 — Scrub Key warning UX plan
 ```
 
 If only one worker is available, start with:
@@ -299,33 +351,33 @@ CHANGELOG.md
 handover/workpackages/YYYYMMDD_HHMM_synthetic_messy_benchmark_corpus.md
 ```
 
-### WP26 — Scrub Key encryption/lifecycle specification
+### WP27 — Scrub Key warning UX plan
 
-Type: security/lifecycle specification.
+Type: UX/security specification.
 
 Purpose:
 
-- Define Scrub Key lifecycle states, retention/deletion expectations and protection options.
-- Compare warning-only, protected file, encrypted file and local vault options.
+- Convert WP25/WP26 Scrub Key threat and lifecycle findings into a user-facing warning plan.
+- Define warning text, placement and acknowledgement expectations for export/download, import/reload, reinsert, deletion/expiry and shared-computer/storage-risk moments.
 
 Allowed direction:
 
-- Specification only.
-- No encryption implementation.
-- No Scrub Key JSON schema migration.
+- Specification/UX plan only.
+- No UI implementation.
+- No Scrub Key schema migration.
 - No import/export behavior change.
-- No UI change.
+- No reinsert behavior change.
+- No encryption implementation.
 - No secrets or real data.
 
 Likely files:
 
 ```text
-SCRUB_KEY_LIFECYCLE_SPEC.md
-DECISION_LOG.md
+SCRUB_KEY_WARNING_UX_PLAN.md
 RISK_REGISTER.md
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_scrub_key_lifecycle_spec.md
+handover/workpackages/YYYYMMDD_HHMM_scrub_key_warning_ux_plan.md
 ```
 
 ### WP31 — LLM-resistant placeholder format proposal
@@ -435,7 +487,7 @@ Also blocked until separate approval or later specs:
 Safe in parallel now:
 
 ```text
-WP20, WP26, WP31, WP45
+WP20, WP27, WP31, WP45
 ```
 
 Optional safe parallel candidates:
