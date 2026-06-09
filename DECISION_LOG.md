@@ -4,6 +4,31 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-10 — D010 — Scrub Key MVP lifecycle starts warning-first before encryption
+
+Status: accepted
+
+Decision:
+
+```text
+Scrub Key lifecycle must be specified before encryption implementation. The MVP may start with warning-only handling plus explicit lifecycle guidance and protected-local-file guidance, but encrypted key files, local vault behavior, key recovery and Scrub Key schema/container changes require separate implementation workpackages.
+```
+
+Rationale:
+
+The Scrub Key is sensitive re-identification data. Adding encryption or vault behavior without a lifecycle policy can create new risks: surprise data loss, unclear passphrase recovery, hidden recovery copies, incompatible key formats, import/export confusion and unsupported security claims. A warning-first MVP preserves the current schema and behavior while making risk visible.
+
+Implications:
+
+- WP26 remains security/lifecycle-specification-only.
+- WP27 should specify warning UX before user-facing lifecycle changes.
+- WP28 should define expiry/delete policy before any automated deletion behavior.
+- WP29 should add secure import/export tests before harder protection behavior.
+- Scrub Key encryption implementation remains blocked until a separate approved implementation workpackage defines format, migration, passphrase behavior and tamper protection.
+- Local vault / managed key-store behavior remains a later professional/local desktop option, not an MVP change.
+
+---
+
 ## 2026-06-09 — D001 — Roadmap becomes risk-driven
 
 Status: accepted
