@@ -1,5 +1,61 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP30 — Placeholder robustness review
+
+Status: completed architecture/specification-only.
+
+Purpose:
+
+- Review how placeholders survive AI rewriting, translation, summarization and formatting changes.
+- Document the current placeholder format and deterministic reinsert assumptions.
+- Identify corruption risks and candidate future validation/audit directions before any migration.
+
+Files added:
+
+- `PLACEHOLDER_ROBUSTNESS_REVIEW.md`
+- `handover/workpackages/20260609_2310_placeholder_robustness_review.md`
+
+Files changed:
+
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main architecture findings:
+
+- Current `[PERSOON_1]`-style placeholders are deterministic and readable, but fragile under AI translation, summarization, punctuation/spacing changes, markdown/HTML formatting and document conversion.
+- Current reinsert assumes exact placeholder strings from the Scrub Key mapping.
+- Existing audit fields for unknown, duplicate and not-found placeholders are a useful foundation, but do not yet detect checksum failures, near-misses, placeholder deletion or semantic placeholder merges.
+- Candidate robust formats such as `[[SP_PERSON_0001_A7F3]]`, `[[SP_BSN_0002_C91B]]` and `[[SP_ADDRESS_0003_D41A]]` remain proposals only.
+- Checksum design must avoid deriving visible values from original sensitive data.
+- Backward compatibility with legacy placeholders is mandatory.
+
+Validation status:
+
+- Documentation/architecture review only.
+- No tests run; no code or test files were changed.
+- GitHub Actions: not checked at changelog update time.
+- Hugging Face sync: not checked at changelog update time.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No code changed.
+- No placeholder migration.
+- No placeholder format changed.
+- No Scrub Key schema changed.
+- No reinsert helper changed.
+- No UI changed.
+- No AI/cloud integration.
+- No tests added or changed.
+- No export behavior changed.
+- No final placeholder format mandated.
+
+Next recommended step:
+
+- `WP31 — LLM-resistant placeholder format proposal`.
+
 ## WP25 — Scrub Key threat model
 
 Status: completed security/specification-only.
