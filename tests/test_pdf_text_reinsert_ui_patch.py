@@ -98,7 +98,7 @@ def test_pdf_text_reinsert_is_inserted_before_anonymization_else_branch():
     insert_marker = 'pdf_insert_marker = \'\'\''
     assert insert_marker in PATCH_TEXT
     assert "+ pdf_text_reinsert_ui_block" in PATCH_TEXT
-    assert "'''else:\\n'''" in PATCH_TEXT
+    assert "'''else:\n'''" in PATCH_TEXT
 
 
 def test_dockerfile_runs_pdf_text_reinsert_patch_after_existing_patch():
