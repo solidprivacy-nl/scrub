@@ -63,34 +63,37 @@ Recommended workpackages:
 
 ## R2 — Scrub Key leakage or accidental sharing
 
-Status: open  
+Status: mitigating  
 Impact: critical
 
 Risk:
 
 ```text
-The Scrub Key is shared, leaked, retained too long or mishandled, allowing full re-identification of scrubbed content.
+The Scrub Key is shared, leaked, retained too long, tampered with or mishandled, allowing full re-identification of scrubbed content.
 ```
 
 Why it matters:
 
-The Scrub Key maps placeholders to real sensitive values. It is therefore concentrated sensitive data.
+The Scrub Key maps placeholders to real sensitive values. It is therefore concentrated sensitive re-identification data. Scrub Key-based output is pseudonymized, not fully anonymized, as long as the key exists.
 
 Current mitigations:
 
 - UI warnings around Scrub Key reinsert.
 - Local-only/no-AI/no-cloud positioning for reinsert.
+- `SCRUB_KEY_SPEC.md` states that Scrub Key-based output is pseudonymization, not full anonymization.
+- WP25 created `SCRUB_KEY_THREAT_MODEL.md`, defining accidental sharing, local storage, download-folder, e-mail/AI-upload, shared-computer, retention, loss-of-key, tampering, malformed-key and import/export risks.
 
 Gaps:
 
-- No formal Scrub Key threat model.
-- No lifecycle/expiry/delete policy.
-- No encryption/protection strategy.
-- No user-facing release/security notes focused on Scrub Key handling.
+- No encryption/protection implementation.
+- No implemented lifecycle/expiry/delete policy.
+- No dedicated warning UX plan for all key touchpoints.
+- No tamper-proof or authenticated Scrub Key format.
+- No secure import/export regression test package focused on key handling.
+- No automatic cleanup for browser Downloads or unmanaged local storage.
 
 Recommended workpackages:
 
-- WP25 — Scrub Key threat model.
 - WP26 — Scrub Key encryption/lifecycle specification.
 - WP27 — Scrub Key warning UX plan.
 - WP28 — Scrub Key expiry/delete policy.
