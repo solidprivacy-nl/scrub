@@ -39,6 +39,7 @@ WP18-FIX — Fix failing PDF text to TXT UI tests: completed after Actions/sync 
 WP18B — PDF text to restored TXT UI app verification closeout: completed closeout-only.
 WP18C — Add Codex worker governance instructions: completed documentation/governance-only.
 WP19 — Recall benchmark specification: completed specification-only.
+WP25 — Scrub Key threat model: completed security/specification-only.
 ```
 
 ## Closed UI line: WP18 PDF text to restored TXT
@@ -208,9 +209,60 @@ Next recommended step:
 
 - WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
 
+## Phase 2: Scrub Key security and lifecycle
+
+### WP25 — Scrub Key threat model
+
+Status: completed security/specification-only.
+
+Purpose:
+
+- Treat Scrub Key as sensitive re-identification data.
+- Define leakage, accidental sharing, lifecycle, expiry/delete and encryption risks.
+- Make clear that Scrub Key-based output is pseudonymized, not fully anonymized, as long as the key exists.
+
+Files added:
+
+```text
+SCRUB_KEY_THREAT_MODEL.md
+handover/workpackages/20260609_2258_scrub_key_threat_model.md
+```
+
+Files changed:
+
+```text
+RISK_REGISTER.md
+DECISION_LOG.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Main security findings:
+
+- The Scrub Key contains original confidential values and placeholder mappings, so it can re-identify scrubbed content.
+- Accidental sharing, download-folder retention, e-mail/AI uploads, shared computers, unmanaged local storage and long retention are critical risks.
+- Loss of the key prevents deterministic reinsert; tampering or malformed keys can cause incorrect or unsafe reinsert.
+- Encryption, lifecycle, expiry/delete and tamper protection require a separate approved specification before implementation.
+
+Intentionally not changed:
+
+- No helper logic changed.
+- No Scrub Key JSON schema migration.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No UI changed.
+- No encryption implemented.
+- No dependencies changed.
+- No tests added or changed.
+- No secrets or real data stored.
+
+Next recommended step:
+
+- WP26 — Scrub Key encryption/lifecycle specification.
+
 ## Active / next recommended workpackages
 
-The WP18 UI line is closed and WP19 is complete.
+The WP18 UI line is closed, WP19 is complete and WP25 is complete.
 
 The next recommended workpackage for Phase 1 is:
 
@@ -218,29 +270,13 @@ The next recommended workpackage for Phase 1 is:
 WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
 ```
 
-The following workpackages can also be prepared and run in parallel because they do not touch the same UI flow:
-
-### WP25 — Scrub Key threat model
-
-Type: security review/specification.
-
-Purpose:
-
-- Treat Scrub Key as sensitive re-identification data.
-- Define leakage, accidental sharing, lifecycle, expiry/delete and encryption risks.
-
-Likely files:
+The next recommended workpackage for Phase 2 is:
 
 ```text
-SCRUB_KEY_THREAT_MODEL.md
-RISK_REGISTER.md
-DECISION_LOG.md
-WORKPACKAGES.md
-CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_scrub_key_threat_model.md
+WP26 — Scrub Key encryption/lifecycle specification
 ```
 
-No encryption implementation in WP25.
+The following workpackages can also be prepared and run in parallel because they do not touch the same UI flow:
 
 ### WP30 — Placeholder robustness review
 
@@ -373,7 +409,7 @@ No GitHub workflow changes unless separately approved.
 Safe in parallel after WP18B closeout:
 
 ```text
-WP25, WP30, WP35, WP45, WP50, WP56, WP57
+WP30, WP35, WP45, WP50, WP56, WP57
 ```
 
 Do not run in parallel:
