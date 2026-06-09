@@ -11,183 +11,106 @@ Read in order:
 
 Repository: `solidprivacy-nl/scrub`.
 
+Also read when relevant:
+
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+- `STATUS_MONITORING_RUNBOOK.md`
+- `RELEASE_NOTES.md`
+
 ## Current status
 
 WP0 through WP13B are complete.
 
-## WP14 / WP14B / WP14C — v13.8 DOCX reinsert upload/download UI
-
-Status: completed and app-verified after Actions/sync verification.
-
-WP14 implemented controlled DOCX upload/download reinsert in `Originele waarden terugzetten`, using the existing local helper `reinsert_docx_bytes(content, scrub_key)`.
-
-Existing pasted-text reinsert and TXT reinsert remain available.
-
-## WP15 — PDF text extraction reliability review only
-
-Status: completed review/specification only.
-
-Review conclusion:
-
-- Do not implement full PDF reinsert now.
-- Do not implement OCR now.
-- Restored PDF output remains out of scope.
-- DOCX remains the preferred document-level reinsert path.
-- A future helper-only spike may evaluate text-based PDF extraction to restored TXT output.
-
-## WP16 — Text-based PDF extraction helper spike, restored TXT output only
-
-Status: completed after Actions/sync verification; app verification not applicable because no UI behavior changed.
-
-Implemented behavior:
-
-- `extract_text_from_pdf_bytes(content)` extracts selectable PDF text locally when `pypdf` is installed.
-- `reinsert_pdf_text_bytes(content, scrub_key)` feeds extracted text into existing deterministic Scrub Key reinsert logic.
-- Restored output is TXT/text only.
-- No restored PDF bytes are produced.
-- Blank/no-text PDFs are clearly marked unsupported.
-- Audit includes local-only, no-AI, no-cloud, OCR-not-used and PDF-output-false fields.
-
-## WP16-FIX — Fix failing PDF text helper tests
-
-Status: completed after Actions/sync verification; app verification not applicable because no UI behavior changed.
-
-Fix applied:
-
-- `scrub_key_pdf_text_reinsert.py` imports `pypdf` optionally and remains import-safe when `pypdf` is unavailable.
-- If `pypdf` is missing, the helper returns an explicit validation issue instead of failing module import.
-- `tests/test_scrub_key_pdf_text_reinsert.py` uses `pytest.importorskip("pypdf")` for PDF extraction tests.
-
-Coordinator evidence after WP16-FIX:
+Recent completed line:
 
 ```text
-Tests #198 green — commit 4ccd79e
-Sync to Hugging Face Space #212 green — commit 4ccd79e
-Tests #199 green — commit 1fbdf48
-Sync to Hugging Face Space #213 green — commit 1fbdf48
-Tests #200 green — commit 410f04a
-Sync to Hugging Face Space #214 green — commit 410f04a
-Tests #201 green — commit 9354727
-Sync to Hugging Face Space #215 green — commit 9354727
+WP14 / WP14B / WP14C — v13.8 DOCX reinsert upload/download UI: completed and app-verified.
+WP15 — PDF text extraction reliability review only: completed review/specification-only.
+WP16 — Text-based PDF extraction helper spike: completed after Actions/sync verification.
+WP16-FIX — PDF helper test fix: completed after Actions/sync verification.
+WP16B — PDF helper verification closeout: completed closeout-only.
+WP17 — PDF text extraction reinsert UI planning: completed planning/specification-only.
+WP17B — Roadmap current-status reconciliation after WP17: completed documentation-only.
+WP18 — PDF text extraction to restored TXT UI implementation: implemented; GitHub Actions tests failing; fix required.
+WP18R — Risk-driven roadmap and operating model reset: completed documentation/governance-only.
 ```
 
-## WP16B — Text-based PDF extraction helper spike verification and closeout
+## Active workpackage
 
-Status: completed closeout-only.
+### WP18-FIX — Fix failing PDF text to TXT UI tests
 
-Purpose:
+Status: active / required next.
 
-- Formally close WP16 and WP16-FIX as verified after coordinator-supplied Actions/sync evidence.
-- Record that app verification is not applicable because no UI behavior changed.
-- Preserve all implementation, UI, dependency and export boundaries.
+Current evidence:
 
-## WP17 — PDF text extraction reinsert UI planning only
+```text
+WP18 implemented the PDF-to-restored-TXT UI.
+Hugging Face sync for WP18 commits was green in coordinator evidence.
+GitHub Actions tests for WP18 commits were red in coordinator evidence.
+App verification is blocked until Actions are green.
+```
 
-Status: completed planning/specification-only.
+Goal:
 
-Planning conclusion:
-
-- PDF text extraction may be exposed only as text-based PDF extraction to restored TXT output.
-- Future placement must be only in `Originele waarden terugzetten`.
-- The UI must not appear in `Anonimiseren`.
-- DOCX remains the preferred document-level reinsert route.
-- The future workflow should be PDF upload → local text extraction → restored TXT preview/download only.
-- Strong warnings must explain incomplete PDF extraction, no layout preservation, restored sensitive values, unsupported scanned/image-only PDFs and TXT-only output.
-- Unsupported cases must not silently succeed.
-
-## WP17B — Roadmap current-status reconciliation after WP17
-
-Status: completed documentation-only update.
-
-Purpose:
-
-- Reconcile stale `ROADMAP.md` wording that still pointed to WP16B/WP17 as the active next steps.
-- Align `ROADMAP.md`, `WORKPACKAGES.md` and `CHANGELOG.md` after WP17.
-- Record that WP18 is the current next possible workpackage, but only after explicit approval.
-
-## WP18 — PDF text extraction to restored TXT UI implementation
-
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
-
-Purpose:
-
-- Expose the existing WP16 PDF text helper safely in the UI.
-- Add only PDF upload → local selectable-text extraction → deterministic Scrub Key reinsert → restored TXT preview/download.
-- Keep the feature inside `Originele waarden terugzetten` only.
-- Keep `Anonimiseren` unchanged.
-
-Implemented workflow:
+- Read failing GitHub Actions logs.
+- Fix the failing WP18 tests without expanding scope.
+- Preserve the approved WP18 behavior:
 
 ```text
 Originele waarden terugzetten
 → PDF upload
 → local selectable-text extraction via WP16 helper
-→ existing deterministic Scrub Key reinsert
+→ deterministic Scrub Key reinsert
 → restored TXT preview
 → restored TXT download
 → audit report
 ```
 
-Files added:
+Allowed files if needed:
 
-- `fix_streamlit_pdf_text_reinsert.py`
-- `tests/test_pdf_text_reinsert_ui_patch.py`
-- `handover/workpackages/20260609_1215_pdf_text_to_restored_txt_ui.md`
+```text
+fix_streamlit_pdf_text_reinsert.py
+tests/test_pdf_text_reinsert_ui_patch.py
+Dockerfile
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_pdf_text_to_txt_ui_tests_fix.md
+```
 
-Files changed:
+Out of scope:
 
-- `Dockerfile`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
+- no OCR;
+- no restored PDF output;
+- no PDF-to-DOCX reconstruction;
+- no AI/cloud extraction;
+- no layout reconstruction;
+- no batch PDF processing;
+- no real-data tests;
+- no automatic PDF rehydration;
+- no changes to existing pasted-text/TXT/DOCX reinsert semantics;
+- no changes to existing anonymization/export semantics;
+- no direct `presidio_streamlit.py` edit unless the logs prove there is no safe patch-file alternative and the coordinator explicitly approves.
 
-Implementation notes:
+Required validation:
 
-- `fix_streamlit_pdf_text_reinsert.py` runs after `fix_streamlit_nested_expanders.py` and adds the PDF-to-restored-TXT UI section.
-- `Dockerfile` now runs both startup patches.
-- `Dockerfile` also installs `pypdf` in the runtime image so the existing WP16 local PDF parser dependency is available to the app.
-- No new PDF extraction library was introduced beyond the already approved WP16 `pypdf` dependency.
-- No changes were made to `requirements.txt` or helper modules.
+```bash
+PYTHONPATH=. pytest -q tests/test_pdf_text_reinsert_ui_patch.py
+PYTHONPATH=. pytest -q tests/test_two_mode_ui_patch.py
+PYTHONPATH=. pytest -q tests/test_txt_reinsert_ui_patch.py
+PYTHONPATH=. pytest -q tests/test_docx_reinsert_ui_patch.py
+PYTHONPATH=. pytest -q tests/test_scrub_key_pdf_text_reinsert.py
+```
 
-Validation status:
+Then verify GitHub Actions and Hugging Face sync using `STATUS_MONITORING_RUNBOOK.md` where connector permissions allow.
 
-- UI patch tests added for the PDF-to-restored-TXT section.
-- Repository pytest execution was not available in this connector session.
-- GitHub Actions: awaiting verification.
-- Hugging Face sync: awaiting verification.
-- App verification: required after Actions/sync are green because UI behavior changed.
+## Next after WP18-FIX
 
-Intentionally not changed:
+### WP18 app verification
 
-- No `presidio_streamlit.py` direct edit.
-- No `scrub_key_pdf_text_reinsert.py` helper change.
-- No `scrub_key_reinsert.py` change.
-- No `scrub_key_import.py` change.
-- No `requirements.txt` change.
-- No `PDF_TEXT_REINSERT_UI_PLAN.md` change.
-- No restored PDF output.
-- No OCR.
-- No PDF-to-DOCX reconstruction.
-- No cloud PDF conversion.
-- No AI-based extraction.
-- No layout preservation promises.
-- No batch PDF processing.
-- No real-data PDF test cases.
-- No automatic PDF rehydration.
-- No existing TXT/DOCX/pasted reinsert semantics changed.
-- No Scrub Key import/export behavior changed.
-- No existing scrubbed export/download semantics changed.
+Only after WP18-FIX has green Actions and sync.
 
-## Active / next recommended workpackage
-
-WP18B — PDF text to restored TXT UI app verification closeout.
-
-Do not start WP18B until:
-
-- GitHub Actions tests are green after WP18;
-- Hugging Face sync is green after WP18;
-- coordinator/user has verified the Hugging Face app behavior.
-
-App verification must confirm:
+Coordinator/user must verify in the Hugging Face app:
 
 - `Originele waarden terugzetten` shows the new PDF-to-TXT section;
 - `Anonimiseren` does not show the PDF reinsert section;
@@ -201,3 +124,219 @@ App verification must confirm:
 - scanned/image-only PDFs are rejected or clearly marked unsupported;
 - existing pasted-text, TXT and DOCX reinsert still work;
 - existing anonymization/export behavior is unchanged.
+
+### WP18B — PDF text to restored TXT UI app verification closeout
+
+Status: blocked until WP18-FIX green and app verification confirmed.
+
+Closeout-only.
+
+Allowed files:
+
+```text
+WORKPACKAGES.md
+CHANGELOG.md
+RELEASE_NOTES.md
+handover/workpackages/YYYYMMDD_HHMM_pdf_text_to_txt_ui_app_closeout.md
+```
+
+No code, tests, dependencies or UI changes.
+
+## Parallelizable work after WP18-FIX is green
+
+The following workpackages can be prepared and run in parallel because they do not touch the same UI flow:
+
+### WP19 — Recall benchmark specification
+
+Type: specification/test-design.
+
+Purpose:
+
+- Define a benchmark for measuring recall/precision on messy synthetic Dutch legal and care texts.
+- Define entity classes, scoring rules, minimum metrics and reporting format.
+
+Likely files:
+
+```text
+RECALL_BENCHMARK_SPEC.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_recall_benchmark_spec.md
+```
+
+No recognizer logic changes in WP19.
+
+### WP25 — Scrub Key threat model
+
+Type: security review/specification.
+
+Purpose:
+
+- Treat Scrub Key as sensitive re-identification data.
+- Define leakage, accidental sharing, lifecycle, expiry/delete and encryption risks.
+
+Likely files:
+
+```text
+SCRUB_KEY_THREAT_MODEL.md
+RISK_REGISTER.md
+DECISION_LOG.md
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_scrub_key_threat_model.md
+```
+
+No encryption implementation in WP25.
+
+### WP30 — Placeholder robustness review
+
+Type: architecture/specification.
+
+Purpose:
+
+- Review how placeholders survive AI rewriting, translation and summarization.
+- Propose an LLM-resistant placeholder format and validation direction.
+
+Likely files:
+
+```text
+PLACEHOLDER_ROBUSTNESS_REVIEW.md
+DECISION_LOG.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_placeholder_robustness_review.md
+```
+
+No placeholder format migration in WP30.
+
+### WP35 — DOCX hidden content risk review
+
+Type: document hygiene review/specification.
+
+Purpose:
+
+- Review metadata, comments, tracked changes, headers/footers and hidden document content.
+- Define safe extraction/cleaning sequence before helper implementation.
+
+Likely files:
+
+```text
+DOCX_HIDDEN_CONTENT_RISK_REVIEW.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_docx_hidden_content_risk_review.md
+```
+
+No cleaner implementation in WP35.
+
+### WP45 — Local runtime architecture plan
+
+Type: architecture/specification.
+
+Purpose:
+
+- Bring local-first runtime earlier in the roadmap.
+- Compare minimal local Streamlit launcher, PyInstaller, Tauri and Electron paths.
+
+Likely files:
+
+```text
+LOCAL_RUNTIME_ARCHITECTURE_PLAN.md
+DECISION_LOG.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_local_runtime_architecture_plan.md
+```
+
+No packaging implementation in WP45.
+
+### WP50 — Pilot design: Legal vs Zorg
+
+Type: validation/GTM specification.
+
+Purpose:
+
+- Compare first pilot route: Scrub Legal versus Scrub Zorg.
+- Define ICP, pilot documents, consent/NDA process, metrics and decision criteria.
+
+Likely files:
+
+```text
+PILOT_VALIDATION_PLAN.md
+DECISION_LOG.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_pilot_validation_plan.md
+```
+
+No real customer data or real documents in repo.
+
+### WP56 — User-facing release notes split and documentation hygiene
+
+Type: documentation.
+
+Purpose:
+
+- Keep `CHANGELOG.md` as internal workpackage log.
+- Keep `RELEASE_NOTES.md` as user-facing product capability log.
+
+Likely files:
+
+```text
+RELEASE_NOTES.md
+CHANGELOG.md
+WORKPACKAGES.md
+handover/workpackages/YYYYMMDD_HHMM_release_notes_split.md
+```
+
+### WP57 — Workflow status monitoring runbook and checks
+
+Type: operations/documentation, optional helper later.
+
+Purpose:
+
+- Reduce dependence on coordinator screenshots.
+- Define how workers check GitHub Actions and Hugging Face sync status themselves.
+- Define status states and when app verification can start.
+
+Likely files:
+
+```text
+STATUS_MONITORING_RUNBOOK.md
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_status_monitoring_runbook.md
+```
+
+No GitHub workflow changes unless separately approved.
+
+## Parallelization rules
+
+Safe in parallel after WP18-FIX is green:
+
+```text
+WP19, WP25, WP30, WP35, WP45, WP50, WP56, WP57
+```
+
+Do not run in parallel:
+
+- WP18-FIX with other UI patch work;
+- multiple edits to Docker startup patch order;
+- multiple edits to `presidio_streamlit.py` or `fix_streamlit_nested_expanders.py`;
+- multiple changes to export/download flow;
+- implementation work that depends on unresolved specs.
+
+## Documentation model
+
+- `ROADMAP.md`: strategy, risk-driven phase order and architecture.
+- `WORKPACKAGES.md`: active queue and dependencies.
+- `CHANGELOG.md`: internal workpackage implementation log.
+- `RELEASE_NOTES.md`: user-facing product changes.
+- `DECISION_LOG.md`: accepted strategic/architecture/product decisions.
+- `RISK_REGISTER.md`: active privacy/product/security risks and mitigations.
+- `handover/workpackages/`: worker handovers.
