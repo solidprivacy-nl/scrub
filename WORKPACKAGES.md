@@ -39,21 +39,6 @@ Review conclusion:
 
 Status: completed after Actions/sync verification; app verification not applicable because no UI behavior changed.
 
-Added:
-
-- `scrub_key_pdf_text_reinsert.py`
-- `tests/test_scrub_key_pdf_text_reinsert.py`
-- `handover/workpackages/20260609_0000_pdf_text_extraction_helper_spike.md`
-
-Dependency decision:
-
-- Added `pypdf` as a local text-extraction dependency.
-- `pypdf` is used only for local selectable-text extraction.
-- No OCR dependency was added.
-- No cloud PDF service was added.
-- No AI extraction dependency was added.
-- No PDF-to-DOCX or layout reconstruction dependency was added.
-
 Implemented behavior:
 
 - `extract_text_from_pdf_bytes(content)` extracts selectable PDF text locally when `pypdf` is installed.
@@ -67,19 +52,11 @@ Implemented behavior:
 
 Status: completed after Actions/sync verification; app verification not applicable because no UI behavior changed.
 
-Cause found:
-
-- The GitHub Actions test workflow installs `pytest presidio-analyzer click==8.1.8` directly.
-- It does not install `requirements.txt`.
-- Therefore `pypdf` was not guaranteed to be present in the test job.
-- The original helper/test module imported `pypdf` at module import time, which could fail before tests ran.
-
 Fix applied:
 
-- `scrub_key_pdf_text_reinsert.py` now imports `pypdf` optionally and remains import-safe when `pypdf` is unavailable.
+- `scrub_key_pdf_text_reinsert.py` imports `pypdf` optionally and remains import-safe when `pypdf` is unavailable.
 - If `pypdf` is missing, the helper returns an explicit validation issue instead of failing module import.
-- `tests/test_scrub_key_pdf_text_reinsert.py` now uses `pytest.importorskip("pypdf")` for PDF extraction tests.
-- A test was added for the missing-`pypdf` path via monkeypatch.
+- `tests/test_scrub_key_pdf_text_reinsert.py` uses `pytest.importorskip("pypdf")` for PDF extraction tests.
 
 Coordinator evidence after WP16-FIX:
 
@@ -108,12 +85,6 @@ Purpose:
 
 Status: completed planning/specification-only.
 
-Purpose:
-
-- Specify whether and how the WP16 PDF text helper may be exposed safely in the future UI.
-- Keep implementation out of scope.
-- Preserve all current code, tests, UI behavior, dependencies and export semantics.
-
 Planning conclusion:
 
 - PDF text extraction may be exposed only as text-based PDF extraction to restored TXT output.
@@ -122,7 +93,6 @@ Planning conclusion:
 - DOCX remains the preferred document-level reinsert route.
 - The future workflow should be PDF upload → local text extraction → restored TXT preview/download only.
 - Strong warnings must explain incomplete PDF extraction, no layout preservation, restored sensitive values, unsupported scanned/image-only PDFs and TXT-only output.
-- The future UI must show audit fields for document type, extracted text length, restored value count, mapping counts, placeholder issues, validation issues, unsupported reason, local-only status, AI/cloud status, OCR-used status and PDF-output status.
 - Unsupported cases must not silently succeed.
 
 ## WP17B — Roadmap current-status reconciliation after WP17
@@ -135,62 +105,99 @@ Purpose:
 - Align `ROADMAP.md`, `WORKPACKAGES.md` and `CHANGELOG.md` after WP17.
 - Record that WP18 is the current next possible workpackage, but only after explicit approval.
 
+## WP18 — PDF text extraction to restored TXT UI implementation
+
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Purpose:
+
+- Expose the existing WP16 PDF text helper safely in the UI.
+- Add only PDF upload → local selectable-text extraction → deterministic Scrub Key reinsert → restored TXT preview/download.
+- Keep the feature inside `Originele waarden terugzetten` only.
+- Keep `Anonimiseren` unchanged.
+
+Implemented workflow:
+
+```text
+Originele waarden terugzetten
+→ PDF upload
+→ local selectable-text extraction via WP16 helper
+→ existing deterministic Scrub Key reinsert
+→ restored TXT preview
+→ restored TXT download
+→ audit report
+```
+
+Files added:
+
+- `fix_streamlit_pdf_text_reinsert.py`
+- `tests/test_pdf_text_reinsert_ui_patch.py`
+- `handover/workpackages/20260609_1215_pdf_text_to_restored_txt_ui.md`
+
 Files changed:
 
-- `ROADMAP.md`
+- `Dockerfile`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 
-Handover added:
+Implementation notes:
 
-- `handover/workpackages/20260609_1200_roadmap_status_reconciliation_after_wp17.md`
+- `fix_streamlit_pdf_text_reinsert.py` runs after `fix_streamlit_nested_expanders.py` and adds the PDF-to-restored-TXT UI section.
+- `Dockerfile` now runs both startup patches.
+- `Dockerfile` also installs `pypdf` in the runtime image so the existing WP16 local PDF parser dependency is available to the app.
+- No new PDF extraction library was introduced beyond the already approved WP16 `pypdf` dependency.
+- No changes were made to `requirements.txt` or helper modules.
 
-Validation:
+Validation status:
 
-- Tests: not required; documentation-only update.
-- GitHub Actions: not required unless documentation checks run automatically.
-- Hugging Face sync: not functionally relevant; no app behavior changed.
-- App verification: not applicable; no UI behavior changed.
+- UI patch tests added for the PDF-to-restored-TXT section.
+- Repository pytest execution was not available in this connector session.
+- GitHub Actions: awaiting verification.
+- Hugging Face sync: awaiting verification.
+- App verification: required after Actions/sync are green because UI behavior changed.
 
 Intentionally not changed:
 
-- No code changed.
-- No tests changed.
-- No UI changed.
-- No dependencies changed.
-- No OCR added.
-- No PDF output added.
-- No PDF-to-DOCX reconstruction added.
-- No AI/cloud behavior added.
-- No export/download semantics changed.
+- No `presidio_streamlit.py` direct edit.
+- No `scrub_key_pdf_text_reinsert.py` helper change.
+- No `scrub_key_reinsert.py` change.
+- No `scrub_key_import.py` change.
+- No `requirements.txt` change.
+- No `PDF_TEXT_REINSERT_UI_PLAN.md` change.
+- No restored PDF output.
+- No OCR.
+- No PDF-to-DOCX reconstruction.
+- No cloud PDF conversion.
+- No AI-based extraction.
+- No layout preservation promises.
+- No batch PDF processing.
+- No real-data PDF test cases.
+- No automatic PDF rehydration.
+- No existing TXT/DOCX/pasted reinsert semantics changed.
+- No Scrub Key import/export behavior changed.
+- No existing scrubbed export/download semantics changed.
 
-## Active / next possible workpackage
+## Active / next recommended workpackage
 
-WP18 — PDF text extraction to restored TXT UI implementation.
+WP18B — PDF text to restored TXT UI app verification closeout.
 
-WP18 must not start unless explicitly approved as a separate implementation workpackage.
+Do not start WP18B until:
 
-Recommended WP18 scope if approved:
+- GitHub Actions tests are green after WP18;
+- Hugging Face sync is green after WP18;
+- coordinator/user has verified the Hugging Face app behavior.
 
-- `Originele waarden terugzetten` only;
-- PDF upload;
-- local text extraction via WP16 helper;
-- restored TXT preview;
-- restored TXT download;
-- audit report;
-- strong warnings;
-- no PDF output;
-- no OCR;
-- no AI/cloud.
+App verification must confirm:
 
-Keep explicitly out of scope until separately approved:
-
-- full restored PDF output;
-- OCR;
-- PDF-to-DOCX reconstruction;
-- cloud PDF conversion;
-- AI-based extraction;
-- layout preservation promises;
-- batch PDF processing;
-- real-data PDF test cases;
-- automatic PDF rehydration.
+- `Originele waarden terugzetten` shows the new PDF-to-TXT section;
+- `Anonimiseren` does not show the PDF reinsert section;
+- a valid Scrub Key can be loaded;
+- a text-based PDF with placeholders can be uploaded;
+- PDF text can be restored locally to TXT;
+- restored TXT preview appears;
+- restored TXT download appears;
+- audit report appears;
+- UI clearly says no OCR, no AI, no cloud and no PDF output;
+- scanned/image-only PDFs are rejected or clearly marked unsupported;
+- existing pasted-text, TXT and DOCX reinsert still work;
+- existing anonymization/export behavior is unchanged.
