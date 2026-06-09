@@ -1,5 +1,62 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP26 — Scrub Key encryption/lifecycle specification
+
+Status: completed security/lifecycle-specification-only.
+
+Purpose:
+
+- Define Scrub Key lifecycle states, retention/deletion expectations and protection options.
+- Treat the Scrub Key as sensitive re-identification data following WP25.
+- Specify MVP handling versus later professional/local desktop protection without implementing encryption.
+
+Files added:
+
+- `SCRUB_KEY_LIFECYCLE_SPEC.md`
+- `handover/workpackages/20260610_0015_scrub_key_lifecycle_spec.md`
+
+Files changed:
+
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main lifecycle decisions:
+
+- Scrub Key lifecycle states are creation, download/export, local storage, import/reload, active use, sharing risk, expiry and deletion.
+- Loss of the key or future passphrase means Scrub cannot deterministically restore original values.
+- Tampering can restore wrong values and corrupt legal/care meaning; future protected formats should include integrity protection.
+- MVP recommendation is warning-only plus explicit lifecycle guidance and protected-local-file guidance.
+- Encrypted local files, local vault / managed key store, key recovery and schema/container changes are later professional/local desktop options that require separate implementation workpackages.
+- Audit/logging should record lifecycle events and counts, but not original values, passphrases, encryption keys or full mappings.
+
+Validation status:
+
+- Documentation/security lifecycle review only.
+- Required control files, WP25 threat model, WP58 consolidation and existing Scrub Key helper/import/reinsert files were read.
+- No tests run; no code or test files were changed.
+- GitHub Actions: to be checked after final handover commit.
+- Hugging Face sync: to be checked after final handover commit.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No encryption implemented.
+- No Scrub Key JSON schema migration.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No UI changed.
+- No helper logic changed.
+- No dependencies changed.
+- No tests added or changed.
+- No secrets or real data stored.
+
+Next recommended step:
+
+- `WP27 — Scrub Key warning UX plan`.
+- Alternative next step depending on consolidation: `WP29 — Scrub Key secure import/export tests`.
+
 ## WP58 — Parallel specification consolidation and next execution queue
 
 Status: completed documentation/planning-only.
