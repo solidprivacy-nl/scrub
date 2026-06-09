@@ -24,7 +24,7 @@ low
 
 ## R1 — False negatives / missed sensitive data
 
-Status: open  
+Status: mitigating  
 Impact: critical
 
 Risk:
@@ -42,17 +42,17 @@ Current mitigations:
 - Human review workflow.
 - Review guidance and final review summary.
 - Synthetic regression tests for selected recognizers.
+- WP19 created `RECALL_BENCHMARK_SPEC.md`, defining how Scrub will measure recall, precision, per-entity scorecards, context-term preservation and CI reporting on messy synthetic Dutch legal and care documents.
 
 Gaps:
 
-- No formal recall benchmark.
-- No gold-label corpus.
-- No per-entity recall/precision scorecard.
-- No explicit false-negative residual-risk report.
+- No synthetic gold-label corpus yet.
+- No implemented benchmark runner yet.
+- No CI scorecard yet.
+- No explicit false-negative residual-risk report yet.
 
 Recommended workpackages:
 
-- WP19 — Recall benchmark specification.
 - WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
 - WP21 — Gold-label entity schema.
 - WP22 — Recall/precision test runner.
