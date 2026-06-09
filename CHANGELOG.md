@@ -1,5 +1,75 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP18-FIX — Fix failing PDF text to TXT UI tests
+
+Status: implemented; awaiting GitHub Actions and Hugging Face sync.
+
+Root cause:
+
+- WP18 implemented the PDF-to-restored-TXT UI, but GitHub Actions tests were red in coordinator evidence.
+- `STATUS_MONITORING_RUNBOOK.md` was followed where connector permissions allowed.
+- Commit-to-workflow lookup returned no workflow runs for the relevant WP18 commits.
+- The visible run numbers #220–#223 were not accepted by the connector as workflow run IDs or job IDs, so failing job logs could not be fetched via connector.
+- Based on inspection/reconstruction, the failure was in `tests/test_pdf_text_reinsert_ui_patch.py`: the test used a brittle expectation around the triple-quoted `else:` insertion marker.
+
+Fix applied:
+
+- Updated only `tests/test_pdf_text_reinsert_ui_patch.py`.
+- The test now checks the actual real-newline `else:` marker form used by `fix_streamlit_pdf_text_reinsert.py`.
+- No product behavior, UI behavior, Docker startup behavior, helper code or dependency behavior was changed.
+
+Files changed:
+
+- `tests/test_pdf_text_reinsert_ui_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Files added:
+
+- `handover/workpackages/20260609_1245_pdf_text_to_txt_ui_tests_fix.md`
+
+Tests:
+
+- Target test expectation corrected for the PDF text reinsert UI patch.
+- Repository pytest execution was not available in this connector session.
+- Recommended verification:
+  - `PYTHONPATH=. pytest -q tests/test_pdf_text_reinsert_ui_patch.py`
+  - `PYTHONPATH=. pytest -q tests/test_two_mode_ui_patch.py`
+  - `PYTHONPATH=. pytest -q tests/test_txt_reinsert_ui_patch.py`
+  - `PYTHONPATH=. pytest -q tests/test_docx_reinsert_ui_patch.py`
+  - `PYTHONPATH=. pytest -q tests/test_scrub_key_pdf_text_reinsert.py`
+
+Validation status:
+
+- GitHub Actions: awaiting verification after WP18-FIX.
+- Hugging Face sync: awaiting verification after WP18-FIX.
+- App verification: still blocked until Actions/sync are green.
+
+Intentionally not changed:
+
+- No `presidio_streamlit.py` direct edit.
+- No `fix_streamlit_pdf_text_reinsert.py` functional change.
+- No `Dockerfile` change.
+- No helper code changed.
+- No dependency change.
+- No OCR added.
+- No restored PDF output added.
+- No PDF-to-DOCX reconstruction added.
+- No AI/cloud extraction added.
+- No layout reconstruction added.
+- No batch PDF processing added.
+- No real-data tests added.
+- No automatic PDF rehydration added.
+- No existing pasted-text/TXT/DOCX reinsert semantics changed.
+- No existing anonymization/export semantics changed.
+- No Scrub Key import/export behavior changed.
+
+Next recommended step:
+
+- Check GitHub Actions and Hugging Face sync after WP18-FIX.
+- Only when both are green: perform WP18 app verification.
+- After app verification: `WP18B — PDF text to restored TXT UI app verification closeout`.
+
 ## WP18R — Risk-driven roadmap and operating model reset
 
 Status: completed documentation/governance-only update.
