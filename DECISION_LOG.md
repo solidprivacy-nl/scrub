@@ -132,3 +132,26 @@ Implications:
 - Add STATUS_MONITORING_RUNBOOK.md.
 - Do not ask the coordinator for app verification until Actions/sync are green.
 - Ask the coordinator only when permissions prevent checking or when subjective app verification is required.
+
+---
+
+## 2026-06-09 — D007 — Scrub Key encryption and lifecycle require separate approved specification
+
+Status: accepted
+
+Decision:
+
+```text
+Scrub Key encryption, expiry, deletion, key-vault behavior and schema/format migration must not be implemented ad hoc. They require a separate approved encryption/lifecycle specification workpackage before implementation.
+```
+
+Rationale:
+
+The Scrub Key is sensitive re-identification data. Protection choices such as passphrase encryption, OS keychain storage, authenticated encryption, deletion reminders and lifecycle states affect user trust, data loss risk, backward compatibility and import/export semantics.
+
+Implications:
+
+- WP25 remains threat-model/specification-only.
+- WP26 should define the Scrub Key encryption/lifecycle specification before any encryption implementation.
+- No worker should silently change Scrub Key JSON schema, import/export semantics or storage behavior while implementing unrelated work.
+- Loss-of-key and loss-of-passphrase behavior must be specified before encryption is added.
