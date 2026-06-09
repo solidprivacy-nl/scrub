@@ -41,6 +41,7 @@ WP18C — Add Codex worker governance instructions: completed documentation/gove
 WP19 — Recall benchmark specification: completed specification-only.
 WP25 — Scrub Key threat model: completed security/specification-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
+WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
 ```
 
 ## Closed UI line: WP18 PDF text to restored TXT
@@ -313,50 +314,73 @@ Next recommended step:
 
 - WP31 — LLM-resistant placeholder format proposal.
 
-## Active / next recommended workpackages
-
-The WP18 UI line is closed. WP19, WP25 and WP30 are complete.
-
-The next recommended workpackage for Phase 1 is:
-
-```text
-WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
-```
-
-The next recommended workpackage for Phase 2 is:
-
-```text
-WP26 — Scrub Key encryption/lifecycle specification
-```
-
-The next recommended workpackage for Phase 3 is:
-
-```text
-WP31 — LLM-resistant placeholder format proposal
-```
-
-The following workpackages can also be prepared and run in parallel because they do not touch the same UI flow:
+## Phase 4: Hidden content and document hygiene
 
 ### WP35 — DOCX hidden content risk review
 
-Type: document hygiene review/specification.
+Status: completed document-hygiene/specification-only.
 
 Purpose:
 
-- Review metadata, comments, tracked changes, headers/footers and hidden document content.
-- Define safe extraction/cleaning sequence before helper implementation.
+- Review DOCX metadata, comments, tracked changes, headers, footers, footnotes, text boxes, custom XML and hidden document parts as leakage risks.
+- Define current DOCX support assumptions and distinguish visible body-text scrubbing, hidden-content scrubbing, metadata cleaning, unsupported-content warnings and future export blocking.
+- Define safe extraction and cleaning sequences before helper implementation.
 
-Likely files:
+Files added:
 
 ```text
 DOCX_HIDDEN_CONTENT_RISK_REVIEW.md
+handover/workpackages/20260609_2325_docx_hidden_content_risk_review.md
+```
+
+Files changed:
+
+```text
 RISK_REGISTER.md
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_docx_hidden_content_risk_review.md
 ```
 
-No cleaner implementation in WP35.
+Main risk findings:
+
+- Current DOCX support covers `word/document.xml` text nodes, including normal body paragraphs and tables, but not full package hygiene.
+- Headers, footers, comments, tracked changes, metadata, custom XML, footnotes/endnotes, text boxes/shapes and embedded objects can contain sensitive values outside visible body text.
+- Tracked changes are a critical leakage risk because deleted text and author/timestamp data can remain in XML.
+- Metadata and custom XML should be treated as separate cleaning problems, not as normal visible-text scrubbing.
+- Blocking export is a product semantics change and must not be introduced silently.
+
+Intentionally not changed:
+
+- No DOCX cleaner implemented.
+- No DOCX parser changed.
+- No export semantics changed.
+- No UI changed.
+- No tests added or changed.
+- No real documents added.
+- No cloud processing added.
+- No dependency changes made.
+- No direct edit to `presidio_streamlit.py`.
+- No direct edit to `fix_streamlit_nested_expanders.py`.
+- No direct edit to `fix_streamlit_pdf_text_reinsert.py`.
+
+Next recommended step:
+
+- WP58 — Parallel specification consolidation and next execution queue.
+- After WP58 reconciliation, WP36 — DOCX metadata cleaner helper.
+
+## Active / next recommended workpackages
+
+The WP18 UI line is closed. WP19, WP25, WP30 and WP35 are complete.
+
+The coordinator should now run:
+
+```text
+WP58 — Parallel specification consolidation and next execution queue
+```
+
+WP58 must reconcile WP19, WP25, WP30 and WP35 before implementation packages such as WP20, WP26, WP31 or WP36 start.
+
+The following workpackages can also be prepared and run in parallel because they do not touch the same UI flow:
 
 ### WP45 — Local runtime architecture plan
 
@@ -446,7 +470,7 @@ No GitHub workflow changes unless separately approved.
 Safe in parallel after WP18B closeout:
 
 ```text
-WP35, WP45, WP50, WP56, WP57
+WP45, WP50, WP56, WP57
 ```
 
 Do not run in parallel:
