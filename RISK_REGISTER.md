@@ -103,7 +103,7 @@ Recommended workpackages:
 
 ## R3 — Placeholder corruption during AI roundtrip
 
-Status: open  
+Status: mitigating  
 Impact: high
 
 Risk:
@@ -112,19 +112,26 @@ Risk:
 An AI system rewrites, translates, merges or deletes placeholders, causing deterministic reinsert to fail or restore incompletely.
 ```
 
+Why it matters:
+
+The current reinsert path is deterministic and exact-match based. This is safe when placeholders are preserved exactly, but fragile when scrubbed content is rewritten, translated, summarized or moved through markdown, HTML, DOCX or PDF text extraction. The most dangerous failure is silent partial restoration: some placeholders restore while others are missing, merged or changed.
+
 Current mitigations:
 
 - Unknown placeholders and not-found placeholders are reported in reinsert audit flows.
+- Duplicate placeholders in the Scrub Key are detected and excluded from deterministic replacement.
+- WP30 created `PLACEHOLDER_ROBUSTNESS_REVIEW.md`, documenting current assumptions, corruption examples, translation/summarization/formatting risks, candidate robust formats, checksum ideas, validation/audit direction, migration risks and backward compatibility concerns.
 
 Gaps:
 
-- No LLM-resistant placeholder format.
-- No checksum/validation helper for placeholder integrity.
-- No synthetic AI-output corruption tests.
+- No LLM-resistant placeholder format has been accepted or implemented.
+- No checksum/validation helper exists yet.
+- No near-miss placeholder detection exists yet.
+- No synthetic AI-output corruption tests exist yet.
+- No migration or backward-compatibility implementation exists yet.
 
 Recommended workpackages:
 
-- WP30 — Placeholder robustness review.
 - WP31 — LLM-resistant placeholder format proposal.
 - WP32 — Placeholder checksum/validation helper.
 - WP33 — Unknown/changed placeholder audit hardening.
