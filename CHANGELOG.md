@@ -1,5 +1,59 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP25 — Scrub Key threat model
+
+Status: completed security/specification-only.
+
+Purpose:
+
+- Treat the Scrub Key as sensitive re-identification data.
+- Define accidental sharing, local storage, download-folder, e-mail/AI upload, shared-computer, retention, loss-of-key, tampering, malformed-key and import/export risks.
+- Clarify the distinction between anonymization, pseudonymization, redaction and reinsert.
+- Make clear that Scrub Key-based output is pseudonymized, not fully anonymized, as long as the key exists.
+
+Files added:
+
+- `SCRUB_KEY_THREAT_MODEL.md`
+- `handover/workpackages/20260609_2258_scrub_key_threat_model.md`
+
+Files changed:
+
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main security findings:
+
+- The Scrub Key contains original confidential values and placeholder mappings, so it can re-identify scrubbed content.
+- Accidental sharing, default Downloads storage, e-mail/AI upload, shared-computer use, unmanaged local storage and long retention are critical risks.
+- Loss of the Scrub Key prevents deterministic reinsert; tampering or malformed keys can cause incorrect or unsafe reinsert.
+- Encryption, lifecycle, expiry/delete and tamper protection require a separate approved specification before implementation.
+
+Validation status:
+
+- Documentation/security review only.
+- No tests run; no code or test files were changed.
+- GitHub Actions: not checked at changelog update time.
+- Hugging Face sync: not checked at changelog update time.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No helper logic changed.
+- No Scrub Key JSON schema migration.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No UI changed.
+- No encryption implemented.
+- No dependencies changed.
+- No tests added or changed.
+- No secrets or real data stored.
+
+Next recommended step:
+
+- `WP26 — Scrub Key encryption/lifecycle specification`.
+
 ## WP19 — Recall benchmark specification
 
 Status: completed specification-only.
