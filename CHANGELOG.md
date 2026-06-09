@@ -1,5 +1,56 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP18C — Add Codex worker governance instructions
+
+Status: completed documentation/governance-only.
+
+Purpose:
+
+- Add repository-level worker instructions for Codex/agent execution.
+- Make handover-by-file the default process for Codex workers.
+- Reduce long handover copy-paste in the coordinator chat while preserving GitHub as source of truth.
+- Prepare safe parallel execution of WP19, WP25, WP30 and WP35.
+
+Files added:
+
+- `AGENTS.md`
+- `handover/workpackages/20260609_1330_codex_worker_governance.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main changes:
+
+- `AGENTS.md` defines repository scope, required start sequence, safety rules, workpackage discipline, parallelization rules, testing/validation expectations, documentation updates and handover process.
+- Codex workers must write full handovers to `handover/workpackages/`.
+- Coordinator chat only needs handover path, commit/PR, status and short summary when the handover is committed to GitHub.
+- Full handover copy-paste is only required if commit/GitHub access fails, there is a conflict, or the coordinator explicitly asks for it.
+- `WORKPACKAGES.md` now records WP18C as completed and includes `AGENTS.md` in relevant start context.
+
+Validation status:
+
+- GitHub Actions: not checked; documentation/governance-only change.
+- Hugging Face sync: not checked; documentation/governance-only change.
+- App verification: not applicable.
+
+Intentionally not changed:
+
+- No code changed.
+- No tests changed.
+- No UI changed.
+- No dependencies changed.
+- No Dockerfile changed.
+- No product behavior changed.
+- No export/reinsert behavior changed.
+- No Scrub Key behavior changed.
+
+Next recommended step:
+
+- Start the first four safe parallel Codex workpackages: WP19, WP25, WP30 and WP35.
+- After those complete, run `WP58 — Parallel specification consolidation and next execution queue`.
+
 ## WP18B — PDF text to restored TXT UI app verification closeout
 
 Status: completed closeout-only; WP18 completed and app-verified after Actions/sync verification.
