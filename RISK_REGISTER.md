@@ -127,21 +127,23 @@ Current mitigations:
 - Unknown placeholders and not-found placeholders are reported in reinsert audit flows.
 - Duplicate placeholders in the Scrub Key are detected and excluded from deterministic replacement.
 - WP30 created `PLACEHOLDER_ROBUSTNESS_REVIEW.md`, documenting current assumptions, corruption examples, translation/summarization/formatting risks, candidate robust formats, checksum ideas, validation/audit direction, migration risks and backward compatibility concerns.
+- WP31 created `PLACEHOLDER_FORMAT_PROPOSAL.md`, recommending the future architecture direction `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`, for example `[[SP_PERSON_0001_A7F3]]`, as proposal-only and additive to legacy placeholders.
 
 Gaps:
 
-- No LLM-resistant placeholder format has been accepted or implemented.
+- No robust placeholder format has been implemented.
 - No checksum/validation helper exists yet.
 - No near-miss placeholder detection exists yet.
 - No synthetic AI-output corruption tests exist yet.
 - No migration or backward-compatibility implementation exists yet.
+- No Scrub Key schema/version support for robust placeholder metadata exists yet.
 
 Recommended workpackages:
 
-- WP31 — LLM-resistant placeholder format proposal.
 - WP32 — Placeholder checksum/validation helper.
 - WP33 — Unknown/changed placeholder audit hardening.
 - WP34 — Synthetic AI-output placeholder corruption tests.
+- Later gated package — robust placeholder generation and compatibility implementation, only after validation and schema decisions.
 
 ---
 
