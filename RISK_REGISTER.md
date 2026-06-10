@@ -182,7 +182,7 @@ Recommended workpackages:
 
 ## R5 — Cloud-demo trust gap
 
-Status: open  
+Status: mitigating  
 Impact: high
 
 Risk:
@@ -195,17 +195,21 @@ Current mitigations:
 
 - Roadmap includes local desktop/offline direction.
 - UI messaging emphasizes local/no-AI/no-cloud for helper operations where applicable.
+- WP45 created `LOCAL_RUNTIME_ARCHITECTURE_PLAN.md`, defining the Hugging Face demo role, local-first trust requirements and a phased local runtime path.
+- WP45 recommends a minimal local Streamlit launcher as MVP path, followed by local file-handling/privacy validation, a PyInstaller/portable Windows proof of concept and a later Tauri/Electron desktop decision.
 
 Gaps:
 
+- No minimal local Streamlit launcher yet.
 - No local runtime proof of concept yet.
 - No offline mode demonstration.
 - No network-traffic validation.
 - No local file handling/privacy test.
+- No Windows packaging proof of concept.
+- No final desktop packaging decision.
 
 Recommended workpackages:
 
-- WP45 — Local runtime architecture plan.
 - WP46 — Minimal local Streamlit launcher.
 - WP47 — Local file handling/privacy test.
 - WP48 — Portable Windows proof of concept.
