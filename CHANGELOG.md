@@ -1,5 +1,173 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP28 — Scrub Key expiry/delete policy
+
+Status: completed security/lifecycle-policy-only.
+
+Purpose:
+
+- Define expiry, retention and deletion policy for Scrub Keys after the warning UX plan.
+- Clarify user-controlled deletion, matter/project retention guidance, Downloads/shared-computer risk, loss-of-key consequences, tampering/mismatch consequences and audit expectations.
+- Keep the package policy-only with no UI, deletion automation, schema migration, encryption or behavior changes.
+
+Files added:
+
+- `SCRUB_KEY_EXPIRY_DELETE_POLICY.md`
+- `handover/workpackages/20260610_1826_scrub_key_expiry_delete_policy.md`
+
+Files changed:
+
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main policy decisions:
+
+- Scrub Keys should be retained only as long as needed for a specific matter, project, AI roundtrip, review or reinsert purpose.
+- MVP expiry is guidance-only; Scrub must not add expiry metadata, block import by age or automatically delete old keys.
+- Deletion must remain explicit and user-controlled.
+- Scrub must not silently delete Scrub Keys, mappings, restored output, audit context, browser Downloads files, synced copies, backups or future app-managed vault entries.
+- Scrub must not keep hidden recovery copies.
+- Future app-managed deletion, expiry reminders, protected storage, encrypted containers, vault behavior and recovery/escrow require separate approved implementation workpackages.
+- Dutch user-facing policy copy examples are included for future warning/planning work.
+
+Validation status:
+
+- Documentation/security lifecycle-policy review only.
+- Required control files plus `SCRUB_KEY_THREAT_MODEL.md`, `SCRUB_KEY_LIFECYCLE_SPEC.md`, `SCRUB_KEY_WARNING_UX_PLAN.md`, `SCRUB_KEY_SPEC.md` and `PARALLEL_SPEC_CONSOLIDATION_WP58.md` were read.
+- Context-only helper/UI files inspected: `scrub_key.py`, `scrub_key_import.py`, `scrub_key_reinsert.py`, `fix_streamlit_nested_expanders.py`.
+- No tests run; no code or test files were changed.
+- GitHub Actions: to be checked after final handover commit.
+- Hugging Face sync: to be checked after final handover commit.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No UI implementation.
+- No Streamlit patch changed.
+- No helper logic changed.
+- No automatic deletion.
+- No Scrub Key JSON schema migration.
+- No encryption implementation.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No tests added or changed.
+- No dependencies changed.
+- No secrets or real data stored.
+- No cloud processing added.
+
+Next recommended step:
+
+- `WP29 — Scrub Key secure import/export tests`.
+- Alternative if UI planning should precede tests: `WP28B — Scrub Key warning implementation planning`.
+
+## WP46 — Minimal local Streamlit launcher
+
+Status: completed minimal local runtime implementation.
+
+Purpose:
+
+- Add the smallest safe local launcher path recommended by WP45.
+- Allow a developer/user to run the existing Streamlit app locally for non-cloud confidential-processing validation.
+- Document local setup, launch command, local-only warnings and current limits without changing app behavior.
+
+Files added:
+
+- `scripts/run_local_streamlit.py`
+- `LOCAL_RUN.md`
+- `handover/workpackages/20260610_1828_minimal_local_streamlit_launcher.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Added a minimal Python launcher that runs the existing startup patch scripts and then starts `presidio_streamlit.py` through Streamlit.
+- The launcher binds to `127.0.0.1` by default, uses port `8501` by default and disables Streamlit usage stats for this local launcher path.
+- Added local run documentation covering Python 3.10, dependency installation, the exact command executed, local-only warning, no-real-data-in-repo warning, locally processed files, current non-guarantees and the next validation step.
+
+Validation status:
+
+- `python -m py_compile scripts/run_local_streamlit.py` passed.
+- `python scripts/run_local_streamlit.py --help` passed.
+- Full app launch was not run.
+- App verification: not applicable because no UI feature changed.
+
+Intentionally not changed:
+
+- No installer.
+- No PyInstaller packaging.
+- No Tauri/Electron implementation.
+- No Docker startup change.
+- No Streamlit UI feature change.
+- No export/reinsert behavior change.
+- No dependency change.
+- No telemetry implementation.
+- No cloud processing added.
+- No real data added.
+
+Next recommended step:
+
+- `WP47 — Local file handling/privacy test`.
+
+## WP31 — LLM-resistant placeholder format proposal
+
+Status: completed architecture/proposal-only.
+
+Purpose:
+
+- Propose and compare placeholder formats that are more resistant to AI rewriting, translation, summarization and formatting changes.
+- Select a future robust placeholder direction without implementing migration or changing reinsert behavior.
+- Define compatibility, validation and phased implementation requirements after WP30.
+
+Files added:
+
+- `PLACEHOLDER_FORMAT_PROPOSAL.md`
+- `handover/workpackages/20260610_0035_placeholder_format_proposal.md`
+- `handover/workpackages/20260610_1824_placeholder_format_proposal.md`
+
+Files changed:
+
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main proposal decisions:
+
+- Recommended future format direction: `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`.
+- Example: `[[SP_PERSON_0001_A7F3]]`.
+- Legacy placeholders such as `[PERSOON_1]` remain backward-compatible.
+- Future robust support should be additive first and must not silently replace legacy placeholders.
+- Visible checksum/integrity values must not be derived directly from original sensitive data.
+- WP32 should implement validation/checksum helpers before any generation, migration or schema change.
+
+Validation status:
+
+- Documentation/architecture review only.
+- Required control files plus `PLACEHOLDER_ROBUSTNESS_REVIEW.md`, `SCRUB_KEY_SPEC.md` and `PARALLEL_SPEC_CONSOLIDATION_WP58.md` were read.
+- Context-only reinsert helper and test files were inspected.
+- No tests run; no code or test files were changed.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No placeholder migration.
+- No reinsert helper change.
+- No Scrub Key schema change.
+- No UI change.
+- No export behavior change.
+- No tests added or changed.
+- No AI/cloud integration.
+- No dependencies changed.
+
+Next recommended step:
+
+- `WP32 — Placeholder checksum/validation helper`.
+
 ## WP27 — Scrub Key warning UX plan
 
 Status: completed UX/security specification-only.
