@@ -1,5 +1,63 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
+
+Status: completed benchmark-corpus-only.
+
+Purpose:
+
+- Create a first synthetic messy Dutch legal, zorg and mixed professional benchmark corpus aligned with `RECALL_BENCHMARK_SPEC.md`.
+- Provide corpus text fixtures for later `WP21` gold labels, `WP22` runner and `WP23` CI scorecards.
+- Keep the recall line corpus-first and runner-free.
+
+Files added:
+
+- `benchmark/corpus/README.md`
+- `benchmark/corpus/legal/legal_process_messy_001.txt`
+- `benchmark/corpus/zorg/care_operations_messy_001.txt`
+- `benchmark/corpus/mixed/legal_care_mixed_messy_001.txt`
+- `benchmark/gold/README.md`
+- `handover/workpackages/20260610_0045_synthetic_messy_benchmark_corpus.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Corpus coverage:
+
+- Legal process fixture covers case numbers, rolnummers, dossier numbers, client numbers, claim/incident references, ECLI, names, addresses, emails, phone numbers, IBAN-like and BSN-like values, Dutch postcodes, dates, organizations, BIG/medical references and legal context terms to preserve.
+- Zorg fixture covers client numbers, zorgdossier/EPD references, verpleegoproep references, MIC incidents, room/department context, care professionals, contact persons, emails, phone numbers, IBAN-like and BSN-like values, medical references, organizations and care context terms to preserve.
+- Mixed fixture covers municipality, school, legal and care references in one professional memo, including repeated footer values, legal article traps, date/time traps, addresses, emails, phones, names, ECLI, care-plan references and legal/care context terms.
+- All fixtures are explicitly marked synthetic and contain no real customer, legal, care or personal data.
+- `benchmark/gold/README.md` explains that full gold-label sidecars, zero-based offsets and schema validation belong to `WP21`.
+
+Validation status:
+
+- Corpus/document review only.
+- Required control files, `RECALL_BENCHMARK_SPEC.md`, `PARALLEL_SPEC_CONSOLIDATION_WP58.md`, `legal_test_examples.py`, `dutch_recognizers.py` and test context were inspected.
+- No tests run; no code or test files were changed.
+- GitHub Actions: to be checked after final handover commit.
+- Hugging Face sync: to be checked after final handover commit.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No benchmark runner implemented.
+- No full gold-label schema or offset sidecars added.
+- No CI gate or scorecard added.
+- No UI changed.
+- No tests added or changed.
+- No dependencies changed.
+- No export/reinsert behavior changed.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step:
+
+- `WP21 — Gold-label entity schema`.
+
 ## WP26 — Scrub Key encryption/lifecycle specification
 
 Status: completed security/lifecycle-specification-only.
@@ -116,9 +174,8 @@ Intentionally not changed:
 
 Next recommended step:
 
-- Start the next parallel worker set:
-  - `WP20 — Synthetic messy Dutch legal/zorg benchmark corpus`.
-  - `WP26 — Scrub Key encryption/lifecycle specification`.
+- Continue the next parallel worker set, excluding already completed WP20/WP26:
+  - `WP27 — Scrub Key warning UX plan`.
   - `WP31 — LLM-resistant placeholder format proposal`.
   - `WP45 — Local runtime architecture plan`.
 
@@ -371,7 +428,7 @@ Main changes:
 ## Earlier completed work
 
 - WP18B — PDF text to restored TXT UI app verification closeout.
-- WP18-FIX — Fix failing PDF text to TXT UI tests.
+- WP18-FIX — Fix failing PDF text to TXT tests.
 - WP18R — Risk-driven roadmap and operating model reset.
 - WP18 — PDF text extraction to restored TXT UI implementation.
 - WP17B — Roadmap current-status reconciliation after WP17.
