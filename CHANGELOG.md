@@ -1,5 +1,60 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP45 — Local runtime architecture plan
+
+Status: completed architecture/specification-only.
+
+Purpose:
+
+- Compare local runtime paths and define local-first trust requirements.
+- Address the gap between the Hugging Face demo/development environment and the intended local-first confidential-processing product promise.
+- Recommend an MVP local runtime path and a later professional desktop runtime path without implementing packaging or runtime changes.
+
+Files added:
+
+- `LOCAL_RUNTIME_ARCHITECTURE_PLAN.md`
+- `handover/workpackages/20260610_0115_local_runtime_architecture_plan.md`
+
+Files changed:
+
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Runtime architecture recommendation:
+
+- Keep Hugging Face as demo/development environment only, not as the confidential production trust environment.
+- MVP local runtime path: minimal local Streamlit launcher, then local file-handling/privacy validation, then a PyInstaller/portable Windows proof of concept.
+- Later professional runtime path: evaluate a Tauri desktop shell with reusable Python core; keep Electron as an alternative if frontend needs or team capability favor it.
+- Local runtime expectations include local file processing, offline-capable core flows, no required outbound network calls for core processing, no silent cloud document processing, no document-content telemetry and careful local Scrub Key handling.
+
+Validation status:
+
+- Documentation/architecture review only.
+- Required control files, WP58 consolidation, Dockerfile, requirements and Streamlit app context were inspected.
+- No tests run; no code or test files were changed.
+- GitHub Actions: to be checked after final handover commit.
+- Hugging Face sync: to be checked after final handover commit.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No packaging implementation.
+- No installer created.
+- No runtime code changed.
+- No UI changed.
+- No Docker/runtime startup changes.
+- No dependency changes.
+- No cloud processing added.
+- No telemetry implementation.
+- No real data added.
+- No export/reinsert behavior changed.
+
+Next recommended step:
+
+- `WP46 — Minimal local Streamlit launcher`.
+
 ## WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
 
 Status: completed benchmark-corpus-only.
@@ -174,10 +229,9 @@ Intentionally not changed:
 
 Next recommended step:
 
-- Continue the next parallel worker set, excluding already completed WP20/WP26:
+- Continue the next parallel worker set, excluding already completed WP20/WP26/WP45:
   - `WP27 — Scrub Key warning UX plan`.
   - `WP31 — LLM-resistant placeholder format proposal`.
-  - `WP45 — Local runtime architecture plan`.
 
 ## WP35 — DOCX hidden content risk review
 
