@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "legal_process_messy_001",
+  "domain": "legal",
+  "document_type": "synthetic legal process text",
+  "language": "nl",
+  "source_file": "benchmark/corpus/legal/legal_process_messy_001.txt",
+  "source_text_encoding": "utf-8",
+  "synthetic": true,
+  "completeness": "schema_example_only",
+  "notes": "WP21 schema example only. This file intentionally contains a small sample of labels and is not a full gold-label sidecar.",
+  "normalization": {
+    "default_match_tier": "exact",
+    "casefold": false,
+    "collapse_whitespace": true,
+    "strip_outer_punctuation": true,
+    "ignore_separators_for_classes": ["PHONE", "IBAN", "CASE_NUMBER", "DOSSIER_NUMBER", "CLIENT_NUMBER", "CLAIM_NUMBER", "INCIDENT_NUMBER"],
+    "notes": "Future WP22 runner should report exact and value-normalized matching separately."
+  },
+  "labels": [
+    {
+      "label_id": "L001",
+      "entity_id": "case_legal_process_001",
+      "entity_class": "CASE_NUMBER",
+      "text": "10876543 / TS VERZ 26-884",
+      "start": 371,
+      "end": 396,
+      "sensitivity": "case_identifier",
+      "required": true,
+      "normalization_profile": "ignore_spaces_and_punctuation",
+      "acceptable_entity_mappings": ["NL_LEGAL_CASE_NUMBER", "NL_ZAAKNUMMER", "CASE_NUMBER"],
+      "notes": "Detect the value only, not the label Zaaknr."
+    },
+    {
+      "label_id": "L002",
+      "entity_id": "person_lina_van_maaren",
+      "entity_class": "PERSON",
+      "text": "Lina van Maaren",
+      "start": 701,
+      "end": 716,
+      "sensitivity": "direct_identifier",
+      "required": true,
+      "normalization_profile": "casefold",
+      "notes": "Named synthetic client/person value."
+    },
+    {
+      "label_id": "L003",
+      "entity_id": "date_lina_birth",
+      "entity_class": "DATE",
+      "text": "12-05-1988",
+      "start": 729,
+      "end": 739,
+      "sensitivity": "quasi_identifier",
+      "required": true,
+      "normalization_profile": "date_string_exact",
+      "notes": "Birth date should not be confused with BSN or phone."
+    },
+    {
+      "label_id": "L004",
+      "entity_id": "email_lina",
+      "entity_class": "EMAIL",
+      "text": "lina.vanmaaren@example.invalid",
+      "start": 977,
+      "end": 1007,
+      "sensitivity": "direct_identifier",
+      "required": true,
+      "normalization_profile": "casefold"
+    },
+    {
+      "label_id": "L005",
+      "entity_id": "phone_lina_mobile",
+      "entity_class": "PHONE",
+      "text": "06 1234 5678",
+      "start": 1018,
+      "end": 1030,
+      "sensitivity": "direct_identifier",
+      "required": true,
+      "normalization_profile": "phone_digits_normalized"
+    }
+  ],
+  "preserve_terms": [
+    {
+      "term_id": "P001",
+      "term": "cliënt",
+      "start": 694,
+      "end": 700,
+      "entity_class": "ROLE_OR_CONTEXT_TERM_TO_PRESERVE",
+      "reason": "Legal role/context word, not the sensitive name value.",
+      "expected_behavior": "must_remain_readable"
+    }
+  ],
+  "known_traps": [
+    {
+      "trap_id": "T001",
+      "text": "13-03-2026",
+      "start": 1502,
+      "end": 1512,
+      "trap_type": "date_must_not_be_bsn_or_phone",
+      "expected_behavior": "must_not_match_as_this_entity_class",
+      "not_entity_class": ["BSN", "PHONE"],
+      "notes": "Process date may be DATE if configured, but must not count as BSN or PHONE."
+    },
+    {
+      "trap_id": "T002",
+      "text": "7:669 BW",
+      "start": 2226,
+      "end": 2234,
+      "trap_type": "legal_article_not_case_number",
+      "expected_behavior": "must_not_match_as_this_entity_class",
+      "not_entity_class": ["CASE_NUMBER"]
+    }
+  ],
+  "runner_expectations": {
+    "must_validate_offsets": true,
+    "must_validate_text_equals_source_span": true,
+    "must_report_exact_and_normalized": true,
+    "must_report_preserve_term_failures": true,
+    "partial_overlap_policy": "diagnostic_only",
+    "notes": "WP22 should reject malformed offsets and report partial overlaps separately from exact/value-normalized matches."
+  }
+}
