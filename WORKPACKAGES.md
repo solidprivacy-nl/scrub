@@ -44,12 +44,11 @@ WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
+WP45 — Local runtime architecture plan: completed architecture/specification-only.
 WP58 — Parallel specification consolidation and next execution queue: completed documentation/planning-only.
 ```
 
 ## Closed UI line: WP18 PDF text to restored TXT
-
-### WP18 — PDF text extraction to restored TXT UI implementation
 
 Status: completed and app-verified after Actions/sync verification.
 
@@ -77,37 +76,6 @@ Preserved boundaries:
 - no automatic PDF rehydration;
 - no changes to existing pasted-text/TXT/DOCX reinsert semantics;
 - no changes to existing anonymization/export semantics.
-
-### WP18-FIX — Fix failing PDF text to TXT UI tests
-
-Status: completed after Actions/sync verification; WP18 app verification completed.
-
-Fix summary:
-
-- Updated `tests/test_pdf_text_reinsert_ui_patch.py` only.
-- Corrected a brittle test expectation around the triple-quoted `else:` insertion marker.
-- No UI code, Dockerfile behavior, helper code, dependencies or feature behavior were changed.
-
-### WP18B — PDF text to restored TXT UI app verification closeout
-
-Status: completed closeout-only.
-
-Closeout evidence recorded:
-
-- GitHub Actions: green based on coordinator/user closeout approval.
-- Hugging Face sync: green based on coordinator/user closeout approval.
-- App verification: confirmed by coordinator/user closeout approval.
-
-### WP18C — Add Codex worker governance instructions
-
-Status: completed documentation/governance-only.
-
-Codex worker rule:
-
-```text
-Workers must write full handovers to handover/workpackages/.
-Coordinator chat only needs handover path, commit/PR, status and short summary unless commit failed or GitHub access is unavailable.
-```
 
 ## Completed risk-driven specification and benchmark packages
 
@@ -152,7 +120,6 @@ handover/workpackages/20260610_0045_synthetic_messy_benchmark_corpus.md
 Summary:
 
 - Created a first synthetic messy corpus foundation with legal, zorg and mixed professional text fixtures.
-- Covered case numbers, client numbers, dossier numbers, claim/incident references, names, addresses, emails, phone numbers, synthetic BSN-like and IBAN-like values, Dutch postcodes, dates, organizations, medical/care references and role/context terms to preserve.
 - Added `benchmark/gold/README.md` explaining that full gold labels, zero-based offsets and schema validation belong to WP21.
 
 Intentionally not changed:
@@ -219,8 +186,6 @@ CHANGELOG.md
 Summary:
 
 - Defines Scrub Key lifecycle states from creation, download/export, local storage, import/reload and active use through sharing risk, expiry and deletion.
-- Defines loss-of-key, tampering, password/passphrase, key recovery, metadata and audit/logging expectations.
-- Compares warning-only, protected local file, encrypted local file and local vault / managed key store options.
 - Recommends warning-only plus explicit lifecycle/protected-local-file guidance for MVP.
 - Recommends encrypted files, vault/managed key stores and integrity protection only for later professional/local desktop versions after separate implementation workpackages.
 
@@ -239,12 +204,6 @@ Next recommended step from WP26:
 
 ```text
 WP27 — Scrub Key warning UX plan
-```
-
-Alternative next step depending on consolidation:
-
-```text
-WP29 — Scrub Key secure import/export tests
 ```
 
 ### WP30 — Placeholder robustness review
@@ -293,6 +252,53 @@ Next recommended step after WP58:
 WP36 remains blocked until a tighter metadata-cleaner helper boundary is approved.
 ```
 
+### WP45 — Local runtime architecture plan
+
+Status: completed architecture/specification-only.
+
+Files added:
+
+```text
+LOCAL_RUNTIME_ARCHITECTURE_PLAN.md
+handover/workpackages/20260610_0115_local_runtime_architecture_plan.md
+```
+
+Files changed:
+
+```text
+DECISION_LOG.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Summary:
+
+- Defines the current Hugging Face role as demo/development environment, not the trust environment for confidential production documents.
+- Defines why local-first matters for Dutch legal and care workflows.
+- Compares local Streamlit launcher, PyInstaller, Tauri and Electron across privacy, complexity, Windows friendliness, installer effort, offline support, frontend flexibility and maintainability.
+- Defines local file handling, offline, telemetry/network, secrets, Scrub Key local storage, installer/update and supportability expectations.
+- Recommends the MVP path: minimal local Streamlit launcher, local file-handling/privacy test and PyInstaller/portable Windows proof of concept.
+- Recommends the later professional path: Tauri desktop shell with reusable Python core, with Electron as alternative depending on frontend/team requirements.
+
+Intentionally not changed:
+
+- No packaging implementation.
+- No installer created.
+- No runtime code changed.
+- No UI changed.
+- No Docker/runtime startup change.
+- No dependency change.
+- No cloud processing added.
+- No telemetry implementation.
+- No real data added.
+
+Next recommended step from WP45:
+
+```text
+WP46 — Minimal local Streamlit launcher
+```
+
 ### WP58 — Parallel specification consolidation and next execution queue
 
 Status: completed documentation/planning-only.
@@ -320,7 +326,6 @@ Consolidation decisions:
 - WP31 can run in parallel with WP20 and WP26 because placeholder format proposal is specification-only and must not implement migration.
 - WP45 can run in parallel as architecture/planning because it addresses the cloud-demo trust gap without touching UI/runtime implementation.
 - WP36 is blocked until a tighter metadata-only/helper-only/no-export-semantics boundary is approved.
-- WP50, WP56 and WP57 remain lower-risk optional parallel candidates if worker capacity exists.
 
 Intentionally not changed:
 
@@ -340,10 +345,16 @@ Intentionally not changed:
 
 ## Active / next recommended execution queue
 
-The next recommended workpackage for the recall/trust line is:
+The next recommended workpackage for the recall/trust line remains:
 
 ```text
 WP21 — Gold-label entity schema
+```
+
+The next recommended workpackage from the local-runtime line is:
+
+```text
+WP46 — Minimal local Streamlit launcher
 ```
 
 Other workpackages from the WP58/WP26 parallel set may continue independently if not already completed:
@@ -351,13 +362,12 @@ Other workpackages from the WP58/WP26 parallel set may continue independently if
 ```text
 WP27 — Scrub Key warning UX plan
 WP31 — LLM-resistant placeholder format proposal
-WP45 — Local runtime architecture plan
 ```
 
 Reason:
 
 ```text
-WP20 created source corpus fixtures only. Gold-label schema and offset validation are still needed before a runner or CI scorecard can be useful.
+WP20 created source corpus fixtures only, so gold-label schema and offset validation are still needed before a runner or CI scorecard can be useful. WP45 resolved the architecture direction for local runtime, so WP46 may implement the minimal local launcher next.
 ```
 
 ## Next workpackage definitions
@@ -450,32 +460,34 @@ CHANGELOG.md
 handover/workpackages/YYYYMMDD_HHMM_placeholder_format_proposal.md
 ```
 
-### WP45 — Local runtime architecture plan
+### WP46 — Minimal local Streamlit launcher
 
-Type: architecture/specification.
+Type: local runtime implementation.
 
 Purpose:
 
-- Compare local Streamlit launcher, PyInstaller, Tauri and Electron paths.
-- Define local file-handling, offline and trust requirements.
+- Implement the minimal local runtime path recommended by WP45.
+- Provide a local launcher or documented launcher path that runs the existing Streamlit app locally for non-cloud confidential-processing validation.
 
 Allowed direction:
 
-- Architecture/specification only.
-- No packaging implementation.
-- No Docker/runtime startup changes.
-- No UI changes.
+- Minimal launcher only.
+- No installer.
+- No PyInstaller packaging yet.
+- No Tauri/Electron implementation.
+- No UI feature changes unless separately approved.
+- No export/reinsert behavior changes.
 - No cloud processing.
+- No telemetry implementation.
+- No real data.
 
 Likely files:
 
 ```text
-LOCAL_RUNTIME_ARCHITECTURE_PLAN.md
-DECISION_LOG.md
-RISK_REGISTER.md
+local launcher file or documentation, to be specified in the WP46 task
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_local_runtime_architecture_plan.md
+handover/workpackages/YYYYMMDD_HHMM_minimal_local_streamlit_launcher.md
 ```
 
 ## Optional safe parallel candidates
@@ -520,37 +532,3 @@ Also blocked until separate approval or later specs:
 - Restored PDF output.
 - OCR.
 - Cloud document processing.
-- Real-data benchmark fixtures.
-- Batch/CLI scale features before single-document trust/security/review/local-runtime foundations are credible.
-
-## Parallelization rules
-
-Safe in parallel now:
-
-```text
-WP27, WP31, WP45
-```
-
-Optional safe parallel candidates:
-
-```text
-WP50, WP56, WP57
-```
-
-Do not run in parallel:
-
-- multiple edits to Docker startup patch order;
-- multiple edits to `presidio_streamlit.py` or `fix_streamlit_nested_expanders.py`;
-- multiple changes to export/download flow;
-- implementation work that depends on unresolved specs;
-- DOCX cleaner/export semantics work before WP36 boundary approval.
-
-## Documentation model
-
-- `ROADMAP.md`: strategy, risk-driven phase order and architecture.
-- `WORKPACKAGES.md`: active queue and dependencies.
-- `CHANGELOG.md`: internal workpackage implementation log.
-- `RELEASE_NOTES.md`: user-facing product changes.
-- `DECISION_LOG.md`: accepted strategic/architecture/product decisions.
-- `RISK_REGISTER.md`: active privacy/product/security risks and mitigations.
-- `handover/workpackages/`: worker handovers.
