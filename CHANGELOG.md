@@ -1,5 +1,61 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP27 — Scrub Key warning UX plan
+
+Status: completed UX/security specification-only.
+
+Purpose:
+
+- Convert WP25/WP26 Scrub Key threat and lifecycle findings into a user-facing warning and acknowledgement plan.
+- Define warning text, placement and acknowledgement expectations for Scrub Key touchpoints.
+- Keep the package specification-only with no Streamlit/UI implementation.
+
+Files added:
+
+- `SCRUB_KEY_WARNING_UX_PLAN.md`
+- `handover/workpackages/20260610_0145_scrub_key_warning_ux_plan.md`
+
+Files changed:
+
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main warning UX decisions:
+
+- Severity levels are defined as informational, warning, critical and blocking candidate for later policy.
+- MVP acknowledgement is lightweight and focused on high-risk moments such as Scrub Key export/download, import/reload, reinsert and restored output download.
+- The warning plan covers Scrub Key creation, download/export, local storage, import/reload, reinsert mode, restored output download, deletion/expiry guidance, shared-computer risk, e-mail/AI upload risk, loss-of-key warning and tampering/mismatch warning.
+- Proposed Dutch UI copy is included for future implementation, but no UI is implemented by WP27.
+- MVP scope is warning/acknowledgement guidance only; later secure/local desktop versions may add risky-storage detection, passphrase/key-vault warnings, expiry reminders and blocking policy gates after separate approval.
+
+Validation status:
+
+- Documentation/UX-security review only.
+- Required control files plus `SCRUB_KEY_THREAT_MODEL.md`, `SCRUB_KEY_LIFECYCLE_SPEC.md`, `SCRUB_KEY_SPEC.md` and `PARALLEL_SPEC_CONSOLIDATION_WP58.md` were read.
+- Context-only helper/UI files inspected: `scrub_key.py`, `scrub_key_import.py`, `scrub_key_reinsert.py`, `fix_streamlit_nested_expanders.py`.
+- No tests run; no code or test files were changed.
+- GitHub Actions: to be checked after final handover commit.
+- Hugging Face sync: to be checked after final handover commit.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No UI implementation.
+- No Streamlit patch changed.
+- No helper logic changed.
+- No Scrub Key JSON schema migration.
+- No encryption implementation.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No tests added or changed.
+- No dependencies changed.
+- No secrets or real data stored.
+
+Next recommended step:
+
+- `WP28 — Scrub Key expiry/delete policy`.
+
 ## WP45 — Local runtime architecture plan
 
 Status: completed architecture/specification-only.
@@ -32,10 +88,7 @@ Runtime architecture recommendation:
 Validation status:
 
 - Documentation/architecture review only.
-- Required control files, WP58 consolidation, Dockerfile, requirements and Streamlit app context were inspected.
 - No tests run; no code or test files were changed.
-- GitHub Actions: to be checked after final handover commit.
-- Hugging Face sync: to be checked after final handover commit.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -81,19 +134,14 @@ Files changed:
 
 Corpus coverage:
 
-- Legal process fixture covers case numbers, rolnummers, dossier numbers, client numbers, claim/incident references, ECLI, names, addresses, emails, phone numbers, IBAN-like and BSN-like values, Dutch postcodes, dates, organizations, BIG/medical references and legal context terms to preserve.
-- Zorg fixture covers client numbers, zorgdossier/EPD references, verpleegoproep references, MIC incidents, room/department context, care professionals, contact persons, emails, phone numbers, IBAN-like and BSN-like values, medical references, organizations and care context terms to preserve.
-- Mixed fixture covers municipality, school, legal and care references in one professional memo, including repeated footer values, legal article traps, date/time traps, addresses, emails, phones, names, ECLI, care-plan references and legal/care context terms.
-- All fixtures are explicitly marked synthetic and contain no real customer, legal, care or personal data.
+- Legal, zorg and mixed fixtures cover synthetic Dutch professional identifiers, names, addresses, e-mails, phone numbers, BSN-like values, IBAN-like values, case/client/claim/incident/care references, organizations, dates and context terms to preserve.
+- All fixtures are explicitly synthetic and contain no real customer, legal, care or personal data.
 - `benchmark/gold/README.md` explains that full gold-label sidecars, zero-based offsets and schema validation belong to `WP21`.
 
 Validation status:
 
 - Corpus/document review only.
-- Required control files, `RECALL_BENCHMARK_SPEC.md`, `PARALLEL_SPEC_CONSOLIDATION_WP58.md`, `legal_test_examples.py`, `dutch_recognizers.py` and test context were inspected.
 - No tests run; no code or test files were changed.
-- GitHub Actions: to be checked after final handover commit.
-- Hugging Face sync: to be checked after final handover commit.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -147,10 +195,7 @@ Main lifecycle decisions:
 Validation status:
 
 - Documentation/security lifecycle review only.
-- Required control files, WP25 threat model, WP58 consolidation and existing Scrub Key helper/import/reinsert files were read.
 - No tests run; no code or test files were changed.
-- GitHub Actions: to be checked after final handover commit.
-- Hugging Face sync: to be checked after final handover commit.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -168,7 +213,6 @@ Intentionally not changed:
 Next recommended step:
 
 - `WP27 — Scrub Key warning UX plan`.
-- Alternative next step depending on consolidation: `WP29 — Scrub Key secure import/export tests`.
 
 ## WP58 — Parallel specification consolidation and next execution queue
 
@@ -194,20 +238,13 @@ Files changed:
 Consolidation decisions:
 
 - Next recommended parallel set: `WP20`, `WP26`, `WP31`, `WP45`.
-- If only one worker is available, start with `WP20 — Synthetic messy Dutch legal/zorg benchmark corpus`, because false negatives remain the highest product risk.
-- `WP26 — Scrub Key encryption/lifecycle specification` can run in parallel with WP20 because it is specification-only and separate from detection benchmarking.
-- `WP31 — LLM-resistant placeholder format proposal` can run in parallel because it is proposal-only and must not implement placeholder migration.
-- `WP45 — Local runtime architecture plan` can run in parallel because it is architecture/planning-only and addresses the cloud-demo trust gap.
 - `WP36 — DOCX metadata cleaner helper` remains blocked until a tighter metadata-only/helper-only/no-export-semantics boundary is approved.
 - Optional lower-risk parallel candidates remain `WP50`, `WP56` and `WP57` if worker capacity exists.
 
 Validation status:
 
 - Documentation/planning review only.
-- Required control files, four specification outputs and four handovers were read.
 - No tests run; no code or test files were changed.
-- GitHub Actions: not checked at changelog update time.
-- Hugging Face sync: not checked at changelog update time.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -229,9 +266,7 @@ Intentionally not changed:
 
 Next recommended step:
 
-- Continue the next parallel worker set, excluding already completed WP20/WP26/WP45:
-  - `WP27 — Scrub Key warning UX plan`.
-  - `WP31 — LLM-resistant placeholder format proposal`.
+- Continue the remaining parallel worker set and follow the updated `WORKPACKAGES.md` queue.
 
 ## WP35 — DOCX hidden content risk review
 
@@ -259,7 +294,6 @@ Main risk findings:
 - Current DOCX support covers `word/document.xml` text nodes, including normal body paragraphs and tables, but does not provide full DOCX package hygiene.
 - Headers, footers, comments, tracked changes, metadata, custom XML, footnotes/endnotes, text boxes/shapes and embedded objects can contain sensitive values outside visible body text.
 - Tracked changes are a critical leakage risk because deleted text, author names and timestamps can remain in XML even when not visible in the accepted document view.
-- Metadata and custom XML should be treated as separate cleaning problems, not as normal visible-text scrubbing.
 - Future audit output should distinguish inspected parts, unsupported parts, cleaning actions, warnings and blocking reasons.
 - Blocking export is a product semantics change and must not be introduced silently.
 
@@ -267,8 +301,6 @@ Validation status:
 
 - Documentation/document-hygiene review only.
 - No tests run; no code or test files were changed.
-- GitHub Actions: not checked at changelog update time.
-- Hugging Face sync: not checked at changelog update time.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -287,8 +319,7 @@ Intentionally not changed:
 
 Next recommended step:
 
-- `WP58 — Parallel specification consolidation and next execution queue`.
-- After WP58 reconciliation: `WP36 — DOCX metadata cleaner helper`.
+- Future DOCX hygiene work remains blocked until the helper boundary is approved.
 
 ## WP30 — Placeholder robustness review
 
@@ -325,8 +356,6 @@ Validation status:
 
 - Documentation/architecture review only.
 - No tests run; no code or test files were changed.
-- GitHub Actions: not checked at changelog update time.
-- Hugging Face sync: not checked at changelog update time.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -380,8 +409,6 @@ Validation status:
 
 - Documentation/security review only.
 - No tests run; no code or test files were changed.
-- GitHub Actions: not checked at changelog update time.
-- Hugging Face sync: not checked at changelog update time.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -423,18 +450,16 @@ Files changed:
 
 Main specification decisions:
 
-- The benchmark taxonomy includes `PERSON`, `ADDRESS`, `EMAIL`, `PHONE`, `BSN`, `IBAN`, `DATE`, `NL_POSTCODE`, `CASE_NUMBER`, `DOSSIER_NUMBER`, `CLIENT_NUMBER`, `CLAIM_NUMBER`, `INCIDENT_NUMBER`, `ECLI`, `ORGANIZATION`, `MEDICAL_OR_CARE_REFERENCE` and `ROLE_OR_CONTEXT_TERM_TO_PRESERVE`.
+- The benchmark taxonomy includes Dutch legal and care identifiers such as names, addresses, BSN, phone, e-mail, IBAN, dates, postcodes, case numbers, dossier numbers, client numbers, claim numbers, incident numbers, ECLI, organizations and medical/care references.
 - Gold labels should use zero-based inclusive/exclusive character offsets against synthetic plain-text sources.
-- Reporting should include overall, per-domain and per-entity recall/precision, with false-negative, false-positive and context-preservation failure lists.
-- Context terms such as `slachtoffer`, `minderjarige`, `verzoeker`, `verweerder`, `eiser`, `rechtbank`, `arts`, `cliënt` and `zorgmedewerker` should not automatically be treated as sensitive values unless identifying context makes them sensitive.
-- CI should start as report-only, then add malformed-label failures, regression gates and later accepted per-entity thresholds.
+- Reporting should include overall, per-domain and per-entity recall/precision, false-negative, false-positive and context-preservation failure lists.
+- Context terms such as `slachtoffer`, `minderjarige`, `verzoeker`, `verweerder`, `eiser`, `rechtbank`, `arts`, `cliënt` and `zorgmedewerker` should normally remain readable unless identifying context makes them sensitive.
+- CI should start report-only, then add malformed-label failures, regression gates and later accepted per-entity thresholds.
 
 Validation status:
 
 - Documentation/specification review only.
 - No tests run; no code or test files were changed.
-- GitHub Actions: not checked at changelog update time.
-- Hugging Face sync: not checked at changelog update time.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
