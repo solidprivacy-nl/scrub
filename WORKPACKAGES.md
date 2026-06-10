@@ -42,6 +42,7 @@ WP19 — Recall benchmark specification: completed specification-only.
 WP20 — Synthetic messy Dutch legal/zorg benchmark corpus: completed benchmark-corpus-only.
 WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
+WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
@@ -206,6 +207,51 @@ Next recommended step from WP26:
 WP27 — Scrub Key warning UX plan
 ```
 
+### WP27 — Scrub Key warning UX plan
+
+Status: completed UX/security specification-only.
+
+Files added:
+
+```text
+SCRUB_KEY_WARNING_UX_PLAN.md
+handover/workpackages/20260610_0145_scrub_key_warning_ux_plan.md
+```
+
+Files changed:
+
+```text
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Summary:
+
+- Converts WP25/WP26 Scrub Key threat and lifecycle findings into a user-facing warning and acknowledgement plan.
+- Defines severity levels: informational, warning, critical and blocking candidate for later policy.
+- Defines warning and acknowledgement expectations for Scrub Key creation, export/download, local storage, import/reload, reinsert mode, restored output download, deletion/expiry guidance, shared-computer risk, e-mail/AI upload risk, loss-of-key and tampering/mismatch warnings.
+- Provides proposed Dutch UI copy without implementing it.
+- Clarifies MVP warning expectations versus later secure/local desktop warning and blocking candidates.
+
+Intentionally not changed:
+
+- No UI implementation.
+- No Streamlit patch changed.
+- No helper logic changed.
+- No Scrub Key schema migration.
+- No encryption implementation.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No tests added or changed.
+- No secrets or real data added.
+
+Next recommended step from WP27:
+
+```text
+WP28 — Scrub Key expiry/delete policy
+```
+
 ### WP30 — Placeholder robustness review
 
 Status: completed architecture/specification-only.
@@ -351,23 +397,28 @@ The next recommended workpackage for the recall/trust line remains:
 WP21 — Gold-label entity schema
 ```
 
+The next recommended workpackage from the Scrub Key security line is:
+
+```text
+WP28 — Scrub Key expiry/delete policy
+```
+
 The next recommended workpackage from the local-runtime line is:
 
 ```text
 WP46 — Minimal local Streamlit launcher
 ```
 
-Other workpackages from the WP58/WP26 parallel set may continue independently if not already completed:
+Other workpackages from the WP58 parallel set may continue independently if not already completed:
 
 ```text
-WP27 — Scrub Key warning UX plan
 WP31 — LLM-resistant placeholder format proposal
 ```
 
 Reason:
 
 ```text
-WP20 created source corpus fixtures only, so gold-label schema and offset validation are still needed before a runner or CI scorecard can be useful. WP45 resolved the architecture direction for local runtime, so WP46 may implement the minimal local launcher next.
+WP20 created source corpus fixtures only, so gold-label schema and offset validation are still needed before a runner or CI scorecard can be useful. WP27 defined the warning UX plan, so the Scrub Key line can proceed to expiry/delete policy. WP45 resolved the architecture direction for local runtime, so WP46 may implement the minimal local launcher next.
 ```
 
 ## Next workpackage definitions
@@ -402,33 +453,35 @@ CHANGELOG.md
 handover/workpackages/YYYYMMDD_HHMM_gold_label_entity_schema.md
 ```
 
-### WP27 — Scrub Key warning UX plan
+### WP28 — Scrub Key expiry/delete policy
 
-Type: UX/security specification.
+Type: security/lifecycle policy specification.
 
 Purpose:
 
-- Convert WP25/WP26 Scrub Key threat and lifecycle findings into a user-facing warning plan.
-- Define warning text, placement and acknowledgement expectations for export/download, import/reload, reinsert, deletion/expiry and shared-computer/storage-risk moments.
+- Define expiry, retention and deletion policy for Scrub Keys after the warning UX plan.
+- Clarify user-controlled deletion, loss-of-key consequences, matter/project retention guidance and audit expectations.
 
 Allowed direction:
 
-- Specification/UX plan only.
+- Specification/policy only.
 - No UI implementation.
+- No automatic deletion.
 - No Scrub Key schema migration.
+- No encryption implementation.
 - No import/export behavior change.
 - No reinsert behavior change.
-- No encryption implementation.
+- No tests yet unless separately approved.
 - No secrets or real data.
 
 Likely files:
 
 ```text
-SCRUB_KEY_WARNING_UX_PLAN.md
+SCRUB_KEY_EXPIRY_DELETE_POLICY.md
 RISK_REGISTER.md
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_scrub_key_warning_ux_plan.md
+handover/workpackages/YYYYMMDD_HHMM_scrub_key_expiry_delete_policy.md
 ```
 
 ### WP31 — LLM-resistant placeholder format proposal
