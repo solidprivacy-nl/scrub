@@ -4,6 +4,32 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-10 — D011 — Local runtime starts with Streamlit launcher, later desktop shell
+
+Status: accepted
+
+Decision:
+
+```text
+The MVP local runtime path should start with a minimal local Streamlit launcher, followed by local file-handling/privacy validation and a PyInstaller/portable Windows proof of concept. The later professional runtime path should evaluate a Tauri desktop shell with a reusable Python core, with Electron as an alternative if frontend requirements or team capability favor it.
+```
+
+Rationale:
+
+A minimal local Streamlit launcher is the fastest, lowest-risk way to test the local-first trust promise while reusing the current Python/Streamlit prototype. PyInstaller can validate Windows packaging and offline asset handling before committing to a professional desktop architecture. Tauri is the preferred later professional direction because it can support a document-centric frontend with a smaller desktop footprint, while Electron remains viable for richer web-app frontend needs.
+
+Implications:
+
+- WP45 remains architecture/specification-only.
+- WP46 should implement only a minimal local Streamlit launcher unless separately approved otherwise.
+- WP47 should validate local file handling, temp-file behavior, logs and network expectations.
+- WP48 should validate a portable Windows/PyInstaller packaging proof of concept before installer claims.
+- WP49 should decide the longer-term packaging path across Streamlit/PyInstaller, Tauri and Electron.
+- Hugging Face remains a demo/development environment and should not be positioned as the confidential production processing environment.
+- No runtime code, UI, Docker startup, dependency or packaging behavior changes are introduced by this decision.
+
+---
+
 ## 2026-06-10 — D010 — Scrub Key MVP lifecycle starts warning-first before encryption
 
 Status: accepted
