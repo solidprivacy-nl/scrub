@@ -39,11 +39,11 @@ The new launcher starts the existing Streamlit app locally by running the same e
 
 ## GitHub Actions status
 
-- To be checked after commit/push.
+- Unknown / no statuses returned by connector for final WP46 commit.
 
 ## Hugging Face sync status
 
-- To be checked after commit/push.
+- Unknown / no workflow runs returned by connector for final WP46 commit.
 
 ## App verification status
 
