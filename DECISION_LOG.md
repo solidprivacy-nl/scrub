@@ -4,6 +4,31 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-10 — D012 — Recommended future robust placeholder format
+
+Status: accepted architecture recommendation; not implemented
+
+Decision:
+
+```text
+The recommended future robust placeholder format direction is [[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]], for example [[SP_PERSON_0001_A7F3]]. This is an architecture recommendation only. It does not change current placeholder generation, Scrub Key schema, reinsert helper behavior or export behavior.
+```
+
+Rationale:
+
+The recommended shape is ASCII-only, visually distinct, machine-detectable, copy/paste friendly and less likely than Dutch natural-language labels to be translated by an LLM. The `SP` prefix identifies the token as a SolidPrivacy control token. A stable technical entity code, zero-padded counter and short integrity component create a path for future validation.
+
+Implications:
+
+- Current legacy placeholders such as `[PERSOON_1]` remain supported until a separate compatibility/migration decision says otherwise.
+- WP31 remains proposal-only and does not implement migration.
+- WP32 should implement a placeholder checksum/validation helper behind tests before any generation change.
+- The visible integrity token must not be derived directly from original sensitive values.
+- Future robust placeholder support should be additive first, not a silent replacement of legacy placeholders.
+- No worker may change placeholder format, reinsert behavior or Scrub Key schema as a side effect of unrelated work.
+
+---
+
 ## 2026-06-10 — D011 — Local runtime starts with Streamlit launcher, later desktop shell
 
 Status: accepted
