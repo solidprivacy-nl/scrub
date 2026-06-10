@@ -39,6 +39,7 @@ WP18-FIX — Fix failing PDF text to TXT UI tests: completed after Actions/sync 
 WP18B — PDF text to restored TXT UI app verification closeout: completed closeout-only.
 WP18C — Add Codex worker governance instructions: completed documentation/governance-only.
 WP19 — Recall benchmark specification: completed specification-only.
+WP20 — Synthetic messy Dutch legal/zorg benchmark corpus: completed benchmark-corpus-only.
 WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
@@ -108,7 +109,7 @@ Workers must write full handovers to handover/workpackages/.
 Coordinator chat only needs handover path, commit/PR, status and short summary unless commit failed or GitHub access is unavailable.
 ```
 
-## Completed risk-driven specification packages
+## Completed risk-driven specification and benchmark packages
 
 ### WP19 — Recall benchmark specification
 
@@ -131,6 +132,45 @@ Next recommended step from WP19:
 
 ```text
 WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
+```
+
+### WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
+
+Status: completed benchmark-corpus-only.
+
+Files added:
+
+```text
+benchmark/corpus/README.md
+benchmark/corpus/legal/legal_process_messy_001.txt
+benchmark/corpus/zorg/care_operations_messy_001.txt
+benchmark/corpus/mixed/legal_care_mixed_messy_001.txt
+benchmark/gold/README.md
+handover/workpackages/20260610_0045_synthetic_messy_benchmark_corpus.md
+```
+
+Summary:
+
+- Created a first synthetic messy corpus foundation with legal, zorg and mixed professional text fixtures.
+- Covered case numbers, client numbers, dossier numbers, claim/incident references, names, addresses, emails, phone numbers, synthetic BSN-like and IBAN-like values, Dutch postcodes, dates, organizations, medical/care references and role/context terms to preserve.
+- Added `benchmark/gold/README.md` explaining that full gold labels, zero-based offsets and schema validation belong to WP21.
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No benchmark runner implemented.
+- No CI gate added.
+- No UI changed.
+- No tests added or changed.
+- No dependencies changed.
+- No export/reinsert behavior changed.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step from WP20:
+
+```text
+WP21 — Gold-label entity schema
 ```
 
 ### WP25 — Scrub Key threat model
@@ -300,55 +340,56 @@ Intentionally not changed:
 
 ## Active / next recommended execution queue
 
-The next recommended parallel set is:
+The next recommended workpackage for the recall/trust line is:
 
 ```text
-Worker 1: WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
-Worker 2: WP31 — LLM-resistant placeholder format proposal
-Worker 3: WP45 — Local runtime architecture plan
-Worker 4: WP27 — Scrub Key warning UX plan
+WP21 — Gold-label entity schema
 ```
 
-If only one worker is available, start with:
+Other workpackages from the WP58/WP26 parallel set may continue independently if not already completed:
 
 ```text
-WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
+WP27 — Scrub Key warning UX plan
+WP31 — LLM-resistant placeholder format proposal
+WP45 — Local runtime architecture plan
 ```
 
 Reason:
 
 ```text
-False negatives / missed sensitive data remain the highest product risk.
+WP20 created source corpus fixtures only. Gold-label schema and offset validation are still needed before a runner or CI scorecard can be useful.
 ```
 
 ## Next workpackage definitions
 
-### WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
+### WP21 — Gold-label entity schema
 
-Type: benchmark data/specification artifacts.
+Type: benchmark schema/specification artifacts.
 
 Purpose:
 
-- Create synthetic messy Dutch legal, care and mixed professional benchmark documents.
-- Prepare corpus material that can later support gold-label schema, runner and CI scorecards.
+- Define the sidecar schema for benchmark gold labels.
+- Define zero-based offset rules, entity class mapping, preserve terms and known traps.
+- Prepare validation expectations before the runner is implemented.
 
 Allowed direction:
 
-- Synthetic data only.
-- No real customer, legal, care or personal data.
+- Schema/specification only unless separately approved.
+- Synthetic corpus only.
 - No recognizer logic changes.
+- No runner implementation.
+- No CI gate.
 - No UI changes.
 - No export/reinsert changes.
-- No CI gate unless separately approved.
 
 Likely files:
 
 ```text
-benchmark/corpus/...
-benchmark/gold/...
+benchmark/gold/README.md
+benchmark/gold/schema...
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_synthetic_messy_benchmark_corpus.md
+handover/workpackages/YYYYMMDD_HHMM_gold_label_entity_schema.md
 ```
 
 ### WP27 — Scrub Key warning UX plan
@@ -487,7 +528,7 @@ Also blocked until separate approval or later specs:
 Safe in parallel now:
 
 ```text
-WP20, WP27, WP31, WP45
+WP27, WP31, WP45
 ```
 
 Optional safe parallel candidates:
