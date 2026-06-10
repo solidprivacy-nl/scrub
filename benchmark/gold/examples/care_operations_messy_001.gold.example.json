@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "care_operations_messy_001",
+  "domain": "zorg",
+  "document_type": "synthetic care operations text",
+  "language": "nl",
+  "source_file": "benchmark/corpus/zorg/care_operations_messy_001.txt",
+  "source_text_encoding": "utf-8",
+  "synthetic": true,
+  "completeness": "schema_example_only",
+  "notes": "WP21 schema example only. This file intentionally contains a small sample of labels and is not a full gold-label sidecar.",
+  "normalization": {
+    "default_match_tier": "exact",
+    "casefold": false,
+    "collapse_whitespace": true,
+    "strip_outer_punctuation": true,
+    "ignore_separators_for_classes": ["PHONE", "IBAN", "CLIENT_NUMBER", "INCIDENT_NUMBER", "MEDICAL_OR_CARE_REFERENCE"],
+    "notes": "Future WP22 runner should report exact and value-normalized matching separately."
+  },
+  "labels": [
+    {
+      "label_id": "Z001",
+      "entity_id": "org_zorgvoorbeeld_noord",
+      "entity_class": "ORGANIZATION",
+      "text": "Stichting ZorgVoorbeeld Noord",
+      "start": 332,
+      "end": 361,
+      "sensitivity": "quasi_identifier",
+      "required": true,
+      "normalization_profile": "casefold"
+    },
+    {
+      "label_id": "Z002",
+      "entity_id": "client_number_nora",
+      "entity_class": "CLIENT_NUMBER",
+      "text": "ZORG-CL-2026-00441",
+      "start": 618,
+      "end": 636,
+      "sensitivity": "care_identifier",
+      "required": true,
+      "normalization_profile": "ignore_spaces_and_punctuation",
+      "acceptable_entity_mappings": ["NL_CLIENT_NUMBER", "CLIENT_NUMBER", "MEDICAL_OR_CARE_REFERENCE"]
+    },
+    {
+      "label_id": "Z003",
+      "entity_id": "person_nora_van_der_laan",
+      "entity_class": "PERSON",
+      "text": "Nora van der Laan",
+      "start": 824,
+      "end": 841,
+      "sensitivity": "direct_identifier",
+      "required": true,
+      "normalization_profile": "casefold"
+    },
+    {
+      "label_id": "Z004",
+      "entity_id": "date_nora_birth",
+      "entity_class": "DATE",
+      "text": "04-11-1942",
+      "start": 854,
+      "end": 864,
+      "sensitivity": "quasi_identifier",
+      "required": true,
+      "normalization_profile": "date_string_exact",
+      "notes": "Birth date should not be confused with BSN."
+    },
+    {
+      "label_id": "Z005",
+      "entity_id": "email_ahmed",
+      "entity_class": "EMAIL",
+      "text": "ahmed.elidrissi@example.invalid",
+      "start": 1075,
+      "end": 1106,
+      "sensitivity": "direct_identifier",
+      "required": true,
+      "normalization_profile": "casefold"
+    }
+  ],
+  "preserve_terms": [
+    {
+      "term_id": "P001",
+      "term": "cliënt",
+      "start": 816,
+      "end": 822,
+      "entity_class": "ROLE_OR_CONTEXT_TERM_TO_PRESERVE",
+      "reason": "Care role/context word, not the sensitive person value.",
+      "expected_behavior": "must_remain_readable"
+    }
+  ],
+  "known_traps": [
+    {
+      "trap_id": "T001",
+      "text": "07:45",
+      "start": 594,
+      "end": 599,
+      "trap_type": "time_not_phone",
+      "expected_behavior": "must_not_match_as_this_entity_class",
+      "not_entity_class": ["PHONE", "BSN"]
+    },
+    {
+      "trap_id": "T002",
+      "text": "7:453 BW",
+      "start": 3092,
+      "end": 3100,
+      "trap_type": "legal_article_not_case_number",
+      "expected_behavior": "must_not_match_as_this_entity_class",
+      "not_entity_class": ["CASE_NUMBER"]
+    }
+  ],
+  "runner_expectations": {
+    "must_validate_offsets": true,
+    "must_validate_text_equals_source_span": true,
+    "must_report_exact_and_normalized": true,
+    "must_report_preserve_term_failures": true,
+    "partial_overlap_policy": "diagnostic_only",
+    "notes": "WP22 should reject malformed offsets and report partial overlaps separately from exact/value-normalized matches."
+  }
+}
