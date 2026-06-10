@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://solidprivacy.local/benchmark/gold/schema/gold_label_schema.json",
+  "title": "SolidPrivacy Scrub benchmark gold-label sidecar schema",
+  "description": "Schema for synthetic benchmark gold-label sidecars. This is a specification artifact only; it does not implement a runner or CI gate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "document_id",
+    "domain",
+    "language",
+    "source_file",
+    "source_text_encoding",
+    "synthetic",
+    "labels",
+    "preserve_terms",
+    "known_traps"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "document_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_\\-]*$"
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["legal", "zorg", "mixed"]
+    },
+    "document_type": {
+      "type": "string",
+      "description": "Human-readable synthetic fixture type, for example verweerschrift, MDO-fragment or mixed memo."
+    },
+    "language": {
+      "type": "string",
+      "const": "nl"
+    },
+    "source_file": {
+      "type": "string",
+      "pattern": "^benchmark/corpus/(legal|zorg|mixed)/.+\\.txt$"
+    },
+    "source_text_encoding": {
+      "type": "string",
+      "const": "utf-8"
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "Optional future guard for ensuring offsets refer to the exact source version."
+    },
+    "synthetic": {
+      "type": "boolean",
+      "const": true
+    },
+    "completeness": {
+      "type": "string",
+      "enum": ["schema_example_only", "complete_gold_labels"],
+      "default": "complete_gold_labels"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Document-level normalization guidance for future WP22 matching; it is not executable behavior in WP21.",
+      "properties": {
+        "default_match_tier": {
+          "type": "string",
+          "enum": ["exact", "value_normalized", "overlap_diagnostic"]
+        },
+        "casefold": {"type": "boolean"},
+        "collapse_whitespace": {"type": "boolean"},
+        "strip_outer_punctuation": {"type": "boolean"},
+        "ignore_separators_for_classes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/entity_class"},
+          "uniqueItems": true
+        },
+        "notes": {"type": "string"}
+      }
+    },
+    "labels": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/gold_label"}
+    },
+    "preserve_terms": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/preserve_term"}
+    },
+    "known_traps": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/known_trap"}
+    },
+    "runner_expectations": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Non-executable guidance for WP22.",
+      "properties": {
+        "must_validate_offsets": {"type": "boolean"},
+        "must_validate_text_equals_source_span": {"type": "boolean"},
+        "must_report_exact_and_normalized": {"type": "boolean"},
+        "must_report_preserve_term_failures": {"type": "boolean"},
+        "partial_overlap_policy": {
+          "type": "string",
+          "enum": ["diagnostic_only", "accepted_for_normalized_tier_if_same_value", "not_accepted"]
+        },
+        "notes": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "entity_class": {
+      "type": "string",
+      "enum": [
+        "PERSON",
+        "ADDRESS",
+        "EMAIL",
+        "PHONE",
+        "BSN",
+        "IBAN",
+        "DATE",
+        "NL_POSTCODE",
+        "CASE_NUMBER",
+        "DOSSIER_NUMBER",
+        "CLIENT_NUMBER",
+        "CLAIM_NUMBER",
+        "INCIDENT_NUMBER",
+        "ECLI",
+        "ORGANIZATION",
+        "MEDICAL_OR_CARE_REFERENCE",
+        "ROLE_OR_CONTEXT_TERM_TO_PRESERVE"
+      ]
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": [
+        "direct_identifier",
+        "quasi_identifier",
+        "case_identifier",
+        "care_identifier",
+        "context_preservation",
+        "negative_trap"
+      ]
+    },
+    "normalization_profile": {
+      "type": "string",
+      "enum": [
+        "exact",
+        "casefold",
+        "collapse_whitespace",
+        "strip_outer_punctuation",
+        "ignore_spaces_and_punctuation",
+        "phone_digits_normalized",
+        "iban_compact_uppercase",
+        "date_string_exact"
+      ]
+    },
+    "gold_label": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label_id",
+        "entity_id",
+        "entity_class",
+        "text",
+        "start",
+        "end",
+        "sensitivity",
+        "required"
+      ],
+      "properties": {
+        "label_id": {
+          "type": "string",
+          "pattern": "^[A-Z]+[0-9]{3,5}$"
+        },
+        "entity_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_\\-]*$",
+          "description": "Stable ID for the real-world/synthetic entity or repeated value. Repeated occurrences may share entity_id but must have distinct label_id values."
+        },
+        "entity_class": {"$ref": "#/$defs/entity_class"},
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Expected exact source span. Future validation must assert text == source_text[start:end]."
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Zero-based inclusive character offset in the UTF-8-decoded source text."
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Zero-based exclusive character offset in the UTF-8-decoded source text."
+        },
+        "sensitivity": {"$ref": "#/$defs/sensitivity"},
+        "required": {
+          "type": "boolean",
+          "description": "True means the future runner should count a miss as a false negative."
+        },
+        "normalization_profile": {"$ref": "#/$defs/normalization_profile"},
+        "acceptable_entity_mappings": {
+          "type": "array",
+          "description": "Implementation-specific recognizer labels that may map to this canonical class. WP21 defines the place for this list; WP22 may use it.",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
+        "failure_class_hint": {
+          "type": "string",
+          "enum": [
+            "missed_class_entirely",
+            "detected_wrong_type",
+            "span_too_narrow",
+            "span_too_broad",
+            "only_label_detected",
+            "value_split_across_boundary",
+            "duplicate_occurrence_missed",
+            "context_required_but_absent",
+            "unsupported_class"
+          ]
+        },
+        "notes": {"type": "string"}
+      }
+    },
+    "preserve_term": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["term_id", "term", "start", "end", "reason", "expected_behavior"],
+      "properties": {
+        "term_id": {
+          "type": "string",
+          "pattern": "^P[0-9]{3,5}$"
+        },
+        "term": {"type": "string", "minLength": 1},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 1},
+        "entity_class": {
+          "type": "string",
+          "const": "ROLE_OR_CONTEXT_TERM_TO_PRESERVE"
+        },
+        "reason": {"type": "string"},
+        "expected_behavior": {
+          "type": "string",
+          "enum": ["must_remain_readable", "may_be_sensitive_only_with_identifying_context"]
+        },
+        "notes": {"type": "string"}
+      }
+    },
+    "known_trap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trap_id", "text", "start", "end", "trap_type", "expected_behavior"],
+      "properties": {
+        "trap_id": {
+          "type": "string",
+          "pattern": "^T[0-9]{3,5}$"
+        },
+        "text": {"type": "string", "minLength": 1},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 1},
+        "trap_type": {
+          "type": "string",
+          "enum": [
+            "date_must_not_be_bsn_or_phone",
+            "legal_article_not_case_number",
+            "money_amount_not_reference",
+            "time_not_phone",
+            "generic_role_not_person",
+            "label_not_value",
+            "ambiguous_room_or_department",
+            "school_group_not_vehicle_plate",
+            "medication_code_not_reference_unless_context"
+          ]
+        },
+        "expected_behavior": {
+          "type": "string",
+          "enum": [
+            "must_not_match_as_sensitive_value",
+            "must_not_match_as_this_entity_class",
+            "diagnostic_only"
+          ]
+        },
+        "not_entity_class": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/entity_class"},
+          "uniqueItems": true
+        },
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}
