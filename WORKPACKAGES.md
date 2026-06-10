@@ -44,8 +44,10 @@ WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
+WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
+WP46 — Minimal local Streamlit launcher: completed minimal local runtime implementation.
 WP58 — Parallel specification consolidation and next execution queue: completed documentation/planning-only.
 ```
 
@@ -275,6 +277,51 @@ Next recommended step from WP30:
 WP31 — LLM-resistant placeholder format proposal
 ```
 
+### WP31 — LLM-resistant placeholder format proposal
+
+Status: completed architecture/proposal-only.
+
+Files added:
+
+```text
+PLACEHOLDER_FORMAT_PROPOSAL.md
+handover/workpackages/20260610_0035_placeholder_format_proposal.md
+handover/workpackages/20260610_1824_placeholder_format_proposal.md
+```
+
+Files changed:
+
+```text
+DECISION_LOG.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Summary:
+
+- Compares `[PERSOON_1]`, `[[SP_PERSON_0001_A7F3]]`, `{{SP:PERSON:0001:A7F3}}` and `⟦SP_PERSON_0001_A7F3⟧`.
+- Recommends the future architecture direction `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`, for example `[[SP_PERSON_0001_A7F3]]`.
+- Defines entity naming, counter format, integrity-token direction, human readability, LLM robustness, copy/paste robustness, TXT/DOCX/PDF compatibility, Scrub Key compatibility, backward compatibility, migration risks, audit/validation requirements and implementation phases.
+- Explicitly warns that visible checksum/integrity values must not be derived directly from original sensitive data.
+
+Intentionally not changed:
+
+- No placeholder migration.
+- No reinsert helper change.
+- No Scrub Key schema change.
+- No UI change.
+- No export behavior change.
+- No tests added or changed.
+- No AI/cloud integration.
+- No dependency changes.
+
+Next recommended step from WP31:
+
+```text
+WP32 — Placeholder checksum/validation helper
+```
+
 ### WP35 — DOCX hidden content risk review
 
 Status: completed document-hygiene/specification-only.
@@ -345,6 +392,56 @@ Next recommended step from WP45:
 WP46 — Minimal local Streamlit launcher
 ```
 
+### WP46 — Minimal local Streamlit launcher
+
+Status: completed minimal local runtime implementation.
+
+Files added:
+
+```text
+scripts/run_local_streamlit.py
+LOCAL_RUN.md
+handover/workpackages/20260610_1828_minimal_local_streamlit_launcher.md
+```
+
+Files changed:
+
+```text
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Summary:
+
+- Added a minimal local Python launcher for the existing Streamlit app.
+- The launcher runs the same existing startup patch scripts used by the container startup path, then starts `presidio_streamlit.py` locally through Streamlit.
+- Default bind address is `127.0.0.1`, default port is `8501` and Streamlit usage stats are disabled for this local launcher path.
+- Added `LOCAL_RUN.md` with Python 3.10 assumption, dependency installation, exact launch command, local-only warning, no-real-data-in-repo warning, locally processed files, current non-guarantees and next validation step.
+
+Intentionally not changed:
+
+- No installer.
+- No PyInstaller packaging.
+- No Tauri/Electron implementation.
+- No Docker startup change.
+- No Streamlit UI feature change.
+- No export/reinsert behavior change.
+- No dependency change.
+- No cloud processing added.
+- No real data added.
+
+Validation:
+
+```text
+python -m py_compile scripts/run_local_streamlit.py
+```
+
+Next recommended step from WP46:
+
+```text
+WP47 — Local file handling/privacy test
+```
+
 ### WP58 — Parallel specification consolidation and next execution queue
 
 Status: completed documentation/planning-only.
@@ -406,19 +503,19 @@ WP28 — Scrub Key expiry/delete policy
 The next recommended workpackage from the local-runtime line is:
 
 ```text
-WP46 — Minimal local Streamlit launcher
+WP47 — Local file handling/privacy test
 ```
 
 Other workpackages from the WP58 parallel set may continue independently if not already completed:
 
 ```text
-WP31 — LLM-resistant placeholder format proposal
+WP32 — Placeholder checksum/validation helper
 ```
 
 Reason:
 
 ```text
-WP20 created source corpus fixtures only, so gold-label schema and offset validation are still needed before a runner or CI scorecard can be useful. WP27 defined the warning UX plan, so the Scrub Key line can proceed to expiry/delete policy. WP45 resolved the architecture direction for local runtime, so WP46 may implement the minimal local launcher next.
+WP20 created source corpus fixtures only, so gold-label schema and offset validation are still needed before a runner or CI scorecard can be useful. WP27 defined the warning UX plan, so the Scrub Key line can proceed to expiry/delete policy. WP31 accepted the robust placeholder format direction, so the placeholder line can proceed to validation helpers. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
 ```
 
 ## Next workpackage definitions
@@ -484,51 +581,53 @@ CHANGELOG.md
 handover/workpackages/YYYYMMDD_HHMM_scrub_key_expiry_delete_policy.md
 ```
 
-### WP31 — LLM-resistant placeholder format proposal
+### WP32 — Placeholder checksum/validation helper
 
-Type: architecture/specification.
+Type: helper/tests implementation, gated by WP31.
 
 Purpose:
 
-- Propose and compare candidate LLM-resistant placeholder formats.
-- Define backward compatibility and validation/checksum direction.
+- Implement validation helpers for the recommended robust placeholder shape.
+- Keep validation separate from placeholder generation and migration.
+- Preserve legacy placeholder support as a separate compatibility mode.
 
 Allowed direction:
 
-- Proposal only.
+- Helper and tests only.
 - No placeholder migration.
-- No reinsert helper change.
+- No generation of robust placeholders in product flow.
+- No reinsert behavior change unless explicitly limited to validation reporting.
 - No Scrub Key schema change.
 - No UI change.
 - No export behavior change.
+- No AI/cloud integration.
 
 Likely files:
 
 ```text
-PLACEHOLDER_FORMAT_PROPOSAL.md
-DECISION_LOG.md
-RISK_REGISTER.md
+placeholder_validation.py
+tests/test_placeholder_validation.py
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_placeholder_format_proposal.md
+handover/workpackages/YYYYMMDD_HHMM_placeholder_validation_helper.md
 ```
 
-### WP46 — Minimal local Streamlit launcher
+### WP47 — Local file handling/privacy test
 
-Type: local runtime implementation.
+Type: local runtime validation.
 
 Purpose:
 
-- Implement the minimal local runtime path recommended by WP45.
-- Provide a local launcher or documented launcher path that runs the existing Streamlit app locally for non-cloud confidential-processing validation.
+- Validate that the minimal local Streamlit runtime handles files in line with the local-first privacy expectations.
+- Check source-file handling, Scrub Key handling, restored output handling, audit output handling, logs, temporary files and network behavior where practical.
 
 Allowed direction:
 
-- Minimal launcher only.
+- Validation/tests/checks only.
 - No installer.
-- No PyInstaller packaging yet.
+- No PyInstaller packaging.
 - No Tauri/Electron implementation.
-- No UI feature changes unless separately approved.
+- No UI feature changes.
 - No export/reinsert behavior changes.
 - No cloud processing.
 - No telemetry implementation.
@@ -537,10 +636,10 @@ Allowed direction:
 Likely files:
 
 ```text
-local launcher file or documentation, to be specified in the WP46 task
+local runtime privacy validation file(s), to be specified in the WP47 task
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_minimal_local_streamlit_launcher.md
+handover/workpackages/YYYYMMDD_HHMM_local_file_handling_privacy_test.md
 ```
 
 ## Optional safe parallel candidates
@@ -578,8 +677,8 @@ Also blocked until separate approval or later specs:
 - Scrub Key encryption implementation.
 - Scrub Key JSON schema migration.
 - Placeholder migration.
-- Placeholder checksum/validation helper implementation before WP31 is accepted.
-- Unknown/changed placeholder audit hardening before the format proposal is stable.
+- Robust placeholder generation in product flow.
+- Unknown/changed placeholder audit hardening before the validation helper is stable.
 - DOCX comment/tracked-change removal.
 - Clean DOCX export blocking.
 - Restored PDF output.
