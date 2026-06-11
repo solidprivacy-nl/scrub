@@ -4,6 +4,30 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-10 — D013 — Scrub Key deletion remains explicit and user-controlled
+
+Status: accepted security/lifecycle policy
+
+Decision:
+
+```text
+Scrub Keys must be retained only as long as needed for a specific matter, project, AI roundtrip, review or reinsert purpose. Expiry is guidance-first in MVP. Deletion must remain explicit and user-controlled. Scrub must not silently delete Scrub Keys, mappings, restored output, audit context or external copies, and must not keep hidden recovery copies.
+```
+
+Rationale:
+
+The Scrub Key is sensitive re-identification data, so unnecessary retention increases breach impact. At the same time, deleting or losing the key prevents deterministic reinsert. Silent deletion would create surprise data loss and could conflict with matter, project, legal-hold or organization retention requirements.
+
+Implications:
+
+- WP28 defines policy only and does not implement deletion behavior.
+- MVP may warn, guide and request acknowledgement, but must not automatically delete keys.
+- Future app-managed deletion requires explicit confirmation, non-sensitive audit events and clear limits about external copies.
+- Future expiry metadata, reminders, protected storage, encrypted containers, vault behavior and recovery/escrow require separate approved implementation workpackages.
+- No worker may add automatic Scrub Key deletion, hidden recovery copies or import/export behavior changes as a side effect of unrelated work.
+
+---
+
 ## 2026-06-10 — D012 — Recommended future robust placeholder format
 
 Status: accepted architecture recommendation; not implemented

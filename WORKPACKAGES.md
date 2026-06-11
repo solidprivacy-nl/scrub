@@ -40,9 +40,11 @@ WP18B — PDF text to restored TXT UI app verification closeout: completed close
 WP18C — Add Codex worker governance instructions: completed documentation/governance-only.
 WP19 — Recall benchmark specification: completed specification-only.
 WP20 — Synthetic messy Dutch legal/zorg benchmark corpus: completed benchmark-corpus-only.
+WP21 — Gold-label entity schema: completed benchmark schema/closeout-only.
 WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
+WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
@@ -141,6 +143,53 @@ Next recommended step from WP20:
 
 ```text
 WP21 — Gold-label entity schema
+```
+
+### WP21 — Gold-label entity schema
+
+Status: completed benchmark schema/closeout-only.
+
+Files added:
+
+```text
+benchmark/gold/schema/gold_label_schema.json
+benchmark/gold/examples/legal_process_messy_001.gold.example.json
+benchmark/gold/examples/care_operations_messy_001.gold.example.json
+handover/workpackages/20260610_1900_gold_label_entity_schema_closeout.md
+```
+
+Files changed:
+
+```text
+benchmark/gold/README.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Summary:
+
+- Verified the existing WP21 schema artifact and completed central closeout documentation.
+- Confirmed the schema covers gold-label sidecar format, zero-based inclusive/exclusive offsets, source file references, entity class mapping, label IDs, entity IDs, expected text spans, normalization guidance, preserve-term labels, known-trap labels, partial-overlap guidance, validation expectations and future WP22 runner expectations.
+- Updated `benchmark/gold/README.md` from WP20 placeholder language to WP21 schema foundation status.
+- No schema change was needed.
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No benchmark runner implemented.
+- No CI scorecard added.
+- No production test gate added.
+- No UI changed.
+- No dependency changes.
+- No export/reinsert behavior changed.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step from WP21:
+
+```text
+WP22 — Recall/precision test runner
 ```
 
 ### WP25 — Scrub Key threat model
@@ -252,6 +301,58 @@ Next recommended step from WP27:
 
 ```text
 WP28 — Scrub Key expiry/delete policy
+```
+
+### WP28 — Scrub Key expiry/delete policy
+
+Status: completed security/lifecycle-policy-only.
+
+Files added:
+
+```text
+SCRUB_KEY_EXPIRY_DELETE_POLICY.md
+handover/workpackages/20260610_1826_scrub_key_expiry_delete_policy.md
+```
+
+Files changed:
+
+```text
+DECISION_LOG.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Summary:
+
+- Defines Scrub Key retention principles, user-controlled deletion, matter/project retention guidance, Downloads risk, shared-computer risk, expiry guidance, manual deletion guidance, loss-of-key consequences, tampering/mismatch consequences and audit/logging expectations.
+- Establishes that MVP expiry is guidance-only: no automatic deletion, no schema migration, no import/export behavior change and no reinsert behavior change.
+- Records the accepted policy decision that Scrub must not silently delete Scrub Keys, mappings, restored output, audit context or external copies, and must not keep hidden recovery copies.
+- Provides Dutch user-facing policy copy examples for future warning/planning work.
+
+Intentionally not changed:
+
+- No UI implementation.
+- No Streamlit patch changed.
+- No helper logic changed.
+- No automatic deletion.
+- No Scrub Key schema migration.
+- No encryption implementation.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No tests added or changed.
+- No secrets or real data added.
+
+Next recommended step from WP28:
+
+```text
+WP29 — Scrub Key secure import/export tests
+```
+
+Alternative sequencing if the coordinator wants UI planning before tests:
+
+```text
+WP28B — Scrub Key warning implementation planning
 ```
 
 ### WP30 — Placeholder robustness review
@@ -491,13 +592,19 @@ Intentionally not changed:
 The next recommended workpackage for the recall/trust line remains:
 
 ```text
-WP21 — Gold-label entity schema
+WP22 — Recall/precision test runner
 ```
 
 The next recommended workpackage from the Scrub Key security line is:
 
 ```text
-WP28 — Scrub Key expiry/delete policy
+WP29 — Scrub Key secure import/export tests
+```
+
+Alternative Scrub Key sequencing if UI planning should precede tests:
+
+```text
+WP28B — Scrub Key warning implementation planning
 ```
 
 The next recommended workpackage from the local-runtime line is:
@@ -515,70 +622,97 @@ WP32 — Placeholder checksum/validation helper
 Reason:
 
 ```text
-WP20 created source corpus fixtures only, so gold-label schema and offset validation are still needed before a runner or CI scorecard can be useful. WP27 defined the warning UX plan, so the Scrub Key line can proceed to expiry/delete policy. WP31 accepted the robust placeholder format direction, so the placeholder line can proceed to validation helpers. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
+WP21 completed the gold-label sidecar schema foundation, so the recall/trust line can proceed to the first recall/precision runner. WP28 defined the Scrub Key expiry/delete policy, so the Scrub Key line can proceed to secure import/export tests or warning implementation planning. WP31 accepted the robust placeholder format direction, so the placeholder line can proceed to validation helpers. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
 ```
 
 ## Next workpackage definitions
 
-### WP21 — Gold-label entity schema
+### WP22 — Recall/precision test runner
 
-Type: benchmark schema/specification artifacts.
+Type: benchmark runner implementation.
 
 Purpose:
 
-- Define the sidecar schema for benchmark gold labels.
-- Define zero-based offset rules, entity class mapping, preserve terms and known traps.
-- Prepare validation expectations before the runner is implemented.
+- Implement the first runner that reads synthetic corpus files and WP21 gold-label sidecars.
+- Validate sidecar offsets and expected text spans before scoring.
+- Produce report-only recall/precision output for exact and value-normalized matching.
 
 Allowed direction:
 
-- Schema/specification only unless separately approved.
 - Synthetic corpus only.
 - No recognizer logic changes.
-- No runner implementation.
-- No CI gate.
+- Report-only runner; no CI failure gate yet.
 - No UI changes.
 - No export/reinsert changes.
+- No real data.
 
 Likely files:
 
 ```text
-benchmark/gold/README.md
-benchmark/gold/schema...
+benchmark/run_recall_precision.py or benchmark/runner...
+benchmark/reports/...
+tests/... if scoped to synthetic runner behavior
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_gold_label_entity_schema.md
+handover/workpackages/YYYYMMDD_HHMM_recall_precision_test_runner.md
 ```
 
-### WP28 — Scrub Key expiry/delete policy
+### WP29 — Scrub Key secure import/export tests
 
-Type: security/lifecycle policy specification.
+Type: security regression tests.
 
 Purpose:
 
-- Define expiry, retention and deletion policy for Scrub Keys after the warning UX plan.
-- Clarify user-controlled deletion, loss-of-key consequences, matter/project retention guidance and audit expectations.
+- Add focused tests for Scrub Key import/export safety expectations after WP25-WP28.
+- Verify malformed, wrong-policy, missing-marker and unsafe/tampered key cases are handled visibly and without leaking original values.
+- Preserve existing Scrub Key schema and import/export behavior unless a test exposes a bug that requires a separate fix package.
 
 Allowed direction:
 
-- Specification/policy only.
+- Tests only unless a failing test proves a narrow helper bug and the coordinator approves a fix package.
+- Synthetic data only.
 - No UI implementation.
 - No automatic deletion.
-- No Scrub Key schema migration.
 - No encryption implementation.
-- No import/export behavior change.
-- No reinsert behavior change.
-- No tests yet unless separately approved.
-- No secrets or real data.
+- No schema migration.
+- No export/reinsert behavior change.
 
 Likely files:
 
 ```text
-SCRUB_KEY_EXPIRY_DELETE_POLICY.md
-RISK_REGISTER.md
+tests/test_scrub_key_import.py
+tests/test_scrub_key.py
+tests/test_scrub_key_reinsert.py
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_scrub_key_expiry_delete_policy.md
+handover/workpackages/YYYYMMDD_HHMM_scrub_key_secure_import_export_tests.md
+```
+
+### WP28B — Scrub Key warning implementation planning
+
+Type: UI/security implementation planning only.
+
+Purpose:
+
+- Translate WP27 warning UX and WP28 expiry/delete policy into exact implementation locations, acknowledgement states and copy inventory before editing Streamlit UI.
+- Keep behavior unchanged until a later implementation package is approved.
+
+Allowed direction:
+
+- Planning/specification only.
+- No UI implementation.
+- No Streamlit patch changes.
+- No automatic deletion.
+- No schema migration.
+- No import/export or reinsert behavior change.
+
+Likely files:
+
+```text
+SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_scrub_key_warning_implementation_planning.md
 ```
 
 ### WP32 — Placeholder checksum/validation helper
