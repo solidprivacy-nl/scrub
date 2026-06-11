@@ -43,18 +43,18 @@ Current mitigations:
 - Review guidance and final review summary.
 - Synthetic regression tests for selected recognizers.
 - WP19 created `RECALL_BENCHMARK_SPEC.md`, defining how Scrub will measure recall, precision, per-entity scorecards, context-term preservation and CI reporting on messy synthetic Dutch legal and care documents.
+- WP20 created the first synthetic messy legal, zorg and mixed corpus fixtures.
+- WP21 created the gold-label sidecar schema foundation in `benchmark/gold/schema/gold_label_schema.json`, covering canonical entity classes, zero-based inclusive/exclusive offsets, expected text spans, preserve terms, known traps, normalization guidance and future runner expectations.
 
 Gaps:
 
-- No synthetic gold-label corpus yet.
+- No complete gold-label sidecars for the corpus yet.
 - No implemented benchmark runner yet.
 - No CI scorecard yet.
 - No explicit false-negative residual-risk report yet.
 
 Recommended workpackages:
 
-- WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
-- WP21 — Gold-label entity schema.
 - WP22 — Recall/precision test runner.
 - WP23 — Entity-class scorecard in CI.
 - WP24 — False-negative residual-risk report.
@@ -84,12 +84,13 @@ Current mitigations:
 - WP25 created `SCRUB_KEY_THREAT_MODEL.md`, defining accidental sharing, local storage, download-folder, e-mail/AI-upload, shared-computer, retention, loss-of-key, tampering, malformed-key and import/export risks.
 - WP26 created `SCRUB_KEY_LIFECYCLE_SPEC.md`, defining lifecycle states, retention/deletion expectations, loss-of-key and tampering consequences, audit/logging expectations and protection options.
 - WP27 created `SCRUB_KEY_WARNING_UX_PLAN.md`, defining warning severity levels, acknowledgement expectations and proposed Dutch UI copy for Scrub Key creation, export/download, storage, import/reload, reinsert, restored downloads, expiry/delete guidance, shared-computer risk, e-mail/AI upload risk, loss-of-key and tampering/mismatch moments.
+- WP28 created `SCRUB_KEY_EXPIRY_DELETE_POLICY.md`, defining user-controlled retention, expiry and deletion policy; Downloads/shared-computer/manual deletion guidance; loss-of-key and tampering consequences; audit/logging expectations; and the rule that Scrub must not silently delete keys or keep hidden recovery copies.
 
 Gaps:
 
 - No implemented warning UX changes yet.
 - No encryption/protection implementation.
-- No implemented expiry/delete policy or automated lifecycle behavior.
+- No implemented expiry/delete UI or automated lifecycle tooling.
 - No tamper-proof or authenticated Scrub Key format.
 - No secure import/export regression test package focused on key handling.
 - No automatic cleanup for browser Downloads or unmanaged local storage.
@@ -98,8 +99,8 @@ Gaps:
 
 Recommended workpackages:
 
-- WP28 — Scrub Key expiry/delete policy.
 - WP29 — Scrub Key secure import/export tests.
+- WP28B — Scrub Key warning implementation planning.
 - Later implementation package — MVP Scrub Key warning/acknowledgement UI.
 - Later implementation package — protected local file handling.
 - Later implementation package — encrypted key container.

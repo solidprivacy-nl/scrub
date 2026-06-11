@@ -1,5 +1,113 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP28-REPAIR — Scrub Key expiry/delete policy artifact repair
+
+Status: completed documentation-repair-only.
+
+Purpose:
+
+- Verify that the completed WP28 central documentation is backed by the required policy artifact.
+- Confirm that `SCRUB_KEY_EXPIRY_DELETE_POLICY.md` is present and covers the required expiry, retention and deletion policy topics.
+- Create a repair handover for the artifact consistency check.
+
+Files added:
+
+- `handover/workpackages/20260611_2135_scrub_key_expiry_delete_policy_repair.md`
+
+Files changed:
+
+- `CHANGELOG.md`
+
+Files verified:
+
+- `SCRUB_KEY_EXPIRY_DELETE_POLICY.md`
+- `WORKPACKAGES.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+
+Validation status:
+
+- Documentation/artifact repair review only.
+- `SCRUB_KEY_EXPIRY_DELETE_POLICY.md` is present at the expected path.
+- Policy coverage was checked against the WP28 required topics and aligned with WP25, WP26, WP27, `SCRUB_KEY_SPEC.md`, WP58, `RISK_REGISTER.md` and `DECISION_LOG.md`.
+- No tests run; no code or test files were changed.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No UI implementation.
+- No Streamlit patch changed.
+- No helper logic changed.
+- No automatic deletion.
+- No Scrub Key schema migration.
+- No encryption implementation.
+- No import/export behavior changed.
+- No reinsert behavior changed.
+- No tests added or changed.
+- No secrets or real data added.
+- No cloud processing added.
+
+Next recommended step:
+
+- `WP29 — Scrub Key secure import/export tests`.
+- Alternative if warning implementation planning should precede tests: `WP28B — Scrub Key warning implementation planning`.
+
+## WP21-CLOSEOUT — Gold-label schema handover and central docs repair
+
+Status: completed documentation/schema-closeout-only.
+
+Purpose:
+
+- Complete WP21 closeout after the gold-label schema artifact was created.
+- Verify that `benchmark/gold/schema/gold_label_schema.json` covers the required sidecar schema concepts.
+- Repair central status documentation and create the missing handover.
+
+Files added:
+
+- `handover/workpackages/20260610_1900_gold_label_entity_schema_closeout.md`
+
+Files changed:
+
+- `benchmark/gold/README.md`
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Schema artifact verified:
+
+- `benchmark/gold/schema/gold_label_schema.json`
+
+Verification summary:
+
+- The schema covers gold-label sidecar format, zero-based character offsets, inclusive `start` and exclusive `end`, source file reference, canonical entity class mapping, label ID, entity ID, expected text span, normalization guidance, preserve-term labels, known-trap labels, partial-overlap guidance, validation expectations and future WP22 runner expectations.
+- The schema aligns with the canonical entity classes in `RECALL_BENCHMARK_SPEC.md`.
+- `benchmark/gold/README.md` now reflects WP21 schema foundation status instead of WP20 future-schema placeholder language.
+- No schema defect was found, so `benchmark/gold/schema/gold_label_schema.json` was intentionally not modified.
+
+Validation status:
+
+- Documentation/schema closeout review only.
+- `python -m json.tool benchmark/gold/schema/gold_label_schema.json` passed.
+- Required benchmark context files were read.
+- No tests run; no code or test files were changed.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No benchmark runner implemented.
+- No CI scorecard added.
+- No production test gate added.
+- No UI changed.
+- No dependency changes.
+- No export/reinsert behavior changed.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step:
+
+- `WP22 — Recall/precision test runner`.
+
 ## WP28 — Scrub Key expiry/delete policy
 
 Status: completed security/lifecycle-policy-only.
