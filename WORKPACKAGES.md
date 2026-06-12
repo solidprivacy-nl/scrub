@@ -44,6 +44,7 @@ WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-onl
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
+WP33 — Placeholder audit hardening: completed audit/helper hardening-only.
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
 WP46 — Minimal local Streamlit launcher: completed minimal local runtime implementation.
@@ -69,12 +70,6 @@ Summary:
 - Made false negatives / missed sensitive data measurable before recognizer changes.
 - Defined entity classes, context-preservation expectations, gold-label requirements and future reporting/CI sequence.
 
-Next recommended step from WP19:
-
-```text
-WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
-```
-
 ### WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
 
 Status: completed benchmark-corpus-only.
@@ -90,18 +85,6 @@ benchmark/gold/README.md
 handover/workpackages/20260610_0045_synthetic_messy_benchmark_corpus.md
 ```
 
-Summary:
-
-- Created a first synthetic messy corpus foundation with legal, zorg and mixed professional text fixtures.
-- Added `benchmark/gold/README.md` explaining that full gold labels, zero-based offsets and schema validation belong to WP21.
-- No recognizer logic, runner, CI gate, UI, dependency, export/reinsert behavior, real data or cloud processing was added.
-
-Next recommended step from WP20:
-
-```text
-WP21 — Gold-label entity schema
-```
-
 ### WP21 — Gold-label entity schema
 
 Status: completed benchmark schema/closeout-only.
@@ -113,28 +96,6 @@ benchmark/gold/schema/gold_label_schema.json
 benchmark/gold/examples/legal_process_messy_001.gold.example.json
 benchmark/gold/examples/care_operations_messy_001.gold.example.json
 handover/workpackages/20260610_1900_gold_label_entity_schema_closeout.md
-```
-
-Files changed:
-
-```text
-benchmark/gold/README.md
-RISK_REGISTER.md
-WORKPACKAGES.md
-CHANGELOG.md
-```
-
-Summary:
-
-- Verified the WP21 schema artifact and completed central closeout documentation.
-- Confirmed the schema covers gold-label sidecar format, zero-based inclusive/exclusive offsets, source file references, entity class mapping, label IDs, entity IDs, expected text spans, normalization guidance, preserve-term labels, known-trap labels, partial-overlap guidance, validation expectations and future WP22 runner expectations.
-- Updated `benchmark/gold/README.md` from WP20 placeholder language to WP21 schema foundation status.
-- No recognizer logic, benchmark runner, CI scorecard, production gate, UI, dependency, export/reinsert behavior, real data or cloud processing was added.
-
-Next recommended step from WP21:
-
-```text
-WP22 — Recall/precision test runner
 ```
 
 ### WP22 — Recall/precision test runner
@@ -149,44 +110,11 @@ tests/test_recall_precision_runner.py
 handover/workpackages/20260612_1200_recall_precision_test_runner.md
 ```
 
-Files changed:
-
-```text
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-```
-
 Summary:
 
 - Added a deterministic local recall/precision runner for synthetic WP21 gold-label sidecars and supplied prediction JSON.
-- The runner validates source-file references, synthetic-only sidecars, zero-based inclusive/exclusive offsets and `text == source_text[start:end]` before scoring.
-- The runner reports exact and value-normalized recall/precision, per-domain metrics, per-entity-class metrics, false negatives, false positives, preserve-term failures, known-trap failures and diagnostic-only partial overlaps.
-- The runner does not call recognizers, Presidio, Streamlit, AI or cloud services.
-- The runner applies no CI threshold and no production-blocking gate.
-
-Validation:
-
-```text
-python -m json.tool benchmark/gold/schema/gold_label_schema.json
-pytest tests/test_recall_precision_runner.py
-```
-
-Intentionally not changed:
-
-- No recognizer logic changed.
-- No Streamlit UI changed.
-- No CI scorecard or production test gate added.
-- No dependency changes.
-- No export/reinsert behavior changed.
-- No real data added.
-- No cloud processing added.
-
-Next recommended step from WP22:
-
-```text
-WP23 — Entity-class scorecard in CI
-```
+- Reports exact and value-normalized recall/precision, per-domain metrics, per-entity-class metrics, false negatives, false positives, preserve-term failures, known-trap failures and diagnostic-only partial overlaps.
+- No recognizer logic, UI, CI threshold, dependency, export/reinsert behavior, real data or cloud processing was added.
 
 ### WP23 — Entity-class scorecard in CI
 
@@ -201,45 +129,11 @@ tests/test_entity_scorecard.py
 handover/workpackages/20260612_1230_entity_class_scorecard_ci.md
 ```
 
-Files changed:
-
-```text
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-```
-
 Summary:
 
-- Added `benchmark/build_entity_scorecard.py`, a report-only wrapper around the WP22 runner.
-- The helper builds CI-friendly `entity_scorecard.json` and `entity_scorecard.md` artifacts in `benchmark/reports/`.
-- The scorecard shows overall recall/precision, per-domain metrics, per-entity-class metrics, gold/prediction counts, exact and normalized true positives, false-negative and false-positive counts, preserve-term failures, known-trap failures and partial-overlap diagnostic counts.
-- The scorecard explicitly records `synthetic_only`, `report_only`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
-- CI may publish this report and may fail on technical errors such as malformed JSON, bad offsets or runner exceptions, but must not fail on recall/precision scores yet.
-- No CI workflow threshold or production-blocking gate was added.
-
-Validation:
-
-```text
-python -m py_compile benchmark/build_entity_scorecard.py
-pytest tests/test_entity_scorecard.py
-```
-
-Intentionally not changed:
-
-- No recognizer logic changed.
-- No Streamlit UI changed.
-- No CI threshold or production-blocking gate added.
-- No dependency changes.
-- No export/reinsert behavior changed.
-- No real data added.
-- No cloud processing added.
-
-Next recommended step from WP23:
-
-```text
-WP24 — False-negative residual-risk report
-```
+- Added a report-only entity-class scorecard wrapper around the WP22 runner.
+- Scorecard artifacts explicitly record `synthetic_only`, `report_only`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
+- No recognizer logic, UI, CI threshold, dependency, export/reinsert behavior, real data or cloud processing was added.
 
 ### WP24 — False-negative residual-risk report
 
@@ -264,45 +158,11 @@ RISK_REGISTER.md
 
 Summary:
 
-- Added `benchmark/build_residual_risk_report.py`, a report-only helper that consumes a WP23 scorecard or builds one from WP22/WP23 inputs.
-- The helper writes `false_negative_residual_risk_report.json` and `false_negative_residual_risk_report.md` under `benchmark/reports/`.
-- The report shows synthetic-only warning, report-only/no-production-safety policy, current benchmark coverage status, schema-example limitation, supplied-prediction limitation, overall false-negative risk, per-domain residual risk, per-entity-class residual risk, preserve-term risk, known-trap/false-positive risk, partial-overlap/near-miss diagnostics, unsupported/not-yet-baselined classes and recommended next work.
-- The report explicitly records `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
-- Technical errors may still fail, but low scores do not fail CI or create a production gate.
+- Added a report-only residual-risk helper that consumes a WP23 scorecard or builds one from WP22/WP23 inputs.
+- The report shows synthetic-only warning, report-only/no-production-safety policy, benchmark coverage status, residual false-negative risks, unsupported/not-yet-baselined classes and recommended next work.
+- No recognizer logic, UI, production threshold, production gate, dependency, export/reinsert behavior, real data or cloud processing was added.
 
-Validation:
-
-```text
-python -m py_compile benchmark/build_residual_risk_report.py
-pytest tests/test_residual_risk_report.py
-```
-
-Intentionally not changed:
-
-- No recognizer logic changed.
-- No Streamlit UI changed.
-- No production threshold or production-blocking gate added.
-- No production safety claim added.
-- No dependency changes.
-- No export/reinsert behavior changed.
-- No real data added.
-- No cloud processing added.
-
-Next recommended step from WP24:
-
-```text
-WP29 — Scrub Key secure import/export tests
-```
-
-Alternative if the coordinator wants to continue the placeholder line first:
-
-```text
-WP33 — Unknown/changed placeholder audit hardening
-```
-
-## Other completed risk-driven packages
-
-### Scrub Key security line
+## Scrub Key security line
 
 ```text
 WP25 — Scrub Key threat model: completed security/specification-only.
@@ -323,12 +183,13 @@ Alternative Scrub Key sequencing if UI planning should precede tests:
 WP28B — Scrub Key warning implementation planning
 ```
 
-### Placeholder robustness line
+## Placeholder robustness line
 
 ```text
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
+WP33 — Placeholder audit hardening: completed audit/helper hardening-only.
 ```
 
 WP32 files added:
@@ -340,22 +201,31 @@ handover/workpackages/20260612_0015_placeholder_checksum_validation_helper.md
 handover/workpackages/20260612_0030_placeholder_validation_helper_closeout.md
 ```
 
-WP32 summary:
+WP33 files added:
 
-- Added an additive helper for the future robust placeholder shape `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`.
-- The helper parses entity type, counter and integrity token.
-- The helper computes deterministic integrity tokens from non-sensitive placeholder metadata only.
-- Integrity tokens are not derived directly from original sensitive values.
-- Legacy placeholders remain a separate compatibility mode.
-- No placeholder migration, product placeholder generation change, Scrub Key schema change, reinsert behavior change, UI/export/dependency change or AI/cloud integration was added.
+```text
+placeholder_audit.py
+tests/test_placeholder_audit.py
+handover/workpackages/20260612_0045_unknown_changed_placeholder_audit_hardening.md
+handover/workpackages/20260612_0105_placeholder_audit_hardening_closeout.md
+```
+
+WP33 summary:
+
+- Added a pure placeholder audit helper using WP32 validation output.
+- Classifies legacy, robust, malformed robust, truncated robust, integrity-failed and unknown placeholder-like tokens.
+- Reports audit fields such as `placeholder_format_summary`, `observed_placeholder_like_tokens`, `legacy_placeholders`, `robust_placeholders`, `malformed_robust_placeholders`, `integrity_failed_placeholders`, `unknown_placeholder_like_tokens`, `missing_placeholders` and `placeholder_validation_issues`.
+- Leaves unknown, malformed and failed-integrity tokens unchanged and does not silently repair or guess placeholder intent.
+- Existing legacy reinsert semantics remain compatible.
+- No placeholder migration, robust placeholder generation, Scrub Key schema change, UI/export behavior change, dependency change or AI/cloud integration was added.
 
 Next recommended placeholder step:
 
 ```text
-WP33 — Unknown/changed placeholder audit hardening
+WP34 — Synthetic AI-output placeholder corruption tests
 ```
 
-### DOCX hygiene line
+## DOCX hygiene line
 
 ```text
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
@@ -367,7 +237,7 @@ Blocked until tighter helper boundary is approved:
 WP36 — DOCX metadata cleaner helper
 ```
 
-### Local runtime line
+## Local runtime line
 
 ```text
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
@@ -380,7 +250,7 @@ Next recommended local-runtime step:
 WP47 — Local file handling/privacy test
 ```
 
-### Planning / consolidation
+## Planning / consolidation
 
 ```text
 WP58 — Parallel specification consolidation and next execution queue: completed documentation/planning-only.
@@ -403,7 +273,7 @@ WP28B — Scrub Key warning implementation planning
 The next recommended workpackage from the placeholder robustness line is:
 
 ```text
-WP33 — Unknown/changed placeholder audit hardening
+WP34 — Synthetic AI-output placeholder corruption tests
 ```
 
 The next recommended workpackage from the local-runtime line is:
@@ -415,7 +285,7 @@ WP47 — Local file handling/privacy test
 Reason:
 
 ```text
-WP24 completed the first report-only false-negative residual-risk report foundation for the recall/trust line. The recall/trust line still needs complete gold-label sidecars, recognizer-backed prediction baselines and later approved thresholds, but the next high-risk executable line can proceed to Scrub Key secure import/export tests. WP32 added additive placeholder validation helpers, so the placeholder line can proceed to audit hardening without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
+WP24 completed the first report-only false-negative residual-risk report foundation for the recall/trust line. The recall/trust line still needs complete gold-label sidecars, recognizer-backed prediction baselines and later approved thresholds. WP33 completed additive placeholder audit helper hardening, so the placeholder line can proceed to synthetic AI-output corruption tests without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
 ```
 
 ## Next workpackage definitions
@@ -452,25 +322,26 @@ RISK_REGISTER.md
 handover/workpackages/YYYYMMDD_HHMM_scrub_key_secure_import_export_tests.md
 ```
 
-### WP33 — Unknown/changed placeholder audit hardening
+### WP34 — Synthetic AI-output placeholder corruption tests
 
-Type: audit/helper integration planning or narrow audit implementation, depending on the approved task.
+Type: synthetic corruption tests.
 
 Purpose:
 
-- Use the WP32 validation helper as the foundation for clearer placeholder audit reporting.
-- Make unknown, changed, malformed, truncated, missing and integrity-failed placeholders visible before any future robust generation or migration.
-- Do not silently repair or guess placeholder intent.
+- Add synthetic AI-output-style placeholder corruption fixtures and tests after WP33.
+- Cover translation, summarization, markdown/HTML, spacing, punctuation, truncation, integrity failure and placeholder deletion/merge scenarios.
+- Keep tests synthetic and report/audit focused.
 
 Allowed direction:
 
+- Tests and synthetic fixtures only unless a narrow helper defect is discovered.
 - No placeholder migration.
 - No robust placeholder generation in product flow.
 - No Scrub Key schema migration.
-- No UI feature change unless separately approved.
+- No UI feature change.
 - No export behavior change.
 - No AI/cloud integration.
-- Synthetic data only.
+- No real data.
 
 ### WP47 — Local file handling/privacy test
 
@@ -508,7 +379,7 @@ Also blocked until separate approval or later specs:
 - Scrub Key encryption implementation.
 - Scrub Key JSON schema migration.
 - Placeholder migration.
-- Unknown/changed placeholder audit hardening that silently repairs or guesses placeholder intent.
+- Placeholder auto-repair or guessed placeholder intent.
 - DOCX comment/tracked-change removal.
 - Clean DOCX export blocking.
 - Restored PDF output.
