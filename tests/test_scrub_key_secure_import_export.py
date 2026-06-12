@@ -39,7 +39,6 @@ SYNTHETIC_ROWS = [
     },
 ]
 
-
 FORBIDDEN_LIFECYCLE_OR_RECOVERY_FIELDS = {
     "expires_at",
     "delete_after",
@@ -53,6 +52,10 @@ FORBIDDEN_LIFECYCLE_OR_RECOVERY_FIELDS = {
 
 def _valid_scrub_key() -> dict:
     return build_scrub_key(SYNTHETIC_ROWS, document_label="WP29 synthetisch testdossier")
+
+
+def _errors_text(result: dict) -> str:
+    return " ".join(result.get("errors", []) + result.get("validation_issues", []))
 
 
 def test_scrub_key_export_is_deterministic_and_carries_safety_policy_markers():
@@ -104,6 +107,39 @@ def test_non_object_json_import_is_rejected_safely():
     assert any("ongeldig hoofdformaat" in error for error in errors)
 
 
+def test_missing_schema_marker_is_rejected_without_silent_fallback():
+    scrub_key = _valid_scrub_key()
+    del scrub_key["schema"]
+
+    result = build_scrub_key_import_result(scrub_key_to_json(scrub_key))
+    reinsert_result = reinsert_from_scrub_key("Controle [PERSOON_1].", scrub_key)
+
+    assert result["ok"] is False
+    assert result["mapping_rows"] == []
+    assert any("schema" in error for error in result["errors"])
+    assert reinsert_result["text"] == "Controle [PERSOON_1]."
+    assert reinsert_result["replacement_count"] == 0
+    assert reinsert_result["unknown_placeholders"] == ["[PERSOON_1]"]
+
+
+def test_unsupported_schema_version_is_rejected_without_partial_import_or_reinsert():
+    scrub_key = _valid_scrub_key()
+    scrub_key["schema_version"] = "2.0"
+
+    import_result = build_scrub_key_import_result(scrub_key_to_json(scrub_key))
+    mapping_result = build_reinsert_mapping(scrub_key)
+    reinsert_result = reinsert_from_scrub_key("Controle [PERSOON_1].", scrub_key)
+
+    assert any("schema_version" in issue for issue in validate_scrub_key(scrub_key))
+    assert import_result["ok"] is False
+    assert import_result["mapping_rows"] == []
+    assert any("schema_version" in error for error in import_result["errors"])
+    assert mapping_result["mapping"] == {}
+    assert any("schema_version" in issue for issue in mapping_result["validation_issues"])
+    assert reinsert_result["text"] == "Controle [PERSOON_1]."
+    assert reinsert_result["replacement_count"] == 0
+
+
 def test_missing_required_item_field_is_rejected_without_normalised_rows():
     scrub_key = _valid_scrub_key()
     del scrub_key["items"][0]["timestamp"]
@@ -142,6 +178,21 @@ def test_wrong_policy_markers_are_rejected_without_schema_migration():
     assert "excluded_rows_policy=omitted" in joined_errors
 
 
+def test_empty_mapping_is_visible_and_does_not_silently_reinsert():
+    scrub_key = build_scrub_key([], document_label="WP29 leeg synthetisch testdossier")
+
+    import_result = build_scrub_key_import_result(scrub_key_to_json(scrub_key))
+    reinsert_result = reinsert_from_scrub_key("Tekst met [PERSOON_1].", scrub_key)
+
+    assert import_result["ok"] is True
+    assert import_result["item_count"] == 0
+    assert import_result["mapping_rows"] == []
+    assert reinsert_result["text"] == "Tekst met [PERSOON_1]."
+    assert reinsert_result["replacement_count"] == 0
+    assert reinsert_result["unknown_placeholders"] == ["[PERSOON_1]"]
+    assert reinsert_result["reinserted"] is False
+
+
 def test_duplicate_placeholder_tampering_is_reported_and_not_reinserted():
     scrub_key = _valid_scrub_key()
     duplicate = dict(scrub_key["items"][0])
@@ -161,12 +212,53 @@ def test_duplicate_placeholder_tampering_is_reported_and_not_reinserted():
     assert result["replacement_count"] == 0
 
 
+def test_tampered_item_count_is_reported_without_leaking_original_values_in_errors():
+    scrub_key = _valid_scrub_key()
+    scrub_key["item_count"] = 999
+
+    import_result = build_scrub_key_import_result(scrub_key_to_json(scrub_key))
+    reinsert_result = reinsert_from_scrub_key("Controle [PERSOON_1].", scrub_key)
+    combined_errors = _errors_text(import_result) + " " + _errors_text(reinsert_result)
+
+    assert import_result["ok"] is False
+    assert reinsert_result["text"] == "Controle [PERSOON_1]."
+    assert reinsert_result["replacement_count"] == 0
+    assert "item_count" in combined_errors
+    assert "BETROKKENE-TEST-A" not in combined_errors
+    assert "DOSSIER-TEST-2026-001" not in combined_errors
+
+
+def test_unknown_placeholder_and_key_placeholder_not_found_are_audited_separately():
+    result = reinsert_from_scrub_key("Bekend [PERSOON_1], onbekend [ONBEKEND_1].", _valid_scrub_key())
+
+    assert "BETROKKENE-TEST-A" in result["text"]
+    assert "[ONBEKEND_1]" in result["text"]
+    assert result["unknown_placeholders"] == ["[ONBEKEND_1]"]
+    assert result["placeholders_not_found"] == ["[DOSSIER_1]"]
+    assert result["replacement_count"] == 1
+
+
 def test_mismatch_unknown_placeholder_is_visible_and_not_guessed():
     result = reinsert_from_scrub_key("Tekst met onbekende [ONBEKEND_1].", _valid_scrub_key())
 
     assert result["text"] == "Tekst met onbekende [ONBEKEND_1]."
     assert result["unknown_placeholders"] == ["[ONBEKEND_1]"]
     assert result["replacement_count"] == 0
+
+
+def test_validation_error_messages_do_not_leak_original_values():
+    scrub_key = _valid_scrub_key()
+    scrub_key["items"][0]["timestamp"] = ""
+
+    import_result = build_scrub_key_import_result(scrub_key_to_json(scrub_key))
+    reinsert_result = reinsert_from_scrub_key("Waarde [PERSOON_1].", scrub_key)
+    combined_errors = _errors_text(import_result) + " " + _errors_text(reinsert_result)
+
+    assert "timestamp" in combined_errors
+    assert "BETROKKENE-TEST-A" not in combined_errors
+    assert "DOSSIER-TEST-2026-001" not in combined_errors
+    assert reinsert_result["text"] == "Waarde [PERSOON_1]."
+    assert reinsert_result["replacement_count"] == 0
 
 
 def test_old_timestamp_is_not_expiry_blocked_or_deleted_by_helpers():
@@ -208,6 +300,25 @@ def test_reinsert_remains_local_deterministic_no_ai_no_cloud():
     assert first["ai_processing"] is False
     assert first["cloud_processing"] is False
     assert first["text"] == "BETROKKENE-TEST-A / DOSSIER-TEST-2026-001"
+
+
+def test_valid_synthetic_key_still_imports_and_reinserts_correctly():
+    import_result = build_scrub_key_import_result(scrub_key_to_json(_valid_scrub_key()))
+    scrub_key = import_result["scrub_key"]
+    original_key_copy = deepcopy(scrub_key)
+
+    result = reinsert_from_scrub_key("[PERSOON_1] hoort bij [DOSSIER_1].", scrub_key)
+
+    assert import_result["ok"] is True
+    assert import_result["item_count"] == 2
+    assert result["text"] == "BETROKKENE-TEST-A hoort bij DOSSIER-TEST-2026-001."
+    assert result["replacement_count"] == 2
+    assert result["unknown_placeholders"] == []
+    assert result["placeholders_not_found"] == []
+    assert result["local_only"] is True
+    assert result["ai_processing"] is False
+    assert result["cloud_processing"] is False
+    assert scrub_key == original_key_copy
 
 
 def test_examples_use_synthetic_values_only():
