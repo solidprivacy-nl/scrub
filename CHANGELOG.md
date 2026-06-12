@@ -1,5 +1,53 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — Repair failing replacement logic and DOCX triage tests
+
+Status: implemented minimal pytest repair; awaiting GitHub Actions verification.
+
+Files added:
+
+- `workpackage_claims/WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS.md`
+- `handover/workpackages/20260613_0015_actions_fix_replace_logic_tests.md`
+
+Files changed:
+
+- `DOCX_RESIDUAL_PLACEHOLDER_COMMENTS_TRIAGE.md`
+- `tests/test_replace_logic_ui_contract.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS.md`
+
+Summary:
+
+- Fixed the reported `test_triage_document_records_high_risk_and_no_fix_boundary` failure by making the WP36A policy boundary explicitly say that WP36A does not implement a DOCX cleaner and does not implement a fix.
+- Fixed the reported `test_contract_tests_use_synthetic_values_only` failure by removing literal forbidden example values from the self-scanned test source and constructing them from safe fragments instead.
+- Preserved the synthetic-only boundary and kept the replacement UI contract tests focused on helper/UI-plan contracts.
+
+Validation status:
+
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
+- Expected checks: `pytest tests/test_docx_residual_placeholder_comments_risk.py tests/test_replace_logic_ui_contract.py`.
+- Full GitHub Actions rerun is required for final green status.
+
+Intentionally not changed:
+
+- No UI implementation.
+- No changes to `presidio_streamlit.py`.
+- No changes to `fix_streamlit_nested_expanders.py`.
+- No review table behavior change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No helper runtime behavior change.
+- No dependency change.
+- No cloud processing.
+- No real-data fixtures.
+
+Next recommended step:
+
+- Verify GitHub Actions are green.
+- Then verify Hugging Face sync/app startup for the already pending WP42D-ROLLBACK line.
+
 ## WP42D-FIX4 — Static highlight preview stale-block cleanup repair
 
 Status: implemented UI patch cleanup repair; awaiting GitHub Actions, Hugging Face sync and app verification.
