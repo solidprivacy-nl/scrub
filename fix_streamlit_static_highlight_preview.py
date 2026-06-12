@@ -1,8 +1,7 @@
 """Startup patch for the experimental static highlight preview UI.
 
-WP42D-FIX repairs the WP42D insertion anchor after app verification showed the
-panel was not visible in the deployed Space. The previous patch targeted a
-stale technical-details block that no longer exists in the current review flow.
+WP42D-FIX2 repairs the insertion anchor after runtime verification showed the
+previous two-line anchor was still too strict after the startup patch chain.
 
 The panel remains explicitly read-only and non-authoritative. It does not mutate
 review rows, change export/download behavior, change Scrub Key behavior, change
@@ -19,6 +18,7 @@ text = APP_FILE.read_text(encoding="utf-8")
 
 HELPER_IMPORT = "from highlight_preview import build_static_highlight_preview\n"
 PREVIEW_TITLE = "Documentvoorbeeld met markeringen — experimenteel"
+EDITOR_ANCHOR = "        edited_replacements_df = st.data_editor(\n"
 
 
 def replace_once(source: str, old: str, new: str) -> str:
@@ -134,19 +134,10 @@ static_highlight_preview_block = '''        with st.expander("Documentvoorbeeld 
 '''
 
 if PREVIEW_TITLE not in text:
-    insertion_anchor = '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
-        edited_replacements_df = st.data_editor(
-'''
-    insertion_replacement = (
-        '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
-'''
-        + static_highlight_preview_block
-        + '''        edited_replacements_df = st.data_editor(
-'''
-    )
-    updated_text = replace_once(text, insertion_anchor, insertion_replacement)
-    if updated_text == text:
+    if EDITOR_ANCHOR not in text:
+        raise RuntimeError("Could not locate replacement editor anchor for static highlight preview.")
+    text = replace_once(text, EDITOR_ANCHOR, static_highlight_preview_block + EDITOR_ANCHOR)
+    if PREVIEW_TITLE not in text:
         raise RuntimeError("Could not insert static highlight preview block before replacement editor.")
-    text = updated_text
 
 APP_FILE.write_text(text, encoding="utf-8")
