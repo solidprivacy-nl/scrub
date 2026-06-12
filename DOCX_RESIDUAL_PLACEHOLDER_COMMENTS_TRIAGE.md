@@ -133,7 +133,7 @@ This should be handled as a document hygiene issue, not as UI polish.
 
 ## 7. MVP policy boundary
 
-WP36A does not implement a fix.
+WP36A does not implement a DOCX cleaner and does not implement a fix.
 
 WP36A explicitly does not:
 
