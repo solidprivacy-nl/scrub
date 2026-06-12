@@ -1,5 +1,63 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP38 — DOCX hygiene audit report
+
+Status: completed helper/tests/documentation-only.
+
+Purpose:
+
+- Add a report-only DOCX hygiene audit helper on top of the WP37 hidden-content extraction helper.
+- Convert hidden-content extraction into structured severity, counts, findings and recommended-action text.
+- Preserve current DOCX reinsert behavior, export semantics and UI behavior.
+
+Files added:
+
+- `docx_hygiene_audit.py`
+- `DOCX_HYGIENE_AUDIT_REPORT.md`
+- `tests/test_docx_hygiene_audit.py`
+- `workpackage_claims/WP38_docx_hygiene_audit_report.md`
+- `handover/workpackages/20260612_1840_docx_hygiene_audit_report.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Main changes:
+
+- Added `build_docx_hygiene_audit_report(content: bytes) -> dict`.
+- Added `render_docx_hygiene_audit_markdown(report: dict) -> str`.
+- Reports `low`, `medium` or `high` severity for DOCX hygiene risk.
+- Marks headers, footers, comments/person metadata and tracked-change markers as high-risk findings.
+- Reports invalid DOCX inspection as medium unknown-risk finding.
+- Keeps explicit boundaries: `report_only: true`, `extraction_only: true`, `cleaning_applied: false`, `export_blocking: false`, `export_semantics_changed: false` and `safe_to_claim_clean: false`.
+- Added synthetic tests for high-risk findings, no-supported-findings-not-clean guarantee, invalid DOCX, Markdown rendering and synthetic-only boundaries.
+
+Validation status:
+
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
+- Added tests should be validated by GitHub Actions.
+- App verification: not applicable because no UI behavior changed.
+
+Intentionally not changed:
+
+- No DOCX cleaner implemented.
+- No comments/tracked-changes removal implemented.
+- No export blocking.
+- No export semantics changed.
+- No DOCX reinsert behavior changed.
+- No Streamlit UI changed.
+- No Scrub Key schema changed.
+- No dependency change.
+- No real data added.
+- No cloud processing added.
+- No roadmap change because strategy and phase order did not change.
+
+Next recommended step:
+
+- `WP39 — Clean DOCX export policy`.
+
 ## WP51 — ICP and pricing hypothesis
 
 Status: completed business/design/documentation-only.
@@ -147,63 +205,6 @@ Next recommended step:
 
 - `WP51 — ICP and pricing hypothesis`.
 
-## WP49 — Desktop packaging decision
-
-Status: completed decision/documentation-only.
-
-Purpose:
-
-- Decide the future local desktop packaging direction after WP45-WP48.
-- Compare portable Python folder, PyInstaller, Tauri, Electron and MSI as a later future option.
-- Preserve the local-first privacy boundary without implementing packaging.
-
-Files added:
-
-- `DESKTOP_PACKAGING_DECISION.md`
-- `workpackage_claims/WP49_desktop_packaging_decision.md`
-- `handover/workpackages/20260612_1700_desktop_packaging_decision.md`
-
-Files changed:
-
-- `DECISION_LOG.md`
-- `RISK_REGISTER.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main changes:
-
-- Decided that the first local MVP distribution form should remain a portable Python folder with the existing local Streamlit launcher.
-- Decided that PyInstaller one-folder may be the next concrete packaging proof only if explicitly approved.
-- Kept Tauri as the preferred later professional desktop-shell candidate if Scrub moves toward a document-centric frontend.
-- Kept Electron as a later alternative if frontend requirements or team capability favor it.
-- Kept MSI as a future managed-deployment option only after packaging, signing, update, rollback, offline, network, temp-file and support boundaries are validated.
-- Added D014 to `DECISION_LOG.md`.
-- Updated R5 in `RISK_REGISTER.md` so the desktop-packaging decision is no longer a gap, while production packaging remains gated.
-
-Validation status:
-
-- Documentation/decision-only.
-- No tests run because no code, tests, UI, runtime behavior, dependency or packaging implementation changed.
-- App verification: not applicable because no UI behavior changed.
-
-Intentionally not changed:
-
-- No installer built.
-- No MSI built.
-- No PyInstaller package built.
-- No Tauri or Electron implementation.
-- No Docker/Hugging Face startup change.
-- No Streamlit UI change.
-- No runtime behavior change.
-- No telemetry added.
-- No cloud document processing added.
-- No real data added.
-- No roadmap change because the strategy did not change.
-
-Next recommended step:
-
-- `WP48B — Portable Python folder hardening proof` or `WP49B — PyInstaller one-folder packaging proof`, only if the coordinator approves a concrete packaging proof.
-
 ## Earlier entries
 
-Previous changelog detail remains available in Git history. This WP51 entry records the latest ICP/pricing hypothesis while preserving recent WP37, WP50 and WP49 entries below.
+Previous changelog detail remains available in Git history. This WP38 entry records the latest DOCX hygiene audit report while preserving recent WP51, WP37 and WP50 entries below.
