@@ -46,7 +46,8 @@ WP30-WP34 — placeholder robustness line completed through synthetic AI-output 
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40 — Document-centric review UX specification completed.
 WP45-WP49 — local runtime line completed through desktop packaging decision; installer work deferred to final roadmap phase.
-WP50-WP51 — pilot validation line completed through ICP/pricing hypothesis.
+WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is now parked.
+WP51B — MVP product quality gate recorded.
 WP58 — parallel specification consolidation completed.
 ```
 
@@ -59,6 +60,18 @@ Validate logic, interface, security and trustworthiness online first. Delay loca
 Do not start local installer, MSI, PyInstaller, Tauri, Electron, auto-updater, signed desktop package or production packaging work by default.
 
 `WP48B` or `WP49B` may only start with explicit coordinator approval and should remain a small proof package. They are no longer part of the default active queue.
+
+## MVP product quality gate
+
+The active product priority is now:
+
+```text
+Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
+```
+
+WP50 and WP51 remain recorded as early thinking artifacts, but they are not the active execution line now.
+
+Do not start WP52 by default. Phase 7 may be reopened only after the coordinator confirms that the MVP workflow is credible enough for external validation.
 
 ## Review UX line
 
@@ -90,6 +103,16 @@ Next review UX step:
 ```text
 WP41 — Highlight-based review prototype decision
 ```
+
+## Replace/review logic line
+
+Next replace/review logic step:
+
+```text
+WP_REPLACE_LOGIC — Easy replace/review logic simplification specification
+```
+
+This should be specification/helper-first and must not change Streamlit UI flow until a separate implementation package is approved.
 
 ## Scrub Key security line
 
@@ -182,28 +205,31 @@ Completed for now. No further installer/packaging work is default next work.
 
 The local installer path is now final-phase work after logic, interface, security and trustworthiness are acceptable. Continue online/web validation first.
 
-## Pilot validation line
+## Parked pilot validation line
 
 ```text
 WP50 — Pilot design Legal vs Zorg.
 WP51 — ICP and pricing hypothesis.
 ```
 
-Next pilot-validation step:
+Parked next step:
 
 ```text
 WP52 — Pilot intake and NDA process
 ```
+
+WP52 is parked until the MVP product quality gate is passed.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
 2. WP41 — Highlight-based review prototype decision.
-3. WP52 — Pilot intake and NDA process, if coordinator wants to continue pilot-validation line.
+3. WP_REPLACE_LOGIC — Easy replace/review logic simplification specification.
+4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
 
-Packaging/installer work is intentionally not in the default active queue.
+Packaging/installer work and Phase 7 follow-up are intentionally not in the default active queue.
 
 ## Blocked work
 
@@ -211,6 +237,7 @@ Do not start yet without separate approval:
 
 ```text
 WP36 — DOCX metadata cleaner helper
+WP52 — Pilot intake and NDA process
 ```
 
 Also blocked until separate approval or later specs:
