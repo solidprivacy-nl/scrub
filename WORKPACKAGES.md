@@ -37,6 +37,7 @@ WP_REPLACE_LOGIC — easy replace/review logic simplification specification comp
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration completed.
+WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — implemented minimal Actions repair for two failing pytest assertions; awaiting Actions verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
 ```
@@ -97,6 +98,7 @@ WP_REPLACE_LOGIC — completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — implemented helper/tests-only.
 WP_REPLACE_LOGIC_UI_PLAN — completed planning/tests/documentation-only.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — completed tests/documentation-only.
+WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — implemented minimal Actions repair; awaiting verification.
 ```
 
 Next replace/review logic step:
