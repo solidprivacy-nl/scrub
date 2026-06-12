@@ -11,14 +11,6 @@ Read in order:
 
 Repository: `solidprivacy-nl/scrub`.
 
-Also read when relevant:
-
-- `AGENTS.md`
-- `RISK_REGISTER.md`
-- `DECISION_LOG.md`
-- `STATUS_MONITORING_RUNBOOK.md`
-- `RELEASE_NOTES.md`
-
 ## Required workpackage claim check
 
 Before starting implementation or documentation changes, check:
@@ -36,202 +28,53 @@ When done, update the same claim file to `completed` and include the final commi
 ## Current status
 
 ```text
-WP0-WP13B — completed.
-WP14-WP18C — completed/app-verified or closeout as previously recorded.
-WP19-WP24 — recall/trust line completed through report-only residual-risk reporting.
-WP25-WP29C — Scrub Key security, policy, import/export and warning test scaffolding completed.
-WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; blocked awaiting coordinator/user evidence for Actions/HF sync and app verification.
-WP28C-VERIFY — verification attempted; connector returned no statuses or workflow runs.
-WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
+WP28C — implemented; still needs coordinator evidence/app verification.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP41 — review UX line completed through highlight-based review prototype decision.
-WP45-WP49 — local runtime line completed through desktop packaging decision; installer work deferred to final roadmap phase.
-WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is now parked.
+WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
+WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
-WP58 — parallel specification consolidation completed.
 ```
-
-## Roadmap sequencing rule
-
-```text
-Validate logic, interface, security and trustworthiness online first. Delay local installer/MSI work until the core product behavior is acceptable.
-```
-
-Do not start local installer, MSI, PyInstaller, Tauri, Electron, auto-updater, signed desktop package or production packaging work by default.
-
-`WP48B` or `WP49B` may only start with explicit coordinator approval and should remain a small proof package. They are no longer part of the default active queue.
 
 ## MVP product quality gate
 
-The active product priority is now:
+The active product priority is:
 
 ```text
 Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 ```
 
-WP50 and WP51 remain recorded as early thinking artifacts, but they are not the active execution line now.
-
-Do not start WP52 by default. Phase 7 may be reopened only after the coordinator confirms that the MVP workflow is credible enough for external validation.
-
-## Review UX line
-
-```text
-WP40 — Document-centric review UX specification: completed specification-only.
-WP41 — Highlight-based review prototype decision: completed decision/documentation-only.
-```
-
-WP41 files added/changed:
-
-```text
-HIGHLIGHT_BASED_REVIEW_PROTOTYPE_DECISION.md
-DECISION_LOG.md
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-workpackage_claims/WP41_highlight_based_review_prototype_decision.md
-handover/workpackages/20260612_2000_highlight_based_review_prototype_decision.md
-```
-
-WP41 summary:
-
-- Decided that highlight-based review should be pursued only as a small bounded prototype after a Streamlit feasibility review.
-- Decided that the first prototype should be read-only, text-based, synthetic, highlight-and-detail oriented, table-linked and explicitly non-authoritative.
-- Recorded D016 in `DECISION_LOG.md`.
-- Kept the current review table as the audit/control surface.
-- No Streamlit UI, review table implementation, export/download behavior, Scrub Key behavior, helper logic, dependency, cloud processing or real data was changed.
-
-Next review UX step:
-
-```text
-WP42 — Streamlit feasibility boundary review
-```
+WP52 is parked until the MVP product quality gate is passed.
 
 ## Replace/review logic line
+
+```text
+WP_REPLACE_LOGIC — completed with artifact limitation.
+```
+
+Summary:
+
+- Checked for existing claim before starting.
+- No in-progress claim existed.
+- Standalone spec file creation was blocked by platform safety checks.
+- The completed summary is recorded in the claim and handover.
+- Recommended next step is helper/data-model tests before UI implementation.
+- No code, UI, tests, export behavior, schema, runtime behavior, cloud processing or real data changed.
 
 Next replace/review logic step:
 
 ```text
-WP_REPLACE_LOGIC — Easy replace/review logic simplification specification
+WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests
 ```
-
-This should be specification/helper-first and must not change Streamlit UI flow until a separate implementation package is approved.
-
-## Scrub Key security line
-
-Current Scrub Key status:
-
-```text
-WP25 — Scrub Key threat model: completed.
-WP26 — Scrub Key encryption/lifecycle specification: completed.
-WP27 — Scrub Key warning UX plan: completed.
-WP28 — Scrub Key expiry/delete policy: completed.
-WP28B — Scrub Key warning implementation planning: completed.
-WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; blocked awaiting coordinator/user evidence.
-WP28C-VERIFY — status checks attempted; Actions/HF sync unknown because connector returned no workflow runs/statuses.
-WP29 — Scrub Key secure import/export tests: completed.
-WP29B — Scrub Key import/export edge-case hardening: completed.
-WP29C — Scrub Key warning UI regression test scaffolding: completed.
-```
-
-Next Scrub Key step:
-
-```text
-Coordinator/user evidence needed — provide GitHub Actions and Hugging Face sync result for the WP28C commits. If green, perform app verification for the WP28C warning/acknowledgement UI.
-```
-
-Do not start further Scrub Key UI implementation until WP28C verification status is known.
-
-## Completed recall/trust line
-
-```text
-WP19 — Recall benchmark specification.
-WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
-WP21 — Gold-label entity schema.
-WP22 — Recall/precision test runner.
-WP23 — Entity-class scorecard in CI.
-WP24 — False-negative residual-risk report.
-```
-
-Remaining future work: complete gold-label sidecars, recognizer-backed baselines, approved thresholds and user-facing audit integration.
-
-## Placeholder robustness line
-
-```text
-WP30 — Placeholder robustness review.
-WP31 — LLM-resistant placeholder format proposal.
-WP32 — Placeholder checksum/validation helper.
-WP33 — Placeholder audit hardening.
-WP34 — Synthetic AI-output placeholder corruption tests.
-```
-
-The placeholder robustness line is complete through synthetic AI-output corruption tests. Do not start robust placeholder generation, placeholder migration or Scrub Key schema work without a separate approved gated package.
-
-## DOCX hygiene line
-
-```text
-WP35 — DOCX hidden content risk review.
-WP36A — DOCX residual placeholder and comments risk triage.
-WP37 — Headers/footers/comments/tracked-changes extraction helper.
-WP38 — DOCX hygiene audit report.
-WP39 — Clean DOCX export policy.
-```
-
-Alternative DOCX-specific follow-up if the coordinator wants to continue document hygiene first:
-
-```text
-WP39B — DOCX hygiene audit UI planning
-```
-
-Blocked until separate approval:
-
-```text
-WP36 — DOCX metadata cleaner helper
-```
-
-## Local runtime / installer line
-
-```text
-WP45 — Local runtime architecture plan.
-WP46 — Minimal local Streamlit launcher.
-WP47 — Local file handling/privacy test.
-WP48 — Portable Windows proof of concept.
-WP49 — Desktop packaging decision.
-ROADMAP — Local installer deferred to final phase.
-```
-
-Status:
-
-```text
-Completed for now. No further installer/packaging work is default next work.
-```
-
-The local installer path is now final-phase work after logic, interface, security and trustworthiness are acceptable. Continue online/web validation first.
-
-## Parked pilot validation line
-
-```text
-WP50 — Pilot design Legal vs Zorg.
-WP51 — ICP and pricing hypothesis.
-```
-
-Parked next step:
-
-```text
-WP52 — Pilot intake and NDA process
-```
-
-WP52 is parked until the MVP product quality gate is passed.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
 2. WP42 — Streamlit feasibility boundary review.
-3. WP_REPLACE_LOGIC — Easy replace/review logic simplification specification.
+3. WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests.
 4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
-
-Packaging/installer work and Phase 7 follow-up are intentionally not in the default active queue.
 
 ## Blocked work
 
@@ -251,11 +94,8 @@ Also blocked until separate approval or later specs:
 - Placeholder auto-repair or guessed placeholder intent.
 - DOCX comment/tracked-change removal.
 - Clean DOCX export blocking implementation.
-- Clean DOCX export claim.
 - Restored PDF output.
 - OCR.
 - Cloud document processing.
 - MSI implementation.
 - PyInstaller/Tauri/Electron implementation.
-- Production installer claim.
-- Installer/packaging proof work unless coordinator explicitly approves it despite final-phase deferral.
