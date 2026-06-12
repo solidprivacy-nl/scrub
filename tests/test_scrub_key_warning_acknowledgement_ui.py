@@ -2,6 +2,8 @@ from pathlib import Path
 
 
 PATCH_TEXT = Path("fix_streamlit_pdf_text_reinsert.py").read_text(encoding="utf-8")
+APP_TEXT = Path("presidio_streamlit.py").read_text(encoding="utf-8")
+COMBINED_TEXT = PATCH_TEXT + "\n" + APP_TEXT
 DOCKERFILE_TEXT = Path("Dockerfile").read_text(encoding="utf-8")
 
 
@@ -36,7 +38,7 @@ def test_scrub_key_import_warning_acknowledgement_and_gating_are_present():
     assert "Ik begrijp dat ik alleen een Scrub Key mag laden" in PATCH_TEXT
     assert "Valideer en laad Scrub Key" in PATCH_TEXT
     assert "disabled=not ack_scrub_key_import_risk" in PATCH_TEXT
-    assert "build_scrub_key_import_result(scrub_key_import_text)" in PATCH_TEXT
+    assert "build_scrub_key_import_result(scrub_key_import_text)" in COMBINED_TEXT
 
 
 def test_reinsert_mode_entry_warning_and_local_only_copy_are_present():
@@ -103,7 +105,7 @@ def test_existing_reinsert_helpers_and_audit_fields_remain_visible():
         "ai_processing",
         "cloud_processing",
     ]:
-        assert marker in PATCH_TEXT
+        assert marker in COMBINED_TEXT
 
 
 def test_mismatch_warning_copy_is_strengthened_without_placeholder_repair():
