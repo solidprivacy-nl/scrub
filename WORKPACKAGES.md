@@ -33,6 +33,7 @@ WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP42C — review UX line completed through static highlight preview UI planning.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
+WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
 ```
@@ -57,27 +58,6 @@ WP42B — Static highlight preview helper and tests: completed.
 WP42C — Static highlight preview UI planning: completed.
 ```
 
-WP42C artifacts:
-
-```text
-STATIC_HIGHLIGHT_PREVIEW_UI_PLAN.md
-tests/test_static_highlight_preview_ui_plan.py
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-workpackage_claims/WP42C_static_highlight_preview_ui_planning.md
-handover/workpackages/20260612_2110_static_highlight_preview_ui_planning.md
-```
-
-WP42C summary:
-
-- Planned a future experimental read-only Streamlit panel for static highlight preview.
-- Required the current replacement table to remain authoritative.
-- Required helper gates before rendering: `safe_to_render`, `read_only`, `non_authoritative`, `mutation_allowed=False`, `export_blocking=False` and `scrub_key_changes=False`.
-- Required rendering only `escaped_text`, not raw user text as HTML.
-- Added static tests for planning boundaries.
-- No Streamlit UI, review table, export/download, Scrub Key, reinsert, helper runtime behavior, dependency, cloud processing or real data changed.
-
 Next review UX step:
 
 ```text
@@ -97,23 +77,44 @@ WP43 — Frontend architecture decision
 ```text
 WP_REPLACE_LOGIC — completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — implemented helper/tests-only.
+WP_REPLACE_LOGIC_UI_PLAN — completed planning/tests/documentation-only.
 ```
+
+WP_REPLACE_LOGIC_UI_PLAN artifacts:
+
+```text
+REPLACE_LOGIC_UI_PLAN.md
+tests/test_replace_logic_ui_plan.py
+workpackage_claims/WP_REPLACE_LOGIC_UI_PLAN_helper_integration.md
+handover/workpackages/20260612_1925_replace_logic_ui_plan.md
+```
+
+WP_REPLACE_LOGIC_UI_PLAN summary:
+
+- Planned how `replacement_decision.py` can later be integrated into the review UI.
+- Mapped simple Dutch UI actions to helper states.
+- Defined conservative scope controls.
+- Preserved the current table/review flow as fallback.
+- Kept export readiness advisory only.
+- Kept Scrub Key schema and behavior unchanged.
+- Added static tests for plan boundaries.
+- No Streamlit UI, review table behavior, export/download behavior, Scrub Key behavior, reinsert behavior, helper runtime behavior, dependency, cloud processing or real data changed.
 
 Next replace/review logic step:
 
 ```text
-WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration
+WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration
 ```
 
-Do not start UI implementation until the helper tests are green and UI plan is separately approved.
+Do not start UI implementation until the UI contract tests are completed and coordinator approves UI work.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
-2. WP42D — Static highlight preview UI integration, only if coordinator approves UI work.
-3. WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration.
-4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+2. WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration.
+3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+4. WP43 — Frontend architecture decision, if coordinator wants architecture before UI implementation.
 ```
 
 ## Blocked work
