@@ -28,7 +28,7 @@ When done, update the same claim file to `completed` and include the final commi
 ## Current status
 
 ```text
-WP28C — implemented; still needs coordinator evidence/app verification.
+WP28C — implemented; partial app evidence recorded for Scrub Key/reinsert warning UI; full closeout still needs Actions/HF/app coverage.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
@@ -51,6 +51,30 @@ Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 
 WP52 is parked until the MVP product quality gate is passed.
 
+## Scrub Key / reinsert warning evidence
+
+```text
+WP28C app evidence — partial evidence recorded.
+```
+
+A coordinator-provided screenshot of the running app in mode `Originele waarden terugzetten` shows:
+
+- Scrub Key loading section;
+- Scrub Key warning text;
+- acknowledgement checkbox before validating/loading the Scrub Key;
+- original-values reinsert warning;
+- TXT, DOCX and PDF-to-TXT reinsert warning sections;
+- DOCX and PDF limitation warnings;
+- buttons gated by acknowledgement/input state.
+
+The screenshot itself was not stored in the repository.
+
+Remaining WP28C closeout needs:
+
+```text
+Full GitHub Actions evidence, Hugging Face sync evidence and app verification coverage for all expected WP28C warning/acknowledgement surfaces.
+```
+
 ## Review UX / frontend line
 
 ```text
@@ -64,17 +88,6 @@ WP42D-VERIFY — app verification not passed; expected preview panel not visible
 WP42D-INVESTIGATE — diagnosis completed.
 WP43 — Frontend architecture decision: completed.
 ```
-
-WP42D-INVESTIGATE summary:
-
-- Checked for an existing claim before starting; none existed.
-- Added `WP42D_INVESTIGATION_REPORT.md`.
-- Confirmed `fix_streamlit_static_highlight_preview.py` exists and contains the expected preview label and safety gates.
-- Confirmed repository `Dockerfile` includes the static highlight patch command before `streamlit run`.
-- Confirmed raw `presidio_streamlit.py` does not contain the panel because WP42D is a startup patch, not a direct source edit.
-- Confirmed `fix_streamlit_nested_expanders.py` creates the upstream review-table anchor used by the WP42D patch.
-- Most likely diagnosis: the running Hugging Face app is not using the WP42D-patched runtime yet, or the patch-chain needs stronger diagnostics/fail-fast checks.
-- No UI, code behavior, tests, runtime behavior, export/download behavior, Scrub Key behavior, reinsert behavior, cloud processing or real data changed.
 
 Next review/frontend step:
 
@@ -105,7 +118,7 @@ Do not start replacement UI implementation until coordinator approves UI work.
 
 ```text
 1. WP42D-FIX — Static highlight preview deployment/patch-chain hardening.
-2. Coordinator/user evidence still needed for WP28C Actions/HF sync and app verification if not already available.
+2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 4. No further review UI implementation until WP42D visibility is fixed or explicitly approved.
 ```
