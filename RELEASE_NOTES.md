@@ -25,6 +25,7 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 - Export a Scrub Key JSON mapping file.
 - Import/reload a Scrub Key for controlled reinsert.
 - Clear warnings are shown because the Scrub Key can restore sensitive/confidential values.
+- Scrub Key export and import now require an explicit acknowledgement before the high-risk action button is active.
 
 ### Reinsert
 
@@ -36,6 +37,10 @@ TXT upload  → restored TXT
 DOCX upload → restored DOCX, within documented helper limits
 PDF upload  → restored TXT only
 ```
+
+- Pasted-text, TXT, DOCX and PDF-to-TXT reinsert actions now require acknowledgement that restored output is confidential again.
+- Restored output download buttons now show an additional warning and acknowledgement before download.
+- The restored output content, filenames and file types are unchanged after acknowledgement.
 
 PDF support is intentionally limited:
 
@@ -54,6 +59,7 @@ PDF support is intentionally limited:
 - The Hugging Face Space is a demo/development environment, not the final local confidential processing environment.
 - The final product direction is local-first/offline capable.
 - The Scrub Key is sensitive because it can re-identify scrubbed content.
+- UI acknowledgements are safety prompts, not encryption, automatic deletion, expiry enforcement or managed key storage.
 - DOCX metadata, comments, tracked changes, headers and footers require further document-hygiene work.
 - Detection quality needs formal recall/precision benchmarking before strong trust claims can be made.
 - PDF text extraction depends on a usable selectable-text layer and may lose layout, tables, columns, headers, footers and visual reading order.
