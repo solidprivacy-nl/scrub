@@ -179,7 +179,7 @@ Recommended workpackages:
 
 ---
 
-## R6 — Streamlit review UX ceiling
+## R6 — Review UX and replace-flow ceiling
 
 Status: mitigating  
 Impact: medium
@@ -187,7 +187,7 @@ Impact: medium
 Risk:
 
 ```text
-A table-first Streamlit interface may not support the document-centric review experience needed for high-trust legal/care workflows.
+A table-first interface and unclear replacement decisions may not support the document-centric review experience needed for high-trust legal/care workflows.
 ```
 
 Current mitigations:
@@ -198,6 +198,7 @@ Current mitigations:
 - WP41 created the highlight-based review prototype decision.
 - WP42 created the Streamlit feasibility boundary.
 - WP42B created `highlight_preview.py`, a pure static highlight preview helper/model with tests for offsets, escaping, category labels and non-authoritative boundaries.
+- WP_REPLACE_LOGIC_HELPER created `replacement_decision.py`, a pure replacement decision helper with tests for review states, conservative scope matching, report-only audit summaries and advisory export-readiness state.
 
 Gaps:
 
@@ -205,10 +206,12 @@ Gaps:
 - No click-to-mark sensitive text prototype.
 - No frontend architecture decision for professional review UX.
 - No document-centric UI implementation exists yet.
+- Replacement decision helper is not wired into the product UI yet.
 
 Recommended workpackages:
 
 - WP42C — Static highlight preview UI planning.
+- WP_REPLACE_LOGIC_UI_PLAN — UI plan for replacement decision helper integration.
 - WP43 — Frontend architecture decision.
 - WP44 — Click-to-mark sensitive text prototype only after further approval.
 
