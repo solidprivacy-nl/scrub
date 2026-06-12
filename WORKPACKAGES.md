@@ -19,6 +19,20 @@ Also read when relevant:
 - `STATUS_MONITORING_RUNBOOK.md`
 - `RELEASE_NOTES.md`
 
+## Required workpackage claim check
+
+Before starting implementation or documentation changes, check:
+
+```text
+workpackage_claims/
+```
+
+If a claim file for the same workpackage exists with status `in_progress`, stop and report that another worker has already claimed the package.
+
+If no claim exists, create a new claim file before changing code, tests, UI, export, schema or shared documentation. Use `GitHub.create_file` so a duplicate claim fails instead of silently overwriting another worker.
+
+When done, update the same claim file to `completed` and include the final commit/PR, handover path, tests/checks and next step.
+
 ## Current status
 
 WP0 through WP13B are complete.
@@ -85,6 +99,12 @@ Next recommended Scrub Key step:
 
 ```text
 WP28C — MVP Scrub Key warning/acknowledgement UI implementation
+```
+
+WP28C claim status:
+
+```text
+workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md — in_progress
 ```
 
 Alternative Scrub Key test scaffolding package:
@@ -155,6 +175,12 @@ The next recommended workpackage from the Scrub Key security line is:
 WP28C — MVP Scrub Key warning/acknowledgement UI implementation
 ```
 
+Claimed/in progress:
+
+```text
+workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md
+```
+
 The next recommended workpackage from the local-runtime line is:
 
 ```text
@@ -173,6 +199,12 @@ DOCX hygiene — WP36 remains blocked until tighter metadata-only helper boundar
 ### WP28C — MVP Scrub Key warning/acknowledgement UI implementation
 
 Type: UI/security implementation.
+
+Claim status:
+
+```text
+workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md — in_progress
+```
 
 Purpose:
 
