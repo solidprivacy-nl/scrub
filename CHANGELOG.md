@@ -1,5 +1,67 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP29-CLOSEOUT — Scrub Key secure import/export tests closeout
+
+Status: completed documentation/status closeout after PR/Actions verification.
+
+Purpose:
+
+- Close out WP29 after PR #2 was merged into `main` and GitHub Actions passed.
+- Record that WP29 added secure import/export regression tests for the current Scrub Key helper surface.
+- Move the Scrub Key security line to `WP28B — Scrub Key warning implementation planning`, with `WP29B — Scrub Key import/export edge-case hardening` as an alternative.
+
+Files added:
+
+- `handover/workpackages/20260612_0715_scrub_key_secure_import_export_tests_closeout.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+WP29 artifacts recorded:
+
+- `tests/test_scrub_key_secure_import_export.py`
+- `handover/workpackages/20260612_0000_scrub_key_secure_import_export_tests.md`
+
+Main closeout points:
+
+- WP29 is completed helper/tests-only after PR/Actions verification.
+- The tests cover deterministic Scrub Key JSON export, required policy markers, valid import/reload warning and result shape, malformed JSON, non-object JSON, missing required item fields, invalid `items` structure, wrong privacy/reversible/excluded-row policy markers, duplicate placeholder tampering, unknown placeholder mismatch, old timestamp non-blocking behavior, no hidden recovery/deletion/expiry state, no-mutation behavior, local deterministic no-AI/no-cloud reinsert behavior and synthetic-only examples.
+- PR #2 merged the WP29 test and handover into `main`.
+- GitHub Actions for PR #2 passed before merge.
+- No helper logic, UI, Scrub Key schema, import/export behavior, reinsert behavior, encryption, automatic deletion, expiry blocking, dependency, real-data or cloud-processing changes were made.
+
+Validation status:
+
+- GitHub Actions: green for WP29 PR #2 / head commit `88759004ae534b73d0af63f7ff3c214832dd8e58`.
+- PR merge commit recorded by GitHub: `e1f23c6565e271e702fea17934f1a4f81711db30`.
+- No local pytest was run in ChatGPT web/GitHub connector environment.
+- This closeout is documentation/status only.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No code changed.
+- No tests changed in this closeout.
+- No helper logic changed.
+- No Streamlit UI changed.
+- No Scrub Key schema migration.
+- No import/export behavior change.
+- No reinsert behavior change.
+- No encryption implemented.
+- No automatic deletion implemented.
+- No expiry blocking implemented.
+- No dependency change.
+- No real data added.
+- No cloud processing added.
+- No roadmap change because strategy and phase order did not change.
+
+Next recommended step:
+
+- `WP28B — Scrub Key warning implementation planning`.
+- Alternative if the security-test line should continue first: `WP29B — Scrub Key import/export edge-case hardening`.
+
 ## WP33-CLOSEOUT — Placeholder audit hardening central docs repair
 
 Status: completed documentation/coordination-only.
