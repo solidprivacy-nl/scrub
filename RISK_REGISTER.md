@@ -35,7 +35,7 @@ Sensitive data remains in the scrubbed output and the user wrongly trusts the re
 
 Why it matters:
 
-A scrubber has asymmetric failure costs. A false positive is annoying; a false negative may create the exact privacy incident the user wanted to avoid.
+A scrubber has asymmetric failure costs. A false positive is annoying; a false negative may create the exact privacy incident the product wanted to avoid.
 
 Current mitigations:
 
@@ -320,3 +320,36 @@ Gaps:
 Recommended workpackages:
 
 - WP57 — Workflow status monitoring runbook and checks.
+
+---
+
+## R9 — Pilot/commercial overclaim risk
+
+Status: mitigating  
+Impact: medium
+
+Risk:
+
+```text
+The product is positioned commercially beyond what the current workflow can safely support.
+```
+
+Current mitigations:
+
+- WP50 defined a controlled pilot design and separated demo, pilot and production.
+- WP51 created `ICP_AND_PRICING_HYPOTHESIS.md`, keeping ICP and pricing as hypotheses only.
+- WP51 explicitly records what must not yet be sold or claimed.
+
+Gaps:
+
+- No external pilot has validated willingness to pay yet.
+- No ICP/pricing interview evidence exists yet.
+- No pilot intake or agreement process exists yet.
+- No production offer should be made before local runtime, document hygiene, review and support boundaries are clearer.
+
+Recommended workpackages:
+
+- WP52 — Pilot intake and NDA process.
+- WP53 — Controlled pilot protocol.
+- WP54 — Missers/false negatives feedback loop.
+- WP55 — Residual-risk report as consultancy deliverable.
