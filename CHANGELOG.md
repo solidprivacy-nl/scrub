@@ -1,5 +1,27 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP42D-VERIFY evidence update — Static highlight preview not visible in screenshot
+
+Status: app verification not passed / not confirmed.
+
+Files changed:
+
+- `WP42D_VERIFY_STATUS.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Summary:
+
+- Coordinator provided a screenshot of the running Hugging Face app.
+- The screenshot shows the existing Scrub Legal review flow and replacement table.
+- The expected static highlight preview expander/panel `Documentvoorbeeld met markeringen — experimenteel` is not visible in the provided screenshot.
+- The screenshot itself was not stored in the repository.
+- WP42D remains not closed out as app-verified.
+
+Next recommended step:
+
+- `WP42D-INVESTIGATE — diagnose why the static highlight preview panel is not visible in the running app`.
+
 ## WP43 — Frontend architecture decision
 
 Status: completed architecture/decision/documentation-only.
