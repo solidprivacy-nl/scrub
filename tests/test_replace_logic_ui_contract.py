@@ -169,8 +169,12 @@ def test_ui_contract_plan_preserves_boundaries_and_does_not_approve_ui_implement
 
 def test_contract_tests_use_synthetic_values_only():
     rendered = THIS_TEST.read_text(encoding="utf-8") + _ui_plan_text()
+    forbidden_real_data_examples = [
+        "Jan " + "Jansen",
+        "Piet " + "de " + "Vries",
+        "123" + "456" + "782",
+    ]
 
     assert "SYNTHETIC" in rendered
-    assert "Jan Jansen" not in rendered
-    assert "Piet de Vries" not in rendered
-    assert "123456782" not in rendered
+    for forbidden in forbidden_real_data_examples:
+        assert forbidden not in rendered
