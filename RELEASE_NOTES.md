@@ -19,6 +19,8 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 
 - Review table and review guidance are available.
 - Final review summary and export sanity checks help users understand remaining risk.
+- Experimental marked document preview: for small texts, the app can show a read-only context preview before the replacement table.
+- The marked preview is not authoritative. Users still make decisions in the replacement table.
 
 ### Scrub Key
 
@@ -49,8 +51,7 @@ PDF support is intentionally limited:
 - no OCR;
 - no PDF-to-DOCX reconstruction;
 - no layout preservation guarantee;
-- scanned/image-only PDFs are unsupported;
-- the UI must clearly show no OCR, no AI, no cloud and no PDF output.
+- scanned/image-only PDFs are unsupported.
 
 ---
 
@@ -60,20 +61,18 @@ PDF support is intentionally limited:
 - The final product direction is local-first/offline capable.
 - The Scrub Key is sensitive because it can re-identify scrubbed content.
 - UI acknowledgements are safety prompts, not encryption, automatic deletion, expiry enforcement or managed key storage.
+- The marked document preview is read-only and does not replace the replacement table.
 - DOCX metadata, comments, tracked changes, headers and footers require further document-hygiene work.
 - Detection quality needs formal recall/precision benchmarking before strong trust claims can be made.
-- PDF text extraction depends on a usable selectable-text layer and may lose layout, tables, columns, headers, footers and visual reading order.
 
 ---
 
 ## Upcoming focus
 
-After the verified PDF-to-restored-TXT UI line, the roadmap prioritizes:
+The roadmap prioritizes MVP product quality across:
 
-1. recall and trust benchmarking;
-2. Scrub Key security and lifecycle;
-3. placeholder robustness for AI roundtrip;
-4. hidden document content and metadata hygiene;
-5. document-centric review UX;
-6. local-first runtime;
-7. pilot validation for Legal and Zorg.
+```text
+Import → Scrub → Review → Replace → Scrub Key → Reinsert → Export → Audit
+```
+
+Local installer work remains later, after the core workflow is good enough.
