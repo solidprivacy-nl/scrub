@@ -1,5 +1,61 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP34 — Synthetic AI-output placeholder corruption tests
+
+Status: completed synthetic fixtures/tests-only.
+
+Purpose:
+
+- Add synthetic AI-output-style placeholder corruption fixtures and tests after WP33.
+- Cover translation, summarization/deletion, markdown/HTML, spacing, punctuation, truncation, integrity failure and placeholder deletion/merge scenarios.
+- Keep the work synthetic-only and report/audit focused without changing product behavior.
+
+Files added:
+
+- `tests/fixtures/placeholder_corruption/ai_output_corruption_cases.json`
+- `tests/test_placeholder_corruption_scenarios.py`
+- `handover/workpackages/20260612_0140_synthetic_ai_placeholder_corruption_tests.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Main changes:
+
+- Added a synthetic fixture set with expected placeholders and corrupted AI-output-style examples.
+- Added tests for exact legacy placeholder preservation with punctuation, translated placeholder label, summarization/deletion, markdown/HTML wrapping, HTML split token, spacing mutation, robust placeholder truncation, robust integrity mismatch, placeholder merge/deletion and invented curly placeholder-like token.
+- Tests assert that missing expected placeholders remain visible through `placeholder_audit.audit_placeholders`.
+- Tests assert that malformed, truncated, integrity-failed and unknown placeholder-like tokens are reported without repair or guessing.
+- Tests confirm existing legacy reinsert still restores exact preserved placeholders.
+- The fixture states that it is synthetic and uses no real personal data.
+
+Validation status:
+
+- `python -m py_compile placeholder_validation.py placeholder_audit.py scrub_key.py scrub_key_reinsert.py tests/test_placeholder_corruption_scenarios.py` passed in the ChatGPT execution sandbox against the authored fixture/test draft.
+- `PYTHONPATH=. pytest -q tests/test_placeholder_corruption_scenarios.py` passed in the ChatGPT execution sandbox against the authored WP34 test draft: 11 passed.
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector. GitHub Actions should validate the committed final files.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No helper logic changed.
+- No Streamlit UI changed.
+- No export behavior changed.
+- No reinsert behavior changed.
+- No Scrub Key schema migration.
+- No placeholder migration.
+- No robust placeholder generation in product flow.
+- No dependency change.
+- No real data added.
+- No AI/cloud integration.
+
+Next recommended step:
+
+- Placeholder robustness line: later gated robust placeholder generation and compatibility implementation only after schema/format policy is explicitly approved.
+- Active non-placeholder next step remains `WP28C — MVP Scrub Key warning/acknowledgement UI implementation` or `WP47 — Local file handling/privacy test`, depending on coordinator priority.
+
 ## WP29B — Scrub Key import/export edge-case hardening
 
 Status: completed helper/tests-only edge-case validation hardening.
