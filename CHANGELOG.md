@@ -1,5 +1,59 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP29B — Scrub Key import/export edge-case hardening
+
+Status: completed helper/tests-only edge-case validation hardening.
+
+Purpose:
+
+- Extend the already-completed WP29 secure import/export regression coverage for the current Scrub Key helper surface.
+- Make unsupported Scrub Key schema versions visible as validation issues.
+- Preserve existing Scrub Key schema, UI, import/export behavior and reinsert behavior.
+
+Files changed:
+
+- `scrub_key.py`
+- `tests/test_scrub_key_secure_import_export.py`
+- `WORKPACKAGES.md`
+- `RISK_REGISTER.md`
+- `CHANGELOG.md`
+
+Files added:
+
+- `handover/workpackages/20260612_1330_scrub_key_secure_import_export_edge_case_hardening.md`
+
+Main changes:
+
+- `validate_scrub_key` now reports unsupported `schema_version` values instead of accepting any non-empty version marker.
+- Expanded `tests/test_scrub_key_secure_import_export.py` with coverage for missing schema marker, unsupported schema version, empty/no-usable mappings, tampered item count, unknown placeholder and not-found placeholder audit behavior, validation error non-leakage and valid synthetic roundtrip.
+- Kept old timestamp behavior guidance-only: old keys are not expiry-blocked or deleted by helpers.
+- Confirmed helpers do not add hidden recovery, deletion or expiry state.
+- Confirmed reinsert remains deterministic, local-only, no-AI and no-cloud for valid synthetic keys.
+
+Validation status:
+
+- `python -m py_compile scrub_key.py scrub_key_import.py scrub_key_reinsert.py tests/test_scrub_key_secure_import_export.py` passed in the ChatGPT execution sandbox against the authored helper/test draft.
+- `pytest -q tests/test_scrub_key_secure_import_export.py` passed in the ChatGPT execution sandbox against the authored WP29 edge-case test draft: 10 passed.
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector. GitHub Actions should validate the committed final file.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No encryption implemented.
+- No automatic deletion implemented.
+- No expiry enforcement implemented.
+- No Scrub Key schema migration.
+- No Streamlit UI change.
+- No import/export semantic change.
+- No reinsert semantic change.
+- No dependency change.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step:
+
+- `WP28B — Scrub Key warning implementation planning`.
+
 ## WP29-CLOSEOUT — Scrub Key secure import/export tests closeout
 
 Status: completed documentation/status closeout after PR/Actions verification.
@@ -92,7 +146,6 @@ Main closeout points:
 - WP33 is completed audit/helper hardening only.
 - The helper adds pure placeholder audit classification on top of WP32 validation.
 - The helper classifies placeholder-like tokens without changing reinsert behavior.
-- The helper reports `placeholder_format_summary`, `observed_placeholder_like_tokens`, `legacy_placeholders`, `robust_placeholders`, `malformed_robust_placeholders`, `integrity_failed_placeholders`, `unknown_placeholder_like_tokens`, `missing_placeholders` and `placeholder_validation_issues`.
 - Existing legacy placeholder reinsert remains compatible.
 - Unknown, malformed, truncated and failed-integrity placeholder-like tokens are made visible in helper audit output.
 - Unknown/malformed tokens are not automatically repaired.
@@ -161,12 +214,10 @@ Main changes:
 
 Validation status:
 
-- `python -m py_compile benchmark/build_residual_risk_report.py` passed in the ChatGPT execution sandbox against the authored helper. The sandbox emitted an unrelated spreadsheet runtime warmup warning before Python execution, but the command returned success.
-- `pytest -q tests/test_residual_risk_report.py` passed in the ChatGPT execution sandbox against the authored tests: 4 passed. The sandbox emitted the same unrelated spreadsheet runtime warmup warning, but pytest returned success.
-- `pytest tests/test_recall_precision_runner.py` and `pytest tests/test_entity_scorecard.py` were requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector. WP22/WP23 previously recorded their targeted tests as passed in the implementation sandbox.
+- `python -m py_compile benchmark/build_residual_risk_report.py` passed in the ChatGPT execution sandbox against the authored helper.
+- `pytest -q tests/test_residual_risk_report.py` passed in the ChatGPT execution sandbox against the authored tests: 4 passed.
+- `pytest tests/test_recall_precision_runner.py` and `pytest tests/test_entity_scorecard.py` were requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector.
 - `python -m json.tool benchmark/gold/schema/gold_label_schema.json` was requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector. The schema was fetched and inspected through GitHub.
-- GitHub Actions: to be checked after final handover commit.
-- Hugging Face sync: to be checked after final handover commit.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -185,181 +236,6 @@ Intentionally not changed:
 Next recommended step:
 
 - `WP29 — Scrub Key secure import/export tests`.
-- Alternative if the coordinator wants to continue the placeholder line first: `WP33 — Unknown/changed placeholder audit hardening`.
-
-## WP23 — Entity-class scorecard in CI
-
-Status: completed report-only CI/entity-class scorecard foundation.
-
-Purpose:
-
-- Make the WP22 recall/precision runner visible through CI-friendly entity-class scorecard artifacts.
-- Keep benchmark reporting report-only with no production threshold or safety claim.
-- Preserve recognizer logic, Streamlit UI, export/reinsert behavior, dependencies and cloud boundaries.
-
-Files added:
-
-- `benchmark/build_entity_scorecard.py`
-- `benchmark/reports/README.md`
-- `tests/test_entity_scorecard.py`
-- `handover/workpackages/20260612_1230_entity_class_scorecard_ci.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-
-Main changes:
-
-- Added `benchmark/build_entity_scorecard.py`, a pure-stdlib wrapper around `benchmark/run_recall_precision.py`.
-- The helper can write `benchmark/reports/entity_scorecard.json` and `entity_scorecard.md`.
-- Scorecard JSON includes `synthetic_only: true`, `report_only: true`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
-- Scorecard policy states that CI may publish the report and may fail on technical errors such as malformed JSON, bad offsets or runner exceptions, but must not fail on recall/precision scores yet.
-- Scorecard output includes overall recall/precision, per-domain metrics, per-entity-class metrics, gold/prediction counts, exact and normalized true positives, false-negative and false-positive counts, preserve-term failures, known-trap failures and partial-overlap diagnostic counts.
-- Added `benchmark/reports/README.md` to explain generated report artifacts and the no-real-data/no-production-claim boundary.
-- Added `tests/test_entity_scorecard.py` for scorecard policy fields, zero rows for entity classes, Markdown rendering and output writing.
-
-Validation status:
-
-- `python -m py_compile benchmark/build_entity_scorecard.py` passed in the ChatGPT execution sandbox against the authored helper.
-- `pytest -q tests/test_entity_scorecard.py` passed in the ChatGPT execution sandbox against the authored tests: 4 passed.
-- `pytest tests/test_recall_precision_runner.py` was requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector. WP22 already recorded the targeted runner tests as passed in the implementation sandbox.
-- `python -m json.tool benchmark/gold/schema/gold_label_schema.json` was requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector. The schema was fetched and inspected through GitHub.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No recognizer logic changed.
-- No Presidio integration changed.
-- No Streamlit UI changed.
-- No CI threshold or production-blocking gate added.
-- No production safety claim added.
-- No dependency changes.
-- No export/reinsert behavior changed.
-- No real data added.
-- No cloud processing added.
-
-Next recommended step:
-
-- `WP24 — False-negative residual-risk report`.
-
-## WP32-CLOSEOUT — Placeholder validation helper central docs repair
-
-Status: completed documentation/coordination-only.
-
-Purpose:
-
-- Complete central documentation for WP32 after the helper and tests were added.
-- Record the additive placeholder validation helper status without changing code, tests, UI, reinsert, export or Scrub Key schema behavior.
-- Move the placeholder robustness line to WP33.
-
-Files added:
-
-- `handover/workpackages/20260612_0030_placeholder_validation_helper_closeout.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-WP32 artifacts recorded:
-
-- `placeholder_validation.py`
-- `tests/test_placeholder_validation.py`
-- `handover/workpackages/20260612_0015_placeholder_checksum_validation_helper.md`
-
-Main closeout points:
-
-- WP32 is completed helper/tests-only.
-- The helper recognizes and validates the future robust placeholder form `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`.
-- The helper parses entity type, counter and integrity token.
-- The helper generates deterministic integrity tokens from non-sensitive placeholder metadata.
-- Integrity tokens are not derived directly from original sensitive values.
-- Legacy placeholders remain a separate compatibility mode.
-- No placeholder migration, robust placeholder generation, Scrub Key schema change, reinsert behavior change, UI/export/dependency change or AI/cloud processing was added.
-
-Validation status:
-
-- Documentation/coordination repair only.
-- Prior WP32 targeted checks were recorded as passed: `python -m py_compile placeholder_validation.py tests/test_placeholder_validation.py` and `PYTHONPATH=. pytest tests/test_placeholder_validation.py -q` with 12 passed.
-- The broader command `pytest tests -k "placeholder or scrub_key or reinsert"` was not run in the prior WP32 worker because a full repository checkout was unavailable in the ChatGPT runtime.
-- No code or test files were changed in this closeout.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No code changed.
-- No tests changed.
-- No placeholder migration.
-- No robust placeholder generation in product flow.
-- No Scrub Key schema migration.
-- No reinsert behavior change.
-- No Streamlit UI change.
-- No export behavior change.
-- No dependency change.
-- No AI/cloud integration.
-- No real data added.
-- No roadmap change because strategy and phase order did not change.
-
-Next recommended step:
-
-- `WP33 — Unknown/changed placeholder audit hardening`.
-
-## WP22 — Recall/precision test runner
-
-Status: completed report-only benchmark runner implementation.
-
-Purpose:
-
-- Make synthetic benchmark detection quality measurable after WP19/WP20/WP21.
-- Add a deterministic local runner for WP21 gold-label sidecars and supplied prediction JSON.
-- Keep the first runner report-only with no recognizer logic changes, no Streamlit UI changes, no CI gate and no production-blocking threshold.
-
-Files added:
-
-- `benchmark/run_recall_precision.py`
-- `tests/test_recall_precision_runner.py`
-- `handover/workpackages/20260612_1200_recall_precision_test_runner.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-
-Main changes:
-
-- Added `benchmark/run_recall_precision.py`, a pure-stdlib deterministic runner.
-- The runner loads WP21 sidecars, validates `synthetic: true`, verifies source file references and checks `text == source_text[start:end]` for labels, preserve terms and known traps.
-- The runner accepts optional prediction JSON and reports exact and value-normalized recall/precision.
-- Metrics include overall summary, per-domain metrics, per-entity-class metrics, false negatives, false positives, preserve-term failures, known-trap failures and diagnostic-only partial overlaps.
-- Partial overlap is explicitly diagnostic-only and does not hide false negatives.
-- Schema-example sidecars are included by default with warnings so current examples can be used for runner validation without implying full benchmark coverage.
-- Added `tests/test_recall_precision_runner.py` covering exact/normalized scoring, preserve/trap failure reporting, malformed gold-label offset rejection and CLI JSON output.
-
-Validation status:
-
-- `python -m py_compile benchmark/run_recall_precision.py` passed in the ChatGPT execution sandbox against the authored runner.
-- `pytest -q tests/test_recall_precision_runner.py` passed in the ChatGPT execution sandbox against the authored tests: 3 passed.
-- `python -m json.tool benchmark/gold/schema/gold_label_schema.json` was requested; the schema was fetched and inspected through GitHub, but the GitHub connector does not provide a shell in the repository checkout. The runner itself parses JSON sidecars with Python stdlib.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No recognizer logic changed.
-- No Presidio integration changed.
-- No Streamlit UI changed.
-- No CI scorecard or production test gate added.
-- No production-blocking threshold added.
-- No dependency changes.
-- No export/reinsert behavior changed.
-- No real data added.
-- No cloud processing added.
-
-Next recommended step:
-
-- `WP23 — Entity-class scorecard in CI`.
 
 ## Earlier completed work
 
@@ -378,4 +254,3 @@ Next recommended step:
 - WP25 — Scrub Key threat model.
 - WP19 — Recall benchmark specification.
 - WP18C — Add Codex worker governance instructions.
-- Earlier UI, PDF helper, Scrub Key, reinsert and Review UX work as recorded in repository history.
