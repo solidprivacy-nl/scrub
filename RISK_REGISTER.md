@@ -173,13 +173,13 @@ Current mitigations:
 - WP35 created `DOCX_HIDDEN_CONTENT_RISK_REVIEW.md`, defining current assumptions, hidden-content leakage risks, audit requirements, safe extraction/cleaning sequence and future warning/blocking policy boundaries.
 - WP36A created `DOCX_RESIDUAL_PLACEHOLDER_COMMENTS_TRIAGE.md` and synthetic tests for the app-verification finding that DOCX restored output can still contain residual placeholders and that Word comments/kantlijncommentaren remain outside current processing.
 - WP37 created `docx_hidden_content_extractor.py`, adding local read-only extraction/audit visibility for headers, footers, comments/person metadata and tracked-change markers without cleaning, removal, export blocking, UI changes or export semantics changes.
+- WP38 created `docx_hygiene_audit.py`, turning WP37 extraction output into a report-only DOCX hygiene audit with severity, counts, findings and explicit non-change flags.
 
 Gaps:
 
 - Residual placeholders such as `[PERSOON_01]` can remain in restored DOCX when the loaded Scrub Key mapping does not match them exactly or Word splits placeholders across runs.
-- Word comments / kantlijncommentaren are still not scrubbed or removed by the current DOCX scrub/reinsert flow; WP37 only detects/extracts them for audit visibility.
-- Headers, footers and tracked changes are detected/extracted by WP37, but no product UI/audit report consumes the helper output yet.
-- No DOCX hygiene audit report yet.
+- Word comments / kantlijncommentaren are still not scrubbed or removed by the current DOCX scrub/reinsert flow; WP37/WP38 only detect and report them.
+- Headers, footers and tracked changes are detectable/reportable, but no product UI consumes the audit report yet.
 - No clean DOCX export policy yet.
 - No implementation for footnotes/endnotes, custom XML, text boxes/shapes or embedded object handling.
 - No approved export-blocking policy for high-risk hidden content.
@@ -187,7 +187,6 @@ Gaps:
 
 Recommended workpackages:
 
-- WP38 — DOCX hygiene audit report.
 - WP39 — Clean DOCX export policy.
 - Later gated package — DOCX metadata cleaner helper after explicit metadata-only boundary approval.
 
