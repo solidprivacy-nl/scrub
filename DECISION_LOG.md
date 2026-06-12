@@ -4,6 +4,32 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-12 — D014 — Desktop packaging starts with portable Python folder, MSI later only
+
+Status: accepted packaging decision
+
+Decision:
+
+```text
+The first local MVP distribution form should remain a portable Python folder with the existing local Streamlit launcher. PyInstaller one-folder may be the next concrete packaging proof if explicitly approved. Tauri remains the preferred later professional desktop-shell direction if Scrub moves toward a document-centric frontend, with Electron as a later alternative. MSI is a future managed-deployment option only after packaging, signing, update, rollback, offline, network, temp-file and support boundaries have been validated.
+```
+
+Rationale:
+
+A portable Python folder has the lowest current architecture and security risk. It reuses the current app, avoids installer/elevation behavior, avoids opaque executable bundling, remains inspectable for IT/security reviewers and fits the current WP46-WP48 local-runtime path. PyInstaller can later validate dependency/model bundling but should start with one-folder proof, not a production one-file executable claim. Tauri and Electron are desktop-shell decisions that should wait until the Python core and document-centric frontend needs are clearer. MSI is useful for legal/care organization deployment later, but it would create false production maturity if built before signing, update, rollback, storage and support policies exist.
+
+Implications:
+
+- WP49 is decision/documentation-only and does not implement packaging.
+- No worker may build MSI, PyInstaller, Tauri or Electron artifacts as a side effect of unrelated work.
+- The next packaging proof should be `WP48B` or `WP49B` only if the coordinator approves a concrete packaging proof.
+- Preferred next proof is either portable Python folder hardening or PyInstaller one-folder packaging proof.
+- One-file PyInstaller, signed installer, MSI/MSIX, auto-updater and managed enterprise deployment remain future gated work.
+- Local-first boundaries remain: no telemetry, no cloud document processing, no real data in repo, no export/reinsert semantic changes.
+- Production packaging requires reproducible build, dependency/model asset inventory, code signing plan, update/rollback policy, offline/network/temp-file validation and support model.
+
+---
+
 ## 2026-06-10 — D013 — Scrub Key deletion remains explicit and user-controlled
 
 Status: accepted security/lifecycle policy
