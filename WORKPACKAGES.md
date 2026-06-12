@@ -36,6 +36,7 @@ WP20 — Synthetic messy Dutch legal/zorg benchmark corpus: completed benchmark-
 WP21 — Gold-label entity schema: completed benchmark schema/closeout-only.
 WP22 — Recall/precision test runner: completed report-only benchmark runner implementation.
 WP23 — Entity-class scorecard in CI: completed report-only CI/entity-class scorecard foundation.
+WP24 — False-negative residual-risk report: completed report-only residual-risk report foundation.
 WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
@@ -240,6 +241,65 @@ Next recommended step from WP23:
 WP24 — False-negative residual-risk report
 ```
 
+### WP24 — False-negative residual-risk report
+
+Status: completed report-only false-negative residual-risk report foundation.
+
+Files added:
+
+```text
+benchmark/build_residual_risk_report.py
+tests/test_residual_risk_report.py
+handover/workpackages/20260612_1300_false_negative_residual_risk_report.md
+```
+
+Files changed:
+
+```text
+benchmark/reports/README.md
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+```
+
+Summary:
+
+- Added `benchmark/build_residual_risk_report.py`, a report-only helper that consumes a WP23 scorecard or builds one from WP22/WP23 inputs.
+- The helper writes `false_negative_residual_risk_report.json` and `false_negative_residual_risk_report.md` under `benchmark/reports/`.
+- The report shows synthetic-only warning, report-only/no-production-safety policy, current benchmark coverage status, schema-example limitation, supplied-prediction limitation, overall false-negative risk, per-domain residual risk, per-entity-class residual risk, preserve-term risk, known-trap/false-positive risk, partial-overlap/near-miss diagnostics, unsupported/not-yet-baselined classes and recommended next work.
+- The report explicitly records `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
+- Technical errors may still fail, but low scores do not fail CI or create a production gate.
+
+Validation:
+
+```text
+python -m py_compile benchmark/build_residual_risk_report.py
+pytest tests/test_residual_risk_report.py
+```
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No Streamlit UI changed.
+- No production threshold or production-blocking gate added.
+- No production safety claim added.
+- No dependency changes.
+- No export/reinsert behavior changed.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step from WP24:
+
+```text
+WP29 — Scrub Key secure import/export tests
+```
+
+Alternative if the coordinator wants to continue the placeholder line first:
+
+```text
+WP33 — Unknown/changed placeholder audit hardening
+```
+
 ## Other completed risk-driven packages
 
 ### Scrub Key security line
@@ -328,12 +388,6 @@ WP58 — Parallel specification consolidation and next execution queue: complete
 
 ## Active / next recommended execution queue
 
-The next recommended workpackage for the recall/trust line is:
-
-```text
-WP24 — False-negative residual-risk report
-```
-
 The next recommended workpackage from the Scrub Key security line is:
 
 ```text
@@ -361,42 +415,10 @@ WP47 — Local file handling/privacy test
 Reason:
 
 ```text
-WP23 made entity-class scorecards CI-visible but report-only. WP24 should translate the remaining false-negative gaps into a residual-risk report without claiming production safety. WP28 defined Scrub Key expiry/delete policy, so the Scrub Key line can proceed to secure import/export tests or warning implementation planning. WP32 added additive placeholder validation helpers, so the placeholder line can proceed to audit hardening without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
+WP24 completed the first report-only false-negative residual-risk report foundation for the recall/trust line. The recall/trust line still needs complete gold-label sidecars, recognizer-backed prediction baselines and later approved thresholds, but the next high-risk executable line can proceed to Scrub Key secure import/export tests. WP32 added additive placeholder validation helpers, so the placeholder line can proceed to audit hardening without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
 ```
 
 ## Next workpackage definitions
-
-### WP24 — False-negative residual-risk report
-
-Type: benchmark/risk reporting.
-
-Purpose:
-
-- Use WP22/WP23 report-only benchmark outputs to make false-negative and unsupported-class residual risk explicit.
-- Produce a clear internal/user-supportable residual-risk report without claiming the product is safe for real-world confidential documents.
-- Keep the work report-only unless a later gate is explicitly approved.
-
-Allowed direction:
-
-- Synthetic corpus only.
-- No recognizer logic changes.
-- No production-blocking threshold unless separately approved.
-- No UI changes.
-- No export/reinsert changes.
-- No real data.
-- No cloud processing.
-
-Likely files:
-
-```text
-benchmark/build_residual_risk_report.py
-benchmark/reports/...
-tests/test_residual_risk_report.py
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-handover/workpackages/YYYYMMDD_HHMM_false_negative_residual_risk_report.md
-```
 
 ### WP29 — Scrub Key secure import/export tests
 
@@ -417,6 +439,18 @@ Allowed direction:
 - No encryption implementation.
 - No schema migration.
 - No export/reinsert behavior change.
+
+Likely files:
+
+```text
+tests/test_scrub_key_import.py
+tests/test_scrub_key.py
+tests/test_scrub_key_reinsert.py
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+handover/workpackages/YYYYMMDD_HHMM_scrub_key_secure_import_export_tests.md
+```
 
 ### WP33 — Unknown/changed placeholder audit hardening
 
