@@ -143,7 +143,6 @@ Gaps:
 
 Recommended workpackages:
 
-- WP40 — Document-centric review UX specification.
 - WP39B — DOCX hygiene audit UI planning, only if coordinator wants DOCX-specific UI planning first.
 - Later gated package — DOCX metadata cleaner helper after explicit metadata-only boundary approval.
 
@@ -190,7 +189,7 @@ Recommended workpackages:
 
 ## R6 — Streamlit review UX ceiling
 
-Status: open  
+Status: mitigating  
 Impact: medium
 
 Risk:
@@ -203,16 +202,17 @@ Current mitigations:
 
 - Review table flow exists.
 - Review filters and guidance exist.
+- WP40 created `DOCUMENT_CENTRIC_REVIEW_UX_SPEC.md`, defining a future document-first review model with document pane, detail pane, table audit/control pane, explicit review states, context-term handling and synthetic validation scenarios.
 
 Gaps:
 
-- No document-centric review specification.
 - No click-to-mark sensitive text prototype.
+- No Streamlit feasibility boundary review for clickable span markers, synchronized panes and large-document performance.
 - No frontend architecture decision for professional review UX.
+- No document-centric UI implementation exists yet.
 
 Recommended workpackages:
 
-- WP40 — Document-centric review UX specification.
 - WP41 — Highlight-based review prototype decision.
 - WP42 — Streamlit feasibility boundary review.
 - WP43 — Frontend architecture decision.
