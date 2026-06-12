@@ -1,39 +1,47 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration
+## WP42D — Static highlight preview UI integration
 
-Status: completed planning/tests/documentation-only.
+Status: implemented UI patch/tests; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Files added:
 
-- `REPLACE_LOGIC_UI_PLAN.md`
-- `tests/test_replace_logic_ui_plan.py`
-- `workpackage_claims/WP_REPLACE_LOGIC_UI_PLAN_helper_integration.md`
-- `handover/workpackages/20260612_1925_replace_logic_ui_plan.md`
+- `fix_streamlit_static_highlight_preview.py`
+- `tests/test_static_highlight_preview_ui_integration_patch.py`
+- `workpackage_claims/WP42D_static_highlight_preview_ui_integration.md`
+- `handover/workpackages/20260612_2130_static_highlight_preview_ui_integration.md`
 
 Files changed:
 
+- `Dockerfile`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
+- `RELEASE_NOTES.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_REPLACE_LOGIC_UI_PLAN_helper_integration.md`
+- `workpackage_claims/WP42D_static_highlight_preview_ui_integration.md`
 
 Summary:
 
-- Checked for an existing WP_REPLACE_LOGIC_UI_PLAN claim before starting; none existed.
-- Planned how `replacement_decision.py` can later be integrated into the review UI.
-- Mapped simple Dutch UI actions to helper states.
-- Defined conservative scope controls and affected-count confirmation expectations.
-- Kept export readiness advisory only.
-- Kept Scrub Key schema and behavior unchanged.
-- Added static tests for the plan boundaries.
-- No Streamlit UI, review table behavior, export/download behavior, Scrub Key behavior, reinsert behavior, helper runtime behavior, dependency, cloud processing or real data changed.
+- Added a new post-patch script that injects an experimental read-only static highlight preview panel before the authoritative replacement table.
+- The panel uses `build_static_highlight_preview(...)` and renders only helper-provided `escaped_text` inside trusted markup.
+- The panel is gated by helper safety flags and is explicitly non-authoritative.
+- The existing review table remains authoritative for include/exclude/replacement decisions, Scrub Key and export.
+- Added static tests for patch boundaries and Docker startup order.
+- No export/download, Scrub Key, reinsert, helper runtime behavior, dependency, cloud processing or real data changed.
 
 Validation status:
 
 - The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
-- Added plan tests should be validated by GitHub Actions.
-- App verification: not applicable because no UI behavior changed.
+- Expected checks: `pytest tests/test_static_highlight_preview_ui_integration_patch.py tests/test_highlight_preview.py`.
+- App verification required after Actions and Hugging Face sync because UI behavior changed.
+
+Next recommended step:
+
+- `WP42D-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout`.
+
+## WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration
+
+Status: completed planning/tests/documentation-only.
 
 Next recommended step:
 
@@ -43,51 +51,15 @@ Next recommended step:
 
 Status: completed planning/tests/documentation-only.
 
-Files added:
-
-- `STATIC_HIGHLIGHT_PREVIEW_UI_PLAN.md`
-- `tests/test_static_highlight_preview_ui_plan.py`
-- `workpackage_claims/WP42C_static_highlight_preview_ui_planning.md`
-- `handover/workpackages/20260612_2110_static_highlight_preview_ui_planning.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-- `workpackage_claims/WP42C_static_highlight_preview_ui_planning.md`
-
-Summary:
-
-- Planned a future experimental read-only Streamlit panel for static highlight preview.
-- Required the current replacement table to remain authoritative.
-- Required rendering only `escaped_text`, not raw user text as HTML.
-- Added static tests for the plan boundaries.
-- No Streamlit UI, review table, export/download, Scrub Key, reinsert, helper runtime behavior, dependency, cloud processing or real data changed.
-
-Validation status:
-
-- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
-- Added plan tests should be validated by GitHub Actions.
-- App verification: not applicable because no UI behavior changed.
-
 Next recommended step:
 
 - `WP42D — Static highlight preview UI integration`, only if coordinator explicitly approves UI work.
-- Alternative: `WP43 — Frontend architecture decision`.
-
-## WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests
-
-Status: implemented helper/tests-only; awaiting GitHub Actions verification.
-
-Next recommended step:
-
-- `WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration`.
 
 ## Recent previous entries
 
 Recent detailed changelog history remains available in Git history and includes:
 
+- WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests.
 - WP42B — Static highlight preview helper and tests.
 - WP42 — Streamlit feasibility boundary review.
 - WP_REPLACE_LOGIC — Easy replace/review logic simplification specification.
