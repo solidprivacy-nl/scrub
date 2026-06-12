@@ -89,6 +89,8 @@ Current mitigations:
 - WP26 created `SCRUB_KEY_LIFECYCLE_SPEC.md`, defining lifecycle states, retention/deletion expectations, loss-of-key and tampering consequences, audit/logging expectations and protection options.
 - WP27 created `SCRUB_KEY_WARNING_UX_PLAN.md`, defining warning severity levels, acknowledgement expectations and proposed Dutch UI copy for Scrub Key creation, export/download, storage, import/reload, reinsert, restored downloads, expiry/delete guidance, shared-computer risk, e-mail/AI upload risk, loss-of-key and tampering/mismatch moments.
 - WP28 created `SCRUB_KEY_EXPIRY_DELETE_POLICY.md`, defining user-controlled retention, expiry and deletion policy; Downloads/shared-computer/manual deletion guidance; loss-of-key and tampering consequences; audit/logging expectations; and the rule that Scrub must not silently delete keys or keep hidden recovery copies.
+- WP29 added secure import/export regression tests for the current Scrub Key helper surface.
+- WP29B expanded edge-case coverage and added minimal validation hardening so unsupported `schema_version` values are reported instead of accepted.
 
 Gaps:
 
@@ -96,14 +98,13 @@ Gaps:
 - No encryption/protection implementation.
 - No implemented expiry/delete UI or automated lifecycle tooling.
 - No tamper-proof or authenticated Scrub Key format.
-- No secure import/export regression test package focused on key handling.
+- Secure import/export tests now cover the current helper surface, but future key-container, document-mismatch and protected-storage behavior still require separate approved work.
 - No automatic cleanup for browser Downloads or unmanaged local storage.
 - No local vault / managed key store.
 - No approved key recovery model.
 
 Recommended workpackages:
 
-- WP29 — Scrub Key secure import/export tests.
 - WP28B — Scrub Key warning implementation planning.
 - Later implementation package — MVP Scrub Key warning/acknowledgement UI.
 - Later implementation package — protected local file handling.
@@ -134,18 +135,17 @@ Current mitigations:
 - WP30 created `PLACEHOLDER_ROBUSTNESS_REVIEW.md`, documenting current assumptions, corruption examples, translation/summarization/formatting risks, candidate robust formats, checksum ideas, validation/audit direction, migration risks and backward compatibility concerns.
 - WP31 created `PLACEHOLDER_FORMAT_PROPOSAL.md`, recommending the future architecture direction `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`, for example `[[SP_PERSON_0001_A7F3]]`, as proposal-only and additive to legacy placeholders.
 - WP32 created `placeholder_validation.py`, an additive helper that parses and validates future robust placeholder tokens, computes deterministic integrity tokens from non-sensitive placeholder metadata only, and keeps legacy placeholders as a separate compatibility mode.
+- WP33 created `placeholder_audit.py`, an additive audit helper that classifies legacy, robust, malformed, truncated, integrity-failed and unknown placeholder-like tokens without repairing or guessing intent.
 
 Gaps:
 
 - Robust placeholder generation has not been implemented in product flow.
-- No near-miss placeholder detection is integrated into reinsert audit yet.
 - No synthetic AI-output corruption tests exist yet.
 - No migration or backward-compatibility implementation exists yet.
 - No Scrub Key schema/version support for robust placeholder metadata exists yet.
 
 Recommended workpackages:
 
-- WP33 — Unknown/changed placeholder audit hardening.
 - WP34 — Synthetic AI-output placeholder corruption tests.
 - Later gated package — robust placeholder generation and compatibility implementation, only after validation and schema decisions.
 
