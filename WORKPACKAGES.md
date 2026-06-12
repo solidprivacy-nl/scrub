@@ -32,7 +32,8 @@ WP28C — implemented; partial app evidence recorded for Scrub Key/reinsert warn
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
-WP42D-FIX — static highlight preview visibility repair implemented; awaiting Actions/HF sync/app verification.
+WP42D-FIX — first visibility repair created fail-fast behavior but still used an overly strict anchor.
+WP42D-FIX2 — anchor repair implemented; awaiting Actions/HF sync/app verification.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
@@ -57,23 +58,7 @@ WP52 is parked until the MVP product quality gate is passed.
 WP28C app evidence — partial evidence recorded.
 ```
 
-A coordinator-provided screenshot of the running app in mode `Originele waarden terugzetten` shows:
-
-- Scrub Key loading section;
-- Scrub Key warning text;
-- acknowledgement checkbox before validating/loading the Scrub Key;
-- original-values reinsert warning;
-- TXT, DOCX and PDF-to-TXT reinsert warning sections;
-- DOCX and PDF limitation warnings;
-- buttons gated by acknowledgement/input state.
-
-The screenshot itself was not stored in the repository.
-
-Remaining WP28C closeout needs:
-
-```text
-Full GitHub Actions evidence, Hugging Face sync evidence and app verification coverage for all expected WP28C warning/acknowledgement surfaces.
-```
+A coordinator-provided screenshot of the running app in mode `Originele waarden terugzetten` shows Scrub Key and reinsert warning/acknowledgement surfaces. Full closeout still needs complete Actions/HF/app evidence.
 
 ## Review UX / frontend line
 
@@ -85,26 +70,27 @@ WP42B — Static highlight preview helper and tests: completed.
 WP42C — Static highlight preview UI planning: completed.
 WP42D — Static highlight preview UI integration: implemented.
 WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
-WP42D-FIX — visibility repair implemented; awaiting verification.
+WP42D-FIX — first visibility repair implemented fail-fast behavior but failed runtime verification.
+WP42D-FIX2 — single-line editor anchor repair implemented; awaiting verification.
 WP43 — Frontend architecture decision: completed.
 ```
 
-WP42D-FIX summary:
+WP42D-FIX2 summary:
 
-- User app verification showed the Space runs, but the expected `Documentvoorbeeld met markeringen — experimenteel` panel is not visible.
-- Root cause found: `fix_streamlit_static_highlight_preview.py` used a stale anchor around `Technische details bij de vervangtabel`, which is not present in the current app flow before the replacement editor.
-- The patch now anchors on the current stable sequence directly before `edited_replacements_df = st.data_editor(...)`.
-- The patch now raises `RuntimeError` if it cannot insert the helper import or preview block, preventing silent startup without the panel.
-- Tests now assert the stable current app anchor exists and the stale anchor is not used.
+- User runtime evidence showed the first fix now fails fast with `RuntimeError: Could not insert static highlight preview block before replacement editor.`
+- This confirms the previous fail-fast guard worked, but the two-line insertion anchor was still too strict after the startup patch chain.
+- `fix_streamlit_static_highlight_preview.py` now anchors on only the replacement editor line: `edited_replacements_df = st.data_editor(`.
+- This keeps the preview directly before the authoritative replacement table while avoiding dependency on the preceding dataframe line.
+- Tests now assert the single-line editor anchor and fail-fast guards.
 - Read-only, non-authoritative, escaped-rendering, no export, no Scrub Key and no reinsert boundaries remain unchanged.
 
 Next review/frontend step:
 
 ```text
-Verify WP42D-FIX with GitHub Actions, Hugging Face sync and app screenshot showing the preview panel.
+Verify WP42D-FIX2 with GitHub Actions, Hugging Face sync and app screenshot showing the preview panel.
 ```
 
-Do not start further review UI implementation until WP42D-FIX visibility is verified or coordinator explicitly approves another path.
+Do not start further review UI implementation until WP42D-FIX2 visibility is verified or coordinator explicitly approves another path.
 
 ## Replace/review logic line
 
@@ -126,10 +112,10 @@ Do not start replacement UI implementation until coordinator approves UI work.
 ## Active / next recommended execution queue
 
 ```text
-1. WP42D-FIX verification — GitHub Actions, Hugging Face sync and app screenshot showing preview panel.
+1. WP42D-FIX2 verification — GitHub Actions, Hugging Face sync and app screenshot showing preview panel.
 2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
-4. No further review UI implementation until WP42D-FIX visibility is verified or explicitly approved.
+4. No further review UI implementation until WP42D-FIX2 visibility is verified or explicitly approved.
 ```
 
 ## Blocked work
