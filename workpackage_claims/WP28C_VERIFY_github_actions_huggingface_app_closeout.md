@@ -4,24 +4,26 @@ Repository: `solidprivacy-nl/scrub`
 
 Workpackage: `WP28C-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout`
 
-Status: `in_progress`
+Status: `blocked`
 
 Started: `2026-06-12 15:55 Europe/Amsterdam`
 
-Scope:
+Updated: `2026-06-12 16:00 Europe/Amsterdam`
+
+Reason:
 
 ```text
-Verify recorded WP28C implementation status where connector access allows. Record GitHub Actions, Hugging Face sync and app verification status. Documentation/closeout only: no code, no UI, no tests, no dependencies.
+Connector checks returned no status contexts and no workflow runs for the checked WP28C commits. App verification is still required because WP28C changed UI behavior.
 ```
 
-Related implementation claim:
+Handover path:
 
 ```text
-workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md
+handover/workpackages/20260612_1600_wp28c_verify_actions_sync_app_closeout.md
 ```
 
-Coordination note:
+Next step:
 
 ```text
-If another worker wants to start WP28C-VERIFY while this status is in_progress, stop and report that the package is already claimed.
+Provide or confirm WP28C Actions/sync/app verification evidence, then run WP28C-CLOSEOUT.
 ```
