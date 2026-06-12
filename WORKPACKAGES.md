@@ -46,9 +46,9 @@ WP30-WP34 — placeholder robustness line completed through synthetic AI-output 
 WP35 — DOCX hidden content risk review completed.
 WP36A — DOCX residual placeholder and comments risk triage completed.
 WP37 — Headers/footers/comments/tracked-changes extraction helper completed.
+WP38 — DOCX hygiene audit report completed.
 WP45-WP49 — local runtime line completed through desktop packaging decision.
-WP50 — Pilot design Legal vs Zorg completed planning-only with artifact limitation.
-WP51 — ICP and pricing hypothesis completed business/design/documentation-only.
+WP50-WP51 — pilot validation line completed through ICP/pricing hypothesis.
 WP58 — parallel specification consolidation completed.
 ```
 
@@ -108,12 +108,35 @@ The placeholder robustness line is complete through synthetic AI-output corrupti
 WP35 — DOCX hidden content risk review.
 WP36A — DOCX residual placeholder and comments risk triage.
 WP37 — Headers/footers/comments/tracked-changes extraction helper.
+WP38 — DOCX hygiene audit report.
 ```
+
+WP38 files added/changed:
+
+```text
+docx_hygiene_audit.py
+DOCX_HYGIENE_AUDIT_REPORT.md
+tests/test_docx_hygiene_audit.py
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP38_docx_hygiene_audit_report.md
+handover/workpackages/20260612_1840_docx_hygiene_audit_report.md
+```
+
+WP38 summary:
+
+- Added a report-only DOCX hygiene audit helper on top of the WP37 extraction helper.
+- Builds structured audit reports with severity, counts, findings, warnings, recommended action text and explicit non-change flags.
+- Includes `report_only: true`, `extraction_only: true`, `cleaning_applied: false`, `export_blocking: false`, `export_semantics_changed: false` and `safe_to_claim_clean: false`.
+- Renders a compact Markdown report for future audit/report integration.
+- Added synthetic tests for high-risk findings, no-supported-findings-not-clean guarantee, invalid DOCX, Markdown rendering and synthetic-only boundaries.
+- No DOCX cleaner, comments/tracked-changes removal, export blocking, export semantic change, DOCX reinsert behavior change, Streamlit UI change, dependency change, real data or cloud processing was added.
 
 Next DOCX hygiene step:
 
 ```text
-WP38 — DOCX hygiene audit report
+WP39 — Clean DOCX export policy
 ```
 
 Blocked until separate approval:
@@ -145,26 +168,6 @@ WP50 — Pilot design Legal vs Zorg.
 WP51 — ICP and pricing hypothesis.
 ```
 
-WP51 files added/changed:
-
-```text
-ICP_AND_PRICING_HYPOTHESIS.md
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-workpackage_claims/WP51_icp_and_pricing_hypothesis.md
-handover/workpackages/20260612_1815_icp_and_pricing_hypothesis.md
-```
-
-WP51 summary:
-
-- Defined first ICP hypothesis for Scrub Legal and Scrub Zorg.
-- Compared Legal and Zorg users, buyers, approvers/blockers, workflows, willingness-to-pay drivers and risks.
-- Compared demo/discovery, paid pilot, consultancy-assisted pilot, subscription, local desktop license and enterprise/support models.
-- Recommended consultancy-assisted paid pilot as the first paid-offer hypothesis.
-- Recorded what must not be sold or claimed yet, including full automation, production certification, complete anonymization without review, complete hidden-content handling, OCR/restored-PDF output and guaranteed detection.
-- No sales campaign, customer outreach, code, UI, runtime behavior or cloud document processing was added.
-
 Next pilot-validation step:
 
 ```text
@@ -175,7 +178,7 @@ WP52 — Pilot intake and NDA process
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
-2. WP38 — DOCX hygiene audit report, if coordinator wants to continue DOCX hygiene line.
+2. WP39 — Clean DOCX export policy, if coordinator wants to continue DOCX hygiene line.
 3. WP52 — Pilot intake and NDA process, if coordinator wants to continue pilot-validation line.
 4. WP48B or WP49B — only if coordinator approves a concrete packaging proof.
 ```
