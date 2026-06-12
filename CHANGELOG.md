@@ -1,5 +1,64 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP23 — Entity-class scorecard in CI
+
+Status: completed report-only CI/entity-class scorecard foundation.
+
+Purpose:
+
+- Make the WP22 recall/precision runner visible through CI-friendly entity-class scorecard artifacts.
+- Keep benchmark reporting report-only with no production threshold or safety claim.
+- Preserve recognizer logic, Streamlit UI, export/reinsert behavior, dependencies and cloud boundaries.
+
+Files added:
+
+- `benchmark/build_entity_scorecard.py`
+- `benchmark/reports/README.md`
+- `tests/test_entity_scorecard.py`
+- `handover/workpackages/20260612_1230_entity_class_scorecard_ci.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Main changes:
+
+- Added `benchmark/build_entity_scorecard.py`, a pure-stdlib wrapper around `benchmark/run_recall_precision.py`.
+- The helper can write `benchmark/reports/entity_scorecard.json` and `benchmark/reports/entity_scorecard.md`.
+- Scorecard JSON includes `synthetic_only: true`, `report_only: true`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
+- Scorecard policy states that CI may publish the report and may fail on technical errors such as malformed JSON, bad offsets or runner exceptions, but must not fail on recall/precision scores yet.
+- Scorecard output includes overall recall/precision, per-domain metrics, per-entity-class metrics, gold/prediction counts, exact and normalized true positives, false-negative and false-positive counts, preserve-term failures, known-trap failures and partial-overlap diagnostic counts.
+- Added `benchmark/reports/README.md` to explain generated report artifacts and the no-real-data/no-production-claim boundary.
+- Added `tests/test_entity_scorecard.py` for scorecard policy fields, zero rows for entity classes, Markdown rendering and output writing.
+
+Validation status:
+
+- `python -m py_compile benchmark/build_entity_scorecard.py` passed in the ChatGPT execution sandbox against the authored helper.
+- `pytest -q tests/test_entity_scorecard.py` passed in the ChatGPT execution sandbox against the authored tests: 4 passed.
+- `pytest tests/test_recall_precision_runner.py` was requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector. WP22 already recorded the targeted runner tests as passed in the implementation sandbox.
+- `python -m json.tool benchmark/gold/schema/gold_label_schema.json` was requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector. The schema was fetched and inspected through GitHub.
+- GitHub Actions: to be checked after final handover commit.
+- Hugging Face sync: to be checked after final handover commit.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No Presidio integration changed.
+- No Streamlit UI changed.
+- No CI threshold or production-blocking gate added.
+- No production safety claim added.
+- No dependency changes.
+- No export/reinsert behavior changed.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step:
+
+- `WP24 — False-negative residual-risk report`.
+
 ## WP32-CLOSEOUT — Placeholder validation helper central docs repair
 
 Status: completed documentation/coordination-only.
@@ -99,8 +158,6 @@ Validation status:
 - `python -m py_compile benchmark/run_recall_precision.py` passed in the ChatGPT execution sandbox against the authored runner.
 - `pytest -q tests/test_recall_precision_runner.py` passed in the ChatGPT execution sandbox against the authored tests: 3 passed.
 - `python -m json.tool benchmark/gold/schema/gold_label_schema.json` was requested; the schema was fetched and inspected through GitHub, but the GitHub connector does not provide a shell in the repository checkout. The runner itself parses JSON sidecars with Python stdlib.
-- GitHub Actions: to be checked after final handover commit.
-- Hugging Face sync: to be checked after final handover commit.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -227,172 +284,11 @@ Next recommended step:
 
 - `WP22 — Recall/precision test runner`.
 
-## WP28 — Scrub Key expiry/delete policy
-
-Status: completed security/lifecycle-policy-only.
-
-Purpose:
-
-- Define expiry, retention and deletion policy for Scrub Keys after the warning UX plan.
-- Clarify user-controlled deletion, matter/project retention guidance, Downloads/shared-computer risk, loss-of-key consequences, tampering/mismatch consequences and audit expectations.
-- Keep the package policy-only with no UI, deletion automation, schema migration, encryption or behavior changes.
-
-Files added:
-
-- `SCRUB_KEY_EXPIRY_DELETE_POLICY.md`
-- `handover/workpackages/20260610_1826_scrub_key_expiry_delete_policy.md`
-
-Files changed:
-
-- `DECISION_LOG.md`
-- `RISK_REGISTER.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main policy decisions:
-
-- Scrub Keys should be retained only as long as needed for a specific matter, project, AI roundtrip, review or reinsert purpose.
-- MVP expiry is guidance-only; Scrub must not add expiry metadata, block import by age or automatically delete old keys.
-- Deletion must remain explicit and user-controlled.
-- Scrub must not silently delete Scrub Keys, mappings, restored output, audit context, browser Downloads files, synced copies, backups or future app-managed vault entries.
-- Scrub must not keep hidden recovery copies.
-- Future app-managed deletion, expiry reminders, protected storage, encrypted containers, vault behavior and recovery/escrow require separate approved implementation workpackages.
-- Dutch user-facing policy copy examples are included for future warning/planning work.
-
-Validation status:
-
-- Documentation/security lifecycle-policy review only.
-- Required control files plus Scrub Key context files were read.
-- Context-only helper/UI files were inspected.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No UI implementation.
-- No Streamlit patch changed.
-- No helper logic changed.
-- No automatic deletion.
-- No Scrub Key JSON schema migration.
-- No encryption implementation.
-- No import/export behavior changed.
-- No reinsert behavior changed.
-- No tests added or changed.
-- No dependencies changed.
-- No secrets or real data stored.
-- No cloud processing added.
-
-Next recommended step:
-
-- `WP29 — Scrub Key secure import/export tests`.
-- Alternative if UI planning should precede tests: `WP28B — Scrub Key warning implementation planning`.
-
-## WP46 — Minimal local Streamlit launcher
-
-Status: completed minimal local runtime implementation.
-
-Purpose:
-
-- Add the smallest safe local launcher path recommended by WP45.
-- Allow a developer/user to run the existing Streamlit app locally for non-cloud confidential-processing validation.
-- Document local setup, launch command, local-only warnings and current limits without changing app behavior.
-
-Files added:
-
-- `scripts/run_local_streamlit.py`
-- `LOCAL_RUN.md`
-- `handover/workpackages/20260610_1828_minimal_local_streamlit_launcher.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main changes:
-
-- Added a minimal Python launcher that runs the existing startup patch scripts and then starts `presidio_streamlit.py` through Streamlit.
-- The launcher binds to `127.0.0.1` by default, uses port `8501` by default and disables Streamlit usage stats for this local launcher path.
-- Added local run documentation covering Python setup, dependency installation, exact launch command, local-only warning, no-real-data-in-repo warning, locally processed files, current non-guarantees and the next validation step.
-
-Validation status:
-
-- `python -m py_compile scripts/run_local_streamlit.py` passed in the implementation worker environment.
-- Full app launch was not run.
-- App verification: not applicable because no UI feature changed.
-
-Intentionally not changed:
-
-- No installer.
-- No PyInstaller packaging.
-- No Tauri/Electron implementation.
-- No Docker startup change.
-- No Streamlit UI feature change.
-- No export/reinsert behavior change.
-- No dependency change.
-- No telemetry implementation.
-- No cloud processing added.
-- No real data added.
-
-Next recommended step:
-
-- `WP47 — Local file handling/privacy test`.
-
-## WP31 — LLM-resistant placeholder format proposal
-
-Status: completed architecture/proposal-only.
-
-Purpose:
-
-- Propose and compare placeholder formats that are more resistant to AI rewriting, translation, summarization and formatting changes.
-- Select a future robust placeholder direction without implementing migration or changing reinsert behavior.
-- Define compatibility, validation and phased implementation requirements after WP30.
-
-Files added:
-
-- `PLACEHOLDER_FORMAT_PROPOSAL.md`
-- `handover/workpackages/20260610_0035_placeholder_format_proposal.md`
-- `handover/workpackages/20260610_1824_placeholder_format_proposal.md`
-
-Files changed:
-
-- `DECISION_LOG.md`
-- `RISK_REGISTER.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main proposal decisions:
-
-- Recommended future format direction: `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`.
-- Example: `[[SP_PERSON_0001_A7F3]]`.
-- Legacy placeholders such as `[PERSOON_1]` remain backward-compatible.
-- Future robust support should be additive first and must not silently replace legacy placeholders.
-- Visible checksum/integrity values must not be derived directly from original sensitive data.
-- WP32 should implement validation/checksum helpers before any generation, migration or schema change.
-
-Validation status:
-
-- Documentation/architecture review only.
-- Required context files were read.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No placeholder migration.
-- No reinsert helper change.
-- No Scrub Key schema change.
-- No UI change.
-- No export behavior change.
-- No tests added or changed.
-- No AI/cloud integration.
-- No dependencies changed.
-
-Next recommended step:
-
-- `WP32 — Placeholder checksum/validation helper`.
-
 ## Earlier completed work
 
+- WP28 — Scrub Key expiry/delete policy.
+- WP46 — Minimal local Streamlit launcher.
+- WP31 — LLM-resistant placeholder format proposal.
 - WP27 — Scrub Key warning UX plan.
 - WP45 — Local runtime architecture plan.
 - WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
