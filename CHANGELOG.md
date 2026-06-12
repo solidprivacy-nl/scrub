@@ -1,5 +1,62 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP37 — Headers/footers/comments/tracked-changes extraction helper
+
+Status: completed helper/tests/documentation-only.
+
+Purpose:
+
+- Add a pure local DOCX extraction helper for headers, footers, comments/kantlijncommentaren and tracked-change signals.
+- Make high-risk hidden DOCX content audit-visible before any cleaner, removal or export-blocking policy is implemented.
+- Preserve current DOCX reinsert behavior and export semantics.
+
+Files added:
+
+- `docx_hidden_content_extractor.py`
+- `DOCX_HIDDEN_CONTENT_EXTRACTION_HELPER.md`
+- `tests/test_docx_hidden_content_extractor.py`
+- `workpackage_claims/WP37_headers_footers_comments_tracked_changes_extraction_helper.md`
+- `handover/workpackages/20260612_1735_headers_footers_comments_tracked_changes_extraction_helper.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Main changes:
+
+- Added `inspect_docx_hidden_content(content: bytes) -> dict`, a side-effect-free helper that inspects DOCX bytes in memory.
+- Detects and extracts text from `word/header*.xml`, `word/footer*.xml`, `word/comments.xml`, `word/commentsExtended.xml` and `word/person.xml` where parseable.
+- Detects tracked-change markers such as `w:ins`, `w:del`, `w:delText`, `w:moveFrom` and `w:moveTo` across `word/*.xml` parts.
+- Returns audit-oriented fields including `docx_parts_seen`, `headers`, `footers`, `comments`, `tracked_changes`, `detected`, `warnings`, `extraction_only`, `cleaning_applied: false` and `export_blocking: false`.
+- Added synthetic tests for extraction, absence reporting, invalid input and synthetic-only boundaries.
+- Added helper documentation that explicitly records extraction-only non-goals.
+
+Validation status:
+
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
+- Added tests should be validated by GitHub Actions.
+- App verification: not applicable because no UI behavior changed.
+
+Intentionally not changed:
+
+- No DOCX cleaner implemented.
+- No comments/tracked-changes removal implemented.
+- No export blocking.
+- No export semantics changed.
+- No DOCX reinsert behavior changed.
+- No Streamlit UI changed.
+- No Scrub Key schema changed.
+- No dependency change.
+- No real data added.
+- No cloud processing added.
+- No roadmap change because strategy and phase order did not change.
+
+Next recommended step:
+
+- `WP38 — DOCX hygiene audit report`.
+
 ## WP50 — Pilot design Legal vs Zorg
 
 Status: completed planning-only with artifact limitation.
@@ -189,4 +246,4 @@ Next recommended step:
 
 ## Earlier entries
 
-Previous changelog detail remains available in Git history. This WP50 entry records the latest pilot design status while preserving recent WP49, WP36A and WP28C verification entries below.
+Previous changelog detail remains available in Git history. This WP37 entry records the latest DOCX hidden-content extraction helper while preserving recent WP50, WP49, WP36A and WP28C verification entries below.
