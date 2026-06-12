@@ -43,4 +43,7 @@ WORKDIR $HOME/app
 # Copy the current directory contents into the container at $HOME/app setting the owner to the user
 COPY --chown=user . $HOME/app
 
-CMD ["sh", "-c", "python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py && python fix_streamlit_static_highlight_preview.py && streamlit run presidio_streamlit.py --server.port=7860 --server.address=0.0.0.0 --server.enableXsrfProtection=false --server.enableCORS=false"]
+# WP42D-ROLLBACK: disable the experimental static highlight preview startup patch.
+# The patch caused repeated runtime errors in the Hugging Face Space and is parked
+# until it can be redesigned without mutating presidio_streamlit.py at startup.
+CMD ["sh", "-c", "python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py && streamlit run presidio_streamlit.py --server.port=7860 --server.address=0.0.0.0 --server.enableXsrfProtection=false --server.enableCORS=false"]
