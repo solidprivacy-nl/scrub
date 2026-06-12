@@ -1,5 +1,42 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP42D-VERIFY — Static highlight preview UI verification closeout
+
+Status: verification attempted; blocked pending Actions/HF/app evidence.
+
+Files added:
+
+- `WP42D_VERIFY_STATUS.md`
+- `workpackage_claims/WP42D_VERIFY_static_highlight_preview_ui_closeout.md`
+- `handover/workpackages/20260612_1945_static_highlight_preview_ui_verify.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP42D_VERIFY_static_highlight_preview_ui_closeout.md`
+
+Summary:
+
+- Checked for an existing WP42D-VERIFY claim before starting; none existed.
+- Created a WP42D-VERIFY claim before changing shared docs.
+- Confirmed connector-visible WP42D files exist: `fix_streamlit_static_highlight_preview.py`, `tests/test_static_highlight_preview_ui_integration_patch.py` and `Dockerfile`.
+- Confirmed connector-visible patch boundaries: read-only, non-authoritative, helper-gated rendering, escaped text rendering and no export/Scrub Key/reinsert mutation in the patch text.
+- Confirmed connector-visible Dockerfile patch order: existing patches run before `fix_streamlit_static_highlight_preview.py`, which runs before `streamlit run`.
+- GitHub combined status returned no statuses.
+- Workflow run lookup returned no workflow runs.
+- App verification remains required because WP42D changed UI behavior.
+
+Validation status:
+
+- Verification artifact added.
+- Actions/HF/app status not confirmed by connector.
+- No code, UI, tests, runtime behavior, export/download behavior, Scrub Key behavior, reinsert behavior, cloud processing or real data changed.
+
+Next recommended step:
+
+- Coordinator/user evidence needed for WP42D Actions/HF sync and app verification.
+
 ## WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration
 
 Status: completed tests/documentation-only.
