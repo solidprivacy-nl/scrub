@@ -32,6 +32,7 @@ WP28C — implemented; still needs coordinator evidence/app verification.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
+WP42D-INVESTIGATE — diagnosis completed; likely running app is not using WP42D-patched runtime or patch-chain diagnostics are insufficient.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
@@ -60,25 +61,28 @@ WP42B — Static highlight preview helper and tests: completed.
 WP42C — Static highlight preview UI planning: completed.
 WP42D — Static highlight preview UI integration: implemented.
 WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
+WP42D-INVESTIGATE — diagnosis completed.
 WP43 — Frontend architecture decision: completed.
 ```
 
-WP42D-VERIFY summary:
+WP42D-INVESTIGATE summary:
 
-- Connector-visible WP42D files exist.
-- Connector-visible patch boundaries and Dockerfile patch order were reviewed.
-- GitHub combined status returned no statuses.
-- Workflow run lookup returned no workflow runs.
-- Coordinator-provided app screenshot shows the existing review flow and replacement table, but does not show the expected expander/panel `Documentvoorbeeld met markeringen — experimenteel`.
-- The screenshot itself was not stored in the repository.
+- Checked for an existing claim before starting; none existed.
+- Added `WP42D_INVESTIGATION_REPORT.md`.
+- Confirmed `fix_streamlit_static_highlight_preview.py` exists and contains the expected preview label and safety gates.
+- Confirmed repository `Dockerfile` includes the static highlight patch command before `streamlit run`.
+- Confirmed raw `presidio_streamlit.py` does not contain the panel because WP42D is a startup patch, not a direct source edit.
+- Confirmed `fix_streamlit_nested_expanders.py` creates the upstream review-table anchor used by the WP42D patch.
+- Most likely diagnosis: the running Hugging Face app is not using the WP42D-patched runtime yet, or the patch-chain needs stronger diagnostics/fail-fast checks.
+- No UI, code behavior, tests, runtime behavior, export/download behavior, Scrub Key behavior, reinsert behavior, cloud processing or real data changed.
 
 Next review/frontend step:
 
 ```text
-WP42D-INVESTIGATE — diagnose why the static highlight preview panel is not visible in the running app.
+WP42D-FIX — Static highlight preview deployment/patch-chain hardening
 ```
 
-Do not start further review UI implementation until WP42D visibility is diagnosed or coordinator explicitly approves another path.
+Do not start further review UI implementation until WP42D visibility is fixed or coordinator explicitly approves another path.
 
 ## Replace/review logic line
 
@@ -100,10 +104,10 @@ Do not start replacement UI implementation until coordinator approves UI work.
 ## Active / next recommended execution queue
 
 ```text
-1. WP42D-INVESTIGATE — diagnose why the static highlight preview panel is not visible in the running app.
+1. WP42D-FIX — Static highlight preview deployment/patch-chain hardening.
 2. Coordinator/user evidence still needed for WP28C Actions/HF sync and app verification if not already available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
-4. No further review UI implementation until WP42D visibility is diagnosed or explicitly approved.
+4. No further review UI implementation until WP42D visibility is fixed or explicitly approved.
 ```
 
 ## Blocked work
