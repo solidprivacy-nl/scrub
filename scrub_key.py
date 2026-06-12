@@ -223,6 +223,8 @@ def validate_scrub_key(scrub_key: Any) -> list[str]:
         issues.append(f"Missing or invalid schema: expected {SCRUB_KEY_SCHEMA}.")
     if not scrub_key.get("schema_version"):
         issues.append("Missing schema_version.")
+    elif scrub_key.get("schema_version") != SCRUB_KEY_SCHEMA_VERSION:
+        issues.append(f"Unsupported schema_version: expected {SCRUB_KEY_SCHEMA_VERSION}.")
     if scrub_key.get("reversible") is not True:
         issues.append("Scrub Key must explicitly mark reversible=true.")
     if scrub_key.get("privacy_model") != "pseudonymization_not_full_anonymization":
