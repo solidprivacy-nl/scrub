@@ -44,7 +44,7 @@ WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; 
 WP28C-VERIFY — verification attempted; connector returned no statuses or workflow runs.
 WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
-WP40 — Document-centric review UX specification completed.
+WP40-WP41 — review UX line completed through highlight-based review prototype decision.
 WP45-WP49 — local runtime line completed through desktop packaging decision; installer work deferred to final roadmap phase.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is now parked.
 WP51B — MVP product quality gate recorded.
@@ -77,31 +77,33 @@ Do not start WP52 by default. Phase 7 may be reopened only after the coordinator
 
 ```text
 WP40 — Document-centric review UX specification: completed specification-only.
+WP41 — Highlight-based review prototype decision: completed decision/documentation-only.
 ```
 
-WP40 files added/changed:
+WP41 files added/changed:
 
 ```text
-DOCUMENT_CENTRIC_REVIEW_UX_SPEC.md
+HIGHLIGHT_BASED_REVIEW_PROTOTYPE_DECISION.md
+DECISION_LOG.md
 WORKPACKAGES.md
 CHANGELOG.md
 RISK_REGISTER.md
-workpackage_claims/WP40_document_centric_review_ux_specification.md
-handover/workpackages/20260612_1930_document_centric_review_ux_specification.md
+workpackage_claims/WP41_highlight_based_review_prototype_decision.md
+handover/workpackages/20260612_2000_highlight_based_review_prototype_decision.md
 ```
 
-WP40 summary:
+WP41 summary:
 
-- Defined a future document-first review model with document pane, detail pane and table audit/control pane.
-- Defined review states: `needs_review`, `accepted`, `ignored`, `edited`, `manual_added`, `preserve_context`, `high_risk_unresolved`.
-- Defined actions such as accept, ignore, edit replacement, mark as context term, add missed sensitive value and apply to all same values.
-- Kept the current table useful as an audit/control surface rather than the only review surface.
+- Decided that highlight-based review should be pursued only as a small bounded prototype after a Streamlit feasibility review.
+- Decided that the first prototype should be read-only, text-based, synthetic, highlight-and-detail oriented, table-linked and explicitly non-authoritative.
+- Recorded D016 in `DECISION_LOG.md`.
+- Kept the current review table as the audit/control surface.
 - No Streamlit UI, review table implementation, export/download behavior, Scrub Key behavior, helper logic, dependency, cloud processing or real data was changed.
 
 Next review UX step:
 
 ```text
-WP41 — Highlight-based review prototype decision
+WP42 — Streamlit feasibility boundary review
 ```
 
 ## Replace/review logic line
@@ -224,7 +226,7 @@ WP52 is parked until the MVP product quality gate is passed.
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
-2. WP41 — Highlight-based review prototype decision.
+2. WP42 — Streamlit feasibility boundary review.
 3. WP_REPLACE_LOGIC — Easy replace/review logic simplification specification.
 4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
