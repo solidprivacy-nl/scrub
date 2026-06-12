@@ -4,18 +4,30 @@ Repository: `solidprivacy-nl/scrub`
 
 Workpackage: `WP51 — ICP and pricing hypothesis`
 
-Status: `in_progress`
+Status: `completed`
 
 Started: `2026-06-12 18:05 Europe/Amsterdam`
 
-Scope:
+Completed: `2026-06-12 18:15 Europe/Amsterdam`
+
+Files added:
 
 ```text
-Business/design/documentation-only ICP and pricing hypothesis for Scrub Legal and Scrub Zorg. No outreach, no sales campaign, no real data, no UI/code changes and no cloud document processing.
+ICP_AND_PRICING_HYPOTHESIS.md
+handover/workpackages/20260612_1815_icp_and_pricing_hypothesis.md
 ```
 
-Coordination note:
+Files changed:
 
 ```text
-If another worker wants to start WP51 while this status is in_progress, stop and report that WP51 is already claimed.
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP51_icp_and_pricing_hypothesis.md
+```
+
+Next recommended step:
+
+```text
+WP52 — Pilot intake and NDA process
 ```
