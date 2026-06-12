@@ -203,17 +203,18 @@ Current mitigations:
 - Review table flow exists.
 - Review filters and guidance exist.
 - WP40 created `DOCUMENT_CENTRIC_REVIEW_UX_SPEC.md`, defining a future document-first review model with document pane, detail pane, table audit/control pane, explicit review states, context-term handling and synthetic validation scenarios.
+- WP41 created `HIGHLIGHT_BASED_REVIEW_PROTOTYPE_DECISION.md`, deciding that highlight-based review should start as a small bounded read-only, text-based, synthetic, highlight-and-detail prototype only after Streamlit feasibility review.
+- D016 records that no broad document-centric UI should be implemented before WP42.
 
 Gaps:
 
-- No click-to-mark sensitive text prototype.
 - No Streamlit feasibility boundary review for clickable span markers, synchronized panes and large-document performance.
+- No click-to-mark sensitive text prototype.
 - No frontend architecture decision for professional review UX.
 - No document-centric UI implementation exists yet.
 
 Recommended workpackages:
 
-- WP41 — Highlight-based review prototype decision.
 - WP42 — Streamlit feasibility boundary review.
 - WP43 — Frontend architecture decision.
 - WP44 — Click-to-mark sensitive text prototype.
