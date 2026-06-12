@@ -203,20 +203,22 @@ Current mitigations:
 - WP_REPLACE_LOGIC_HELPER created `replacement_decision.py`, a pure replacement decision helper with tests for review states, conservative scope matching, report-only audit summaries and advisory export-readiness state.
 - WP_REPLACE_LOGIC_UI_PLAN created `REPLACE_LOGIC_UI_PLAN.md`, planning future helper integration without changing Streamlit behavior.
 - WP_REPLACE_LOGIC_UI_CONTRACT_TESTS added `tests/test_replace_logic_ui_contract.py`, locking the planned label/state/scope mappings and report-only/export-readiness boundaries before any replacement-decision UI implementation.
+- WP43 created `FRONTEND_ARCHITECTURE_DECISION.md`, deciding to keep Streamlit for MVP validation and defer a separate frontend/professional document editor until MVP workflow evidence and user validation justify the migration risk.
 
 Gaps:
 
 - WP42D still needs GitHub Actions, Hugging Face sync and app verification before the UI change can be considered fully validated.
 - No click-to-mark sensitive text prototype.
-- No frontend architecture decision for professional review UX.
-- No document-centric UI implementation exists yet.
+- No professional document editor exists.
+- No separate frontend migration is approved.
 - Replacement decision helper is not wired into the product UI yet.
 
 Recommended workpackages:
 
-- WP42D-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout for static highlight preview UI.
-- WP43 — Frontend architecture decision.
-- WP44 — Click-to-mark sensitive text prototype only after further approval.
+- WP42D-VERIFY evidence from coordinator/user.
+- WP39B — DOCX hygiene audit UI planning, if coordinator chooses document hygiene UI next.
+- Later approved package — replacement decision UI implementation.
+- WP44 — Click-to-mark sensitive text prototype only after further approval and after frontend/MVP evidence.
 
 ---
 
