@@ -44,6 +44,7 @@ WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; 
 WP28C-VERIFY — verification attempted; connector returned no statuses or workflow runs.
 WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
+WP40 — Document-centric review UX specification completed.
 WP45-WP49 — local runtime line completed through desktop packaging decision; installer work deferred to final roadmap phase.
 WP50-WP51 — pilot validation line completed through ICP/pricing hypothesis.
 WP58 — parallel specification consolidation completed.
@@ -58,6 +59,37 @@ Validate logic, interface, security and trustworthiness online first. Delay loca
 Do not start local installer, MSI, PyInstaller, Tauri, Electron, auto-updater, signed desktop package or production packaging work by default.
 
 `WP48B` or `WP49B` may only start with explicit coordinator approval and should remain a small proof package. They are no longer part of the default active queue.
+
+## Review UX line
+
+```text
+WP40 — Document-centric review UX specification: completed specification-only.
+```
+
+WP40 files added/changed:
+
+```text
+DOCUMENT_CENTRIC_REVIEW_UX_SPEC.md
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP40_document_centric_review_ux_specification.md
+handover/workpackages/20260612_1930_document_centric_review_ux_specification.md
+```
+
+WP40 summary:
+
+- Defined a future document-first review model with document pane, detail pane and table audit/control pane.
+- Defined review states: `needs_review`, `accepted`, `ignored`, `edited`, `manual_added`, `preserve_context`, `high_risk_unresolved`.
+- Defined actions such as accept, ignore, edit replacement, mark as context term, add missed sensitive value and apply to all same values.
+- Kept the current table useful as an audit/control surface rather than the only review surface.
+- No Streamlit UI, review table implementation, export/download behavior, Scrub Key behavior, helper logic, dependency, cloud processing or real data was changed.
+
+Next review UX step:
+
+```text
+WP41 — Highlight-based review prototype decision
+```
 
 ## Scrub Key security line
 
@@ -119,34 +151,6 @@ WP38 — DOCX hygiene audit report.
 WP39 — Clean DOCX export policy.
 ```
 
-WP39 files added/changed:
-
-```text
-CLEAN_DOCX_EXPORT_POLICY.md
-tests/test_clean_docx_export_policy.py
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-workpackage_claims/WP39_clean_docx_export_policy.md
-handover/workpackages/20260612_1915_clean_docx_export_policy.md
-```
-
-WP39 summary:
-
-- Defined that current DOCX output must not be described as clean DOCX export.
-- Defined allowed current labels such as DOCX output with limitations, restored DOCX output with hygiene warnings and DOCX hygiene audit.
-- Defined warning/report policy for no supported findings, headers/footers, comments/kantlijncommentaren, tracked changes and invalid/uninspectable DOCX.
-- Defined future export-blocking candidates without implementing blocking.
-- Defined minimum requirements before any clean-DOCX claim.
-- Added policy tests that lock the no-clean-claim, no-export-semantic-change, no-blocking and no-real-data boundaries.
-- No DOCX cleaner, comments/tracked-changes removal, export blocking implementation, export semantic change, DOCX reinsert behavior change, Streamlit UI change, dependency change, real data or cloud processing was added.
-
-Next default step:
-
-```text
-WP40 — Document-centric review UX specification
-```
-
 Alternative DOCX-specific follow-up if the coordinator wants to continue document hygiene first:
 
 ```text
@@ -195,7 +199,7 @@ WP52 — Pilot intake and NDA process
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
-2. WP40 — Document-centric review UX specification.
+2. WP41 — Highlight-based review prototype decision.
 3. WP52 — Pilot intake and NDA process, if coordinator wants to continue pilot-validation line.
 ```
 
