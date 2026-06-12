@@ -163,26 +163,18 @@ Current mitigations:
 
 - Roadmap includes local desktop/offline direction.
 - UI messaging emphasizes local/no-AI/no-cloud for helper operations where applicable.
-- WP45 created `LOCAL_RUNTIME_ARCHITECTURE_PLAN.md`.
-- WP46 added the minimal local Streamlit launcher path.
-- WP47 added local launcher/documentation privacy tests.
-- WP48 added a minimal Windows portable proof-of-concept wrapper.
-- WP49 created `DESKTOP_PACKAGING_DECISION.md` and accepted D014.
-- D015 now defers local installer/MSI/desktop packaging to the final roadmap phase after online/web validation of logic, interface, security and trustworthiness.
+- WP45-WP49 completed the local runtime and packaging decision line through decision-only packaging deferral.
 
 Gaps:
 
-- WP47/WP48 validate launcher/documentation boundaries only; they are not full network-traffic captures.
 - No full offline demonstration.
 - No runtime packet/network inspection.
 - No production security certification is supported.
 - No signed or managed enterprise deployment proof exists.
-- Installer testing remains intentionally deferred because installable-app validation is more labor-intensive than web-interface validation.
 
 Recommended workpackages:
 
 - Continue online/web validation and trust hardening first.
-- Later network/privacy validation package — runtime network-traffic capture and temp-file inspection under controlled local conditions.
 - Final-phase installer/packaging proof only after coordinator approval and after core product behavior is acceptable.
 
 ---
@@ -202,21 +194,21 @@ Current mitigations:
 
 - Review table flow exists.
 - Review filters and guidance exist.
-- WP40 created `DOCUMENT_CENTRIC_REVIEW_UX_SPEC.md`, defining a future document-first review model with document pane, detail pane, table audit/control pane, explicit review states, context-term handling and synthetic validation scenarios.
-- WP41 created `HIGHLIGHT_BASED_REVIEW_PROTOTYPE_DECISION.md`, deciding that highlight-based review should start as a small bounded read-only, text-based, synthetic, highlight-and-detail prototype only after Streamlit feasibility review.
-- WP42 created `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md`, deciding Streamlit is feasible only for a bounded static/read-only highlight preview, not for broad document UI rewrite or click-to-mark review.
-- D017 records the accepted Streamlit feasibility boundary.
+- WP40 created the document-centric review UX specification.
+- WP41 created the highlight-based review prototype decision.
+- WP42 created the Streamlit feasibility boundary.
+- WP42B created `highlight_preview.py`, a pure static highlight preview helper/model with tests for offsets, escaping, category labels and non-authoritative boundaries.
 
 Gaps:
 
-- No static highlight preview helper/model exists yet.
+- No Streamlit highlight preview UI exists yet.
 - No click-to-mark sensitive text prototype.
 - No frontend architecture decision for professional review UX.
 - No document-centric UI implementation exists yet.
 
 Recommended workpackages:
 
-- WP42B — Static highlight preview helper and tests.
+- WP42C — Static highlight preview UI planning.
 - WP43 — Frontend architecture decision.
 - WP44 — Click-to-mark sensitive text prototype only after further approval.
 
