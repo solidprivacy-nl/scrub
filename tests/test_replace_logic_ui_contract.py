@@ -13,6 +13,7 @@ from replacement_decision import (
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 UI_PLAN = REPO_ROOT / "REPLACE_LOGIC_UI_PLAN.md"
+THIS_TEST = Path(__file__)
 
 UI_ACTION_TO_STATE = {
     "Vervangen": "accepted",
@@ -167,9 +168,9 @@ def test_ui_contract_plan_preserves_boundaries_and_does_not_approve_ui_implement
 
 
 def test_contract_tests_use_synthetic_values_only():
-    rendered = repr(UI_ACTION_TO_STATE) + repr(UI_SCOPE_TO_HELPER_SCOPE) + _ui_plan_text()
+    rendered = THIS_TEST.read_text(encoding="utf-8") + _ui_plan_text()
 
-    assert "SYNTHETIC" in __file__ or True
+    assert "SYNTHETIC" in rendered
     assert "Jan Jansen" not in rendered
     assert "Piet de Vries" not in rendered
     assert "123456782" not in rendered
