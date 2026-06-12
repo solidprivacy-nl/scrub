@@ -47,20 +47,21 @@ Current mitigations:
 - WP21 created the gold-label sidecar schema foundation in `benchmark/gold/schema/gold_label_schema.json`, covering canonical entity classes, zero-based inclusive/exclusive offsets, expected text spans, preserve terms, known traps, normalization guidance and future runner expectations.
 - WP22 created `benchmark/run_recall_precision.py`, a deterministic local report-only runner that validates gold-label offsets and source spans, then reports exact and value-normalized recall/precision, per-domain metrics, per-entity-class metrics, false negatives, false positives, preserve-term failures, known-trap failures and diagnostic-only partial overlaps for supplied prediction JSON.
 - WP23 created `benchmark/build_entity_scorecard.py`, a report-only entity-class scorecard builder that can write CI-friendly JSON and Markdown artifacts while explicitly recording `synthetic_only`, `report_only`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
+- WP24 created `benchmark/build_residual_risk_report.py`, a report-only false-negative residual-risk report builder that makes remaining limitations and residual risks explicit without adding thresholds, production gates or production safety claims.
 
 Gaps:
 
 - No complete gold-label sidecars for the corpus yet.
 - The WP22 runner still scores supplied prediction JSON only; it does not invoke recognizers or establish accepted baselines.
-- The WP23 scorecard is report-only; no recall/precision threshold or production-blocking gate exists.
-- No explicit false-negative residual-risk report yet.
+- The WP23 scorecard and WP24 residual-risk report are report-only; no recall/precision threshold or production-blocking gate exists.
 - No production safety claim is supported.
+- No user-facing residual-risk/audit integration exists yet.
 
 Recommended workpackages:
 
-- WP24 — False-negative residual-risk report.
 - Later benchmark data package — complete gold-label sidecars for the committed synthetic corpus.
 - Later gated package — accepted thresholds and regression gate only after baselines and policy are approved.
+- Later audit/support package — user-facing residual-risk/audit language after internal report output is stable.
 
 ---
 
