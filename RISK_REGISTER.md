@@ -89,12 +89,13 @@ Current mitigations:
 - WP26 created `SCRUB_KEY_LIFECYCLE_SPEC.md`, defining lifecycle states, retention/deletion expectations, loss-of-key and tampering consequences, audit/logging expectations and protection options.
 - WP27 created `SCRUB_KEY_WARNING_UX_PLAN.md`, defining warning severity levels, acknowledgement expectations and proposed Dutch UI copy for Scrub Key creation, export/download, storage, import/reload, reinsert, restored downloads, expiry/delete guidance, shared-computer risk, e-mail/AI upload risk, loss-of-key and tampering/mismatch moments.
 - WP28 created `SCRUB_KEY_EXPIRY_DELETE_POLICY.md`, defining user-controlled retention, expiry and deletion policy; Downloads/shared-computer/manual deletion guidance; loss-of-key and tampering consequences; audit/logging expectations; and the rule that Scrub must not silently delete keys or keep hidden recovery copies.
+- WP28B created `SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md`, mapping warning copy and acknowledgement requirements to exact current Streamlit patch locations before UI implementation.
 - WP29 added secure import/export regression tests for the current Scrub Key helper surface.
 - WP29B expanded edge-case coverage and added minimal validation hardening so unsupported `schema_version` values are reported instead of accepted.
 
 Gaps:
 
-- No implemented warning UX changes yet.
+- No implemented MVP warning/acknowledgement UI changes yet.
 - No encryption/protection implementation.
 - No implemented expiry/delete UI or automated lifecycle tooling.
 - No tamper-proof or authenticated Scrub Key format.
@@ -105,8 +106,7 @@ Gaps:
 
 Recommended workpackages:
 
-- WP28B — Scrub Key warning implementation planning.
-- Later implementation package — MVP Scrub Key warning/acknowledgement UI.
+- WP28C — MVP Scrub Key warning/acknowledgement UI implementation.
 - Later implementation package — protected local file handling.
 - Later implementation package — encrypted key container.
 - Later implementation package — local vault / managed key store.
