@@ -58,6 +58,7 @@ WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-onl
 WP28B — Scrub Key warning implementation planning: completed UI/security implementation-planning-only.
 WP29 — Scrub Key secure import/export tests: completed helper/tests-only after PR/Actions verification.
 WP29B — Scrub Key import/export edge-case hardening: completed helper/tests-only with minimal unsupported-version validation hardening.
+WP29C — Scrub Key warning UI regression test scaffolding: completed tests/fixture-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
@@ -94,7 +95,23 @@ WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-onl
 WP28B — Scrub Key warning implementation planning: completed UI/security implementation-planning-only.
 WP29 — Scrub Key secure import/export tests: completed helper/tests-only after PR/Actions verification.
 WP29B — Scrub Key import/export edge-case hardening: completed helper/tests-only.
+WP29C — Scrub Key warning UI regression test scaffolding: completed tests/fixture-only.
 ```
+
+WP29C artifacts:
+
+```text
+tests/fixtures/scrub_key_warning_ui_contract.json
+tests/test_scrub_key_warning_ui_contract.py
+handover/workpackages/20260612_1530_scrub_key_warning_ui_regression_test_scaffolding.md
+workpackage_claims/WP29C_scrub_key_warning_ui_regression_test_scaffolding.md
+```
+
+WP29C summary:
+
+- Added a warning UI contract fixture based on `SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md`.
+- Added tests that keep the fixture scaffolding-only and tied to the planned Streamlit patch surface.
+- No UI implementation, Streamlit patch, helper logic, schema, import/export behavior, reinsert behavior, dependency, real-data or cloud-processing change was made.
 
 Next recommended Scrub Key step:
 
@@ -106,12 +123,6 @@ WP28C claim status:
 
 ```text
 workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md — in_progress
-```
-
-Alternative Scrub Key test scaffolding package:
-
-```text
-WP29C — Scrub Key warning UI regression test scaffolding
 ```
 
 ## Placeholder robustness line
