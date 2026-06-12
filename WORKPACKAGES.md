@@ -43,14 +43,21 @@ WP25-WP29C — Scrub Key security, policy, import/export and warning test scaffo
 WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; blocked awaiting coordinator/user evidence for Actions/HF sync and app verification.
 WP28C-VERIFY — verification attempted; connector returned no statuses or workflow runs.
 WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
-WP35 — DOCX hidden content risk review completed.
-WP36A — DOCX residual placeholder and comments risk triage completed.
-WP37 — Headers/footers/comments/tracked-changes extraction helper completed.
-WP38 — DOCX hygiene audit report completed.
-WP45-WP49 — local runtime line completed through desktop packaging decision.
+WP35-WP38 — DOCX hygiene line completed through report-only hygiene audit.
+WP45-WP49 — local runtime line completed through desktop packaging decision; installer work deferred to final roadmap phase.
 WP50-WP51 — pilot validation line completed through ICP/pricing hypothesis.
 WP58 — parallel specification consolidation completed.
 ```
+
+## Roadmap sequencing rule
+
+```text
+Validate logic, interface, security and trustworthiness online first. Delay local installer/MSI work until the core product behavior is acceptable.
+```
+
+Do not start local installer, MSI, PyInstaller, Tauri, Electron, auto-updater, signed desktop package or production packaging work by default.
+
+`WP48B` or `WP49B` may only start with explicit coordinator approval and should remain a small proof package. They are no longer part of the default active queue.
 
 ## Scrub Key security line
 
@@ -111,28 +118,6 @@ WP37 — Headers/footers/comments/tracked-changes extraction helper.
 WP38 — DOCX hygiene audit report.
 ```
 
-WP38 files added/changed:
-
-```text
-docx_hygiene_audit.py
-DOCX_HYGIENE_AUDIT_REPORT.md
-tests/test_docx_hygiene_audit.py
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-workpackage_claims/WP38_docx_hygiene_audit_report.md
-handover/workpackages/20260612_1840_docx_hygiene_audit_report.md
-```
-
-WP38 summary:
-
-- Added a report-only DOCX hygiene audit helper on top of the WP37 extraction helper.
-- Builds structured audit reports with severity, counts, findings, warnings, recommended action text and explicit non-change flags.
-- Includes `report_only: true`, `extraction_only: true`, `cleaning_applied: false`, `export_blocking: false`, `export_semantics_changed: false` and `safe_to_claim_clean: false`.
-- Renders a compact Markdown report for future audit/report integration.
-- Added synthetic tests for high-risk findings, no-supported-findings-not-clean guarantee, invalid DOCX, Markdown rendering and synthetic-only boundaries.
-- No DOCX cleaner, comments/tracked-changes removal, export blocking, export semantic change, DOCX reinsert behavior change, Streamlit UI change, dependency change, real data or cloud processing was added.
-
 Next DOCX hygiene step:
 
 ```text
@@ -145,7 +130,7 @@ Blocked until separate approval:
 WP36 — DOCX metadata cleaner helper
 ```
 
-## Local runtime line
+## Local runtime / installer line
 
 ```text
 WP45 — Local runtime architecture plan.
@@ -153,13 +138,16 @@ WP46 — Minimal local Streamlit launcher.
 WP47 — Local file handling/privacy test.
 WP48 — Portable Windows proof of concept.
 WP49 — Desktop packaging decision.
+ROADMAP — Local installer deferred to final phase.
 ```
 
-Next local-runtime step:
+Status:
 
 ```text
-WP48B or WP49B only if coordinator approves a concrete packaging proof.
+Completed for now. No further installer/packaging work is default next work.
 ```
+
+The local installer path is now final-phase work after logic, interface, security and trustworthiness are acceptable. Continue online/web validation first.
 
 ## Pilot validation line
 
@@ -180,8 +168,9 @@ WP52 — Pilot intake and NDA process
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
 2. WP39 — Clean DOCX export policy, if coordinator wants to continue DOCX hygiene line.
 3. WP52 — Pilot intake and NDA process, if coordinator wants to continue pilot-validation line.
-4. WP48B or WP49B — only if coordinator approves a concrete packaging proof.
 ```
+
+Packaging/installer work is intentionally not in the default active queue.
 
 ## Blocked work
 
@@ -206,3 +195,4 @@ Also blocked until separate approval or later specs:
 - MSI implementation.
 - PyInstaller/Tauri/Electron implementation.
 - Production installer claim.
+- Installer/packaging proof work unless coordinator explicitly approves it despite final-phase deferral.
