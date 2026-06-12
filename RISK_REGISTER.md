@@ -204,20 +204,21 @@ Current mitigations:
 - Review filters and guidance exist.
 - WP40 created `DOCUMENT_CENTRIC_REVIEW_UX_SPEC.md`, defining a future document-first review model with document pane, detail pane, table audit/control pane, explicit review states, context-term handling and synthetic validation scenarios.
 - WP41 created `HIGHLIGHT_BASED_REVIEW_PROTOTYPE_DECISION.md`, deciding that highlight-based review should start as a small bounded read-only, text-based, synthetic, highlight-and-detail prototype only after Streamlit feasibility review.
-- D016 records that no broad document-centric UI should be implemented before WP42.
+- WP42 created `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md`, deciding Streamlit is feasible only for a bounded static/read-only highlight preview, not for broad document UI rewrite or click-to-mark review.
+- D017 records the accepted Streamlit feasibility boundary.
 
 Gaps:
 
-- No Streamlit feasibility boundary review for clickable span markers, synchronized panes and large-document performance.
+- No static highlight preview helper/model exists yet.
 - No click-to-mark sensitive text prototype.
 - No frontend architecture decision for professional review UX.
 - No document-centric UI implementation exists yet.
 
 Recommended workpackages:
 
-- WP42 — Streamlit feasibility boundary review.
+- WP42B — Static highlight preview helper and tests.
 - WP43 — Frontend architecture decision.
-- WP44 — Click-to-mark sensitive text prototype.
+- WP44 — Click-to-mark sensitive text prototype only after further approval.
 
 ---
 
@@ -278,36 +279,3 @@ Gaps:
 Recommended workpackages:
 
 - WP57 — Workflow status monitoring runbook and checks.
-
----
-
-## R9 — Pilot/commercial overclaim risk
-
-Status: mitigating  
-Impact: medium
-
-Risk:
-
-```text
-The product is positioned commercially beyond what the current workflow can safely support.
-```
-
-Current mitigations:
-
-- WP50 defined a controlled pilot design and separated demo, pilot and production.
-- WP51 created `ICP_AND_PRICING_HYPOTHESIS.md`, keeping ICP and pricing as hypotheses only.
-- WP51 explicitly records what must not yet be sold or claimed.
-
-Gaps:
-
-- No external pilot has validated willingness to pay yet.
-- No ICP/pricing interview evidence exists yet.
-- No pilot intake or agreement process exists yet.
-- No production offer should be made before local runtime, document hygiene, review and support boundaries are clearer.
-
-Recommended workpackages:
-
-- WP52 — Pilot intake and NDA process.
-- WP53 — Controlled pilot protocol.
-- WP54 — Missers/false negatives feedback loop.
-- WP55 — Residual-risk report as consultancy deliverable.
