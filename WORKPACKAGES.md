@@ -45,7 +45,7 @@ WP28C-VERIFY — verification attempted; connector returned no statuses or workf
 WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
 WP35 — DOCX hidden content risk review completed.
 WP36A — DOCX residual placeholder and comments risk triage completed.
-WP45-WP48 — local runtime line completed through portable Windows proof of concept.
+WP45-WP49 — local runtime line completed through desktop packaging decision.
 WP58 — parallel specification consolidation completed.
 ```
 
@@ -65,35 +65,6 @@ WP29 — Scrub Key secure import/export tests: completed.
 WP29B — Scrub Key import/export edge-case hardening: completed.
 WP29C — Scrub Key warning UI regression test scaffolding: completed.
 ```
-
-WP28C files added/changed:
-
-```text
-fix_streamlit_pdf_text_reinsert.py
-tests/test_scrub_key_warning_acknowledgement_ui.py
-RELEASE_NOTES.md
-CHANGELOG.md
-WORKPACKAGES.md
-RISK_REGISTER.md
-workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md
-handover/workpackages/20260612_1545_mvp_scrub_key_warning_acknowledgement_ui.md
-```
-
-WP28C summary:
-
-- Added MVP warning and acknowledgement gating for Scrub Key export/import, pasted-text reinsert, TXT reinsert, DOCX reinsert, PDF-to-TXT reinsert and restored-output downloads.
-- Preserved Scrub Key JSON content, import behavior, reinsert helper behavior, restored output bytes, filenames and MIME types after acknowledgement.
-- Added static regression tests for warning copy, acknowledgement keys, disabled buttons and non-change boundaries.
-- No Scrub Key schema migration, encryption, automatic deletion, expiry blocking, hidden recovery, dependency change, real data or cloud processing was added.
-
-WP28C-VERIFY findings:
-
-- `get_commit_combined_status` returned no statuses for the WP28C final claim commit.
-- `fetch_commit_workflow_runs` returned no workflow runs for the WP28C final claim commit.
-- `get_commit_combined_status` returned no statuses for the WP28C-VERIFY claim commit.
-- `fetch_commit_workflow_runs` returned no workflow runs for the WP28C-VERIFY claim commit.
-- Therefore Actions and Hugging Face sync cannot be verified by this worker.
-- App verification must wait until Actions and sync evidence is available.
 
 Next Scrub Key step:
 
@@ -135,26 +106,6 @@ WP35 — DOCX hidden content risk review.
 WP36A — DOCX residual placeholder and comments risk triage.
 ```
 
-WP36A files added/changed:
-
-```text
-DOCX_RESIDUAL_PLACEHOLDER_COMMENTS_TRIAGE.md
-tests/test_docx_residual_placeholder_comments_risk.py
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-workpackage_claims/WP36A_docx_residual_placeholder_comments_risk_triage.md
-handover/workpackages/20260612_1625_docx_residual_placeholder_comments_risk_triage.md
-```
-
-WP36A summary:
-
-- Recorded the app-verification finding that DOCX restored output can still contain residual placeholders such as `[PERSOON_01]`.
-- Recorded that Word comments/kantlijncommentaren are outside the current scrub/reinsert flow.
-- Added synthetic tests showing residual placeholder mismatch remains visible and comments are copied through unchanged by the current DOCX reinsert helper.
-- Classified this as a high-risk document hygiene issue, not a cosmetic bug.
-- No DOCX cleaner, comments/tracked-changes removal, export blocking, export semantic change, Streamlit UI change, real data or cloud processing was added.
-
 Next DOCX hygiene step:
 
 ```text
@@ -174,22 +125,41 @@ WP45 — Local runtime architecture plan.
 WP46 — Minimal local Streamlit launcher.
 WP47 — Local file handling/privacy test.
 WP48 — Portable Windows proof of concept.
+WP49 — Desktop packaging decision.
 ```
+
+WP49 files added/changed:
+
+```text
+DESKTOP_PACKAGING_DECISION.md
+DECISION_LOG.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+workpackage_claims/WP49_desktop_packaging_decision.md
+handover/workpackages/20260612_1700_desktop_packaging_decision.md
+```
+
+WP49 summary:
+
+- Decided that the first local MVP distribution form should remain a portable Python folder with the existing local Streamlit launcher.
+- Decided that PyInstaller one-folder can be the next concrete packaging proof only if explicitly approved.
+- Kept Tauri as preferred later professional desktop-shell candidate, with Electron as a later alternative.
+- Kept MSI as future managed-deployment option only after packaging, signing, update, rollback, offline, network, temp-file and support boundaries are validated.
+- No installer, MSI, PyInstaller, Tauri, Electron, Docker/Hugging Face startup, Streamlit UI, telemetry, cloud processing, dependency, real-data or runtime behavior change was added.
 
 Next local-runtime step:
 
 ```text
-WP49 — Desktop packaging decision
+WP48B or WP49B only if coordinator approves a concrete packaging proof.
 ```
-
-Only start WP49 after WP48 CI/status is acceptable and the coordinator confirms this line should continue before other risk lines.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
 2. WP37 — Headers/footers/comments/tracked-changes extraction helper, if coordinator wants to continue DOCX hygiene line.
-3. WP49 — Desktop packaging decision, only if the coordinator chooses to continue the local-runtime line.
+3. WP48B or WP49B — only if coordinator approves a concrete packaging proof.
 ```
 
 ## Blocked work
@@ -212,3 +182,6 @@ Also blocked until separate approval or later specs:
 - Restored PDF output.
 - OCR.
 - Cloud document processing.
+- MSI implementation.
+- PyInstaller/Tauri/Electron implementation.
+- Production installer claim.
