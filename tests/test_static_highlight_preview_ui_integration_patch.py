@@ -18,7 +18,7 @@ def _app_text() -> str:
 def test_static_highlight_preview_patch_exists_and_is_bounded():
     text = _patch_text()
 
-    assert "WP42D-FIX3" in text
+    assert "WP42D-FIX4" in text
     assert "read-only" in text
     assert "does not mutate" in text
     assert "change export/download behavior" in text
@@ -38,6 +38,16 @@ def test_static_highlight_preview_patch_uses_single_line_editor_anchor():
     assert "Technische details bij de vervangtabel" not in patch_text
     assert "Could not locate replacement editor anchor for static highlight preview" in patch_text
     assert "Could not insert static highlight preview block before replacement editor" in patch_text
+
+
+def test_static_highlight_preview_patch_removes_stale_preview_blocks_before_reinsert():
+    text = _patch_text()
+
+    assert "def remove_existing_preview_block" in text
+    assert "Always clean earlier startup-patch output first" in text
+    assert "while PREVIEW_TITLE in source" in text
+    assert "source = source[:block_start] + source[editor_pos:]" in text
+    assert "Found static highlight preview title but could not locate replacement editor anchor for cleanup" in text
 
 
 def test_static_highlight_preview_patch_uses_no_expander_wrapper():
