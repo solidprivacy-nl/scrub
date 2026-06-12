@@ -4,18 +4,41 @@ Repository: `solidprivacy-nl/scrub`
 
 Workpackage: `WP42D-VERIFY — Static highlight preview UI verification closeout`
 
-Status: `in_progress`
+Status: `completed_verification_attempt_blocked`
 
 Started: `2026-06-12 19:45 Europe/Amsterdam`
 
-Scope:
+Completed: `2026-06-12 19:55 Europe/Amsterdam`
+
+Files added:
 
 ```text
-Verification/closeout-only. Check available GitHub status for the WP42D static highlight preview UI work, record Hugging Face/app verification status, and update central docs. No code, UI, tests, runtime behavior, export/download behavior, Scrub Key behavior, cloud processing or real data changes.
+WP42D_VERIFY_STATUS.md
+handover/workpackages/20260612_1945_static_highlight_preview_ui_verify.md
 ```
 
-Coordination note:
+Files changed:
 
 ```text
-If another worker wants to start WP42D-VERIFY while this status is in_progress, stop and report that this package is already claimed.
+WORKPACKAGES.md
+CHANGELOG.md
+workpackage_claims/WP42D_VERIFY_static_highlight_preview_ui_closeout.md
+```
+
+Connector-visible validation:
+
+```text
+WP42D files exist. Patch boundaries and Dockerfile patch order were reviewed through the connector.
+```
+
+Still needed:
+
+```text
+Actions/HF sync/app evidence from coordinator or accessible workflow logs.
+```
+
+Next:
+
+```text
+Coordinator/user evidence needed for WP42D Actions/HF sync and app verification.
 ```
