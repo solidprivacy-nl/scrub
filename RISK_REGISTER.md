@@ -206,19 +206,19 @@ Current mitigations:
 - WP45 created `LOCAL_RUNTIME_ARCHITECTURE_PLAN.md`, defining the Hugging Face demo role, local-first trust requirements and a phased local runtime path.
 - WP46 added `scripts/run_local_streamlit.py` and `LOCAL_RUN.md` as the minimal local Streamlit launcher path.
 - WP47 added static/monkeypatch tests for the local launcher and local-run documentation, covering localhost binding, default port, disabled Streamlit usage stats, no cloud/AI/telemetry endpoints in launcher arguments, no document content or filenames in launcher arguments, no launcher logging/temp-file/packaging behavior and clear Hugging Face/local-runtime documentation boundaries.
+- WP48 added `scripts/run_windows_portable_poc.ps1`, `WINDOWS_PORTABLE_POC.md` and static tests for a minimal Windows portable proof-of-concept wrapper around the existing local launcher.
 
 Gaps:
 
-- WP47 validates launcher/documentation boundaries only; it is not a full network-traffic capture.
+- WP47 and WP48 validate launcher/documentation boundaries only; they are not full network-traffic captures.
 - No full offline demonstration.
 - No runtime packet/network inspection.
-- No Windows packaging proof of concept.
 - No final desktop packaging decision.
 - No production security certification is supported.
+- No signed or managed enterprise deployment proof exists.
 
 Recommended workpackages:
 
-- WP48 — Portable Windows proof of concept.
 - WP49 — Desktop packaging decision.
 - Later network/privacy validation package — runtime network-traffic capture and temp-file inspection under controlled local conditions.
 
