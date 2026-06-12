@@ -29,6 +29,23 @@ Also read when relevant:
 - `RELEASE_NOTES.md`
 - feature specs such as `SCRUB_KEY_SPEC.md` and `PDF_TEXT_REINSERT_UI_PLAN.md`
 
+## Workpackage claim check
+
+Before starting implementation or documentation changes for a workpackage, check `workpackage_claims/`.
+
+If a claim file for the same workpackage already exists:
+
+- status `in_progress`: stop and report that the package is already claimed;
+- status `completed`: stop and report that the package is already done;
+- status `blocked`: stop and read the blocking reason;
+- status `abandoned`: continue only with coordinator approval.
+
+If no claim exists, create a new claim file before editing code, tests, UI, export, schema or shared documentation files.
+
+Use `GitHub.create_file` for the claim. Do not overwrite an existing claim. This is the lightweight lock that prevents two workers from silently starting the same package.
+
+When the workpackage is done, update the same claim file to `completed` and record the final commit or PR, handover path, tests/checks, validation status, remaining risks and next recommended step.
+
 ## Product direction
 
 The product direction is:
