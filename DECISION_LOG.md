@@ -4,6 +4,32 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-12 — D018 — Stay with Streamlit for MVP validation and defer frontend migration
+
+Status: accepted frontend architecture decision
+
+Decision:
+
+```text
+Keep Streamlit as the MVP validation surface for now. Do not migrate to a separate frontend yet. Do not build a professional document editor yet.
+```
+
+Rationale:
+
+The project currently needs validation of product behavior more than a new frontend stack. Streamlit remains the fastest surface for online MVP validation with synthetic and approved non-confidential test data. A frontend migration now would add architecture, security, testing and synchronization complexity before the core workflow is trusted.
+
+Implications:
+
+- Continue using Streamlit for MVP validation.
+- Keep UI thin and helper-driven.
+- Put business rules and safety decisions in reusable Python helpers and tests where possible.
+- Do not replace the current review table without a separate migration package.
+- Do not start click-to-mark, professional document editing, long-document virtualized review or Word/PDF layout rendering yet.
+- Reconsider frontend migration only after MVP workflow evidence and user validation.
+- WP43 does not validate or close WP42D; WP42D remains pending Actions/HF/app evidence.
+
+---
+
 ## 2026-06-12 — D017 — Streamlit is feasible only for a bounded read-only highlight preview
 
 Status: accepted feasibility boundary decision
