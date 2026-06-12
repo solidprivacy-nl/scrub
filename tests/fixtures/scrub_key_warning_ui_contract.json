@@ -1,0 +1,230 @@
+{
+  "schema_version": "wp29c_scrub_key_warning_ui_contract_v1",
+  "synthetic_only": true,
+  "test_scaffolding_only": true,
+  "implements_ui": false,
+  "source_plan": "SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md",
+  "target_patch_file": "fix_streamlit_nested_expanders.py",
+  "forbidden_files_for_scaffolding": [
+    "presidio_streamlit.py"
+  ],
+  "required_ui_blocks": [
+    "review_summary_block",
+    "scrub_key_import_ui_block",
+    "two_mode_selection_block",
+    "reinsert_ui_block",
+    "txt_reinsert_ui_block",
+    "docx_reinsert_ui_block"
+  ],
+  "required_warning_moments": [
+    {
+      "id": "scrub_key_creation_preview",
+      "location": "review_summary_block",
+      "acknowledgement_required": false,
+      "required_copy_fragments": [
+        "u maakt nu een Scrub Key",
+        "pseudoniem en niet volledig anoniem"
+      ]
+    },
+    {
+      "id": "scrub_key_export_download",
+      "location": "review_summary_block",
+      "acknowledgement_required": true,
+      "state_key": "ack_scrub_key_export_risk",
+      "button_label": "Download Scrub Key (.json)",
+      "required_copy_fragments": [
+        "kan originele vertrouwelijke waarden herstellen",
+        "niet naar externe AI",
+        "niet samen met opgeschoonde uitvoer"
+      ]
+    },
+    {
+      "id": "local_storage_downloads_guidance",
+      "location": "review_summary_block",
+      "acknowledgement_required": false,
+      "required_copy_fragments": [
+        "Bewaar de Scrub Key lokaal",
+        "Downloads",
+        "gedeelde computers",
+        "cloudsync"
+      ]
+    },
+    {
+      "id": "scrub_key_import_reload",
+      "location": "scrub_key_import_ui_block",
+      "acknowledgement_required": true,
+      "state_key": "ack_scrub_key_import_risk",
+      "button_label": "Valideer en laad Scrub Key",
+      "required_copy_fragments": [
+        "Laad alleen een Scrub Key die bij dit document of dossier hoort",
+        "kan originele vertrouwelijke waarden herstellen",
+        "gebruik geen sleutel uit een ander dossier"
+      ]
+    },
+    {
+      "id": "reinsert_mode_entry",
+      "location": "two_mode_selection_block",
+      "acknowledgement_required": false,
+      "required_copy_fragments": [
+        "terugzetten herstelt originele gevoelige waarden",
+        "De uitvoer kan weer persoonsgegevens",
+        "Gebruik de Scrub Key niet in externe AI-diensten"
+      ]
+    },
+    {
+      "id": "pasted_text_reinsert",
+      "location": "reinsert_ui_block",
+      "acknowledgement_required": true,
+      "state_key": "ack_reinsert_text_confidential",
+      "button_label": "Zet originele waarden lokaal terug",
+      "required_copy_fragments": [
+        "herstelde uitvoer weer vertrouwelijk",
+        "Controleer het controleverslag"
+      ]
+    },
+    {
+      "id": "txt_reinsert",
+      "location": "txt_reinsert_ui_block",
+      "acknowledgement_required": true,
+      "state_key": "ack_reinsert_txt_confidential",
+      "button_label": "Zet TXT-bestand lokaal terug",
+      "required_copy_fragments": [
+        "herstelde download bevat mogelijk weer originele persoonsgegevens",
+        "passende beveiligde locatie"
+      ]
+    },
+    {
+      "id": "txt_restored_download",
+      "location": "txt_reinsert_ui_block",
+      "acknowledgement_required": true,
+      "state_key": "ack_download_restored_txt_confidential",
+      "button_label": "Download hersteld TXT-bestand (.txt)",
+      "required_copy_fragments": [
+        "download weer vertrouwelijke originele waarden"
+      ]
+    },
+    {
+      "id": "docx_reinsert",
+      "location": "docx_reinsert_ui_block",
+      "acknowledgement_required": true,
+      "state_key": "ack_reinsert_docx_confidential",
+      "button_label": "Zet DOCX-bestand lokaal terug",
+      "required_copy_fragments": [
+        "herstelde download bevat mogelijk weer originele persoonsgegevens",
+        "DOCX-terugzetten ondersteunt"
+      ]
+    },
+    {
+      "id": "docx_restored_download",
+      "location": "docx_reinsert_ui_block",
+      "acknowledgement_required": true,
+      "state_key": "ack_download_restored_docx_confidential",
+      "button_label": "Download hersteld DOCX-bestand (.docx)",
+      "required_copy_fragments": [
+        "download weer vertrouwelijke originele waarden",
+        "metadata"
+      ]
+    },
+    {
+      "id": "pdf_text_reinsert_if_present",
+      "location": "future_pdf_to_txt_reinsert_block",
+      "acknowledgement_required": true,
+      "state_key": "ack_reinsert_pdf_text_confidential",
+      "required_copy_fragments": [
+        "geen herstelde PDF",
+        "geen OCR",
+        "herstelde TXT-uitvoer"
+      ]
+    },
+    {
+      "id": "expiry_delete_guidance",
+      "location": "multiple_reinsert_and_export_blocks",
+      "acknowledgement_required": false,
+      "required_copy_fragments": [
+        "verloopt niet automatisch",
+        "Verwijder de sleutel zodra het doel is afgerond",
+        "zonder Scrub Key kan Scrub originele waarden niet meer deterministisch terugzetten"
+      ]
+    },
+    {
+      "id": "shared_computer_warning",
+      "location": "multiple_warning_blocks",
+      "acknowledgement_required": false,
+      "required_copy_fragments": [
+        "gedeelde computer",
+        "gedeeld browserprofiel",
+        "geen echte vertrouwelijke documenten"
+      ]
+    },
+    {
+      "id": "email_ai_upload_warning",
+      "location": "multiple_warning_blocks",
+      "acknowledgement_required": false,
+      "required_copy_fragments": [
+        "Upload de Scrub Key niet naar externe AI",
+        "Mail de Scrub Key ook niet mee"
+      ]
+    },
+    {
+      "id": "loss_of_key_warning",
+      "location": "review_summary_block",
+      "acknowledgement_required": false,
+      "required_copy_fragments": [
+        "Zonder Scrub Key kan Scrub originele waarden niet meer deterministisch terugzetten"
+      ]
+    },
+    {
+      "id": "tampering_mismatch_audit_warning",
+      "location": "audit_sections",
+      "acknowledgement_required": false,
+      "required_copy_fragments": [
+        "niet volledig bij deze tekst te passen",
+        "dubbele/ongeldige mappings",
+        "niet automatisch teruggezet"
+      ]
+    }
+  ],
+  "required_acknowledgement_state_keys": [
+    "ack_scrub_key_export_risk",
+    "ack_scrub_key_import_risk",
+    "ack_reinsert_text_confidential",
+    "ack_reinsert_txt_confidential",
+    "ack_reinsert_docx_confidential",
+    "ack_reinsert_pdf_text_confidential",
+    "ack_download_restored_txt_confidential",
+    "ack_download_restored_docx_confidential"
+  ],
+  "required_audit_fields_to_preserve": [
+    "validation_issues",
+    "unknown_placeholders",
+    "duplicate_placeholders",
+    "placeholders_not_found",
+    "replacement_count",
+    "local_only",
+    "ai_processing",
+    "cloud_processing"
+  ],
+  "forbidden_claims_or_behaviors": [
+    "encryptie ingeschakeld",
+    "automatisch verwijderen",
+    "automatische expiry blocking",
+    "hidden recovery",
+    "server-side key storage",
+    "durable key vault",
+    "Scrub Key schema migration",
+    "cloud processing",
+    "safe for production",
+    "volledig anoniem"
+  ],
+  "forbidden_code_markers_for_scaffolding": [
+    "st.checkbox(",
+    "st.download_button(",
+    "st.button(",
+    "fix_streamlit_nested_expanders.py"
+  ],
+  "notes": [
+    "WP29C is scaffolding only and must not implement UI behavior.",
+    "WP28C may consume this contract when implementing warning/acknowledgement UI.",
+    "Acknowledgement gating may disable high-risk buttons only until the related checkbox is checked; it must not change JSON, MIME, filename, import, export or reinsert semantics."
+  ]
+}
