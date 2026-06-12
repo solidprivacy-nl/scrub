@@ -4,18 +4,31 @@ Repository: `solidprivacy-nl/scrub`
 
 Workpackage: `WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration`
 
-Status: `in_progress`
+Status: `completed`
 
 Started: `2026-06-12 19:25 Europe/Amsterdam`
 
-Scope:
+Completed: `2026-06-12 19:35 Europe/Amsterdam`
+
+Files added:
 
 ```text
-Planning/documentation-only. Plan how the replacement_decision.py helper can be integrated into the future review UI without implementing UI, changing Streamlit files, changing export/download behavior, changing Scrub Key schema, changing runtime behavior, adding cloud processing or adding real data.
+REPLACE_LOGIC_UI_PLAN.md
+tests/test_replace_logic_ui_plan.py
+handover/workpackages/20260612_1925_replace_logic_ui_plan.md
 ```
 
-Coordination note:
+Files changed:
 
 ```text
-If another worker wants to start WP_REPLACE_LOGIC_UI_PLAN while this status is in_progress, stop and report that this package is already claimed.
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP_REPLACE_LOGIC_UI_PLAN_helper_integration.md
+```
+
+Next:
+
+```text
+WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration
 ```
