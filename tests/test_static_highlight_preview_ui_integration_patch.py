@@ -18,7 +18,7 @@ def _app_text() -> str:
 def test_static_highlight_preview_patch_exists_and_is_bounded():
     text = _patch_text()
 
-    assert "WP42D-FIX" in text
+    assert "WP42D-FIX2" in text
     assert "read-only" in text
     assert "does not mutate" in text
     assert "change export/download behavior" in text
@@ -28,16 +28,15 @@ def test_static_highlight_preview_patch_exists_and_is_bounded():
     assert "real-data" in text
 
 
-def test_static_highlight_preview_patch_uses_stable_current_app_anchor():
+def test_static_highlight_preview_patch_uses_single_line_editor_anchor():
     patch_text = _patch_text()
     app_text = _app_text()
 
-    stable_anchor = '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
-        edited_replacements_df = st.data_editor(
-'''
-    assert stable_anchor in app_text
-    assert stable_anchor in patch_text
+    editor_anchor = '        edited_replacements_df = st.data_editor(\n'
+    assert editor_anchor in app_text
+    assert 'EDITOR_ANCHOR = "        edited_replacements_df = st.data_editor(\\n"' in patch_text
     assert "Technische details bij de vervangtabel" not in patch_text
+    assert "Could not locate replacement editor anchor for static highlight preview" in patch_text
     assert "Could not insert static highlight preview block before replacement editor" in patch_text
 
 
@@ -57,7 +56,7 @@ def test_static_highlight_preview_patch_inserts_before_authoritative_editor():
     assert "Documentvoorbeeld met markeringen — experimenteel" in text
     assert "De vervangtabel blijft leidend" in text
     assert "edited_replacements_df = st.data_editor(" in text
-    assert text.index("static_highlight_preview_block") < text.index("insertion_anchor") < text.index("APP_FILE.write_text")
+    assert text.index("static_highlight_preview_block") < text.index("EDITOR_ANCHOR") < text.index("APP_FILE.write_text")
 
 
 def test_static_highlight_preview_patch_uses_helper_gates_before_rendering():
