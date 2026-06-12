@@ -34,6 +34,7 @@ WP40-WP42D — review UX line implemented through experimental static highlight 
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
+WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration completed.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
 ```
@@ -88,35 +89,50 @@ Next review UX step:
 WP42D-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout
 ```
 
-Alternative after verification:
-
-```text
-WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration
-```
-
 ## Replace/review logic line
 
 ```text
 WP_REPLACE_LOGIC — completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — implemented helper/tests-only.
 WP_REPLACE_LOGIC_UI_PLAN — completed planning/tests/documentation-only.
+WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — completed tests/documentation-only.
 ```
+
+WP_REPLACE_LOGIC_UI_CONTRACT_TESTS artifacts:
+
+```text
+tests/test_replace_logic_ui_contract.py
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP_REPLACE_LOGIC_UI_CONTRACT_TESTS_replacement_decision_integration.md
+handover/workpackages/20260612_2145_replace_logic_ui_contract_tests.md
+```
+
+Summary:
+
+- Added contract tests mapping planned Dutch UI labels to supported `replacement_decision.py` review states.
+- Added contract tests mapping planned scope labels to supported helper scopes.
+- Tested exact and normalized affected-occurrence behavior through `matching_occurrence_ids(...)`.
+- Tested `build_replacement_audit(...)` report-only/export-readiness behavior.
+- Locked boundaries from `REPLACE_LOGIC_UI_PLAN.md`: no UI implementation, no export blocking, no Scrub Key behavior change, no click-to-mark implementation, existing table remains fallback/control surface.
+- Used synthetic values only.
 
 Next replace/review logic step:
 
 ```text
-WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after coordinator explicitly approves UI work and after relevant contract tests are green.
 ```
 
-Do not start UI implementation until the UI contract tests are completed and coordinator approves UI work.
+Do not start replacement UI implementation until coordinator approves UI work.
 
 ## Active / next recommended execution queue
 
 ```text
 1. WP42D-VERIFY — verify GitHub Actions, Hugging Face sync and app behavior for the static highlight preview UI.
 2. Coordinator/user evidence still needed for WP28C Actions/HF sync and app verification if not already available.
-3. WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration.
-4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+4. WP43 — Frontend architecture decision, if coordinator wants architecture before more UI implementation.
 ```
 
 ## Blocked work
@@ -126,6 +142,7 @@ Do not start yet without separate approval:
 ```text
 WP36 — DOCX metadata cleaner helper
 WP52 — Pilot intake and NDA process
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION — replacement decision UI implementation
 ```
 
 Also blocked until separate approval or later specs:
