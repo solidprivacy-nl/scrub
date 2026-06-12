@@ -41,6 +41,7 @@ WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-only.
+WP28B — Scrub Key warning implementation planning: completed UI/security implementation-planning-only.
 WP29 — Scrub Key secure import/export tests: completed helper/tests-only after PR/Actions verification.
 WP29B — Scrub Key import/export edge-case hardening: completed helper/tests-only with minimal unsupported-version validation hardening.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
@@ -73,9 +74,26 @@ WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-only.
+WP28B — Scrub Key warning implementation planning: completed UI/security implementation-planning-only.
 WP29 — Scrub Key secure import/export tests: completed helper/tests-only after PR/Actions verification.
 WP29B — Scrub Key import/export edge-case hardening: completed helper/tests-only.
 ```
+
+WP28B artifacts:
+
+```text
+SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md
+handover/workpackages/20260612_1415_scrub_key_warning_implementation_planning.md
+```
+
+WP28B summary:
+
+- Translated WP27 warning UX and WP28 expiry/delete policy into exact future implementation locations, acknowledgement states and Dutch copy inventory.
+- Mapped warning placement to the current Streamlit patch surface: `review_summary_block`, `scrub_key_import_ui_block`, `two_mode_selection_block`, `reinsert_ui_block`, `txt_reinsert_ui_block`, `docx_reinsert_ui_block` and future PDF-to-TXT reinsert scope.
+- Defined MVP acknowledgement states for Scrub Key export/import, pasted-text reinsert, TXT reinsert, DOCX reinsert, PDF-to-TXT reinsert if present, and restored output downloads.
+- Defined guidance-only MVP warnings for Downloads/local storage, shared-computer risk, expiry/delete guidance, loss-of-key, DOCX/PDF limitations and audit mismatch guidance.
+- Defined later blocking candidates without implementing blocking.
+- No UI implementation, Streamlit patch, helper logic, schema migration, import/export behavior change, reinsert behavior change, encryption, automatic deletion, expiry blocking, dependency change, real data or cloud processing was added.
 
 WP29 artifacts:
 
@@ -103,7 +121,13 @@ WP29 / WP29B summary:
 Next recommended Scrub Key step:
 
 ```text
-WP28B — Scrub Key warning implementation planning
+WP28C — MVP Scrub Key warning/acknowledgement UI implementation
+```
+
+Alternative if the coordinator wants more test scaffolding before UI work:
+
+```text
+WP29C — Scrub Key warning UI regression test scaffolding
 ```
 
 ## Placeholder robustness line
@@ -151,7 +175,13 @@ WP47 — Local file handling/privacy test
 The next recommended workpackage from the Scrub Key security line is:
 
 ```text
-WP28B — Scrub Key warning implementation planning
+WP28C — MVP Scrub Key warning/acknowledgement UI implementation
+```
+
+Alternative Scrub Key test scaffolding package:
+
+```text
+WP29C — Scrub Key warning UI regression test scaffolding
 ```
 
 The next recommended workpackage from the placeholder robustness line is:
@@ -168,40 +198,70 @@ WP47 — Local file handling/privacy test
 
 ## Next workpackage definitions
 
-### WP28B — Scrub Key warning implementation planning
+### WP28C — MVP Scrub Key warning/acknowledgement UI implementation
 
-Type: UI/security implementation planning only.
+Type: UI/security implementation.
 
 Purpose:
 
-- Translate WP27 warning UX and WP28 expiry/delete policy into exact implementation locations, acknowledgement states and copy inventory before editing Streamlit UI.
-- Define the later MVP warning/acknowledgement implementation scope without changing behavior.
-- Preserve existing Scrub Key schema, import/export behavior and reinsert behavior.
+- Implement the MVP Scrub Key warning and acknowledgement placements defined in `SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md`.
+- Add clear Dutch warnings for Scrub Key creation, export/download, import/reload, reinsert, restored output download, Downloads/local storage, shared-computer risk, e-mail/AI upload risk, loss-of-key and tampering/mismatch risk.
+- Add/update UI patch regression tests for warning placement and acknowledgement gating.
 
 Allowed direction:
 
-- Documentation/planning only.
-- Map warnings to exact current UI flow locations.
-- Define MVP acknowledgement requirements and guidance-only warnings.
-- Define later blocking candidates without implementing blocking.
-- No UI implementation.
-- No Streamlit patch.
-- No helper logic change.
-- No schema migration.
-- No import/export behavior change.
-- No reinsert behavior change.
+- Edit `fix_streamlit_nested_expanders.py` only unless a test requires a narrow related patch file update.
+- Add/update tests for Streamlit patch output.
+- Acknowledgement gating may disable high-risk buttons until the user checks the relevant checkbox.
+- Preserve exported JSON content, import behavior, reinsert behavior and file download semantics after acknowledgement.
+- No Scrub Key schema migration.
 - No encryption.
 - No automatic deletion.
 - No expiry blocking.
+- No hidden recovery.
+- No cloud processing.
+- No real data.
 
 Likely files:
 
 ```text
-SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md
+fix_streamlit_nested_expanders.py
+tests/test_scrub_key_ui_patch.py
+tests/test_two_mode_ui_patch.py
+tests/test_txt_reinsert_ui_patch.py
+tests/test_docx_reinsert_ui_patch.py
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_scrub_key_warning_implementation_planning.md
+handover/workpackages/YYYYMMDD_HHMM_mvp_scrub_key_warning_acknowledgement_ui.md
 ```
+
+Validation expectations:
+
+```text
+pytest tests/test_scrub_key_ui_patch.py
+pytest tests/test_two_mode_ui_patch.py
+pytest tests/test_txt_reinsert_ui_patch.py
+pytest tests/test_docx_reinsert_ui_patch.py
+pytest tests -k "scrub_key or reinsert"
+```
+
+Because WP28C changes UI behavior, app verification is required after GitHub Actions and Hugging Face sync are green.
+
+### WP29C — Scrub Key warning UI regression test scaffolding
+
+Type: test scaffolding only.
+
+Purpose:
+
+- Add tests that lock down the warning-copy and acknowledgement requirements from `SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md` before WP28C implementation.
+- Keep behavior unchanged.
+
+Allowed direction:
+
+- Tests only.
+- No UI implementation.
+- No helper logic.
+- No schema/import/export/reinsert behavior changes.
 
 ### WP34 — Synthetic AI-output placeholder corruption tests
 
