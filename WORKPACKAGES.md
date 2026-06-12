@@ -30,7 +30,7 @@ When done, update the same claim file to `completed` and include the final commi
 ```text
 WP28C — implemented; still needs coordinator evidence/app verification.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
-WP40-WP42D — review UX line implemented through experimental static highlight preview UI.
+WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D-VERIFY — verification attempted; blocked pending Actions/HF/app evidence.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
@@ -50,7 +50,7 @@ Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 
 WP52 is parked until the MVP product quality gate is passed.
 
-## Review UX line
+## Review UX / frontend line
 
 ```text
 WP40 — Document-centric review UX specification: completed.
@@ -60,26 +60,40 @@ WP42B — Static highlight preview helper and tests: completed.
 WP42C — Static highlight preview UI planning: completed.
 WP42D — Static highlight preview UI integration: implemented.
 WP42D-VERIFY — verification attempted; blocked pending Actions/HF/app evidence.
+WP43 — Frontend architecture decision: completed.
 ```
 
-WP42D-VERIFY summary:
+WP43 artifacts:
 
-- Checked for an existing WP42D-VERIFY claim before starting.
-- Created the verification claim before shared documentation changes.
-- Confirmed connector-visible WP42D files exist.
-- Confirmed connector-visible patch boundaries: read-only, non-authoritative, helper-gated rendering, escaped text rendering and no export/Scrub Key/reinsert mutation in the patch text.
-- Confirmed connector-visible Dockerfile patch order: existing patches run before `fix_streamlit_static_highlight_preview.py`, which runs before `streamlit run`.
-- GitHub combined status returned no statuses.
-- Workflow run lookup returned no workflow runs.
-- App verification is still required because WP42D changed UI behavior.
+```text
+FRONTEND_ARCHITECTURE_DECISION.md
+tests/test_frontend_architecture_decision.py
+DECISION_LOG.md
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP43_frontend_architecture_decision.md
+handover/workpackages/20260612_2215_frontend_architecture_decision.md
+```
 
-Next review UX step:
+WP43 summary:
+
+- Decided to keep Streamlit as the MVP validation surface for now.
+- Decided not to migrate to a separate frontend yet.
+- Decided not to build a professional document editor yet.
+- Kept the architecture helper-driven: reusable Python core, thin UI patch layer, contract tests before UI integration.
+- Preserved the current review table as authoritative control/audit surface unless a later migration package changes that.
+- Defined reconsideration criteria for a later separate frontend.
+- Recorded D018 in `DECISION_LOG.md`.
+- No UI implementation, Streamlit patch, review table behavior, export/download behavior, Scrub Key behavior, reinsert behavior, dependency, Docker/runtime behavior, cloud processing or real-data change was made.
+
+Next review/frontend step:
 
 ```text
 Coordinator/user evidence needed for WP42D Actions/HF sync and app verification.
 ```
 
-Do not start further review UI implementation until WP42D verification evidence is available.
+Do not start further review UI implementation until WP42D verification evidence is available or coordinator explicitly approves a new UI package.
 
 ## Replace/review logic line
 
@@ -104,7 +118,7 @@ Do not start replacement UI implementation until coordinator approves UI work.
 1. Coordinator/user evidence needed for WP42D Actions/HF sync and app verification.
 2. Coordinator/user evidence still needed for WP28C Actions/HF sync and app verification if not already available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
-4. WP43 — Frontend architecture decision, if coordinator wants architecture before more UI implementation.
+4. No further review UI implementation until WP42D is verified or explicitly approved.
 ```
 
 ## Blocked work
@@ -132,5 +146,7 @@ Also blocked until separate approval or later specs:
 - MSI implementation.
 - PyInstaller/Tauri/Electron implementation.
 - Broad document-centric Streamlit UI rewrite.
+- Separate frontend migration.
+- Professional document editor implementation.
 - Click-to-mark sensitive text implementation.
 - Authoritative highlight-based review mutation.
