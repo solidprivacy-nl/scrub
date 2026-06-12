@@ -1,14 +1,14 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP42D-FIX2 — Static highlight preview anchor repair
+## WP42D-FIX3 — Static highlight preview no-expander repair
 
-Status: implemented UI patch anchor repair; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: implemented UI patch repair; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Files added:
 
-- `WP42D_FIX2_STATUS.md`
-- `workpackage_claims/WP42D_FIX2_static_highlight_preview_anchor.md`
-- `handover/workpackages/20260612_2310_static_highlight_preview_anchor_repair.md`
+- `WP42D_FIX3_STATUS.md`
+- `workpackage_claims/WP42D_FIX3_static_highlight_preview_no_expander.md`
+- `handover/workpackages/20260612_2325_static_highlight_preview_no_expander_repair.md`
 
 Files changed:
 
@@ -16,15 +16,14 @@ Files changed:
 - `tests/test_static_highlight_preview_ui_integration_patch.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `workpackage_claims/WP42D_FIX2_static_highlight_preview_anchor.md`
+- `workpackage_claims/WP42D_FIX3_static_highlight_preview_no_expander.md`
 
 Summary:
 
-- User runtime evidence showed the first fix now fails fast with `RuntimeError: Could not insert static highlight preview block before replacement editor.`
-- This confirms the fail-fast guard worked, but the two-line insertion anchor was still too strict after the startup patch chain.
-- Repaired `fix_streamlit_static_highlight_preview.py` to anchor on only the replacement editor line: `edited_replacements_df = st.data_editor(`.
-- This keeps the preview directly before the authoritative replacement table while avoiding dependency on the preceding dataframe line.
-- Updated static tests to assert the single-line editor anchor and fail-fast guards.
+- User runtime evidence showed an `IndentationError` around the inserted static highlight preview `with st.expander(...)` block.
+- Repaired `fix_streamlit_static_highlight_preview.py` to stop injecting a new preview `with st.expander(...)` wrapper.
+- The preview is now a simple read-only section before the replacement table using `st.markdown("#### Documentvoorbeeld met markeringen — experimenteel")` and captions.
+- Updated static tests to assert the patch contains no `with st.expander` wrapper.
 - Preserved read-only, non-authoritative, helper-gated rendering with escaped text only.
 - No export/download, Scrub Key, reinsert, dependency, cloud processing or real-data behavior changed.
 
@@ -42,6 +41,7 @@ Next recommended step:
 
 Recent detailed changelog history remains available in Git history and includes:
 
+- WP42D-FIX2 — Static highlight preview anchor repair.
 - WP42D-FIX — Static highlight preview visibility repair.
 - WP28C app evidence — Scrub Key warning UI screenshot.
 - WP42D-INVESTIGATE — Static highlight preview panel not visible.
