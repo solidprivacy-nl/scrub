@@ -48,6 +48,7 @@ WP36A — DOCX residual placeholder and comments risk triage completed.
 WP37 — Headers/footers/comments/tracked-changes extraction helper completed.
 WP45-WP49 — local runtime line completed through desktop packaging decision.
 WP50 — Pilot design Legal vs Zorg completed planning-only with artifact limitation.
+WP51 — ICP and pricing hypothesis completed business/design/documentation-only.
 WP58 — parallel specification consolidation completed.
 ```
 
@@ -109,28 +110,6 @@ WP36A — DOCX residual placeholder and comments risk triage.
 WP37 — Headers/footers/comments/tracked-changes extraction helper.
 ```
 
-WP37 files added/changed:
-
-```text
-docx_hidden_content_extractor.py
-DOCX_HIDDEN_CONTENT_EXTRACTION_HELPER.md
-tests/test_docx_hidden_content_extractor.py
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-workpackage_claims/WP37_headers_footers_comments_tracked_changes_extraction_helper.md
-handover/workpackages/20260612_1735_headers_footers_comments_tracked_changes_extraction_helper.md
-```
-
-WP37 summary:
-
-- Added a pure local, read-only DOCX hidden-content extraction helper.
-- Detects and extracts text from `word/header*.xml`, `word/footer*.xml`, `word/comments.xml`, `word/commentsExtended.xml` and `word/person.xml` where parseable.
-- Detects tracked-change markers such as `w:ins`, `w:del`, `w:delText`, `w:moveFrom` and `w:moveTo` across `word/*.xml` parts.
-- Returns audit-oriented fields including `docx_parts_seen`, `headers`, `footers`, `comments`, `tracked_changes`, `detected`, `warnings`, `extraction_only`, `cleaning_applied: false` and `export_blocking: false`.
-- Added synthetic tests covering extraction, absence reporting, invalid input and synthetic-only boundaries.
-- No DOCX cleaner, comments/tracked-changes removal, export blocking, export semantic change, DOCX reinsert behavior change, Streamlit UI change, dependency change, real data or cloud processing was added.
-
 Next DOCX hygiene step:
 
 ```text
@@ -153,30 +132,43 @@ WP48 — Portable Windows proof of concept.
 WP49 — Desktop packaging decision.
 ```
 
-WP49 files added/changed:
-
-```text
-DESKTOP_PACKAGING_DECISION.md
-DECISION_LOG.md
-RISK_REGISTER.md
-WORKPACKAGES.md
-CHANGELOG.md
-workpackage_claims/WP49_desktop_packaging_decision.md
-handover/workpackages/20260612_1700_desktop_packaging_decision.md
-```
-
-WP49 summary:
-
-- Decided that the first local MVP distribution form should remain a portable Python folder with the existing local Streamlit launcher.
-- Decided that PyInstaller one-folder can be the next concrete packaging proof only if explicitly approved.
-- Kept Tauri as preferred later professional desktop-shell candidate, with Electron as a later alternative.
-- Kept MSI as future managed-deployment option only after packaging, signing, update, rollback, offline, network, temp-file and support boundaries are validated.
-- No installer, MSI, PyInstaller, Tauri, Electron, Docker/Hugging Face startup, Streamlit UI, telemetry, cloud processing, dependency, real-data or runtime behavior change was added.
-
 Next local-runtime step:
 
 ```text
 WP48B or WP49B only if coordinator approves a concrete packaging proof.
+```
+
+## Pilot validation line
+
+```text
+WP50 — Pilot design Legal vs Zorg.
+WP51 — ICP and pricing hypothesis.
+```
+
+WP51 files added/changed:
+
+```text
+ICP_AND_PRICING_HYPOTHESIS.md
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP51_icp_and_pricing_hypothesis.md
+handover/workpackages/20260612_1815_icp_and_pricing_hypothesis.md
+```
+
+WP51 summary:
+
+- Defined first ICP hypothesis for Scrub Legal and Scrub Zorg.
+- Compared Legal and Zorg users, buyers, approvers/blockers, workflows, willingness-to-pay drivers and risks.
+- Compared demo/discovery, paid pilot, consultancy-assisted pilot, subscription, local desktop license and enterprise/support models.
+- Recommended consultancy-assisted paid pilot as the first paid-offer hypothesis.
+- Recorded what must not be sold or claimed yet, including full automation, production certification, complete anonymization without review, complete hidden-content handling, OCR/restored-PDF output and guaranteed detection.
+- No sales campaign, customer outreach, code, UI, runtime behavior or cloud document processing was added.
+
+Next pilot-validation step:
+
+```text
+WP52 — Pilot intake and NDA process
 ```
 
 ## Active / next recommended execution queue
@@ -184,7 +176,8 @@ WP48B or WP49B only if coordinator approves a concrete packaging proof.
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
 2. WP38 — DOCX hygiene audit report, if coordinator wants to continue DOCX hygiene line.
-3. WP48B or WP49B — only if coordinator approves a concrete packaging proof.
+3. WP52 — Pilot intake and NDA process, if coordinator wants to continue pilot-validation line.
+4. WP48B or WP49B — only if coordinator approves a concrete packaging proof.
 ```
 
 ## Blocked work
