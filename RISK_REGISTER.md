@@ -212,19 +212,21 @@ Current mitigations:
 - WP46 added `scripts/run_local_streamlit.py` and `LOCAL_RUN.md` as the minimal local Streamlit launcher path.
 - WP47 added static/monkeypatch tests for the local launcher and local-run documentation, covering localhost binding, default port, disabled Streamlit usage stats, no cloud/AI/telemetry endpoints in launcher arguments, no document content or filenames in launcher arguments, no launcher logging/temp-file/packaging behavior and clear Hugging Face/local-runtime documentation boundaries.
 - WP48 added `scripts/run_windows_portable_poc.ps1`, `WINDOWS_PORTABLE_POC.md` and static tests for a minimal Windows portable proof-of-concept wrapper around the existing local launcher.
+- WP49 created `DESKTOP_PACKAGING_DECISION.md` and accepted D014 in `DECISION_LOG.md`, deciding that the first MVP distribution should remain a portable Python folder, with PyInstaller one-folder as a later approved proof option, Tauri as preferred later professional shell candidate, Electron as later alternative and MSI only as future managed-deployment option.
 
 Gaps:
 
 - WP47 and WP48 validate launcher/documentation boundaries only; they are not full network-traffic captures.
+- WP49 is a decision only; it does not build a package, installer or desktop shell.
 - No full offline demonstration.
 - No runtime packet/network inspection.
-- No final desktop packaging decision.
 - No production security certification is supported.
 - No signed or managed enterprise deployment proof exists.
 
 Recommended workpackages:
 
-- WP49 — Desktop packaging decision.
+- WP48B — Portable Python folder hardening proof, only if coordinator approves.
+- WP49B — PyInstaller one-folder packaging proof, only if coordinator approves.
 - Later network/privacy validation package — runtime network-traffic capture and temp-file inspection under controlled local conditions.
 
 ---
