@@ -1,5 +1,57 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP40 — Document-centric review UX specification
+
+Status: completed specification/documentation-only.
+
+Purpose:
+
+- Define the future document-centric review UX direction.
+- Move review thinking from table-only toward document-first review with table audit/control.
+- Support online/web validation and trust hardening before installer work.
+
+Files added:
+
+- `DOCUMENT_CENTRIC_REVIEW_UX_SPEC.md`
+- `workpackage_claims/WP40_document_centric_review_ux_specification.md`
+- `handover/workpackages/20260612_1930_document_centric_review_ux_specification.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP40_document_centric_review_ux_specification.md`
+
+Main changes:
+
+- Defined a future document-first review model with document pane, detail pane and table audit/control pane.
+- Defined review states such as `needs_review`, `accepted`, `ignored`, `edited`, `manual_added`, `preserve_context` and `high_risk_unresolved`.
+- Defined future actions: accept, ignore, edit replacement, mark as context term, add missed sensitive value and apply to all same values.
+- Kept current review table as a future audit/control surface rather than the only review surface.
+- Updated R6 from open to mitigating because a document-centric specification now exists.
+
+Validation status:
+
+- Documentation/specification-only.
+- No tests run.
+- App verification: not applicable because no UI behavior changed.
+
+Intentionally not changed:
+
+- No Streamlit UI changed.
+- No review table implementation changed.
+- No export/download behavior changed.
+- No Scrub Key behavior changed.
+- No helper logic changed.
+- No dependency change.
+- No cloud processing added.
+- No real data added.
+
+Next recommended step:
+
+- `WP41 — Highlight-based review prototype decision`.
+
 ## WP39 — Clean DOCX export policy
 
 Status: completed policy/tests/documentation-only.
@@ -9,48 +61,6 @@ Purpose:
 - Define when Scrub may warn, report, block or eventually claim a DOCX export is clean.
 - Record that current DOCX output must not be described as clean DOCX export.
 - Preserve current export behavior while setting boundaries for future clean-export claims.
-
-Files added:
-
-- `CLEAN_DOCX_EXPORT_POLICY.md`
-- `tests/test_clean_docx_export_policy.py`
-- `workpackage_claims/WP39_clean_docx_export_policy.md`
-- `handover/workpackages/20260612_1915_clean_docx_export_policy.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-
-Main changes:
-
-- Defined allowed current labels: DOCX output with limitations, restored DOCX output with hygiene warnings and DOCX hygiene audit.
-- Forbid current claims such as clean DOCX, safe DOCX, fully cleaned DOCX, metadata-free DOCX, comments removed and tracked changes removed.
-- Defined warning/report policy for no-supported-findings, headers/footers, comments/kantlijncommentaren, tracked changes and invalid/uninspectable DOCX.
-- Defined future export-blocking candidates without implementing blocking.
-- Defined minimum requirements before any future clean-DOCX claim.
-- Added policy tests that lock the no-clean-claim, no-export-semantic-change, no-blocking and no-real-data boundaries.
-
-Validation status:
-
-- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
-- Added policy tests should be validated by GitHub Actions.
-- App verification: not applicable because no UI behavior changed.
-
-Intentionally not changed:
-
-- No DOCX cleaner implemented.
-- No comments/tracked-changes removal implemented.
-- No export blocking implemented.
-- No export semantics changed.
-- No DOCX reinsert behavior changed.
-- No Streamlit UI changed.
-- No Scrub Key schema changed.
-- No dependency change.
-- No real data added.
-- No cloud processing added.
-- No roadmap change because strategy and phase order did not change.
 
 Next recommended step:
 
@@ -66,28 +76,6 @@ Purpose:
 - Defer local installer/MSI/desktop packaging work to the final roadmap phase.
 - Make online/web validation of logic, interface, security and trustworthiness the default route before installer investment.
 - Prevent packaging proofs from appearing as default next work.
-
-Files added:
-
-- `workpackage_claims/ROADMAP_local_installer_deferral.md`
-- `handover/workpackages/20260612_1900_local_installer_deferral.md`
-
-Files changed:
-
-- `ROADMAP.md`
-- `DECISION_LOG.md`
-- `WORKPACKAGES.md`
-- `RISK_REGISTER.md`
-- `DESKTOP_PACKAGING_DECISION.md`
-- `CHANGELOG.md`
-- `workpackage_claims/ROADMAP_local_installer_deferral.md`
-
-Validation status:
-
-- Documentation/strategy-only.
-- No tests run.
-- App verification not applicable.
-- No code, UI, runtime behavior, dependency, installer, MSI, PyInstaller, Tauri, Electron, telemetry, cloud processing or real data changed.
 
 Next recommended step:
 
