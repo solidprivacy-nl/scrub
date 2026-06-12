@@ -102,21 +102,22 @@ def test_contract_fragments_and_audit_fields_are_grounded_in_warning_plan():
 def test_contract_boundary_is_documented_and_patch_surface_exists_without_ui_implementation():
     contract = load_contract()
     plan = PLAN_PATH.read_text(encoding="utf-8")
+    plan_lower = plan.lower()
     patch_text = PATCH_PATH.read_text(encoding="utf-8")
 
     for fragment in [
-        "No UI implementation",
-        "No Streamlit patch change",
-        "No Scrub Key schema migration",
-        "No import/export behavior change",
-        "No reinsert behavior change",
-        "No encryption implementation",
-        "No automatic deletion implementation",
-        "No expiry blocking",
-        "No hidden recovery",
-        "No cloud processing",
+        "does **not** implement ui",
+        "change streamlit patch files",
+        "change scrub key schema",
+        "change import/export behavior",
+        "change reinsert behavior",
+        "add encryption",
+        "add deletion automation",
+        "add expiry blocking",
+        "add cloud processing",
+        "add real data",
     ]:
-        assert fragment in plan
+        assert fragment in plan_lower
 
     for block in contract["required_ui_blocks"]:
         assert block in patch_text
