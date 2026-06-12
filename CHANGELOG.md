@@ -1,5 +1,72 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP28B — Scrub Key warning implementation planning
+
+Status: completed UI/security implementation-planning-only.
+
+Purpose:
+
+- Translate WP27 Scrub Key warning UX and WP28 expiry/delete policy into exact future implementation locations before editing Streamlit UI.
+- Define MVP warning and acknowledgement placement for Scrub Key creation, export/download, import/reload, reinsert mode and restored output downloads.
+- Preserve existing Scrub Key schema, helper logic, import/export behavior, reinsert behavior, encryption/deletion/expiry boundaries and UI behavior.
+
+Files added:
+
+- `SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md`
+- `handover/workpackages/20260612_1415_scrub_key_warning_implementation_planning.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Main changes:
+
+- Added a UI/security implementation plan for future MVP Scrub Key warnings and acknowledgements.
+- Mapped warning placement to the current Streamlit patch surface in `fix_streamlit_nested_expanders.py`:
+  - `review_summary_block`;
+  - `scrub_key_import_ui_block`;
+  - `two_mode_selection_block`;
+  - `reinsert_ui_block`;
+  - `txt_reinsert_ui_block`;
+  - `docx_reinsert_ui_block`;
+  - future PDF-to-TXT reinsert scope if present.
+- Defined Dutch copy inventory for Scrub Key creation, export/download, import/reload, reinsert, restored output downloads, Downloads/local storage, shared-computer risk, e-mail/AI upload risk, loss-of-key and tampering/mismatch warnings.
+- Defined MVP acknowledgement states and suggested Streamlit state keys for export/import/reinsert/download moments.
+- Defined guidance-only warnings and later blocking candidates without implementing blocking.
+- Updated `WORKPACKAGES.md` so the next Scrub Key step is `WP28C — MVP Scrub Key warning/acknowledgement UI implementation`.
+- Updated `RISK_REGISTER.md` to record that warning implementation planning exists while implemented warning UI remains open.
+
+Validation status:
+
+- Documentation/planning-only.
+- No tests were run because no code, tests, UI, helper, dependency or behavior changed.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No UI implementation.
+- No Streamlit patch change.
+- No helper logic change.
+- No tests changed.
+- No Scrub Key schema migration.
+- No import/export behavior change.
+- No reinsert behavior change.
+- No encryption implementation.
+- No automatic deletion implementation.
+- No expiry blocking.
+- No hidden recovery.
+- No dependency change.
+- No real data added.
+- No cloud processing added.
+- No roadmap change because strategy and phase order did not change.
+
+Next recommended step:
+
+- `WP28C — MVP Scrub Key warning/acknowledgement UI implementation`.
+- Alternative if the coordinator wants tests before UI edits: `WP29C — Scrub Key warning UI regression test scaffolding`.
+
 ## WP34 — Synthetic AI-output placeholder corruption tests
 
 Status: completed synthetic fixtures/tests-only.
