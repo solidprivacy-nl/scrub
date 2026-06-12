@@ -171,22 +171,25 @@ Current mitigations:
 - Roadmap already recognizes document hygiene and metadata-clean export as important.
 - Current DOCX helper reports limitations and unsupported parts for headers, footers, comments, tracked changes, metadata and split-run placeholders.
 - WP35 created `DOCX_HIDDEN_CONTENT_RISK_REVIEW.md`, defining current assumptions, hidden-content leakage risks, audit requirements, safe extraction/cleaning sequence and future warning/blocking policy boundaries.
+- WP36A created `DOCX_RESIDUAL_PLACEHOLDER_COMMENTS_TRIAGE.md` and synthetic tests for the app-verification finding that DOCX restored output can still contain residual placeholders and that Word comments/kantlijncommentaren remain outside current processing.
 
 Gaps:
 
-- No DOCX metadata cleaner helper yet.
+- Residual placeholders such as `[PERSOON_01]` can remain in restored DOCX when the loaded Scrub Key mapping does not match them exactly or Word splits placeholders across runs.
+- Word comments / kantlijncommentaren are not processed by the current DOCX scrub/reinsert flow.
 - No headers/footers/comments/tracked-changes extraction helper yet.
 - No DOCX hygiene audit report yet.
 - No clean DOCX export policy yet.
 - No implementation for footnotes/endnotes, custom XML, text boxes/shapes or embedded object handling.
 - No approved export-blocking policy for high-risk hidden content.
+- No DOCX metadata cleaner helper yet; WP36 remains blocked until a tighter metadata-only helper boundary is approved.
 
 Recommended workpackages:
 
-- WP36 — DOCX metadata cleaner helper.
 - WP37 — Headers/footers/comments/tracked-changes extraction helper.
 - WP38 — DOCX hygiene audit report.
 - WP39 — Clean DOCX export policy.
+- Later gated package — DOCX metadata cleaner helper after explicit metadata-only boundary approval.
 
 ---
 
