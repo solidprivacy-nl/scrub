@@ -1,5 +1,45 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP28C-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout
+
+Status: verification attempted; blocked awaiting coordinator/user evidence.
+
+Purpose:
+
+- Check WP28C implementation status through connector-supported GitHub status tools.
+- Record whether GitHub Actions and Hugging Face sync can be verified before app verification.
+- Avoid starting further Scrub Key UI work until WP28C verification status is known.
+
+Files added:
+
+- `workpackage_claims/WP28C_VERIFY_warning_acknowledgement_ui_closeout.md`
+- `handover/workpackages/20260612_1605_wp28c_warning_acknowledgement_ui_verify.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP28C_VERIFY_warning_acknowledgement_ui_closeout.md`
+
+Main findings:
+
+- `get_commit_combined_status` returned no statuses for `7be73b8aabb8b3677995e153f64148eaf42648e7`.
+- `fetch_commit_workflow_runs` returned no workflow runs for `7be73b8aabb8b3677995e153f64148eaf42648e7`.
+- `get_commit_combined_status` returned no statuses for `ec52353d3425d409ce46990c1d3a97d71a4b4941`.
+- `fetch_commit_workflow_runs` returned no workflow runs for `ec52353d3425d409ce46990c1d3a97d71a4b4941`.
+- Actions/Hugging Face sync cannot be verified by this worker from connector data.
+- App verification cannot be requested yet under `STATUS_MONITORING_RUNBOOK.md` because Actions/sync are not confirmed green.
+
+Validation status:
+
+- Verification/closeout-only.
+- No tests run.
+- No code, tests, UI, helper logic, schema, export, reinsert, dependency, real-data or cloud-processing files changed.
+
+Next recommended step:
+
+- Coordinator/user should provide GitHub Actions and Hugging Face sync evidence for WP28C. If green, perform WP28C app verification.
+
 ## WP28C — MVP Scrub Key warning/acknowledgement UI implementation
 
 Status: implemented; pending GitHub Actions, Hugging Face sync and app verification.
@@ -171,4 +211,4 @@ Next recommended step:
 
 ## Earlier entries
 
-The previous changelog history remains available in Git history. This WP28C entry records the latest Scrub Key UI implementation status while preserving the WP48 and WP29C entries below.
+The previous changelog history remains available in Git history. This WP28C-VERIFY entry records the latest verification attempt while preserving the WP28C, WP48 and WP29C entries below.
