@@ -41,6 +41,7 @@ WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-only.
+WP29 — Scrub Key secure import/export tests: completed helper/tests-only after PR/Actions verification.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
@@ -169,18 +170,34 @@ WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-only.
+WP29 — Scrub Key secure import/export tests: completed helper/tests-only after PR/Actions verification.
 ```
+
+WP29 files added:
+
+```text
+tests/test_scrub_key_secure_import_export.py
+handover/workpackages/20260612_0000_scrub_key_secure_import_export_tests.md
+handover/workpackages/20260612_0715_scrub_key_secure_import_export_tests_closeout.md
+```
+
+WP29 summary:
+
+- Added focused regression tests for Scrub Key secure import/export expectations from WP25-WP28.
+- Covered deterministic JSON export, required policy markers, valid import warning/result shape, malformed JSON, non-object JSON, missing required fields, invalid item structure, wrong policy markers, duplicate placeholder tampering, unknown placeholder mismatch, old timestamp non-blocking behavior, no hidden recovery/deletion/expiry state, no-mutation behavior, local deterministic no-AI/no-cloud reinsert behavior and synthetic-only examples.
+- GitHub Actions for PR #2 passed before merge.
+- No helper logic, UI, Scrub Key schema, import/export behavior, reinsert behavior, encryption, automatic deletion, expiry blocking, dependencies, real data or cloud processing changed.
 
 Next recommended Scrub Key step:
 
 ```text
-WP29 — Scrub Key secure import/export tests
+WP28B — Scrub Key warning implementation planning
 ```
 
-Alternative Scrub Key sequencing if UI planning should precede tests:
+Alternative Scrub Key sequencing if the security-test line should continue first:
 
 ```text
-WP28B — Scrub Key warning implementation planning
+WP29B — Scrub Key import/export edge-case hardening
 ```
 
 ## Placeholder robustness line
@@ -261,13 +278,13 @@ WP58 — Parallel specification consolidation and next execution queue: complete
 The next recommended workpackage from the Scrub Key security line is:
 
 ```text
-WP29 — Scrub Key secure import/export tests
+WP28B — Scrub Key warning implementation planning
 ```
 
-Alternative Scrub Key sequencing if UI planning should precede tests:
+Alternative Scrub Key sequencing if the security-test line should continue first:
 
 ```text
-WP28B — Scrub Key warning implementation planning
+WP29B — Scrub Key import/export edge-case hardening
 ```
 
 The next recommended workpackage from the placeholder robustness line is:
@@ -285,41 +302,75 @@ WP47 — Local file handling/privacy test
 Reason:
 
 ```text
-WP24 completed the first report-only false-negative residual-risk report foundation for the recall/trust line. The recall/trust line still needs complete gold-label sidecars, recognizer-backed prediction baselines and later approved thresholds. WP33 completed additive placeholder audit helper hardening, so the placeholder line can proceed to synthetic AI-output corruption tests without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
+WP24 completed the first report-only false-negative residual-risk report foundation for the recall/trust line. WP29 completed the first secure import/export regression tests for the Scrub Key line, so Scrub Key warning implementation planning can proceed without changing schema, encryption, deletion or import/export behavior. WP33 completed additive placeholder audit helper hardening, so the placeholder line can proceed to synthetic AI-output corruption tests without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
 ```
 
 ## Next workpackage definitions
 
-### WP29 — Scrub Key secure import/export tests
+### WP28B — Scrub Key warning implementation planning
 
-Type: security regression tests.
+Type: UI/security implementation planning only.
 
 Purpose:
 
-- Add focused tests for Scrub Key import/export safety expectations after WP25-WP28.
-- Verify malformed, wrong-policy, missing-marker and unsafe/tampered key cases are handled visibly and without leaking original values.
-- Preserve existing Scrub Key schema and import/export behavior unless a test exposes a bug that requires a separate fix package.
+- Translate WP27 warning UX and WP28 expiry/delete policy into exact implementation locations, acknowledgement states and copy inventory before editing Streamlit UI.
+- Define the later MVP warning/acknowledgement implementation scope without changing behavior.
+- Preserve existing Scrub Key schema, import/export behavior and reinsert behavior.
 
 Allowed direction:
 
-- Tests only unless a failing test proves a narrow helper bug and the coordinator approves a fix package.
-- Synthetic data only.
+- Documentation/planning only.
+- Map warnings to exact current UI flow locations.
+- Define MVP acknowledgement requirements and guidance-only warnings.
+- Define later blocking candidates without implementing blocking.
 - No UI implementation.
-- No automatic deletion.
-- No encryption implementation.
+- No Streamlit patch.
+- No helper logic change.
 - No schema migration.
-- No export/reinsert behavior change.
+- No import/export behavior change.
+- No reinsert behavior change.
+- No encryption.
+- No automatic deletion.
+- No expiry blocking.
 
 Likely files:
 
 ```text
-tests/test_scrub_key_import.py
-tests/test_scrub_key.py
-tests/test_scrub_key_reinsert.py
+SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md
 WORKPACKAGES.md
 CHANGELOG.md
-RISK_REGISTER.md
-handover/workpackages/YYYYMMDD_HHMM_scrub_key_secure_import_export_tests.md
+handover/workpackages/YYYYMMDD_HHMM_scrub_key_warning_implementation_planning.md
+```
+
+### WP29B — Scrub Key import/export edge-case hardening
+
+Type: security regression test hardening.
+
+Purpose:
+
+- Extend WP29 with additional edge-case regression tests around Scrub Key import/export and reinsert safety.
+- Keep the package tests-only unless a narrow helper defect is found and separately approved.
+
+Allowed direction:
+
+- Tests and handover only unless a narrow helper bug is approved as a separate fix.
+- Synthetic values only.
+- No UI implementation.
+- No Streamlit patch.
+- No Scrub Key schema migration.
+- No encryption.
+- No automatic deletion.
+- No expiry blocking.
+- No import/export behavior change unless separately approved.
+- No reinsert behavior change unless separately approved.
+
+Likely files:
+
+```text
+tests/test_scrub_key_secure_import_export.py
+WORKPACKAGES.md
+CHANGELOG.md
+handover/workpackages/YYYYMMDD_HHMM_scrub_key_import_export_edge_case_hardening.md
 ```
 
 ### WP34 — Synthetic AI-output placeholder corruption tests
