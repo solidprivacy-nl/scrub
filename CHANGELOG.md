@@ -1,5 +1,58 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP51 — ICP and pricing hypothesis
+
+Status: completed business/design/documentation-only.
+
+Purpose:
+
+- Define the first ICP and pricing hypothesis after WP50.
+- Compare Scrub Legal and Scrub Zorg as early validation tracks.
+- Keep the work hypothesis-only without sales activity or product-behavior changes.
+
+Files added:
+
+- `ICP_AND_PRICING_HYPOTHESIS.md`
+- `workpackage_claims/WP51_icp_and_pricing_hypothesis.md`
+- `handover/workpackages/20260612_1815_icp_and_pricing_hypothesis.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP51_icp_and_pricing_hypothesis.md`
+
+Main changes:
+
+- Defined first ICP hypothesis for Scrub Legal and Scrub Zorg.
+- Compared likely users, buyers, approvers/blockers, workflows, willingness-to-pay drivers and sales risks.
+- Compared pricing models: demo/discovery, paid pilot, consultancy-assisted pilot, per-user subscription, per-organization subscription, local desktop license and enterprise/support model.
+- Recommended a consultancy-assisted paid pilot as the most sensible first paid offer, while keeping final prices as hypotheses only.
+- Defined what may not yet be sold or claimed, including production certification, full automation, full anonymization without review, complete DOCX hidden-content handling, OCR/restored PDF output and guaranteed detection.
+- Added validation questions and go/no-go criteria for interviews and controlled pilot work.
+
+Validation status:
+
+- Documentation/business-design only.
+- No tests run because no code, tests, UI, runtime behavior, dependency or product behavior changed.
+- App verification: not applicable because no UI behavior changed.
+
+Intentionally not changed:
+
+- No sales campaign started.
+- No customer outreach started.
+- No real data added.
+- No UI changed.
+- No code changed.
+- No runtime behavior changed.
+- No cloud document processing added.
+- No production, compliance or safety guarantee added.
+
+Next recommended step:
+
+- `WP52 — Pilot intake and NDA process`.
+
 ## WP37 — Headers/footers/comments/tracked-changes extraction helper
 
 Status: completed helper/tests/documentation-only.
@@ -151,99 +204,6 @@ Next recommended step:
 
 - `WP48B — Portable Python folder hardening proof` or `WP49B — PyInstaller one-folder packaging proof`, only if the coordinator approves a concrete packaging proof.
 
-## WP36A — DOCX residual placeholder and comments risk triage
-
-Status: completed triage/test/documentation-only.
-
-Purpose:
-
-- Record the app-verification finding that DOCX restored output can still contain residual placeholders such as `[PERSOON_01]`.
-- Record that Word comments/kantlijncommentaren are outside the current DOCX scrub/reinsert flow.
-- Treat this as a high-risk document hygiene issue, not as a cosmetic bug.
-
-Files added:
-
-- `DOCX_RESIDUAL_PLACEHOLDER_COMMENTS_TRIAGE.md`
-- `tests/test_docx_residual_placeholder_comments_risk.py`
-- `workpackage_claims/WP36A_docx_residual_placeholder_comments_risk_triage.md`
-- `handover/workpackages/20260612_1625_docx_residual_placeholder_comments_risk_triage.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-
-Main changes:
-
-- Added a triage document explaining residual DOCX placeholders, numbering mismatches, split-run placeholders and comments/kantlijncommentaren risk.
-- Added synthetic tests showing that `[PERSOON_01]` remains visible when the Scrub Key contains `[PERSOON_1]` and that `word/comments.xml` is copied through unchanged by the current DOCX reinsert helper.
-- Updated `RISK_REGISTER.md` to reflect the app-verification finding under R4 hidden document content and metadata leakage.
-- Updated `WORKPACKAGES.md` so the DOCX hygiene line records WP36A and points to WP37 as the next extraction/audit-oriented step.
-
-Validation status:
-
-- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
-- Added tests should be validated by GitHub Actions.
-- App verification finding was supplied by the coordinator/user and recorded in triage.
-
-Intentionally not changed:
-
-- No DOCX cleaner implemented.
-- No comments/tracked-changes removal implemented.
-- No export blocking.
-- No export semantics changed.
-- No Streamlit UI changed.
-- No helper behavior changed.
-- No Scrub Key schema changed.
-- No real data added.
-- No cloud processing added.
-- No roadmap change because strategy and phase order did not change.
-
-Next recommended step:
-
-- `WP37 — Headers/footers/comments/tracked-changes extraction helper`.
-
-## WP28C-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout
-
-Status: verification attempted; blocked awaiting coordinator/user evidence.
-
-Purpose:
-
-- Check WP28C implementation status through connector-supported GitHub status tools.
-- Record whether GitHub Actions and Hugging Face sync can be verified before app verification.
-- Avoid starting further Scrub Key UI work until WP28C verification status is known.
-
-Files added:
-
-- `workpackage_claims/WP28C_VERIFY_warning_acknowledgement_ui_closeout.md`
-- `handover/workpackages/20260612_1605_wp28c_warning_acknowledgement_ui_verify.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `workpackage_claims/WP28C_VERIFY_warning_acknowledgement_ui_closeout.md`
-
-Main findings:
-
-- `get_commit_combined_status` returned no statuses for `7be73b8aabb8b3677995e153f64148eaf42648e7`.
-- `fetch_commit_workflow_runs` returned no workflow runs for `7be73b8aabb8b3677995e153f64148eaf42648e7`.
-- `get_commit_combined_status` returned no statuses for `ec52353d3425d409ce46990c1d3a97d71a4b4941`.
-- `fetch_commit_workflow_runs` returned no workflow runs for `ec52353d3425d409ce46990c1d3a97d71a4b4941`.
-- Actions/Hugging Face sync cannot be verified by this worker from connector data.
-- App verification cannot be requested yet under `STATUS_MONITORING_RUNBOOK.md` because Actions/sync are not confirmed green.
-
-Validation status:
-
-- Verification/closeout-only.
-- No tests run.
-- No code, tests, UI, helper logic, schema, export, reinsert, dependency, real-data or cloud-processing files changed.
-
-Next recommended step:
-
-- Coordinator/user should provide GitHub Actions and Hugging Face sync evidence for WP28C. If green, perform WP28C app verification.
-
 ## Earlier entries
 
-Previous changelog detail remains available in Git history. This WP37 entry records the latest DOCX hidden-content extraction helper while preserving recent WP50, WP49, WP36A and WP28C verification entries below.
+Previous changelog detail remains available in Git history. This WP51 entry records the latest ICP/pricing hypothesis while preserving recent WP37, WP50 and WP49 entries below.
