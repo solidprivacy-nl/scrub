@@ -200,6 +200,7 @@ Current mitigations:
 - WP42B created `highlight_preview.py`, a pure static highlight preview helper/model with tests for offsets, escaping, category labels and non-authoritative boundaries.
 - WP42C created `STATIC_HIGHLIGHT_PREVIEW_UI_PLAN.md`, planning a future experimental read-only UI panel while preserving the review table as authoritative.
 - WP_REPLACE_LOGIC_HELPER created `replacement_decision.py`, a pure replacement decision helper with tests for review states, conservative scope matching, report-only audit summaries and advisory export-readiness state.
+- WP_REPLACE_LOGIC_UI_PLAN created `REPLACE_LOGIC_UI_PLAN.md`, planning future helper integration without changing Streamlit behavior.
 
 Gaps:
 
@@ -208,11 +209,12 @@ Gaps:
 - No frontend architecture decision for professional review UX.
 - No document-centric UI implementation exists yet.
 - Replacement decision helper is not wired into the product UI yet.
+- No replacement-decision UI contract tests exist yet.
 
 Recommended workpackages:
 
+- WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration.
 - WP42D — Static highlight preview UI integration, only with explicit coordinator approval because it changes UI behavior.
-- WP_REPLACE_LOGIC_UI_PLAN — UI plan for replacement decision helper integration.
 - WP43 — Frontend architecture decision.
 - WP44 — Click-to-mark sensitive text prototype only after further approval.
 
