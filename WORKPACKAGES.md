@@ -30,7 +30,7 @@ When done, update the same claim file to `completed` and include the final commi
 ```text
 WP28C — implemented; still needs coordinator evidence/app verification.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
-WP40-WP41 — review UX line completed through highlight-based review prototype decision.
+WP40-WP42 — review UX line completed through Streamlit feasibility boundary review.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
@@ -45,6 +45,49 @@ Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 ```
 
 WP52 is parked until the MVP product quality gate is passed.
+
+## Review UX line
+
+```text
+WP40 — Document-centric review UX specification: completed.
+WP41 — Highlight-based review prototype decision: completed.
+WP42 — Streamlit feasibility boundary review: completed.
+```
+
+WP42 artifacts:
+
+```text
+STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md
+tests/test_streamlit_feasibility_boundary_review.py
+DECISION_LOG.md
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP42_streamlit_feasibility_boundary_review.md
+handover/workpackages/20260612_2030_streamlit_feasibility_boundary_review.md
+```
+
+WP42 summary:
+
+- Decided Streamlit is feasible only for a small static/read-only highlight review preview using synthetic text or extracted main text.
+- Decided Streamlit is not yet feasible as the long-term professional document-centric review interface.
+- Blocked broad document UI rewrite, click-to-mark sensitive text, synchronized editing, Word/PDF layout rendering, review-decision mutation from highlights, Scrub Key mutation and export blocking based on highlight state.
+- Required escaped rendering, non-authoritative state, color-plus-label accessibility and bounded performance scope.
+- Recorded D017 in `DECISION_LOG.md`.
+- Added static tests for the boundary document.
+- No Streamlit UI, review table, export/download, Scrub Key, reinsert, helper runtime behavior, dependency, cloud processing or real-data change was made.
+
+Next review UX step:
+
+```text
+WP42B — Static highlight preview helper and tests
+```
+
+Alternative:
+
+```text
+WP43 — Frontend architecture decision
+```
 
 ## Replace/review logic line
 
@@ -71,7 +114,7 @@ WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
-2. WP42 — Streamlit feasibility boundary review.
+2. WP42B — Static highlight preview helper and tests.
 3. WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests.
 4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
@@ -99,3 +142,5 @@ Also blocked until separate approval or later specs:
 - Cloud document processing.
 - MSI implementation.
 - PyInstaller/Tauri/Electron implementation.
+- Broad document-centric Streamlit UI rewrite.
+- Click-to-mark sensitive text implementation.
