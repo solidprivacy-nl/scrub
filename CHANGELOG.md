@@ -1,5 +1,64 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP28C — MVP Scrub Key warning/acknowledgement UI implementation
+
+Status: implemented; pending GitHub Actions, Hugging Face sync and app verification.
+
+Purpose:
+
+- Implement MVP Scrub Key warning and acknowledgement gating for high-risk Scrub Key and reinsert actions.
+- Make Scrub Key export/import, local reinsert actions and restored-output downloads visibly safer before the user triggers them.
+- Preserve Scrub Key JSON content, import behavior, reinsert helper behavior, restored output bytes, filenames and MIME types after acknowledgement.
+
+Files added:
+
+- `tests/test_scrub_key_warning_acknowledgement_ui.py`
+
+Files changed:
+
+- `fix_streamlit_pdf_text_reinsert.py`
+- `RELEASE_NOTES.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md`
+- `handover/workpackages/20260612_1545_mvp_scrub_key_warning_acknowledgement_ui.md`
+
+Main changes:
+
+- Added acknowledgement gating for Scrub Key JSON download: `ack_scrub_key_export_risk`.
+- Added acknowledgement gating for Scrub Key import/load: `ack_scrub_key_import_risk`.
+- Added reinsert acknowledgement gating for pasted text, TXT, DOCX and PDF-to-TXT reinsert actions.
+- Added restored-output download acknowledgement gating for pasted text, TXT, DOCX and PDF-to-TXT downloads.
+- Added extra Dutch warning copy for Scrub Key storage, Downloads, local storage, shared risk, loss-of-key and restored confidential output.
+- Strengthened unknown/duplicate placeholder warning copy without changing reinsert helper behavior.
+- Kept the implementation in the post-patch layer that runs after the main Streamlit patch, so existing injected UI blocks can be gated without changing helper logic.
+
+Validation status:
+
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
+- Added static regression tests in `tests/test_scrub_key_warning_acknowledgement_ui.py`; GitHub Actions should validate them.
+- App verification is required after GitHub Actions and Hugging Face sync are green because UI behavior changed.
+
+Intentionally not changed:
+
+- No Scrub Key schema migration.
+- No encryption implementation.
+- No automatic deletion.
+- No expiry blocking.
+- No hidden recovery.
+- No helper logic change.
+- No import/export semantic change after acknowledgement.
+- No reinsert semantic change after acknowledgement.
+- No output filename or MIME type changes.
+- No dependency change.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step:
+
+- `WP28C-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout`.
+
 ## WP48 — Portable Windows proof of concept
 
 Status: completed Windows portable proof-of-concept launcher/docs/tests.
@@ -112,4 +171,4 @@ Next recommended step:
 
 ## Earlier entries
 
-The previous changelog history remains available in Git history. This WP48 entry records the latest workpackage status and artifacts while preserving the WP29C entry below.
+The previous changelog history remains available in Git history. This WP28C entry records the latest Scrub Key UI implementation status while preserving the WP48 and WP29C entries below.
