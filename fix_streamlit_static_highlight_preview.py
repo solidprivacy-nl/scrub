@@ -25,19 +25,21 @@ def replace_once(source: str, old: str, new: str) -> str:
 # Import the pure helper after the existing post-patches have inserted the
 # reinsert imports. The fallback keeps the patch safe if the PDF post-patch is
 # not present for any reason.
-text = replace_once(
-    text,
-    'from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes\n',
-    'from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes\n'
-    'from highlight_preview import build_static_highlight_preview\n',
-)
+if 'from highlight_preview import build_static_highlight_preview\n' not in text:
+    text = replace_once(
+        text,
+        'from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes\n',
+        'from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes\n'
+        'from highlight_preview import build_static_highlight_preview\n',
+    )
 
-text = replace_once(
-    text,
-    'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n',
-    'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n'
-    'from highlight_preview import build_static_highlight_preview\n',
-)
+if 'from highlight_preview import build_static_highlight_preview\n' not in text:
+    text = replace_once(
+        text,
+        'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n',
+        'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n'
+        'from highlight_preview import build_static_highlight_preview\n',
+    )
 
 static_highlight_preview_block = '''        with st.expander("Documentvoorbeeld met markeringen — experimenteel", expanded=False):
             st.caption("Alleen-lezen voorbeeld. De vervangtabel blijft leidend voor beslissingen, Scrub Key en export.")
