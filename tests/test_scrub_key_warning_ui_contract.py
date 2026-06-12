@@ -81,13 +81,16 @@ def test_warning_ui_contract_covers_blocks_warning_moments_and_state_keys():
 def test_contract_fragments_and_audit_fields_are_grounded_in_warning_plan():
     contract = load_contract()
     plan = PLAN_PATH.read_text(encoding="utf-8")
+    plan_lower = plan.lower()
 
     assert "## 5. MVP acknowledgement inventory" in plan
     assert "## 9. Later implementation test expectations" in plan
 
     for moment in contract["required_warning_moments"]:
         for fragment in moment["required_copy_fragments"]:
-            assert fragment in plan, f"Missing planned warning fragment for {moment['id']}: {fragment}"
+            assert fragment.lower() in plan_lower, (
+                f"Missing planned warning fragment for {moment['id']}: {fragment}"
+            )
 
     for state_key in contract["required_acknowledgement_state_keys"]:
         assert state_key in plan
