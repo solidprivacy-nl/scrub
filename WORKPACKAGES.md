@@ -43,7 +43,7 @@ WP25-WP29C — Scrub Key security, policy, import/export and warning test scaffo
 WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; blocked awaiting coordinator/user evidence for Actions/HF sync and app verification.
 WP28C-VERIFY — verification attempted; connector returned no statuses or workflow runs.
 WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
-WP35-WP38 — DOCX hygiene line completed through report-only hygiene audit.
+WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP45-WP49 — local runtime line completed through desktop packaging decision; installer work deferred to final roadmap phase.
 WP50-WP51 — pilot validation line completed through ICP/pricing hypothesis.
 WP58 — parallel specification consolidation completed.
@@ -116,12 +116,41 @@ WP35 — DOCX hidden content risk review.
 WP36A — DOCX residual placeholder and comments risk triage.
 WP37 — Headers/footers/comments/tracked-changes extraction helper.
 WP38 — DOCX hygiene audit report.
+WP39 — Clean DOCX export policy.
 ```
 
-Next DOCX hygiene step:
+WP39 files added/changed:
 
 ```text
-WP39 — Clean DOCX export policy
+CLEAN_DOCX_EXPORT_POLICY.md
+tests/test_clean_docx_export_policy.py
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP39_clean_docx_export_policy.md
+handover/workpackages/20260612_1915_clean_docx_export_policy.md
+```
+
+WP39 summary:
+
+- Defined that current DOCX output must not be described as clean DOCX export.
+- Defined allowed current labels such as DOCX output with limitations, restored DOCX output with hygiene warnings and DOCX hygiene audit.
+- Defined warning/report policy for no supported findings, headers/footers, comments/kantlijncommentaren, tracked changes and invalid/uninspectable DOCX.
+- Defined future export-blocking candidates without implementing blocking.
+- Defined minimum requirements before any clean-DOCX claim.
+- Added policy tests that lock the no-clean-claim, no-export-semantic-change, no-blocking and no-real-data boundaries.
+- No DOCX cleaner, comments/tracked-changes removal, export blocking implementation, export semantic change, DOCX reinsert behavior change, Streamlit UI change, dependency change, real data or cloud processing was added.
+
+Next default step:
+
+```text
+WP40 — Document-centric review UX specification
+```
+
+Alternative DOCX-specific follow-up if the coordinator wants to continue document hygiene first:
+
+```text
+WP39B — DOCX hygiene audit UI planning
 ```
 
 Blocked until separate approval:
@@ -166,7 +195,7 @@ WP52 — Pilot intake and NDA process
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
-2. WP39 — Clean DOCX export policy, if coordinator wants to continue DOCX hygiene line.
+2. WP40 — Document-centric review UX specification.
 3. WP52 — Pilot intake and NDA process, if coordinator wants to continue pilot-validation line.
 ```
 
@@ -188,7 +217,8 @@ Also blocked until separate approval or later specs:
 - Robust placeholder generation in product flow.
 - Placeholder auto-repair or guessed placeholder intent.
 - DOCX comment/tracked-change removal.
-- Clean DOCX export blocking.
+- Clean DOCX export blocking implementation.
+- Clean DOCX export claim.
 - Restored PDF output.
 - OCR.
 - Cloud document processing.
