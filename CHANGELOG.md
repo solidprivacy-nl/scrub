@@ -1,5 +1,59 @@
 # Changelog — SolidPrivacy Scrub
 
+## Workpackage claim protocol and WP28C claim guard
+
+Status: completed governance/coordination-only.
+
+Purpose:
+
+- Prevent duplicate worker effort on the same workpackage.
+- Add a lightweight GitHub-based workpackage claim protocol.
+- Claim `WP28C — MVP Scrub Key warning/acknowledgement UI implementation` before starting UI implementation.
+
+Files added:
+
+- `workpackage_claims/README.md`
+- `workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md`
+- `handover/workpackages/20260612_1515_workpackage_claim_protocol_wp28c_claim.md`
+
+Files changed:
+
+- `AGENTS.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Added `workpackage_claims/` as a lightweight coordination guard for parallel workers.
+- Defined claim statuses: `in_progress`, `completed`, `blocked`, `abandoned`.
+- Required workers to check `workpackage_claims/` before editing code, tests, UI, export, schema or shared documentation.
+- Required workers to create a claim through GitHub new-file creation, so duplicate claims fail instead of silently overwriting each other.
+- Added an active WP28C claim with status `in_progress`.
+- Updated `AGENTS.md` and `WORKPACKAGES.md` so future workers see the claim-check requirement during the normal start sequence.
+
+Validation status:
+
+- Documentation/governance-only.
+- No tests run because no product code, tests, UI behavior, helper logic, export/reinsert semantics or dependencies changed.
+- App verification: not applicable because no UI behavior changed.
+
+Intentionally not changed:
+
+- No WP28C UI implementation yet.
+- No Streamlit patch changed.
+- No tests changed.
+- No helper logic changed.
+- No Scrub Key schema migration.
+- No import/export behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step:
+
+- Continue with the claimed `WP28C — MVP Scrub Key warning/acknowledgement UI implementation`.
+
 ## WP47 — Local file handling/privacy test
 
 Status: completed local runtime privacy validation.
