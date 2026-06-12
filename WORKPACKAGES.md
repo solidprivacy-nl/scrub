@@ -52,6 +52,7 @@ WP34 — Synthetic AI-output placeholder corruption tests: completed synthetic f
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
 WP46 — Minimal local Streamlit launcher: completed minimal local runtime implementation.
+WP47 — Local file handling/privacy test: completed local runtime privacy validation.
 WP58 — Parallel specification consolidation and next execution queue: completed documentation/planning-only.
 ```
 
@@ -80,45 +81,6 @@ WP29 — Scrub Key secure import/export tests: completed helper/tests-only after
 WP29B — Scrub Key import/export edge-case hardening: completed helper/tests-only.
 ```
 
-WP28B artifacts:
-
-```text
-SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md
-handover/workpackages/20260612_1415_scrub_key_warning_implementation_planning.md
-```
-
-WP28B summary:
-
-- Translated WP27 warning UX and WP28 expiry/delete policy into exact future implementation locations, acknowledgement states and Dutch copy inventory.
-- Mapped warning placement to the current Streamlit patch surface: `review_summary_block`, `scrub_key_import_ui_block`, `two_mode_selection_block`, `reinsert_ui_block`, `txt_reinsert_ui_block`, `docx_reinsert_ui_block` and future PDF-to-TXT reinsert scope.
-- Defined MVP acknowledgement states for Scrub Key export/import, pasted-text reinsert, TXT reinsert, DOCX reinsert, PDF-to-TXT reinsert if present, and restored output downloads.
-- Defined guidance-only MVP warnings for Downloads/local storage, shared-computer risk, expiry/delete guidance, loss-of-key, DOCX/PDF limitations and audit mismatch guidance.
-- Defined later blocking candidates without implementing blocking.
-- No UI implementation, Streamlit patch, helper logic, schema migration, import/export behavior change, reinsert behavior change, encryption, automatic deletion, expiry blocking, dependency change, real data or cloud processing was added.
-
-WP29 artifacts:
-
-```text
-tests/test_scrub_key_secure_import_export.py
-handover/workpackages/20260612_0000_scrub_key_secure_import_export_tests.md
-handover/workpackages/20260612_0715_scrub_key_secure_import_export_tests_closeout.md
-handover/workpackages/20260612_1330_scrub_key_secure_import_export_edge_case_hardening.md
-```
-
-WP29B files changed:
-
-```text
-scrub_key.py
-tests/test_scrub_key_secure_import_export.py
-```
-
-WP29 / WP29B summary:
-
-- WP29 added focused secure import/export tests for the current Scrub Key helper surface.
-- WP29B expanded edge-case coverage for missing schema marker, unsupported schema version, empty/no-usable mappings, not-found placeholder audit behavior and validation-error non-leakage.
-- WP29B added a minimal validation hardening so unsupported `schema_version` values are reported instead of accepted.
-- No encryption, automatic deletion, expiry enforcement, Scrub Key schema migration, UI change, export/reinsert semantic change, dependency change, real data or cloud processing was added.
-
 Next recommended Scrub Key step:
 
 ```text
@@ -141,26 +103,7 @@ WP33 — Placeholder audit hardening: completed audit/helper hardening-only.
 WP34 — Synthetic AI-output placeholder corruption tests: completed synthetic fixtures/tests-only.
 ```
 
-WP34 artifacts:
-
-```text
-tests/fixtures/placeholder_corruption/ai_output_corruption_cases.json
-tests/test_placeholder_corruption_scenarios.py
-```
-
-WP34 summary:
-
-- Added synthetic AI-output-style placeholder corruption fixtures and tests after WP33.
-- Covers exact preservation with punctuation, translated labels, summarization/deletion, markdown/HTML wrapping, HTML split tokens, spacing mutation, robust truncation, robust integrity mismatch, placeholder merge and invented curly placeholder-like tokens.
-- Tests assert that unknown, malformed, truncated and failed-integrity tokens are not repaired, and missing expected placeholders remain visible through helper audit output.
-- Existing legacy reinsert semantics remain compatible.
-- No placeholder migration, robust placeholder generation, Scrub Key schema migration, UI/export behavior change, dependency change, real data or AI/cloud integration was added.
-
-Next recommended placeholder step:
-
-```text
-Later gated package — robust placeholder generation and compatibility implementation, only after schema/format policy is explicitly approved.
-```
+The placeholder robustness line is complete through synthetic AI-output corruption tests. Do not start robust placeholder generation, placeholder migration or Scrub Key schema work without a separate approved gated package.
 
 ## DOCX hygiene line
 
@@ -179,13 +122,30 @@ WP36 — DOCX metadata cleaner helper
 ```text
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
 WP46 — Minimal local Streamlit launcher: completed minimal local runtime implementation.
+WP47 — Local file handling/privacy test: completed local runtime privacy validation.
 ```
+
+WP47 files added/changed:
+
+```text
+tests/test_local_file_handling_privacy.py
+LOCAL_RUN.md
+handover/workpackages/20260612_1500_local_file_handling_privacy_test.md
+```
+
+WP47 summary:
+
+- Added local launcher privacy/file-handling tests for default loopback binding, default port, Streamlit usage-stats disabling, absence of cloud/AI/telemetry endpoints in the launcher command, absence of document content or filenames in launcher arguments, no launcher logging/temp-file/packaging behavior, and LOCAL_RUN privacy-boundary documentation.
+- Updated `LOCAL_RUN.md` with Hugging Face demo boundary, runtime privacy expectations, temporary/runtime file expectations, no-telemetry/no-cloud-processing clarification and no installer/packaging claim.
+- No Streamlit UI, upload/download/export/reinsert semantics, cloud document processing, telemetry, installer/packaging, Docker/startup behavior, dependency, real data or app behavior changed.
 
 Next recommended local-runtime step:
 
 ```text
-WP47 — Local file handling/privacy test
+WP48 — Portable Windows proof of concept
 ```
+
+Only start WP48 after WP47 CI/status is acceptable and coordinator confirms this local-runtime line should proceed before other risk lines.
 
 ## Active / next recommended execution queue
 
@@ -195,18 +155,17 @@ The next recommended workpackage from the Scrub Key security line is:
 WP28C — MVP Scrub Key warning/acknowledgement UI implementation
 ```
 
-Alternative Scrub Key test scaffolding package:
-
-```text
-WP29C — Scrub Key warning UI regression test scaffolding
-```
-
-The placeholder robustness line is complete through WP34. Do not start robust placeholder generation, placeholder migration or Scrub Key schema work without a separate approved gated package.
-
 The next recommended workpackage from the local-runtime line is:
 
 ```text
-WP47 — Local file handling/privacy test
+WP48 — Portable Windows proof of concept
+```
+
+Other gated future work:
+
+```text
+Placeholder robustness — robust placeholder generation/compatibility implementation only after explicit schema/format approval.
+DOCX hygiene — WP36 remains blocked until tighter metadata-only helper boundary is approved.
 ```
 
 ## Next workpackage definitions
@@ -248,50 +207,26 @@ CHANGELOG.md
 handover/workpackages/YYYYMMDD_HHMM_mvp_scrub_key_warning_acknowledgement_ui.md
 ```
 
-Validation expectations:
-
-```text
-pytest tests/test_scrub_key_ui_patch.py
-pytest tests/test_two_mode_ui_patch.py
-pytest tests/test_txt_reinsert_ui_patch.py
-pytest tests/test_docx_reinsert_ui_patch.py
-pytest tests -k "scrub_key or reinsert"
-```
-
 Because WP28C changes UI behavior, app verification is required after GitHub Actions and Hugging Face sync are green.
 
-### WP29C — Scrub Key warning UI regression test scaffolding
+### WP48 — Portable Windows proof of concept
 
-Type: test scaffolding only.
-
-Purpose:
-
-- Add tests that lock down the warning-copy and acknowledgement requirements from `SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md` before WP28C implementation.
-- Keep behavior unchanged.
-
-Allowed direction:
-
-- Tests only.
-- No UI implementation.
-- No helper logic.
-- No schema/import/export/reinsert behavior changes.
-
-### WP47 — Local file handling/privacy test
-
-Type: local runtime privacy validation.
+Type: local runtime packaging proof of concept.
 
 Purpose:
 
-- Validate local file handling, temp-file behavior, logs and network expectations after WP46.
-- Keep the Hugging Face demo separate from the future confidential-processing trust environment.
+- Validate a minimal portable Windows/Python packaging direction after WP47 local privacy boundaries.
+- Keep this as proof-of-concept only unless a separate packaging decision approves broader implementation.
 
 Allowed direction:
 
-- Tests and documentation only unless a narrow helper is explicitly required.
-- No UI feature changes.
+- No MSI claim unless explicitly approved.
+- No production installer claim.
 - No cloud document processing.
+- No telemetry.
 - No real data.
-- No installer or packaging implementation.
+- No Streamlit UI behavior changes.
+- No export/reinsert semantic changes.
 
 ## Blocked work
 
