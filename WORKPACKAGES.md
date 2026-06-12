@@ -31,11 +31,8 @@ When done, update the same claim file to `completed` and include the final commi
 WP28C — implemented; partial app evidence recorded for Scrub Key/reinsert warning UI; full closeout still needs Actions/HF/app coverage.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
-WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
-WP42D-FIX — first visibility repair created fail-fast behavior but still used an overly strict anchor.
-WP42D-FIX2 — anchor repair implemented, but runtime showed indentation error around inserted expander wrapper.
-WP42D-FIX3 — no-expander repair implemented, but stale broken block could remain in already-patched running container.
-WP42D-FIX4 — stale-block cleanup repair implemented; awaiting Actions/HF sync/app verification.
+WP42D — experimental static highlight preview attempted but rolled back after repeated runtime failures.
+WP42D-ROLLBACK — static highlight preview startup patch disabled to restore working interface; awaiting HF sync/app verification.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
@@ -70,31 +67,28 @@ WP41 — Highlight-based review prototype decision: completed.
 WP42 — Streamlit feasibility boundary review: completed.
 WP42B — Static highlight preview helper and tests: completed.
 WP42C — Static highlight preview UI planning: completed.
-WP42D — Static highlight preview UI integration: implemented.
-WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
-WP42D-FIX — first visibility repair implemented fail-fast behavior but failed runtime verification.
-WP42D-FIX2 — single-line editor anchor repair implemented but failed with inserted expander indentation error.
-WP42D-FIX3 — no-expander repair implemented but did not clean stale already-inserted block.
-WP42D-FIX4 — stale-block cleanup repair implemented; awaiting verification.
+WP42D — Static highlight preview UI integration: rolled back after repeated runtime failures.
 WP43 — Frontend architecture decision: completed.
+WP42D-ROLLBACK — disabled startup mutation patch; awaiting verification that the app starts again.
 ```
 
-WP42D-FIX4 summary:
+WP42D-ROLLBACK summary:
 
-- User runtime evidence kept showing the old indentation error even after the no-expander patch.
-- Diagnosis: a running container can already contain a stale broken preview block in `presidio_streamlit.py`; a title-present check then skips reinsertion and leaves the broken block in place.
-- `fix_streamlit_static_highlight_preview.py` now first removes any existing preview block from the preview-title line through the replacement editor anchor.
-- It then inserts the current safe no-expander preview before the authoritative replacement table.
-- Tests now assert stale preview cleanup logic exists.
-- Read-only, non-authoritative, escaped-rendering, no export, no Scrub Key and no reinsert boundaries remain unchanged.
+- Coordinator/user correctly identified that repeated quick fixes were not resolving the same startup error and that the safest move was to backtrack.
+- `Dockerfile` no longer runs `python fix_streamlit_static_highlight_preview.py` before Streamlit startup.
+- `fix_streamlit_static_highlight_preview.py` is now a harmless no-op if called manually or by a stale command.
+- Static tests now assert the Dockerfile does not run the experimental preview patch and that the patch file does not mutate `presidio_streamlit.py`.
+- The experimental static highlight preview is parked.
+- Goal is to restore the last working table-first interface.
+- No export/download, Scrub Key, reinsert, dependency, cloud processing or real-data behavior changed.
 
 Next review/frontend step:
 
 ```text
-Verify WP42D-FIX4 with GitHub Actions, Hugging Face sync and app screenshot showing the app starts and the preview panel is visible.
+Verify Hugging Face sync and app screenshot showing the normal Scrub Legal interface starts again without the script execution error.
 ```
 
-Do not start further review UI implementation until WP42D-FIX4 visibility is verified or coordinator explicitly approves another path.
+Do not restart static highlight preview UI work until it is redesigned without startup source mutation.
 
 ## Replace/review logic line
 
@@ -116,10 +110,10 @@ Do not start replacement UI implementation until coordinator approves UI work.
 ## Active / next recommended execution queue
 
 ```text
-1. WP42D-FIX4 verification — GitHub Actions, Hugging Face sync and app screenshot showing preview panel.
+1. WP42D-ROLLBACK verification — Hugging Face sync and app screenshot showing the normal app starts again.
 2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
-4. No further review UI implementation until WP42D-FIX4 visibility is verified or explicitly approved.
+4. Redesign highlight preview without startup source mutation before any new UI attempt.
 ```
 
 ## Blocked work
@@ -151,3 +145,4 @@ Also blocked until separate approval or later specs:
 - Professional document editor implementation.
 - Click-to-mark sensitive text implementation.
 - Authoritative highlight-based review mutation.
+- Static highlight preview startup source mutation.
