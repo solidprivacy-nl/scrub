@@ -1,5 +1,36 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP42D-INVESTIGATE — Static highlight preview panel not visible
+
+Status: diagnosis completed; no fix implemented.
+
+Files added:
+
+- `WP42D_INVESTIGATION_REPORT.md`
+- `workpackage_claims/WP42D_INVESTIGATE_static_highlight_preview_not_visible.md`
+- `handover/workpackages/20260612_2010_static_highlight_preview_investigation.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP42D_INVESTIGATE_static_highlight_preview_not_visible.md`
+
+Summary:
+
+- Checked for an existing WP42D-INVESTIGATE claim before starting; none existed.
+- Added an investigation report.
+- Confirmed the WP42D patch file exists and contains the expected preview label and safety gates.
+- Confirmed repository `Dockerfile` includes the static highlight preview patch command before `streamlit run`.
+- Confirmed raw `presidio_streamlit.py` does not contain the panel because WP42D is a startup patch, not a direct source edit.
+- Confirmed `fix_streamlit_nested_expanders.py` creates the upstream review-table anchor used by the WP42D patch.
+- Most likely diagnosis: the running Hugging Face app is not using the WP42D-patched runtime yet, or the patch-chain needs stronger diagnostics/fail-fast checks.
+- No UI, code behavior, tests, runtime behavior, export/download behavior, Scrub Key behavior, reinsert behavior, cloud processing or real data changed.
+
+Next recommended step:
+
+- `WP42D-FIX — Static highlight preview deployment/patch-chain hardening`.
+
 ## WP42D-VERIFY evidence update — Static highlight preview not visible in screenshot
 
 Status: app verification not passed / not confirmed.
