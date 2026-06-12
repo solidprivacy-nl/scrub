@@ -42,6 +42,7 @@ WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecy
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-only.
 WP29 — Scrub Key secure import/export tests: completed helper/tests-only after PR/Actions verification.
+WP29B — Scrub Key import/export edge-case hardening: completed helper/tests-only with minimal unsupported-version validation hardening.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
@@ -52,116 +53,18 @@ WP46 — Minimal local Streamlit launcher: completed minimal local runtime imple
 WP58 — Parallel specification consolidation and next execution queue: completed documentation/planning-only.
 ```
 
-## Completed risk-driven specification and benchmark packages
-
-### WP19 — Recall benchmark specification
-
-Status: completed specification-only.
-
-Files added:
+## Completed recall/trust line
 
 ```text
-RECALL_BENCHMARK_SPEC.md
-handover/workpackages/20260609_2200_recall_benchmark_spec.md
+WP19 — Recall benchmark specification.
+WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
+WP21 — Gold-label entity schema.
+WP22 — Recall/precision test runner.
+WP23 — Entity-class scorecard in CI.
+WP24 — False-negative residual-risk report.
 ```
 
-Summary:
-
-- Defined recall/precision benchmark requirements for messy synthetic Dutch legal and care documents.
-- Made false negatives / missed sensitive data measurable before recognizer changes.
-- Defined entity classes, context-preservation expectations, gold-label requirements and future reporting/CI sequence.
-
-### WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
-
-Status: completed benchmark-corpus-only.
-
-Files added:
-
-```text
-benchmark/corpus/README.md
-benchmark/corpus/legal/legal_process_messy_001.txt
-benchmark/corpus/zorg/care_operations_messy_001.txt
-benchmark/corpus/mixed/legal_care_mixed_messy_001.txt
-benchmark/gold/README.md
-handover/workpackages/20260610_0045_synthetic_messy_benchmark_corpus.md
-```
-
-### WP21 — Gold-label entity schema
-
-Status: completed benchmark schema/closeout-only.
-
-Files added:
-
-```text
-benchmark/gold/schema/gold_label_schema.json
-benchmark/gold/examples/legal_process_messy_001.gold.example.json
-benchmark/gold/examples/care_operations_messy_001.gold.example.json
-handover/workpackages/20260610_1900_gold_label_entity_schema_closeout.md
-```
-
-### WP22 — Recall/precision test runner
-
-Status: completed report-only benchmark runner implementation.
-
-Files added:
-
-```text
-benchmark/run_recall_precision.py
-tests/test_recall_precision_runner.py
-handover/workpackages/20260612_1200_recall_precision_test_runner.md
-```
-
-Summary:
-
-- Added a deterministic local recall/precision runner for synthetic WP21 gold-label sidecars and supplied prediction JSON.
-- Reports exact and value-normalized recall/precision, per-domain metrics, per-entity-class metrics, false negatives, false positives, preserve-term failures, known-trap failures and diagnostic-only partial overlaps.
-- No recognizer logic, UI, CI threshold, dependency, export/reinsert behavior, real data or cloud processing was added.
-
-### WP23 — Entity-class scorecard in CI
-
-Status: completed report-only CI/entity-class scorecard foundation.
-
-Files added:
-
-```text
-benchmark/build_entity_scorecard.py
-benchmark/reports/README.md
-tests/test_entity_scorecard.py
-handover/workpackages/20260612_1230_entity_class_scorecard_ci.md
-```
-
-Summary:
-
-- Added a report-only entity-class scorecard wrapper around the WP22 runner.
-- Scorecard artifacts explicitly record `synthetic_only`, `report_only`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
-- No recognizer logic, UI, CI threshold, dependency, export/reinsert behavior, real data or cloud processing was added.
-
-### WP24 — False-negative residual-risk report
-
-Status: completed report-only false-negative residual-risk report foundation.
-
-Files added:
-
-```text
-benchmark/build_residual_risk_report.py
-tests/test_residual_risk_report.py
-handover/workpackages/20260612_1300_false_negative_residual_risk_report.md
-```
-
-Files changed:
-
-```text
-benchmark/reports/README.md
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-```
-
-Summary:
-
-- Added a report-only residual-risk helper that consumes a WP23 scorecard or builds one from WP22/WP23 inputs.
-- The report shows synthetic-only warning, report-only/no-production-safety policy, benchmark coverage status, residual false-negative risks, unsupported/not-yet-baselined classes and recommended next work.
-- No recognizer logic, UI, production threshold, production gate, dependency, export/reinsert behavior, real data or cloud processing was added.
+The recall/trust line is now report-only complete through residual-risk reporting. Remaining future work: complete gold-label sidecars, recognizer-backed baselines, approved thresholds and user-facing audit integration.
 
 ## Scrub Key security line
 
@@ -171,33 +74,36 @@ WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecy
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-only.
 WP29 — Scrub Key secure import/export tests: completed helper/tests-only after PR/Actions verification.
+WP29B — Scrub Key import/export edge-case hardening: completed helper/tests-only.
 ```
 
-WP29 files added:
+WP29 artifacts:
 
 ```text
 tests/test_scrub_key_secure_import_export.py
 handover/workpackages/20260612_0000_scrub_key_secure_import_export_tests.md
 handover/workpackages/20260612_0715_scrub_key_secure_import_export_tests_closeout.md
+handover/workpackages/20260612_1330_scrub_key_secure_import_export_edge_case_hardening.md
 ```
 
-WP29 summary:
+WP29B files changed:
 
-- Added focused regression tests for Scrub Key secure import/export expectations from WP25-WP28.
-- Covered deterministic JSON export, required policy markers, valid import warning/result shape, malformed JSON, non-object JSON, missing required fields, invalid item structure, wrong policy markers, duplicate placeholder tampering, unknown placeholder mismatch, old timestamp non-blocking behavior, no hidden recovery/deletion/expiry state, no-mutation behavior, local deterministic no-AI/no-cloud reinsert behavior and synthetic-only examples.
-- GitHub Actions for PR #2 passed before merge.
-- No helper logic, UI, Scrub Key schema, import/export behavior, reinsert behavior, encryption, automatic deletion, expiry blocking, dependencies, real data or cloud processing changed.
+```text
+scrub_key.py
+tests/test_scrub_key_secure_import_export.py
+```
+
+WP29 / WP29B summary:
+
+- WP29 added focused secure import/export tests for the current Scrub Key helper surface.
+- WP29B expanded edge-case coverage for missing schema marker, unsupported schema version, empty/no-usable mappings, not-found placeholder audit behavior and validation-error non-leakage.
+- WP29B added a minimal validation hardening so unsupported `schema_version` values are reported instead of accepted.
+- No encryption, automatic deletion, expiry enforcement, Scrub Key schema migration, UI change, export/reinsert semantic change, dependency change, real data or cloud processing was added.
 
 Next recommended Scrub Key step:
 
 ```text
 WP28B — Scrub Key warning implementation planning
-```
-
-Alternative Scrub Key sequencing if the security-test line should continue first:
-
-```text
-WP29B — Scrub Key import/export edge-case hardening
 ```
 
 ## Placeholder robustness line
@@ -208,33 +114,6 @@ WP31 — LLM-resistant placeholder format proposal: completed architecture/propo
 WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
 WP33 — Placeholder audit hardening: completed audit/helper hardening-only.
 ```
-
-WP32 files added:
-
-```text
-placeholder_validation.py
-tests/test_placeholder_validation.py
-handover/workpackages/20260612_0015_placeholder_checksum_validation_helper.md
-handover/workpackages/20260612_0030_placeholder_validation_helper_closeout.md
-```
-
-WP33 files added:
-
-```text
-placeholder_audit.py
-tests/test_placeholder_audit.py
-handover/workpackages/20260612_0045_unknown_changed_placeholder_audit_hardening.md
-handover/workpackages/20260612_0105_placeholder_audit_hardening_closeout.md
-```
-
-WP33 summary:
-
-- Added a pure placeholder audit helper using WP32 validation output.
-- Classifies legacy, robust, malformed robust, truncated robust, integrity-failed and unknown placeholder-like tokens.
-- Reports audit fields such as `placeholder_format_summary`, `observed_placeholder_like_tokens`, `legacy_placeholders`, `robust_placeholders`, `malformed_robust_placeholders`, `integrity_failed_placeholders`, `unknown_placeholder_like_tokens`, `missing_placeholders` and `placeholder_validation_issues`.
-- Leaves unknown, malformed and failed-integrity tokens unchanged and does not silently repair or guess placeholder intent.
-- Existing legacy reinsert semantics remain compatible.
-- No placeholder migration, robust placeholder generation, Scrub Key schema change, UI/export behavior change, dependency change or AI/cloud integration was added.
 
 Next recommended placeholder step:
 
@@ -267,24 +146,12 @@ Next recommended local-runtime step:
 WP47 — Local file handling/privacy test
 ```
 
-## Planning / consolidation
-
-```text
-WP58 — Parallel specification consolidation and next execution queue: completed documentation/planning-only.
-```
-
 ## Active / next recommended execution queue
 
 The next recommended workpackage from the Scrub Key security line is:
 
 ```text
 WP28B — Scrub Key warning implementation planning
-```
-
-Alternative Scrub Key sequencing if the security-test line should continue first:
-
-```text
-WP29B — Scrub Key import/export edge-case hardening
 ```
 
 The next recommended workpackage from the placeholder robustness line is:
@@ -297,12 +164,6 @@ The next recommended workpackage from the local-runtime line is:
 
 ```text
 WP47 — Local file handling/privacy test
-```
-
-Reason:
-
-```text
-WP24 completed the first report-only false-negative residual-risk report foundation for the recall/trust line. WP29 completed the first secure import/export regression tests for the Scrub Key line, so Scrub Key warning implementation planning can proceed without changing schema, encryption, deletion or import/export behavior. WP33 completed additive placeholder audit helper hardening, so the placeholder line can proceed to synthetic AI-output corruption tests without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
 ```
 
 ## Next workpackage definitions
@@ -340,37 +201,6 @@ SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md
 WORKPACKAGES.md
 CHANGELOG.md
 handover/workpackages/YYYYMMDD_HHMM_scrub_key_warning_implementation_planning.md
-```
-
-### WP29B — Scrub Key import/export edge-case hardening
-
-Type: security regression test hardening.
-
-Purpose:
-
-- Extend WP29 with additional edge-case regression tests around Scrub Key import/export and reinsert safety.
-- Keep the package tests-only unless a narrow helper defect is found and separately approved.
-
-Allowed direction:
-
-- Tests and handover only unless a narrow helper bug is approved as a separate fix.
-- Synthetic values only.
-- No UI implementation.
-- No Streamlit patch.
-- No Scrub Key schema migration.
-- No encryption.
-- No automatic deletion.
-- No expiry blocking.
-- No import/export behavior change unless separately approved.
-- No reinsert behavior change unless separately approved.
-
-Likely files:
-
-```text
-tests/test_scrub_key_secure_import_export.py
-WORKPACKAGES.md
-CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_scrub_key_import_export_edge_case_hardening.md
 ```
 
 ### WP34 — Synthetic AI-output placeholder corruption tests
@@ -417,12 +247,6 @@ Do not start yet:
 
 ```text
 WP36 — DOCX metadata cleaner helper
-```
-
-Reason:
-
-```text
-WP36 may affect document/export semantics. It must wait until a tighter metadata-only/helper-only/no-export-semantics boundary is approved.
 ```
 
 Also blocked until separate approval or later specs:
