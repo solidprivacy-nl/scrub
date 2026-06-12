@@ -4,18 +4,26 @@ Repository: `solidprivacy-nl/scrub`
 
 Workpackage: `WP_REPLACE_LOGIC — Easy replace/review logic simplification specification`
 
-Status: `in_progress`
+Status: `completed`
 
 Started: `2026-06-12 18:45 Europe/Amsterdam`
 
-Scope:
+Completed: `2026-06-12 18:55 Europe/Amsterdam`
+
+Summary:
 
 ```text
-Specification/documentation-only. Define simpler replacement and review logic for the MVP workflow before any Streamlit UI or helper implementation. No code, UI, tests, export behavior, Scrub Key schema or runtime behavior changes.
+Define a simpler MVP review decision model: item, suggestion, user choice, scope and audit. Recommended states: needs_review, accepted, edited, ignored, manual_added, preserve_context and unresolved. Recommended future package split: helper/tests first, UI plan second, UI implementation only after approval, audit integration later.
 ```
 
-Coordination note:
+Artifact limitation:
 
 ```text
-If another worker wants to start WP_REPLACE_LOGIC while this status is in_progress, stop and report that the package is already claimed.
+Attempts to create a standalone specification file were blocked by platform safety checks. The summary is recorded here and in the handover.
+```
+
+Next:
+
+```text
+WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests
 ```
