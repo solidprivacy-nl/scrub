@@ -57,6 +57,28 @@ This launcher binds Streamlit to `127.0.0.1` by default. That means the app is i
 
 Do not change the address to `0.0.0.0` for confidential documents unless a later security review explicitly approves that deployment mode.
 
+## Hugging Face demo boundary
+
+The Hugging Face Space remains a demo and development environment for synthetic or non-confidential examples. Do not process confidential real documents, real Scrub Keys, real audit reports or real client/care/legal material in the Hugging Face demo.
+
+Use the local runtime for confidential-processing validation after setup, and still treat the local runtime as an MVP validation path rather than a complete production security claim.
+
+## Runtime privacy expectations
+
+The local launcher should pass only runtime options to Streamlit. It should not pass source document content, file names, Scrub Key values, restored output or audit content as command-line arguments.
+
+The launcher itself should not create application-managed temporary files, write document-content logs, configure telemetry or add network/cloud endpoints. Streamlit and the browser may still use normal local runtime memory, upload handling and local caches; WP47 validates these launcher and documentation boundaries but does not prove a full offline or network-traffic guarantee.
+
+Any temporary/runtime files introduced by future helpers must stay local, avoid original document snippets in logs, and be removed or documented explicitly.
+
+No installer, PyInstaller, Tauri, Electron, MSI or packaging behavior is introduced by this local run path.
+
+## No telemetry / no cloud processing claim
+
+The command disables Streamlit usage stats with `--browser.gatherUsageStats false`.
+
+The current local launcher does not add AI processing, cloud document processing or telemetry endpoints. This is a local MVP boundary check, not a complete production security certification.
+
 ## No real data in the repo
 
 Do not commit real documents, real Scrub Keys, real audit reports, real names, real case files or real care data to this repository.
