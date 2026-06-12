@@ -46,20 +46,21 @@ Current mitigations:
 - WP20 created the first synthetic messy legal, zorg and mixed corpus fixtures.
 - WP21 created the gold-label sidecar schema foundation in `benchmark/gold/schema/gold_label_schema.json`, covering canonical entity classes, zero-based inclusive/exclusive offsets, expected text spans, preserve terms, known traps, normalization guidance and future runner expectations.
 - WP22 created `benchmark/run_recall_precision.py`, a deterministic local report-only runner that validates gold-label offsets and source spans, then reports exact and value-normalized recall/precision, per-domain metrics, per-entity-class metrics, false negatives, false positives, preserve-term failures, known-trap failures and diagnostic-only partial overlaps for supplied prediction JSON.
+- WP23 created `benchmark/build_entity_scorecard.py`, a report-only entity-class scorecard builder that can write CI-friendly JSON and Markdown artifacts while explicitly recording `synthetic_only`, `report_only`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
 
 Gaps:
 
 - No complete gold-label sidecars for the corpus yet.
-- The WP22 runner is report-only and scores supplied prediction JSON; it does not invoke recognizers or establish accepted baselines.
-- No CI scorecard yet.
-- No production-blocking threshold or safety claim yet.
+- The WP22 runner still scores supplied prediction JSON only; it does not invoke recognizers or establish accepted baselines.
+- The WP23 scorecard is report-only; no recall/precision threshold or production-blocking gate exists.
 - No explicit false-negative residual-risk report yet.
+- No production safety claim is supported.
 
 Recommended workpackages:
 
-- WP23 — Entity-class scorecard in CI.
 - WP24 — False-negative residual-risk report.
 - Later benchmark data package — complete gold-label sidecars for the committed synthetic corpus.
+- Later gated package — accepted thresholds and regression gate only after baselines and policy are approved.
 
 ---
 
@@ -131,19 +132,18 @@ Current mitigations:
 - Duplicate placeholders in the Scrub Key are detected and excluded from deterministic replacement.
 - WP30 created `PLACEHOLDER_ROBUSTNESS_REVIEW.md`, documenting current assumptions, corruption examples, translation/summarization/formatting risks, candidate robust formats, checksum ideas, validation/audit direction, migration risks and backward compatibility concerns.
 - WP31 created `PLACEHOLDER_FORMAT_PROPOSAL.md`, recommending the future architecture direction `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`, for example `[[SP_PERSON_0001_A7F3]]`, as proposal-only and additive to legacy placeholders.
+- WP32 created `placeholder_validation.py`, an additive helper that parses and validates future robust placeholder tokens, computes deterministic integrity tokens from non-sensitive placeholder metadata only, and keeps legacy placeholders as a separate compatibility mode.
 
 Gaps:
 
-- No robust placeholder format has been implemented.
-- No checksum/validation helper exists yet.
-- No near-miss placeholder detection exists yet.
+- Robust placeholder generation has not been implemented in product flow.
+- No near-miss placeholder detection is integrated into reinsert audit yet.
 - No synthetic AI-output corruption tests exist yet.
 - No migration or backward-compatibility implementation exists yet.
 - No Scrub Key schema/version support for robust placeholder metadata exists yet.
 
 Recommended workpackages:
 
-- WP32 — Placeholder checksum/validation helper.
 - WP33 — Unknown/changed placeholder audit hardening.
 - WP34 — Synthetic AI-output placeholder corruption tests.
 - Later gated package — robust placeholder generation and compatibility implementation, only after validation and schema decisions.
