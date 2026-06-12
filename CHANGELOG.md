@@ -1,5 +1,62 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP22 — Recall/precision test runner
+
+Status: completed report-only benchmark runner implementation.
+
+Purpose:
+
+- Make synthetic benchmark detection quality measurable after WP19/WP20/WP21.
+- Add a deterministic local runner for WP21 gold-label sidecars and supplied prediction JSON.
+- Keep the first runner report-only with no recognizer logic changes, no Streamlit UI changes, no CI gate and no production-blocking threshold.
+
+Files added:
+
+- `benchmark/run_recall_precision.py`
+- `tests/test_recall_precision_runner.py`
+- `handover/workpackages/20260612_1200_recall_precision_test_runner.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Main changes:
+
+- Added `benchmark/run_recall_precision.py`, a pure-stdlib deterministic runner.
+- The runner loads WP21 sidecars, validates `synthetic: true`, verifies source file references and checks `text == source_text[start:end]` for labels, preserve terms and known traps.
+- The runner accepts optional prediction JSON and reports exact and value-normalized recall/precision.
+- Metrics include overall summary, per-domain metrics, per-entity-class metrics, false negatives, false positives, preserve-term failures, known-trap failures and diagnostic-only partial overlaps.
+- Partial overlap is explicitly diagnostic-only and does not hide false negatives.
+- Schema-example sidecars are included by default with warnings so current examples can be used for runner validation without implying full benchmark coverage.
+- Added `tests/test_recall_precision_runner.py` covering exact/normalized scoring, preserve/trap failure reporting, malformed gold-label offset rejection and CLI JSON output.
+
+Validation status:
+
+- `python -m py_compile benchmark/run_recall_precision.py` passed in the ChatGPT execution sandbox against the authored runner.
+- `pytest -q tests/test_recall_precision_runner.py` passed in the ChatGPT execution sandbox against the authored tests: 3 passed.
+- `python -m json.tool benchmark/gold/schema/gold_label_schema.json` was requested; the schema was fetched and inspected through GitHub, but the GitHub connector does not provide a shell in the repository checkout. The runner itself parses JSON sidecars with Python stdlib.
+- GitHub Actions: to be checked after final handover commit.
+- Hugging Face sync: to be checked after final handover commit.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No Presidio integration changed.
+- No Streamlit UI changed.
+- No CI scorecard or production test gate added.
+- No production-blocking threshold added.
+- No dependency changes.
+- No export/reinsert behavior changed.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step:
+
+- `WP23 — Entity-class scorecard in CI`.
+
 ## WP28-REPAIR — Scrub Key expiry/delete policy artifact repair
 
 Status: completed documentation-repair-only.
@@ -87,7 +144,7 @@ Verification summary:
 Validation status:
 
 - Documentation/schema closeout review only.
-- `python -m json.tool benchmark/gold/schema/gold_label_schema.json` passed.
+- `python -m json.tool benchmark/gold/schema/gold_label_schema.json` passed in the prior closeout worker environment.
 - Required benchmark context files were read.
 - No tests run; no code or test files were changed.
 - App verification: not applicable because no UI changed.
@@ -143,11 +200,9 @@ Main policy decisions:
 Validation status:
 
 - Documentation/security lifecycle-policy review only.
-- Required control files plus `SCRUB_KEY_THREAT_MODEL.md`, `SCRUB_KEY_LIFECYCLE_SPEC.md`, `SCRUB_KEY_WARNING_UX_PLAN.md`, `SCRUB_KEY_SPEC.md` and `PARALLEL_SPEC_CONSOLIDATION_WP58.md` were read.
-- Context-only helper/UI files inspected: `scrub_key.py`, `scrub_key_import.py`, `scrub_key_reinsert.py`, `fix_streamlit_nested_expanders.py`.
+- Required control files plus Scrub Key context files were read.
+- Context-only helper/UI files were inspected.
 - No tests run; no code or test files were changed.
-- GitHub Actions: to be checked after final handover commit.
-- Hugging Face sync: to be checked after final handover commit.
 - App verification: not applicable because no UI changed.
 
 Intentionally not changed:
@@ -195,12 +250,11 @@ Main changes:
 
 - Added a minimal Python launcher that runs the existing startup patch scripts and then starts `presidio_streamlit.py` through Streamlit.
 - The launcher binds to `127.0.0.1` by default, uses port `8501` by default and disables Streamlit usage stats for this local launcher path.
-- Added local run documentation covering Python 3.10, dependency installation, the exact command executed, local-only warning, no-real-data-in-repo warning, locally processed files, current non-guarantees and the next validation step.
+- Added local run documentation covering Python setup, dependency installation, exact launch command, local-only warning, no-real-data-in-repo warning, locally processed files, current non-guarantees and the next validation step.
 
 Validation status:
 
-- `python -m py_compile scripts/run_local_streamlit.py` passed.
-- `python scripts/run_local_streamlit.py --help` passed.
+- `python -m py_compile scripts/run_local_streamlit.py` passed in the implementation worker environment.
 - Full app launch was not run.
 - App verification: not applicable because no UI feature changed.
 
@@ -256,8 +310,7 @@ Main proposal decisions:
 Validation status:
 
 - Documentation/architecture review only.
-- Required control files plus `PLACEHOLDER_ROBUSTNESS_REVIEW.md`, `SCRUB_KEY_SPEC.md` and `PARALLEL_SPEC_CONSOLIDATION_WP58.md` were read.
-- Context-only reinsert helper and test files were inspected.
+- Required context files were read.
 - No tests run; no code or test files were changed.
 - App verification: not applicable because no UI changed.
 
@@ -276,525 +329,16 @@ Next recommended step:
 
 - `WP32 — Placeholder checksum/validation helper`.
 
-## WP27 — Scrub Key warning UX plan
-
-Status: completed UX/security specification-only.
-
-Purpose:
-
-- Convert WP25/WP26 Scrub Key threat and lifecycle findings into a user-facing warning and acknowledgement plan.
-- Define warning text, placement and acknowledgement expectations for Scrub Key touchpoints.
-- Keep the package specification-only with no Streamlit/UI implementation.
-
-Files added:
-
-- `SCRUB_KEY_WARNING_UX_PLAN.md`
-- `handover/workpackages/20260610_0145_scrub_key_warning_ux_plan.md`
-
-Files changed:
-
-- `RISK_REGISTER.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main warning UX decisions:
-
-- Severity levels are defined as informational, warning, critical and blocking candidate for later policy.
-- MVP acknowledgement is lightweight and focused on high-risk moments such as Scrub Key export/download, import/reload, reinsert and restored output download.
-- The warning plan covers Scrub Key creation, download/export, local storage, import/reload, reinsert mode, restored output download, deletion/expiry guidance, shared-computer risk, e-mail/AI upload risk, loss-of-key warning and tampering/mismatch warning.
-- Proposed Dutch UI copy is included for future implementation, but no UI is implemented by WP27.
-- MVP scope is warning/acknowledgement guidance only; later secure/local desktop versions may add risky-storage detection, passphrase/key-vault warnings, expiry reminders and blocking policy gates after separate approval.
-
-Validation status:
-
-- Documentation/UX-security review only.
-- Required control files plus `SCRUB_KEY_THREAT_MODEL.md`, `SCRUB_KEY_LIFECYCLE_SPEC.md`, `SCRUB_KEY_SPEC.md` and `PARALLEL_SPEC_CONSOLIDATION_WP58.md` were read.
-- Context-only helper/UI files inspected: `scrub_key.py`, `scrub_key_import.py`, `scrub_key_reinsert.py`, `fix_streamlit_nested_expanders.py`.
-- No tests run; no code or test files were changed.
-- GitHub Actions: to be checked after final handover commit.
-- Hugging Face sync: to be checked after final handover commit.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No UI implementation.
-- No Streamlit patch changed.
-- No helper logic changed.
-- No Scrub Key JSON schema migration.
-- No encryption implementation.
-- No import/export behavior changed.
-- No reinsert behavior changed.
-- No tests added or changed.
-- No dependencies changed.
-- No secrets or real data stored.
-
-Next recommended step:
-
-- `WP28 — Scrub Key expiry/delete policy`.
-
-## WP45 — Local runtime architecture plan
-
-Status: completed architecture/specification-only.
-
-Purpose:
-
-- Compare local runtime paths and define local-first trust requirements.
-- Address the gap between the Hugging Face demo/development environment and the intended local-first confidential-processing product promise.
-- Recommend an MVP local runtime path and a later professional desktop runtime path without implementing packaging or runtime changes.
-
-Files added:
-
-- `LOCAL_RUNTIME_ARCHITECTURE_PLAN.md`
-- `handover/workpackages/20260610_0115_local_runtime_architecture_plan.md`
-
-Files changed:
-
-- `DECISION_LOG.md`
-- `RISK_REGISTER.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Runtime architecture recommendation:
-
-- Keep Hugging Face as demo/development environment only, not as the confidential production trust environment.
-- MVP local runtime path: minimal local Streamlit launcher, then local file-handling/privacy validation, then a PyInstaller/portable Windows proof of concept.
-- Later professional runtime path: evaluate a Tauri desktop shell with reusable Python core; keep Electron as an alternative if frontend needs or team capability favor it.
-- Local runtime expectations include local file processing, offline-capable core flows, no required outbound network calls for core processing, no silent cloud document processing, no document-content telemetry and careful local Scrub Key handling.
-
-Validation status:
-
-- Documentation/architecture review only.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No packaging implementation.
-- No installer created.
-- No runtime code changed.
-- No UI changed.
-- No Docker/runtime startup changes.
-- No dependency changes.
-- No cloud processing added.
-- No telemetry implementation.
-- No real data added.
-- No export/reinsert behavior changed.
-
-Next recommended step:
-
-- `WP46 — Minimal local Streamlit launcher`.
-
-## WP20 — Synthetic messy Dutch legal/zorg benchmark corpus
-
-Status: completed benchmark-corpus-only.
-
-Purpose:
-
-- Create a first synthetic messy Dutch legal, zorg and mixed professional benchmark corpus aligned with `RECALL_BENCHMARK_SPEC.md`.
-- Provide corpus text fixtures for later `WP21` gold labels, `WP22` runner and `WP23` CI scorecards.
-- Keep the recall line corpus-first and runner-free.
-
-Files added:
-
-- `benchmark/corpus/README.md`
-- `benchmark/corpus/legal/legal_process_messy_001.txt`
-- `benchmark/corpus/zorg/care_operations_messy_001.txt`
-- `benchmark/corpus/mixed/legal_care_mixed_messy_001.txt`
-- `benchmark/gold/README.md`
-- `handover/workpackages/20260610_0045_synthetic_messy_benchmark_corpus.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Corpus coverage:
-
-- Legal, zorg and mixed fixtures cover synthetic Dutch professional identifiers, names, addresses, e-mails, phone numbers, BSN-like values, IBAN-like values, case/client/claim/incident/care references, organizations, dates and context terms to preserve.
-- All fixtures are explicitly synthetic and contain no real customer, legal, care or personal data.
-- `benchmark/gold/README.md` explains that full gold-label sidecars, zero-based offsets and schema validation belong to `WP21`.
-
-Validation status:
-
-- Corpus/document review only.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No recognizer logic changed.
-- No benchmark runner implemented.
-- No full gold-label schema or offset sidecars added.
-- No CI gate or scorecard added.
-- No UI changed.
-- No tests added or changed.
-- No dependencies changed.
-- No export/reinsert behavior changed.
-- No real data added.
-- No cloud processing added.
-
-Next recommended step:
-
-- `WP21 — Gold-label entity schema`.
-
-## WP26 — Scrub Key encryption/lifecycle specification
-
-Status: completed security/lifecycle-specification-only.
-
-Purpose:
-
-- Define Scrub Key lifecycle states, retention/deletion expectations and protection options.
-- Treat the Scrub Key as sensitive re-identification data following WP25.
-- Specify MVP handling versus later professional/local desktop protection without implementing encryption.
-
-Files added:
-
-- `SCRUB_KEY_LIFECYCLE_SPEC.md`
-- `handover/workpackages/20260610_0015_scrub_key_lifecycle_spec.md`
-
-Files changed:
-
-- `DECISION_LOG.md`
-- `RISK_REGISTER.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main lifecycle decisions:
-
-- Scrub Key lifecycle states are creation, download/export, local storage, import/reload, active use, sharing risk, expiry and deletion.
-- Loss of the key or future passphrase means Scrub cannot deterministically restore original values.
-- Tampering can restore wrong values and corrupt legal/care meaning; future protected formats should include integrity protection.
-- MVP recommendation is warning-only plus explicit lifecycle guidance and protected-local-file guidance.
-- Encrypted local files, local vault / managed key store, key recovery and schema/container changes are later professional/local desktop options that require separate implementation workpackages.
-- Audit/logging should record lifecycle events and counts, but not original values, passphrases, encryption keys or full mappings.
-
-Validation status:
-
-- Documentation/security lifecycle review only.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No encryption implemented.
-- No Scrub Key JSON schema migration.
-- No import/export behavior changed.
-- No reinsert behavior changed.
-- No UI changed.
-- No helper logic changed.
-- No dependencies changed.
-- No tests added or changed.
-- No secrets or real data stored.
-
-Next recommended step:
-
-- `WP27 — Scrub Key warning UX plan`.
-
-## WP58 — Parallel specification consolidation and next execution queue
-
-Status: completed documentation/planning-only.
-
-Purpose:
-
-- Consolidate WP19, WP25, WP30 and WP35 into one coherent next execution queue.
-- Reconcile dependencies between recall benchmarking, Scrub Key lifecycle, placeholder robustness and DOCX hidden-content hygiene.
-- Decide what can run in parallel now and what must remain blocked.
-
-Files added:
-
-- `PARALLEL_SPEC_CONSOLIDATION_WP58.md`
-- `handover/workpackages/20260609_2345_parallel_spec_consolidation_wp58.md`
-
-Files changed:
-
-- `DECISION_LOG.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Consolidation decisions:
-
-- Next recommended parallel set: `WP20`, `WP26`, `WP31`, `WP45`.
-- `WP36 — DOCX metadata cleaner helper` remains blocked until a tighter metadata-only/helper-only/no-export-semantics boundary is approved.
-- Optional lower-risk parallel candidates remain `WP50`, `WP56` and `WP57` if worker capacity exists.
-
-Validation status:
-
-- Documentation/planning review only.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No code changed.
-- No tests added or changed.
-- No UI changed.
-- No dependencies changed.
-- No recognizer logic changed.
-- No Scrub Key encryption implemented.
-- No Scrub Key schema migration.
-- No placeholder migration.
-- No DOCX cleaner implemented.
-- No export behavior changed.
-- No real data added.
-- No cloud processing added.
-- No roadmap change made.
-- No release notes change made because there was no user-facing product capability change.
-
-Next recommended step:
-
-- Continue the remaining parallel worker set and follow the updated `WORKPACKAGES.md` queue.
-
-## WP35 — DOCX hidden content risk review
-
-Status: completed document-hygiene/specification-only.
-
-Purpose:
-
-- Review DOCX hidden content and metadata as leakage risks.
-- Define current DOCX support assumptions and the boundary between visible body-text scrubbing, hidden-content scrubbing, metadata cleaning, unsupported-content warnings and future export blocking.
-- Define audit requirements plus safe extraction and cleaning sequences before any helper implementation.
-
-Files added:
-
-- `DOCX_HIDDEN_CONTENT_RISK_REVIEW.md`
-- `handover/workpackages/20260609_2325_docx_hidden_content_risk_review.md`
-
-Files changed:
-
-- `RISK_REGISTER.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main risk findings:
-
-- Current DOCX support covers `word/document.xml` text nodes, including normal body paragraphs and tables, but does not provide full DOCX package hygiene.
-- Headers, footers, comments, tracked changes, metadata, custom XML, footnotes/endnotes, text boxes/shapes and embedded objects can contain sensitive values outside visible body text.
-- Tracked changes are a critical leakage risk because deleted text, author names and timestamps can remain in XML even when not visible in the accepted document view.
-- Future audit output should distinguish inspected parts, unsupported parts, cleaning actions, warnings and blocking reasons.
-- Blocking export is a product semantics change and must not be introduced silently.
-
-Validation status:
-
-- Documentation/document-hygiene review only.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No DOCX cleaner implemented.
-- No DOCX parser changed.
-- No export semantics changed.
-- No UI changed.
-- No tests added or changed.
-- No real documents added.
-- No cloud processing added.
-- No dependency changes made.
-- No direct edit to `presidio_streamlit.py`.
-- No direct edit to `fix_streamlit_nested_expanders.py`.
-- No direct edit to `fix_streamlit_pdf_text_reinsert.py`.
-
-Next recommended step:
-
-- Future DOCX hygiene work remains blocked until the helper boundary is approved.
-
-## WP30 — Placeholder robustness review
-
-Status: completed architecture/specification-only.
-
-Purpose:
-
-- Review how placeholders survive AI rewriting, translation, summarization and formatting changes.
-- Document the current placeholder format and deterministic reinsert assumptions.
-- Identify corruption risks and candidate future validation/audit directions before any migration.
-
-Files added:
-
-- `PLACEHOLDER_ROBUSTNESS_REVIEW.md`
-- `handover/workpackages/20260609_2310_placeholder_robustness_review.md`
-
-Files changed:
-
-- `RISK_REGISTER.md`
-- `DECISION_LOG.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main architecture findings:
-
-- Current `[PERSOON_1]`-style placeholders are deterministic and readable, but fragile under AI translation, summarization, punctuation/spacing changes, markdown/HTML formatting and document conversion.
-- Current reinsert assumes exact placeholder strings from the Scrub Key mapping.
-- Existing audit fields for unknown, duplicate and not-found placeholders are a useful foundation, but do not yet detect checksum failures, near-misses, placeholder deletion or semantic placeholder merges.
-- Candidate robust formats such as `[[SP_PERSON_0001_A7F3]]`, `[[SP_BSN_0002_C91B]]` and `[[SP_ADDRESS_0003_D41A]]` remain proposals only.
-- Checksum design must avoid deriving visible values from original sensitive data.
-- Backward compatibility with legacy placeholders is mandatory.
-
-Validation status:
-
-- Documentation/architecture review only.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No code changed.
-- No placeholder migration.
-- No placeholder format changed.
-- No Scrub Key schema changed.
-- No reinsert helper changed.
-- No UI changed.
-- No AI/cloud integration.
-- No tests added or changed.
-- No export behavior changed.
-- No final placeholder format mandated.
-
-Next recommended step:
-
-- `WP31 — LLM-resistant placeholder format proposal`.
-
-## WP25 — Scrub Key threat model
-
-Status: completed security/specification-only.
-
-Purpose:
-
-- Treat the Scrub Key as sensitive re-identification data.
-- Define accidental sharing, local storage, download-folder, e-mail/AI upload, shared-computer, retention, loss-of-key, tampering, malformed-key and import/export risks.
-- Clarify the distinction between anonymization, pseudonymization, redaction and reinsert.
-- Make clear that Scrub Key-based output is pseudonymized, not fully anonymized, as long as the key exists.
-
-Files added:
-
-- `SCRUB_KEY_THREAT_MODEL.md`
-- `handover/workpackages/20260609_2258_scrub_key_threat_model.md`
-
-Files changed:
-
-- `RISK_REGISTER.md`
-- `DECISION_LOG.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main security findings:
-
-- The Scrub Key contains original confidential values and placeholder mappings, so it can re-identify scrubbed content.
-- Accidental sharing, default Downloads storage, e-mail/AI upload, shared-computer use, unmanaged local storage and long retention are critical risks.
-- Loss of the Scrub Key prevents deterministic reinsert; tampering or malformed keys can cause incorrect or unsafe reinsert.
-- Encryption, lifecycle, expiry/delete and tamper protection require a separate approved specification before implementation.
-
-Validation status:
-
-- Documentation/security review only.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No helper logic changed.
-- No Scrub Key JSON schema migration.
-- No import/export behavior changed.
-- No reinsert behavior changed.
-- No UI changed.
-- No encryption implemented.
-- No dependencies changed.
-- No tests added or changed.
-- No secrets or real data stored.
-
-Next recommended step:
-
-- `WP26 — Scrub Key encryption/lifecycle specification`.
-
-## WP19 — Recall benchmark specification
-
-Status: completed specification-only.
-
-Purpose:
-
-- Define how Scrub will measure recall and precision on messy synthetic Dutch legal and care documents.
-- Make the highest product risk, false negatives / missed sensitive data, measurable before implementing a benchmark runner.
-- Define context-preservation expectations so legal and care meaning is not destroyed by over-masking.
-
-Files added:
-
-- `RECALL_BENCHMARK_SPEC.md`
-- `handover/workpackages/20260609_2200_recall_benchmark_spec.md`
-
-Files changed:
-
-- `RISK_REGISTER.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main specification decisions:
-
-- The benchmark taxonomy includes Dutch legal and care identifiers such as names, addresses, BSN, phone, e-mail, IBAN, dates, postcodes, case numbers, dossier numbers, client numbers, claim numbers, incident numbers, ECLI, organizations and medical/care references.
-- Gold labels should use zero-based inclusive/exclusive character offsets against synthetic plain-text sources.
-- Reporting should include overall, per-domain and per-entity recall/precision, false-negative, false-positive and context-preservation failure lists.
-- Context terms such as `slachtoffer`, `minderjarige`, `verzoeker`, `verweerder`, `eiser`, `rechtbank`, `arts`, `cliënt` and `zorgmedewerker` should normally remain readable unless identifying context makes them sensitive.
-- CI should start report-only, then add malformed-label failures, regression gates and later accepted per-entity thresholds.
-
-Validation status:
-
-- Documentation/specification review only.
-- No tests run; no code or test files were changed.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No recognizer logic changed.
-- No benchmark runner implemented.
-- No tests added or changed.
-- No UI changed.
-- No dependencies changed.
-- No real data added.
-- No export or reinsert behavior changed.
-
-Next recommended step:
-
-- `WP20 — Synthetic messy Dutch legal/zorg benchmark corpus`.
-
-## WP18C — Add Codex worker governance instructions
-
-Status: completed documentation/governance-only.
-
-Purpose:
-
-- Add repository-level worker instructions for Codex/agent execution.
-- Make handover-by-file the default process for Codex workers.
-- Reduce long handover copy-paste in the coordinator chat while preserving GitHub as source of truth.
-- Prepare safe parallel execution of WP19, WP25, WP30 and WP35.
-
-Files added:
-
-- `AGENTS.md`
-- `handover/workpackages/20260609_1330_codex_worker_governance.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Main changes:
-
-- `AGENTS.md` defines repository scope, required start sequence, safety rules, workpackage discipline, parallelization rules, testing/validation expectations, documentation updates and handover process.
-- Codex workers must write full handovers to `handover/workpackages/`.
-- Coordinator chat only needs handover path, commit/PR, status and short summary when the handover is committed to GitHub.
-- Full handover copy-paste is only required if commit/GitHub access fails, there is a conflict, or the coordinator explicitly asks for it.
-
 ## Earlier completed work
 
-- WP18B — PDF text to restored TXT UI app verification closeout.
-- WP18-FIX — Fix failing PDF text to TXT tests.
-- WP18R — Risk-driven roadmap and operating model reset.
-- WP18 — PDF text extraction to restored TXT UI implementation.
-- WP17B — Roadmap current-status reconciliation after WP17.
-- WP17 — PDF text extraction reinsert UI planning only.
-- WP16B — Text-based PDF extraction helper spike verification and closeout.
-- WP16-FIX — Fix failing PDF text helper tests.
-- WP16 — Text-based PDF extraction helper spike, restored TXT output only.
-- WP15 — PDF text extraction reliability review only.
-- v13.8 DOCX reinsert upload/download UI.
-- v13.7 TXT reinsert upload/download UI.
-- v13.6 two-mode UI.
-- v13.3 deterministic reinsert UI.
-- v13 Scrub Key foundation and import/export work.
-- v12 Review UX line.
+- WP27 — Scrub Key warning UX plan.
+- WP45 — Local runtime architecture plan.
+- WP20 — Synthetic messy Dutch legal/zorg benchmark corpus.
+- WP26 — Scrub Key encryption/lifecycle specification.
+- WP58 — Parallel specification consolidation and next execution queue.
+- WP35 — DOCX hidden content risk review.
+- WP30 — Placeholder robustness review.
+- WP25 — Scrub Key threat model.
+- WP19 — Recall benchmark specification.
+- WP18C — Add Codex worker governance instructions.
+- Earlier UI, PDF helper, Scrub Key, reinsert and Review UX work as recorded in repository history.
