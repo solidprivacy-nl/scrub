@@ -1,5 +1,36 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP28C app evidence — Scrub Key warning UI screenshot
+
+Status: partial app evidence recorded.
+
+Files added:
+
+- `WP28C_APP_EVIDENCE_SCRUB_KEY_WARNING_UI.md`
+- `workpackage_claims/WP28C_app_evidence_scrub_key_warning_ui.md`
+- `handover/workpackages/20260612_2025_scrub_key_warning_ui_app_evidence.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP28C_app_evidence_scrub_key_warning_ui.md`
+
+Summary:
+
+- Coordinator provided a screenshot of the running app in mode `Originele waarden terugzetten`.
+- The screenshot shows Scrub Key loading, Scrub Key warning text, acknowledgement checkbox before validating/loading the key, original-values reinsert warning and TXT/DOCX/PDF-to-TXT reinsert warning sections.
+- DOCX and PDF limitation warnings are visible.
+- Buttons are gated by acknowledgement/input state.
+- The screenshot itself was not stored in the repository.
+- This screenshot is useful partial evidence for WP28C reinsert-warning behavior, but it does not verify WP42D because WP42D belongs to the anonymization review flow.
+
+Remaining verification needs:
+
+- Full GitHub Actions evidence.
+- Hugging Face sync evidence.
+- App verification coverage for all expected WP28C warning/acknowledgement surfaces.
+
 ## WP42D-INVESTIGATE — Static highlight preview panel not visible
 
 Status: diagnosis completed; no fix implemented.
@@ -31,75 +62,12 @@ Next recommended step:
 
 - `WP42D-FIX — Static highlight preview deployment/patch-chain hardening`.
 
-## WP42D-VERIFY evidence update — Static highlight preview not visible in screenshot
-
-Status: app verification not passed / not confirmed.
-
-Files changed:
-
-- `WP42D_VERIFY_STATUS.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-Summary:
-
-- Coordinator provided a screenshot of the running Hugging Face app.
-- The screenshot shows the existing Scrub Legal review flow and replacement table.
-- The expected static highlight preview expander/panel `Documentvoorbeeld met markeringen — experimenteel` is not visible in the provided screenshot.
-- The screenshot itself was not stored in the repository.
-- WP42D remains not closed out as app-verified.
-
-Next recommended step:
-
-- `WP42D-INVESTIGATE — diagnose why the static highlight preview panel is not visible in the running app`.
-
-## WP43 — Frontend architecture decision
-
-Status: completed architecture/decision/documentation-only.
-
-Files added:
-
-- `FRONTEND_ARCHITECTURE_DECISION.md`
-- `tests/test_frontend_architecture_decision.py`
-- `workpackage_claims/WP43_frontend_architecture_decision.md`
-- `handover/workpackages/20260612_2215_frontend_architecture_decision.md`
-
-Files changed:
-
-- `DECISION_LOG.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-- `workpackage_claims/WP43_frontend_architecture_decision.md`
-
-Summary:
-
-- Checked for an existing WP43 claim before starting; none existed.
-- Decided to keep Streamlit as the MVP validation surface for now.
-- Decided not to migrate to a separate frontend yet.
-- Decided not to build a professional document editor yet.
-- Kept the architecture helper-driven: reusable Python core, thin UI patch layer, contract tests before UI integration.
-- Preserved the current review table as authoritative control/audit surface unless a later migration package changes that.
-- Defined criteria for reconsidering a separate frontend later.
-- Recorded D018 in `DECISION_LOG.md`.
-- No UI implementation, Streamlit patch, review table behavior, export/download behavior, Scrub Key behavior, reinsert behavior, dependency, Docker/runtime behavior, cloud processing or real-data change was made.
-
-Validation status:
-
-- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
-- Added decision tests should be validated by GitHub Actions.
-- App verification: not applicable because no UI behavior changed.
-
-Next recommended step:
-
-- Coordinator/user evidence needed for WP42D Actions/HF sync and app verification.
-- Alternative if coordinator wants non-UI planning: `WP39B — DOCX hygiene audit UI planning`.
-
 ## Recent previous entries
 
 Recent detailed changelog history remains available in Git history and includes:
 
 - WP42D-VERIFY — Static highlight preview UI verification closeout.
+- WP43 — Frontend architecture decision.
 - WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration.
 - WP42D — Static highlight preview UI integration.
 - WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration.
