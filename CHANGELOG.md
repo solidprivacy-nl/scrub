@@ -1,5 +1,42 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP50 — Pilot design Legal vs Zorg
+
+Status: completed planning-only with artifact limitation.
+
+Files added:
+
+- `workpackage_claims/WP50_pilot_design_legal_vs_zorg.md`
+- `handover/workpackages/20260612_1715_pilot_design_legal_vs_zorg.md`
+
+Files changed:
+
+- `workpackage_claims/WP50_pilot_design_legal_vs_zorg.md`
+- `CHANGELOG.md`
+
+Main changes:
+
+- Created and completed the WP50 claim.
+- Recorded the WP50 design summary in the claim file because repeated attempts to create the intended standalone design file were blocked by platform safety checks.
+- Covered Legal vs Zorg validation direction, target groups, selection criteria, measurement themes, stop criteria, agreement boundaries, residual-risk reporting role and demo/pilot/production distinction at summary level.
+
+Validation status:
+
+- Documentation-only.
+- No tests were run.
+- App verification: not applicable.
+
+Intentionally not changed:
+
+- No pilot started.
+- No code changed.
+- No UI changed.
+- No runtime behavior changed.
+
+Next recommended step:
+
+- `WP51 — ICP and pricing hypothesis`.
+
 ## WP49 — Desktop packaging decision
 
 Status: completed decision/documentation-only.
@@ -152,4 +189,4 @@ Next recommended step:
 
 ## Earlier entries
 
-The previous changelog history remains available in Git history. This WP49 entry records the latest desktop packaging decision while preserving recent WP36A and WP28C verification entries below.
+Previous changelog detail remains available in Git history. This WP50 entry records the latest pilot design status while preserving recent WP49, WP36A and WP28C verification entries below.
