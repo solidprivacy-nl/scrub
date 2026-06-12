@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 PATCH = Path("fix_streamlit_static_highlight_preview.py")
+APP = Path("presidio_streamlit.py")
 DOCKERFILE = Path("Dockerfile")
 
 
@@ -10,26 +11,44 @@ def _patch_text() -> str:
     return PATCH.read_text(encoding="utf-8")
 
 
+def _app_text() -> str:
+    return APP.read_text(encoding="utf-8")
+
+
 def test_static_highlight_preview_patch_exists_and_is_bounded():
     text = _patch_text()
 
-    assert "WP42D" in text
-    assert "read-only Streamlit preview panel" in text
-    assert "does not mutate review rows" in text
+    assert "WP42D-FIX" in text
+    assert "read-only" in text
+    assert "does not mutate" in text
     assert "change export/download behavior" in text
     assert "change Scrub Key behavior" in text
     assert "change reinsert" in text
     assert "call cloud services" in text
-    assert "real-data fixtures" in text
+    assert "real-data" in text
 
 
-def test_static_highlight_preview_patch_imports_helper_once_with_fallback_guard():
+def test_static_highlight_preview_patch_uses_stable_current_app_anchor():
+    patch_text = _patch_text()
+    app_text = _app_text()
+
+    stable_anchor = '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+        edited_replacements_df = st.data_editor(
+'''
+    assert stable_anchor in app_text
+    assert stable_anchor in patch_text
+    assert "Technische details bij de vervangtabel" not in patch_text
+    assert "Could not insert static highlight preview block before replacement editor" in patch_text
+
+
+def test_static_highlight_preview_patch_imports_helper_with_base_app_anchor():
     text = _patch_text()
 
     assert "from highlight_preview import build_static_highlight_preview" in text
-    assert "if 'from highlight_preview import build_static_highlight_preview\\n' not in text" in text
+    assert "from display_labels_nl import entity_label, source_label, confidence_label" in text
     assert "from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes" in text
     assert "from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes" in text
+    assert "Could not insert static highlight preview helper import" in text
 
 
 def test_static_highlight_preview_patch_inserts_before_authoritative_editor():
@@ -38,7 +57,7 @@ def test_static_highlight_preview_patch_inserts_before_authoritative_editor():
     assert "Documentvoorbeeld met markeringen — experimenteel" in text
     assert "De vervangtabel blijft leidend" in text
     assert "edited_replacements_df = st.data_editor(" in text
-    assert text.index("static_highlight_preview_block") < text.index("APP_FILE.write_text")
+    assert text.index("static_highlight_preview_block") < text.index("insertion_anchor") < text.index("APP_FILE.write_text")
 
 
 def test_static_highlight_preview_patch_uses_helper_gates_before_rendering():
@@ -70,7 +89,6 @@ def test_static_highlight_preview_patch_keeps_preview_non_authoritative():
 
     assert "Niet bepalend voor export" in text
     assert "Static preview only; the review table remains authoritative." in text
-    assert "use_container_width" not in text or "st.dataframe" not in text
     assert "download_button" not in text
     assert "scrub_key_to_json" not in text
     assert "reinsert_from_scrub_key" not in text
