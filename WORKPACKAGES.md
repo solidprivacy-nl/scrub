@@ -35,6 +35,7 @@ WP19 — Recall benchmark specification: completed specification-only.
 WP20 — Synthetic messy Dutch legal/zorg benchmark corpus: completed benchmark-corpus-only.
 WP21 — Gold-label entity schema: completed benchmark schema/closeout-only.
 WP22 — Recall/precision test runner: completed report-only benchmark runner implementation.
+WP23 — Entity-class scorecard in CI: completed report-only CI/entity-class scorecard foundation.
 WP25 — Scrub Key threat model: completed security/specification-only.
 WP26 — Scrub Key encryption/lifecycle specification: completed security/lifecycle-specification-only.
 WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
@@ -152,6 +153,7 @@ Files changed:
 ```text
 WORKPACKAGES.md
 CHANGELOG.md
+RISK_REGISTER.md
 ```
 
 Summary:
@@ -183,6 +185,59 @@ Next recommended step from WP22:
 
 ```text
 WP23 — Entity-class scorecard in CI
+```
+
+### WP23 — Entity-class scorecard in CI
+
+Status: completed report-only CI/entity-class scorecard foundation.
+
+Files added:
+
+```text
+benchmark/build_entity_scorecard.py
+benchmark/reports/README.md
+tests/test_entity_scorecard.py
+handover/workpackages/20260612_1230_entity_class_scorecard_ci.md
+```
+
+Files changed:
+
+```text
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+```
+
+Summary:
+
+- Added `benchmark/build_entity_scorecard.py`, a report-only wrapper around the WP22 runner.
+- The helper builds CI-friendly `entity_scorecard.json` and `entity_scorecard.md` artifacts in `benchmark/reports/`.
+- The scorecard shows overall recall/precision, per-domain metrics, per-entity-class metrics, gold/prediction counts, exact and normalized true positives, false-negative and false-positive counts, preserve-term failures, known-trap failures and partial-overlap diagnostic counts.
+- The scorecard explicitly records `synthetic_only`, `report_only`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
+- CI may publish this report and may fail on technical errors such as malformed JSON, bad offsets or runner exceptions, but must not fail on recall/precision scores yet.
+- No CI workflow threshold or production-blocking gate was added.
+
+Validation:
+
+```text
+python -m py_compile benchmark/build_entity_scorecard.py
+pytest tests/test_entity_scorecard.py
+```
+
+Intentionally not changed:
+
+- No recognizer logic changed.
+- No Streamlit UI changed.
+- No CI threshold or production-blocking gate added.
+- No dependency changes.
+- No export/reinsert behavior changed.
+- No real data added.
+- No cloud processing added.
+
+Next recommended step from WP23:
+
+```text
+WP24 — False-negative residual-risk report
 ```
 
 ## Other completed risk-driven packages
@@ -276,7 +331,7 @@ WP58 — Parallel specification consolidation and next execution queue: complete
 The next recommended workpackage for the recall/trust line is:
 
 ```text
-WP23 — Entity-class scorecard in CI
+WP24 — False-negative residual-risk report
 ```
 
 The next recommended workpackage from the Scrub Key security line is:
@@ -306,26 +361,26 @@ WP47 — Local file handling/privacy test
 Reason:
 
 ```text
-WP22 made recall/precision measurable but report-only. WP23 should add entity-class scorecard integration in CI without creating misleading product safety claims. WP28 defined Scrub Key expiry/delete policy, so the Scrub Key line can proceed to secure import/export tests or warning implementation planning. WP32 added additive placeholder validation helpers, so the placeholder line can proceed to audit hardening without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
+WP23 made entity-class scorecards CI-visible but report-only. WP24 should translate the remaining false-negative gaps into a residual-risk report without claiming production safety. WP28 defined Scrub Key expiry/delete policy, so the Scrub Key line can proceed to secure import/export tests or warning implementation planning. WP32 added additive placeholder validation helpers, so the placeholder line can proceed to audit hardening without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
 ```
 
 ## Next workpackage definitions
 
-### WP23 — Entity-class scorecard in CI
+### WP24 — False-negative residual-risk report
 
-Type: benchmark CI/report integration.
+Type: benchmark/risk reporting.
 
 Purpose:
 
-- Add CI-visible scorecard output for the WP22 recall/precision runner.
-- Keep the first CI integration report-only unless later thresholds are explicitly approved.
-- Make per-entity class gaps visible without claiming production safety.
+- Use WP22/WP23 report-only benchmark outputs to make false-negative and unsupported-class residual risk explicit.
+- Produce a clear internal/user-supportable residual-risk report without claiming the product is safe for real-world confidential documents.
+- Keep the work report-only unless a later gate is explicitly approved.
 
 Allowed direction:
 
 - Synthetic corpus only.
-- No recognizer logic changes unless separately approved.
-- No production-blocking threshold yet unless separately approved.
+- No recognizer logic changes.
+- No production-blocking threshold unless separately approved.
 - No UI changes.
 - No export/reinsert changes.
 - No real data.
@@ -334,12 +389,13 @@ Allowed direction:
 Likely files:
 
 ```text
+benchmark/build_residual_risk_report.py
 benchmark/reports/...
-tools or workflow/report-only integration if approved
-tests/... for scorecard/report behavior
+tests/test_residual_risk_report.py
 WORKPACKAGES.md
 CHANGELOG.md
-handover/workpackages/YYYYMMDD_HHMM_entity_class_scorecard_ci.md
+RISK_REGISTER.md
+handover/workpackages/YYYYMMDD_HHMM_false_negative_residual_risk_report.md
 ```
 
 ### WP29 — Scrub Key secure import/export tests
@@ -418,7 +474,7 @@ Also blocked until separate approval or later specs:
 - Scrub Key encryption implementation.
 - Scrub Key JSON schema migration.
 - Placeholder migration.
-- Robust placeholder generation in product flow.
+- Unknown/changed placeholder audit hardening that silently repairs or guesses placeholder intent.
 - DOCX comment/tracked-change removal.
 - Clean DOCX export blocking.
 - Restored PDF output.
