@@ -1,21 +1,32 @@
-# Workpackage claim — WP51B Park pilot line and restore MVP quality gate
+# Workpackage claim — WP51B MVP quality gate
 
 Repository: `solidprivacy-nl/scrub`
 
-Workpackage: `WP51B — Park pilot/commercial line until MVP quality gate`
+Workpackage: `WP51B — MVP product quality gate`
 
-Status: `in_progress`
+Status: `completed`
 
 Started: `2026-06-12 18:30 Europe/Amsterdam`
 
-Scope:
+Completed: `2026-06-12 18:40 Europe/Amsterdam`
+
+Added:
 
 ```text
-Documentation/governance-only. Mark Phase 7 / pilot-commercial follow-up as parked until the MVP product flow is strong across import, scrub, review, replace, Scrub Key, reinsert, export and audit. Do not start WP52. Do not change code, UI, tests, runtime or product behavior.
+MVP_PRODUCT_QUALITY_GATE.md
+handover/workpackages/20260612_1835_park_pilot_line_mvp_quality_gate.md
 ```
 
-Coordination note:
+Changed:
 
 ```text
-If another worker wants to start WP51B while this status is in_progress, stop and report that WP51B is already claimed.
+ROADMAP.md
+WORKPACKAGES.md
+CHANGELOG.md
+```
+
+Next:
+
+```text
+WP41 — Highlight-based review prototype decision
 ```
