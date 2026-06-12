@@ -1,5 +1,45 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP42D-FIX — Static highlight preview visibility repair
+
+Status: implemented UI patch repair; awaiting GitHub Actions, Hugging Face sync and app verification.
+
+Files added:
+
+- `WP42D_FIX_STATUS.md`
+- `workpackage_claims/WP42D_FIX_static_highlight_preview_visibility.md`
+- `handover/workpackages/20260612_2235_static_highlight_preview_visibility_fix.md`
+
+Files changed:
+
+- `fix_streamlit_static_highlight_preview.py`
+- `tests/test_static_highlight_preview_ui_integration_patch.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `RELEASE_NOTES.md`
+- `workpackage_claims/WP42D_FIX_static_highlight_preview_visibility.md`
+
+Summary:
+
+- User app verification showed the Hugging Face Space runs but the expected experimental static highlight preview panel is not visible.
+- Root cause found: the WP42D patch targeted a stale `Technische details bij de vervangtabel` anchor that is no longer present before the replacement editor in the current app flow.
+- Repaired `fix_streamlit_static_highlight_preview.py` to insert the panel using the stable current app anchor directly before `edited_replacements_df = st.data_editor(...)`.
+- Added fail-fast `RuntimeError` guards if the helper import or preview block cannot be inserted, preventing silent startup without the expected panel.
+- Updated static tests to assert the stable anchor exists in `presidio_streamlit.py`, the stale anchor is not used, and fail-fast guards exist.
+- Preserved read-only, non-authoritative, helper-gated rendering with escaped text only.
+- No export/download, Scrub Key, reinsert, dependency, cloud processing or real-data behavior changed.
+
+Validation status:
+
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
+- Expected checks: `pytest tests/test_static_highlight_preview_ui_integration_patch.py tests/test_highlight_preview.py`.
+- App verification required after Actions and Hugging Face sync because visible UI behavior should change.
+
+Next recommended step:
+
+- Verify GitHub Actions, Hugging Face sync and app screenshot showing `Documentvoorbeeld met markeringen — experimenteel`.
+
 ## WP28C app evidence — Scrub Key warning UI screenshot
 
 Status: partial app evidence recorded.
@@ -33,34 +73,16 @@ Remaining verification needs:
 
 ## WP42D-INVESTIGATE — Static highlight preview panel not visible
 
-Status: diagnosis completed; no fix implemented.
-
-Files added:
-
-- `WP42D_INVESTIGATION_REPORT.md`
-- `workpackage_claims/WP42D_INVESTIGATE_static_highlight_preview_not_visible.md`
-- `handover/workpackages/20260612_2010_static_highlight_preview_investigation.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `workpackage_claims/WP42D_INVESTIGATE_static_highlight_preview_not_visible.md`
+Status: diagnosis completed; superseded by WP42D-FIX.
 
 Summary:
 
-- Checked for an existing WP42D-INVESTIGATE claim before starting; none existed.
 - Added an investigation report.
 - Confirmed the WP42D patch file exists and contains the expected preview label and safety gates.
 - Confirmed repository `Dockerfile` includes the static highlight preview patch command before `streamlit run`.
 - Confirmed raw `presidio_streamlit.py` does not contain the panel because WP42D is a startup patch, not a direct source edit.
-- Confirmed `fix_streamlit_nested_expanders.py` creates the upstream review-table anchor used by the WP42D patch.
-- Most likely diagnosis: the running Hugging Face app is not using the WP42D-patched runtime yet, or the patch-chain needs stronger diagnostics/fail-fast checks.
-- No UI, code behavior, tests, runtime behavior, export/download behavior, Scrub Key behavior, reinsert behavior, cloud processing or real data changed.
-
-Next recommended step:
-
-- `WP42D-FIX — Static highlight preview deployment/patch-chain hardening`.
+- Initial diagnosis suggested runtime/sync or insufficient patch-chain diagnostics.
+- WP42D-FIX later identified and repaired the stale insertion anchor.
 
 ## Recent previous entries
 
