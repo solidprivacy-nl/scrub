@@ -131,17 +131,20 @@ Current mitigations:
 - WP36A recorded residual placeholder/comments risk.
 - WP37 created read-only extraction visibility for headers, footers, comments/person metadata and tracked-change markers.
 - WP38 created a report-only DOCX hygiene audit helper.
+- WP39 created `CLEAN_DOCX_EXPORT_POLICY.md`, defining that current DOCX output must not be claimed as clean DOCX export and that export blocking/clean claims require separate approved implementation.
 
 Gaps:
 
 - Word comments / kantlijncommentaren are still not scrubbed or removed by the current DOCX scrub/reinsert flow.
-- No clean DOCX export policy yet.
 - No product UI consumes the hygiene audit report yet.
-- No approved export-blocking policy for high-risk hidden content.
+- No clean DOCX export implementation exists.
+- No approved export-blocking implementation exists for high-risk hidden content.
+- The policy exists, but enforcement/UI/report integration remains future work.
 
 Recommended workpackages:
 
-- WP39 — Clean DOCX export policy.
+- WP40 — Document-centric review UX specification.
+- WP39B — DOCX hygiene audit UI planning, only if coordinator wants DOCX-specific UI planning first.
 - Later gated package — DOCX metadata cleaner helper after explicit metadata-only boundary approval.
 
 ---
@@ -264,12 +267,46 @@ Current mitigations:
 
 - Coordinator supplies screenshots/evidence.
 - Workpackages record Actions/sync status.
-- STATUS_MONITORING_RUNBOOK.md defines status-check expectations.
 
 Gaps:
 
-- Connector limitations can still prevent workflow/status lookup in some cases.
+- No formal monitoring runbook.
+- No standard status states.
+- No automated status artifact.
 
 Recommended workpackages:
 
-- Continue using status runbook and handover evidence discipline.
+- WP57 — Workflow status monitoring runbook and checks.
+
+---
+
+## R9 — Pilot/commercial overclaim risk
+
+Status: mitigating  
+Impact: medium
+
+Risk:
+
+```text
+The product is positioned commercially beyond what the current workflow can safely support.
+```
+
+Current mitigations:
+
+- WP50 defined a controlled pilot design and separated demo, pilot and production.
+- WP51 created `ICP_AND_PRICING_HYPOTHESIS.md`, keeping ICP and pricing as hypotheses only.
+- WP51 explicitly records what must not yet be sold or claimed.
+
+Gaps:
+
+- No external pilot has validated willingness to pay yet.
+- No ICP/pricing interview evidence exists yet.
+- No pilot intake or agreement process exists yet.
+- No production offer should be made before local runtime, document hygiene, review and support boundaries are clearer.
+
+Recommended workpackages:
+
+- WP52 — Pilot intake and NDA process.
+- WP53 — Controlled pilot protocol.
+- WP54 — Missers/false negatives feedback loop.
+- WP55 — Residual-risk report as consultancy deliverable.
