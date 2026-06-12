@@ -1,5 +1,70 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP33-CLOSEOUT — Placeholder audit hardening central docs repair
+
+Status: completed documentation/coordination-only.
+
+Purpose:
+
+- Complete central documentation for WP33 after the audit helper and tests were added.
+- Record the additive placeholder audit hardening status without changing code, tests, UI, reinsert, export or Scrub Key schema behavior.
+- Move the placeholder robustness line to WP34.
+
+Files added:
+
+- `handover/workpackages/20260612_0105_placeholder_audit_hardening_closeout.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+WP33 artifacts recorded:
+
+- `placeholder_audit.py`
+- `tests/test_placeholder_audit.py`
+- `handover/workpackages/20260612_0045_unknown_changed_placeholder_audit_hardening.md`
+
+Main closeout points:
+
+- WP33 is completed audit/helper hardening only.
+- The helper adds pure placeholder audit classification on top of WP32 validation.
+- The helper classifies placeholder-like tokens without changing reinsert behavior.
+- The helper reports `placeholder_format_summary`, `observed_placeholder_like_tokens`, `legacy_placeholders`, `robust_placeholders`, `malformed_robust_placeholders`, `integrity_failed_placeholders`, `unknown_placeholder_like_tokens`, `missing_placeholders` and `placeholder_validation_issues`.
+- Existing legacy placeholder reinsert remains compatible.
+- Unknown, malformed, truncated and failed-integrity placeholder-like tokens are made visible in helper audit output.
+- Unknown/malformed tokens are not automatically repaired.
+- No placeholder migration, robust placeholder generation, Scrub Key schema change, Streamlit UI change, export/reinsert behavior change, dependency change or AI/cloud processing was added.
+- Only synthetic test values were used.
+
+Validation status:
+
+- Documentation/coordination repair only.
+- Prior WP33 checks were recorded as passed: `python -m py_compile placeholder_validation.py placeholder_audit.py scrub_key.py scrub_key_reinsert.py tests/test_placeholder_audit.py`.
+- Prior WP33 targeted pytest was recorded as passed: `PYTHONPATH=. pytest -q tests/test_placeholder_validation.py tests/test_placeholder_audit.py tests/test_scrub_key_reinsert.py` with 34 passed.
+- Prior WP33 broader selected pytest was recorded as passed: `PYTHONPATH=. pytest -q tests -k "placeholder or scrub_key or reinsert"` with 34 passed.
+- No code or test files were changed in this closeout.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No code changed.
+- No tests changed.
+- No placeholder migration.
+- No robust placeholder generation in product flow.
+- No Scrub Key schema migration.
+- No reinsert behavior change.
+- No Streamlit UI change.
+- No export behavior change.
+- No dependency change.
+- No AI/cloud integration.
+- No real data added.
+- No roadmap change because strategy and phase order did not change.
+
+Next recommended step:
+
+- `WP34 — Synthetic AI-output placeholder corruption tests`.
+
 ## WP24 — False-negative residual-risk report
 
 Status: completed report-only false-negative residual-risk report foundation.
@@ -86,7 +151,7 @@ Files changed:
 Main changes:
 
 - Added `benchmark/build_entity_scorecard.py`, a pure-stdlib wrapper around `benchmark/run_recall_precision.py`.
-- The helper can write `benchmark/reports/entity_scorecard.json` and `benchmark/reports/entity_scorecard.md`.
+- The helper can write `benchmark/reports/entity_scorecard.json` and `entity_scorecard.md`.
 - Scorecard JSON includes `synthetic_only: true`, `report_only: true`, `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
 - Scorecard policy states that CI may publish the report and may fail on technical errors such as malformed JSON, bad offsets or runner exceptions, but must not fail on recall/precision scores yet.
 - Scorecard output includes overall recall/precision, per-domain metrics, per-entity-class metrics, gold/prediction counts, exact and normalized true positives, false-negative and false-positive counts, preserve-term failures, known-trap failures and partial-overlap diagnostic counts.
