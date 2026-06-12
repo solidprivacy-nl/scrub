@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 
 PATCH = Path("fix_streamlit_static_highlight_preview.py")
-APP = Path("presidio_streamlit.py")
 DOCKERFILE = Path("Dockerfile")
 
 
@@ -11,117 +10,50 @@ def _patch_text() -> str:
     return PATCH.read_text(encoding="utf-8")
 
 
-def _app_text() -> str:
-    return APP.read_text(encoding="utf-8")
-
-
-def test_static_highlight_preview_patch_exists_and_is_bounded():
+def test_static_highlight_preview_startup_patch_is_disabled_noop():
     text = _patch_text()
 
-    assert "WP42D-FIX4" in text
-    assert "read-only" in text
-    assert "does not mutate" in text
-    assert "change export/download behavior" in text
-    assert "change Scrub Key behavior" in text
-    assert "change reinsert" in text
-    assert "call cloud services" in text
-    assert "real-data" in text
+    assert "WP42D-ROLLBACK" in text
+    assert "intentionally a no-op" in text
+    assert "Static highlight preview startup patch disabled" in text
+    assert "presidio_streamlit.py" in text
+    assert "mutating" in text
 
 
-def test_static_highlight_preview_patch_uses_single_line_editor_anchor():
-    patch_text = _patch_text()
-    app_text = _app_text()
-
-    editor_anchor = '        edited_replacements_df = st.data_editor(\n'
-    assert editor_anchor in app_text
-    assert 'EDITOR_ANCHOR = "        edited_replacements_df = st.data_editor(\\n"' in patch_text
-    assert "Technische details bij de vervangtabel" not in patch_text
-    assert "Could not locate replacement editor anchor for static highlight preview" in patch_text
-    assert "Could not insert static highlight preview block before replacement editor" in patch_text
-
-
-def test_static_highlight_preview_patch_removes_stale_preview_blocks_before_reinsert():
+def test_static_highlight_preview_patch_no_longer_mutates_app_source():
     text = _patch_text()
 
-    assert "def remove_existing_preview_block" in text
-    assert "Always clean earlier startup-patch output first" in text
-    assert "while PREVIEW_TITLE in source" in text
-    assert "source = source[:block_start] + source[editor_pos:]" in text
-    assert "Found static highlight preview title but could not locate replacement editor anchor for cleanup" in text
-
-
-def test_static_highlight_preview_patch_uses_no_expander_wrapper():
-    text = _patch_text()
-
-    assert "with st.expander" not in text
-    assert 'st.markdown("#### Documentvoorbeeld met markeringen — experimenteel")' in text
-    assert "Legenda:" in text
-
-
-def test_static_highlight_preview_patch_imports_helper_with_base_app_anchor():
-    text = _patch_text()
-
-    assert "from highlight_preview import build_static_highlight_preview" in text
-    assert "from display_labels_nl import entity_label, source_label, confidence_label" in text
-    assert "from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes" in text
-    assert "from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes" in text
-    assert "Could not insert static highlight preview helper import" in text
-
-
-def test_static_highlight_preview_patch_inserts_before_authoritative_editor():
-    text = _patch_text()
-
-    assert "Documentvoorbeeld met markeringen — experimenteel" in text
-    assert "De vervangtabel blijft leidend" in text
-    assert "edited_replacements_df = st.data_editor(" in text
-    assert text.index("static_highlight_preview_block") < text.index("EDITOR_ANCHOR") < text.index("APP_FILE.write_text")
-
-
-def test_static_highlight_preview_patch_uses_helper_gates_before_rendering():
-    text = _patch_text()
-
-    required_gates = [
-        'highlight_preview_result.get("safe_to_render") is True',
-        'highlight_preview_result.get("read_only") is True',
-        'highlight_preview_result.get("non_authoritative") is True',
-        'highlight_preview_result.get("mutation_allowed") is False',
-        'highlight_preview_result.get("export_blocking") is False',
-        'highlight_preview_result.get("scrub_key_changes") is False',
+    forbidden = [
+        "APP_FILE.write_text",
+        "replace_once(",
+        "build_static_highlight_preview",
+        "st.markdown",
+        "with st.expander",
+        "unsafe_allow_html=True",
+        "edited_replacements_df = st.data_editor",
+        "Documentvoorbeeld met markeringen — experimenteel",
     ]
-    for gate in required_gates:
-        assert gate in text
+    for phrase in forbidden:
+        assert phrase not in text
 
 
-def test_static_highlight_preview_patch_renders_escaped_text_only():
-    text = _patch_text()
-
-    assert 'highlight_preview_segment.get("escaped_text", "")' in text
-    assert "unsafe_allow_html=True" in text
-    assert 'highlight_preview_segment.get("text"' not in text
-    assert "external JavaScript" not in text
-
-
-def test_static_highlight_preview_patch_keeps_preview_non_authoritative():
-    text = _patch_text()
-
-    assert "Niet bepalend voor export" in text
-    assert "Static preview only; the review table remains authoritative." in text
-    assert "download_button" not in text
-    assert "scrub_key_to_json" not in text
-    assert "reinsert_from_scrub_key" not in text
-    assert "st.session_state[" not in text
-
-
-def test_dockerfile_runs_highlight_patch_after_existing_patches_before_streamlit():
+def test_dockerfile_does_not_run_static_highlight_preview_patch():
     text = DOCKERFILE.read_text(encoding="utf-8")
 
-    nested = "python fix_streamlit_nested_expanders.py"
-    pdf = "python fix_streamlit_pdf_text_reinsert.py"
-    highlight = "python fix_streamlit_static_highlight_preview.py"
-    streamlit = "streamlit run presidio_streamlit.py"
+    assert "python fix_streamlit_nested_expanders.py" in text
+    assert "python fix_streamlit_pdf_text_reinsert.py" in text
+    assert "python fix_streamlit_static_highlight_preview.py" not in text
+    assert "streamlit run presidio_streamlit.py" in text
 
-    assert nested in text
-    assert pdf in text
-    assert highlight in text
-    assert streamlit in text
-    assert text.index(nested) < text.index(pdf) < text.index(highlight) < text.index(streamlit)
+
+def test_rollback_preserves_runtime_boundaries():
+    docker_text = DOCKERFILE.read_text(encoding="utf-8")
+    patch_text = _patch_text()
+
+    assert "WP42D-ROLLBACK" in docker_text
+    assert "restore" not in patch_text.lower()
+    assert "export" not in patch_text.lower()
+    assert "Scrub Key" not in patch_text
+    assert "reinsert" not in patch_text.lower()
+    assert "cloud" not in patch_text.lower()
+    assert "real" not in patch_text.lower()
