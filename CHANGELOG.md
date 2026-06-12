@@ -1,5 +1,34 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REPLACE_LOGIC — Easy replace/review logic simplification specification
+
+Status: completed specification/documentation-only with artifact limitation.
+
+Files added:
+
+- `workpackage_claims/WP_REPLACE_LOGIC_easy_replace_review_logic_simplification_specification.md`
+- `handover/workpackages/20260612_1855_easy_replace_review_logic_simplification.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REPLACE_LOGIC_easy_replace_review_logic_simplification_specification.md`
+
+Summary:
+
+- Checked for an existing claim before starting; none was in progress.
+- Created and completed the WP_REPLACE_LOGIC claim.
+- Standalone specification file creation was blocked by platform safety checks.
+- Recorded the completed specification summary in the claim and handover.
+- Defined the simplified MVP review model as item, suggestion, user choice, scope and audit.
+- Recommended helper/data-model tests before any UI implementation.
+- No UI, code, tests, export behavior, Scrub Key schema, detection logic, runtime behavior, cloud processing or real data changed.
+
+Next recommended step:
+
+- `WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests`.
+
 ## WP41 — Highlight-based review prototype decision
 
 Status: completed decision/documentation-only.
