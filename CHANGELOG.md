@@ -1,5 +1,67 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP32-CLOSEOUT — Placeholder validation helper central docs repair
+
+Status: completed documentation/coordination-only.
+
+Purpose:
+
+- Complete central documentation for WP32 after the helper and tests were added.
+- Record the additive placeholder validation helper status without changing code, tests, UI, reinsert, export or Scrub Key schema behavior.
+- Move the placeholder robustness line to WP33.
+
+Files added:
+
+- `handover/workpackages/20260612_0030_placeholder_validation_helper_closeout.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+WP32 artifacts recorded:
+
+- `placeholder_validation.py`
+- `tests/test_placeholder_validation.py`
+- `handover/workpackages/20260612_0015_placeholder_checksum_validation_helper.md`
+
+Main closeout points:
+
+- WP32 is completed helper/tests-only.
+- The helper recognizes and validates the future robust placeholder form `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`.
+- The helper parses entity type, counter and integrity token.
+- The helper generates deterministic integrity tokens from non-sensitive placeholder metadata.
+- Integrity tokens are not derived directly from original sensitive values.
+- Legacy placeholders remain a separate compatibility mode.
+- No placeholder migration, robust placeholder generation, Scrub Key schema change, reinsert behavior change, UI/export/dependency change or AI/cloud processing was added.
+
+Validation status:
+
+- Documentation/coordination repair only.
+- Prior WP32 targeted checks were recorded as passed: `python -m py_compile placeholder_validation.py tests/test_placeholder_validation.py` and `PYTHONPATH=. pytest tests/test_placeholder_validation.py -q` with 12 passed.
+- The broader command `pytest tests -k "placeholder or scrub_key or reinsert"` was not run in the prior WP32 worker because a full repository checkout was unavailable in the ChatGPT runtime.
+- No code or test files were changed in this closeout.
+- App verification: not applicable because no UI changed.
+
+Intentionally not changed:
+
+- No code changed.
+- No tests changed.
+- No placeholder migration.
+- No robust placeholder generation in product flow.
+- No Scrub Key schema migration.
+- No reinsert behavior change.
+- No Streamlit UI change.
+- No export behavior change.
+- No dependency change.
+- No AI/cloud integration.
+- No real data added.
+- No roadmap change because strategy and phase order did not change.
+
+Next recommended step:
+
+- `WP33 — Unknown/changed placeholder audit hardening`.
+
 ## WP22 — Recall/precision test runner
 
 Status: completed report-only benchmark runner implementation.
