@@ -1,5 +1,44 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration
+
+Status: completed tests/documentation-only.
+
+Files added:
+
+- `tests/test_replace_logic_ui_contract.py`
+- `workpackage_claims/WP_REPLACE_LOGIC_UI_CONTRACT_TESTS_replacement_decision_integration.md`
+- `handover/workpackages/20260612_2145_replace_logic_ui_contract_tests.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_REPLACE_LOGIC_UI_CONTRACT_TESTS_replacement_decision_integration.md`
+
+Summary:
+
+- Checked for an existing claim before starting; none existed.
+- Added contract tests mapping planned Dutch UI actions to supported `replacement_decision.py` review states.
+- Added contract tests mapping planned scope labels to supported helper scopes.
+- Tested exact and normalized affected-occurrence behavior through `matching_occurrence_ids(...)`.
+- Tested `build_replacement_audit(...)` report-only/export-readiness behavior.
+- Locked boundaries from `REPLACE_LOGIC_UI_PLAN.md`: no UI implementation, no export blocking, no Scrub Key behavior change, no click-to-mark implementation, existing table remains fallback/control surface.
+- Used synthetic values only.
+- No Streamlit UI, review table behavior, export/download behavior, Scrub Key behavior, reinsert behavior, helper runtime behavior, dependency, cloud processing or real data changed.
+
+Validation status:
+
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
+- Added contract tests should be validated by GitHub Actions.
+- App verification: not applicable because no UI behavior changed.
+
+Next recommended step:
+
+- `WP42D-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout` for the already implemented static highlight preview UI.
+- Alternative after verification: `WP43 — Frontend architecture decision`.
+
 ## WP42D — Static highlight preview UI integration
 
 Status: implemented UI patch/tests; awaiting GitHub Actions, Hugging Face sync and app verification.
@@ -39,32 +78,13 @@ Next recommended step:
 
 - `WP42D-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout`.
 
-## WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration
-
-Status: completed planning/tests/documentation-only.
-
-Next recommended step:
-
-- `WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration`.
-
-## WP42C — Static highlight preview UI planning
-
-Status: completed planning/tests/documentation-only.
-
-Next recommended step:
-
-- `WP42D — Static highlight preview UI integration`, only if coordinator explicitly approves UI work.
-
 ## Recent previous entries
 
 Recent detailed changelog history remains available in Git history and includes:
 
+- WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration.
+- WP42C — Static highlight preview UI planning.
 - WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests.
 - WP42B — Static highlight preview helper and tests.
 - WP42 — Streamlit feasibility boundary review.
-- WP_REPLACE_LOGIC — Easy replace/review logic simplification specification.
-- WP41 — Highlight-based review prototype decision.
-- WP40 — Document-centric review UX specification.
-- WP39 — Clean DOCX export policy.
-- WP38 — DOCX hygiene audit report.
 - WP28C / WP28C-VERIFY — Scrub Key warning acknowledgement UI implementation and verification attempt.
