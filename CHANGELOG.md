@@ -1,5 +1,58 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP47 — Local file handling/privacy test
+
+Status: completed local runtime privacy validation.
+
+Purpose:
+
+- Validate the WP46 minimal local Streamlit launcher against local-runtime privacy expectations.
+- Make the Hugging Face demo boundary and local runtime limitations explicit in `LOCAL_RUN.md`.
+- Keep the work test/documentation-only: no UI behavior, upload/download/export/reinsert semantics, cloud processing, telemetry or packaging changes.
+
+Files added:
+
+- `tests/test_local_file_handling_privacy.py`
+- `handover/workpackages/20260612_1500_local_file_handling_privacy_test.md`
+
+Files changed:
+
+- `LOCAL_RUN.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Main changes:
+
+- Added static/monkeypatch tests for `scripts/run_local_streamlit.py`.
+- Tests verify default loopback binding `127.0.0.1`, default port `8501`, `--browser.gatherUsageStats false`, no cloud/AI/telemetry endpoints in launcher arguments, and no document content or synthetic filenames in launcher command arguments.
+- Tests verify the launcher source does not write logs, create temp files, open files, or introduce installer/packaging behavior.
+- Tests verify `LOCAL_RUN.md` documents Hugging Face demo boundaries, local-only limitations, no-real-data rules, temp/runtime expectations, no telemetry/cloud-processing claim and no installer/packaging claim.
+- Updated `LOCAL_RUN.md` with explicit Hugging Face demo warning, runtime privacy expectations, temporary/runtime file expectations and no-telemetry/no-cloud-processing clarification.
+
+Validation status:
+
+- `python -m py_compile scripts/run_local_streamlit.py` passed in the ChatGPT execution sandbox against the authored files. The sandbox emitted an unrelated spreadsheet runtime warmup warning before Python execution, but the command returned success.
+- `pytest -q tests/test_local_file_handling_privacy.py` passed in the ChatGPT execution sandbox against the authored tests: 6 passed.
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository. GitHub Actions should validate the committed final files.
+- App verification: not applicable because no UI behavior changed.
+
+Intentionally not changed:
+
+- No Streamlit UI changed.
+- No upload/download/export/reinsert semantics changed.
+- No cloud document processing added.
+- No telemetry added.
+- No installer/packaging added.
+- No Docker/Hugging Face startup behavior changed.
+- No dependency changes.
+- No real data added.
+
+Next recommended step:
+
+- `WP48 — Portable Windows proof of concept`, only if the coordinator wants to continue the local-runtime line after CI/status is acceptable.
+- Other active risk-line option: `WP28C — MVP Scrub Key warning/acknowledgement UI implementation`.
+
 ## WP28B — Scrub Key warning implementation planning
 
 Status: completed UI/security implementation-planning-only.
@@ -24,19 +77,9 @@ Files changed:
 Main changes:
 
 - Added a UI/security implementation plan for future MVP Scrub Key warnings and acknowledgements.
-- Mapped warning placement to the current Streamlit patch surface in `fix_streamlit_nested_expanders.py`:
-  - `review_summary_block`;
-  - `scrub_key_import_ui_block`;
-  - `two_mode_selection_block`;
-  - `reinsert_ui_block`;
-  - `txt_reinsert_ui_block`;
-  - `docx_reinsert_ui_block`;
-  - future PDF-to-TXT reinsert scope if present.
+- Mapped warning placement to current Streamlit patch locations.
 - Defined Dutch copy inventory for Scrub Key creation, export/download, import/reload, reinsert, restored output downloads, Downloads/local storage, shared-computer risk, e-mail/AI upload risk, loss-of-key and tampering/mismatch warnings.
-- Defined MVP acknowledgement states and suggested Streamlit state keys for export/import/reinsert/download moments.
-- Defined guidance-only warnings and later blocking candidates without implementing blocking.
-- Updated `WORKPACKAGES.md` so the next Scrub Key step is `WP28C — MVP Scrub Key warning/acknowledgement UI implementation`.
-- Updated `RISK_REGISTER.md` to record that warning implementation planning exists while implemented warning UI remains open.
+- Defined MVP acknowledgement states and later blocking candidates without implementing blocking.
 
 Validation status:
 
@@ -94,9 +137,7 @@ Main changes:
 - Added a synthetic fixture set with expected placeholders and corrupted AI-output-style examples.
 - Added tests for exact legacy placeholder preservation with punctuation, translated placeholder label, summarization/deletion, markdown/HTML wrapping, HTML split token, spacing mutation, robust placeholder truncation, robust integrity mismatch, placeholder merge/deletion and invented curly placeholder-like token.
 - Tests assert that missing expected placeholders remain visible through `placeholder_audit.audit_placeholders`.
-- Tests assert that malformed, truncated, integrity-failed and unknown placeholder-like tokens are reported without repair or guessing.
 - Tests confirm existing legacy reinsert still restores exact preserved placeholders.
-- The fixture states that it is synthetic and uses no real personal data.
 
 Validation status:
 
@@ -121,7 +162,6 @@ Intentionally not changed:
 Next recommended step:
 
 - Placeholder robustness line: later gated robust placeholder generation and compatibility implementation only after schema/format policy is explicitly approved.
-- Active non-placeholder next step remains `WP28C — MVP Scrub Key warning/acknowledgement UI implementation` or `WP47 — Local file handling/privacy test`, depending on coordinator priority.
 
 ## WP29B — Scrub Key import/export edge-case hardening
 
@@ -177,191 +217,14 @@ Next recommended step:
 
 - `WP28B — Scrub Key warning implementation planning`.
 
-## WP29-CLOSEOUT — Scrub Key secure import/export tests closeout
-
-Status: completed documentation/status closeout after PR/Actions verification.
-
-Purpose:
-
-- Close out WP29 after PR #2 was merged into `main` and GitHub Actions passed.
-- Record that WP29 added secure import/export regression tests for the current Scrub Key helper surface.
-- Move the Scrub Key security line to `WP28B — Scrub Key warning implementation planning`, with `WP29B — Scrub Key import/export edge-case hardening` as an alternative.
-
-Files added:
-
-- `handover/workpackages/20260612_0715_scrub_key_secure_import_export_tests_closeout.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-WP29 artifacts recorded:
-
-- `tests/test_scrub_key_secure_import_export.py`
-- `handover/workpackages/20260612_0000_scrub_key_secure_import_export_tests.md`
-
-Main closeout points:
-
-- WP29 is completed helper/tests-only after PR/Actions verification.
-- The tests cover deterministic Scrub Key JSON export, required policy markers, valid import/reload warning and result shape, malformed JSON, non-object JSON, missing required item fields, invalid `items` structure, wrong privacy/reversible/excluded-row policy markers, duplicate placeholder tampering, unknown placeholder mismatch, old timestamp non-blocking behavior, no hidden recovery/deletion/expiry state, no-mutation behavior, local deterministic no-AI/no-cloud reinsert behavior and synthetic-only examples.
-- PR #2 merged the WP29 test and handover into `main`.
-- GitHub Actions for PR #2 passed before merge.
-- No helper logic, UI, Scrub Key schema, import/export behavior, reinsert behavior, encryption, automatic deletion, expiry blocking, dependency, real-data or cloud-processing changes were made.
-
-Validation status:
-
-- GitHub Actions: green for WP29 PR #2 / head commit `88759004ae534b73d0af63f7ff3c214832dd8e58`.
-- PR merge commit recorded by GitHub: `e1f23c6565e271e702fea17934f1a4f81711db30`.
-- No local pytest was run in ChatGPT web/GitHub connector environment.
-- This closeout is documentation/status only.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No code changed.
-- No tests changed in this closeout.
-- No helper logic changed.
-- No Streamlit UI changed.
-- No Scrub Key schema migration.
-- No import/export behavior change.
-- No reinsert behavior change.
-- No encryption implemented.
-- No automatic deletion implemented.
-- No expiry blocking implemented.
-- No dependency change.
-- No real data added.
-- No cloud processing added.
-- No roadmap change because strategy and phase order did not change.
-
-Next recommended step:
-
-- `WP28B — Scrub Key warning implementation planning`.
-- Alternative if the security-test line should continue first: `WP29B — Scrub Key import/export edge-case hardening`.
-
-## WP33-CLOSEOUT — Placeholder audit hardening central docs repair
-
-Status: completed documentation/coordination-only.
-
-Purpose:
-
-- Complete central documentation for WP33 after the audit helper and tests were added.
-- Record the additive placeholder audit hardening status without changing code, tests, UI, reinsert, export or Scrub Key schema behavior.
-- Move the placeholder robustness line to WP34.
-
-Files added:
-
-- `handover/workpackages/20260612_0105_placeholder_audit_hardening_closeout.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-
-WP33 artifacts recorded:
-
-- `placeholder_audit.py`
-- `tests/test_placeholder_audit.py`
-- `handover/workpackages/20260612_0045_unknown_changed_placeholder_audit_hardening.md`
-
-Main closeout points:
-
-- WP33 is completed audit/helper hardening only.
-- The helper adds pure placeholder audit classification on top of WP32 validation.
-- The helper classifies placeholder-like tokens without changing reinsert behavior.
-- Existing legacy placeholder reinsert remains compatible.
-- Unknown, malformed, truncated and failed-integrity placeholder-like tokens are made visible in helper audit output.
-- Unknown/malformed tokens are not automatically repaired.
-- No placeholder migration, robust placeholder generation, Scrub Key schema change, Streamlit UI change, export/reinsert behavior change, dependency change or AI/cloud processing was added.
-- Only synthetic test values were used.
-
-Validation status:
-
-- Documentation/coordination repair only.
-- Prior WP33 checks were recorded as passed: `python -m py_compile placeholder_validation.py placeholder_audit.py scrub_key.py scrub_key_reinsert.py tests/test_placeholder_audit.py`.
-- Prior WP33 targeted pytest was recorded as passed: `PYTHONPATH=. pytest -q tests/test_placeholder_validation.py tests/test_placeholder_audit.py tests/test_scrub_key_reinsert.py` with 34 passed.
-- Prior WP33 broader selected pytest was recorded as passed: `PYTHONPATH=. pytest -q tests -k "placeholder or scrub_key or reinsert"` with 34 passed.
-- No code or test files were changed in this closeout.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No code changed.
-- No tests changed.
-- No placeholder migration.
-- No robust placeholder generation in product flow.
-- No Scrub Key schema migration.
-- No reinsert behavior change.
-- No Streamlit UI change.
-- No export behavior change.
-- No dependency change.
-- No AI/cloud integration.
-- No real data added.
-- No roadmap change because strategy and phase order did not change.
-
-Next recommended step:
-
-- `WP34 — Synthetic AI-output placeholder corruption tests`.
-
-## WP24 — False-negative residual-risk report
-
-Status: completed report-only false-negative residual-risk report foundation.
-
-Purpose:
-
-- Make remaining false-negative and coverage risks explicit after WP19/WP20/WP21/WP22/WP23.
-- Provide a report-only residual-risk helper for internal/support risk communication.
-- Keep the work synthetic-only and avoid any production safety claim, threshold or gate.
-
-Files added:
-
-- `benchmark/build_residual_risk_report.py`
-- `tests/test_residual_risk_report.py`
-- `handover/workpackages/20260612_1300_false_negative_residual_risk_report.md`
-
-Files changed:
-
-- `benchmark/reports/README.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-
-Main changes:
-
-- Added `benchmark/build_residual_risk_report.py`, a pure-stdlib report-only helper that consumes a WP23 scorecard or builds one through the existing WP22/WP23 helpers.
-- The helper can write `benchmark/reports/false_negative_residual_risk_report.json` and `benchmark/reports/false_negative_residual_risk_report.md`.
-- The report includes synthetic-only warning, report-only/no-production-safety policy, current benchmark coverage status, schema-example limitation, supplied-prediction limitation, overall false-negative risk, per-domain residual risk, per-entity-class residual risk, preserve-term risk, known-trap/false-positive risk, partial-overlap/near-miss diagnostics, unsupported/not-yet-baselined classes and recommended next work.
-- The report explicitly records `thresholds_applied: false`, `production_gate: false` and `safe_for_production_claim: false`.
-- Added `tests/test_residual_risk_report.py` for policy fields, coverage limitations, risk summaries, unsupported/not-yet-baselined classes, Markdown rendering and output writing.
-- Updated `benchmark/reports/README.md` to document generated residual-risk report artifacts and the no-real-data/no-production-claim boundary.
-
-Validation status:
-
-- `python -m py_compile benchmark/build_residual_risk_report.py` passed in the ChatGPT execution sandbox against the authored helper.
-- `pytest -q tests/test_residual_risk_report.py` passed in the ChatGPT execution sandbox against the authored tests: 4 passed.
-- `pytest tests/test_recall_precision_runner.py` and `pytest tests/test_entity_scorecard.py` were requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector.
-- `python -m json.tool benchmark/gold/schema/gold_label_schema.json` was requested but could not be run in a live GitHub checkout through the ChatGPT GitHub connector. The schema was fetched and inspected through GitHub.
-- App verification: not applicable because no UI changed.
-
-Intentionally not changed:
-
-- No recognizer logic changed.
-- No Presidio integration changed.
-- No Streamlit UI changed.
-- No recall/precision threshold added.
-- No production-blocking gate added.
-- No production safety claim added.
-- No dependency changes.
-- No export/reinsert behavior changed.
-- No real data added.
-- No cloud processing added.
-
-Next recommended step:
-
-- `WP29 — Scrub Key secure import/export tests`.
-
 ## Earlier completed work
 
+- WP29-CLOSEOUT — Scrub Key secure import/export tests closeout.
+- WP33-CLOSEOUT — Placeholder audit hardening central docs repair.
+- WP24 — False-negative residual-risk report.
+- WP23 — Entity-class scorecard in CI.
+- WP32-CLOSEOUT — Placeholder validation helper central docs repair.
+- WP22 — Recall/precision test runner.
 - WP28-REPAIR — Scrub Key expiry/delete policy artifact repair.
 - WP21-CLOSEOUT — Gold-label schema handover and central docs repair.
 - WP28 — Scrub Key expiry/delete policy.
