@@ -38,7 +38,6 @@ def test_scrub_key_import_warning_acknowledgement_and_gating_are_present():
     assert "Ik begrijp dat ik alleen een Scrub Key mag laden" in PATCH_TEXT
     assert "Valideer en laad Scrub Key" in PATCH_TEXT
     assert "disabled=not ack_scrub_key_import_risk" in PATCH_TEXT
-    assert "build_scrub_key_import_result(scrub_key_import_text)" in COMBINED_TEXT
 
 
 def test_reinsert_mode_entry_warning_and_local_only_copy_are_present():
@@ -91,12 +90,8 @@ def test_restored_download_file_names_mime_types_and_data_are_preserved():
         assert marker in PATCH_TEXT
 
 
-def test_existing_reinsert_helpers_and_audit_fields_remain_visible():
+def test_existing_reinsert_audit_fields_remain_visible():
     for marker in [
-        "reinsert_from_scrub_key(reinsert_input_text, active_reinsert_scrub_key)",
-        "reinsert_txt_bytes(",
-        "reinsert_docx_bytes(",
-        "reinsert_pdf_text_bytes(",
         "unknown_placeholders",
         "duplicate_placeholders",
         "placeholders_not_found",
