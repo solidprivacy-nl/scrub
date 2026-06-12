@@ -67,6 +67,7 @@ WP35 — DOCX hidden content risk review: completed document-hygiene/specificati
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
 WP46 — Minimal local Streamlit launcher: completed minimal local runtime implementation.
 WP47 — Local file handling/privacy test: completed local runtime privacy validation.
+WP48 — Portable Windows proof of concept: completed Windows portable proof-of-concept launcher/docs/tests.
 WP58 — Parallel specification consolidation and next execution queue: completed documentation/planning-only.
 ```
 
@@ -143,29 +144,38 @@ WP36 — DOCX metadata cleaner helper
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
 WP46 — Minimal local Streamlit launcher: completed minimal local runtime implementation.
 WP47 — Local file handling/privacy test: completed local runtime privacy validation.
+WP48 — Portable Windows proof of concept: completed Windows portable proof-of-concept launcher/docs/tests.
 ```
 
-WP47 files added/changed:
+WP48 files added/changed:
 
 ```text
-tests/test_local_file_handling_privacy.py
+scripts/run_windows_portable_poc.ps1
+WINDOWS_PORTABLE_POC.md
+tests/test_windows_portable_poc.py
 LOCAL_RUN.md
-handover/workpackages/20260612_1500_local_file_handling_privacy_test.md
+RISK_REGISTER.md
+WORKPACKAGES.md
+CHANGELOG.md
+workpackage_claims/WP48_portable_windows_proof_of_concept.md
+handover/workpackages/20260612_1530_portable_windows_proof_of_concept.md
 ```
 
-WP47 summary:
+WP48 summary:
 
-- Added local launcher privacy/file-handling tests for default loopback binding, default port, Streamlit usage-stats disabling, absence of cloud/AI/telemetry endpoints in the launcher command, absence of document content or filenames in launcher arguments, no launcher logging/temp-file/packaging behavior, and LOCAL_RUN privacy-boundary documentation.
-- Updated `LOCAL_RUN.md` with Hugging Face demo boundary, runtime privacy expectations, temporary/runtime file expectations, no-telemetry/no-cloud-processing clarification and no installer/packaging claim.
-- No Streamlit UI, upload/download/export/reinsert semantics, cloud document processing, telemetry, installer/packaging, Docker/startup behavior, dependency, real data or app behavior changed.
+- Added a minimal Windows PowerShell proof-of-concept wrapper that delegates to the existing `scripts/run_local_streamlit.py` local launcher.
+- Added `WINDOWS_PORTABLE_POC.md` documenting the portable-folder concept, privacy boundary, Windows command, non-goals and validation matrix.
+- Added static tests to verify the wrapper delegates to the existing launcher, defaults to `127.0.0.1`/`8501`, does not add cloud/telemetry/package behavior, does not accept document/secret arguments, and that documentation records the proof-of-concept boundary.
+- Updated `LOCAL_RUN.md` to describe WP48 and keep explicit no-production-installer/no-MSI/no-offline-guarantee boundaries.
+- No Streamlit UI, upload/download/export/reinsert semantics, Docker/Hugging Face startup behavior, dependencies, telemetry, cloud document processing, real data, signed packaging or production installer behavior changed.
 
 Next recommended local-runtime step:
 
 ```text
-WP48 — Portable Windows proof of concept
+WP49 — Desktop packaging decision
 ```
 
-Only start WP48 after WP47 CI/status is acceptable and coordinator confirms this local-runtime line should proceed before other risk lines.
+Only start WP49 after WP48 CI/status is acceptable and the coordinator confirms the local-runtime line should proceed before other risk lines.
 
 ## Active / next recommended execution queue
 
@@ -184,7 +194,7 @@ workpackage_claims/WP28C_mvp_scrub_key_warning_acknowledgement_ui.md
 The next recommended workpackage from the local-runtime line is:
 
 ```text
-WP48 — Portable Windows proof of concept
+WP49 — Desktop packaging decision
 ```
 
 Other gated future work:
@@ -241,18 +251,19 @@ handover/workpackages/YYYYMMDD_HHMM_mvp_scrub_key_warning_acknowledgement_ui.md
 
 Because WP28C changes UI behavior, app verification is required after GitHub Actions and Hugging Face sync are green.
 
-### WP48 — Portable Windows proof of concept
+### WP49 — Desktop packaging decision
 
-Type: local runtime packaging proof of concept.
+Type: local runtime packaging decision.
 
 Purpose:
 
-- Validate a minimal portable Windows/Python packaging direction after WP47 local privacy boundaries.
-- Keep this as proof-of-concept only unless a separate packaging decision approves broader implementation.
+- Decide the longer-term local desktop/package direction after WP45-WP48.
+- Compare Streamlit/Python folder, PyInstaller, Tauri, Electron and managed enterprise deployment options.
+- Define privacy/security requirements before any production packaging or installer claim.
 
 Allowed direction:
 
-- No MSI claim unless explicitly approved.
+- Documentation/decision only unless a separate implementation package is explicitly approved.
 - No production installer claim.
 - No cloud document processing.
 - No telemetry.
