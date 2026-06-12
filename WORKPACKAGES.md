@@ -41,6 +41,7 @@ WP27 — Scrub Key warning UX plan: completed UX/security specification-only.
 WP28 — Scrub Key expiry/delete policy: completed security/lifecycle-policy-only.
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
+WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
 WP46 — Minimal local Streamlit launcher: completed minimal local runtime implementation.
@@ -212,12 +213,31 @@ WP28B — Scrub Key warning implementation planning
 ```text
 WP30 — Placeholder robustness review: completed architecture/specification-only.
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
+WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
 ```
+
+WP32 files added:
+
+```text
+placeholder_validation.py
+tests/test_placeholder_validation.py
+handover/workpackages/20260612_0015_placeholder_checksum_validation_helper.md
+handover/workpackages/20260612_0030_placeholder_validation_helper_closeout.md
+```
+
+WP32 summary:
+
+- Added an additive helper for the future robust placeholder shape `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`.
+- The helper parses entity type, counter and integrity token.
+- The helper computes deterministic integrity tokens from non-sensitive placeholder metadata only.
+- Integrity tokens are not derived directly from original sensitive values.
+- Legacy placeholders remain a separate compatibility mode.
+- No placeholder migration, product placeholder generation change, Scrub Key schema change, reinsert behavior change, UI/export/dependency change or AI/cloud integration was added.
 
 Next recommended placeholder step:
 
 ```text
-WP32 — Placeholder checksum/validation helper
+WP33 — Unknown/changed placeholder audit hardening
 ```
 
 ### DOCX hygiene line
@@ -271,22 +291,22 @@ Alternative Scrub Key sequencing if UI planning should precede tests:
 WP28B — Scrub Key warning implementation planning
 ```
 
+The next recommended workpackage from the placeholder robustness line is:
+
+```text
+WP33 — Unknown/changed placeholder audit hardening
+```
+
 The next recommended workpackage from the local-runtime line is:
 
 ```text
 WP47 — Local file handling/privacy test
 ```
 
-Other workpackages from the WP58 parallel set may continue independently if not already completed:
-
-```text
-WP32 — Placeholder checksum/validation helper
-```
-
 Reason:
 
 ```text
-WP22 made recall/precision measurable but report-only. WP23 should add entity-class scorecard integration in CI without creating misleading product safety claims. WP28 defined Scrub Key expiry/delete policy, so the Scrub Key line can proceed to secure import/export tests or warning implementation planning. WP31 accepted the robust placeholder format direction, so the placeholder line can proceed to validation helpers. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
+WP22 made recall/precision measurable but report-only. WP23 should add entity-class scorecard integration in CI without creating misleading product safety claims. WP28 defined Scrub Key expiry/delete policy, so the Scrub Key line can proceed to secure import/export tests or warning implementation planning. WP32 added additive placeholder validation helpers, so the placeholder line can proceed to audit hardening without migration or generation changes. WP46 added the minimal local launcher, so the local-runtime line can proceed to local file handling and privacy validation.
 ```
 
 ## Next workpackage definitions
@@ -342,24 +362,25 @@ Allowed direction:
 - No schema migration.
 - No export/reinsert behavior change.
 
-### WP32 — Placeholder checksum/validation helper
+### WP33 — Unknown/changed placeholder audit hardening
 
-Type: helper/test implementation.
+Type: audit/helper integration planning or narrow audit implementation, depending on the approved task.
 
 Purpose:
 
-- Add validation/checksum helper foundation for the WP31 robust placeholder proposal.
-- Do not migrate placeholder generation or reinsert behavior yet.
+- Use the WP32 validation helper as the foundation for clearer placeholder audit reporting.
+- Make unknown, changed, malformed, truncated, missing and integrity-failed placeholders visible before any future robust generation or migration.
+- Do not silently repair or guess placeholder intent.
 
 Allowed direction:
 
-- Helper and tests only.
 - No placeholder migration.
+- No robust placeholder generation in product flow.
 - No Scrub Key schema migration.
-- No UI changes.
-- No export/reinsert behavior changes.
-- No real data.
-- No cloud processing.
+- No UI feature change unless separately approved.
+- No export behavior change.
+- No AI/cloud integration.
+- Synthetic data only.
 
 ### WP47 — Local file handling/privacy test
 
@@ -397,7 +418,7 @@ Also blocked until separate approval or later specs:
 - Scrub Key encryption implementation.
 - Scrub Key JSON schema migration.
 - Placeholder migration.
-- Unknown/changed placeholder audit hardening before the format proposal is stable.
+- Robust placeholder generation in product flow.
 - DOCX comment/tracked-change removal.
 - Clean DOCX export blocking.
 - Restored PDF output.
