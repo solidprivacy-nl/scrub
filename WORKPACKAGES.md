@@ -45,7 +45,9 @@ WP28C-VERIFY — verification attempted; connector returned no statuses or workf
 WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
 WP35 — DOCX hidden content risk review completed.
 WP36A — DOCX residual placeholder and comments risk triage completed.
+WP37 — Headers/footers/comments/tracked-changes extraction helper completed.
 WP45-WP49 — local runtime line completed through desktop packaging decision.
+WP50 — Pilot design Legal vs Zorg completed planning-only with artifact limitation.
 WP58 — parallel specification consolidation completed.
 ```
 
@@ -104,12 +106,35 @@ The placeholder robustness line is complete through synthetic AI-output corrupti
 ```text
 WP35 — DOCX hidden content risk review.
 WP36A — DOCX residual placeholder and comments risk triage.
+WP37 — Headers/footers/comments/tracked-changes extraction helper.
 ```
+
+WP37 files added/changed:
+
+```text
+docx_hidden_content_extractor.py
+DOCX_HIDDEN_CONTENT_EXTRACTION_HELPER.md
+tests/test_docx_hidden_content_extractor.py
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP37_headers_footers_comments_tracked_changes_extraction_helper.md
+handover/workpackages/20260612_1735_headers_footers_comments_tracked_changes_extraction_helper.md
+```
+
+WP37 summary:
+
+- Added a pure local, read-only DOCX hidden-content extraction helper.
+- Detects and extracts text from `word/header*.xml`, `word/footer*.xml`, `word/comments.xml`, `word/commentsExtended.xml` and `word/person.xml` where parseable.
+- Detects tracked-change markers such as `w:ins`, `w:del`, `w:delText`, `w:moveFrom` and `w:moveTo` across `word/*.xml` parts.
+- Returns audit-oriented fields including `docx_parts_seen`, `headers`, `footers`, `comments`, `tracked_changes`, `detected`, `warnings`, `extraction_only`, `cleaning_applied: false` and `export_blocking: false`.
+- Added synthetic tests covering extraction, absence reporting, invalid input and synthetic-only boundaries.
+- No DOCX cleaner, comments/tracked-changes removal, export blocking, export semantic change, DOCX reinsert behavior change, Streamlit UI change, dependency change, real data or cloud processing was added.
 
 Next DOCX hygiene step:
 
 ```text
-WP37 — Headers/footers/comments/tracked-changes extraction helper
+WP38 — DOCX hygiene audit report
 ```
 
 Blocked until separate approval:
@@ -158,7 +183,7 @@ WP48B or WP49B only if coordinator approves a concrete packaging proof.
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
-2. WP37 — Headers/footers/comments/tracked-changes extraction helper, if coordinator wants to continue DOCX hygiene line.
+2. WP38 — DOCX hygiene audit report, if coordinator wants to continue DOCX hygiene line.
 3. WP48B or WP49B — only if coordinator approves a concrete packaging proof.
 ```
 
