@@ -4,18 +4,31 @@ Repository: `solidprivacy-nl/scrub`
 
 Workpackage: `WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests`
 
-Status: `in_progress`
+Status: `completed`
 
 Started: `2026-06-12 19:05 Europe/Amsterdam`
 
-Scope:
+Completed: `2026-06-12 19:15 Europe/Amsterdam`
+
+Files added:
 
 ```text
-Helper/tests-only. Add a small replacement decision data model and audit helper behind tests. No Streamlit UI, review table flow, export/download behavior, Scrub Key schema, runtime behavior, cloud processing or real data changes.
+replacement_decision.py
+tests/test_replacement_decision.py
+handover/workpackages/20260612_1905_replacement_decision_helper_tests.md
 ```
 
-Coordination note:
+Files changed:
 
 ```text
-If another worker wants to start WP_REPLACE_LOGIC_HELPER while this status is in_progress, stop and report that this package is already claimed.
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP_REPLACE_LOGIC_HELPER_replacement_decision_helper_tests.md
+```
+
+Next:
+
+```text
+WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration
 ```
