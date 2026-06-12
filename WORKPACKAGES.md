@@ -30,7 +30,8 @@ When done, update the same claim file to `completed` and include the final commi
 ```text
 WP28C — implemented; still needs coordinator evidence/app verification.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
-WP40-WP42D — review UX line implemented through experimental static highlight preview UI; awaiting Actions/HF sync/app verification.
+WP40-WP42D — review UX line implemented through experimental static highlight preview UI.
+WP42D-VERIFY — verification attempted; blocked pending Actions/HF/app evidence.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
@@ -57,37 +58,28 @@ WP41 — Highlight-based review prototype decision: completed.
 WP42 — Streamlit feasibility boundary review: completed.
 WP42B — Static highlight preview helper and tests: completed.
 WP42C — Static highlight preview UI planning: completed.
-WP42D — Static highlight preview UI integration: implemented; awaiting Actions/HF sync/app verification.
+WP42D — Static highlight preview UI integration: implemented.
+WP42D-VERIFY — verification attempted; blocked pending Actions/HF/app evidence.
 ```
 
-WP42D artifacts:
+WP42D-VERIFY summary:
 
-```text
-fix_streamlit_static_highlight_preview.py
-tests/test_static_highlight_preview_ui_integration_patch.py
-Dockerfile
-WORKPACKAGES.md
-CHANGELOG.md
-RELEASE_NOTES.md
-RISK_REGISTER.md
-workpackage_claims/WP42D_static_highlight_preview_ui_integration.md
-handover/workpackages/20260612_2130_static_highlight_preview_ui_integration.md
-```
-
-WP42D summary:
-
-- Added a small post-patch Streamlit integration for an experimental read-only static highlight preview panel.
-- The panel appears before the authoritative replacement table.
-- It uses `build_static_highlight_preview(...)` and renders only helper-provided `escaped_text` inside trusted markup.
-- It gates rendering on `safe_to_render`, `read_only`, `non_authoritative`, `mutation_allowed=False`, `export_blocking=False` and `scrub_key_changes=False`.
-- It limits preview to small text and the first 40 rows.
-- It does not mutate review rows, export/download state, Scrub Key data or reinsert behavior.
+- Checked for an existing WP42D-VERIFY claim before starting.
+- Created the verification claim before shared documentation changes.
+- Confirmed connector-visible WP42D files exist.
+- Confirmed connector-visible patch boundaries: read-only, non-authoritative, helper-gated rendering, escaped text rendering and no export/Scrub Key/reinsert mutation in the patch text.
+- Confirmed connector-visible Dockerfile patch order: existing patches run before `fix_streamlit_static_highlight_preview.py`, which runs before `streamlit run`.
+- GitHub combined status returned no statuses.
+- Workflow run lookup returned no workflow runs.
+- App verification is still required because WP42D changed UI behavior.
 
 Next review UX step:
 
 ```text
-WP42D-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout
+Coordinator/user evidence needed for WP42D Actions/HF sync and app verification.
 ```
+
+Do not start further review UI implementation until WP42D verification evidence is available.
 
 ## Replace/review logic line
 
@@ -97,26 +89,6 @@ WP_REPLACE_LOGIC_HELPER — implemented helper/tests-only.
 WP_REPLACE_LOGIC_UI_PLAN — completed planning/tests/documentation-only.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — completed tests/documentation-only.
 ```
-
-WP_REPLACE_LOGIC_UI_CONTRACT_TESTS artifacts:
-
-```text
-tests/test_replace_logic_ui_contract.py
-WORKPACKAGES.md
-CHANGELOG.md
-RISK_REGISTER.md
-workpackage_claims/WP_REPLACE_LOGIC_UI_CONTRACT_TESTS_replacement_decision_integration.md
-handover/workpackages/20260612_2145_replace_logic_ui_contract_tests.md
-```
-
-Summary:
-
-- Added contract tests mapping planned Dutch UI labels to supported `replacement_decision.py` review states.
-- Added contract tests mapping planned scope labels to supported helper scopes.
-- Tested exact and normalized affected-occurrence behavior through `matching_occurrence_ids(...)`.
-- Tested `build_replacement_audit(...)` report-only/export-readiness behavior.
-- Locked boundaries from `REPLACE_LOGIC_UI_PLAN.md`: no UI implementation, no export blocking, no Scrub Key behavior change, no click-to-mark implementation, existing table remains fallback/control surface.
-- Used synthetic values only.
 
 Next replace/review logic step:
 
@@ -129,7 +101,7 @@ Do not start replacement UI implementation until coordinator approves UI work.
 ## Active / next recommended execution queue
 
 ```text
-1. WP42D-VERIFY — verify GitHub Actions, Hugging Face sync and app behavior for the static highlight preview UI.
+1. Coordinator/user evidence needed for WP42D Actions/HF sync and app verification.
 2. Coordinator/user evidence still needed for WP28C Actions/HF sync and app verification if not already available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 4. WP43 — Frontend architecture decision, if coordinator wants architecture before more UI implementation.
