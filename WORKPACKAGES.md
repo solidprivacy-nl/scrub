@@ -48,6 +48,7 @@ WP30 — Placeholder robustness review: completed architecture/specification-onl
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
 WP33 — Placeholder audit hardening: completed audit/helper hardening-only.
+WP34 — Synthetic AI-output placeholder corruption tests: completed synthetic fixtures/tests-only.
 WP35 — DOCX hidden content risk review: completed document-hygiene/specification-only.
 WP45 — Local runtime architecture plan: completed architecture/specification-only.
 WP46 — Minimal local Streamlit launcher: completed minimal local runtime implementation.
@@ -124,7 +125,7 @@ Next recommended Scrub Key step:
 WP28C — MVP Scrub Key warning/acknowledgement UI implementation
 ```
 
-Alternative if the coordinator wants more test scaffolding before UI work:
+Alternative Scrub Key test scaffolding package:
 
 ```text
 WP29C — Scrub Key warning UI regression test scaffolding
@@ -137,12 +138,28 @@ WP30 — Placeholder robustness review: completed architecture/specification-onl
 WP31 — LLM-resistant placeholder format proposal: completed architecture/proposal-only.
 WP32 — Placeholder checksum/validation helper: completed helper/tests-only.
 WP33 — Placeholder audit hardening: completed audit/helper hardening-only.
+WP34 — Synthetic AI-output placeholder corruption tests: completed synthetic fixtures/tests-only.
 ```
+
+WP34 artifacts:
+
+```text
+tests/fixtures/placeholder_corruption/ai_output_corruption_cases.json
+tests/test_placeholder_corruption_scenarios.py
+```
+
+WP34 summary:
+
+- Added synthetic AI-output-style placeholder corruption fixtures and tests after WP33.
+- Covers exact preservation with punctuation, translated labels, summarization/deletion, markdown/HTML wrapping, HTML split tokens, spacing mutation, robust truncation, robust integrity mismatch, placeholder merge and invented curly placeholder-like tokens.
+- Tests assert that unknown, malformed, truncated and failed-integrity tokens are not repaired, and missing expected placeholders remain visible through helper audit output.
+- Existing legacy reinsert semantics remain compatible.
+- No placeholder migration, robust placeholder generation, Scrub Key schema migration, UI/export behavior change, dependency change, real data or AI/cloud integration was added.
 
 Next recommended placeholder step:
 
 ```text
-WP34 — Synthetic AI-output placeholder corruption tests
+Later gated package — robust placeholder generation and compatibility implementation, only after schema/format policy is explicitly approved.
 ```
 
 ## DOCX hygiene line
@@ -184,11 +201,7 @@ Alternative Scrub Key test scaffolding package:
 WP29C — Scrub Key warning UI regression test scaffolding
 ```
 
-The next recommended workpackage from the placeholder robustness line is:
-
-```text
-WP34 — Synthetic AI-output placeholder corruption tests
-```
+The placeholder robustness line is complete through WP34. Do not start robust placeholder generation, placeholder migration or Scrub Key schema work without a separate approved gated package.
 
 The next recommended workpackage from the local-runtime line is:
 
@@ -263,27 +276,6 @@ Allowed direction:
 - No helper logic.
 - No schema/import/export/reinsert behavior changes.
 
-### WP34 — Synthetic AI-output placeholder corruption tests
-
-Type: synthetic corruption tests.
-
-Purpose:
-
-- Add synthetic AI-output-style placeholder corruption fixtures and tests after WP33.
-- Cover translation, summarization, markdown/HTML, spacing, punctuation, truncation, integrity failure and placeholder deletion/merge scenarios.
-- Keep tests synthetic and report/audit focused.
-
-Allowed direction:
-
-- Tests and synthetic fixtures only unless a narrow helper defect is discovered.
-- No placeholder migration.
-- No robust placeholder generation in product flow.
-- No Scrub Key schema migration.
-- No UI feature change.
-- No export behavior change.
-- No AI/cloud integration.
-- No real data.
-
 ### WP47 — Local file handling/privacy test
 
 Type: local runtime privacy validation.
@@ -314,6 +306,7 @@ Also blocked until separate approval or later specs:
 - Scrub Key encryption implementation.
 - Scrub Key JSON schema migration.
 - Placeholder migration.
+- Robust placeholder generation in product flow.
 - Placeholder auto-repair or guessed placeholder intent.
 - DOCX comment/tracked-change removal.
 - Clean DOCX export blocking.
