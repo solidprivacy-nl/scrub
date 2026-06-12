@@ -202,6 +202,7 @@ Current mitigations:
 - WP42D added a small experimental read-only Streamlit preview panel via `fix_streamlit_static_highlight_preview.py`, preserving the review table as authoritative and keeping export, Scrub Key and reinsert semantics unchanged.
 - WP_REPLACE_LOGIC_HELPER created `replacement_decision.py`, a pure replacement decision helper with tests for review states, conservative scope matching, report-only audit summaries and advisory export-readiness state.
 - WP_REPLACE_LOGIC_UI_PLAN created `REPLACE_LOGIC_UI_PLAN.md`, planning future helper integration without changing Streamlit behavior.
+- WP_REPLACE_LOGIC_UI_CONTRACT_TESTS added `tests/test_replace_logic_ui_contract.py`, locking the planned label/state/scope mappings and report-only/export-readiness boundaries before any replacement-decision UI implementation.
 
 Gaps:
 
@@ -210,12 +211,10 @@ Gaps:
 - No frontend architecture decision for professional review UX.
 - No document-centric UI implementation exists yet.
 - Replacement decision helper is not wired into the product UI yet.
-- No replacement-decision UI contract tests exist yet.
 
 Recommended workpackages:
 
 - WP42D-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout for static highlight preview UI.
-- WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration.
 - WP43 — Frontend architecture decision.
 - WP44 — Click-to-mark sensitive text prototype only after further approval.
 
