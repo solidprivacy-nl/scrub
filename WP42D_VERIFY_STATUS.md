@@ -2,7 +2,7 @@
 
 Repository: `solidprivacy-nl/scrub`
 
-Status: verification attempted; not fully closed out.
+Status: verification attempted; app verification not passed based on provided screenshot.
 
 ## Scope
 
@@ -47,23 +47,40 @@ Therefore Hugging Face sync status is still unknown from this worker.
 
 ## App verification status
 
-App verification is still required because WP42D changed UI behavior.
+App verification evidence was provided by the coordinator as a screenshot of the running Hugging Face app.
 
-The user/coordinator should verify in the Hugging Face app that:
+Observed result:
 
-- the experimental static highlight preview appears in the review flow;
-- it appears before or near the authoritative replacement table;
-- the preview is clearly labelled read-only / experimental / non-authoritative;
-- the replacement table remains the source of truth;
-- no export/download, Scrub Key or reinsert behavior is changed;
-- long/invalid/no-preview cases show safe fallback messages.
+```text
+The existing Scrub Legal review flow and replacement table are visible, but the expected expander/panel labelled "Documentvoorbeeld met markeringen — experimenteel" is not visible in the provided screenshot.
+```
+
+Result:
+
+```text
+App verification not passed / not confirmed.
+```
+
+Reason:
+
+```text
+The expected WP42D static highlight preview UI is not visibly present in the supplied app screenshot.
+```
+
+The screenshot itself is not stored in the repository.
 
 ## Conclusion
 
-WP42D cannot be fully closed out by this worker because Actions, Hugging Face sync and app behavior were not confirmed.
+WP42D cannot be fully closed out. The repository patch files are present, but the app screenshot does not confirm that the expected static highlight preview panel is visible.
 
 Recommended status:
 
 ```text
-WP42D-VERIFY — verification attempted; blocked pending Actions/HF/app evidence.
+WP42D-VERIFY — app verification not passed; investigate why preview panel is not visible in the running app.
+```
+
+Recommended next step:
+
+```text
+WP42D-INVESTIGATE — diagnose why the static highlight preview panel is not visible in the app.
 ```
