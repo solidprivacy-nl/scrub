@@ -44,6 +44,7 @@ WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; 
 WP28C-VERIFY — verification attempted; connector returned no statuses or workflow runs.
 WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
 WP35 — DOCX hidden content risk review completed.
+WP36A — DOCX residual placeholder and comments risk triage completed.
 WP45-WP48 — local runtime line completed through portable Windows proof of concept.
 WP58 — parallel specification consolidation completed.
 ```
@@ -127,6 +128,45 @@ WP34 — Synthetic AI-output placeholder corruption tests.
 
 The placeholder robustness line is complete through synthetic AI-output corruption tests. Do not start robust placeholder generation, placeholder migration or Scrub Key schema work without a separate approved gated package.
 
+## DOCX hygiene line
+
+```text
+WP35 — DOCX hidden content risk review.
+WP36A — DOCX residual placeholder and comments risk triage.
+```
+
+WP36A files added/changed:
+
+```text
+DOCX_RESIDUAL_PLACEHOLDER_COMMENTS_TRIAGE.md
+tests/test_docx_residual_placeholder_comments_risk.py
+WORKPACKAGES.md
+CHANGELOG.md
+RISK_REGISTER.md
+workpackage_claims/WP36A_docx_residual_placeholder_comments_risk_triage.md
+handover/workpackages/20260612_1625_docx_residual_placeholder_comments_risk_triage.md
+```
+
+WP36A summary:
+
+- Recorded the app-verification finding that DOCX restored output can still contain residual placeholders such as `[PERSOON_01]`.
+- Recorded that Word comments/kantlijncommentaren are outside the current scrub/reinsert flow.
+- Added synthetic tests showing residual placeholder mismatch remains visible and comments are copied through unchanged by the current DOCX reinsert helper.
+- Classified this as a high-risk document hygiene issue, not a cosmetic bug.
+- No DOCX cleaner, comments/tracked-changes removal, export blocking, export semantic change, Streamlit UI change, real data or cloud processing was added.
+
+Next DOCX hygiene step:
+
+```text
+WP37 — Headers/footers/comments/tracked-changes extraction helper
+```
+
+Blocked until separate approval:
+
+```text
+WP36 — DOCX metadata cleaner helper
+```
+
 ## Local runtime line
 
 ```text
@@ -148,12 +188,13 @@ Only start WP49 after WP48 CI/status is acceptable and the coordinator confirms 
 
 ```text
 1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
-2. WP49 — Desktop packaging decision, only if the coordinator chooses to continue the local-runtime line.
+2. WP37 — Headers/footers/comments/tracked-changes extraction helper, if coordinator wants to continue DOCX hygiene line.
+3. WP49 — Desktop packaging decision, only if the coordinator chooses to continue the local-runtime line.
 ```
 
 ## Blocked work
 
-Do not start yet:
+Do not start yet without separate approval:
 
 ```text
 WP36 — DOCX metadata cleaner helper
