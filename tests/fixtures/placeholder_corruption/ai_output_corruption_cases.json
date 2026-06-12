@@ -1,0 +1,166 @@
+{
+  "description": "Synthetic AI-output placeholder corruption scenarios for WP34. No real personal data.",
+  "expected_legacy_placeholders": [
+    "[PERSOON_1]",
+    "[PERSOON_2]",
+    "[ZAAKNUMMER_1]"
+  ],
+  "expected_robust_placeholders": [
+    "[[SP_PERSON_0001_E509]]"
+  ],
+  "cases": [
+    {
+      "id": "legacy_exact_preserved_with_punctuation",
+      "category": "punctuation",
+      "ai_output": "Procesnotitie: [PERSOON_1] sprak met [PERSOON_2] over [ZAAKNUMMER_1].",
+      "expected": {
+        "missing_placeholders": [],
+        "unknown_placeholder_like_tokens": [],
+        "legacy_placeholders": [
+          "[PERSOON_1]",
+          "[PERSOON_2]",
+          "[ZAAKNUMMER_1]"
+        ],
+        "malformed_robust_placeholders": [],
+        "integrity_failed_placeholders": []
+      }
+    },
+    {
+      "id": "translated_legacy_label",
+      "category": "translation",
+      "ai_output": "Translated note: [PERSON_1] spoke about [ZAAKNUMMER_1].",
+      "expected": {
+        "missing_placeholders": [
+          "[PERSOON_1]",
+          "[PERSOON_2]"
+        ],
+        "unknown_placeholder_like_tokens": [
+          "[PERSON_1]"
+        ],
+        "legacy_placeholders": [
+          "[PERSON_1]",
+          "[ZAAKNUMMER_1]"
+        ]
+      }
+    },
+    {
+      "id": "summary_deleted_placeholders",
+      "category": "summarization",
+      "ai_output": "De betrokkenen spraken over het dossier.",
+      "expected": {
+        "missing_placeholders": [
+          "[PERSOON_1]",
+          "[PERSOON_2]",
+          "[ZAAKNUMMER_1]"
+        ],
+        "unknown_placeholder_like_tokens": [],
+        "observed_placeholder_like_tokens": []
+      }
+    },
+    {
+      "id": "markdown_html_exact_wrapping",
+      "category": "markdown_html",
+      "ai_output": "Markdown ` [PERSOON_1] ` en HTML <strong>[ZAAKNUMMER_1]</strong> blijven exact zichtbaar.",
+      "expected": {
+        "missing_placeholders": [
+          "[PERSOON_2]"
+        ],
+        "legacy_placeholders": [
+          "[PERSOON_1]",
+          "[ZAAKNUMMER_1]"
+        ],
+        "unknown_placeholder_like_tokens": []
+      }
+    },
+    {
+      "id": "html_split_placeholder",
+      "category": "markdown_html",
+      "ai_output": "HTML split: <span>[PERSOON_</span><span>1]</span> en [ZAAKNUMMER_1].",
+      "expected": {
+        "missing_placeholders": [
+          "[PERSOON_1]",
+          "[PERSOON_2]"
+        ],
+        "legacy_placeholders": [
+          "[ZAAKNUMMER_1]"
+        ]
+      }
+    },
+    {
+      "id": "spacing_changed_placeholder",
+      "category": "spacing",
+      "ai_output": "Spatie-mutatie: [ PERSOON_1 ] bij [ZAAKNUMMER_1].",
+      "expected": {
+        "missing_placeholders": [
+          "[PERSOON_1]",
+          "[PERSOON_2]"
+        ],
+        "legacy_placeholders": [
+          "[ZAAKNUMMER_1]"
+        ]
+      }
+    },
+    {
+      "id": "truncated_robust_placeholder",
+      "category": "truncation",
+      "ai_output": "Afgekapt robuust token [[SP_PERSON_0001_E509] naast [ZAAKNUMMER_1].",
+      "expected_robust": [
+        "[[SP_PERSON_0001_E509]]"
+      ],
+      "expected": {
+        "missing_placeholders": [
+          "[[SP_PERSON_0001_E509]]"
+        ],
+        "malformed_robust_placeholders": [
+          "[[SP_PERSON_0001_E509]"
+        ],
+        "placeholder_issue_contains": "missing_closing_double_bracket"
+      }
+    },
+    {
+      "id": "robust_integrity_mismatch",
+      "category": "integrity_failure",
+      "ai_output": "Checksum fout [[SP_PERSON_0001_FFFF]] naast [ZAAKNUMMER_1].",
+      "expected_robust": [
+        "[[SP_PERSON_0001_E509]]"
+      ],
+      "expected": {
+        "missing_placeholders": [
+          "[[SP_PERSON_0001_E509]]"
+        ],
+        "integrity_failed_placeholders": [
+          "[[SP_PERSON_0001_FFFF]]"
+        ],
+        "placeholder_issue_contains": "integrity_mismatch"
+      }
+    },
+    {
+      "id": "merged_placeholders",
+      "category": "merge",
+      "ai_output": "Samengevoegd: [PERSOON_1] tekent namens [PERSOON_1] in [ZAAKNUMMER_1].",
+      "expected": {
+        "missing_placeholders": [
+          "[PERSOON_2]"
+        ],
+        "legacy_placeholders": [
+          "[PERSOON_1]",
+          "[ZAAKNUMMER_1]"
+        ]
+      }
+    },
+    {
+      "id": "invented_curly_placeholder",
+      "category": "invented",
+      "ai_output": "Uitgevonden token {{SP:PERSON:0001:A7F3}} naast [ZAAKNUMMER_1].",
+      "expected": {
+        "missing_placeholders": [
+          "[PERSOON_1]",
+          "[PERSOON_2]"
+        ],
+        "unknown_placeholder_like_tokens": [
+          "{{SP:PERSON:0001:A7F3}}"
+        ]
+      }
+    }
+  ]
+}
