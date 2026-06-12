@@ -1,13 +1,34 @@
-# WP42D-ROLLBACK claim
+# WP42D rollback claim
 
-Workpackage: `WP42D-ROLLBACK — Disable static highlight preview startup patch`
+Workpackage: `WP42D-ROLLBACK — Restore stable Scrub Legal startup`
 
-Status: `in_progress`
+Status: `completed_awaiting_verification`
 
 Repository: `solidprivacy-nl/scrub`
 
-Claimed by: `ChatGPT webinterface worker`
+Files added:
 
-Reason: repeated runtime errors show the experimental startup patch is too fragile. Restore the last working interface by disabling the preview patch.
+```text
+handover/workpackages/20260613_0005_static_highlight_preview_rollback.md
+```
 
-Scope: rollback/disable experimental UI patch only. No export, reinsert, Scrub Key, dependency, cloud processing or real-data changes.
+Files changed:
+
+```text
+Dockerfile
+fix_streamlit_static_highlight_preview.py
+tests/test_static_highlight_preview_ui_integration_patch.py
+WORKPACKAGES.md
+```
+
+Expected check:
+
+```text
+pytest tests/test_static_highlight_preview_ui_integration_patch.py
+```
+
+Next step:
+
+```text
+Verify that the normal Scrub Legal interface loads again after Hugging Face rebuild.
+```
