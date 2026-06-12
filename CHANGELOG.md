@@ -1,5 +1,42 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests
+
+Status: implemented helper/tests-only; awaiting GitHub Actions verification.
+
+Files added:
+
+- `replacement_decision.py`
+- `tests/test_replacement_decision.py`
+- `workpackage_claims/WP_REPLACE_LOGIC_HELPER_replacement_decision_helper_tests.md`
+- `handover/workpackages/20260612_1905_replacement_decision_helper_tests.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REPLACE_LOGIC_HELPER_replacement_decision_helper_tests.md`
+
+Summary:
+
+- Checked for an existing WP_REPLACE_LOGIC_HELPER claim before starting; none existed.
+- Added `ReplacementDecision`, a pure data model for review decisions.
+- Added validated review states and scopes.
+- Added conservative same-value matching for this occurrence, exact match and normalized match.
+- Added report-only replacement audit output with decision counts, mapping candidates, risk flags and advisory export-readiness state.
+- Added synthetic tests for accepted/edited/ignored/context/manual decisions, validation errors, scope matching, audit output and non-UI boundaries.
+- No Streamlit UI, review table flow, export/download behavior, Scrub Key schema, recognizer behavior, runtime behavior, cloud processing or real data changed.
+
+Validation status:
+
+- The exact updated GitHub checkout could not be executed through the ChatGPT GitHub connector because the connector does not provide shell execution in the checked-out repository.
+- Added helper tests should be validated by GitHub Actions.
+- App verification: not applicable because no UI behavior changed.
+
+Next recommended step:
+
+- `WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration`.
+
 ## WP42B — Static highlight preview helper and tests
 
 Status: completed helper/tests/documentation-only.
