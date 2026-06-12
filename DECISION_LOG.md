@@ -4,6 +4,31 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-12 — D017 — Streamlit is feasible only for a bounded read-only highlight preview
+
+Status: accepted feasibility boundary decision
+
+Decision:
+
+```text
+Streamlit may be used for a small static/read-only highlight review preview using synthetic text or extracted main text only. It must not become the long-term professional document-centric review interface yet, and it must not implement click-to-mark, review mutation, export blocking, Scrub Key mutation, Word/PDF layout rendering or broad review-table replacement.
+```
+
+Rationale:
+
+Streamlit is fast for online MVP validation, but clickable markers, synchronized panes, raw HTML rendering, accessibility, long-document performance and state synchronization are high-risk in the current patch-based UI architecture. A bounded read-only prototype can validate whether document context improves review comprehension without destabilizing the current table-first workflow.
+
+Implications:
+
+- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` is the governing boundary for the next highlight-review work.
+- The next safe implementation step is `WP42B — Static highlight preview helper and tests`.
+- A later Streamlit UI preview may be considered only after helper/model tests exist.
+- Click-to-mark sensitive text remains blocked until later decision/implementation packages.
+- The production review table remains the authoritative audit/control surface.
+- Any HTML rendering must escape source text and avoid raw user-text HTML.
+
+---
+
 ## 2026-06-12 — D016 — Highlight-based review starts as bounded read-only prototype after feasibility review
 
 Status: accepted prototype decision
@@ -40,7 +65,7 @@ Local installer and production desktop packaging work must move to the end of th
 
 Rationale:
 
-Testing an installable app is much more labor-intensive than testing a web interface. Installer work introduces OS, antivirus, signing, dependency, update, rollback, temp-file, network, support and enterprise-management complexity. Starting packaging too early risks spending effort on distributing logic and UI that may still change. The Hugging Face/Streamlit prototype remains the fastest surface for synthetic and approved non-confidential validation of product behavior.
+Testing an installable app is much more labor-intensive than testing a web interface. Installer work introduces OS, antivirus, signing, dependency, update, rollback, offline, network, temp-file, support and enterprise-management complexity. Starting packaging too early risks spending effort on distributing logic and UI that may still change. The Hugging Face/Streamlit prototype remains the fastest surface for synthetic and approved non-confidential validation of product behavior.
 
 Implications:
 
