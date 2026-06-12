@@ -90,12 +90,14 @@ Current mitigations:
 - WP27 created `SCRUB_KEY_WARNING_UX_PLAN.md`, defining warning severity levels, acknowledgement expectations and proposed Dutch UI copy for Scrub Key creation, export/download, storage, import/reload, reinsert, restored downloads, expiry/delete guidance, shared-computer risk, e-mail/AI upload risk, loss-of-key and tampering/mismatch moments.
 - WP28 created `SCRUB_KEY_EXPIRY_DELETE_POLICY.md`, defining user-controlled retention, expiry and deletion policy; Downloads/shared-computer/manual deletion guidance; loss-of-key and tampering consequences; audit/logging expectations; and the rule that Scrub must not silently delete keys or keep hidden recovery copies.
 - WP28B created `SCRUB_KEY_WARNING_IMPLEMENTATION_PLAN.md`, mapping warning copy and acknowledgement requirements to exact current Streamlit patch locations before UI implementation.
+- WP28C implemented MVP warning/acknowledgement gating for Scrub Key export/import, local reinsert actions and restored-output downloads. This is pending GitHub Actions, Hugging Face sync and app verification.
 - WP29 added secure import/export regression tests for the current Scrub Key helper surface.
 - WP29B expanded edge-case coverage and added minimal validation hardening so unsupported `schema_version` values are reported instead of accepted.
 
 Gaps:
 
-- No implemented MVP warning/acknowledgement UI changes yet.
+- WP28C still needs GitHub Actions, Hugging Face sync and app verification before it can be considered fully closed out.
+- UI acknowledgements are safety prompts only; they are not encryption, automatic deletion, expiry enforcement, protected storage or a managed key vault.
 - No encryption/protection implementation.
 - No implemented expiry/delete UI or automated lifecycle tooling.
 - No tamper-proof or authenticated Scrub Key format.
@@ -106,7 +108,7 @@ Gaps:
 
 Recommended workpackages:
 
-- WP28C — MVP Scrub Key warning/acknowledgement UI implementation.
+- WP28C-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout.
 - Later implementation package — protected local file handling.
 - Later implementation package — encrypted key container.
 - Later implementation package — local vault / managed key store.
