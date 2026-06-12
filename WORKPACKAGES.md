@@ -34,7 +34,8 @@ WP40-WP43 — review UX/frontend line completed through frontend architecture de
 WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
 WP42D-FIX — first visibility repair created fail-fast behavior but still used an overly strict anchor.
 WP42D-FIX2 — anchor repair implemented, but runtime showed indentation error around inserted expander wrapper.
-WP42D-FIX3 — no-expander repair implemented; awaiting Actions/HF sync/app verification.
+WP42D-FIX3 — no-expander repair implemented, but stale broken block could remain in already-patched running container.
+WP42D-FIX4 — stale-block cleanup repair implemented; awaiting Actions/HF sync/app verification.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
@@ -73,25 +74,27 @@ WP42D — Static highlight preview UI integration: implemented.
 WP42D-VERIFY — app verification not passed; expected preview panel not visible in provided screenshot.
 WP42D-FIX — first visibility repair implemented fail-fast behavior but failed runtime verification.
 WP42D-FIX2 — single-line editor anchor repair implemented but failed with inserted expander indentation error.
-WP42D-FIX3 — no-expander repair implemented; awaiting verification.
+WP42D-FIX3 — no-expander repair implemented but did not clean stale already-inserted block.
+WP42D-FIX4 — stale-block cleanup repair implemented; awaiting verification.
 WP43 — Frontend architecture decision: completed.
 ```
 
-WP42D-FIX3 summary:
+WP42D-FIX4 summary:
 
-- User runtime evidence showed `IndentationError: expected an indented block after 'with' statement` around the inserted `with st.expander(...)` preview wrapper.
-- `fix_streamlit_static_highlight_preview.py` no longer injects a new `with st.expander(...)` block.
-- The preview is now a simple read-only section using `st.markdown("#### Documentvoorbeeld met markeringen — experimenteel")` and captions before the authoritative replacement table.
-- Tests now assert the patch contains no `with st.expander` wrapper.
+- User runtime evidence kept showing the old indentation error even after the no-expander patch.
+- Diagnosis: a running container can already contain a stale broken preview block in `presidio_streamlit.py`; a title-present check then skips reinsertion and leaves the broken block in place.
+- `fix_streamlit_static_highlight_preview.py` now first removes any existing preview block from the preview-title line through the replacement editor anchor.
+- It then inserts the current safe no-expander preview before the authoritative replacement table.
+- Tests now assert stale preview cleanup logic exists.
 - Read-only, non-authoritative, escaped-rendering, no export, no Scrub Key and no reinsert boundaries remain unchanged.
 
 Next review/frontend step:
 
 ```text
-Verify WP42D-FIX3 with GitHub Actions, Hugging Face sync and app screenshot showing the app starts and the preview panel is visible.
+Verify WP42D-FIX4 with GitHub Actions, Hugging Face sync and app screenshot showing the app starts and the preview panel is visible.
 ```
 
-Do not start further review UI implementation until WP42D-FIX3 visibility is verified or coordinator explicitly approves another path.
+Do not start further review UI implementation until WP42D-FIX4 visibility is verified or coordinator explicitly approves another path.
 
 ## Replace/review logic line
 
@@ -113,10 +116,10 @@ Do not start replacement UI implementation until coordinator approves UI work.
 ## Active / next recommended execution queue
 
 ```text
-1. WP42D-FIX3 verification — GitHub Actions, Hugging Face sync and app screenshot showing preview panel.
+1. WP42D-FIX4 verification — GitHub Actions, Hugging Face sync and app screenshot showing preview panel.
 2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
-4. No further review UI implementation until WP42D-FIX3 visibility is verified or explicitly approved.
+4. No further review UI implementation until WP42D-FIX4 visibility is verified or explicitly approved.
 ```
 
 ## Blocked work
