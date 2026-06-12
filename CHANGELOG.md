@@ -8,7 +8,7 @@ Purpose:
 
 - Park Phase 7 follow-up until the MVP product flow is credible enough.
 - Keep WP50 and WP51 as recorded early thinking artifacts, not the active execution line.
-- Restore the active queue to MVP product-quality work.
+- Restore the active queue to MVP-product-quality work.
 
 Files added:
 
@@ -18,6 +18,7 @@ Files added:
 
 Files changed:
 
+- `ROADMAP.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `workpackage_claims/WP51B_park_pilot_line_mvp_quality_gate.md`
@@ -28,6 +29,7 @@ Main changes:
 - Recorded the active product priority as `Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit`.
 - Parked WP52 as a default next step.
 - Updated the active queue to focus on WP28C evidence/app verification, WP41, easy replace/review logic specification and optional WP39B.
+- Updated `ROADMAP.md` so Phase 7 is explicitly parked until the MVP product quality gate passes.
 - Preserved concurrent worker updates showing WP38, WP39 and WP40 as completed.
 
 Validation status:
@@ -48,7 +50,7 @@ Intentionally not changed:
 
 Notes:
 
-- Attempts to update `DECISION_LOG.md` were blocked by platform safety checks. The decision is recorded in `MVP_PRODUCT_QUALITY_GATE.md`, `WORKPACKAGES.md`, `CHANGELOG.md` and the handover.
+- Attempts to update `DECISION_LOG.md` were blocked by platform safety checks. The decision is recorded in `MVP_PRODUCT_QUALITY_GATE.md`, `ROADMAP.md`, `WORKPACKAGES.md`, `CHANGELOG.md` and the handover.
 
 Next recommended step:
 
