@@ -1,14 +1,14 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP42D-FIX3 — Static highlight preview no-expander repair
+## WP42D-FIX4 — Static highlight preview stale-block cleanup repair
 
-Status: implemented UI patch repair; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: implemented UI patch cleanup repair; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Files added:
 
-- `WP42D_FIX3_STATUS.md`
-- `workpackage_claims/WP42D_FIX3_static_highlight_preview_no_expander.md`
-- `handover/workpackages/20260612_2325_static_highlight_preview_no_expander_repair.md`
+- `WP42D_FIX4_STATUS.md`
+- `workpackage_claims/WP42D_FIX4_static_highlight_preview_cleanup.md`
+- `handover/workpackages/20260612_2340_static_highlight_preview_cleanup_repair.md`
 
 Files changed:
 
@@ -16,14 +16,15 @@ Files changed:
 - `tests/test_static_highlight_preview_ui_integration_patch.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `workpackage_claims/WP42D_FIX3_static_highlight_preview_no_expander.md`
+- `workpackage_claims/WP42D_FIX4_static_highlight_preview_cleanup.md`
 
 Summary:
 
-- User runtime evidence showed an `IndentationError` around the inserted static highlight preview `with st.expander(...)` block.
-- Repaired `fix_streamlit_static_highlight_preview.py` to stop injecting a new preview `with st.expander(...)` wrapper.
-- The preview is now a simple read-only section before the replacement table using `st.markdown("#### Documentvoorbeeld met markeringen — experimenteel")` and captions.
-- Updated static tests to assert the patch contains no `with st.expander` wrapper.
+- User runtime evidence kept showing the old indentation error after the no-expander patch.
+- Diagnosis: the running container can already contain a stale broken preview block in `presidio_streamlit.py`; if the preview title is present, the patch skipped reinsertion and left the broken block in place.
+- Repaired `fix_streamlit_static_highlight_preview.py` to always remove any existing static highlight preview block before inserting the current safe no-expander block.
+- Cleanup removes from the preview-title line through the replacement editor anchor, then reinserts the safe current block before the authoritative replacement table.
+- Updated static tests to assert stale preview cleanup logic exists.
 - Preserved read-only, non-authoritative, helper-gated rendering with escaped text only.
 - No export/download, Scrub Key, reinsert, dependency, cloud processing or real-data behavior changed.
 
@@ -41,6 +42,7 @@ Next recommended step:
 
 Recent detailed changelog history remains available in Git history and includes:
 
+- WP42D-FIX3 — Static highlight preview no-expander repair.
 - WP42D-FIX2 — Static highlight preview anchor repair.
 - WP42D-FIX — Static highlight preview visibility repair.
 - WP28C app evidence — Scrub Key warning UI screenshot.
