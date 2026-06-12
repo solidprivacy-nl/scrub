@@ -6,6 +6,12 @@ PDF-to-restored-TXT section inside ``Originele waarden terugzetten`` only.
 It deliberately does not add restored PDF output, OCR, PDF-to-DOCX conversion,
 AI calls, cloud processing, batch processing, storage, or export/download
 semantic changes outside the approved restored TXT output for this workflow.
+
+WP28C also uses this post-patch layer for MVP Scrub Key warnings and
+acknowledgement gating after the main Scrub Key/reinsert UI has been injected.
+The gating only disables high-risk buttons until the user checks the relevant
+acknowledgement; it does not change JSON content, imported key handling,
+reinsert helper behavior, output bytes, filenames or MIME types.
 """
 
 from __future__ import annotations
@@ -126,6 +132,225 @@ text = replace_once(
     + pdf_text_reinsert_ui_block
     + '''else:
 ''',
+)
+
+# WP28C — MVP Scrub Key warning/acknowledgement UI implementation.
+# These replacements run after the v13.x Scrub Key/reinsert UI is injected.
+# They add acknowledgement gating only; they do not change helper behavior,
+# exported JSON, imported key handling, restored file bytes, filenames or MIME types.
+text = replace_once(
+    text,
+    '''            st.download_button(
+                "Download Scrub Key (.json)",
+                data=scrub_key_to_json(scrub_key),
+                file_name="solidprivacy_scrub_key.json",
+                mime="application/json",
+            )
+''',
+    '''            st.warning("Belangrijk: deze Scrub Key kan originele vertrouwelijke waarden herstellen. Download de sleutel alleen als u deze lokaal, apart en beveiligd kunt bewaren. Deel of upload de sleutel niet naar externe AI, e-mail of derden, tenzij dit bewust bedoeld en toegestaan is.")
+            ack_scrub_key_export_risk = st.checkbox(
+                "Ik begrijp dat deze Scrub Key herleidbaar is en dat ik deze niet samen met opgeschoonde uitvoer mag delen zonder geldige reden en toestemming.",
+                key="ack_scrub_key_export_risk",
+            )
+            st.download_button(
+                "Download Scrub Key (.json)",
+                data=scrub_key_to_json(scrub_key),
+                file_name="solidprivacy_scrub_key.json",
+                mime="application/json",
+                disabled=not ack_scrub_key_export_risk,
+            )
+            st.caption("Bewaar de Scrub Key niet onnodig in Downloads. Verplaats de sleutel naar een beveiligde lokale map of verwijder deze zodra hij niet meer nodig is.")
+            with st.expander("Waar moet ik de Scrub Key bewaren?", expanded=False):
+                st.markdown("Bewaar de Scrub Key lokaal, apart van de opgeschoonde tekst en bij voorkeur in een beveiligde map. Let op met Downloads, gedeelde computers, automatische cloudsync en back-ups.")
+                st.markdown("Verwijder de Scrub Key handmatig zodra terugzetten niet meer nodig is en uw dossier- of organisatiebeleid dat toestaat. Let op: Scrub kan geen kopieën verwijderen uit Downloads, e-mail, cloudsync of back-ups.")
+                st.markdown("Zonder Scrub Key kan Scrub originele waarden niet meer deterministisch terugzetten. Er is geen cloud- of serverherstel.")
+''',
+)
+
+text = replace_once(
+    text,
+    '''    if st.button("Valideer en laad Scrub Key", key="load_scrub_key_import"):
+''',
+    '''    st.warning("Laad alleen een Scrub Key die bij dit document of dossier hoort. Een geldige sleutel kan originele vertrouwelijke waarden herstellen. Gebruik geen sleutel uit een ander dossier of van een onbekende bron.")
+    ack_scrub_key_import_risk = st.checkbox(
+        "Ik begrijp dat ik alleen een Scrub Key mag laden die bij dit document of dossier hoort.",
+        key="ack_scrub_key_import_risk",
+    )
+    if st.button("Valideer en laad Scrub Key", key="load_scrub_key_import", disabled=not ack_scrub_key_import_risk):
+''',
+)
+
+text = replace_once(
+    text,
+    '''if solidprivacy_work_mode == "Originele waarden terugzetten":
+    st.caption("Originele waarden terugzetten: laad een Scrub Key en herstel placeholders lokaal in geplakte tekst.")
+''',
+    '''if solidprivacy_work_mode == "Originele waarden terugzetten":
+    st.warning("Let op: terugzetten herstelt originele gevoelige waarden. De uitvoer kan weer persoonsgegevens, dossierinformatie of andere vertrouwelijke gegevens bevatten.")
+    st.caption("Terugzetten gebeurt lokaal met de geladen Scrub Key. Gebruik de Scrub Key niet in externe AI-diensten.")
+    st.caption("Originele waarden terugzetten: laad een Scrub Key en herstel placeholders lokaal in geplakte tekst.")
+''',
+)
+
+text = replace_once(
+    text,
+    '''    if st.button("Zet originele waarden lokaal terug", key="run_local_reinsert"):
+''',
+    '''    ack_reinsert_text_confidential = st.checkbox(
+        "Ik begrijp dat de herstelde uitvoer weer vertrouwelijk is.",
+        key="ack_reinsert_text_confidential",
+    )
+    if st.button("Zet originele waarden lokaal terug", key="run_local_reinsert", disabled=not ack_reinsert_text_confidential):
+''',
+)
+
+text = replace_once(
+    text,
+    '''        st.download_button(
+            "Download herstelde tekst (.txt)",
+            data=reinsert_result.get("text", ""),
+            file_name="solidprivacy_herstelde_tekst.txt",
+            mime="text/plain",
+        )
+''',
+    '''        st.warning("De herstelde download bevat mogelijk weer originele persoonsgegevens en vertrouwelijke waarden. Sla dit bestand alleen op in een passende beveiligde locatie en deel het niet extern zonder controle en toestemming.")
+        ack_download_restored_text_confidential = st.checkbox(
+            "Ik begrijp dat de download weer vertrouwelijke originele waarden kan bevatten.",
+            key="ack_download_restored_text_confidential",
+        )
+        st.download_button(
+            "Download herstelde tekst (.txt)",
+            data=reinsert_result.get("text", ""),
+            file_name="solidprivacy_herstelde_tekst.txt",
+            mime="text/plain",
+            disabled=not ack_download_restored_text_confidential,
+        )
+''',
+)
+
+text = replace_once(
+    text,
+    '''    if st.button("Zet TXT-bestand lokaal terug", key="run_txt_file_reinsert"):
+''',
+    '''    ack_reinsert_txt_confidential = st.checkbox(
+        "Ik begrijp dat de herstelde uitvoer weer vertrouwelijk is.",
+        key="ack_reinsert_txt_confidential",
+    )
+    if st.button("Zet TXT-bestand lokaal terug", key="run_txt_file_reinsert", disabled=not ack_reinsert_txt_confidential):
+''',
+)
+
+text = replace_once(
+    text,
+    '''        st.download_button(
+            "Download hersteld TXT-bestand (.txt)",
+            data=txt_reinsert_result.get("content_bytes", txt_reinsert_result.get("text", "").encode("utf-8")),
+            file_name="solidprivacy_hersteld_txt_bestand.txt",
+            mime="text/plain",
+        )
+''',
+    '''        st.warning("De herstelde download bevat mogelijk weer originele persoonsgegevens en vertrouwelijke waarden. Sla dit bestand alleen op in een passende beveiligde locatie en deel het niet extern zonder controle en toestemming.")
+        ack_download_restored_txt_confidential = st.checkbox(
+            "Ik begrijp dat de download weer vertrouwelijke originele waarden kan bevatten.",
+            key="ack_download_restored_txt_confidential",
+        )
+        st.download_button(
+            "Download hersteld TXT-bestand (.txt)",
+            data=txt_reinsert_result.get("content_bytes", txt_reinsert_result.get("text", "").encode("utf-8")),
+            file_name="solidprivacy_hersteld_txt_bestand.txt",
+            mime="text/plain",
+            disabled=not ack_download_restored_txt_confidential,
+        )
+''',
+)
+
+text = replace_once(
+    text,
+    '''    if st.button("Zet DOCX-bestand lokaal terug", key="run_docx_file_reinsert"):
+''',
+    '''    ack_reinsert_docx_confidential = st.checkbox(
+        "Ik begrijp dat de herstelde uitvoer weer vertrouwelijk is.",
+        key="ack_reinsert_docx_confidential",
+    )
+    if st.button("Zet DOCX-bestand lokaal terug", key="run_docx_file_reinsert", disabled=not ack_reinsert_docx_confidential):
+''',
+)
+
+text = replace_once(
+    text,
+    '''        st.download_button(
+            "Download hersteld DOCX-bestand (.docx)",
+            data=docx_reinsert_result.get("docx_bytes", b""),
+            file_name="solidprivacy_hersteld_docx_bestand.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
+''',
+    '''        st.warning("De herstelde download bevat mogelijk weer originele persoonsgegevens en vertrouwelijke waarden. Sla dit bestand alleen op in een passende beveiligde locatie en deel het niet extern zonder controle en toestemming.")
+        ack_download_restored_docx_confidential = st.checkbox(
+            "Ik begrijp dat de download weer vertrouwelijke originele waarden kan bevatten.",
+            key="ack_download_restored_docx_confidential",
+        )
+        st.download_button(
+            "Download hersteld DOCX-bestand (.docx)",
+            data=docx_reinsert_result.get("docx_bytes", b""),
+            file_name="solidprivacy_hersteld_docx_bestand.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            disabled=not ack_download_restored_docx_confidential,
+        )
+''',
+)
+
+text = replace_once(
+    text,
+    '''    if st.button("Zet PDF-tekst lokaal terug", key="run_pdf_text_file_reinsert"):
+''',
+    '''    ack_reinsert_pdf_text_confidential = st.checkbox(
+        "Ik begrijp dat de herstelde uitvoer weer vertrouwelijk is.",
+        key="ack_reinsert_pdf_text_confidential",
+    )
+    if st.button("Zet PDF-tekst lokaal terug", key="run_pdf_text_file_reinsert", disabled=not ack_reinsert_pdf_text_confidential):
+''',
+)
+
+text = replace_once(
+    text,
+    '''            st.download_button(
+                "Download herstelde TXT uit PDF (.txt)",
+                data=str(pdf_text_restored_text).encode("utf-8"),
+                file_name="solidprivacy_herstelde_txt_uit_pdf.txt",
+                mime="text/plain",
+            )
+''',
+    '''            st.warning("De herstelde download bevat mogelijk weer originele persoonsgegevens en vertrouwelijke waarden. Sla dit bestand alleen op in een passende beveiligde locatie en deel het niet extern zonder controle en toestemming.")
+            ack_download_restored_pdf_text_confidential = st.checkbox(
+                "Ik begrijp dat de download weer vertrouwelijke originele waarden kan bevatten.",
+                key="ack_download_restored_pdf_text_confidential",
+            )
+            st.download_button(
+                "Download herstelde TXT uit PDF (.txt)",
+                data=str(pdf_text_restored_text).encode("utf-8"),
+                file_name="solidprivacy_herstelde_txt_uit_pdf.txt",
+                mime="text/plain",
+                disabled=not ack_download_restored_pdf_text_confidential,
+            )
+''',
+)
+
+text = text.replace(
+    "De tekst bevat placeholders die niet in de actieve Scrub Key staan.",
+    "De tekst bevat placeholders die niet in de geladen Scrub Key staan. Deze waarden kunnen niet automatisch worden teruggezet met deze sleutel.",
+)
+text = text.replace(
+    "Het TXT-bestand bevat placeholders die niet in de actieve Scrub Key staan.",
+    "Het TXT-bestand bevat placeholders die niet in de geladen Scrub Key staan. Deze waarden kunnen niet automatisch worden teruggezet met deze sleutel.",
+)
+text = text.replace(
+    "Het DOCX-bestand bevat placeholders die niet in de actieve Scrub Key staan.",
+    "Het DOCX-bestand bevat placeholders die niet in de geladen Scrub Key staan. Deze waarden kunnen niet automatisch worden teruggezet met deze sleutel.",
+)
+text = text.replace(
+    "De Scrub Key bevat dubbele placeholders. Deze zijn niet automatisch teruggezet.",
+    "De Scrub Key bevat dubbele placeholders. Deze mappings worden niet automatisch teruggezet om verkeerde herleiding te voorkomen.",
 )
 
 APP_FILE.write_text(text, encoding="utf-8")
