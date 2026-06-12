@@ -40,7 +40,8 @@ WP0-WP13B — completed.
 WP14-WP18C — completed/app-verified or closeout as previously recorded.
 WP19-WP24 — recall/trust line completed through report-only residual-risk reporting.
 WP25-WP29C — Scrub Key security, policy, import/export and warning test scaffolding completed.
-WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; pending Actions/HF sync/app verification.
+WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; blocked awaiting coordinator/user evidence for Actions/HF sync and app verification.
+WP28C-VERIFY — verification attempted; connector returned no statuses or workflow runs.
 WP30-WP34 — placeholder robustness line completed through synthetic AI-output corruption tests.
 WP35 — DOCX hidden content risk review completed.
 WP45-WP48 — local runtime line completed through portable Windows proof of concept.
@@ -57,7 +58,8 @@ WP26 — Scrub Key encryption/lifecycle specification: completed.
 WP27 — Scrub Key warning UX plan: completed.
 WP28 — Scrub Key expiry/delete policy: completed.
 WP28B — Scrub Key warning implementation planning: completed.
-WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; pending verification.
+WP28C — MVP Scrub Key warning/acknowledgement UI implementation: implemented; blocked awaiting coordinator/user evidence.
+WP28C-VERIFY — status checks attempted; Actions/HF sync unknown because connector returned no workflow runs/statuses.
 WP29 — Scrub Key secure import/export tests: completed.
 WP29B — Scrub Key import/export edge-case hardening: completed.
 WP29C — Scrub Key warning UI regression test scaffolding: completed.
@@ -83,10 +85,19 @@ WP28C summary:
 - Added static regression tests for warning copy, acknowledgement keys, disabled buttons and non-change boundaries.
 - No Scrub Key schema migration, encryption, automatic deletion, expiry blocking, hidden recovery, dependency change, real data or cloud processing was added.
 
+WP28C-VERIFY findings:
+
+- `get_commit_combined_status` returned no statuses for the WP28C final claim commit.
+- `fetch_commit_workflow_runs` returned no workflow runs for the WP28C final claim commit.
+- `get_commit_combined_status` returned no statuses for the WP28C-VERIFY claim commit.
+- `fetch_commit_workflow_runs` returned no workflow runs for the WP28C-VERIFY claim commit.
+- Therefore Actions and Hugging Face sync cannot be verified by this worker.
+- App verification must wait until Actions and sync evidence is available.
+
 Next Scrub Key step:
 
 ```text
-WP28C-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout
+Coordinator/user evidence needed — provide GitHub Actions and Hugging Face sync result for the WP28C commits. If green, perform app verification for the WP28C warning/acknowledgement UI.
 ```
 
 Do not start further Scrub Key UI implementation until WP28C verification status is known.
@@ -136,7 +147,7 @@ Only start WP49 after WP48 CI/status is acceptable and the coordinator confirms 
 ## Active / next recommended execution queue
 
 ```text
-1. WP28C-VERIFY — GitHub Actions, Hugging Face sync and app verification closeout.
+1. Coordinator/user evidence needed for WP28C Actions/HF sync and app verification.
 2. WP49 — Desktop packaging decision, only if the coordinator chooses to continue the local-runtime line.
 ```
 
