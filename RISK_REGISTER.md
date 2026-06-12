@@ -136,18 +136,19 @@ Current mitigations:
 - WP31 created `PLACEHOLDER_FORMAT_PROPOSAL.md`, recommending the future architecture direction `[[SP_<ENTITY>_<COUNTER>_<INTEGRITY>]]`, for example `[[SP_PERSON_0001_A7F3]]`, as proposal-only and additive to legacy placeholders.
 - WP32 created `placeholder_validation.py`, an additive helper that parses and validates future robust placeholder tokens, computes deterministic integrity tokens from non-sensitive placeholder metadata only, and keeps legacy placeholders as a separate compatibility mode.
 - WP33 created `placeholder_audit.py`, an additive audit helper that classifies legacy, robust, malformed, truncated, integrity-failed and unknown placeholder-like tokens without repairing or guessing intent.
+- WP34 added synthetic AI-output placeholder corruption fixtures and tests for translation, summarization/deletion, markdown/HTML wrapping and split tokens, spacing mutation, punctuation preservation, robust truncation, integrity mismatch, placeholder merge and invented placeholder-like tokens.
 
 Gaps:
 
 - Robust placeholder generation has not been implemented in product flow.
-- No synthetic AI-output corruption tests exist yet.
 - No migration or backward-compatibility implementation exists yet.
 - No Scrub Key schema/version support for robust placeholder metadata exists yet.
+- WP34 is still helper/audit-test focused; it does not wire placeholder-audit warnings into product UI/export flows.
 
 Recommended workpackages:
 
-- WP34 — Synthetic AI-output placeholder corruption tests.
 - Later gated package — robust placeholder generation and compatibility implementation, only after validation and schema decisions.
+- Later audit/UI package — user-visible placeholder corruption warning integration after audit semantics are approved.
 
 ---
 
