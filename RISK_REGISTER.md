@@ -45,19 +45,21 @@ Current mitigations:
 - WP19 created `RECALL_BENCHMARK_SPEC.md`, defining how Scrub will measure recall, precision, per-entity scorecards, context-term preservation and CI reporting on messy synthetic Dutch legal and care documents.
 - WP20 created the first synthetic messy legal, zorg and mixed corpus fixtures.
 - WP21 created the gold-label sidecar schema foundation in `benchmark/gold/schema/gold_label_schema.json`, covering canonical entity classes, zero-based inclusive/exclusive offsets, expected text spans, preserve terms, known traps, normalization guidance and future runner expectations.
+- WP22 created `benchmark/run_recall_precision.py`, a deterministic local report-only runner that validates gold-label offsets and source spans, then reports exact and value-normalized recall/precision, per-domain metrics, per-entity-class metrics, false negatives, false positives, preserve-term failures, known-trap failures and diagnostic-only partial overlaps for supplied prediction JSON.
 
 Gaps:
 
 - No complete gold-label sidecars for the corpus yet.
-- No implemented benchmark runner yet.
+- The WP22 runner is report-only and scores supplied prediction JSON; it does not invoke recognizers or establish accepted baselines.
 - No CI scorecard yet.
+- No production-blocking threshold or safety claim yet.
 - No explicit false-negative residual-risk report yet.
 
 Recommended workpackages:
 
-- WP22 — Recall/precision test runner.
 - WP23 — Entity-class scorecard in CI.
 - WP24 — False-negative residual-risk report.
+- Later benchmark data package — complete gold-label sidecars for the committed synthetic corpus.
 
 ---
 
@@ -200,21 +202,18 @@ Current mitigations:
 - Roadmap includes local desktop/offline direction.
 - UI messaging emphasizes local/no-AI/no-cloud for helper operations where applicable.
 - WP45 created `LOCAL_RUNTIME_ARCHITECTURE_PLAN.md`, defining the Hugging Face demo role, local-first trust requirements and a phased local runtime path.
-- WP45 recommends a minimal local Streamlit launcher as MVP path, followed by local file-handling/privacy validation, a PyInstaller/portable Windows proof of concept and a later Tauri/Electron desktop decision.
+- WP46 added `scripts/run_local_streamlit.py` and `LOCAL_RUN.md` as the minimal local Streamlit launcher path.
 
 Gaps:
 
-- No minimal local Streamlit launcher yet.
-- No local runtime proof of concept yet.
+- No local file handling/privacy test yet.
 - No offline mode demonstration.
 - No network-traffic validation.
-- No local file handling/privacy test.
 - No Windows packaging proof of concept.
 - No final desktop packaging decision.
 
 Recommended workpackages:
 
-- WP46 — Minimal local Streamlit launcher.
 - WP47 — Local file handling/privacy test.
 - WP48 — Portable Windows proof of concept.
 - WP49 — Desktop packaging decision.
@@ -269,7 +268,8 @@ Current mitigations:
 - WP15 reliability review.
 - WP16 helper-only path.
 - WP17 UI planning.
-- WP18 UI warnings and audit fields, pending test/app verification.
+- WP18 UI warnings and audit fields.
+- WP18-FIX and WP18B completed the verification/closeout path.
 
 Boundaries:
 
@@ -280,9 +280,7 @@ Boundaries:
 
 Recommended workpackages:
 
-- WP18-FIX — fix failing PDF-to-TXT UI tests.
-- WP18 app verification.
-- WP18B — closeout after app verification.
+- Keep PDF scope warnings clear in future UI changes.
 
 ---
 
