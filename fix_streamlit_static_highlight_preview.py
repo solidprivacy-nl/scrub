@@ -1,7 +1,9 @@
 """Startup patch for the experimental static highlight preview UI.
 
-WP42D-FIX3 removes the extra preview expander wrapper after runtime verification
-showed an IndentationError around the inserted `with st.expander(...)` block.
+WP42D-FIX4 removes any stale previously inserted preview block before inserting
+the current safe no-expander preview. This handles running containers where an
+earlier startup patch already modified ``presidio_streamlit.py`` and left a
+broken ``with st.expander(...)`` block behind.
 
 The panel remains explicitly read-only and non-authoritative. It does not mutate
 review rows, change export/download behavior, change Scrub Key behavior, change
@@ -26,6 +28,26 @@ def replace_once(source: str, old: str, new: str) -> str:
         return source.replace(old, new, 1)
     return source
 
+
+def remove_existing_preview_block(source: str) -> str:
+    """Remove stale preview blocks before reinserting the current safe block."""
+    while PREVIEW_TITLE in source:
+        title_pos = source.find(PREVIEW_TITLE)
+        block_start = source.rfind("\n", 0, title_pos)
+        if block_start == -1:
+            block_start = 0
+        else:
+            block_start += 1
+        editor_pos = source.find(EDITOR_ANCHOR, title_pos)
+        if editor_pos == -1:
+            raise RuntimeError("Found static highlight preview title but could not locate replacement editor anchor for cleanup.")
+        source = source[:block_start] + source[editor_pos:]
+    return source
+
+
+# Always clean earlier startup-patch output first. Without this, a running
+# container can keep a stale broken block and the title check would skip repair.
+text = remove_existing_preview_block(text)
 
 # Prefer a stable base-app import anchor. Fallbacks are kept for patched app
 # variants, but the patch must not silently continue when no import anchor works.
@@ -131,11 +153,10 @@ static_highlight_preview_block = '''        st.markdown("#### Documentvoorbeeld 
                 st.caption("Legenda: bevestigd gevoelig, controle nodig, mogelijk gemist gegeven, handmatig toegevoegd, context behouden, hoog risico onopgelost, verborgen inhoud waarschuwing.")
 '''
 
+if EDITOR_ANCHOR not in text:
+    raise RuntimeError("Could not locate replacement editor anchor for static highlight preview.")
+text = replace_once(text, EDITOR_ANCHOR, static_highlight_preview_block + EDITOR_ANCHOR)
 if PREVIEW_TITLE not in text:
-    if EDITOR_ANCHOR not in text:
-        raise RuntimeError("Could not locate replacement editor anchor for static highlight preview.")
-    text = replace_once(text, EDITOR_ANCHOR, static_highlight_preview_block + EDITOR_ANCHOR)
-    if PREVIEW_TITLE not in text:
-        raise RuntimeError("Could not insert static highlight preview block before replacement editor.")
+    raise RuntimeError("Could not insert static highlight preview block before replacement editor.")
 
 APP_FILE.write_text(text, encoding="utf-8")
