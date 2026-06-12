@@ -1,11 +1,13 @@
 """Startup patch for the experimental static highlight preview UI.
 
-WP42D integrates the existing ``highlight_preview.py`` helper as a small
-read-only Streamlit preview panel in the anonymization review flow.
+WP42D-FIX repairs the WP42D insertion anchor after app verification showed the
+panel was not visible in the deployed Space. The previous patch targeted a
+stale technical-details block that no longer exists in the current review flow.
 
-The panel is explicitly non-authoritative. It does not mutate review rows,
-change export/download behavior, change Scrub Key behavior, change reinsert
-behavior, add dependencies, call cloud services or use real-data fixtures.
+The panel remains explicitly read-only and non-authoritative. It does not mutate
+review rows, change export/download behavior, change Scrub Key behavior, change
+reinsert behavior, add dependencies, call cloud services or use real-data
+fixtures.
 """
 
 from __future__ import annotations
@@ -15,6 +17,9 @@ from pathlib import Path
 APP_FILE = Path(__file__).with_name("presidio_streamlit.py")
 text = APP_FILE.read_text(encoding="utf-8")
 
+HELPER_IMPORT = "from highlight_preview import build_static_highlight_preview\n"
+PREVIEW_TITLE = "Documentvoorbeeld met markeringen — experimenteel"
+
 
 def replace_once(source: str, old: str, new: str) -> str:
     if old in source and new not in source:
@@ -22,24 +27,21 @@ def replace_once(source: str, old: str, new: str) -> str:
     return source
 
 
-# Import the pure helper after the existing post-patches have inserted the
-# reinsert imports. The fallback keeps the patch safe if the PDF post-patch is
-# not present for any reason.
-if 'from highlight_preview import build_static_highlight_preview\n' not in text:
-    text = replace_once(
-        text,
-        'from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes\n',
-        'from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes\n'
-        'from highlight_preview import build_static_highlight_preview\n',
-    )
+# Prefer a stable base-app import anchor. Fallbacks are kept for patched app
+# variants, but the patch must not silently continue when no import anchor works.
+if HELPER_IMPORT not in text:
+    import_anchors = [
+        "from display_labels_nl import entity_label, source_label, confidence_label\n",
+        "from scrub_key_pdf_text_reinsert import reinsert_pdf_text_bytes\n",
+        "from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n",
+    ]
+    for import_anchor in import_anchors:
+        if HELPER_IMPORT in text:
+            break
+        text = replace_once(text, import_anchor, import_anchor + HELPER_IMPORT)
 
-if 'from highlight_preview import build_static_highlight_preview\n' not in text:
-    text = replace_once(
-        text,
-        'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n',
-        'from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes\n'
-        'from highlight_preview import build_static_highlight_preview\n',
-    )
+if HELPER_IMPORT not in text:
+    raise RuntimeError("Could not insert static highlight preview helper import.")
 
 static_highlight_preview_block = '''        with st.expander("Documentvoorbeeld met markeringen — experimenteel", expanded=False):
             st.caption("Alleen-lezen voorbeeld. De vervangtabel blijft leidend voor beslissingen, Scrub Key en export.")
@@ -131,28 +133,20 @@ static_highlight_preview_block = '''        with st.expander("Documentvoorbeeld 
                             st.markdown(f"- `{highlight_preview_category}` — {highlight_preview_label}")
 '''
 
-text = replace_once(
-    text,
-    '''        with st.expander("Technische details bij de vervangtabel", expanded=False):
-            st.caption(TECHNICAL_DETAILS_GUIDANCE)
-            technical_columns = technical_display_columns(replacement_editor_df.columns)
-            if technical_columns:
-                st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
-            else:
-                st.caption("Geen technische detailkolommen beschikbaar.")
+if PREVIEW_TITLE not in text:
+    insertion_anchor = '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
         edited_replacements_df = st.data_editor(
-''',
-    '''        with st.expander("Technische details bij de vervangtabel", expanded=False):
-            st.caption(TECHNICAL_DETAILS_GUIDANCE)
-            technical_columns = technical_display_columns(replacement_editor_df.columns)
-            if technical_columns:
-                st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
-            else:
-                st.caption("Geen technische detailkolommen beschikbaar.")
 '''
-    + static_highlight_preview_block
-    + '''        edited_replacements_df = st.data_editor(
-''',
-)
+    insertion_replacement = (
+        '''        replacement_editor_df = pd.DataFrame(default_editor_rows)
+'''
+        + static_highlight_preview_block
+        + '''        edited_replacements_df = st.data_editor(
+'''
+    )
+    updated_text = replace_once(text, insertion_anchor, insertion_replacement)
+    if updated_text == text:
+        raise RuntimeError("Could not insert static highlight preview block before replacement editor.")
+    text = updated_text
 
 APP_FILE.write_text(text, encoding="utf-8")
