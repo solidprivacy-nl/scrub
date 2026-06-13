@@ -1,5 +1,58 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_CONTEXT_CARD_STATUS_RECONCILE — Reconcile completed context-card helper into central project status
+
+Status: completed documentation/status-repair-only reconciliation.
+
+Files added:
+
+- `workpackage_claims/WP_CONTEXT_CARD_STATUS_RECONCILE.md`
+- `handover/workpackages/20260613_1145_context_card_status_reconcile.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_CONTEXT_CARD_STATUS_RECONCILE.md`
+
+Summary:
+
+- Reconciled `WP_CONTEXT_CARD_HELPER` after its worker hit a 409 conflict while trying to update central project status documents.
+- Recorded that `WP_CONTEXT_CARD_HELPER` is completed helper/tests-only.
+- Recorded added helper artifacts: `context_cards.py`, `tests/test_context_cards.py`, `handover/workpackages/20260613_1115_context_card_helper.md` and `workpackage_claims/WP_CONTEXT_CARD_HELPER.md`.
+- Recorded helper test evidence from the handover: `pytest tests/test_context_cards.py` — 10 passed in an isolated local workspace.
+- Recorded combined helper/highlight test evidence from the handover: `pytest tests/test_context_cards.py tests/test_highlight_preview.py` — 16 passed in an isolated local workspace.
+- Recorded that remote GitHub Actions / Hugging Face sync status was unknown at helper handover time.
+- Recorded that app verification is not applicable because no UI/runtime behavior changed.
+- Recorded the helper boundary: report-only, non-mutating, HTML-escaped and synthetic-only tests.
+- Set the next recommended step to `WP_CONTEXT_CARD_UI_PLAN`.
+
+Validation status:
+
+- Documentation/status-repair-only; no app rebuild was run.
+- No shell/pytest execution was available through the ChatGPT GitHub connector for this exact repository checkout.
+- Status was reconciled against `context_cards.py`, `tests/test_context_cards.py`, `workpackage_claims/WP_CONTEXT_CARD_HELPER.md` and `handover/workpackages/20260613_1115_context_card_helper.md`.
+
+Intentionally not changed:
+
+- No changes to `context_cards.py`.
+- No changes to `tests/test_context_cards.py`.
+- No changes to `presidio_streamlit.py`.
+- No changes to `fix_streamlit_nested_expanders.py`.
+- No Streamlit UI implementation.
+- No review table behavior change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real-data fixtures.
+
+Next recommended step:
+
+- `WP_CONTEXT_CARD_UI_PLAN — plan a small non-authoritative context-card panel near the review table`.
+
 ## WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — Restore WP43/WP42D documentation contract phrase
 
 Status: completed narrow documentation-contract repair; awaiting GitHub Actions and Hugging Face sync evidence.
