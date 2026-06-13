@@ -262,7 +262,7 @@ Recommended workpackages:
 
 ## R8 — Workflow status dependence on coordinator screenshots
 
-Status: open  
+Status: mitigating  
 Impact: medium
 
 Risk:
@@ -273,15 +273,16 @@ Development slows because workers wait for coordinator screenshots instead of se
 
 Current mitigations:
 
-- Coordinator supplies screenshots/evidence.
+- Coordinator supplies screenshots/evidence when connector permissions cannot show the relevant run.
 - Workpackages record Actions/sync status.
+- `STATUS_MONITORING_RUNBOOK.md` exists and defines standard status states plus the expected Actions/Hugging Face verification order.
+- Workers are instructed to use connector status tools first, then ask for coordinator evidence only when connector lookup is incomplete.
 
 Gaps:
 
-- No formal monitoring runbook.
-- No standard status states.
-- No automated status artifact.
+- Connector workflow-run lookup can still be incomplete for some push-triggered runs.
+- No automated status artifact exists yet.
 
 Recommended workpackages:
 
-- WP57 — Workflow status monitoring runbook and checks.
+- Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
