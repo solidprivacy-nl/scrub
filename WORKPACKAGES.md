@@ -42,6 +42,7 @@ WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planni
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data before UI.
 WP_REPLACE_LOGIC_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — completed readiness/specification-only; implementation still requires separate coordinator approval.
+WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — completed tests/documentation-only; strengthened staged-vs-applied, mutation, Scrub Key, export and reinsert contracts before implementation.
 WP_SERIAL_REVIEW_HELPER — completed helper/tests-only.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot showed Tests #715 green and Sync #727 green.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
@@ -137,17 +138,17 @@ The smallest safe first UI direction is read-only/staged near the existing revie
 Mutating replacement actions, Scrub Key writes, export blocking and reinsert changes require separate explicit coordinator approval and stronger contract tests.
 ```
 
-Recommended pre-implementation package if stronger safeguards are desired:
+Replacement-decision contract gap fix:
 
 ```text
-WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — add contract tests for staged-vs-applied UI, no table/session mutation, no Scrub Key writes, no export/download calls, and no reinsert changes.
+WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX strengthened REPLACE_LOGIC_UI_PLAN.md and tests/test_replace_logic_ui_contract.py.
+It now locks staged-vs-applied state, no review table mutation, view-only session-state limits, advisory-only mapping/export readiness, no Scrub Key writes, no export/download calls, no reinsert changes, no automatic replacement, no fuzzy matching/guessed intent and explicit approval before implementation.
 ```
 
 ## Active / next recommended execution queue
 
 ```text
-1. WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — if coordinator wants stronger contract coverage before replacement UI.
-2. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
+1. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
