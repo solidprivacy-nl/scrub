@@ -206,6 +206,7 @@ Current mitigations:
 - WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX strengthened staged-vs-applied, no table/session mutation, advisory mapping/export readiness, no Scrub Key writes, no export/download calls and no reinsert-change contracts.
 - WP_REPLACE_LOGIC_UI_IMPLEMENTATION showed the helper panel was technically possible, but coordinator product feedback found it not intuitive enough and too complex for the normal flow.
 - WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK removed the helper panel from the normal Scrub Legal UI flow while preserving helper and contract assets for future redesign.
+- WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN specified a simpler optional visual aid: a non-mutating `Markeringen tonen` toggle for already masked/replaced values in preview text.
 
 Gaps:
 
@@ -216,9 +217,11 @@ Gaps:
 - No separate frontend migration is approved.
 - Replacement-decision helper internals should not be exposed directly as a user-facing panel.
 - A genuinely intuitive replacement review flow still needs redesign.
+- The masked-text highlight toggle is only planned; no contract tests or UI implementation exist yet.
 
 Recommended workpackages:
 
+- WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — lock the simple toggle labels, read-only behavior and safety boundaries before implementation.
 - WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — design a genuinely intuitive replacement review flow after separate coordinator approval.
 - Later approved package — mutating replacement decision behavior only after separate explicit approval and dedicated tests.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
