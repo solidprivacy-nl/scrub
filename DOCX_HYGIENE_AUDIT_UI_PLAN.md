@@ -286,6 +286,16 @@ Forbidden:
 - no mutation of Scrub Key state;
 - no mutation of reinsert output.
 
+Additional implementation boundaries:
+
+- no cloud document processing
+- no AI calls
+- no persistence of document bytes
+- no real data
+- no cloud processing
+- real-data fixtures are forbidden
+- uploaded DOCX bytes already provided by the user in the current session may be audited report-only
+
 ---
 
 ## 9. Suggested future contract tests
