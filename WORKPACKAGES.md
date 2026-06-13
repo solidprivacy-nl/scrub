@@ -41,9 +41,10 @@ WP42D — experimental static highlight preview attempted but fully rolled back/
 WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data before UI.
 WP_REPLACE_LOGIC_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — completed readiness/specification-only; implementation required separate coordinator approval.
-WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — completed tests/documentation-only; strengthened staged-vs-applied, mutation, Scrub Key, export and reinsert contracts before implementation.
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION — implemented with explicit coordinator approval; staged/read-only companion panel added; awaiting GitHub Actions, Hugging Face sync and app verification.
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — completed readiness/specification-only.
+WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — completed tests/documentation-only.
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION — technically implemented, but product validation failed; user-facing panel is not accepted as a successful feature.
+WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — completed product rollback/hide; replacement helper panel is removed from the normal Scrub Legal UI flow while helper/contracts are preserved for redesign.
 WP_SERIAL_REVIEW_HELPER — completed helper/tests-only.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot showed Tests #715 green and Sync #727 green.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
@@ -78,30 +79,7 @@ docx_hygiene_audit_panel_ui.py
 tests/test_docx_hygiene_audit_ui_patch.py
 ```
 
-WP39D-ACTIONS-FIX repaired the wording-only contract failures. Coordinator screenshot evidence then confirmed:
-
-- latest relevant GitHub Actions Tests are green;
-- latest relevant Sync to Hugging Face Space is green;
-- app starts without Script execution error;
-- normal Scrub Legal interface remains visible;
-- existing export/download section remains visible;
-- DOCX hygiene audit UI is visible;
-- the panel says it is report-only;
-- no clean-DOCX claim is shown;
-- export is not blocked;
-- no static-highlight startup error is visible.
-
-The DOCX hygiene audit UI is a small report-only panel shown near the existing DOCX download button. It uses `docx_hygiene_audit.py` and preserves these boundaries:
-
-- no DOCX cleaner/removal;
-- no clean-DOCX claim;
-- no export blocking;
-- no export/download behavior change;
-- no Scrub Key change;
-- no reinsert behavior change;
-- no dependency change;
-- no cloud processing;
-- no real data.
+WP39D is closed out after green Actions, green sync and app verification. The DOCX hygiene audit UI is report-only and remains visible near DOCX export. It does not clean files, block export, claim clean DOCX, change Scrub Key or change reinsert behavior.
 
 ## Scrub Key / reinsert warning closeout
 
@@ -121,6 +99,8 @@ The working baseline remains:
 table-first review table = source of truth and fallback
 ```
 
+The serial review panel remains visible as a small non-destructive review aid.
+
 The failed static-highlight startup mutation route remains parked. Do not restart:
 
 - startup source mutation;
@@ -130,67 +110,52 @@ The failed static-highlight startup mutation route remains parked. Do not restar
 - advanced editor;
 - Word/PDF layout rendering.
 
-Replacement-decision readiness conclusion:
+Replacement-decision helper status:
 
 ```text
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS completed a documentation-only check.
-Replacement-decision UI must not start automatically.
-The smallest safe first UI direction is read-only/staged near the existing review table or serial review panel.
-Mutating replacement actions, Scrub Key writes, export blocking and reinsert changes require separate explicit coordinator approval and stronger contract tests.
+replacement_decision.py, REPLACE_LOGIC_UI_PLAN.md and tests/test_replace_logic_ui_contract.py remain valuable helper/contract assets.
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION technically added a staged/read-only helper panel, but coordinator product feedback rejected it as not intuitive and too complex for the normal user flow.
+WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK removed the panel from the normal Scrub Legal UI flow.
 ```
 
-Replacement-decision contract gap fix:
+Coordinator feedback:
 
 ```text
-WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX strengthened REPLACE_LOGIC_UI_PLAN.md and tests/test_replace_logic_ui_contract.py.
-It now locks staged-vs-applied state, no review table mutation, view-only session-state limits, advisory-only mapping/export readiness, no Scrub Key writes, no export/download calls, no reinsert changes, no automatic replacement, no fuzzy matching/guessed intent and explicit approval before implementation.
+Replacement decision helper works technically, but is not an intuitive user-friendly functionality. It makes the workflow less clear and more complex instead of more intuitive.
 ```
 
-Replacement-decision helper panel implementation:
+Decision boundary:
 
 ```text
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION added replacement_decision_panel_ui.py and tests/test_replace_logic_ui_patch.py.
-The panel is rendered from the serial review area and uses replacement_decision.py for staged/read-only preview only.
-It shows selected occurrence, source text, suggested replacement, decision state, scope, affected count, advisory mapping/export/readiness fields, unresolved items and risk flags.
-It does not mutate the existing review table, edited_replacements_df, Streamlit data-editor state, Scrub Key, export/download behavior or reinsert behavior.
+Do not expose replacement_decision helper internals as a user-facing panel.
+Future replacement UX should be redesigned around a genuinely intuitive review flow, not around raw helper/audit internals.
 ```
 
-Required next evidence:
+## Active / next recommended execution queue
 
 ```text
-1. GitHub Actions green.
-2. Sync to Hugging Face Space green.
-3. Coordinator app verification screenshot.
+1. Verify GitHub Actions and Hugging Face sync for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK.
+2. Request app verification screenshot because UI/runtime behavior changed.
+3. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
 ```
 
 App verification should confirm:
 
 - app starts without Script execution error;
 - normal Scrub Legal interface remains visible;
-- existing review table remains visible;
+- review table remains visible;
 - serial review panel remains visible;
-- Replacement decision helper panel is visible;
-- panel clearly says staged/read-only / not applied;
-- existing replacement table remains source of truth and fallback;
-- no automatic replacement;
-- no Scrub Key change;
-- no export blocking;
-- no reinsert change;
+- replacement decision helper panel is not visible in the normal flow;
+- export/download remains visible;
+- DOCX hygiene audit remains visible;
 - no static-highlight startup error.
-
-## Active / next recommended execution queue
-
-```text
-1. WP_REPLACE_LOGIC_UI_VERIFY — closeout/app verification for replacement decision helper panel after Actions and Hugging Face sync are green.
-```
 
 ## Blocked work
 
 Do not start yet without separate approval:
 
 ```text
-WP36 — DOCX metadata cleaner helper
-WP52 — Pilot intake and NDA process
+new replacement UI implementation
 mutating replacement decision implementation
 automatic replacement
 Scrub Key write behavior
