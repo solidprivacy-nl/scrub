@@ -41,6 +41,7 @@ WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration completed.
 WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed; GitHub Actions and Hugging Face sync were green for commit b869688.
 WP_SERIAL_REVIEW_HELPER — implemented helper/tests-only serial review queue foundation; awaiting Actions/HF sync evidence.
+WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — completed narrow documentation-contract repair for failing WP43/WP42D regression test.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
 ```
@@ -72,7 +73,7 @@ WP42 — Streamlit feasibility boundary review: completed.
 WP42B — Static highlight preview helper and tests: completed.
 WP42C — Static highlight preview UI planning: completed.
 WP42D — Static highlight preview UI integration: fully rolled back/parked after repeated runtime failures.
-WP43 — Frontend architecture decision: completed.
+WP43 — Frontend architecture decision: completed; historical WP43/WP42D contract wording restored for regression tests.
 WP42D-ROLLBACK — disabled startup mutation patch and restored the working table-first interface.
 WP42D-ROLLBACK-REPAIR — cache-busted HF runtime image and added app-source guard against stale static preview block.
 WP42D-ROLLBACK-CLOSEOUT — recorded working table-first baseline and parked static-highlight startup mutation route.
@@ -127,9 +128,10 @@ Do not start replacement UI implementation or serial review UI implementation un
 ## Active / next recommended execution queue
 
 ```text
-1. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after helper/tests are green and coordinator approval is explicit.
-2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
-3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+1. Verify GitHub Actions and Hugging Face sync for WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT / WP_SERIAL_REVIEW_HELPER follow-up commits.
+2. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after helper/tests are green and coordinator approval is explicit.
+3. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
+4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
 
 ## Blocked work
