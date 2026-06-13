@@ -39,6 +39,7 @@ WP42D — experimental static highlight preview attempted but fully rolled back/
 WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data before UI.
 WP_REPLACE_LOGIC_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — completed readiness/specification-only; implementation still requires separate coordinator approval.
 WP_SERIAL_REVIEW_HELPER — completed helper/tests-only.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot showed Tests #715 green and Sync #727 green.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
@@ -148,11 +149,27 @@ The failed static-highlight startup mutation route remains parked. Do not restar
 - advanced editor;
 - Word/PDF layout rendering.
 
+Replacement-decision readiness conclusion:
+
+```text
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS completed a documentation-only check.
+Replacement-decision UI must not start automatically.
+The smallest safe first UI direction is read-only/staged near the existing review table or serial review panel.
+Mutating replacement actions, Scrub Key writes, export blocking and reinsert changes require separate explicit coordinator approval and stronger contract tests.
+```
+
+Recommended pre-implementation package if stronger safeguards are desired:
+
+```text
+WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — add contract tests for staged-vs-applied UI, no table/session mutation, no Scrub Key writes, no export/download calls, and no reinsert changes.
+```
+
 ## Active / next recommended execution queue
 
 ```text
 1. WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after Actions and Hugging Face sync are green.
-2. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
+2. WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — if coordinator wants stronger contract coverage before replacement UI.
+3. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
