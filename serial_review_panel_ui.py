@@ -14,7 +14,6 @@ from typing import Any
 import streamlit as st
 
 from review_panel_view_model import build_review_panel_view_model
-from replacement_decision_panel_ui import render_replacement_decision_panel
 
 
 FILTER_LABELS = {
@@ -95,7 +94,7 @@ def _offsets_for(displayed_text: str, source_text: str) -> tuple[int | None, int
     start = displayed_text.find(source_text)
     if start < 0:
         return None, None
-    return start, start + len(source_text)
+    return start + 0, start + len(source_text)
 
 
 def build_serial_review_panel_rows(displayed_text: str, edited_replacements_df: Any) -> list[dict[str, Any]]:
@@ -243,12 +242,6 @@ def render_serial_review_panel(*, displayed_text: str, edited_replacements_df: A
             _show_current_item(current_item)
         with right:
             _show_context_card(view_model.get("current_context_card"), view_model.get("warnings", []))
-
-        replacement_preview = render_replacement_decision_panel(
-            review_rows=review_rows,
-            current_occurrence_id=current_item.get("occurrence_id"),
-        )
-        view_model["replacement_decision_preview"] = replacement_preview
 
     nav_prev, nav_next, nav_unresolved = st.columns(3)
     with nav_prev:
