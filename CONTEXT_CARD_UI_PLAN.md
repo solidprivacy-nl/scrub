@@ -39,6 +39,7 @@ It must not reintroduce:
 Contract wording:
 
 ```text
+no Streamlit UI implementation
 no startup source mutation
 no full-document marking
 no click-to-mark
