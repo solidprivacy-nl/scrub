@@ -33,7 +33,7 @@ WP28C-CLOSEOUT — completed verification/documentation-only closeout.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP39B — completed planning/documentation-only for DOCX hygiene audit UI; no UI implementation.
 WP39C — completed tests/documentation-only for DOCX hygiene audit UI plan contracts.
-WP39D — implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
+WP39D — implemented with explicit coordinator approval; WP39D-ACTIONS-FIX completed wording-only repair; awaiting green Actions, Hugging Face sync and app verification.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
 WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
@@ -97,6 +97,13 @@ WP39D added:
 ```text
 docx_hygiene_audit_panel_ui.py
 tests/test_docx_hygiene_audit_ui_patch.py
+```
+
+WP39D-ACTIONS-FIX repaired two wording-only contract failures:
+
+```text
+remove metadata
+no real data
 ```
 
 The DOCX hygiene audit UI is a small report-only panel shown near the existing DOCX download button. It uses `docx_hygiene_audit.py` and preserves these boundaries:
@@ -167,9 +174,9 @@ WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — add contract tests for staged-vs-applie
 ## Active / next recommended execution queue
 
 ```text
-1. WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after Actions and Hugging Face sync are green.
-2. WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — if coordinator wants stronger contract coverage before replacement UI.
-3. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
+1. Verify GitHub Actions and Hugging Face sync for WP39D-ACTIONS-FIX.
+2. WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after Actions and Hugging Face sync are green.
+3. WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — if coordinator wants stronger contract coverage before replacement UI.
 ```
 
 ## Blocked work
