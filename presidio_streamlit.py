@@ -60,6 +60,7 @@ from ui_texts_nl import (
 )
 from display_labels_nl import entity_label, source_label, confidence_label
 from serial_review_panel_ui import render_serial_review_panel
+from docx_hygiene_audit_panel_ui import render_docx_hygiene_audit_panel
 
 try:
     from candidate_scanner import scan_unmasked_candidates
@@ -779,6 +780,7 @@ try:
             else:
                 docx_bytes = docx_from_text(export_text)
                 docx_filename = "opgeschoonde_tekst.docx"
+            render_docx_hygiene_audit_panel(docx_bytes, source_label=docx_filename)
             st.download_button(
                 label="Download opgeschoond Word-bestand (.docx)",
                 data=docx_bytes,
