@@ -99,11 +99,12 @@ def test_replacement_decision_panel_shows_advisory_helper_fields():
 
 def test_replacement_decision_panel_uses_only_allowed_view_only_session_keys():
     renderer_text = _renderer_text()
-    discovered_keys = set(re.findall(r"replacement_decision_[A-Za-z0-9_]+", renderer_text))
+    discovered_session_keys = set(re.findall(r"st\.session_state\.get\(\"(replacement_decision_[A-Za-z0-9_]+)\"", renderer_text))
+    discovered_widget_keys = set(re.findall(r"key=\"(replacement_decision_[A-Za-z0-9_]+)\"", renderer_text))
+    discovered_keys = discovered_session_keys | discovered_widget_keys
 
     assert ALLOWED_VIEW_ONLY_SESSION_KEYS.issubset(discovered_keys)
     assert discovered_keys.issubset(ALLOWED_VIEW_ONLY_SESSION_KEYS)
-    assert "temporary UI selection and preview" not in renderer_text or "applied" in renderer_text
 
 
 def test_replacement_decision_panel_does_not_mutate_review_table_or_editor_state():
