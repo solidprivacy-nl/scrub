@@ -41,8 +41,9 @@ WP42D — experimental static highlight preview attempted but fully rolled back/
 WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data before UI.
 WP_REPLACE_LOGIC_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — completed readiness/specification-only; implementation still requires separate coordinator approval.
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — completed readiness/specification-only; implementation required separate coordinator approval.
 WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — completed tests/documentation-only; strengthened staged-vs-applied, mutation, Scrub Key, export and reinsert contracts before implementation.
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION — implemented with explicit coordinator approval; staged/read-only companion panel added; awaiting GitHub Actions, Hugging Face sync and app verification.
 WP_SERIAL_REVIEW_HELPER — completed helper/tests-only.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot showed Tests #715 green and Sync #727 green.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
@@ -145,10 +146,42 @@ WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX strengthened REPLACE_LOGIC_UI_PLAN.md and t
 It now locks staged-vs-applied state, no review table mutation, view-only session-state limits, advisory-only mapping/export readiness, no Scrub Key writes, no export/download calls, no reinsert changes, no automatic replacement, no fuzzy matching/guessed intent and explicit approval before implementation.
 ```
 
+Replacement-decision helper panel implementation:
+
+```text
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION added replacement_decision_panel_ui.py and tests/test_replace_logic_ui_patch.py.
+The panel is rendered from the serial review area and uses replacement_decision.py for staged/read-only preview only.
+It shows selected occurrence, source text, suggested replacement, decision state, scope, affected count, advisory mapping/export/readiness fields, unresolved items and risk flags.
+It does not mutate the existing review table, edited_replacements_df, Streamlit data-editor state, Scrub Key, export/download behavior or reinsert behavior.
+```
+
+Required next evidence:
+
+```text
+1. GitHub Actions green.
+2. Sync to Hugging Face Space green.
+3. Coordinator app verification screenshot.
+```
+
+App verification should confirm:
+
+- app starts without Script execution error;
+- normal Scrub Legal interface remains visible;
+- existing review table remains visible;
+- serial review panel remains visible;
+- Replacement decision helper panel is visible;
+- panel clearly says staged/read-only / not applied;
+- existing replacement table remains source of truth and fallback;
+- no automatic replacement;
+- no Scrub Key change;
+- no export blocking;
+- no reinsert change;
+- no static-highlight startup error.
+
 ## Active / next recommended execution queue
 
 ```text
-1. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
+1. WP_REPLACE_LOGIC_UI_VERIFY — closeout/app verification for replacement decision helper panel after Actions and Hugging Face sync are green.
 ```
 
 ## Blocked work
@@ -158,7 +191,10 @@ Do not start yet without separate approval:
 ```text
 WP36 — DOCX metadata cleaner helper
 WP52 — Pilot intake and NDA process
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION — replacement decision UI implementation
+mutating replacement decision implementation
+automatic replacement
+Scrub Key write behavior
+export blocking
 click-to-mark
 advanced editor
 full-document marking
