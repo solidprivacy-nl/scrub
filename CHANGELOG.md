@@ -1,5 +1,35 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX2 — Repair replacement-logic contract text failures
+
+Status: completed narrow Actions repair; awaiting GitHub Actions and Hugging Face sync evidence.
+
+Files added:
+
+- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX2.md`
+- `handover/workpackages/20260613_1658_review_highlight_toggle_plan_actions_fix2.md`
+
+Files changed:
+
+- `replacement_decision_panel_ui.py`
+- `REPLACE_LOGIC_UI_PLAN.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX2.md`
+
+Summary:
+
+- Coordinator screenshot for `Tests #844` showed two exact contract failures in existing replacement-logic tests.
+- Restored exact renderer phrase `does not write Scrub Key mappings` in the parked replacement decision renderer while keeping the panel out of the normal Scrub Legal flow.
+- Restored exact `WP_REPLACE_LOGIC_UI_CONTRACT_TESTS` reference in `REPLACE_LOGIC_UI_PLAN.md`.
+- Preserved `_safe_text` runtime behavior after the text patch.
+- No Streamlit UI implementation, normal-flow rendering, replacement table mutation, automatic replacement, Scrub Key write, export/download change, export blocking, reinsert change, dependency change, cloud processing or real-data fixture was introduced.
+
+Validation status:
+
+- Repair is based on the exact failure lines shown in coordinator screenshot for `Tests #844`.
+- Expected verification: GitHub Actions green and Hugging Face sync green for the final fix commit.
+- App verification is not applicable because the normal app UI/runtime behavior was not intentionally changed.
+
 ## WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX — Repair stale workflow-status risk wording
 
 Status: completed narrow documentation repair; awaiting GitHub Actions and Hugging Face sync evidence.
