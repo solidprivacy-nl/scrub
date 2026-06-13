@@ -33,6 +33,7 @@ WP28C-CLOSEOUT — completed verification/documentation-only closeout.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP39B — completed planning/documentation-only for DOCX hygiene audit UI; no UI implementation.
 WP39C — completed tests/documentation-only for DOCX hygiene audit UI plan contracts.
+WP39D — implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
 WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
@@ -90,28 +91,45 @@ WP39C added:
 tests/test_docx_hygiene_audit_ui_plan.py
 ```
 
-The contract tests guard that the planned DOCX hygiene audit UI remains report-only, does not claim clean DOCX, does not block export, does not clean/remove DOCX content, does not change Scrub Key or reinsert behavior, and does not introduce cloud processing or real data.
+WP39D added:
 
-WP39B/WP39C preserve these boundaries:
+```text
+docx_hygiene_audit_panel_ui.py
+tests/test_docx_hygiene_audit_ui_patch.py
+```
 
-- no product code changes;
-- no Streamlit UI implementation;
-- no export/download behavior change;
-- no export blocking;
+The DOCX hygiene audit UI is a small report-only panel shown near the existing DOCX download button. It uses `docx_hygiene_audit.py` and preserves these boundaries:
+
 - no DOCX cleaner/removal;
+- no clean-DOCX claim;
+- no export blocking;
+- no export/download behavior change;
 - no Scrub Key change;
 - no reinsert behavior change;
 - no dependency change;
 - no cloud processing;
 - no real data.
 
-Next DOCX hygiene step:
+Because WP39D changes UI/runtime behavior, it is not fully closed out yet.
+
+Required next evidence:
 
 ```text
-WP39D — DOCX hygiene audit UI implementation
+1. GitHub Actions green.
+2. Sync to Hugging Face Space green.
+3. Coordinator app verification screenshot.
 ```
 
-Only after explicit coordinator approval should a later implementation package add a small report-only UI surface.
+App verification should confirm:
+
+- app starts without Script execution error;
+- normal Scrub Legal interface remains visible;
+- existing export/download section remains visible;
+- DOCX hygiene audit UI is visible;
+- text makes clear it is report-only;
+- no clean-DOCX claim;
+- no export blocking;
+- no static-highlight startup error.
 
 ## Review UX / frontend status
 
@@ -133,7 +151,7 @@ The failed static-highlight startup mutation route remains parked. Do not restar
 ## Active / next recommended execution queue
 
 ```text
-1. WP39D — DOCX hygiene audit UI implementation, only after separate explicit coordinator approval.
+1. WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after Actions and Hugging Face sync are green.
 2. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
@@ -145,10 +163,11 @@ Do not start yet without separate approval:
 WP36 — DOCX metadata cleaner helper
 WP52 — Pilot intake and NDA process
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION — replacement decision UI implementation
-WP39D — DOCX hygiene audit UI implementation
 click-to-mark
 advanced editor
 full-document marking
+clean DOCX export blocking
+DOCX cleaner/removal
 ```
 
 Also blocked until separate approval or later specs:
