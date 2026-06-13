@@ -286,6 +286,12 @@ Forbidden session-state behavior:
 
 ## 14. Minimum implementation sequence
 
+Required pre-implementation contract package:
+
+```text
+WP_REPLACE_LOGIC_UI_CONTRACT_TESTS
+```
+
 Recommended sequence:
 
 ```text
