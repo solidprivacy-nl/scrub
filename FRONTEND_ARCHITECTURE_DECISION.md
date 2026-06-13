@@ -62,7 +62,7 @@ Streamlit remains approved for:
 
 - current table-first review workflow;
 - small, bounded review aids;
-- experimental read-only preview panels;
+- experimental read-only preview panels only after helper/tests and explicit approval;
 - synthetic online validation;
 - user-facing workflow testing;
 - Hugging Face demo validation with non-confidential/synthetic data;
@@ -83,7 +83,8 @@ Streamlit is not approved for:
 - long-document virtualized review;
 - export blocking based on UI-only state;
 - direct Scrub Key mutation from new panels;
-- replacing the current review table without a separate migration plan.
+- replacing the current review table without a separate migration plan;
+- startup source mutation of `presidio_streamlit.py` for preview, marking or editor work.
 
 ---
 
@@ -135,25 +136,32 @@ Future UI work must follow these rules:
 6. no cloud document processing;
 7. no real-data fixtures;
 8. app verification required for UI behavior changes;
-9. status evidence required before claiming UI success.
+9. status evidence required before claiming UI success;
+10. no startup source mutation of `presidio_streamlit.py` for preview/marking/editor work.
 
 ---
 
-## 9. Relationship to WP42D
+## 9. Relationship to WP42D after rollback closeout
 
-WP42D added an experimental Streamlit static highlight preview UI and still needs verification evidence.
+WP42D added an experimental Streamlit static highlight preview UI, but that implementation route failed repeated runtime/startup verification and has been rolled back/parked.
 
-WP43 does not validate or close WP42D.
-
-WP42D remains pending until:
+The current accepted status is:
 
 ```text
-GitHub Actions evidence
-Hugging Face sync evidence
-app verification evidence
+The normal table-first Scrub interface is the working baseline and fallback.
+The static-highlight startup mutation route is not approved for restart.
+Future review improvements must start helper/model first and tests first.
 ```
 
-No further review UI implementation should start until WP42D verification is resolved or explicitly approved by the coordinator.
+WP43 remains valid at architecture level: keep Streamlit for MVP validation, keep UI thin, and defer a separate frontend/professional editor. D019 / WP42D-ROLLBACK-CLOSEOUT supersedes the earlier WP42D verification path.
+
+Next review/frontend step:
+
+```text
+WP_SERIAL_REVIEW_HELPER — pure helper/tests for serial review queue.
+```
+
+Only after helper/tests and explicit approval should a small non-destructive UI package be considered.
 
 ---
 
@@ -182,5 +190,6 @@ WP43 does not change:
 Stay with Streamlit for MVP validation.
 Keep UI thin and helper-driven.
 Do not migrate frontend yet.
+Do not restart startup source mutation for static highlights/marking/editor work.
 Reconsider frontend migration only after MVP workflow evidence and user validation.
 ```
