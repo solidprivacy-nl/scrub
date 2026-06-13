@@ -1,5 +1,64 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — Readiness check before replacement decision UI implementation
+
+Status: completed readiness/specification/documentation-only; no UI or product code changed.
+
+Files added:
+
+- `REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS.md`
+- `workpackage_claims/WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS.md`
+- `handover/workpackages/20260613_1240_replace_logic_ui_implementation_readiness.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS.md`
+
+Summary:
+
+- Reviewed `replacement_decision.py`, helper tests, UI plan, UI contract tests, serial review helper/UI, review panel view model, context-card and serial-review plans, `presidio_streamlit.py`, risk/decision docs and the status monitoring runbook.
+- Concluded that the replacement-decision foundation is suitable for a small read-only/staged companion panel, but mutating replacement decision UI must not start automatically.
+- Recorded that the existing review table remains the source of truth and fallback.
+- Recorded that `creates_mapping`, `mapping_candidates` and `export_readiness` are advisory only and must not write Scrub Key mappings or block export.
+- Recommended `WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX` before any mutating UI implementation.
+- Reaffirmed that `WP_REPLACE_LOGIC_UI_IMPLEMENTATION` requires separate explicit coordinator approval.
+
+Validation status:
+
+- Documentation/readiness-only; no app rebuild was run.
+- No shell/pytest execution was available through the ChatGPT GitHub connector in a checked-out repository.
+- Product tests were not required because no product code, UI code or runtime behavior changed.
+
+Intentionally not changed:
+
+- No Streamlit UI implementation.
+- No changes to `presidio_streamlit.py`.
+- No changes to `serial_review_panel_ui.py`.
+- No product code changes.
+- No review table behavior change.
+- No replacement mutation implementation.
+- No automatic replacement.
+- No Scrub Key writes.
+- No Scrub Key schema change.
+- No export blocking.
+- No export/download behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real-data fixtures.
+- No click-to-mark.
+- No advanced editor.
+- No full-document marking.
+
+Next recommended step:
+
+- `WP39D-VERIFY` if DOCX hygiene audit UI is ready for closeout/app verification.
+- `WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX` if stronger replacement UI contract coverage is desired.
+- `WP_REPLACE_LOGIC_UI_IMPLEMENTATION` only after separate explicit coordinator approval.
+
 ## WP39D — DOCX hygiene audit UI implementation
 
 Status: implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
