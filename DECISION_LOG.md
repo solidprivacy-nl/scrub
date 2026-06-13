@@ -4,6 +4,32 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-13 — D020 — Do not expose replacement helper internals as a user-facing panel
+
+Status: accepted UX rollback decision
+
+Decision:
+
+```text
+Do not expose replacement_decision helper internals as a user-facing panel in the normal Scrub Legal flow. The technically working replacement decision helper panel is parked/hidden because coordinator product feedback found it not intuitive enough and too complex for normal users.
+```
+
+Rationale:
+
+The replacement decision helper and contract tests remain useful as business-logic foundations, but the first user-facing panel exposed too much helper/audit structure. It made the review flow less clear instead of more intuitive.
+
+Implications:
+
+- Keep `replacement_decision.py`, `REPLACE_LOGIC_UI_PLAN.md` and the contract tests as redesign assets.
+- Do not treat WP_REPLACE_LOGIC_UI_IMPLEMENTATION as a successful user-facing feature.
+- The normal Scrub Legal flow must not show the replacement decision helper panel.
+- The review table remains the source of truth and fallback.
+- The serial review panel may remain visible as a non-destructive review aid.
+- Future replacement UX must be redesigned around a genuinely intuitive review flow, not raw helper/audit internals.
+- Do not start a new replacement UI implementation, mutating decision behavior, automatic replacement, Scrub Key writes, export blocking, click-to-mark, advanced editor or full-document marking without separate coordinator approval.
+
+---
+
 ## 2026-06-13 — D019 — Table-first baseline restored; static-highlight startup mutation parked
 
 Status: accepted rollback/implementation-route decision
@@ -125,7 +151,6 @@ Implications:
 - `ROADMAP.md` now places final local desktop/offline installer work after trust, review, document hygiene, online workflow validation, pilot validation and scale-readiness work.
 - `WP48B` or `WP49B` are not default next workpackages; they require explicit coordinator approval.
 - MSI, signed installer, auto-updater, Tauri/Electron implementation and production packaging claims remain blocked until late-phase evidence is strong.
-- The local-first product promise remains the final trust target, but installer effort should not precede product-behavior validation.
 - Workers must not start installer or packaging implementation as a side effect of local-runtime, UI or trust work.
 
 ---
