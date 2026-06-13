@@ -3,9 +3,8 @@
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION adds the first small replacement-decision
 companion panel. It uses replacement_decision.py for preview/audit output only.
 It does not mutate review rows, does not write edited_replacements_df, does not
-write Streamlit data-editor state, does not apply replacements, does not write
-Scrub Key mappings, does not write Scrub Key mappings, does not block export,
-does not call export/download functions, does not change reinsert behavior,
+write Streamlit data-editor state, does not apply replacements, does not write Scrub Key mappings,
+does not block export, does not call export/download functions, does not change reinsert behavior,
 does not use fuzzy matching or guess intent, does not add dependencies, does
 not call cloud services and does not use real data.
 """
@@ -69,7 +68,7 @@ def _safe_text(value: Any) -> str:
         if value != value:  # NaN check without pandas dependency
             return ""
     except Exception:
-        return ""
+        pass
     return str(value).strip()
 
 
