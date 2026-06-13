@@ -1,10 +1,11 @@
 # Workpackage claim — WP_SERIAL_REVIEW_HELPER
 
-status: completed
+status: completed after Actions/sync verification; app verification not applicable
 repository: solidprivacy-nl/scrub
 workpackage title: WP_SERIAL_REVIEW_HELPER — Serial review queue helper and tests
 started timestamp: 2026-06-13T11:16:22+02:00
 completed timestamp: 2026-06-13T11:20:24+02:00
+verification timestamp: 2026-06-13T11:39:00+02:00
 scope: helper/tests-only pure Python serial review queue for review rows -> review queue -> current item -> next/previous unresolved item -> audit summary
 
 ## Boundaries
@@ -25,13 +26,11 @@ scope: helper/tests-only pure Python serial review queue for review rows -> revi
 
 No PR was used; changes were committed directly to `main` through the GitHub contents API.
 
-Final implementation/docs commit before this claim-close update:
+Final verified commit containing the helper/test work and follow-up Actions fix:
 
 ```text
-8e7f39598ee77437ec98f80b5af59874448f3ae2
+a8182cd146deb9bb3200b333187c5a3b2cdec7d7
 ```
-
-Note: the exact claim-close commit SHA is returned by the GitHub update call that writes this completed claim state.
 
 ## Handover path
 
@@ -53,21 +52,20 @@ Result:
 10 passed
 ```
 
-A direct full repository clone for broader validation was attempted, but the container could not resolve `github.com`. Expected follow-up in a normal checkout:
+Coordinator/user provided green CI evidence for commit `a8182cd`:
 
 ```text
-pytest tests/test_serial_review_helper.py
-pytest tests/test_serial_review_helper.py tests/test_replace_logic_ui_contract.py
-pytest
+Tests #691 — green
+Sync to Hugging Face Space #703 — green
 ```
 
 ## GitHub Actions status
 
-Unknown at claim close. The GitHub connector returned `workflow_runs: []` for the helper commits at check time.
+Green for commit `a8182cd` based on coordinator/user evidence: `Tests #691`.
 
 ## Hugging Face sync status
 
-Unknown at claim close. This package does not change UI/runtime/dependencies, but sync status should still be verified if the workflow runs.
+Green for commit `a8182cd` based on coordinator/user evidence: `Sync to Hugging Face Space #703`.
 
 ## App verification status
 
@@ -75,7 +73,7 @@ Not applicable. No Streamlit UI behavior changed.
 
 ## Next recommended step
 
-After GitHub Actions and sync are green, and only after coordinator approval:
+Only after coordinator approval:
 
 ```text
 WP_SERIAL_REVIEW_UI — non-destructive serial review panel in Streamlit.
