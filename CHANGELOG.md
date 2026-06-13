@@ -1,5 +1,35 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX — Repair stale workflow-status risk wording
+
+Status: completed narrow documentation repair; awaiting GitHub Actions and Hugging Face sync evidence.
+
+Files added:
+
+- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX.md`
+- `handover/workpackages/20260613_1634_review_highlight_toggle_plan_actions_fix.md`
+
+Files changed:
+
+- `RISK_REGISTER.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX.md`
+
+Summary:
+
+- Coordinator screenshot showed red `Tests #838` on `WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN` claim close while sync was green.
+- Connector could not fetch workflow logs for the push-triggered run.
+- The likely stale contract issue was in `RISK_REGISTER.md` R8, which still claimed there was no formal monitoring runbook and no standard status states.
+- `STATUS_MONITORING_RUNBOOK.md` exists and defines standard status states, so R8 was corrected to mark the risk as mitigating and to describe the remaining connector-run lookup limitation instead.
+- No product code, UI, tests, export, Scrub Key, reinsert, dependency, cloud processing or real-data behavior changed.
+
+Validation status:
+
+- Documentation/status repair only.
+- Expected verification: GitHub Actions green and Hugging Face sync green for the final fix commit.
+- App verification is not applicable because no Streamlit UI/runtime behavior changed.
+
 ## WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — Simple masked-text highlight toggle planning
 
 Status: completed planning/specification-only; no UI or product code changed.
