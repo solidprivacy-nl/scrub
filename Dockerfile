@@ -40,6 +40,11 @@ ENV HOME=/home/user \
 # Set the working directory to the user's home directory
 WORKDIR $HOME/app
 
+# WP42D-ROLLBACK-REPAIR: cache-bust the HF runtime image so the Space
+# cannot keep running an image that still contains a stale mutated
+# presidio_streamlit.py static-highlight block.
+ENV SCRUB_ROLLBACK_REPAIR=20260613_0015
+
 # Copy the current directory contents into the container at $HOME/app setting the owner to the user
 COPY --chown=user . $HOME/app
 
