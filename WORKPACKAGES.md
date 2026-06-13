@@ -40,8 +40,8 @@ WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration completed.
 WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed; GitHub Actions and Hugging Face sync were green for commit b869688.
-WP_SERIAL_REVIEW_HELPER — implemented helper/tests-only serial review queue foundation; awaiting Actions/HF sync evidence.
-WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — completed narrow documentation-contract repair for failing WP43/WP42D regression test.
+WP_SERIAL_REVIEW_HELPER — completed after Actions/sync verification for commit a8182cd; app verification not applicable.
+WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — completed after Actions/sync verification for commit a8182cd; app verification not applicable.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
 ```
@@ -77,7 +77,7 @@ WP43 — Frontend architecture decision: completed; historical WP43/WP42D contra
 WP42D-ROLLBACK — disabled startup mutation patch and restored the working table-first interface.
 WP42D-ROLLBACK-REPAIR — cache-busted HF runtime image and added app-source guard against stale static preview block.
 WP42D-ROLLBACK-CLOSEOUT — recorded working table-first baseline and parked static-highlight startup mutation route.
-WP_SERIAL_REVIEW_HELPER — implemented helper/tests-only serial review queue foundation; no UI changes.
+WP_SERIAL_REVIEW_HELPER — completed helper/tests-only serial review queue foundation; Actions/sync green for commit a8182cd; no UI changes.
 ```
 
 WP42D rollback closeout summary:
@@ -113,13 +113,13 @@ WP_REPLACE_LOGIC_HELPER — implemented helper/tests-only.
 WP_REPLACE_LOGIC_UI_PLAN — completed planning/tests/documentation-only.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — completed tests/documentation-only.
 WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed after Actions/HF sync evidence.
-WP_SERIAL_REVIEW_HELPER — implemented helper/tests-only serial queue for one-by-one review navigation and report-only audit summary.
+WP_SERIAL_REVIEW_HELPER — completed after Actions/sync verification; implemented helper/tests-only serial queue for one-by-one review navigation and report-only audit summary.
 ```
 
 Next replace/review logic step:
 
 ```text
-WP_SERIAL_REVIEW_UI — only after serial helper tests are green and coordinator explicitly approves UI work.
+WP_SERIAL_REVIEW_UI — only after coordinator explicitly approves UI work.
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after coordinator explicitly approves UI work and after relevant contract tests are green.
 ```
 
@@ -128,10 +128,9 @@ Do not start replacement UI implementation or serial review UI implementation un
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT / WP_SERIAL_REVIEW_HELPER follow-up commits.
-2. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after helper/tests are green and coordinator approval is explicit.
-3. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
-4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+1. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after coordinator approval is explicit.
+2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
+3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
 
 ## Blocked work
