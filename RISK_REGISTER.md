@@ -204,7 +204,8 @@ Current mitigations:
 - WP43 created `FRONTEND_ARCHITECTURE_DECISION.md`, deciding to keep Streamlit for MVP validation and defer a separate frontend/professional document editor until MVP workflow evidence and user validation justify the migration risk.
 - WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS recorded that replacement decision UI may be considered only as a small read-only/staged step unless a separate approved package adds mutation safeguards.
 - WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX strengthened staged-vs-applied, no table/session mutation, advisory mapping/export readiness, no Scrub Key writes, no export/download calls and no reinsert-change contracts.
-- WP_REPLACE_LOGIC_UI_IMPLEMENTATION added a small staged/read-only replacement decision helper panel rendered from the serial review area. It previews decision state, scope, affected count and advisory mapping/export/readiness fields without mutating the review table, Scrub Key, export or reinsert flow.
+- WP_REPLACE_LOGIC_UI_IMPLEMENTATION showed the helper panel was technically possible, but coordinator product feedback found it not intuitive enough and too complex for the normal flow.
+- WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK removed the helper panel from the normal Scrub Legal UI flow while preserving helper and contract assets for future redesign.
 
 Gaps:
 
@@ -213,11 +214,12 @@ Gaps:
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
 - No separate frontend migration is approved.
-- Replacement decision helper panel is preview-only and does not implement mutating replacement actions.
+- Replacement-decision helper internals should not be exposed directly as a user-facing panel.
+- A genuinely intuitive replacement review flow still needs redesign.
 
 Recommended workpackages:
 
-- WP_REPLACE_LOGIC_UI_VERIFY — closeout/app verification after Actions and Hugging Face sync are green.
+- WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — design a genuinely intuitive replacement review flow after separate coordinator approval.
 - Later approved package — mutating replacement decision behavior only after separate explicit approval and dedicated tests.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
