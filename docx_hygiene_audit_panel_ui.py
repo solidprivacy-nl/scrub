@@ -1,10 +1,8 @@
 """Report-only Streamlit panel for DOCX hygiene audit findings.
 
 WP39D intentionally keeps this UI small and non-mutating. It shows the existing
-``docx_hygiene_audit.py`` helper output near DOCX export/download controls, but
-it does not clean DOCX content, remove comments, remove tracked changes, remove
-metadata, block export, change export/download behavior, write Scrub Key data,
-change reinsert behavior, add dependencies, call cloud services or use real data.
+``docx_hygiene_audit.py`` helper output near DOCX export/download controls.
+It does not clean DOCX content, remove comments, remove tracked changes, remove metadata, block export, change export/download behavior, write Scrub Key data, change reinsert behavior, add dependencies, call cloud services or use real data.
 """
 
 from __future__ import annotations
