@@ -1,5 +1,37 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — Simple masked-text highlight toggle planning
+
+Status: completed planning/specification-only; no UI or product code changed.
+
+Files added:
+
+- `REVIEW_HIGHLIGHT_TOGGLE_PLAN.md`
+- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN.md`
+- `handover/workpackages/20260613_1605_review_highlight_toggle_plan.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN.md`
+
+Summary:
+
+- Planned a simple optional review toggle: `Markeringen tonen` / `Markeringen tonen in voorbeeldtekst`.
+- Goal is to show subtle visual markers for values already masked/replaced in the preview text.
+- The planned toggle remains visual-only, read-only, non-authoritative and non-mutating.
+- The review table remains the source of truth and fallback.
+- Explicitly blocks the old WP42D static-highlight startup mutation route, startup patching of `presidio_streamlit.py`, click-to-mark, advanced editor behavior, full-document marking, raw unsafe HTML, Scrub Key writes, export/download changes and reinsert changes.
+- Next recommended package: `WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS`.
+
+Validation status:
+
+- Documentation/planning-only.
+- No tests were added or run.
+- App verification is not applicable because no Streamlit UI/runtime behavior changed.
+
 ## WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK
 
 Status: completed product rollback/hide.
