@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_SERIAL_REVIEW_HELPER — Serial review queue helper and tests`
 
-Status: implemented helper/tests-only; awaiting GitHub Actions and Hugging Face sync evidence.
+Status: completed after Actions/sync verification; app verification not applicable.
 
 ## Summary
 
@@ -15,6 +15,13 @@ review rows -> stable review queue -> current item -> next/previous unresolved i
 ```
 
 The helper is intentionally non-mutating. It does not apply replacements, does not mutate the review table, does not write Scrub Key mappings and does not change export/reinsert behavior.
+
+Coordinator/user provided green evidence for commit `a8182cd`:
+
+```text
+Tests #691 — green
+Sync to Hugging Face Space #703 — green
+```
 
 ## Files added
 
@@ -58,30 +65,27 @@ Result:
 10 passed
 ```
 
-Also attempted a direct repository clone for broader validation, but the container could not resolve `github.com`, so the exact GitHub checkout and combined test command could not be executed locally from a clone.
-
-Expected follow-up commands in a normal checkout:
+Coordinator/user CI evidence:
 
 ```text
-pytest tests/test_serial_review_helper.py
-pytest tests/test_serial_review_helper.py tests/test_replace_logic_ui_contract.py
-pytest
+Tests #691 — green for commit a8182cd
+Sync to Hugging Face Space #703 — green for commit a8182cd
 ```
 
 ## Validation status
 
 - Helper implementation completed.
 - Targeted local subset tests passed: `10 passed`.
-- GitHub file writes succeeded through the GitHub connector.
-- GitHub Actions workflow runs were not visible through `fetch_commit_workflow_runs` at check time (`workflow_runs: []` for helper commits).
+- GitHub Actions verified green by coordinator/user evidence.
+- Hugging Face sync verified green by coordinator/user evidence.
 
 ## GitHub Actions status
 
-Unknown at handover time. No workflow run was visible through the connector for the helper commits.
+Green for commit `a8182cd` based on coordinator/user evidence: `Tests #691`.
 
 ## Hugging Face sync status
 
-Unknown at handover time. This package changes Python helper/test/docs only and does not change UI/runtime/dependencies, but the sync status should still be checked if the repo workflow runs.
+Green for commit `a8182cd` based on coordinator/user evidence: `Sync to Hugging Face Space #703`.
 
 ## App verification status
 
@@ -103,10 +107,9 @@ Not applicable. No Streamlit UI behavior changed.
 
 ## Remaining risks
 
-- GitHub Actions and Hugging Face sync still need verification for the final commits.
-- Broader test suite was not executable from a cloned checkout in the ChatGPT container due DNS/network unavailability.
 - `duplicate_exact_value_count` is intentionally conservative and counts exact same `source_text` occurrences for the current item, including the current occurrence.
 - The helper is not wired into the product UI yet.
+- Any future serial review UI must remain non-destructive unless a separate approved package changes that.
 
 ## Commit evidence
 
@@ -115,10 +118,11 @@ Not applicable. No Streamlit UI behavior changed.
 - Tests added: `c923f1bd2bf0f2875ff09675d251296a41bf9980`
 - Workpackages updated: `b62e58b0eaf54cb8c9332119e600eefb5fe3a7fb`
 - Changelog updated: `6fce8ee8ba029bca78faacd486ef3381c64c5d1d`
+- Follow-up verified commit: `a8182cd146deb9bb3200b333187c5a3b2cdec7d7`
 
 ## Next recommended step
 
-After GitHub Actions and sync are green, and only after coordinator approval:
+Only after coordinator approval:
 
 ```text
 WP_SERIAL_REVIEW_UI — non-destructive serial review panel in Streamlit.
