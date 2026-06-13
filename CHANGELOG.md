@@ -1,5 +1,55 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — Restore WP43/WP42D documentation contract phrase
+
+Status: completed narrow documentation-contract repair; awaiting GitHub Actions and Hugging Face sync evidence.
+
+Files added:
+
+- `workpackage_claims/WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT.md`
+- `handover/workpackages/20260613_1132_actions_fix_frontend_decision_contract.md`
+
+Files changed:
+
+- `FRONTEND_ARCHITECTURE_DECISION.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT.md`
+
+Summary:
+
+- Coordinator/user screenshots showed Actions failing in `tests/test_frontend_architecture_decision.py::test_wp43_does_not_close_wp42d_verification_or_change_ui`.
+- Root cause: the later rollback/closeout wording in `FRONTEND_ARCHITECTURE_DECISION.md` removed the exact historical contract phrase required by the existing regression test: `WP43 does not validate or close WP42D` and `WP42D remains pending`.
+- Restored those exact contract phrases under a `Historical WP43 contract` subsection while preserving the later rollback/parked status as a later explicit decision.
+- Did not change product code, UI, helper logic, export, Scrub Key, reinsert, dependencies or runtime behavior.
+
+Validation status:
+
+- Static check confirmed `FRONTEND_ARCHITECTURE_DECISION.md` now contains the expected lower-case substrings after `.lower()`:
+  - `wp43 does not validate or close wp42d`
+  - `wp42d remains pending`
+- The exact GitHub Actions run still needs to verify the full suite.
+
+Intentionally not changed:
+
+- No Streamlit UI implementation.
+- No changes to `presidio_streamlit.py`.
+- No changes to `fix_streamlit_nested_expanders.py`.
+- No product code changes.
+- No helper logic changes.
+- No review table behavior change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real-data fixtures.
+
+Next recommended step:
+
+- Verify GitHub Actions and Hugging Face sync for the final fix commit.
+- If green, proceed only with approved next work; do not start `WP_SERIAL_REVIEW_UI` unless coordinator explicitly approves UI work.
+
 ## WP_SERIAL_REVIEW_HELPER — Serial review queue helper and tests
 
 Status: implemented helper/tests-only serial review queue foundation; awaiting GitHub Actions and Hugging Face sync evidence.
