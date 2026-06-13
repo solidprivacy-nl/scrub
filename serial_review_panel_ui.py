@@ -14,6 +14,7 @@ from typing import Any
 import streamlit as st
 
 from review_panel_view_model import build_review_panel_view_model
+from review_highlight_toggle_panel_ui import render_review_highlight_toggle_panel
 
 
 FILTER_LABELS = {
@@ -260,5 +261,10 @@ def render_serial_review_panel(*, displayed_text: str, edited_replacements_df: A
         if st.button("Volgende onopgeloste", key="serial_review_next_unresolved_button", disabled=next_unresolved is None):
             st.session_state["serial_review_current_occurrence_id"] = next_unresolved.get("occurrence_id")
             st.rerun()
+
+    render_review_highlight_toggle_panel(
+        displayed_text=displayed_text,
+        edited_replacements_df=edited_replacements_df,
+    )
 
     return view_model
