@@ -41,6 +41,7 @@ WP42D — experimental static highlight preview attempted but fully rolled back/
 WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data before UI.
 WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — completed planning/specification-only for a simple masked-text highlight toggle; no UI implementation.
+WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX — completed narrow documentation repair for stale workflow-status risk wording; awaiting Actions/HF verification.
 WP_REPLACE_LOGIC_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — completed readiness/specification-only.
 WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — completed tests/documentation-only.
@@ -126,6 +127,12 @@ The planned future toggle is intentionally small and optional:
 
 It may later show subtle visual markers for already masked/replaced values in the preview text. It must remain visual-only, read-only, non-authoritative and non-mutating. The review table remains the source of truth and fallback. The plan explicitly blocks startup source mutation, static-highlight startup patching, click-to-mark, advanced editor behavior, full-document marking, raw unsafe HTML, Scrub Key writes, export/download changes and reinsert changes.
 
+Actions repair note:
+
+```text
+WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX repaired stale workflow-status risk wording in RISK_REGISTER.md. R8 now recognizes STATUS_MONITORING_RUNBOOK.md and standard status states instead of claiming they do not exist.
+```
+
 Replacement-decision helper status:
 
 ```text
@@ -150,10 +157,11 @@ Future replacement UX should be redesigned around a genuinely intuitive review f
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK.
-2. Request app verification screenshot because UI/runtime behavior changed.
-3. WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — planning test package for the simple visual toggle.
-4. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
+1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX.
+2. Verify GitHub Actions and Hugging Face sync for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK.
+3. Request app verification screenshot for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK because UI/runtime behavior changed.
+4. WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — planning test package for the simple visual toggle, only after Actions/sync are green.
+5. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
 ```
 
 App verification should confirm:
