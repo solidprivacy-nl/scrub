@@ -32,6 +32,7 @@ WP28C — completed after Actions/HF/app verification for Scrub Key warning/rein
 WP28C-CLOSEOUT — completed verification/documentation-only closeout.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP39B — completed planning/documentation-only for DOCX hygiene audit UI; no UI implementation.
+WP39C — completed tests/documentation-only for DOCX hygiene audit UI plan contracts.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
 WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
@@ -83,9 +84,15 @@ WP39B added:
 DOCX_HYGIENE_AUDIT_UI_PLAN.md
 ```
 
-The plan describes how the existing `docx_hygiene_audit.py` report-only helper may later be surfaced in the app without changing export behavior.
+WP39C added:
 
-WP39B preserves these boundaries:
+```text
+tests/test_docx_hygiene_audit_ui_plan.py
+```
+
+The contract tests guard that the planned DOCX hygiene audit UI remains report-only, does not claim clean DOCX, does not block export, does not clean/remove DOCX content, does not change Scrub Key or reinsert behavior, and does not introduce cloud processing or real data.
+
+WP39B/WP39C preserve these boundaries:
 
 - no product code changes;
 - no Streamlit UI implementation;
@@ -101,10 +108,10 @@ WP39B preserves these boundaries:
 Next DOCX hygiene step:
 
 ```text
-WP39C — DOCX hygiene audit UI contract tests
+WP39D — DOCX hygiene audit UI implementation
 ```
 
-Only after contract tests and explicit coordinator approval should a later implementation package add a small report-only UI surface.
+Only after explicit coordinator approval should a later implementation package add a small report-only UI surface.
 
 ## Review UX / frontend status
 
@@ -126,7 +133,7 @@ The failed static-highlight startup mutation route remains parked. Do not restar
 ## Active / next recommended execution queue
 
 ```text
-1. WP39C — DOCX hygiene audit UI contract tests.
+1. WP39D — DOCX hygiene audit UI implementation, only after separate explicit coordinator approval.
 2. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
