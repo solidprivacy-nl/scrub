@@ -83,12 +83,12 @@ The UI must keep legal/professional context readable and must not imply that out
 
 ## 4. Recommended placement
 
-Future placement should be close to the current review table:
+Future placement should be close to the current review table and, now that the serial review panel exists, may also sit close to the current serial review item:
 
 ```text
 Review guidance
-Optional static preview / context area
-Replacement decision panel
+Serial review / context card area
+Replacement decision companion panel — staged preview only
 Existing replacement table as audit/control fallback
 ```
 
@@ -143,6 +143,8 @@ Safety rules:
 - `all_exact` must show affected count before applying.
 - `all_normalized` must require a stronger confirmation.
 - No fuzzy matching or guessed intent is allowed.
+- `all_normalized` is not available as a first mutating UI scope without separate explicit coordinator approval.
+- A first UI may show `all_normalized` as disabled/advisory only, or omit it entirely.
 
 ## 7. Decision panel fields
 
@@ -192,6 +194,8 @@ Use careful advisory wording:
 
 This UI plan does not approve export blocking.
 
+`export_readiness` is advisory only. It must not call export/download functions, change export eligibility, disable export buttons or alter download payloads.
+
 ## 10. Scrub Key boundary
 
 The first UI plan must not change Scrub Key behavior.
@@ -209,6 +213,10 @@ Not allowed in this plan:
 - auto-repairing duplicate placeholders;
 - changing placeholder format.
 
+`creates_mapping` is advisory only. It does not authorize a Scrub Key write.
+
+`mapping_candidates` are advisory only. They do not authorize Scrub Key persistence.
+
 ## 11. Static preview relationship
 
 If the future static highlight preview exists, the replacement decision panel may use the selected item from that preview.
@@ -222,26 +230,82 @@ Replacement table / decision model remains the authoritative decision surface.
 
 No click-to-mark implementation is approved by this plan.
 
-## 12. Minimum implementation sequence
+## 12. Staged-vs-applied contract
+
+A future replacement decision UI must separate staged UI intent from applied product state.
+
+Contract language:
+
+```text
+staged decision preview only
+staged decision state is not applied state
+existing review table remains source of truth and fallback
+no review table mutation
+no replacement mutation
+no automatic replacement
+no export/download calls
+no reinsert behavior change
+no Scrub Key writes
+```
+
+The first implementation may build `ReplacementDecision` objects for display, but it must not write those decisions back to:
+
+- the existing review table;
+- `edited_replacements_df`;
+- Streamlit data-editor state;
+- Scrub Key memory or files;
+- export payloads;
+- reinsert payloads.
+
+If later approved, mutating behavior must be implemented in a separate package with explicit coordinator approval and dedicated tests.
+
+## 13. Session-state contract
+
+A future non-mutating replacement decision companion panel may use only view-only session-state keys.
+
+Allowed view-only session keys:
+
+```text
+replacement_decision_selected_occurrence_id
+replacement_decision_preview_state
+replacement_decision_preview_scope
+replacement_decision_preview_text
+replacement_decision_panel_expanded
+```
+
+These keys are allowed only for temporary UI selection and preview state. They must not be treated as applied replacement state.
+
+Forbidden session-state behavior:
+
+- no mutation of `replacement_editor`;
+- no mutation of `edited_replacements_df`;
+- no mutation of review table rows;
+- no mutation of export state;
+- no mutation of Scrub Key state;
+- no mutation of reinsert state.
+
+## 14. Minimum implementation sequence
 
 Recommended sequence:
 
 ```text
-1. Add UI contract tests around labels/states/scopes.
-2. Add a non-mutating decision panel prototype behind an expander.
+1. Add UI contract tests around labels/states/scopes and staged-vs-applied boundaries.
+2. Add a non-mutating decision panel prototype behind an expander only after separate explicit coordinator approval.
 3. Use synthetic examples only.
 4. Keep the existing table flow as fallback.
 5. Verify Actions and Hugging Face sync.
 6. Ask for app verification because UI behavior changed.
 ```
 
-## 13. Explicit non-changes
+## 15. Explicit non-changes
 
 This plan does not change:
 
 - `presidio_streamlit.py`;
+- `serial_review_panel_ui.py`;
 - `fix_streamlit_nested_expanders.py`;
 - review table behavior;
+- replacement mutation behavior;
 - export/download behavior;
 - Scrub Key behavior;
 - reinsert behavior;
@@ -250,12 +314,27 @@ This plan does not change:
 - cloud processing;
 - real-data fixtures.
 
-## 14. Next recommended step
+This plan does not approve:
 
-Recommended next package:
+- Streamlit UI implementation;
+- automatic replacement;
+- review table mutation;
+- replacement mutation;
+- Scrub Key writes;
+- Scrub Key schema changes;
+- export blocking;
+- export/download calls;
+- reinsert behavior changes;
+- click-to-mark;
+- advanced editor;
+- full-document marking.
+
+## 16. Next recommended step
+
+Recommended next package after this gap-fix:
 
 ```text
-WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration
+WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
-Only after that should a small UI implementation package be considered.
+Do not start implementation automatically. A later implementation must begin as a small staged/read-only companion panel unless a separate approved package explicitly allows mutation.
