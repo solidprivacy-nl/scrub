@@ -1,5 +1,60 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP42D-ROLLBACK-CLOSEOUT — Working table-first interface restored after failed static highlight preview
+
+Status: completed documentation-only closeout; normal table-first Scrub interface is the current working baseline.
+
+Files added:
+
+- `workpackage_claims/WP42D_ROLLBACK_CLOSEOUT.md`
+- `handover/workpackages/20260613_1116_wp42d_rollback_closeout.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+- `FRONTEND_ARCHITECTURE_DECISION.md`
+- `workpackage_claims/WP42D_ROLLBACK_CLOSEOUT.md`
+
+Summary:
+
+- Recorded that the Hugging Face app is again usable on the stable table-first Scrub interface.
+- Recorded that the failed static-highlight/marking attempt is fully rolled back and parked.
+- Explicitly blocked a restart of the old static highlight preview route based on startup source mutation.
+- Preserved the product direction: document-first review with context, better replacement decisions, and later marking/editor capabilities.
+- Changed the implementation route: helper/model first, contract tests first, then small approved non-destructive UI panels.
+- Set the next recommended package to `WP_SERIAL_REVIEW_HELPER`, followed later by `WP_SERIAL_REVIEW_UI` only after helper/tests and explicit approval.
+
+Validation status:
+
+- Documentation-only closeout; no app rebuild was run.
+- No shell/pytest execution was available through the ChatGPT GitHub connector for this repository checkout.
+- Textual planning was checked and updated so it no longer points to restarting the old static-highlight startup mutation route.
+- GitHub Actions and Hugging Face sync are not required for a runtime/UI change in this closeout, but may still run for documentation commits.
+- App verification for this closeout is not applicable because no code/runtime/UI behavior changed; coordinator/user instruction supplied the working-app evidence that this package records.
+
+Intentionally not changed:
+
+- No changes to `presidio_streamlit.py`.
+- No changes to `fix_streamlit_nested_expanders.py`.
+- No changes to `Dockerfile`.
+- No UI implementation.
+- No new highlight preview.
+- No replacement decision UI.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real-data fixtures.
+
+Next recommended step:
+
+- `WP_SERIAL_REVIEW_HELPER — pure helper/tests for serial review queue`.
+- After that: `WP_SERIAL_REVIEW_UI — small non-destructive serial review panel`, only after helper/tests and explicit approval.
+
 ## WP42D-ROLLBACK-REPAIR — Static preview source cleanup / HF startup repair
 
 Status: implemented HF runtime cache-bust and source guard; awaiting GitHub Actions, Hugging Face sync and app verification.
