@@ -29,30 +29,15 @@ When done, update the same claim file to `completed` and include the final commi
 
 ```text
 WP28C — completed after Actions/HF/app verification for Scrub Key warning/reinsert acknowledgement UI.
-WP28C-CLOSEOUT — completed verification/documentation-only closeout.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
-WP39B — completed planning/documentation-only for DOCX hygiene audit UI; no UI implementation.
-WP39C — completed tests/documentation-only for DOCX hygiene audit UI plan contracts.
 WP39D — completed after Actions/HF/app verification; DOCX hygiene audit UI is report-only and app-verified.
-WP39D-ACTIONS-FIX — completed wording-only repair.
-WP39D-VERIFY — completed verification/documentation-only closeout.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
-WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
-WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data before UI.
-WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — completed planning/specification-only for a simple masked-text highlight toggle; no UI implementation.
-WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX — completed narrow documentation repair for stale workflow-status risk wording.
-WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX2 — completed narrow replacement-logic contract text repair.
-WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX3 — completed after Actions/HF verification; Tests #855 and Sync #867 green by coordinator screenshot evidence.
-WP_REPLACE_LOGIC_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — completed readiness/specification-only.
-WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — completed tests/documentation-only.
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION — technically implemented, but product validation failed; user-facing panel is not accepted as a successful feature.
-WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — completed product rollback/hide; replacement helper panel is removed from the normal Scrub Legal UI flow while helper/contracts are preserved for redesign.
-WP_SERIAL_REVIEW_HELPER — completed helper/tests-only.
-WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot showed Tests #715 green and Sync #727 green.
+WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — completed planning/specification-only for a simple masked-text highlight toggle.
+WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — completed after Actions/HF verification by coordinator screenshot evidence.
+WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — implemented; awaiting Actions/HF/app verification.
+WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — completed product rollback/hide; replacement helper panel is removed from the normal Scrub Legal UI flow.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
-WP_SERIAL_REVIEW_UI_VERIFY — completed verification/documentation-only closeout.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
 
@@ -62,10 +47,6 @@ WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 ```
 
-## DOCX hygiene status
-
-WP39D is closed out after green Actions, green sync and app verification. The DOCX hygiene audit UI is report-only and remains visible near DOCX export. It does not clean files, block export, claim clean DOCX, change Scrub Key or change reinsert behavior.
-
 ## Review UX / frontend status
 
 The working baseline remains:
@@ -74,59 +55,35 @@ The working baseline remains:
 table-first review table = source of truth and fallback
 ```
 
-The serial review panel remains visible as a small non-destructive review aid.
-
-The failed static-highlight startup mutation route remains parked. Do not restart:
-
-- startup source mutation;
-- `fix_streamlit_static_highlight_preview.py`;
-- full-document marking;
-- click-to-mark;
-- advanced editor;
-- Word/PDF layout rendering.
-
-Simple masked-text highlight toggle planning:
+The planned and now implemented review highlight toggle is intentionally small and optional:
 
 ```text
-WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — completed planning/specification-only.
-```
-
-The planned future toggle is intentionally small and optional:
-
-```text
-[ ] Markeringen tonen
 [ ] Markeringen tonen in voorbeeldtekst
 ```
 
-It may later show subtle visual markers for already masked/replaced values in the preview text. It must remain visual-only, read-only, non-authoritative and non-mutating. The review table remains the source of truth and fallback. The plan explicitly blocks startup source mutation, static-highlight startup patching, click-to-mark, advanced editor behavior, full-document marking, raw unsafe HTML, Scrub Key writes, export/download changes and reinsert changes.
+It shows subtle visual markers for already masked/replaced values in the checked preview text. It remains visual-only, read-only, non-authoritative and non-mutating. The review table remains the source of truth and fallback.
 
-Actions repair closeout:
+Implementation boundaries:
 
-```text
-WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX3 — completed after Actions/HF verification. Tests #855 and Sync to Hugging Face Space #867 were green for commit c9b5201 by coordinator screenshot evidence.
-```
-
-Replacement-decision helper status:
-
-```text
-replacement_decision.py, REPLACE_LOGIC_UI_PLAN.md and tests/test_replace_logic_ui_contract.py remain valuable helper/contract assets.
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION technically added a staged/read-only helper panel, but coordinator product feedback rejected it as not intuitive and too complex for the normal user flow.
-WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK removed the panel from the normal Scrub Legal UI flow.
-```
-
-Decision boundary:
-
-```text
-Do not expose replacement_decision helper internals as a user-facing panel.
-Future replacement UX should be redesigned around a genuinely intuitive review flow, not around raw helper/audit internals.
-```
+- no startup source mutation;
+- no static-highlight startup patch;
+- no click-to-mark;
+- no advanced editor;
+- no full-document marking;
+- no replacement table mutation;
+- no export/download behavior change;
+- no Scrub Key behavior change;
+- no reinsert behavior change;
+- no dependency change;
+- no cloud processing;
+- no real data.
 
 ## Active / next recommended execution queue
 
 ```text
-1. WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — planning test package for the simple visual toggle.
-2. Verify GitHub Actions and Hugging Face sync for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK.
-3. Request app verification screenshot for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK because UI/runtime behavior changed.
+1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION.
+2. Request app verification screenshot because UI behavior changed.
+3. Verify GitHub Actions and Hugging Face sync for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK.
 4. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
 ```
 
@@ -138,14 +95,12 @@ Do not start yet without separate approval:
 new replacement UI implementation
 mutating replacement decision implementation
 automatic replacement
-Scrub Key write behavior
 export blocking
 click-to-mark
 advanced editor
 full-document marking
 clean DOCX export blocking
 DOCX cleaner/removal
-WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION
 ```
 
 Also blocked until separate approval or later specs:
@@ -154,17 +109,12 @@ Also blocked until separate approval or later specs:
 - Scrub Key JSON schema migration.
 - Placeholder migration.
 - Robust placeholder generation in product flow.
-- Placeholder auto-repair or guessed placeholder intent.
 - DOCX comment/tracked-change removal.
-- Clean DOCX export blocking implementation.
 - Restored PDF output.
 - OCR.
 - Cloud document processing.
 - MSI implementation.
-- PyInstaller/Tauri/Electron implementation.
 - Broad document-centric Streamlit UI rewrite.
 - Separate frontend migration.
 - Professional document editor implementation.
-- Authoritative highlight-based review mutation.
 - Static highlight preview startup source mutation.
-- Startup source mutation of `presidio_streamlit.py` for preview/marking/editor work.
