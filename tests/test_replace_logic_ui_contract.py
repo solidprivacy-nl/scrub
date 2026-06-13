@@ -52,6 +52,10 @@ def _ui_plan_text() -> str:
     return UI_PLAN.read_text(encoding="utf-8")
 
 
+def _contract_text() -> str:
+    return _ui_plan_text().replace("`", "").lower()
+
+
 def test_ui_action_contract_maps_only_to_supported_helper_states():
     assert set(UI_ACTION_TO_STATE.values()).issubset(VALID_REVIEW_STATES)
 
@@ -159,7 +163,7 @@ def test_audit_contract_is_report_only_and_export_readiness_is_advisory():
 
 
 def test_ui_contract_plan_preserves_boundaries_and_does_not_approve_ui_implementation():
-    text = _ui_plan_text().lower()
+    text = _contract_text()
 
     for required in [
         "does not implement ui",
@@ -186,7 +190,7 @@ def test_ui_contract_plan_preserves_boundaries_and_does_not_approve_ui_implement
 
 
 def test_staged_vs_applied_state_contract_is_explicit_and_non_mutating():
-    text = _ui_plan_text().lower()
+    text = _contract_text()
 
     for required in [
         "staged decision preview only",
@@ -203,7 +207,7 @@ def test_staged_vs_applied_state_contract_is_explicit_and_non_mutating():
 
 def test_session_state_contract_allows_only_view_only_keys_and_blocks_mutation_targets():
     text = _ui_plan_text()
-    lowered = text.lower()
+    contract = _contract_text()
 
     assert "Allowed view-only session keys" in text
     assert "temporary UI selection and preview state" in text
@@ -212,11 +216,11 @@ def test_session_state_contract_allows_only_view_only_keys_and_blocks_mutation_t
     for key in ALLOWED_VIEW_ONLY_SESSION_KEYS:
         assert key in text
     for target in FORBIDDEN_MUTATION_TARGETS:
-        assert f"no mutation of {target}" in lowered
+        assert f"no mutation of {target}" in contract
 
 
 def test_scrub_key_mapping_indicators_are_advisory_only():
-    text = _ui_plan_text().lower()
+    text = _contract_text()
     decisions = [
         build_replacement_decision(
             occurrence_id="mapping-1",
@@ -240,7 +244,7 @@ def test_scrub_key_mapping_indicators_are_advisory_only():
 
 
 def test_export_download_and_reinsert_boundaries_are_explicit():
-    text = _ui_plan_text().lower()
+    text = _contract_text()
 
     for required in [
         "export_readiness is advisory only",
@@ -256,7 +260,7 @@ def test_export_download_and_reinsert_boundaries_are_explicit():
 
 
 def test_no_fuzzy_matching_no_guessed_intent_and_no_automatic_replacement_contract():
-    text = _ui_plan_text().lower()
+    text = _contract_text()
 
     assert "no fuzzy matching or guessed intent is allowed" in text
     assert "no automatic replacement" in text
@@ -264,7 +268,7 @@ def test_no_fuzzy_matching_no_guessed_intent_and_no_automatic_replacement_contra
 
 
 def test_all_normalized_not_available_as_first_mutating_scope_without_approval():
-    text = _ui_plan_text().lower()
+    text = _contract_text()
 
     assert "all_normalized" in text
     assert "not available as a first mutating ui scope without separate explicit coordinator approval" in text
@@ -272,7 +276,7 @@ def test_all_normalized_not_available_as_first_mutating_scope_without_approval()
 
 
 def test_future_ui_requires_separate_explicit_coordinator_approval():
-    text = _ui_plan_text().lower()
+    text = _contract_text()
 
     assert "only after separate explicit coordinator approval" in text
     assert "do not start implementation automatically" in text
