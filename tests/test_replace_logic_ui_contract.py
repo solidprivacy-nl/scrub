@@ -30,6 +30,23 @@ UI_SCOPE_TO_HELPER_SCOPE = {
     "Alle genormaliseerde gelijke waarden": "all_normalized",
 }
 
+ALLOWED_VIEW_ONLY_SESSION_KEYS = {
+    "replacement_decision_selected_occurrence_id",
+    "replacement_decision_preview_state",
+    "replacement_decision_preview_scope",
+    "replacement_decision_preview_text",
+    "replacement_decision_panel_expanded",
+}
+
+FORBIDDEN_MUTATION_TARGETS = {
+    "replacement_editor",
+    "edited_replacements_df",
+    "review table rows",
+    "export state",
+    "scrub key state",
+    "reinsert state",
+}
+
 
 def _ui_plan_text() -> str:
     return UI_PLAN.read_text(encoding="utf-8")
@@ -154,6 +171,7 @@ def test_ui_contract_plan_preserves_boundaries_and_does_not_approve_ui_implement
         "no click-to-mark implementation is approved",
         "this plan does not change",
         "presidio_streamlit.py",
+        "serial_review_panel_ui.py",
         "fix_streamlit_nested_expanders.py",
         "review table behavior",
         "export/download behavior",
@@ -165,6 +183,100 @@ def test_ui_contract_plan_preserves_boundaries_and_does_not_approve_ui_implement
         "real-data fixtures",
     ]:
         assert required in text
+
+
+def test_staged_vs_applied_state_contract_is_explicit_and_non_mutating():
+    text = _ui_plan_text().lower()
+
+    for required in [
+        "staged decision preview only",
+        "staged decision state is not applied state",
+        "existing review table remains source of truth and fallback",
+        "no review table mutation",
+        "no replacement mutation",
+        "no automatic replacement",
+        "not write those decisions back",
+        "separate package with explicit coordinator approval",
+    ]:
+        assert required in text
+
+
+def test_session_state_contract_allows_only_view_only_keys_and_blocks_mutation_targets():
+    text = _ui_plan_text()
+    lowered = text.lower()
+
+    assert "Allowed view-only session keys" in text
+    assert "temporary UI selection and preview state" in text
+    assert "must not be treated as applied replacement state" in text
+
+    for key in ALLOWED_VIEW_ONLY_SESSION_KEYS:
+        assert key in text
+    for target in FORBIDDEN_MUTATION_TARGETS:
+        assert f"no mutation of {target}" in lowered
+
+
+def test_scrub_key_mapping_indicators_are_advisory_only():
+    text = _ui_plan_text().lower()
+    decisions = [
+        build_replacement_decision(
+            occurrence_id="mapping-1",
+            source_text="SYNTHETIC-A",
+            entity_type="SYNTHETIC_ENTITY",
+            display_label="Vervangen",
+            suggested_replacement="[SYNTHETIC_A]",
+            review_state="accepted",
+        )
+    ]
+    audit = build_replacement_audit(decisions)
+
+    assert decisions[0].creates_mapping is True
+    assert audit["mapping_candidates"] == ["mapping-1"]
+    assert "creates_mapping is advisory only" in text
+    assert "does not authorize a scrub key write" in text
+    assert "mapping_candidates are advisory only" in text
+    assert "do not authorize scrub key persistence" in text
+    assert "writing mappings directly from a new ui panel" in text
+    assert "scrub key schema" in text
+
+
+def test_export_download_and_reinsert_boundaries_are_explicit():
+    text = _ui_plan_text().lower()
+
+    for required in [
+        "export_readiness is advisory only",
+        "must not call export/download functions",
+        "change export eligibility",
+        "disable export buttons",
+        "alter download payloads",
+        "no export/download calls",
+        "no reinsert behavior change",
+        "no scrub key writes",
+    ]:
+        assert required in text
+
+
+def test_no_fuzzy_matching_no_guessed_intent_and_no_automatic_replacement_contract():
+    text = _ui_plan_text().lower()
+
+    assert "no fuzzy matching or guessed intent is allowed" in text
+    assert "no automatic replacement" in text
+    assert "auto-repairing duplicate placeholders" in text
+
+
+def test_all_normalized_not_available_as_first_mutating_scope_without_approval():
+    text = _ui_plan_text().lower()
+
+    assert "all_normalized" in text
+    assert "not available as a first mutating ui scope without separate explicit coordinator approval" in text
+    assert "disabled/advisory only" in text
+
+
+def test_future_ui_requires_separate_explicit_coordinator_approval():
+    text = _ui_plan_text().lower()
+
+    assert "only after separate explicit coordinator approval" in text
+    assert "do not start implementation automatically" in text
+    assert "small staged/read-only companion panel" in text
 
 
 def test_contract_tests_use_synthetic_values_only():
