@@ -4,9 +4,35 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-13 — D019 — Table-first baseline restored; static-highlight startup mutation parked
+
+Status: accepted rollback/implementation-route decision
+
+Decision:
+
+```text
+The working table-first Scrub interface is the current baseline and fallback. The failed static-highlight/marking route based on startup source mutation is fully rolled back and parked. Future document-context, marking or editor improvements must be redesigned through helper/model code first, tests first and small approved non-destructive UI panels only after the contracts are stable.
+```
+
+Rationale:
+
+The WP42D static highlight preview attempt repeatedly destabilized Hugging Face runtime startup and required rollback/repair work. The product direction remains document-first review with context, better replacement decisions and later marking/editor capabilities, but the implementation route must not depend on mutating `presidio_streamlit.py` at container startup or on quick UI patch fixes without app-start verification.
+
+Implications:
+
+- Do not restart the old static highlight preview startup mutation route.
+- Do not patch `presidio_streamlit.py` through container startup for preview, marking or editor work.
+- Keep the table-first review workflow as the authoritative working baseline/fallback.
+- Future review improvements should start with pure helper/model modules and tests.
+- UI work should be small, non-destructive and explicitly approved after helper/contract tests are stable.
+- The next recommended work is `WP_SERIAL_REVIEW_HELPER`, followed later by `WP_SERIAL_REVIEW_UI` only after helper/tests and explicit approval.
+- Click-to-mark and advanced editor work remain later-stage candidates requiring separate decisions.
+
+---
+
 ## 2026-06-12 — D018 — Stay with Streamlit for MVP validation and defer frontend migration
 
-Status: accepted frontend architecture decision
+Status: accepted frontend architecture decision; implementation-route superseded where it conflicts with D019
 
 Decision:
 
@@ -26,13 +52,13 @@ Implications:
 - Do not replace the current review table without a separate migration package.
 - Do not start click-to-mark, professional document editing, long-document virtualized review or Word/PDF layout rendering yet.
 - Reconsider frontend migration only after MVP workflow evidence and user validation.
-- WP43 does not validate or close WP42D; WP42D remains pending Actions/HF/app evidence.
+- WP42D is no longer pending preview verification; it is rolled back/parked and closed out through D019/WP42D-ROLLBACK-CLOSEOUT.
 
 ---
 
 ## 2026-06-12 — D017 — Streamlit is feasible only for a bounded read-only highlight preview
 
-Status: accepted feasibility boundary decision
+Status: accepted feasibility boundary decision; any implementation route using startup source mutation is superseded by D019
 
 Decision:
 
@@ -46,9 +72,9 @@ Streamlit is fast for online MVP validation, but clickable markers, synchronized
 
 Implications:
 
-- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` is the governing boundary for the next highlight-review work.
-- The next safe implementation step is `WP42B — Static highlight preview helper and tests`.
-- A later Streamlit UI preview may be considered only after helper/model tests exist.
+- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` remains a historical feasibility boundary, but D019 governs the route after the failed WP42D startup-mutation attempt.
+- The old static-highlight startup source mutation route must not be restarted.
+- Future UI preview work may be considered only after helper/model tests and explicit approval.
 - Click-to-mark sensitive text remains blocked until later decision/implementation packages.
 - The production review table remains the authoritative audit/control surface.
 - Any HTML rendering must escape source text and avoid raw user-text HTML.
@@ -57,7 +83,7 @@ Implications:
 
 ## 2026-06-12 — D016 — Highlight-based review starts as bounded read-only prototype after feasibility review
 
-Status: accepted prototype decision
+Status: accepted prototype decision; implementation route superseded where it conflicts with D019
 
 Decision:
 
@@ -76,6 +102,7 @@ Implications:
 - No worker should implement broad document-centric UI before WP42.
 - Raw HTML/highlight rendering must consider escaping, accessibility, color-not-alone design and state safety.
 - Current review table remains the audit/control surface.
+- D019 supersedes any interpretation that would restart static-highlight startup source mutation.
 
 ---
 
