@@ -4,10 +4,10 @@ WP_REPLACE_LOGIC_UI_IMPLEMENTATION adds the first small replacement-decision
 companion panel. It uses replacement_decision.py for preview/audit output only.
 It does not mutate review rows, does not write edited_replacements_df, does not
 write Streamlit data-editor state, does not apply replacements, does not write
-Scrub Key mappings, does not block export, does not call export/download
-functions, does not change reinsert behavior, does not use fuzzy matching or
-guess intent, does not add dependencies, does not call cloud services and does
-not use real data.
+Scrub Key mappings, does not write Scrub Key mappings, does not block export,
+does not call export/download functions, does not change reinsert behavior,
+does not use fuzzy matching or guess intent, does not add dependencies, does
+not call cloud services and does not use real data.
 """
 
 from __future__ import annotations
@@ -50,8 +50,8 @@ SCOPE_LABELS = {
 READ_ONLY_BOUNDARY = (
     "staged decision preview only · staged decision state is not applied state · "
     "existing review table remains source of truth and fallback · no review table mutation · "
-    "no automatic replacement · no Scrub Key writes · no export blocking · "
-    "no reinsert behavior change"
+    "no automatic replacement · does not write Scrub Key mappings · no Scrub Key writes · "
+    "no export blocking · no reinsert behavior change"
 )
 
 DUTCH_BOUNDARY = (
@@ -69,7 +69,7 @@ def _safe_text(value: Any) -> str:
         if value != value:  # NaN check without pandas dependency
             return ""
     except Exception:
-        pass
+        return ""
     return str(value).strip()
 
 
@@ -239,7 +239,7 @@ def render_replacement_decision_panel(*, review_rows: Any, current_occurrence_id
         audit_cols[2].metric("Risk flags", len(audit.get("risk_flags", [])))
         audit_cols[3].metric("Export readiness", audit.get("export_readiness", ""))
         st.caption("creates_mapping, mapping_candidates and export_readiness are advisory only.")
-        st.caption("No review table mutation · No automatic replacement · No Scrub Key writes · No export blocking · No reinsert behavior change")
+        st.caption("No review table mutation · No automatic replacement · does not write Scrub Key mappings · No Scrub Key writes · No export blocking · No reinsert behavior change")
 
         if audit.get("risk_flags"):
             st.warning("Risk flags: " + ", ".join(audit.get("risk_flags", [])))
