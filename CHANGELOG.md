@@ -1,5 +1,69 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — Strengthen replacement decision UI contract tests before implementation
+
+Status: completed tests/documentation-only; no UI or product code changed.
+
+Files added:
+
+- `workpackage_claims/WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX.md`
+- `handover/workpackages/20260613_1255_replace_logic_ui_contract_gap_fix.md`
+
+Files changed:
+
+- `REPLACE_LOGIC_UI_PLAN.md`
+- `tests/test_replace_logic_ui_contract.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX.md`
+
+Summary:
+
+- Strengthened `REPLACE_LOGIC_UI_PLAN.md` with explicit staged-vs-applied contract language.
+- Locked the existing review table as source of truth and fallback.
+- Added view-only session-state key boundaries for a future non-mutating companion panel.
+- Recorded that `creates_mapping`, `mapping_candidates` and `export_readiness` are advisory only.
+- Recorded no review table mutation, no replacement mutation, no automatic replacement, no Scrub Key writes, no export/download calls, no reinsert changes, no fuzzy matching/guessed intent, and no first mutating `all_normalized` scope without separate explicit coordinator approval.
+- Strengthened `tests/test_replace_logic_ui_contract.py` from 6 to 13 contract tests.
+
+Validation status:
+
+- Targeted local validation in an isolated workspace passed:
+
+```text
+PYTHONPATH=. pytest tests/test_replace_logic_ui_contract.py
+```
+
+- Result: `13 passed`.
+- No app rebuild was run.
+- No Hugging Face app verification is required because no UI/runtime behavior changed.
+
+Intentionally not changed:
+
+- No Streamlit UI implementation.
+- No changes to `presidio_streamlit.py`.
+- No changes to `serial_review_panel_ui.py`.
+- No product code changes.
+- No review table behavior change.
+- No replacement mutation implementation.
+- No automatic replacement.
+- No Scrub Key writes.
+- No Scrub Key schema change.
+- No export blocking.
+- No export/download behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real-data fixtures.
+- No click-to-mark.
+- No advanced editor.
+- No full-document marking.
+
+Next recommended step:
+
+- `WP_REPLACE_LOGIC_UI_IMPLEMENTATION` only after separate explicit coordinator approval.
+
 ## WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — Readiness check before replacement decision UI implementation
 
 Status: completed readiness/specification/documentation-only; no UI or product code changed.
@@ -55,71 +119,13 @@ Intentionally not changed:
 
 Next recommended step:
 
-- `WP39D-VERIFY` if DOCX hygiene audit UI is ready for closeout/app verification.
-- `WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX` if stronger replacement UI contract coverage is desired.
 - `WP_REPLACE_LOGIC_UI_IMPLEMENTATION` only after separate explicit coordinator approval.
-
-## WP39D — DOCX hygiene audit UI implementation
-
-Status: implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
-
-Files added:
-
-- `docx_hygiene_audit_panel_ui.py`
-- `tests/test_docx_hygiene_audit_ui_patch.py`
-- `workpackage_claims/WP39D_docx_hygiene_audit_ui_implementation.md`
-- `handover/workpackages/20260613_1405_docx_hygiene_audit_ui_implementation.md`
-
-Files changed:
-
-- `presidio_streamlit.py`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-- `workpackage_claims/WP39D_docx_hygiene_audit_ui_implementation.md`
-
-Summary:
-
-- Added `docx_hygiene_audit_panel_ui.py`, a small report-only Streamlit renderer for the existing `docx_hygiene_audit.py` helper.
-- Integrated the panel into `presidio_streamlit.py` near the existing DOCX download button.
-- The panel shows DOCX hygiene severity, finding count, affected areas, warnings and manual review guidance.
-- The panel explicitly says: DOCX hygiene audit, Alleen rapportage, Geen clean-DOCX garantie, Export wordt niet geblokkeerd, Controleer metadata/opmerkingen/revisies/verborgen inhoud, and Bestaande export blijft ongewijzigd.
-- Added `tests/test_docx_hygiene_audit_ui_patch.py` with static guards for UI text, helper use and non-mutating boundaries.
-
-Validation status:
-
-- No shell/pytest execution was available through the ChatGPT GitHub connector.
-- Expected checks: `python -m py_compile presidio_streamlit.py`, `python -m py_compile docx_hygiene_audit_panel_ui.py`, `pytest tests/test_docx_hygiene_audit_ui_patch.py`, `pytest tests/test_docx_hygiene_audit.py tests/test_docx_hygiene_audit_ui_plan.py tests/test_docx_hygiene_audit_ui_patch.py`, then full `pytest`.
-- This changes UI/runtime behavior, so Actions, Hugging Face sync and coordinator app verification are required before closeout.
-
-Intentionally not changed:
-
-- No DOCX cleaner implementation.
-- No comments removal.
-- No tracked changes removal.
-- No metadata removal.
-- No clean-DOCX claim.
-- No export blocking.
-- No export/download behavior change.
-- No Scrub Key behavior change.
-- No reinsert behavior change.
-- No dependency change.
-- No cloud processing.
-- No real-data fixtures.
-- No startup source mutation.
-- No full-document marking.
-- No click-to-mark.
-- No advanced editor.
-- No broad UI rewrite.
-
-Next recommended step:
-
-- `WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after green Actions and Hugging Face sync`.
 
 ## Recent previous entries
 
 Detailed recent history remains available in Git history and includes:
 
+- WP39D — DOCX hygiene audit UI implementation.
 - WP39C — DOCX hygiene audit UI contract tests.
 - WP39B — DOCX hygiene audit UI planning.
 - WP28C-CLOSEOUT — Scrub Key warning/reinsert evidence closeout.
