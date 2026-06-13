@@ -145,7 +145,6 @@ Gaps:
 
 Recommended workpackages:
 
-- WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after Actions and Hugging Face sync are green.
 - Later gated package — DOCX metadata cleaner helper after explicit metadata-only boundary approval.
 
 ---
@@ -204,6 +203,7 @@ Current mitigations:
 - WP_SERIAL_REVIEW_UI is completed and app-verified as a small non-destructive panel.
 - WP43 created `FRONTEND_ARCHITECTURE_DECISION.md`, deciding to keep Streamlit for MVP validation and defer a separate frontend/professional document editor until MVP workflow evidence and user validation justify the migration risk.
 - WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS recorded that replacement decision UI may be considered only as a small read-only/staged step unless a separate approved package adds mutation safeguards.
+- WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX strengthened staged-vs-applied, no table/session mutation, advisory mapping/export readiness, no Scrub Key writes, no export/download calls and no reinsert-change contracts.
 
 Gaps:
 
@@ -213,11 +213,9 @@ Gaps:
 - No professional document editor exists.
 - No separate frontend migration is approved.
 - Replacement decision helper is not wired into a mutating product UI yet.
-- Contract coverage is still missing for staged-vs-applied replacement UI, no table/session mutation, no Scrub Key writes, no export/download calls and no reinsert changes.
 
 Recommended workpackages:
 
-- WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — add missing contract safeguards before any replacement decision UI implementation with mutation risk.
 - Later approved package — replacement decision UI implementation, preferably first as a small read-only/staged companion panel.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
