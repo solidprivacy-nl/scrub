@@ -3,6 +3,8 @@
 The helpers are deliberately display-only. They do not mutate review rows,
 export payloads, Scrub Key state or reinsert state. They only prepare escaped
 HTML for already masked/replaced values that are present in the preview text.
+Tests and examples for this helper must remain synthetic-only and use no real
+data fixtures.
 """
 
 from __future__ import annotations
