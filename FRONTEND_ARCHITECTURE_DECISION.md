@@ -145,7 +145,14 @@ Future UI work must follow these rules:
 
 WP42D added an experimental Streamlit static highlight preview UI, but that implementation route failed repeated runtime/startup verification and has been rolled back/parked.
 
-The current accepted status is:
+Historical WP43 contract:
+
+```text
+WP43 does not validate or close WP42D.
+WP42D remains pending until its own Actions/Hugging Face/app evidence or a later explicit rollback/closeout decision.
+```
+
+Later status update:
 
 ```text
 The normal table-first Scrub interface is the working baseline and fallback.
@@ -153,7 +160,7 @@ The static-highlight startup mutation route is not approved for restart.
 Future review improvements must start helper/model first and tests first.
 ```
 
-WP43 remains valid at architecture level: keep Streamlit for MVP validation, keep UI thin, and defer a separate frontend/professional editor. D019 / WP42D-ROLLBACK-CLOSEOUT supersedes the earlier WP42D verification path.
+WP43 remains valid at architecture level: keep Streamlit for MVP validation, keep UI thin, and defer a separate frontend/professional editor. D019 / WP42D-ROLLBACK-CLOSEOUT records the later rollback/parked status and must not be read as a WP43 UI validation.
 
 Next review/frontend step:
 
