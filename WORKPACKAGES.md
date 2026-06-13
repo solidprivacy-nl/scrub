@@ -28,7 +28,8 @@ When done, update the same claim file to `completed` and include the final commi
 ## Current status
 
 ```text
-WP28C — implemented; partial app evidence recorded for Scrub Key/reinsert warning UI; full closeout still needs Actions/HF/app coverage.
+WP28C — completed after Actions/HF/app verification for Scrub Key warning/reinsert acknowledgement UI.
+WP28C-CLOSEOUT — completed verification/documentation-only closeout.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
@@ -46,6 +47,31 @@ WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 
 ```text
 Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
+```
+
+## Scrub Key / reinsert warning closeout
+
+WP28C is now closed out.
+
+Coordinator evidence confirms:
+
+- recent relevant GitHub Actions Tests are green;
+- recent relevant Sync to Hugging Face Space runs are green;
+- the running app starts without Script execution error;
+- mode `Originele waarden terugzetten` is visible;
+- Scrub Key loading section is visible;
+- Scrub Key warning text is visible;
+- Scrub Key acknowledgement checkbox is visible;
+- Original-values reinsert section is visible;
+- pasted-text, TXT, DOCX and PDF-to-TXT reinsert warning/acknowledgement surfaces are visible;
+- DOCX success/download flow is visible after acknowledgement;
+- reinsert statistics/audit output is visible;
+- no export/download, Scrub Key schema, reinsert semantic, dependency, cloud-processing or real-data change was made in closeout.
+
+Important boundary:
+
+```text
+UI acknowledgements are safety prompts only. They are not encryption, protected storage, automatic deletion, expiry enforcement, key recovery or a managed vault.
 ```
 
 ## Review UX / frontend status
@@ -79,7 +105,6 @@ Coordinator screenshot evidence confirms:
 
 - latest relevant Tests workflow is green;
 - latest relevant Sync to Hugging Face Space workflow is green;
-- an earlier red `Add serial review UI patch tests` Tests run was followed by later green Tests/Sync runs;
 - app starts without Script execution error;
 - normal Scrub Legal interface remains visible;
 - existing review table remains visible;
@@ -96,31 +121,11 @@ The panel remains intentionally:
 - no export blocking;
 - no reinsert behavior change.
 
-The panel may use only view state:
-
-```text
-serial_review_current_index
-serial_review_current_occurrence_id
-serial_review_filter_mode
-```
-
-Not changed:
-
-- no review table mutation;
-- no automatic replacement;
-- no Scrub Key writes;
-- no export/download behavior change;
-- no reinsert behavior change;
-- no dependency change;
-- no cloud processing;
-- no real data.
-
 ## Active / next recommended execution queue
 
 ```text
-1. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
-2. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
-3. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
+1. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+2. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
