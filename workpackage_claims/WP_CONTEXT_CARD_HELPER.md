@@ -16,14 +16,14 @@ boundaries:
 - no dependency change
 - synthetic values only
 
-final commit SHA or PR link: 284c465aab0f9dd53a268c931d38120b63845868
+final implementation/handover commit SHA: cab4d415a5c3b8c7bd9a494552751010e1c48a00
 handover path: handover/workpackages/20260613_1115_context_card_helper.md
 
 tests/checks:
 - pytest tests/test_context_cards.py — 10 passed in isolated local workspace
 - pytest tests/test_context_cards.py tests/test_highlight_preview.py — 16 passed in isolated local workspace
 
-GitHub Actions status: unknown; no workflow runs were visible for the helper/test commits at check time.
+GitHub Actions status: unknown; no workflow runs/statuses were visible for the final checked commit at check time.
 Hugging Face sync status: unknown / not verified.
 app verification status: not applicable; no UI/runtime behavior changed.
 next recommended step: WP_CONTEXT_CARD_UI_PLAN — plan a small non-authoritative context-card panel near the review table. After coordinator approval: WP_SERIAL_REVIEW_UI.
