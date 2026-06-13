@@ -68,16 +68,15 @@ Current mitigations:
 - UI warnings around Scrub Key reinsert.
 - Local-only/no-AI/no-cloud positioning for reinsert.
 - WP25-WP29C covered threat model, lifecycle specs, warning planning/implementation, import/export tests and warning UI test scaffolding.
+- WP28C warning/acknowledgement UI is closed out after Actions/HF/app verification.
 
 Gaps:
 
-- WP28C still needs GitHub Actions, Hugging Face sync and app verification before it can be fully closed out.
 - UI acknowledgements are safety prompts only; they are not encryption, protected storage, automatic deletion or a managed key vault.
 - No approved key recovery model.
 
 Recommended workpackages:
 
-- WP28C verification/app evidence.
 - Later implementation package — protected local file handling.
 - Later implementation package — encrypted key container.
 - Later implementation package — local vault / managed key store.
@@ -132,18 +131,20 @@ Current mitigations:
 - WP37 created read-only extraction visibility for headers, footers, comments/person metadata and tracked-change markers.
 - WP38 created a report-only DOCX hygiene audit helper.
 - WP39 created `CLEAN_DOCX_EXPORT_POLICY.md`, defining that current DOCX output must not be claimed as clean DOCX export and that export blocking/clean claims require separate approved implementation.
+- WP39B created `DOCX_HYGIENE_AUDIT_UI_PLAN.md`, planning how the existing report-only hygiene audit can later be surfaced without changing export behavior.
 
 Gaps:
 
 - Word comments / kantlijncommentaren are still not scrubbed or removed by the current DOCX scrub/reinsert flow.
-- No product UI consumes the hygiene audit report yet.
+- Product UI still does not consume the hygiene audit report; WP39B is planning only.
 - No clean DOCX export implementation exists.
 - No approved export-blocking implementation exists for high-risk hidden content.
 - The policy exists, but enforcement/UI/report integration remains future work.
 
 Recommended workpackages:
 
-- WP39B — DOCX hygiene audit UI planning, only if coordinator wants DOCX-specific UI planning first.
+- WP39C — DOCX hygiene audit UI contract tests.
+- Later approved package — small report-only DOCX hygiene audit UI implementation.
 - Later gated package — DOCX metadata cleaner helper after explicit metadata-only boundary approval.
 
 ---
@@ -197,39 +198,22 @@ Current mitigations:
 - WP40 created the document-centric review UX specification.
 - WP41 created the highlight-based review prototype decision.
 - WP42 created the Streamlit feasibility boundary.
-- WP42B created `highlight_preview.py`, a pure static highlight preview helper/model with tests for offsets, escaping, category labels and non-authoritative boundaries.
-- WP42C created `STATIC_HIGHLIGHT_PREVIEW_UI_PLAN.md`, planning a future experimental read-only UI panel while preserving the review table as authoritative.
-- WP42D attempted a small experimental read-only Streamlit preview panel, but the route failed repeatedly in runtime/startup verification.
-- WP42D-ROLLBACK and WP42D-ROLLBACK-REPAIR disabled the startup mutation path and guarded against stale static-preview source/runtime state.
-- WP42D-ROLLBACK-CLOSEOUT recorded that the Hugging Face app is back on the stable table-first interface and that the static-highlight/marking attempt is fully parked.
-- WP_CONTEXT_CARD_HELPER created `context_cards.py`, a pure report-only helper for escaped prefix/match/suffix context cards around exact displayed-text offsets, with synthetic-only tests.
-- WP_CONTEXT_CARD_STATUS_RECONCILE recorded the completed context-card helper in central project status after a parallel-edit conflict prevented the helper worker from updating shared documentation.
-- WP_CONTEXT_CARD_UI_PLAN created planning/contract-only guidance for a non-authoritative context-card panel near the review table, with no UI implementation.
-- WP_REPLACE_LOGIC_HELPER created `replacement_decision.py`, a pure replacement decision helper with tests for review states, conservative scope matching, report-only audit summaries and advisory export-readiness state.
-- WP_REPLACE_LOGIC_UI_PLAN created `REPLACE_LOGIC_UI_PLAN.md`, planning future helper integration without changing Streamlit behavior.
-- WP_REPLACE_LOGIC_UI_CONTRACT_TESTS added `tests/test_replace_logic_ui_contract.py`, locking the planned label/state/scope mappings and report-only/export-readiness boundaries before any replacement-decision UI implementation.
-- WP_SERIAL_REVIEW_HELPER created a helper/tests-only serial review queue foundation for one-by-one review navigation and report-only audit summary.
-- WP_SERIAL_REVIEW_UI_CONTRACT_TESTS created `SERIAL_REVIEW_UI_PLAN.md` and `tests/test_serial_review_ui_contract.py`, locking a future table-first, non-destructive, report-only serial review panel contract before any UI implementation.
-- WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE recorded the completed serial review UI contract tests in central project status after coordinator screenshot evidence showed green Actions and Hugging Face sync.
+- WP42D rollback/closeout parked the failed static-highlight startup mutation route.
+- Context-card, serial-review and review-panel view-model helper/planning/test work created safer helper-driven review surfaces.
+- WP_SERIAL_REVIEW_UI is completed and app-verified as a small non-destructive panel.
 - WP43 created `FRONTEND_ARCHITECTURE_DECISION.md`, deciding to keep Streamlit for MVP validation and defer a separate frontend/professional document editor until MVP workflow evidence and user validation justify the migration risk.
 
 Gaps:
 
-- The stable table-first workflow is working again, but it still has the original document-context limitations.
+- The stable table-first workflow remains the source of truth and fallback.
 - The static-highlight startup source mutation route is not safe enough to continue.
-- Context cards are helper/planning-only and not yet integrated into a UI panel.
-- Serial review queue and serial review UI contracts exist, but no UI implementation is approved yet.
-- No combined review-panel view-model helper exists yet.
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
 - No separate frontend migration is approved.
-- Replacement decision helper is not wired into the product UI yet.
+- Replacement decision helper is not wired into a mutating product UI yet.
 
 Recommended workpackages:
 
-- WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue and context-card data before any UI.
-- WP_CONTEXT_CARD_UI_CONTRACT_TESTS — contract tests for the planned non-authoritative context-card panel.
-- WP_SERIAL_REVIEW_UI — small non-destructive serial review panel only after explicit coordinator approval.
 - Later approved package — replacement decision UI implementation.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
