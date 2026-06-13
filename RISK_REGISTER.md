@@ -204,6 +204,7 @@ Current mitigations:
 - WP43 created `FRONTEND_ARCHITECTURE_DECISION.md`, deciding to keep Streamlit for MVP validation and defer a separate frontend/professional document editor until MVP workflow evidence and user validation justify the migration risk.
 - WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS recorded that replacement decision UI may be considered only as a small read-only/staged step unless a separate approved package adds mutation safeguards.
 - WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX strengthened staged-vs-applied, no table/session mutation, advisory mapping/export readiness, no Scrub Key writes, no export/download calls and no reinsert-change contracts.
+- WP_REPLACE_LOGIC_UI_IMPLEMENTATION added a small staged/read-only replacement decision helper panel rendered from the serial review area. It previews decision state, scope, affected count and advisory mapping/export/readiness fields without mutating the review table, Scrub Key, export or reinsert flow.
 
 Gaps:
 
@@ -212,11 +213,12 @@ Gaps:
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
 - No separate frontend migration is approved.
-- Replacement decision helper is not wired into a mutating product UI yet.
+- Replacement decision helper panel is preview-only and does not implement mutating replacement actions.
 
 Recommended workpackages:
 
-- Later approved package — replacement decision UI implementation, preferably first as a small read-only/staged companion panel.
+- WP_REPLACE_LOGIC_UI_VERIFY — closeout/app verification after Actions and Hugging Face sync are green.
+- Later approved package — mutating replacement decision behavior only after separate explicit approval and dedicated tests.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
 ---
