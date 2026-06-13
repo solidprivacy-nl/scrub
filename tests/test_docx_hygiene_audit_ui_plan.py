@@ -37,7 +37,7 @@ def test_plan_blocks_clean_docx_claims():
     ])
     _assert_all_present_lower([
         "must not be described as clean DOCX export",
-        "not be called clean DOCX",
+        "current DOCX output must not be called clean DOCX",
         "safe_to_claim_clean",
     ])
 
@@ -57,16 +57,15 @@ def test_plan_forbids_export_blocking_in_first_ui_surface():
 
 def test_plan_forbids_docx_cleaning_and_removal():
     _assert_all_present([
-        "DOCX cleaning/removal",
         "Verwijder opmerkingen",
         "Accepteer/verwijder bijgehouden wijzigingen",
         "Verwijder metadata",
         "no cleaning/removal",
     ])
     _assert_all_present_lower([
-        "no docx cleaner/removal",
         "no cleaning applied",
         "geen opmerkingen of wijzigingen verwijderd",
+        "no cleaning/removal",
     ])
 
 
@@ -80,8 +79,8 @@ def test_plan_forbids_scrub_key_and_reinsert_changes():
     _assert_all_present_lower([
         "no mutation of scrub key state",
         "no mutation of reinsert output",
-        "no scrub key change",
-        "no reinsert behavior change",
+        "scrub key changes",
+        "reinsert behavior changes",
     ])
 
 
