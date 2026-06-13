@@ -32,164 +32,101 @@ WP28C — implemented; partial app evidence recorded for Scrub Key/reinsert warn
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
-WP42D-ROLLBACK — completed rollback path; startup mutation disabled and table-first baseline restored.
-WP42D-ROLLBACK-REPAIR — completed repair/guard path; stale static-preview source/runtime risk recorded and parked.
-WP42D-ROLLBACK-CLOSEOUT — completed documentation-only closeout; working table-first interface is the current baseline.
-WP_CONTEXT_CARD_HELPER — completed helper/tests-only context-card foundation; remote Actions/HF status unknown at helper handover; app verification not applicable.
-WP_CONTEXT_CARD_STATUS_RECONCILE — completed documentation/status reconciliation for WP_CONTEXT_CARD_HELPER.
-WP_CONTEXT_CARD_UI_PLAN — completed planning/contract-only; no UI implementation.
-WP_CONTEXT_CARD_UI_CONTRACT_TESTS — completed planning/tests-only hardening of context-card UI plan labels, fields and boundaries.
-WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
-WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
-WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
-WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration completed.
-WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed; GitHub Actions and Hugging Face sync were green for commit b869688.
-WP_SERIAL_REVIEW_HELPER — completed after Actions/sync verification for commit a8182cd; app verification not applicable.
-WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot shows Tests #715 green, Sync to Hugging Face Space #727 green and claim completion green; app verification not applicable.
-WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — completed documentation/status reconciliation for WP_SERIAL_REVIEW_UI_CONTRACT_TESTS.
-WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and safe context-card data before any UI.
-WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — completed after Actions/sync verification for commit a8182cd; app verification not applicable.
+WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line; no UI implementation.
+WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data before UI.
+WP_REPLACE_LOGIC_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
+WP_SERIAL_REVIEW_HELPER — completed helper/tests-only.
+WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot showed Tests #715 green and Sync #727 green.
+WP_SERIAL_REVIEW_UI — implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
-WP51B — MVP product quality gate recorded.
 ```
 
-## MVP product quality gate
-
-The active product priority is:
+## Active product line
 
 ```text
 Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 ```
 
-WP52 is parked until the MVP product quality gate is passed.
+## Review UX / frontend status
 
-## Scrub Key / reinsert warning evidence
-
-```text
-WP28C app evidence — partial evidence recorded.
-```
-
-A coordinator-provided screenshot of the running app in mode `Originele waarden terugzetten` shows Scrub Key and reinsert warning/acknowledgement surfaces. Full closeout still needs complete Actions/HF/app evidence.
-
-## Review UX / frontend line
+The working baseline remains:
 
 ```text
-WP40 — Document-centric review UX specification: completed.
-WP41 — Highlight-based review prototype decision: completed.
-WP42 — Streamlit feasibility boundary review: completed.
-WP42B — Static highlight preview helper and tests: completed.
-WP42C — Static highlight preview UI planning: completed.
-WP42D — Static highlight preview UI integration: fully rolled back/parked after repeated runtime failures.
-WP43 — Frontend architecture decision: completed; historical WP43/WP42D contract wording restored for regression tests.
-WP42D-ROLLBACK — disabled startup mutation patch and restored the working table-first interface.
-WP42D-ROLLBACK-REPAIR — cache-busted HF runtime image and added app-source guard against stale static preview block.
-WP42D-ROLLBACK-CLOSEOUT — recorded working table-first baseline and parked static-highlight startup mutation route.
-WP_CONTEXT_CARD_HELPER — completed helper/tests-only; adds safe report-only context cards with escaped prefix/match/suffix snippets and synthetic-only tests.
-WP_CONTEXT_CARD_STATUS_RECONCILE — reconciled completed context-card helper into central project status.
-WP_CONTEXT_CARD_UI_PLAN — completed planning/contract-only for a non-authoritative context-card panel near the review table.
-WP_CONTEXT_CARD_UI_CONTRACT_TESTS — completed planning/tests-only hardening for context-card plan labels, fields and boundaries.
-WP_SERIAL_REVIEW_HELPER — completed helper/tests-only serial review queue foundation; Actions/sync green for commit a8182cd; no UI changes.
-WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed planning/contract tests for future serial review panel; Actions/sync green by coordinator screenshot; no UI/runtime changes.
-WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — reconciled completed serial review UI contract tests into central project status.
-WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only view model combining serial queue plus safe context-card data; no UI changes.
+table-first review table = source of truth and fallback
 ```
 
-WP42D rollback closeout summary:
+The failed static-highlight startup mutation route remains parked. Do not restart:
 
-- Coordinator/user evidence confirms the Hugging Face app is again usable on the normal table-first Scrub interface.
-- The table-first review workflow is the current working baseline and fallback.
-- The failed static-highlight/marking attempt is fully rolled back and parked.
-- Do not restart the old static highlight preview route.
-- Do not patch `presidio_streamlit.py` through startup source mutation.
-- Do not reintroduce `python fix_streamlit_static_highlight_preview.py` into container startup.
-- Future document-first review, marking and editor improvements must be redesigned through helper/model first, contract tests first and only then small approved UI panels.
-- No product code, runtime code, UI behavior, export/download behavior, Scrub Key behavior, reinsert behavior, dependencies, cloud processing or real-data fixtures changed in the closeout.
+- startup source mutation;
+- `fix_streamlit_static_highlight_preview.py`;
+- full-document marking;
+- click-to-mark;
+- advanced editor;
+- Word/PDF layout rendering.
 
-Completed context-card helper/planning steps:
+## WP_SERIAL_REVIEW_UI implementation note
+
+Coordinator approval: explicit.
+
+Implemented:
+
+- `serial_review_panel_ui.py` renders a small helper-driven Streamlit panel.
+- `presidio_streamlit.py` calls `render_serial_review_panel(...)` after the existing replacement table editor.
+- `tests/test_serial_review_ui_patch.py` adds static guards for UI text, navigation, safety boundaries and no static-highlight startup mutation.
+
+The panel is intentionally:
+
+- table-first baseline;
+- non-destructive;
+- report-only;
+- no Scrub Key mutation;
+- no export blocking;
+- no reinsert behavior change.
+
+The panel may use only view state:
 
 ```text
-WP_CONTEXT_CARD_HELPER — pure helper/tests for report-only context cards around detected values.
-WP_CONTEXT_CARD_UI_PLAN — planning/contract-only; no Streamlit UI implementation.
-WP_CONTEXT_CARD_UI_CONTRACT_TESTS — planning/tests-only hardening; no Streamlit UI implementation.
+serial_review_current_index
+serial_review_current_occurrence_id
+serial_review_filter_mode
 ```
 
-Recorded context-card UI plan boundaries:
+Not changed:
 
-- The plan uses `context_cards.py` as an existing report-only helper.
-- The context-card panel is non-authoritative and near the existing review table.
-- The table-first baseline remains the authoritative control/fallback surface.
-- The plan explicitly blocks startup source mutation, click-to-mark, advanced editor behavior, inline editing, Word/PDF layout rendering, export blocking, Scrub Key mutation and reinsert behavior changes.
-- Contract tests now explicitly require `build_context_card`, `build_context_cards`, required context-card fields, display-only semantics and serial-review linkage.
+- no review table mutation;
+- no automatic replacement;
+- no Scrub Key writes;
+- no export/download behavior change;
+- no reinsert behavior change;
+- no dependency change;
+- no cloud processing;
+- no real data.
 
-Completed serial review UI contract-test step:
+## Verification required
+
+Because WP_SERIAL_REVIEW_UI changes UI/runtime behavior, it is not fully closed out yet.
+
+Required next evidence:
 
 ```text
-WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed planning/contract tests for future serial review panel.
+1. GitHub Actions green.
+2. Sync to Hugging Face Space green.
+3. Coordinator app verification screenshot.
 ```
 
-Recorded serial review UI contract-test evidence:
+App verification should confirm:
 
-- Added `SERIAL_REVIEW_UI_PLAN.md`.
-- Added `tests/test_serial_review_ui_contract.py`.
-- Added `handover/workpackages/20260613_1200_serial_review_ui_contract_tests.md`.
-- Added and completed `workpackage_claims/WP_SERIAL_REVIEW_UI_CONTRACT_TESTS.md`.
-- Handover tests: `PYTHONPATH=. pytest tests/test_serial_review_ui_contract.py` — 8 passed in isolated local workspace.
-- Coordinator screenshot shows `Tests #715` green.
-- Coordinator screenshot shows `Sync to Hugging Face Space #727` green.
-- Coordinator screenshot shows `Complete WP_SERIAL_REVIEW_UI_CONTRACT_TESTS claim` green.
-- App verification is not applicable because no UI/runtime behavior changed.
-
-Completed review-panel view-model helper step:
-
-```text
-WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue + context-card data before any UI.
-```
-
-Recorded review-panel view-model helper boundaries:
-
-- `review_panel_view_model.py` builds one report-only view model from `serial_review.py` queue output and `context_cards.py` current context-card output.
-- Missing offsets degrade to an escaped context-preview fallback or warning without crashing.
-- Invalid offsets produce warnings and invalid context-card data; no fuzzy matching or guessed intent is used.
-- The helper locks `report_only = True`, `mutation_allowed = False`, `export_blocking = False`, `scrub_key_changes = False`, `reinsert_changes = False` and `table_first_baseline = True`.
-- No Streamlit UI, review table mutation, replacement mutation, Scrub Key mapping write, reinsert behavior change, dependency change, cloud processing or real-data fixture was added.
-
-Blocked until explicit coordinator approval:
-
-```text
-WP_SERIAL_REVIEW_UI — small non-destructive serial review panel.
-```
-
-Do not restart static highlight preview UI work until it is redesigned without startup source mutation and without changing the table-first workflow as baseline/fallback.
-
-## Replace/review logic line
-
-```text
-WP_REPLACE_LOGIC — completed with artifact limitation.
-WP_REPLACE_LOGIC_HELPER — implemented helper/tests-only.
-WP_REPLACE_LOGIC_UI_PLAN — completed planning/tests/documentation-only.
-WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — completed tests/documentation-only.
-WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed after Actions/HF sync evidence.
-WP_CONTEXT_CARD_HELPER — completed helper/tests-only report-only context-card foundation for exact-offset local context review.
-WP_CONTEXT_CARD_UI_PLAN — completed planning/contract-only for a non-authoritative context-card panel near the table-first review baseline.
-WP_CONTEXT_CARD_UI_CONTRACT_TESTS — completed planning/tests-only hardening of context-card plan labels, fields and boundaries.
-WP_SERIAL_REVIEW_HELPER — completed after Actions/sync verification; implemented helper/tests-only serial queue for one-by-one review navigation and report-only audit summary.
-WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed planning/contract tests; table-first, non-destructive, report-only boundaries locked before any UI.
-WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data into one non-mutating review-panel view model.
-```
-
-Next replace/review logic step:
-
-```text
-WP_SERIAL_REVIEW_UI — only after coordinator explicitly approves UI work.
-WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after coordinator explicitly approves UI work and after relevant contract tests are green.
-```
-
-Do not start replacement UI implementation or serial review UI implementation until coordinator approves UI work.
+- app starts without Script execution error;
+- normal table-first Scrub interface remains visible;
+- serial review panel is visible;
+- existing review table remains present;
+- no static highlight preview startup error;
+- no full-document marking/editor.
 
 ## Active / next recommended execution queue
 
 ```text
-1. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after explicit coordinator approval.
+1. WP_SERIAL_REVIEW_UI_VERIFY — closeout/app verification after Actions and Hugging Face sync are green.
 2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
@@ -202,7 +139,6 @@ Do not start yet without separate approval:
 WP36 — DOCX metadata cleaner helper
 WP52 — Pilot intake and NDA process
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION — replacement decision UI implementation
-WP_SERIAL_REVIEW_UI — serial review UI implementation
 ```
 
 Also blocked until separate approval or later specs:
