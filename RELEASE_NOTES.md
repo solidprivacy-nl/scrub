@@ -19,9 +19,11 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 
 - Review table and review guidance are available.
 - Final review summary and export sanity checks help users understand remaining risk.
-- Experimental marked document preview: for small texts, the app can show a read-only context preview before the replacement table.
-- The marked preview is not authoritative. Users still make decisions in the replacement table.
-- A visibility repair was added for the experimental marked preview after app verification showed the panel was not visible.
+- Serial review is available as a small read-only review aid next to the replacement table.
+- The review area now includes an optional `Markeringen tonen in voorbeeldtekst` toggle for the checked preview text.
+- When the toggle is off, the preview remains calm and normally readable.
+- When the toggle is on, already masked/replaced values can receive subtle visual markers.
+- These markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.
 
 ### Scrub Key
 
@@ -62,8 +64,8 @@ PDF support is intentionally limited:
 - The final product direction is local-first/offline capable.
 - The Scrub Key is sensitive because it can re-identify scrubbed content.
 - UI acknowledgements are safety prompts, not encryption, automatic deletion, expiry enforcement or managed key storage.
-- The marked document preview is read-only and does not replace the replacement table.
-- The marked preview still needs fresh app verification after the visibility repair is synced.
+- The review highlight toggle is visual-only and does not replace the replacement table.
+- The review highlight toggle still needs app verification after Actions and Hugging Face sync are green.
 - DOCX metadata, comments, tracked changes, headers and footers require further document-hygiene work.
 - Detection quality needs formal recall/precision benchmarking before strong trust claims can be made.
 
