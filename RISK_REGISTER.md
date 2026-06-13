@@ -202,16 +202,20 @@ Current mitigations:
 - WP42D attempted a small experimental read-only Streamlit preview panel, but the route failed repeatedly in runtime/startup verification.
 - WP42D-ROLLBACK and WP42D-ROLLBACK-REPAIR disabled the startup mutation path and guarded against stale static-preview source/runtime state.
 - WP42D-ROLLBACK-CLOSEOUT recorded that the Hugging Face app is back on the stable table-first interface and that the static-highlight/marking attempt is fully parked.
+- WP_CONTEXT_CARD_HELPER created `context_cards.py`, a pure report-only helper for escaped prefix/match/suffix context cards around exact displayed-text offsets, with synthetic-only tests.
+- WP_CONTEXT_CARD_STATUS_RECONCILE recorded the completed context-card helper in central project status after a parallel-edit conflict prevented the helper worker from updating shared documentation.
 - WP_REPLACE_LOGIC_HELPER created `replacement_decision.py`, a pure replacement decision helper with tests for review states, conservative scope matching, report-only audit summaries and advisory export-readiness state.
 - WP_REPLACE_LOGIC_UI_PLAN created `REPLACE_LOGIC_UI_PLAN.md`, planning future helper integration without changing Streamlit behavior.
 - WP_REPLACE_LOGIC_UI_CONTRACT_TESTS added `tests/test_replace_logic_ui_contract.py`, locking the planned label/state/scope mappings and report-only/export-readiness boundaries before any replacement-decision UI implementation.
+- WP_SERIAL_REVIEW_HELPER created a helper/tests-only serial review queue foundation for one-by-one review navigation and report-only audit summary.
 - WP43 created `FRONTEND_ARCHITECTURE_DECISION.md`, deciding to keep Streamlit for MVP validation and defer a separate frontend/professional document editor until MVP workflow evidence and user validation justify the migration risk.
 
 Gaps:
 
 - The stable table-first workflow is working again, but it still has the original document-context limitations.
 - The static-highlight startup source mutation route is not safe enough to continue.
-- No serial review queue helper exists yet.
+- Context cards are helper-only and not yet integrated into a UI panel.
+- Serial review queue is helper-only and not yet integrated into a UI panel.
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
 - No separate frontend migration is approved.
@@ -219,8 +223,8 @@ Gaps:
 
 Recommended workpackages:
 
-- WP_SERIAL_REVIEW_HELPER — pure helper/tests for serial review queue.
-- WP_SERIAL_REVIEW_UI — small non-destructive serial review panel only after helper/tests and explicit approval.
+- WP_CONTEXT_CARD_UI_PLAN — plan a small non-authoritative context-card panel near the review table.
+- WP_SERIAL_REVIEW_UI — small non-destructive serial review panel only after context-card UI planning and explicit approval.
 - Later approved package — replacement decision UI implementation.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
