@@ -79,6 +79,7 @@ Required visible placement message:
 
 ```text
 Table-first baseline: the review table remains the authoritative control and fallback.
+Existing review table remains authoritative control/fallback.
 ```
 
 ## 4. Panel labels
@@ -271,16 +272,22 @@ Contract validation should check that this plan contains:
 
 ```text
 context_cards.py
+build_context_card
+build_context_cards
 report-only
 non-authoritative
 table-first baseline
+existing review table remains authoritative control/fallback
 no startup source mutation
 no full-document marking
 no click-to-mark
 no advanced editor
+no inline editing
+no Word/PDF layout rendering
 no export blocking
 no Scrub Key mutation
 no reinsert behavior change
+no review table mutation
 synthetic-only
 ```
 
