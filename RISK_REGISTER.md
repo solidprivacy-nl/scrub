@@ -192,16 +192,16 @@ A table-first interface and unclear replacement decisions may not support the do
 
 Current mitigations:
 
-- Review table flow exists.
+- Review table flow exists and is the current working baseline/fallback.
 - Review filters and guidance exist.
 - WP40 created the document-centric review UX specification.
 - WP41 created the highlight-based review prototype decision.
 - WP42 created the Streamlit feasibility boundary.
 - WP42B created `highlight_preview.py`, a pure static highlight preview helper/model with tests for offsets, escaping, category labels and non-authoritative boundaries.
 - WP42C created `STATIC_HIGHLIGHT_PREVIEW_UI_PLAN.md`, planning a future experimental read-only UI panel while preserving the review table as authoritative.
-- WP42D added a small experimental read-only Streamlit preview panel via `fix_streamlit_static_highlight_preview.py`, preserving the review table as authoritative and keeping export, Scrub Key and reinsert semantics unchanged.
-- WP42D-FIX added hard-fail guards after the initial preview panel was not visible.
-- WP42D-FIX2 repaired the anchor again to use only the replacement editor line, reducing startup-patch-chain fragility while preserving the same read-only/non-authoritative boundaries.
+- WP42D attempted a small experimental read-only Streamlit preview panel, but the route failed repeatedly in runtime/startup verification.
+- WP42D-ROLLBACK and WP42D-ROLLBACK-REPAIR disabled the startup mutation path and guarded against stale static-preview source/runtime state.
+- WP42D-ROLLBACK-CLOSEOUT recorded that the Hugging Face app is back on the stable table-first interface and that the static-highlight/marking attempt is fully parked.
 - WP_REPLACE_LOGIC_HELPER created `replacement_decision.py`, a pure replacement decision helper with tests for review states, conservative scope matching, report-only audit summaries and advisory export-readiness state.
 - WP_REPLACE_LOGIC_UI_PLAN created `REPLACE_LOGIC_UI_PLAN.md`, planning future helper integration without changing Streamlit behavior.
 - WP_REPLACE_LOGIC_UI_CONTRACT_TESTS added `tests/test_replace_logic_ui_contract.py`, locking the planned label/state/scope mappings and report-only/export-readiness boundaries before any replacement-decision UI implementation.
@@ -209,7 +209,9 @@ Current mitigations:
 
 Gaps:
 
-- WP42D-FIX2 still needs GitHub Actions, Hugging Face sync and app verification before the UI change can be considered fully validated.
+- The stable table-first workflow is working again, but it still has the original document-context limitations.
+- The static-highlight startup source mutation route is not safe enough to continue.
+- No serial review queue helper exists yet.
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
 - No separate frontend migration is approved.
@@ -217,10 +219,10 @@ Gaps:
 
 Recommended workpackages:
 
-- Verify WP42D-FIX2 with Actions, Hugging Face sync and an app screenshot showing `Documentvoorbeeld met markeringen — experimenteel`.
-- WP39B — DOCX hygiene audit UI planning, if coordinator chooses document hygiene UI next.
+- WP_SERIAL_REVIEW_HELPER — pure helper/tests for serial review queue.
+- WP_SERIAL_REVIEW_UI — small non-destructive serial review panel only after helper/tests and explicit approval.
 - Later approved package — replacement decision UI implementation.
-- WP44 — Click-to-mark sensitive text prototype only after further approval and after frontend/MVP evidence.
+- Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
 ---
 
