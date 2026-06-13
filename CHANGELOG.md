@@ -1,5 +1,60 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_SERIAL_REVIEW_HELPER — Serial review queue helper and tests
+
+Status: implemented helper/tests-only serial review queue foundation; awaiting GitHub Actions and Hugging Face sync evidence.
+
+Files added:
+
+- `serial_review.py`
+- `tests/test_serial_review_helper.py`
+- `workpackage_claims/WP_SERIAL_REVIEW_HELPER.md`
+- `handover/workpackages/20260613_1120_serial_review_helper.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_SERIAL_REVIEW_HELPER.md`
+
+Summary:
+
+- Added a pure Python `serial_review.py` helper for future one-by-one review flows.
+- Supports stable serial queue construction from synthetic review rows, current item selection, next/previous unresolved navigation, unresolved/high-risk filtering and exact same-value occurrence ids.
+- Added report-only audit summary fields for unresolved count, high-risk count, high-risk unresolved ids, duplicate exact-value groups and review readiness.
+- Preserved strict boundaries: report-only output, `mutation_allowed = False`, no automatic replacement, no review table mutation and no Scrub Key mapping writes.
+- Added synthetic-only pytest coverage for empty queue, single item, navigation, unresolved filtering, high-risk filtering, duplicate exact source text, all-exact occurrence matching, no fuzzy matching, report-only boundaries and synthetic-only values.
+
+Validation status:
+
+- Local subset validation in the ChatGPT container passed with:
+
+```text
+PYTHONPATH=. pytest tests/test_serial_review_helper.py
+```
+
+- Result: `10 passed`.
+- A direct full repository clone for combined pytest was not possible in the container because DNS/network access to GitHub was unavailable.
+- The GitHub connector could fetch repository files and write commits, but `fetch_commit_workflow_runs` returned `workflow_runs: []` for the helper commits at check time.
+
+Intentionally not changed:
+
+- No Streamlit UI implementation.
+- No changes to `presidio_streamlit.py`.
+- No changes to `fix_streamlit_nested_expanders.py`.
+- No review table behavior change.
+- No export/download behavior change.
+- No Scrub Key schema or mapping write behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real-data fixtures.
+
+Next recommended step:
+
+- Verify GitHub Actions and Hugging Face sync for the final workpackage commits.
+- After helper tests are green and coordinator approval is explicit: `WP_SERIAL_REVIEW_UI — non-destructive serial review panel in Streamlit`.
+
 ## WP42D-ROLLBACK-CLOSEOUT — Working table-first interface restored after failed static highlight preview
 
 Status: completed documentation-only closeout; normal table-first Scrub interface is the current working baseline.
