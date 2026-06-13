@@ -47,6 +47,7 @@ WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed; GitHub Actions and Hugging Fac
 WP_SERIAL_REVIEW_HELPER — completed after Actions/sync verification for commit a8182cd; app verification not applicable.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot shows Tests #715 green, Sync to Hugging Face Space #727 green and claim completion green; app verification not applicable.
 WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — completed documentation/status reconciliation for WP_SERIAL_REVIEW_UI_CONTRACT_TESTS.
+WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and safe context-card data before any UI.
 WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — completed after Actions/sync verification for commit a8182cd; app verification not applicable.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
@@ -90,6 +91,7 @@ WP_CONTEXT_CARD_UI_CONTRACT_TESTS — completed planning/tests-only hardening fo
 WP_SERIAL_REVIEW_HELPER — completed helper/tests-only serial review queue foundation; Actions/sync green for commit a8182cd; no UI changes.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed planning/contract tests for future serial review panel; Actions/sync green by coordinator screenshot; no UI/runtime changes.
 WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — reconciled completed serial review UI contract tests into central project status.
+WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only view model combining serial queue plus safe context-card data; no UI changes.
 ```
 
 WP42D rollback closeout summary:
@@ -137,11 +139,19 @@ Recorded serial review UI contract-test evidence:
 - Coordinator screenshot shows `Complete WP_SERIAL_REVIEW_UI_CONTRACT_TESTS claim` green.
 - App verification is not applicable because no UI/runtime behavior changed.
 
-Next safe review/frontend step:
+Completed review-panel view-model helper step:
 
 ```text
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue + context-card data before any UI.
 ```
+
+Recorded review-panel view-model helper boundaries:
+
+- `review_panel_view_model.py` builds one report-only view model from `serial_review.py` queue output and `context_cards.py` current context-card output.
+- Missing offsets degrade to an escaped context-preview fallback or warning without crashing.
+- Invalid offsets produce warnings and invalid context-card data; no fuzzy matching or guessed intent is used.
+- The helper locks `report_only = True`, `mutation_allowed = False`, `export_blocking = False`, `scrub_key_changes = False`, `reinsert_changes = False` and `table_first_baseline = True`.
+- No Streamlit UI, review table mutation, replacement mutation, Scrub Key mapping write, reinsert behavior change, dependency change, cloud processing or real-data fixture was added.
 
 Blocked until explicit coordinator approval:
 
@@ -164,12 +174,12 @@ WP_CONTEXT_CARD_UI_PLAN — completed planning/contract-only for a non-authorita
 WP_CONTEXT_CARD_UI_CONTRACT_TESTS — completed planning/tests-only hardening of context-card plan labels, fields and boundaries.
 WP_SERIAL_REVIEW_HELPER — completed after Actions/sync verification; implemented helper/tests-only serial queue for one-by-one review navigation and report-only audit summary.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed planning/contract tests; table-first, non-destructive, report-only boundaries locked before any UI.
+WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data into one non-mutating review-panel view model.
 ```
 
 Next replace/review logic step:
 
 ```text
-WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue + context-card view data before any UI.
 WP_SERIAL_REVIEW_UI — only after coordinator explicitly approves UI work.
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after coordinator explicitly approves UI work and after relevant contract tests are green.
 ```
@@ -179,10 +189,9 @@ Do not start replacement UI implementation or serial review UI implementation un
 ## Active / next recommended execution queue
 
 ```text
-1. WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue + context-card data before any UI.
-2. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after explicit coordinator approval.
-3. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
-4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+1. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after explicit coordinator approval.
+2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
+3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
 
 ## Blocked work
