@@ -37,7 +37,7 @@ def test_plan_blocks_clean_docx_claims():
     ])
     _assert_all_present_lower([
         "must not be described as clean DOCX export",
-        "current DOCX output must not be called clean DOCX",
+        "no clean-DOCX guarantee",
         "safe_to_claim_clean",
     ])
 
