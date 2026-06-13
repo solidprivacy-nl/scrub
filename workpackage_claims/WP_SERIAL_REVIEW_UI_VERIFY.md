@@ -1,10 +1,10 @@
 # Workpackage claim — WP_SERIAL_REVIEW_UI_VERIFY
 
-status: blocked; awaiting coordinator/user evidence
+status: completed
 repository: solidprivacy-nl/scrub
 workpackage title: WP_SERIAL_REVIEW_UI_VERIFY — Closeout/app verification for non-destructive serial review panel
 started timestamp: 2026-06-13T12:45:00+02:00
-stopped timestamp: 2026-06-13T12:45:00+02:00
+completed timestamp: 2026-06-13T12:45:00+02:00
 scope: Verification/documentation-only closeout for WP_SERIAL_REVIEW_UI based on GitHub Actions status, Hugging Face sync status and coordinator app verification evidence.
 boundaries:
 - No changes to presidio_streamlit.py.
@@ -19,16 +19,10 @@ boundaries:
 - No cloud processing.
 - No real data.
 
-Reason blocked:
-- Could not verify green GitHub Actions through available connector evidence.
-- `get_commit_combined_status` for implementation/claim commit `288c22b199cb4f9b8bd5e34217ca6a1fce0b8cd4` returned `statuses: []`.
-- `get_commit_combined_status` for handover commit `1733a7cb16f22df917960a3a661915141413f2e1` returned `statuses: []`.
-- `fetch_commit_workflow_runs` for `288c22b199cb4f9b8bd5e34217ca6a1fce0b8cd4` returned `workflow_runs: []`.
-- `fetch_commit_workflow_runs` for `1733a7cb16f22df917960a3a661915141413f2e1` returned `workflow_runs: []`.
-- `fetch_commit_workflow_runs` for this verify claim commit `4cf8f1510431667b03d1c5d78b0445cfc67ba8f9` returned `workflow_runs: []`.
-- No coordinator app screenshot was available in this chat turn for direct visual verification of the serial review panel.
-
-GitHub Actions status: unverified via connector; no green evidence available in this session.
-Hugging Face sync status: unverified via connector; no green sync evidence available in this session.
-app verification status: blocked; screenshot/evidence needed.
-next recommended step: Provide a screenshot or run evidence showing green Tests, green Sync to Hugging Face Space, and the app with the serial review panel visible. Then rerun WP_SERIAL_REVIEW_UI_VERIFY.
+final commit SHA or PR link: a581f8068e7e67a112397f19586f7dcea3118ab6
+handover path: handover/workpackages/20260613_1245_serial_review_ui_verify.md
+tests/checks: Documentation/status checks only. Required files read. GitHub connector status calls returned empty workflow/status lists for earlier commits, but coordinator screenshot evidence showed green Tests, green Sync to Hugging Face Space, and the running app with the serial review panel visible.
+GitHub Actions status: Green by coordinator screenshot for latest relevant Tests runs; one earlier red patch-test run was followed by later green Tests runs.
+Hugging Face sync status: Green by coordinator screenshot for latest relevant Sync to Hugging Face Space runs.
+app verification status: Completed by coordinator screenshot: normal Scrub Legal interface visible, existing review table visible, serial review panel visible, no static-highlight route/error visible, no full-document marking/editor visible.
+next recommended step: WP28C-CLOSEOUT if Scrub Key warning/reinsert evidence is complete, or WP39B DOCX hygiene audit UI planning. Do not start WP_REPLACE_LOGIC_UI_IMPLEMENTATION, click-to-mark, advanced editor or full-document marking without separate explicit coordinator approval.
