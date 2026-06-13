@@ -31,9 +31,10 @@ When done, update the same claim file to `completed` and include the final commi
 WP28C — implemented; partial app evidence recorded for Scrub Key/reinsert warning UI; full closeout still needs Actions/HF/app coverage.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
-WP42D — experimental static highlight preview attempted but rolled back after repeated runtime failures.
-WP42D-ROLLBACK — static highlight preview startup patch disabled to restore working interface; awaiting HF sync/app verification.
-WP42D-ROLLBACK-REPAIR — implemented HF runtime cache-bust and source guard for stale static preview code; awaiting Actions/HF/app verification.
+WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
+WP42D-ROLLBACK — completed rollback path; startup mutation disabled and table-first baseline restored.
+WP42D-ROLLBACK-REPAIR — completed repair/guard path; stale static-preview source/runtime risk recorded and parked.
+WP42D-ROLLBACK-CLOSEOUT — completed documentation-only closeout; working table-first interface is the current baseline.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
@@ -69,36 +70,37 @@ WP41 — Highlight-based review prototype decision: completed.
 WP42 — Streamlit feasibility boundary review: completed.
 WP42B — Static highlight preview helper and tests: completed.
 WP42C — Static highlight preview UI planning: completed.
-WP42D — Static highlight preview UI integration: rolled back after repeated runtime failures.
+WP42D — Static highlight preview UI integration: fully rolled back/parked after repeated runtime failures.
 WP43 — Frontend architecture decision: completed.
-WP42D-ROLLBACK — disabled startup mutation patch; awaiting verification that the app starts again.
+WP42D-ROLLBACK — disabled startup mutation patch and restored the working table-first interface.
 WP42D-ROLLBACK-REPAIR — cache-busted HF runtime image and added app-source guard against stale static preview block.
+WP42D-ROLLBACK-CLOSEOUT — recorded working table-first baseline and parked static-highlight startup mutation route.
 ```
 
-WP42D-ROLLBACK summary:
+WP42D rollback closeout summary:
 
-- Coordinator/user correctly identified that repeated quick fixes were not resolving the same startup error and that the safest move was to backtrack.
-- `Dockerfile` no longer runs `python fix_streamlit_static_highlight_preview.py` before Streamlit startup.
-- `fix_streamlit_static_highlight_preview.py` is now a harmless no-op if called manually or by a stale command.
-- Static tests now assert the Dockerfile does not run the experimental preview patch and that the patch file does not mutate `presidio_streamlit.py`.
-- The experimental static highlight preview is parked.
-- Goal is to restore the last working table-first interface.
-- No export/download, Scrub Key, reinsert, dependency, cloud processing or real-data behavior changed.
-
-WP42D-ROLLBACK-REPAIR summary:
-
-- Coordinator/user evidence after green Actions/HF sync still showed Hugging Face stuck on Restarting with a script execution error pointing to a stale static highlight preview caption in `presidio_streamlit.py` line 1081.
-- GitHub `main` no longer contains that stale preview text, so the repair adds a Dockerfile cache-bust marker before `COPY --chown=user . $HOME/app` to force a clean Hugging Face runtime image.
-- The static highlight preview remains parked; the startup patch remains disabled.
-- Tests now assert that `presidio_streamlit.py` does not contain the stale preview title/caption/helper import text.
+- Coordinator/user evidence confirms the Hugging Face app is again usable on the normal table-first Scrub interface.
+- The table-first review workflow is the current working baseline and fallback.
+- The failed static-highlight/marking attempt is fully rolled back and parked.
+- Do not restart the old static highlight preview route.
+- Do not patch `presidio_streamlit.py` through startup source mutation.
+- Do not reintroduce `python fix_streamlit_static_highlight_preview.py` into container startup.
+- Future document-first review, marking and editor improvements must be redesigned through helper/model first, contract tests first and only then small approved UI panels.
+- No product code, runtime code, UI behavior, export/download behavior, Scrub Key behavior, reinsert behavior, dependencies, cloud processing or real-data fixtures changed in the closeout.
 
 Next review/frontend step:
 
 ```text
-Verify GitHub Actions, Hugging Face sync and app screenshot showing the normal Scrub Legal interface starts again without the script execution error.
+WP_SERIAL_REVIEW_HELPER — pure helper/tests for a serial review queue.
 ```
 
-Do not restart static highlight preview UI work until it is redesigned without startup source mutation.
+After helper/tests are complete and coordinator approval is explicit, the next UI step may be:
+
+```text
+WP_SERIAL_REVIEW_UI — small non-destructive serial review panel.
+```
+
+Do not restart static highlight preview UI work until it is redesigned without startup source mutation and without changing the table-first workflow as baseline/fallback.
 
 ## Replace/review logic line
 
@@ -121,10 +123,10 @@ Do not start replacement UI implementation until coordinator approves UI work.
 ## Active / next recommended execution queue
 
 ```text
-1. WP42D-ROLLBACK-REPAIR verification — GitHub Actions, Hugging Face sync and app screenshot showing the normal app starts again.
-2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
-3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
-4. Redesign highlight preview without startup source mutation before any new UI attempt.
+1. WP_SERIAL_REVIEW_HELPER — pure helper/tests for serial review queue.
+2. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after helper/tests and explicit approval.
+3. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
+4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
 
 ## Blocked work
@@ -157,3 +159,4 @@ Also blocked until separate approval or later specs:
 - Click-to-mark sensitive text implementation.
 - Authoritative highlight-based review mutation.
 - Static highlight preview startup source mutation.
+- Startup source mutation of `presidio_streamlit.py` for preview/marking/editor work.
