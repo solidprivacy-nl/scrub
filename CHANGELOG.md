@@ -1,58 +1,55 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_SERIAL_REVIEW_UI_VERIFY — Closeout/app verification for non-destructive serial review panel
+## WP28C-CLOSEOUT — Scrub Key warning/reinsert evidence closeout
 
 Status: completed verification/documentation-only closeout.
 
 Files added:
 
-- `workpackage_claims/WP_SERIAL_REVIEW_UI_VERIFY.md`
-- `handover/workpackages/20260613_1245_serial_review_ui_verify.md`
+- `workpackage_claims/WP28C_CLOSEOUT.md`
+- `handover/workpackages/20260613_1305_wp28c_closeout.md`
+- `handover/workpackages/20260613_1315_wp28c_closeout.md`
 
 Files changed:
 
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `workpackage_claims/WP_SERIAL_REVIEW_UI_VERIFY.md`
+- `workpackage_claims/WP28C_CLOSEOUT.md`
 
 Summary:
 
-- Closed out `WP_SERIAL_REVIEW_UI` after coordinator evidence showed green Tests, green Hugging Face sync and the running app with the serial review panel visible.
-- The app evidence shows the normal Scrub Legal flow, the existing review table and `Serial review — experimentele reviewhulp`.
-- The panel remains table-first, non-destructive and report-only.
-- The panel does not mutate Scrub Key data, does not block export and does not change reinsert behavior.
-- One earlier red Tests run for the patch-test commit was followed by later green Tests and Sync runs.
+- Closed out WP28C after coordinator screenshots showed green Tests, green Hugging Face sync and the running app in `Originele waarden terugzetten` mode.
+- The app evidence shows Scrub Key loading, warning text, acknowledgement checkbox and original-values reinsert sections.
+- Pasted-text, TXT, DOCX and PDF-to-TXT reinsert warning/acknowledgement surfaces are visible.
+- DOCX restored-output success/download evidence and reinsert statistics/audit output are visible.
+- UI acknowledgements remain safety prompts only; no encryption, protected storage, automatic deletion, expiry enforcement, key recovery or managed vault was added.
 
 Validation status:
 
 - Verification/documentation-only; no product code changed.
 - No tests changed.
-- GitHub connector status calls returned empty workflow/status lists for earlier commits, so the coordinator screenshot is the recorded verification source.
+- Coordinator screenshots are recorded as the verification source for Actions, Hugging Face sync and app behavior.
 
 Intentionally not changed:
 
-- No changes to `presidio_streamlit.py`.
-- No changes to `serial_review_panel_ui.py`.
-- No changes to `review_panel_view_model.py`.
-- No test changes.
-- No UI changes.
+- No UI changes in this closeout.
 - No export/download behavior change.
-- No Scrub Key behavior change.
-- No reinsert behavior change.
+- No Scrub Key schema or behavior change.
+- No reinsert semantic change.
 - No dependency change.
 - No cloud processing.
 - No real-data fixtures.
 
 Next recommended step:
 
-- `WP28C-CLOSEOUT`, if Scrub Key warning/reinsert evidence is complete.
-- Or `WP39B — DOCX hygiene audit UI planning`.
+- `WP39B — DOCX hygiene audit UI planning`, if coordinator wants to continue DOCX hygiene.
 - `WP_REPLACE_LOGIC_UI_IMPLEMENTATION` only after separate explicit coordinator approval.
 
 ## Recent previous entries
 
 Detailed recent history remains available in Git history and includes:
 
+- WP_SERIAL_REVIEW_UI_VERIFY — closeout/app verification for non-destructive serial review panel.
 - WP_SERIAL_REVIEW_UI — small non-destructive serial review panel in Streamlit.
 - WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — central status reconciliation for serial review UI contract tests.
 - WP_CONTEXT_CARD_STATUS_RECONCILE — central status reconciliation for the context-card helper.
