@@ -36,6 +36,22 @@ It must not reintroduce:
 - cloud processing;
 - real-data fixtures.
 
+Contract wording:
+
+```text
+no startup source mutation
+no full-document marking
+no click-to-mark
+no advanced editor
+no review table mutation
+no export blocking
+no Scrub Key mutation
+no reinsert behavior change
+no dependency changes
+no cloud processing
+synthetic-only
+```
+
 The future panel is context-assistive only. It is report-only, non-authoritative and synthetic-only in tests.
 
 ## 3. Placement
@@ -229,6 +245,13 @@ This plan explicitly does not approve:
 - cloud processing;
 - real-data fixtures.
 
+Additional explicit contract wording:
+
+```text
+no inline editing
+no Word/PDF layout rendering
+```
+
 ## 12. Implementation sequence after this plan
 
 Recommended next packages:
@@ -251,6 +274,7 @@ report-only
 non-authoritative
 table-first baseline
 no startup source mutation
+no full-document marking
 no click-to-mark
 no advanced editor
 no export blocking
