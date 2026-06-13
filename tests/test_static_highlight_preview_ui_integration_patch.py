@@ -4,6 +4,7 @@ from pathlib import Path
 
 PATCH = Path("fix_streamlit_static_highlight_preview.py")
 DOCKERFILE = Path("Dockerfile")
+APP_FILE = Path("presidio_streamlit.py")
 
 
 def _patch_text() -> str:
@@ -37,6 +38,18 @@ def test_static_highlight_preview_patch_no_longer_mutates_app_source():
         assert phrase not in text
 
 
+def test_app_source_no_longer_contains_static_highlight_preview_block():
+    text = APP_FILE.read_text(encoding="utf-8")
+
+    forbidden = [
+        "Documentvoorbeeld met markeringen — experimenteel",
+        "Alleen-lezen voorbeeld. De vervangtabel blijft leidend",
+        "build_static_highlight_preview",
+    ]
+    for phrase in forbidden:
+        assert phrase not in text
+
+
 def test_dockerfile_does_not_run_static_highlight_preview_patch():
     text = DOCKERFILE.read_text(encoding="utf-8")
 
@@ -44,6 +57,13 @@ def test_dockerfile_does_not_run_static_highlight_preview_patch():
     assert "python fix_streamlit_pdf_text_reinsert.py" in text
     assert "python fix_streamlit_static_highlight_preview.py" not in text
     assert "streamlit run presidio_streamlit.py" in text
+
+
+def test_dockerfile_forces_clean_hf_runtime_after_rollback_repair():
+    text = DOCKERFILE.read_text(encoding="utf-8")
+
+    assert "WP42D-ROLLBACK-REPAIR" in text
+    assert "SCRUB_ROLLBACK_REPAIR=20260613_0015" in text
 
 
 def test_rollback_preserves_runtime_boundaries():
