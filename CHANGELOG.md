@@ -1,5 +1,61 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — Reconcile completed serial review UI contract tests into central status
+
+Status: completed documentation/status-repair-only reconciliation.
+
+Files added:
+
+- `workpackage_claims/WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE.md`
+- `handover/workpackages/20260613_1215_serial_review_ui_contract_status_reconcile.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE.md`
+
+Summary:
+
+- Reconciled `WP_SERIAL_REVIEW_UI_CONTRACT_TESTS` into central status after its worker completed the plan/tests but central documentation was not safely updated.
+- Recorded that `WP_SERIAL_REVIEW_UI_CONTRACT_TESTS` is completed.
+- Recorded added artifacts: `SERIAL_REVIEW_UI_PLAN.md`, `tests/test_serial_review_ui_contract.py`, `handover/workpackages/20260613_1200_serial_review_ui_contract_tests.md` and `workpackage_claims/WP_SERIAL_REVIEW_UI_CONTRACT_TESTS.md`.
+- Recorded handover test evidence: `PYTHONPATH=. pytest tests/test_serial_review_ui_contract.py` — 8 passed.
+- Recorded coordinator screenshot evidence: `Tests #715` green, `Sync to Hugging Face Space #727` green and `Complete WP_SERIAL_REVIEW_UI_CONTRACT_TESTS claim` green.
+- Recorded that app verification is not applicable because no UI/runtime behavior changed.
+- Recorded safe next steps: `WP_REVIEW_PANEL_VIEW_MODEL_HELPER` and `WP_CONTEXT_CARD_UI_CONTRACT_TESTS`.
+- Reaffirmed that `WP_SERIAL_REVIEW_UI` remains blocked until explicit coordinator approval.
+
+Validation status:
+
+- Documentation/status-repair-only; no app rebuild was run.
+- No shell/pytest execution was available through the ChatGPT GitHub connector for this exact repository checkout.
+- Status was reconciled against `SERIAL_REVIEW_UI_PLAN.md`, `tests/test_serial_review_ui_contract.py`, `workpackage_claims/WP_SERIAL_REVIEW_UI_CONTRACT_TESTS.md` and `handover/workpackages/20260613_1200_serial_review_ui_contract_tests.md`.
+
+Intentionally not changed:
+
+- No changes to `SERIAL_REVIEW_UI_PLAN.md`.
+- No changes to `tests/test_serial_review_ui_contract.py`.
+- No changes to `serial_review.py`.
+- No changes to `context_cards.py`.
+- No changes to `presidio_streamlit.py`.
+- No changes to `fix_streamlit_nested_expanders.py`.
+- No Streamlit UI implementation.
+- No review table behavior change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real-data fixtures.
+
+Next recommended step:
+
+- `WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue + context-card data before any UI`.
+- `WP_CONTEXT_CARD_UI_CONTRACT_TESTS — contract tests for the planned non-authoritative context-card panel`.
+- Do not start `WP_SERIAL_REVIEW_UI` without explicit coordinator approval.
+
 ## WP_CONTEXT_CARD_STATUS_RECONCILE — Reconcile completed context-card helper into central project status
 
 Status: completed documentation/status-repair-only reconciliation.
