@@ -34,7 +34,7 @@ def test_review_highlight_toggle_plan_is_read_only_visual_only_and_table_first()
         "non-mutating",
         "table-first baseline",
         "existing review table remains the source of truth and fallback",
-        "review table remains source of truth",
+        "review table as source of truth",
     ]:
         assert required in lowered
 
