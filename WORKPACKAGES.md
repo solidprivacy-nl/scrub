@@ -38,6 +38,7 @@ WP42D-ROLLBACK-CLOSEOUT — completed documentation-only closeout; working table
 WP_CONTEXT_CARD_HELPER — completed helper/tests-only context-card foundation; remote Actions/HF status unknown at helper handover; app verification not applicable.
 WP_CONTEXT_CARD_STATUS_RECONCILE — completed documentation/status reconciliation for WP_CONTEXT_CARD_HELPER.
 WP_CONTEXT_CARD_UI_PLAN — completed planning/contract-only; no UI implementation.
+WP_CONTEXT_CARD_UI_CONTRACT_TESTS — completed planning/tests-only hardening of context-card UI plan labels, fields and boundaries.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
@@ -85,6 +86,7 @@ WP42D-ROLLBACK-CLOSEOUT — recorded working table-first baseline and parked sta
 WP_CONTEXT_CARD_HELPER — completed helper/tests-only; adds safe report-only context cards with escaped prefix/match/suffix snippets and synthetic-only tests.
 WP_CONTEXT_CARD_STATUS_RECONCILE — reconciled completed context-card helper into central project status.
 WP_CONTEXT_CARD_UI_PLAN — completed planning/contract-only for a non-authoritative context-card panel near the review table.
+WP_CONTEXT_CARD_UI_CONTRACT_TESTS — completed planning/tests-only hardening for context-card plan labels, fields and boundaries.
 WP_SERIAL_REVIEW_HELPER — completed helper/tests-only serial review queue foundation; Actions/sync green for commit a8182cd; no UI changes.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed planning/contract tests for future serial review panel; Actions/sync green by coordinator screenshot; no UI/runtime changes.
 WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — reconciled completed serial review UI contract tests into central project status.
@@ -106,6 +108,7 @@ Completed context-card helper/planning steps:
 ```text
 WP_CONTEXT_CARD_HELPER — pure helper/tests for report-only context cards around detected values.
 WP_CONTEXT_CARD_UI_PLAN — planning/contract-only; no Streamlit UI implementation.
+WP_CONTEXT_CARD_UI_CONTRACT_TESTS — planning/tests-only hardening; no Streamlit UI implementation.
 ```
 
 Recorded context-card UI plan boundaries:
@@ -113,7 +116,8 @@ Recorded context-card UI plan boundaries:
 - The plan uses `context_cards.py` as an existing report-only helper.
 - The context-card panel is non-authoritative and near the existing review table.
 - The table-first baseline remains the authoritative control/fallback surface.
-- The plan explicitly blocks startup source mutation, click-to-mark, advanced editor behavior, export blocking, Scrub Key mutation and reinsert behavior changes.
+- The plan explicitly blocks startup source mutation, click-to-mark, advanced editor behavior, inline editing, Word/PDF layout rendering, export blocking, Scrub Key mutation and reinsert behavior changes.
+- Contract tests now explicitly require `build_context_card`, `build_context_cards`, required context-card fields, display-only semantics and serial-review linkage.
 
 Completed serial review UI contract-test step:
 
@@ -133,11 +137,10 @@ Recorded serial review UI contract-test evidence:
 - Coordinator screenshot shows `Complete WP_SERIAL_REVIEW_UI_CONTRACT_TESTS claim` green.
 - App verification is not applicable because no UI/runtime behavior changed.
 
-Next safe review/frontend steps:
+Next safe review/frontend step:
 
 ```text
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue + context-card data before any UI.
-WP_CONTEXT_CARD_UI_CONTRACT_TESTS — contract tests for the planned non-authoritative context-card panel.
 ```
 
 Blocked until explicit coordinator approval:
@@ -158,6 +161,7 @@ WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — completed tests/documentation-only.
 WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed after Actions/HF sync evidence.
 WP_CONTEXT_CARD_HELPER — completed helper/tests-only report-only context-card foundation for exact-offset local context review.
 WP_CONTEXT_CARD_UI_PLAN — completed planning/contract-only for a non-authoritative context-card panel near the table-first review baseline.
+WP_CONTEXT_CARD_UI_CONTRACT_TESTS — completed planning/tests-only hardening of context-card plan labels, fields and boundaries.
 WP_SERIAL_REVIEW_HELPER — completed after Actions/sync verification; implemented helper/tests-only serial queue for one-by-one review navigation and report-only audit summary.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed planning/contract tests; table-first, non-destructive, report-only boundaries locked before any UI.
 ```
@@ -166,7 +170,6 @@ Next replace/review logic step:
 
 ```text
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue + context-card view data before any UI.
-WP_CONTEXT_CARD_UI_CONTRACT_TESTS — contract-test package for context-card UI plan labels/fields/boundaries.
 WP_SERIAL_REVIEW_UI — only after coordinator explicitly approves UI work.
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after coordinator explicitly approves UI work and after relevant contract tests are green.
 ```
@@ -177,10 +180,9 @@ Do not start replacement UI implementation or serial review UI implementation un
 
 ```text
 1. WP_REVIEW_PANEL_VIEW_MODEL_HELPER — pure helper combining serial queue + context-card data before any UI.
-2. WP_CONTEXT_CARD_UI_CONTRACT_TESTS — contract tests for context-card plan labels/fields/boundaries.
-3. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after explicit coordinator approval.
-4. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
-5. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+2. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after explicit coordinator approval.
+3. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
+4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
 
 ## Blocked work
