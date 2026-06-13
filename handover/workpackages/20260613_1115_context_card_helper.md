@@ -18,9 +18,13 @@ This package intentionally replaces the failed full-document marking direction w
 
 ## Files changed
 
-- `workpackage_claims/WP_CONTEXT_CARD_HELPER.md` — claim created as `in_progress`; final completion update follows this handover.
-- `CHANGELOG.md` — intended update for implementation history.
-- `WORKPACKAGES.md` — intended update for current status / next step.
+- `workpackage_claims/WP_CONTEXT_CARD_HELPER.md` — claim created and later completed.
+
+## Documentation updates attempted
+
+- `WORKPACKAGES.md` update was attempted after fetching the then-current file, but GitHub returned a 409 SHA conflict caused by parallel documentation changes. This was not forced.
+- `CHANGELOG.md` was intentionally not forced after that conflict to avoid overwriting parallel work.
+- The claim file records this documentation conflict so the coordinator can reconcile it safely.
 
 ## Tests added/updated
 
@@ -92,6 +96,7 @@ A full repository `pytest` was not run because the ChatGPT GitHub connector does
 - Context cards are only as reliable as the caller-provided displayed text and offsets.
 - Remote CI/Hugging Face status still needs normal pipeline visibility after GitHub updates.
 - Future UI must remain non-authoritative unless a separate approved package changes that boundary.
+- `CHANGELOG.md` and `WORKPACKAGES.md` still need coordinator-safe reconciliation because the update hit a parallel-edit conflict.
 
 ## Next recommended step
 
