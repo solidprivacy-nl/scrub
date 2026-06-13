@@ -1,25 +1,46 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — Contract tests for simple masked-text highlight toggle plan
+## WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — Simple masked-text highlight toggle implementation
 
-Status: completed tests/documentation-only; awaiting GitHub Actions and Hugging Face sync evidence.
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Files added:
 
-- `tests/test_review_highlight_toggle_plan.py`
-- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS.md`
-- `handover/workpackages/20260613_1745_review_highlight_toggle_contract_tests.md`
+- `review_highlight_toggle.py`
+- `review_highlight_toggle_panel_ui.py`
+- `tests/test_review_highlight_toggle.py`
+- `tests/test_review_highlight_toggle_ui_patch.py`
+- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION.md`
+- `handover/workpackages/20260613_1805_review_highlight_toggle_implementation.md`
+
+Files changed:
+
+- `serial_review_panel_ui.py`
+- `RELEASE_NOTES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION.md`
+
+Summary:
+
+- Added a small optional `Markeringen tonen in voorbeeldtekst` toggle in the review area through a separate renderer called from the serial review panel.
+- Added safe helper functions that escape document text before wrapping exact already-applied replacement values in static marker HTML.
+- Added tests for exact matching, escaping, include-only replacement terms, no fuzzy matching, visible UI copy, no table/export/Scrub Key/reinsert side effects and synthetic-only values.
+- No startup source mutation, no click-to-mark, no advanced editor, no full-document marking, no export/download behavior change, no Scrub Key behavior change, no reinsert behavior change, no dependency change, no cloud processing and no real data.
+
+Validation status:
+
+- No shell/pytest execution was available through the GitHub connector.
+- Expected checks: `pytest tests/test_review_highlight_toggle.py tests/test_review_highlight_toggle_ui_patch.py tests/test_review_highlight_toggle_plan.py` and full `python -m pytest -q tests`.
+- UI behavior changed, so app verification is required after green Actions and Hugging Face sync.
+
+## WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — Contract tests for simple masked-text highlight toggle plan
+
+Status: completed after Actions/HF verification by coordinator screenshot evidence.
 
 Summary:
 
 - Added contract tests for `REVIEW_HIGHLIGHT_TOGGLE_PLAN.md`.
-- Tests cover Dutch labels, on/off copy, read-only and visual-only boundaries, table-first/source-of-truth behavior, exact matching only, allowed and forbidden highlighted values, no replacement table mutation, no automatic replacement, no Scrub Key writes, no export/download changes, no export blocking, no reinsert changes, no old WP42D startup mutation route, no click-to-mark, no advanced editor, no full-document marking, raw-HTML escaping/accessibility expectations and synthetic-only/no-real-data constraints.
-- No Streamlit UI, product runtime, export/download, Scrub Key, reinsert, dependency, cloud processing or real-data behavior changed.
-
-Next recommended step:
-
-- Verify Actions and sync.
-- `WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION` remains blocked without separate coordinator approval.
+- Coordinator screenshot showed `Tests #865` green and `Sync to Hugging Face Space #877` green for commit `07b7581`.
 
 ## WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX3 — Restore exact replacement UI plan sequencing phrase
 
