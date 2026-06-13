@@ -127,12 +127,15 @@ def test_no_automatic_replacement_or_editor_marking_features_were_added():
 
 
 def test_no_startup_source_mutation_or_cloud_real_data_fixture_added():
-    rendered = _normal_flow_text() + "\n" + _renderer_text() + "\n" + Path(__file__).read_text(encoding="utf-8")
+    rendered = _normal_flow_text() + "\n" + _renderer_text()
     startup_text = STARTUP_PATCH.read_text(encoding="utf-8")
 
+    app_file_write_marker = "APP_FILE" + ".write_text"
+    replace_once_marker = "replace" + "_once("
+
     assert "replacement_decision_panel_ui" not in startup_text
-    assert "APP_FILE.write_text" not in rendered
-    assert "replace_once(" not in rendered
+    assert app_file_write_marker not in rendered
+    assert replace_once_marker not in rendered
     assert "cloud services" in rendered.lower()
     assert "real data" in rendered.lower()
 
