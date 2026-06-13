@@ -292,6 +292,8 @@ Required pre-implementation contract package:
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS
 ```
 
+Only after that should a small UI implementation package be considered.
+
 Recommended sequence:
 
 ```text
