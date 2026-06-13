@@ -33,11 +33,12 @@ WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but rolled back after repeated runtime failures.
 WP42D-ROLLBACK — static highlight preview startup patch disabled to restore working interface; awaiting HF sync/app verification.
+WP42D-ROLLBACK-REPAIR — implemented HF runtime cache-bust and source guard for stale static preview code; awaiting Actions/HF/app verification.
 WP_REPLACE_LOGIC — easy replace/review logic simplification specification completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration completed.
-WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — implemented minimal Actions repair for two failing pytest assertions; awaiting Actions verification.
+WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed; GitHub Actions and Hugging Face sync were green for commit b869688.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
 ```
@@ -71,6 +72,7 @@ WP42C — Static highlight preview UI planning: completed.
 WP42D — Static highlight preview UI integration: rolled back after repeated runtime failures.
 WP43 — Frontend architecture decision: completed.
 WP42D-ROLLBACK — disabled startup mutation patch; awaiting verification that the app starts again.
+WP42D-ROLLBACK-REPAIR — cache-busted HF runtime image and added app-source guard against stale static preview block.
 ```
 
 WP42D-ROLLBACK summary:
@@ -83,10 +85,17 @@ WP42D-ROLLBACK summary:
 - Goal is to restore the last working table-first interface.
 - No export/download, Scrub Key, reinsert, dependency, cloud processing or real-data behavior changed.
 
+WP42D-ROLLBACK-REPAIR summary:
+
+- Coordinator/user evidence after green Actions/HF sync still showed Hugging Face stuck on Restarting with a script execution error pointing to a stale static highlight preview caption in `presidio_streamlit.py` line 1081.
+- GitHub `main` no longer contains that stale preview text, so the repair adds a Dockerfile cache-bust marker before `COPY --chown=user . $HOME/app` to force a clean Hugging Face runtime image.
+- The static highlight preview remains parked; the startup patch remains disabled.
+- Tests now assert that `presidio_streamlit.py` does not contain the stale preview title/caption/helper import text.
+
 Next review/frontend step:
 
 ```text
-Verify Hugging Face sync and app screenshot showing the normal Scrub Legal interface starts again without the script execution error.
+Verify GitHub Actions, Hugging Face sync and app screenshot showing the normal Scrub Legal interface starts again without the script execution error.
 ```
 
 Do not restart static highlight preview UI work until it is redesigned without startup source mutation.
@@ -98,7 +107,7 @@ WP_REPLACE_LOGIC — completed with artifact limitation.
 WP_REPLACE_LOGIC_HELPER — implemented helper/tests-only.
 WP_REPLACE_LOGIC_UI_PLAN — completed planning/tests/documentation-only.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — completed tests/documentation-only.
-WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — implemented minimal Actions repair; awaiting verification.
+WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed after Actions/HF sync evidence.
 ```
 
 Next replace/review logic step:
@@ -112,7 +121,7 @@ Do not start replacement UI implementation until coordinator approves UI work.
 ## Active / next recommended execution queue
 
 ```text
-1. WP42D-ROLLBACK verification — Hugging Face sync and app screenshot showing the normal app starts again.
+1. WP42D-ROLLBACK-REPAIR verification — GitHub Actions, Hugging Face sync and app screenshot showing the normal app starts again.
 2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
 3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 4. Redesign highlight preview without startup source mutation before any new UI attempt.
