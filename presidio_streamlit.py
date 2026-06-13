@@ -59,6 +59,7 @@ from ui_texts_nl import (
     ADVANCED_SETTINGS_HELP,
 )
 from display_labels_nl import entity_label, source_label, confidence_label
+from serial_review_panel_ui import render_serial_review_panel
 
 try:
     from candidate_scanner import scan_unmasked_candidates
@@ -237,7 +238,6 @@ with st.sidebar.expander("Geavanceerde instellingen", expanded=False):
     ]
     if not allow_other_models:
         model_list.pop()
-
     st_model = st.selectbox(
         "Technisch NER-model",
         model_list,
@@ -683,6 +683,11 @@ try:
                 "source": st.column_config.TextColumn("Technische bron"),
             },
             key="replacement_editor",
+        )
+
+        render_serial_review_panel(
+            displayed_text=st_text,
+            edited_replacements_df=edited_replacements_df,
         )
 
         edited_replacements = {}
