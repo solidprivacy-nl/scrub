@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — Restore WP43/WP42D documentation contract phrase for regression tests`
 
-Status: completed narrow documentation-contract repair; awaiting GitHub Actions and Hugging Face sync evidence.
+Status: completed after Actions/sync verification; app verification not applicable.
 
 ## Summary
 
@@ -22,6 +22,13 @@ wp42d remains pending
 ```
 
 The later rollback/closeout wording in `FRONTEND_ARCHITECTURE_DECISION.md` had removed that exact phrase. The repair restores it under a `Historical WP43 contract` subsection while preserving the later rollback/parked status as a later explicit decision.
+
+Coordinator/user later provided green evidence for commit `a8182cd`:
+
+```text
+Tests #691 — green
+Sync to Hugging Face Space #703 — green
+```
 
 ## Files added
 
@@ -48,31 +55,26 @@ Static verification against repository content:
 - `FRONTEND_ARCHITECTURE_DECISION.md` now contains `WP43 does not validate or close WP42D.`
 - `FRONTEND_ARCHITECTURE_DECISION.md` now contains `WP42D remains pending until its own Actions/Hugging Face/app evidence or a later explicit rollback/closeout decision.`
 
-Expected GitHub Actions command:
+Coordinator/user CI evidence:
 
 ```text
-python -m pytest -q tests
-```
-
-Expected targeted local command:
-
-```text
-pytest tests/test_frontend_architecture_decision.py
+Tests #691 — green for commit a8182cd
+Sync to Hugging Face Space #703 — green for commit a8182cd
 ```
 
 ## Validation status
 
 - Static content repair completed.
-- No shell execution against the full repository checkout was available through the GitHub connector.
-- GitHub Actions must verify the full suite.
+- GitHub Actions verified green by coordinator/user evidence.
+- Hugging Face sync verified green by coordinator/user evidence.
 
 ## GitHub Actions status
 
-Unknown at handover time. A new run is expected after the final fix commits.
+Green for commit `a8182cd` based on coordinator/user evidence: `Tests #691`.
 
 ## Hugging Face sync status
 
-Unknown at handover time. This package changes documentation/admin files only and does not change app runtime/UI/dependencies.
+Green for commit `a8182cd` based on coordinator/user evidence: `Sync to Hugging Face Space #703`.
 
 ## App verification status
 
@@ -99,16 +101,16 @@ Not applicable. No Streamlit UI behavior changed.
 - Contract phrase restored: `359af141080ba225b88e2e69e8b78fedf87d5c0c`
 - Workpackages updated: `b6926226112c8b6951af092b602ea3fe9743b5d5`
 - Changelog updated: `4c18f3ad9488e1ba4de2f8180eed2c401cb1ce95`
+- Claim close before verification evidence: `a8182cd146deb9bb3200b333187c5a3b2cdec7d7`
 
 ## Remaining risks
 
-- GitHub Actions still need to confirm the full test suite is green.
-- Other parallel commits may still need their own Actions verification.
 - This repair preserves the test contract rather than changing test semantics.
+- Next UI work still requires explicit coordinator approval.
 
 ## Next recommended step
 
-Verify GitHub Actions and Hugging Face sync for the final commit. If green, resume the planned sequence only after coordinator approval:
+Resume the planned sequence only after coordinator approval:
 
 ```text
 WP_SERIAL_REVIEW_UI — non-destructive serial review panel in Streamlit.
