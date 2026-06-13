@@ -1,54 +1,43 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_SERIAL_REVIEW_UI — Small non-destructive serial review panel in Streamlit
+## WP_SERIAL_REVIEW_UI_VERIFY — Closeout/app verification for non-destructive serial review panel
 
-Status: implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed verification/documentation-only closeout.
 
 Files added:
 
-- `serial_review_panel_ui.py`
-- `tests/test_serial_review_ui_patch.py`
-- `workpackage_claims/WP_SERIAL_REVIEW_UI.md`
-- `handover/workpackages/20260613_1230_serial_review_ui.md`
+- `workpackage_claims/WP_SERIAL_REVIEW_UI_VERIFY.md`
+- `handover/workpackages/20260613_1245_serial_review_ui_verify.md`
 
 Files changed:
 
-- `presidio_streamlit.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `RISK_REGISTER.md`
-- `workpackage_claims/WP_SERIAL_REVIEW_UI.md`
+- `workpackage_claims/WP_SERIAL_REVIEW_UI_VERIFY.md`
 
 Summary:
 
-- Added a small helper-driven Streamlit renderer for a non-destructive serial review panel.
-- Integrated the panel into `presidio_streamlit.py` directly after the existing replacement table editor.
-- The panel uses `review_panel_view_model.py` and shows current item, context card/fallback, counts, warnings and navigation.
-- The panel keeps the existing table-first review table as source of truth and fallback.
-- Session state is limited to `serial_review_current_index`, `serial_review_current_occurrence_id` and `serial_review_filter_mode`.
-- Added static UI/contract guards in `tests/test_serial_review_ui_patch.py`.
+- Closed out `WP_SERIAL_REVIEW_UI` after coordinator evidence showed green Tests, green Hugging Face sync and the running app with the serial review panel visible.
+- The app evidence shows the normal Scrub Legal flow, the existing review table and `Serial review — experimentele reviewhulp`.
+- The panel remains table-first, non-destructive and report-only.
+- The panel does not mutate Scrub Key data, does not block export and does not change reinsert behavior.
+- One earlier red Tests run for the patch-test commit was followed by later green Tests and Sync runs.
 
 Validation status:
 
-- No shell/pytest execution was available through the ChatGPT GitHub connector for the checked-out repository.
-- Expected checks: `python -m py_compile presidio_streamlit.py`, `python -m py_compile review_panel_view_model.py`, `pytest tests/test_serial_review_ui_patch.py`, `pytest tests/test_review_panel_view_model.py tests/test_serial_review_helper.py tests/test_context_cards.py`, then full `pytest`.
-- This changes UI/runtime behavior, so Actions, Hugging Face sync and app verification are required before closeout.
+- Verification/documentation-only; no product code changed.
+- No tests changed.
+- GitHub connector status calls returned empty workflow/status lists for earlier commits, so the coordinator screenshot is the recorded verification source.
 
 Intentionally not changed:
 
-- No startup source mutation.
-- No use of `fix_streamlit_static_highlight_preview.py`.
-- No Dockerfile change.
-- No full-document marking.
-- No click-to-mark.
-- No advanced editor.
-- No inline editing.
-- No Word/PDF layout rendering.
-- No review table mutation.
-- No automatic replacement.
-- No Scrub Key writes or schema changes.
-- No export blocking.
+- No changes to `presidio_streamlit.py`.
+- No changes to `serial_review_panel_ui.py`.
+- No changes to `review_panel_view_model.py`.
+- No test changes.
+- No UI changes.
 - No export/download behavior change.
+- No Scrub Key behavior change.
 - No reinsert behavior change.
 - No dependency change.
 - No cloud processing.
@@ -56,12 +45,15 @@ Intentionally not changed:
 
 Next recommended step:
 
-- `WP_SERIAL_REVIEW_UI_VERIFY — closeout/app verification for the non-destructive serial review panel after green Actions and Hugging Face sync`.
+- `WP28C-CLOSEOUT`, if Scrub Key warning/reinsert evidence is complete.
+- Or `WP39B — DOCX hygiene audit UI planning`.
+- `WP_REPLACE_LOGIC_UI_IMPLEMENTATION` only after separate explicit coordinator approval.
 
 ## Recent previous entries
 
 Detailed recent history remains available in Git history and includes:
 
+- WP_SERIAL_REVIEW_UI — small non-destructive serial review panel in Streamlit.
 - WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — central status reconciliation for serial review UI contract tests.
 - WP_CONTEXT_CARD_STATUS_RECONCILE — central status reconciliation for the context-card helper.
 - WP_ACTIONS_FIX_FRONTEND_DECISION_CONTRACT — restored WP43/WP42D contract phrase.
