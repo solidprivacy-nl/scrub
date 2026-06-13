@@ -40,6 +40,7 @@ WP_REPLACE_LOGIC_HELPER — replacement decision helper and tests implemented.
 WP_REPLACE_LOGIC_UI_PLAN — UI plan for helper integration completed.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — UI contract tests for replacement decision integration completed.
 WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed; GitHub Actions and Hugging Face sync were green for commit b869688.
+WP_SERIAL_REVIEW_HELPER — implemented helper/tests-only serial review queue foundation; awaiting Actions/HF sync evidence.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 WP51B — MVP product quality gate recorded.
 ```
@@ -75,6 +76,7 @@ WP43 — Frontend architecture decision: completed.
 WP42D-ROLLBACK — disabled startup mutation patch and restored the working table-first interface.
 WP42D-ROLLBACK-REPAIR — cache-busted HF runtime image and added app-source guard against stale static preview block.
 WP42D-ROLLBACK-CLOSEOUT — recorded working table-first baseline and parked static-highlight startup mutation route.
+WP_SERIAL_REVIEW_HELPER — implemented helper/tests-only serial review queue foundation; no UI changes.
 ```
 
 WP42D rollback closeout summary:
@@ -88,13 +90,13 @@ WP42D rollback closeout summary:
 - Future document-first review, marking and editor improvements must be redesigned through helper/model first, contract tests first and only then small approved UI panels.
 - No product code, runtime code, UI behavior, export/download behavior, Scrub Key behavior, reinsert behavior, dependencies, cloud processing or real-data fixtures changed in the closeout.
 
-Next review/frontend step:
+Completed serial review helper step:
 
 ```text
 WP_SERIAL_REVIEW_HELPER — pure helper/tests for a serial review queue.
 ```
 
-After helper/tests are complete and coordinator approval is explicit, the next UI step may be:
+After helper/tests are green and coordinator approval is explicit, the next UI step may be:
 
 ```text
 WP_SERIAL_REVIEW_UI — small non-destructive serial review panel.
@@ -110,23 +112,24 @@ WP_REPLACE_LOGIC_HELPER — implemented helper/tests-only.
 WP_REPLACE_LOGIC_UI_PLAN — completed planning/tests/documentation-only.
 WP_REPLACE_LOGIC_UI_CONTRACT_TESTS — completed tests/documentation-only.
 WP_ACTIONS_FIX_REPLACE_LOGIC_TESTS — completed after Actions/HF sync evidence.
+WP_SERIAL_REVIEW_HELPER — implemented helper/tests-only serial queue for one-by-one review navigation and report-only audit summary.
 ```
 
 Next replace/review logic step:
 
 ```text
+WP_SERIAL_REVIEW_UI — only after serial helper tests are green and coordinator explicitly approves UI work.
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after coordinator explicitly approves UI work and after relevant contract tests are green.
 ```
 
-Do not start replacement UI implementation until coordinator approves UI work.
+Do not start replacement UI implementation or serial review UI implementation until coordinator approves UI work.
 
 ## Active / next recommended execution queue
 
 ```text
-1. WP_SERIAL_REVIEW_HELPER — pure helper/tests for serial review queue.
-2. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after helper/tests and explicit approval.
-3. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
-4. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+1. WP_SERIAL_REVIEW_UI — small non-destructive serial review panel, only after helper/tests are green and coordinator approval is explicit.
+2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
+3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
 ```
 
 ## Blocked work
