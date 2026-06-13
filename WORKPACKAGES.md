@@ -32,12 +32,13 @@ WP28C — implemented; partial app evidence recorded for Scrub Key/reinsert warn
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
-WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line; no UI implementation.
+WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
 WP_REVIEW_PANEL_VIEW_MODEL_HELPER — completed helper/tests-only; combines serial queue and context-card data before UI.
 WP_REPLACE_LOGIC_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
 WP_SERIAL_REVIEW_HELPER — completed helper/tests-only.
 WP_SERIAL_REVIEW_UI_CONTRACT_TESTS — completed; coordinator screenshot showed Tests #715 green and Sync #727 green.
-WP_SERIAL_REVIEW_UI — implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
+WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
+WP_SERIAL_REVIEW_UI_VERIFY — completed verification/documentation-only closeout.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
 
@@ -64,17 +65,29 @@ The failed static-highlight startup mutation route remains parked. Do not restar
 - advanced editor;
 - Word/PDF layout rendering.
 
-## WP_SERIAL_REVIEW_UI implementation note
+## WP_SERIAL_REVIEW_UI closeout
 
 Coordinator approval: explicit.
 
-Implemented:
+Implementation verified:
 
 - `serial_review_panel_ui.py` renders a small helper-driven Streamlit panel.
 - `presidio_streamlit.py` calls `render_serial_review_panel(...)` after the existing replacement table editor.
-- `tests/test_serial_review_ui_patch.py` adds static guards for UI text, navigation, safety boundaries and no static-highlight startup mutation.
+- `tests/test_serial_review_ui_patch.py` guards UI text, navigation, safety boundaries and no static-highlight startup mutation.
 
-The panel is intentionally:
+Coordinator screenshot evidence confirms:
+
+- latest relevant Tests workflow is green;
+- latest relevant Sync to Hugging Face Space workflow is green;
+- an earlier red `Add serial review UI patch tests` Tests run was followed by later green Tests/Sync runs;
+- app starts without Script execution error;
+- normal Scrub Legal interface remains visible;
+- existing review table remains visible;
+- `Serial review — experimentele reviewhulp` panel is visible;
+- no static highlight preview error is visible;
+- no full-document marking/editor is visible.
+
+The panel remains intentionally:
 
 - table-first baseline;
 - non-destructive;
@@ -102,33 +115,12 @@ Not changed:
 - no cloud processing;
 - no real data.
 
-## Verification required
-
-Because WP_SERIAL_REVIEW_UI changes UI/runtime behavior, it is not fully closed out yet.
-
-Required next evidence:
-
-```text
-1. GitHub Actions green.
-2. Sync to Hugging Face Space green.
-3. Coordinator app verification screenshot.
-```
-
-App verification should confirm:
-
-- app starts without Script execution error;
-- normal table-first Scrub interface remains visible;
-- serial review panel is visible;
-- existing review table remains present;
-- no static highlight preview startup error;
-- no full-document marking/editor.
-
 ## Active / next recommended execution queue
 
 ```text
-1. WP_SERIAL_REVIEW_UI_VERIFY — closeout/app verification after Actions and Hugging Face sync are green.
-2. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
-3. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+1. WP28C-CLOSEOUT — only after full Actions/HF/app verification evidence is available.
+2. WP39B — DOCX hygiene audit UI planning, if coordinator wants to continue DOCX hygiene first.
+3. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
@@ -139,6 +131,9 @@ Do not start yet without separate approval:
 WP36 — DOCX metadata cleaner helper
 WP52 — Pilot intake and NDA process
 WP_REPLACE_LOGIC_UI_IMPLEMENTATION — replacement decision UI implementation
+click-to-mark
+advanced editor
+full-document marking
 ```
 
 Also blocked until separate approval or later specs:
@@ -158,7 +153,6 @@ Also blocked until separate approval or later specs:
 - Broad document-centric Streamlit UI rewrite.
 - Separate frontend migration.
 - Professional document editor implementation.
-- Click-to-mark sensitive text implementation.
 - Authoritative highlight-based review mutation.
 - Static highlight preview startup source mutation.
 - Startup source mutation of `presidio_streamlit.py` for preview/marking/editor work.
