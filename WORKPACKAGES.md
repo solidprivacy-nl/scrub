@@ -33,7 +33,9 @@ WP28C-CLOSEOUT — completed verification/documentation-only closeout.
 WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
 WP39B — completed planning/documentation-only for DOCX hygiene audit UI; no UI implementation.
 WP39C — completed tests/documentation-only for DOCX hygiene audit UI plan contracts.
-WP39D — implemented with explicit coordinator approval; WP39D-ACTIONS-FIX completed wording-only repair; awaiting green Actions, Hugging Face sync and app verification.
+WP39D — completed after Actions/HF/app verification; DOCX hygiene audit UI is report-only and app-verified.
+WP39D-ACTIONS-FIX — completed wording-only repair.
+WP39D-VERIFY — completed verification/documentation-only closeout.
 WP40-WP43 — review UX/frontend line completed through frontend architecture decision.
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
 WP_CONTEXT_CARD_HELPER / UI_PLAN / UI_CONTRACT_TESTS — completed helper/planning/tests line.
@@ -51,31 +53,6 @@ WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 
 ```text
 Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
-```
-
-## Scrub Key / reinsert warning closeout
-
-WP28C is now closed out.
-
-Coordinator evidence confirms:
-
-- recent relevant GitHub Actions Tests are green;
-- recent relevant Sync to Hugging Face Space runs are green;
-- the running app starts without Script execution error;
-- mode `Originele waarden terugzetten` is visible;
-- Scrub Key loading section is visible;
-- Scrub Key warning text is visible;
-- Scrub Key acknowledgement checkbox is visible;
-- Original-values reinsert section is visible;
-- pasted-text, TXT, DOCX and PDF-to-TXT reinsert warning/acknowledgement surfaces are visible;
-- DOCX success/download flow is visible after acknowledgement;
-- reinsert statistics/audit output is visible;
-- no export/download, Scrub Key schema, reinsert semantic, dependency, cloud-processing or real-data change was made in closeout.
-
-Important boundary:
-
-```text
-UI acknowledgements are safety prompts only. They are not encryption, protected storage, automatic deletion, expiry enforcement, key recovery or a managed vault.
 ```
 
 ## DOCX hygiene status
@@ -99,12 +76,18 @@ docx_hygiene_audit_panel_ui.py
 tests/test_docx_hygiene_audit_ui_patch.py
 ```
 
-WP39D-ACTIONS-FIX repaired two wording-only contract failures:
+WP39D-ACTIONS-FIX repaired the wording-only contract failures. Coordinator screenshot evidence then confirmed:
 
-```text
-remove metadata
-no real data
-```
+- latest relevant GitHub Actions Tests are green;
+- latest relevant Sync to Hugging Face Space is green;
+- app starts without Script execution error;
+- normal Scrub Legal interface remains visible;
+- existing export/download section remains visible;
+- DOCX hygiene audit UI is visible;
+- the panel says it is report-only;
+- no clean-DOCX claim is shown;
+- export is not blocked;
+- no static-highlight startup error is visible.
 
 The DOCX hygiene audit UI is a small report-only panel shown near the existing DOCX download button. It uses `docx_hygiene_audit.py` and preserves these boundaries:
 
@@ -118,26 +101,15 @@ The DOCX hygiene audit UI is a small report-only panel shown near the existing D
 - no cloud processing;
 - no real data.
 
-Because WP39D changes UI/runtime behavior, it is not fully closed out yet.
+## Scrub Key / reinsert warning closeout
 
-Required next evidence:
+WP28C is closed out.
+
+Important boundary:
 
 ```text
-1. GitHub Actions green.
-2. Sync to Hugging Face Space green.
-3. Coordinator app verification screenshot.
+UI acknowledgements are safety prompts only. They are not encryption, protected storage, automatic deletion, expiry enforcement, key recovery or a managed vault.
 ```
-
-App verification should confirm:
-
-- app starts without Script execution error;
-- normal Scrub Legal interface remains visible;
-- existing export/download section remains visible;
-- DOCX hygiene audit UI is visible;
-- text makes clear it is report-only;
-- no clean-DOCX claim;
-- no export blocking;
-- no static-highlight startup error.
 
 ## Review UX / frontend status
 
@@ -174,9 +146,8 @@ WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — add contract tests for staged-vs-applie
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP39D-ACTIONS-FIX.
-2. WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after Actions and Hugging Face sync are green.
-3. WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — if coordinator wants stronger contract coverage before replacement UI.
+1. WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — if coordinator wants stronger contract coverage before replacement UI.
+2. WP_REPLACE_LOGIC_UI_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
