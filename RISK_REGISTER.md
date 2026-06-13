@@ -133,18 +133,19 @@ Current mitigations:
 - WP39 created `CLEAN_DOCX_EXPORT_POLICY.md`, defining that current DOCX output must not be claimed as clean DOCX export and that export blocking/clean claims require separate approved implementation.
 - WP39B created `DOCX_HYGIENE_AUDIT_UI_PLAN.md`, planning how the existing report-only hygiene audit can later be surfaced without changing export behavior.
 - WP39C added `tests/test_docx_hygiene_audit_ui_plan.py`, contract-testing that the planned UI remains report-only, does not claim clean DOCX, does not block export, does not clean/remove DOCX content, and does not change Scrub Key or reinsert behavior.
+- WP39D implemented a small report-only DOCX hygiene audit UI panel near DOCX export, using the existing helper without export blocking, clean-DOCX claims, DOCX cleaning/removal, Scrub Key changes or reinsert behavior changes.
 
 Gaps:
 
 - Word comments / kantlijncommentaren are still not scrubbed or removed by the current DOCX scrub/reinsert flow.
-- Product UI still does not consume the hygiene audit report; WP39B/WP39C are planning/tests only.
+- Product UI now reports supported DOCX hygiene risk, but it does not clean or remove hidden content.
 - No clean DOCX export implementation exists.
 - No approved export-blocking implementation exists for high-risk hidden content.
-- The policy exists, but enforcement/UI/report integration remains future work.
+- Unsupported DOCX parts remain future work.
 
 Recommended workpackages:
 
-- Later approved package — small report-only DOCX hygiene audit UI implementation.
+- WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after Actions and Hugging Face sync are green.
 - Later gated package — DOCX metadata cleaner helper after explicit metadata-only boundary approval.
 
 ---
