@@ -1,54 +1,64 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP28C-CLOSEOUT — Scrub Key warning/reinsert evidence closeout
+## WP39B — DOCX hygiene audit UI planning
 
-Status: completed verification/documentation-only closeout.
+Status: completed planning/documentation-only.
 
 Files added:
 
-- `workpackage_claims/WP28C_CLOSEOUT.md`
-- `handover/workpackages/20260613_1305_wp28c_closeout.md`
-- `handover/workpackages/20260613_1315_wp28c_closeout.md`
+- `DOCX_HYGIENE_AUDIT_UI_PLAN.md`
+- `workpackage_claims/WP39B_docx_hygiene_audit_ui_planning.md`
+- `handover/workpackages/20260613_1330_docx_hygiene_audit_ui_planning.md`
 
 Files changed:
 
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `workpackage_claims/WP28C_CLOSEOUT.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP39B_docx_hygiene_audit_ui_planning.md`
 
 Summary:
 
-- Closed out WP28C after coordinator screenshots showed green Tests, green Hugging Face sync and the running app in `Originele waarden terugzetten` mode.
-- The app evidence shows Scrub Key loading, warning text, acknowledgement checkbox and original-values reinsert sections.
-- Pasted-text, TXT, DOCX and PDF-to-TXT reinsert warning/acknowledgement surfaces are visible.
-- DOCX restored-output success/download evidence and reinsert statistics/audit output are visible.
-- UI acknowledgements remain safety prompts only; no encryption, protected storage, automatic deletion, expiry enforcement, key recovery or managed vault was added.
+- Planned a small future UI surface for the existing report-only DOCX hygiene audit helper.
+- The plan uses `docx_hygiene_audit.py` and `render_docx_hygiene_audit_markdown(...)` as the future helper surface.
+- The plan defines placement near DOCX upload/export and restored DOCX reinsert/download controls.
+- The plan defines severity behavior for low, medium and high findings.
+- The plan preserves the WP39 policy that current DOCX output must not be called clean DOCX.
+- The plan recommends `WP39C — DOCX hygiene audit UI contract tests` before implementation.
 
 Validation status:
 
-- Verification/documentation-only; no product code changed.
-- No tests changed.
-- Coordinator screenshots are recorded as the verification source for Actions, Hugging Face sync and app behavior.
+- Planning/documentation-only; no app rebuild was run.
+- No shell/pytest execution was available through the ChatGPT GitHub connector.
+- Existing WP37/WP38/WP39 documents and helper/test files were read and used as source material.
 
 Intentionally not changed:
 
-- No UI changes in this closeout.
+- No product code changes.
+- No Streamlit UI implementation.
+- No changes to `presidio_streamlit.py`.
+- No changes to `fix_streamlit_nested_expanders.py`.
+- No changes to `docx_hygiene_audit.py`.
+- No tests changed.
 - No export/download behavior change.
-- No Scrub Key schema or behavior change.
-- No reinsert semantic change.
+- No export blocking.
+- No DOCX cleaning/removal.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
 - No dependency change.
 - No cloud processing.
 - No real-data fixtures.
 
 Next recommended step:
 
-- `WP39B — DOCX hygiene audit UI planning`, if coordinator wants to continue DOCX hygiene.
-- `WP_REPLACE_LOGIC_UI_IMPLEMENTATION` only after separate explicit coordinator approval.
+- `WP39C — DOCX hygiene audit UI contract tests`.
+- `WP39D — DOCX hygiene audit UI implementation` only after contract tests and explicit coordinator approval.
 
 ## Recent previous entries
 
 Detailed recent history remains available in Git history and includes:
 
+- WP28C-CLOSEOUT — Scrub Key warning/reinsert evidence closeout.
 - WP_SERIAL_REVIEW_UI_VERIFY — closeout/app verification for non-destructive serial review panel.
 - WP_SERIAL_REVIEW_UI — small non-destructive serial review panel in Streamlit.
 - WP_SERIAL_REVIEW_UI_CONTRACT_STATUS_RECONCILE — central status reconciliation for serial review UI contract tests.
