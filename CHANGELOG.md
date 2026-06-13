@@ -1,57 +1,67 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP39C — DOCX hygiene audit UI contract tests
+## WP39D — DOCX hygiene audit UI implementation
 
-Status: completed tests/documentation-only.
+Status: implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Files added:
 
-- `tests/test_docx_hygiene_audit_ui_plan.py`
-- `workpackage_claims/WP39C_docx_hygiene_audit_ui_contract_tests.md`
-- `handover/workpackages/20260613_1345_docx_hygiene_audit_ui_contract_tests.md`
+- `docx_hygiene_audit_panel_ui.py`
+- `tests/test_docx_hygiene_audit_ui_patch.py`
+- `workpackage_claims/WP39D_docx_hygiene_audit_ui_implementation.md`
+- `handover/workpackages/20260613_1405_docx_hygiene_audit_ui_implementation.md`
 
 Files changed:
 
+- `presidio_streamlit.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP39C_docx_hygiene_audit_ui_contract_tests.md`
+- `workpackage_claims/WP39D_docx_hygiene_audit_ui_implementation.md`
 
 Summary:
 
-- Added text-contract tests for `DOCX_HYGIENE_AUDIT_UI_PLAN.md`.
-- Tests guard report-only boundaries, no clean-DOCX claim, no export blocking, no DOCX cleaning/removal, no Scrub Key or reinsert behavior changes, no cloud/AI/persistence/real-data usage, expected visible labels, severity behavior and the future implementation approval gate.
-- No Streamlit UI was implemented.
-- No product code or export/download behavior changed.
+- Added `docx_hygiene_audit_panel_ui.py`, a small report-only Streamlit renderer for the existing `docx_hygiene_audit.py` helper.
+- Integrated the panel into `presidio_streamlit.py` near the existing DOCX download button.
+- The panel shows DOCX hygiene severity, finding count, affected areas, warnings and manual review guidance.
+- The panel explicitly says: DOCX hygiene audit, Alleen rapportage, Geen clean-DOCX garantie, Export wordt niet geblokkeerd, Controleer metadata/opmerkingen/revisies/verborgen inhoud, and Bestaande export blijft ongewijzigd.
+- Added `tests/test_docx_hygiene_audit_ui_patch.py` with static guards for UI text, helper use and non-mutating boundaries.
 
-Tests/checks:
+Validation status:
 
 - No shell/pytest execution was available through the ChatGPT GitHub connector.
-- Expected checks: `pytest tests/test_docx_hygiene_audit_ui_plan.py`, `pytest tests/test_docx_hygiene_audit.py tests/test_docx_hygiene_audit_ui_plan.py`, then full `pytest`.
+- Expected checks: `python -m py_compile presidio_streamlit.py`, `python -m py_compile docx_hygiene_audit_panel_ui.py`, `pytest tests/test_docx_hygiene_audit_ui_patch.py`, `pytest tests/test_docx_hygiene_audit.py tests/test_docx_hygiene_audit_ui_plan.py tests/test_docx_hygiene_audit_ui_patch.py`, then full `pytest`.
+- This changes UI/runtime behavior, so Actions, Hugging Face sync and coordinator app verification are required before closeout.
 
 Intentionally not changed:
 
-- No changes to `presidio_streamlit.py`.
-- No changes to `fix_streamlit_nested_expanders.py`.
-- No changes to `docx_hygiene_audit.py`.
-- No export/download flow changes.
-- No Streamlit UI implementation.
+- No DOCX cleaner implementation.
+- No comments removal.
+- No tracked changes removal.
+- No metadata removal.
+- No clean-DOCX claim.
 - No export blocking.
-- No DOCX cleaning/removal.
+- No export/download behavior change.
 - No Scrub Key behavior change.
 - No reinsert behavior change.
 - No dependency change.
 - No cloud processing.
 - No real-data fixtures.
+- No startup source mutation.
+- No full-document marking.
+- No click-to-mark.
+- No advanced editor.
+- No broad UI rewrite.
 
 Next recommended step:
 
-- `WP39D — DOCX hygiene audit UI implementation`, only after explicit coordinator approval.
+- `WP39D-VERIFY — closeout/app verification for DOCX hygiene audit UI after green Actions and Hugging Face sync`.
 
 ## Recent previous entries
 
 Detailed recent history remains available in Git history and includes:
 
+- WP39C — DOCX hygiene audit UI contract tests.
 - WP39B — DOCX hygiene audit UI planning.
 - WP28C-CLOSEOUT — Scrub Key warning/reinsert evidence closeout.
 - WP_SERIAL_REVIEW_UI_VERIFY — closeout/app verification for non-destructive serial review panel.
