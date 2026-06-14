@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — Simple masked-text highlight toggle implementation`
 
-Status: completed after Tests/app verification; Hugging Face final sync retry required.
+Status: completed after Actions/HF/app verification.
 
 ## Summary
 
@@ -78,7 +78,9 @@ No shell/pytest execution was available through the GitHub connector.
 Coordinator screenshot evidence:
 
 ```text
-Tests #878 — green for commit 60750c0
+Tests #878 — green for implementation commit 60750c0
+Tests #879 — green for verification-status commit 94b6c1d
+Tests #880 — green for partial-verification handover commit 83556af
 ```
 
 Expected targeted checks:
@@ -97,7 +99,9 @@ python -m pytest -q tests
 
 - Contract tests were green before implementation by coordinator screenshot evidence: `Tests #865`, `Sync #877`, commit `07b7581`.
 - Implementation completed after explicit coordinator approval.
-- GitHub Actions tests are green by coordinator screenshot evidence: `Tests #878`, commit `60750c0`.
+- GitHub Actions tests are green by coordinator screenshot evidence: latest shown `Tests #880`, commit `83556af`.
+- Hugging Face sync is green by coordinator screenshot evidence: latest shown `Sync #892`, commit `83556af`.
+- Earlier `Sync #890` failed with external `429`, but it is superseded by later green sync evidence.
 - App verification is positive by coordinator screenshot: app starts, review table remains visible, serial review remains visible, `Voorbeeldtekst met optionele markeringen` is visible, `Markeringen tonen in voorbeeldtekst` is visible, and subtle highlight markers are shown.
 - No startup mutation was introduced.
 - No export/download behavior was changed.
@@ -108,22 +112,20 @@ python -m pytest -q tests
 
 ## GitHub Actions status
 
-Green by coordinator screenshot evidence: `Tests #878` for commit `60750c0`.
+Green by coordinator screenshot evidence: latest shown `Tests #880` for commit `83556af`.
 
 ## Hugging Face sync status
 
-Final sync not green yet.
+Green by coordinator screenshot evidence: latest shown `Sync to Hugging Face Space #892` for commit `83556af`.
 
-Coordinator screenshot evidence:
+Earlier failed run:
 
 ```text
 Sync to Hugging Face Space #890 — failed for commit 60750c0
 fatal: unable to access 'https://huggingface.co/spaces/solidprivacy/scrub/': The requested URL returned error: 429
 ```
 
-This appears to be an external/rate-limit sync failure, not a code or test failure.
-
-The provided app screenshot shows the feature visible in the Hugging Face Space, so implementation code appears deployed, but the final workflow evidence remains red and should be retried.
+This earlier external/rate-limit sync failure is superseded by later green sync evidence.
 
 ## App verification status
 
@@ -144,22 +146,11 @@ Confirmed visually:
 
 ## Remaining risks
 
-- Final Hugging Face sync evidence is red due `429`; retry is required before marking fully completed after Actions/HF/app verification.
 - Because the feature uses `st.markdown(..., unsafe_allow_html=True)` for marker rendering, safety depends on the helper escaping raw document text first. Tests cover the escaping contract.
-- App screenshot is positive, but final administrative sync run is still red.
+- Broader document marking, click-to-mark and advanced editor behavior remain blocked unless separately approved.
 
 ## Next recommended step
 
-Rerun or wait/retry:
-
-```text
-Sync to Hugging Face Space #890
-```
-
-Expected final status after a successful retry:
-
-```text
-WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — completed after Actions/HF/app verification
-```
+No further closeout action is required for this package.
 
 Do not start broader document marking, click-to-mark, advanced editor or replacement UI redesign without separate coordinator approval.
