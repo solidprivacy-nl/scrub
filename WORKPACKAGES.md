@@ -46,6 +46,7 @@ WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — completed after Actions/HF/app verific
 WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — completed after Actions/HF/app verification; equal-height side-by-side panes with local processed-pane scrolling are live.
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY — completed documentation-only feasibility review; recommendation is not to implement synchronized scroll in the current Streamlit MVP.
 WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — completed closeout/app verification for implementation, height fix and explicit no-sync-scroll decision.
+WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — implemented isolated prototype-only concept; not connected to normal Scrub Legal flow; awaiting Actions verification.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -64,61 +65,37 @@ The working baseline remains:
 table-first review table = source of truth and fallback
 ```
 
-The side-by-side review target is now implemented and app-verified as a first bounded Streamlit surface:
+The normal app keeps the verified MVP baseline:
 
 ```text
 brontekst links | verwerkte/gecontroleerde tekst rechts
-                | optionele markeringen geïntegreerd in de verwerkte tekst
+equal-height independent panes
+no synchronized scrolling in normal Scrub Legal flow
 ```
 
-Verified evidence:
+An isolated prototype now exists for visual evaluation:
 
 ```text
-Tests green and Sync to Hugging Face Space green for:
-- WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX
-- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY
-
-Coordinator app screenshot confirms:
-- Scrub Legal starts without Script execution error;
-- review table is visible;
-- `Controleer de tekst` side-by-side surface is visible;
-- brontekst appears on the left;
-- verwerkte tekst appears on the right;
-- left and right panes are visually equal height;
-- processed/highlighted pane scrolls locally;
-- `Markeringen tonen in verwerkte tekst` is visible and works;
-- serial review remains visible;
-- export/download remains visible;
-- no replacement decision helper panel is visible;
-- no static-highlight startup error is visible.
+prototypes/side_by_side_sync_scroll_prototype.html
 ```
 
-Synchronized scrolling is explicitly not implemented:
+Prototype status:
 
-```text
-Keep equal-height independent panes as the MVP baseline.
-Do not implement synchronized scrolling in the current Streamlit MVP flow.
-```
-
-Reason:
-
-```text
-Source and processed text are not guaranteed to align line-by-line or by scroll percentage after masking/replacement, so naive synchronized scrolling can create false visual alignment.
-```
-
-This remains not approved:
-
-```text
-synchronized scroll implementation
-custom Streamlit component rendering
-JavaScript injection
-```
+- synthetic-only content;
+- source pane left and processed pane right;
+- highlighted placeholders in the processed pane;
+- `Synchroon scrollen` checkbox;
+- bidirectional percentage-based scroll sync;
+- sync-off fallback;
+- no connection to production Streamlit UI;
+- no review table, replacement, Scrub Key, export/download or reinsert changes.
 
 ## Active / next recommended execution queue
 
 ```text
-1. Continue MVP workflow simplification and replacement-review redesign only through separately approved packages.
-2. If synchronized scroll is still desired later: WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_CONTRACT_TESTS before any spike.
+1. Verify GitHub Actions for WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE.
+2. Coordinator can inspect the isolated HTML prototype.
+3. If useful, create contract tests/spec before any app implementation spike.
 ```
 
 ## Blocked work
@@ -126,9 +103,8 @@ JavaScript injection
 Do not start yet without separate approval:
 
 ```text
-synchronized scroll implementation
+production synchronized scroll implementation
 custom Streamlit component rendering implementation
-JavaScript injection for scroll sync
 new replacement UI implementation
 mutating replacement decision implementation
 automatic replacement
