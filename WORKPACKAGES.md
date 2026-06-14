@@ -39,8 +39,8 @@ WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — completed isolated prototype-on
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — implemented with explicit coordinator approval; awaiting Actions, Hugging Face sync and app verification.
 WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — implemented; old upper direct preview removed, one central side-by-side review added above review table, Dutch synthetic legal demo text added; awaiting Actions, Hugging Face sync and app verification.
 WP_REVIEW_SURFACE_CONTROL_CLEANUP — implemented; markers default on, marker label shortened, sync scroll remains active but visible sync checkbox removed; awaiting Actions, Hugging Face sync and app verification.
-WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed tests/documentation-only; stale assertions repaired after marker/sync-control cleanup; awaiting Actions verification.
-WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed tests/documentation-only; awaiting Actions/HF verification.
+WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed after Actions/HF verification; stale assertions repaired after marker/sync-control cleanup.
+WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verification; implementation may start after coordinator approval.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -63,7 +63,7 @@ The normal app now targets:
 ```text
 1. Voeg document of tekst toe
 2. Controleer de tekst: one central side-by-side review surface
-3. Controleer gevonden gegevens: review table remains source of truth, may become collapsible after tests/approval
+3. Controleer gevonden gegevens: review table remains source of truth, may become collapsible after implementation approval
 4. Serial review / extra review aids
 5. Download opgeschoonde bestanden
 ```
@@ -82,6 +82,7 @@ Review table collapsible contract:
 - `REVIEW_TABLE_COLLAPSIBLE_CONTRACT.md` records the future collapsible-section rules.
 - `tests/test_review_table_collapsible_contract.py` locks that `Controleer gevonden gegevens` may support an item count but the table remains source of truth/fallback.
 - Future implementation must preserve `replacement_editor`, `include`, `remember`, `find`, `replace_with`, export/download labels and no Scrub Key/reinsert/replacement behavior changes.
+- Verification evidence: `Tests #1041` green and `Sync to Hugging Face Space #1053` green by coordinator screenshot evidence; earlier red `Tests #1031` was a stale review-surface assertion and is superseded.
 
 Boundaries preserved:
 
@@ -96,11 +97,10 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR.
-2. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS.
+1. Ask coordinator approval for WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION.
+2. If approved, implement the collapsible review table section only when no other presidio_streamlit.py review-flow work is active.
 3. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP.
 4. Ask coordinator for app verification screenshot where UI behavior changed.
-5. After green contract tests, consider WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION only if no other presidio_streamlit.py review-flow work is active.
 ```
 
 ## Blocked work
