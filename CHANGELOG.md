@@ -1,22 +1,64 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — Production integration of synchronized side-by-side scrolling
+## WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — Consolidate preview surfaces and Dutch legal sample
 
-Status: implemented with explicit coordinator approval after isolated prototype review; awaiting Actions, Hugging Face sync and app verification.
+Status: implemented; awaiting Actions, Hugging Face sync and app verification.
 
 Files changed:
 
-- `side_by_side_review_panel_ui.py`
-- `tests/test_side_by_side_review_ui_patch.py`
-- `tests/test_side_by_side_sync_scroll_prototype.py`
+- `demo_text.txt`
+- `serial_review_panel_ui.py`
+- `presidio_streamlit.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `RELEASE_NOTES.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE.md`
 
 Files added:
 
-- `handover/workpackages/20260615_0040_side_by_side_review_sync_scroll_implementation.md`
+- `tests/test_side_by_side_review_consolidation_dutch_sample.py`
+- `handover/workpackages/20260615_0130_side_by_side_review_consolidation_dutch_sample.md`
+
+Summary:
+
+- Replaced the English demo/fallback text with a longer Dutch synthetic legal sample.
+- Added `include_side_by_side` to `render_serial_review_panel` so the lower duplicate side-by-side review can be suppressed.
+- Removed the old upper `Invoer` / `Directe voorbeeldweergave` two-column preview from `presidio_streamlit.py`.
+- Added one central side-by-side review surface above the review table.
+- Kept synchronized scrolling and optional visual markers through the existing side-by-side renderer.
+- Changed the serial review call to `include_side_by_side=False` after central rendering.
+- Removed the extra controlled-preview expander based on the review table to avoid a third preview surface.
+- Preserved review table, export/download, Scrub Key and reinsert behavior boundaries.
+
+Validation status:
+
+- No shell/pytest execution was available through the ChatGPT GitHub connector.
+- Expected targeted checks: `pytest tests/test_side_by_side_review_consolidation_dutch_sample.py`; `pytest tests/test_review_highlight_toggle.py tests/test_review_highlight_toggle_ui_patch.py`.
+- Expected full check: `python -m pytest -q tests`.
+- UI behavior changed, so Actions, Hugging Face sync and coordinator app verification are required.
+
+Intentionally not changed:
+
+- No new full-document editor.
+- No click-to-mark.
+- No advanced editor.
+- No startup source mutation.
+- No static-highlight startup patch.
+- No export/download behavior change.
+- No export blocking.
+- No Scrub Key writes or schema changes.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real data.
+
+Next recommended step:
+
+- Verify GitHub Actions and Hugging Face sync.
+- Then ask coordinator to verify the app: one central side-by-side review near the top, no duplicate preview blocks, Dutch synthetic legal sample, review table and export still visible.
+
+## WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — Production integration of synchronized side-by-side scrolling
+
+Status: implemented with explicit coordinator approval after isolated prototype review; awaiting Actions, Hugging Face sync and app verification.
 
 Summary:
 
@@ -28,30 +70,6 @@ Summary:
 - Uses percentage-based bidirectional scroll sync from the approved prototype.
 - Escapes source and processed document text before HTML rendering.
 - Does not import the prototype HTML file into production.
-
-Validation status:
-
-- No shell/pytest execution was available through the ChatGPT GitHub connector.
-- Expected checks: `python -m py_compile side_by_side_review_panel_ui.py`; `pytest tests/test_side_by_side_review_ui_patch.py`; `pytest tests/test_side_by_side_sync_scroll_prototype.py`; full `pytest`.
-- UI behavior changed, so Actions, Hugging Face sync and coordinator app verification are required.
-
-Intentionally not changed:
-
-- No `presidio_streamlit.py` change.
-- No `serial_review_panel_ui.py` change.
-- No review table behavior change.
-- No replacement behavior change.
-- No Scrub Key behavior change.
-- No export/download behavior change.
-- No reinsert behavior change.
-- No dependency change.
-- No cloud processing.
-- No real data.
-
-Next recommended step:
-
-- Verify GitHub Actions and Hugging Face sync.
-- Then app verification screenshot confirming synchronized scrolling works in the normal Scrub Legal side-by-side review.
 
 ## WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — Isolated working concept for synchronized side-by-side scrolling
 
@@ -67,19 +85,11 @@ Summary:
 - Prototype supports bidirectional percentage-based scroll sync.
 - Prototype supports sync-off fallback to independent scrolling.
 
-## WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — Closeout/app verification for side-by-side review implementation
-
-Status: completed verification/documentation-only closeout.
-
-Summary:
-
-- Closed out the first bounded side-by-side review implementation after coordinator evidence.
-- Confirmed app screenshot evidence: side-by-side review visible, highlights visible, equal pane height visible, local processed-pane scrolling visible.
-
 ## Recent previous entries
 
 Detailed recent history remains available in Git history and includes:
 
+- WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — closeout/app verification for side-by-side review implementation.
 - WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY — feasibility review for synchronized side-by-side scrolling.
 - WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — equal-height side-by-side review panes.
 - WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — bounded Streamlit side-by-side review surface.
