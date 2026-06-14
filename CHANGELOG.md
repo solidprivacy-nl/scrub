@@ -1,5 +1,61 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — Repair side-by-side review contract wording failure
+
+Status: completed documentation-only Actions repair; no UI or product code changed.
+
+Files added:
+
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX.md`
+- `handover/workpackages/20260614_2235_side_by_side_review_contract_tests_actions_fix.md`
+
+Files changed:
+
+- `SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX.md`
+
+Summary:
+
+- Added the exact compact contract/safety wording expected by `tests/test_side_by_side_review_contract.py`.
+- Added `only visual aid` to the highlight toggle safety note.
+- Added `Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior.` to the same safety note.
+- No new UX direction was introduced.
+
+Validation status:
+
+- No shell/pytest execution was available through the ChatGPT GitHub connector.
+- Expected check: `pytest tests/test_side_by_side_review_contract.py`.
+- Optional combined check: `pytest tests/test_side_by_side_review_contract.py tests/test_replace_logic_ui_redesign_plan.py`.
+- No app rebuild or app verification required because this was documentation-only.
+
+Intentionally not changed:
+
+- No Streamlit UI implementation.
+- No product code.
+- No tests.
+- No `presidio_streamlit.py`.
+- No `serial_review_panel_ui.py`.
+- No `review_highlight_toggle_panel_ui.py`.
+- No review table behavior.
+- No replacement behavior.
+- No Scrub Key behavior.
+- No export/download behavior.
+- No reinsert behavior.
+- No synchronized scroll implementation.
+- No custom HTML/component implementation.
+- No click-to-mark.
+- No advanced editor.
+- No full-document marking.
+- No dependency change.
+- No cloud processing.
+- No real data.
+
+Next recommended step:
+
+- After green Actions: `WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER`.
+
 ## WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — Contract tests for unified side-by-side review UX
 
 Status: completed tests/documentation-only; no UI or product code changed.
