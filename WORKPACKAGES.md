@@ -41,6 +41,7 @@ WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — completed after Actions/HF/app v
 WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — completed planning/design/documentation-only; old helper panel must not return as normal user-facing panel.
 WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed tests/documentation-only; intuitive replacement review redesign is contract-locked.
 WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — completed roadmap/specification/documentation-only; unified side-by-side review UX direction is now anchored.
+WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed planning/design/documentation-only; detailed side-by-side source/processed review plan is now available.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -66,13 +67,26 @@ brontekst links | verwerkte/gecontroleerde tekst rechts
                 | optionele markeringen geïntegreerd in de verwerkte tekst
 ```
 
-This is now anchored in:
+This is now anchored and planned in:
 
 ```text
 DECISION_LOG.md — D021
 SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md
+SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md
 ROADMAP.md
 ```
+
+The detailed side-by-side redesign plan states:
+
+- one main review surface before more helper panels;
+- source/brontekst on the left;
+- processed/checked text on the right;
+- optional highlights integrated into the right processed pane;
+- the separate highlight-only duplicate preview is not the long-term target;
+- repeated per-highlight labels such as `Gemarkeerd` are not the long-term design;
+- at most one compact legend should explain highlights;
+- synchronized scrolling is desirable but must be separately planned/tested;
+- no custom component, synchronized scroll, click-to-mark, advanced editor or full-document marking without separate approval.
 
 The replacement decision helper internals are not a user-facing feature:
 
@@ -139,9 +153,9 @@ Current implementation boundaries remain:
 ### Planning / contract line
 
 ```text
-1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN
-2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS
-3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed
+1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed.
+2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — next.
+3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed.
 ```
 
 These are documentation/tests-only and may be partially parallelized if they do not edit the same files at the same time.
@@ -166,7 +180,7 @@ Implementation packages must be sequential if they touch any shared UI files.
 ## Active / next recommended execution queue
 
 ```text
-1. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side direction before implementation.
+1. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side plan before implementation.
 2. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — only after side-by-side contracts are in place.
 ```
 
