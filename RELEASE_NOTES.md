@@ -19,10 +19,12 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 
 - Review table and review guidance are available.
 - Final review summary and export sanity checks help users understand remaining risk.
-- Serial review is available as a small read-only review aid next to the replacement table.
-- The review area now includes an optional `Markeringen tonen in voorbeeldtekst` toggle for the checked preview text.
-- When the toggle is off, the preview remains calm and normally readable.
-- When the toggle is on, already masked/replaced values can receive subtle visual markers.
+- The review area now includes a first side-by-side review surface: `Brontekst` on the left and `Verwerkte tekst` on the right.
+- The replacement table remains the source of truth and fallback.
+- Serial review remains available as a small read-only review aid below the side-by-side comparison.
+- The right-side processed pane includes an optional `Markeringen tonen in verwerkte tekst` toggle.
+- When the toggle is off, the processed text remains calm and normally readable.
+- When the toggle is on, already masked/replaced values can receive subtle visual markers in the processed pane.
 - These markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.
 
 ### Scrub Key
@@ -64,8 +66,9 @@ PDF support is intentionally limited:
 - The final product direction is local-first/offline capable.
 - The Scrub Key is sensitive because it can re-identify scrubbed content.
 - UI acknowledgements are safety prompts, not encryption, automatic deletion, expiry enforcement or managed key storage.
-- The review highlight toggle is visual-only and does not replace the replacement table.
-- The review highlight toggle still needs app verification after Actions and Hugging Face sync are green.
+- The side-by-side review surface is a first bounded implementation and still needs app verification after Actions and Hugging Face sync are green.
+- The side-by-side review surface does not implement synchronized scrolling, click-to-mark, an advanced editor or full-document marking.
+- The review table remains the source of truth and fallback.
 - DOCX metadata, comments, tracked changes, headers and footers require further document-hygiene work.
 - Detection quality needs formal recall/precision benchmarking before strong trust claims can be made.
 
