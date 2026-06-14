@@ -1,12 +1,11 @@
-Here are a few example sentences we currently support:
+Op 14 maart 2026 ontving mr. Eva de Vries, advocaat te Utrecht, een e-mail van haar cliënt de heer Samir El Amrani. De cliënt gaf aan dat hij op 3 maart 2026 een brief had ontvangen van Woningstichting Noordrand over een vermeende huurachterstand. In de brief stond dossiernummer HZ-2026-4419 en klantnummer WR-KLANT-2026-7712 vermeld.
 
-Hi, my name is David Johnson and I'm originally from Liverpool.
-My credit card number is 4095-2609-9393-4932 and my crypto wallet id is 16Yeky6GMjeNkAiNcBY7ZhrLoMSgg1BoyZ.
+Volgens de cliënt is de huur over januari, februari en maart 2026 volledig betaald vanaf rekeningnummer NL91 ABNA 0417 1643 00. De betalingen zouden zijn verricht op 2 januari 2026, 1 februari 2026 en 1 maart 2026. De wederpartij stelt echter dat alleen de betaling van januari is ontvangen.
 
-On 11/10/2024 I visited www.microsoft.com and sent an email to test@presidio.site,  from IP 192.168.0.1.
+De cliënt woont aan de fictieve Parklaan 18B, 3512 ZX Utrecht. Zijn telefoonnummer is 06-12345678 en zijn e-mailadres is samir.elamrani@example.test. In het dossier komt ook zijn burgerservicenummer 123456782 voor. Dit nummer is uitsluitend opgenomen als synthetische testwaarde.
 
-My passport: 191280342 and my phone number: (212) 555-1234.
+Op 18 maart 2026 heeft de advocaat namens de cliënt een conceptbrief opgesteld. Daarin wordt Woningstichting Noordrand verzocht om binnen veertien dagen een specificatie van de openstaande posten te sturen. Ook wordt gevraagd om de incassomaatregelen tijdelijk op te schorten totdat duidelijk is welke betalingen zijn verwerkt.
 
-This is a valid International Bank Account Number: IL150120690000003111111 . Can you please check the status on bank account 954567876544? 
+In het concept staan daarnaast verwijzingen naar zaaknummer ZK-WOON-55091, factuurnummer FACT-2026-4481 en intern referentienummer INT-2026-9033. De advocaat wil deze tekst anonimiseren voordat zij het document deelt met een externe juridisch adviseur voor inhoudelijke feedback.
 
-Kate's social security number is 078-05-1126.  Her driver license? it is 1234567A.
+De tekst bevat bewust synthetische namen, adressen, datums, telefoonnummers, e-mailadressen, IBAN, BSN, dossiernummers en zaakreferenties. Deze gegevens zijn niet echt en mogen alleen worden gebruikt voor test- en demonstratiedoeleinden.
