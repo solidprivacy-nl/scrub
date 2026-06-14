@@ -213,6 +213,7 @@ Current mitigations:
 - WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR anchored `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md` and D021: source text left, processed text right, optional highlights integrated into the main processed pane.
 - WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN added a detailed plan for one unified main review surface with source text left, processed/checked text right, integrated optional highlights, table fallback, serial-review relationship, replacement-review relationship and contract-test requirements.
 - WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS added contract coverage for the side-by-side plan before any UI implementation.
+- WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER added a pure helper model for source/processed panes, processed-pane highlight spans, a compact legend, table fallback, serial-review relationship, replacement-review relationship and scroll-sync feasibility flags.
 
 Gaps:
 
@@ -228,7 +229,7 @@ Gaps:
 
 Recommended workpackages:
 
-- WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — helper-only exploration after side-by-side contracts are in place.
+- Verify GitHub Actions for WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER.
 - Later approved package — small side-by-side review implementation after separate explicit approval.
 - Later approved package — small redesigned replacement review implementation after separate explicit approval.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
