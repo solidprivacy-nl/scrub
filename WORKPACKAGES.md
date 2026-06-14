@@ -42,7 +42,8 @@ WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed planning/design/documentation
 WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — completed tests/documentation-only; side-by-side review plan is contract-locked before implementation.
 WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — completed documentation-only wording repair for highlight safety contract phrases.
 WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — completed helper/tests-only; pure source/processed pane model, highlight metadata, legend and scroll-sync feasibility fields added.
-WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — implemented with explicit coordinator approval; WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX completed narrow wording/test repair; awaiting GitHub Actions, Hugging Face sync and app verification.
+WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — implemented with explicit coordinator approval; follow-up Actions fixes completed; awaiting final GitHub Actions/HF/app closeout.
+WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — implemented; equal-height side-by-side panes with local pane scrolling added; awaiting GitHub Actions, Hugging Face sync and app verification.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -61,47 +62,21 @@ The working baseline remains:
 table-first review table = source of truth and fallback
 ```
 
-The new review UX target is now implemented as a first bounded Streamlit surface:
+The side-by-side review target is now implemented as a first bounded Streamlit surface:
 
 ```text
 brontekst links | verwerkte/gecontroleerde tekst rechts
                 | optionele markeringen geïntegreerd in de verwerkte tekst
 ```
 
-This line is governed by:
+`WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX` improves the first implementation by making the source and processed panes visually equal-height. The processed highlight pane now uses a fixed pane height and its own local vertical scroll.
+
+This is explicitly not synchronized scrolling:
 
 ```text
-DECISION_LOG.md — D021
-SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md
-SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md
-tests/test_side_by_side_review_contract.py
-side_by_side_review.py
-tests/test_side_by_side_review_prototype.py
-side_by_side_review_panel_ui.py
-tests/test_side_by_side_review_ui_patch.py
+no synchronized scroll implementation
+no custom Streamlit component rendering
 ```
-
-WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION added:
-
-- `side_by_side_review_panel_ui.py`;
-- `tests/test_side_by_side_review_ui_patch.py`;
-- integration through `serial_review_panel_ui.py`;
-- a visible `Controleer de tekst` section;
-- source/brontekst left;
-- processed/verwerkte text right;
-- `Markeringen tonen in verwerkte tekst` toggle in the right processed pane;
-- one compact legend when markers are visible;
-- no repeated per-highlight `Gemarkeerd` labels in the new panel;
-- table-first fallback copy;
-- no synchronized scroll implementation;
-- no custom Streamlit component;
-- no replacement behavior change;
-- no review table behavior change;
-- no Scrub Key/export/reinsert behavior change.
-
-WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX repaired a narrow test wording issue in a helper docstring. No runtime behavior changed.
-
-The old separate highlight-preview call was removed from `serial_review_panel_ui.py`; its helper assets remain available for compatibility.
 
 Required verification for closeout:
 
@@ -116,11 +91,12 @@ App verification should confirm:
 - app starts without Script execution error;
 - normal Scrub Legal interface remains visible;
 - review table remains visible;
-- the new `Controleer de tekst` side-by-side surface is visible;
+- `Controleer de tekst` side-by-side surface is visible;
 - brontekst appears on the left;
 - verwerkte tekst appears on the right;
+- left and right panes are visually equal height;
+- the processed/highlighted pane scrolls locally when content is long;
 - `Markeringen tonen in verwerkte tekst` is visible in/near the right pane;
-- marker toggle is visual-only;
 - serial review remains visible;
 - export/download remains visible;
 - DOCX hygiene audit remains visible;
@@ -130,7 +106,7 @@ App verification should confirm:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX.
+1. Verify GitHub Actions and Hugging Face sync for WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX.
 2. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — after green Actions/sync and app screenshot.
 ```
 
