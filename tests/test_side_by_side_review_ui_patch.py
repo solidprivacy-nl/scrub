@@ -58,6 +58,19 @@ def test_user_facing_side_by_side_copy_exists():
         assert phrase in text
 
 
+def test_side_by_side_panes_have_equal_height_and_local_processed_scroll():
+    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+
+    assert "SIDE_BY_SIDE_REVIEW_PANE_HEIGHT = 320" in text
+    assert "height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
+    assert "max-height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
+    assert "min-height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
+    assert "overflow-y: auto" in text
+    assert "height=SIDE_BY_SIDE_REVIEW_PANE_HEIGHT" in text
+    assert '"pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT' in text
+    assert '"processed_pane_scrolls_independently": True' in text
+
+
 def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_panel():
     serial_text = SERIAL_PANEL.read_text(encoding="utf-8")
     side_text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
