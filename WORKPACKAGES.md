@@ -37,6 +37,7 @@ WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — completed after Actions/HF/app verific
 WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — completed after Actions/HF/app verification; equal-height side-by-side panes with local processed-pane scrolling are live.
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — completed isolated prototype-only concept and visually approved by coordinator.
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — implemented with explicit coordinator approval; awaiting Actions, Hugging Face sync and app verification.
+WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — implemented; old upper direct preview removed, one central side-by-side review added above review table, Dutch synthetic legal demo text added; awaiting Actions, Hugging Face sync and app verification.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -57,17 +58,25 @@ table-first review table = source of truth and fallback
 The normal app now targets:
 
 ```text
-brontekst links | verwerkte/gecontroleerde tekst rechts
-equal-height panes
-optional visual highlights in processed pane
-optional synchronized scrolling with sync-off fallback
+1. Voeg document of tekst toe
+2. Controleer de tekst: one central side-by-side review surface
+3. Controleer gevonden gegevens: review table remains source of truth
+4. Serial review / extra review aids
+5. Download opgeschoonde bestanden
 ```
 
-`WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION` integrates the visually approved prototype concept into `side_by_side_review_panel_ui.py` using Streamlit's built-in local HTML component.
+`WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE` moves the side-by-side review surface above the review table and removes the old upper `Invoer` / `Directe voorbeeldweergave` duplicate preview. The serial review panel can now suppress its embedded side-by-side preview when the central surface has already been rendered.
+
+The central review surface keeps:
+
+- brontekst left;
+- verwerkte/gecontroleerde tekst right;
+- synchronized scrolling;
+- optional visual highlights;
+- review table as source of truth and fallback.
 
 Boundaries preserved:
 
-- review table remains source of truth and fallback;
 - no replacement behavior change;
 - no Scrub Key change;
 - no export/download change;
@@ -79,9 +88,9 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION.
+1. Verify GitHub Actions and Hugging Face sync for WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE.
 2. Ask coordinator for app verification screenshot.
-3. Close out with WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION_VERIFY.
+3. Close out after verification evidence.
 ```
 
 ## Blocked work
