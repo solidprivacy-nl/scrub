@@ -44,6 +44,7 @@ WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — completed documentation-on
 WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — completed helper/tests-only; pure source/processed pane model, highlight metadata, legend and scroll-sync feasibility fields added.
 WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — implemented with explicit coordinator approval; follow-up Actions fixes completed; awaiting final GitHub Actions/HF/app closeout.
 WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — implemented; equal-height side-by-side panes with local pane scrolling added; awaiting GitHub Actions, Hugging Face sync and app verification.
+WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY — completed documentation-only feasibility review; recommendation is not to implement synchronized scroll in the current Streamlit MVP.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -71,14 +72,28 @@ brontekst links | verwerkte/gecontroleerde tekst rechts
 
 `WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX` improves the first implementation by making the source and processed panes visually equal-height. The processed highlight pane now uses a fixed pane height and its own local vertical scroll.
 
-This is explicitly not synchronized scrolling:
+`WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY` records the current scroll decision:
 
 ```text
-no synchronized scroll implementation
-no custom Streamlit component rendering
+Keep equal-height independent panes as the MVP baseline.
+Do not implement synchronized scrolling in the current Streamlit MVP flow.
 ```
 
-Required verification for closeout:
+Reason:
+
+```text
+Source and processed text are not guaranteed to align line-by-line or by scroll percentage after masking/replacement, so naive synchronized scrolling can create false visual alignment.
+```
+
+This is explicitly not approved:
+
+```text
+synchronized scroll implementation
+custom Streamlit component rendering
+JavaScript injection
+```
+
+Required verification for current UI closeout:
 
 ```text
 1. GitHub Actions green.
@@ -110,6 +125,12 @@ App verification should confirm:
 2. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — after green Actions/sync and app screenshot.
 ```
 
+Only if the coordinator still wants sync-scroll after current closeout:
+
+```text
+WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_CONTRACT_TESTS — documentation/tests-only, before any spike.
+```
+
 ## Blocked work
 
 Do not start yet without separate approval:
@@ -117,6 +138,7 @@ Do not start yet without separate approval:
 ```text
 synchronized scroll implementation
 custom Streamlit component rendering implementation
+JavaScript injection for scroll sync
 new replacement UI implementation
 mutating replacement decision implementation
 automatic replacement
