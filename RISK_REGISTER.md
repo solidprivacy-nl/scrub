@@ -195,22 +195,18 @@ Current mitigations:
 
 - Review table flow exists and remains the source of truth/fallback.
 - Review filters and guidance exist.
-- WP42D rollback/closeout parked the failed static-highlight startup mutation route.
 - WP_SERIAL_REVIEW_UI is completed and app-verified as a small non-destructive panel.
 - WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK removed the non-intuitive replacement helper panel from the normal flow.
-- WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION added a visual-only `Markeringen tonen in voorbeeldtekst` aid.
-- WP_REPLACE_LOGIC_UI_REDESIGN_PLAN and its contract tests defined a task-oriented replacement flow.
-- WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR, redesign plan, contract tests and prototype helper established the unified source/processed review direction.
-- WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION added a first bounded side-by-side UI surface: brontekst left, verwerkte text right, optional visual markers in the right pane, no synchronized scroll, no custom component, no review table mutation, no Scrub Key/export/reinsert change.
-- WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX made the side-by-side panes visually equal-height with local processed-pane scrolling.
-- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY recorded why synchronized scrolling is attractive but risky in the current Streamlit MVP, and recommended keeping equal-height independent panes as the safe baseline.
+- WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION added the bounded side-by-side review surface.
+- WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX made the side-by-side panes visually equal-height.
+- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE was visually approved by the coordinator.
+- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION integrated optional percentage-based synchronized scrolling with a sync-off fallback in the side-by-side renderer.
 
 Gaps:
 
-- GitHub Actions, Hugging Face sync and app verification are still needed for the side-by-side implementation/height-fix closeout.
+- Actions, Hugging Face sync and app verification are still needed for the synchronized-scroll implementation closeout.
 - The review table remains the source of truth and fallback.
-- Synchronized scrolling remains desirable but technically risky and is not approved for implementation.
-- Naive percentage-based synchronized scrolling can create false visual alignment because source and processed text are not guaranteed to match line-by-line after masking/replacement.
+- Percentage-based synchronized scrolling can create imperfect alignment when source and processed text differ structurally after masking/replacement.
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
 - No separate frontend migration is approved.
@@ -218,8 +214,7 @@ Gaps:
 
 Recommended workpackages:
 
-- WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — closeout/app verification after green Actions and Hugging Face sync.
-- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_CONTRACT_TESTS — only if coordinator still wants synchronized scroll after current UI closeout.
+- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION_VERIFY — closeout/app verification after green Actions and Hugging Face sync.
 - Later approved package — small redesigned replacement review implementation after separate explicit approval.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
