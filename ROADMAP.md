@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-06-12 — Phase 7 parked until MVP product quality gate.
+Last roadmap strategy update: 2026-06-14 — unified side-by-side review UX direction anchored.
 
 ---
 
@@ -99,16 +99,21 @@ Recent work completed or recorded:
 WP19-WP24 — recall/trust foundation.
 WP25-WP29C — Scrub Key safety/test line.
 WP30-WP34 — placeholder robustness helper/test line.
-WP35-WP39 — DOCX hygiene line through clean-DOCX export policy.
-WP40 — document-centric review UX specification.
+WP35-WP39 — DOCX hygiene line through clean-DOCX export policy and report-only audit UI.
+WP40-WP43 — review UX/frontend decision line.
+WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — product-rejected helper panel hidden and verified.
+WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — replacement review redesigned around simple user choices.
+WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — unified side-by-side review UX direction anchored.
 WP45-WP49 — local runtime/packaging decision line; installer deferred.
 WP50-WP51 — pilot/ICP thinking artifacts; parked for now.
 ```
 
-Important open status:
+Important UX status:
 
 ```text
-WP28C — Scrub Key warning/acknowledgement UI implementation still needs coordinator evidence and app verification.
+The review table remains source of truth and fallback.
+The old replacement decision helper panel must not return as normal user-facing UI.
+The long-term review target is one unified side-by-side main review surface, not more separate helper panels.
 ```
 
 ---
@@ -149,6 +154,31 @@ Phase 8 — Scale features: profiles, batch, CLI, enterprise
 Phase 9 — Final local desktop/offline installer path
 ```
 
+### Phase 5/6 — Review UX direction
+
+The review UX target is now:
+
+```text
+Source text left | Processed/checked text right
+                 | Optional highlights integrated in the processed text
+```
+
+This is governed by:
+
+- `DECISION_LOG.md` D021;
+- `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md`;
+- `REPLACE_LOGIC_UI_REDESIGN_PLAN.md`.
+
+UX principles:
+
+- one main review surface before more helper panels;
+- review table remains source of truth and fallback;
+- serial review remains a guided review layer, not a table replacement;
+- highlights are visual aid, not mutation mechanism;
+- no repeated per-highlight `Gemarkeerd` labels as the long-term design;
+- no click-to-mark, advanced editor or full-document marking in this phase;
+- no Scrub Key/export/reinsert behavior changes from review UX work without separate approval.
+
 ### Phase 6 — MVP workflow validation and trust hardening
 
 Goal:
@@ -163,7 +193,7 @@ Focus:
 - import and export confidence;
 - Scrub Key warning/acknowledgement verification;
 - DOCX hygiene reporting;
-- document-centric review direction;
+- unified side-by-side review direction;
 - easier replace/review logic;
 - residual-risk and audit reporting;
 - Hugging Face app verification after GitHub Actions/sync when UI changes.
@@ -181,15 +211,16 @@ Phase 7 may reopen when the coordinator confirms the MVP product quality gate ha
 Current active priorities:
 
 ```text
-1. Obtain WP28C Actions/HF sync evidence and app verification before more Scrub Key UI work.
-2. Continue review UX decision work: WP41.
-3. Specify easy replace/review logic before implementation.
-4. Continue DOCX hygiene UI/audit planning only if coordinator chooses that path.
+1. Lock the side-by-side review UX direction with plan and contract tests.
+2. Lock the redesigned replacement-review flow with contract tests.
+3. Only then consider small UI implementation packages with separate explicit coordinator approval.
 ```
 
-Local packaging next steps such as `WP48B` or `WP49B` are not default next work. They require explicit coordinator approval.
+Do not implement UI directly from this roadmap step.
 
-Pilot follow-up such as `WP52` is not default next work. It requires the MVP quality gate to pass first.
+Do not start local packaging next steps such as `WP48B` or `WP49B` by default. They require explicit coordinator approval.
+
+Do not start pilot follow-up such as `WP52` by default. It requires the MVP quality gate to pass first.
 
 ---
 
@@ -203,14 +234,19 @@ Safe to do in parallel:
 - documentation;
 - benchmark data design;
 - risk reviews;
-- non-UI architecture work.
+- non-UI architecture work;
+- `WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN` and `WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS`, if both stay documentation/tests-only.
 
 Do not run in parallel:
 
 - multiple changes to `fix_streamlit_nested_expanders.py` or `presidio_streamlit.py`;
 - multiple changes to the same Streamlit patch file;
+- `serial_review_panel_ui.py` UI edits without coordination;
+- `review_highlight_toggle_panel_ui.py` UI edits without coordination;
 - export/download flow changes;
 - review table flow changes;
+- synchronized scroll implementation;
+- custom HTML/component rendering implementation;
 - Docker/runtime startup patch-order changes;
 - installer/packaging work unless explicitly approved;
 - Phase 7 follow-up while the MVP quality gate is not passed.
@@ -230,6 +266,8 @@ Presidio/spaCy recognizers
 Dutch legal recognizers
 Candidate scanner
 Review table
+Serial review / context aids
+Side-by-side review UX direction
 Scrub Key import/export
 Pasted/TXT/DOCX/PDF-to-TXT reinsert
 Exports
@@ -244,7 +282,7 @@ Validated online/web workflow first
 Reusable Python core
 Local recognition engine
 Local benchmark/evaluation layer
-Local review workflow
+Unified review workflow
 Secure Scrub Key handling
 Local exports
 Residual-risk/audit reports
