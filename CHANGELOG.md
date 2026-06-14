@@ -1,5 +1,55 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — Closeout/app verification for hidden replacement helper panel
+
+Status: completed after Actions/HF/app verification.
+
+Files added:
+
+- `workpackage_claims/WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY.md`
+- `handover/workpackages/20260614_0220_replace_logic_ui_product_rollback_verify.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY.md`
+
+Summary:
+
+- Formally closed out the product rollback/hide of the replacement decision helper panel.
+- Verified from source that helper/contract assets remain available for redesign.
+- Verified from source that `serial_review_panel_ui.py` does not import or call `replacement_decision_panel_ui.py`.
+- Used coordinator screenshot evidence showing current post-rollback Actions/Sync green and app verification positive.
+- App screenshot shows review table, serial review, highlight toggle, export/download and DOCX hygiene audit visible, while the replacement decision helper panel is not visible.
+
+Validation status:
+
+- Coordinator screenshot evidence showed current post-rollback Tests and Sync to Hugging Face Space green on current main.
+- GitHub connector status/check calls returned no statuses/workflow-runs, so coordinator screenshot evidence was used.
+- App verification was positive by coordinator screenshot.
+
+Intentionally not changed:
+
+- No product code.
+- No tests.
+- No Streamlit UI.
+- No `presidio_streamlit.py`.
+- No `serial_review_panel_ui.py`.
+- No new replacement UI.
+- No replacement helper panel re-exposure.
+- No mutating replacement behavior.
+- No automatic replacement.
+- No Scrub Key behavior.
+- No export/download behavior.
+- No reinsert behavior.
+- No dependencies.
+- No real data.
+
+Next recommended step:
+
+- `WP_REPLACE_LOGIC_UI_REDESIGN_PLAN` only after separate coordinator approval.
+
 ## WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — Simple masked-text highlight toggle implementation
 
 Status: completed after Actions/HF/app verification.
