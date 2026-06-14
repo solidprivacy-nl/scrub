@@ -19,14 +19,15 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 
 - Review table and review guidance are available.
 - Final review summary and export sanity checks help users understand remaining risk.
-- The review area now includes a first side-by-side review surface: `Brontekst` on the left and `Verwerkte tekst` on the right.
-- The side-by-side source and processed panes now use equal visual height.
-- Long processed/highlighted text scrolls inside its own pane; synchronized scrolling is not implemented.
+- The review area includes a side-by-side review surface: `Brontekst` on the left and `Verwerkte tekst` on the right.
+- The side-by-side source and processed panes use equal visual height.
+- The side-by-side panes now include optional synchronized scrolling.
+- `Synchroon scrollen` can be turned off so both panes scroll independently.
 - The replacement table remains the source of truth and fallback.
 - Serial review remains available as a small read-only review aid below the side-by-side comparison.
 - The right-side processed pane includes an optional `Markeringen tonen in verwerkte tekst` toggle.
-- When the toggle is off, the processed text remains calm and normally readable.
-- When the toggle is on, already masked/replaced values can receive subtle visual markers in the processed pane.
+- When the marker toggle is off, the processed text remains calm and normally readable.
+- When the marker toggle is on, already masked/replaced values can receive subtle visual markers in the processed pane.
 - These markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.
 
 ### Scrub Key
@@ -68,9 +69,9 @@ PDF support is intentionally limited:
 - The final product direction is local-first/offline capable.
 - The Scrub Key is sensitive because it can re-identify scrubbed content.
 - UI acknowledgements are safety prompts, not encryption, automatic deletion, expiry enforcement or managed key storage.
-- The side-by-side review surface is a first bounded implementation and still needs app verification after Actions and Hugging Face sync are green.
-- The side-by-side review surface does not implement synchronized scrolling, click-to-mark, an advanced editor or full-document marking.
+- Side-by-side synchronized scrolling is percentage-based and can still create imperfect alignment when source and processed text differ structurally.
 - The review table remains the source of truth and fallback.
+- The side-by-side review surface does not implement click-to-mark, an advanced editor or full-document marking.
 - DOCX metadata, comments, tracked changes, headers and footers require further document-hygiene work.
 - Detection quality needs formal recall/precision benchmarking before strong trust claims can be made.
 
