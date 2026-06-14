@@ -1,22 +1,60 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — Equal-height side-by-side review panes
+## WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY — Feasibility review for synchronized side-by-side scrolling
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed documentation-only feasibility review; no implementation or runtime behavior changed.
 
 Files added:
 
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX.md`
-- `handover/workpackages/20260614_2355_side_by_side_review_height_fix.md`
+- `SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY.md`
+- `handover/workpackages/20260615_0005_side_by_side_review_sync_scroll_feasibility.md`
 
 Files changed:
 
-- `side_by_side_review_panel_ui.py`
-- `tests/test_side_by_side_review_ui_patch.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `RELEASE_NOTES.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY.md`
+
+Summary:
+
+- Reviewed whether synchronized scrolling should be added to the side-by-side review surface.
+- Recorded that synchronized scrolling is attractive for long-document comparison but risky because source and processed text are not guaranteed to align line-by-line or by scroll percentage after masking/replacement.
+- Compared independent scroll panes, percentage-based custom component sync, anchor-based sync and selected-item focus.
+- Recommended keeping equal-height independent panes as the MVP baseline.
+- Recommended not implementing synchronized scroll in the current Streamlit MVP flow.
+- Recommended contract tests and a separate approved spike only if the coordinator later still wants synchronized scroll.
+
+Validation status:
+
+- Documentation-only; no app rebuild or product tests required.
+- No shell/git diff execution was available through the ChatGPT GitHub connector.
+
+Intentionally not changed:
+
+- No synchronized scroll implementation.
+- No custom Streamlit component rendering.
+- No JavaScript injection.
+- No Streamlit UI code change.
+- No product code change.
+- No review table behavior change.
+- No replacement behavior change.
+- No Scrub Key behavior change.
+- No export/download behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real data.
+
+Next recommended step:
+
+- `WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY` after green Actions/sync and app screenshot.
+- Only if the coordinator still wants synchronized scroll after that: `WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_CONTRACT_TESTS`.
+
+## WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — Equal-height side-by-side review panes
+
+Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Summary:
 
@@ -25,36 +63,6 @@ Summary:
 - The highlighted processed pane now has fixed height, max-height, min-height and local `overflow-y: auto` scrolling.
 - This is not synchronized scrolling.
 - No custom Streamlit component was added.
-
-Validation status:
-
-- No shell/pytest execution was available through the ChatGPT GitHub connector.
-- Expected focused check: `pytest tests/test_side_by_side_review_ui_patch.py`.
-- Expected combined check: `pytest tests/test_side_by_side_review_ui_patch.py tests/test_review_highlight_toggle_ui_patch.py`.
-- UI changed, so Actions, sync and app verification are required.
-
-Intentionally not changed:
-
-- No `presidio_streamlit.py` change.
-- No `serial_review_panel_ui.py` change.
-- No review table behavior change.
-- No replacement behavior change.
-- No Scrub Key behavior change.
-- No export/download behavior change.
-- No reinsert behavior change.
-- No synchronized scroll implementation.
-- No custom Streamlit component.
-- No click-to-mark.
-- No advanced editor.
-- No full-document marking.
-- No dependency change.
-- No cloud processing.
-- No real data.
-
-Next recommended step:
-
-- Verify GitHub Actions and Hugging Face sync.
-- Then `WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY` with coordinator app screenshot.
 
 ## WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX — Repair side-by-side UI patch wording failure
 
