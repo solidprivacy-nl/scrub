@@ -193,34 +193,20 @@ A table-first interface and unclear replacement decisions may not support the do
 
 Current mitigations:
 
-- Review table flow exists and is the current working baseline/fallback.
+- Review table flow exists and remains the source of truth/fallback.
 - Review filters and guidance exist.
-- WP40 created the document-centric review UX specification.
-- WP41 created the highlight-based review prototype decision.
-- WP42 created the Streamlit feasibility boundary.
 - WP42D rollback/closeout parked the failed static-highlight startup mutation route.
-- Context-card, serial-review and review-panel view-model helper/planning/test work created safer helper-driven review surfaces.
 - WP_SERIAL_REVIEW_UI is completed and app-verified as a small non-destructive panel.
-- WP43 created `FRONTEND_ARCHITECTURE_DECISION.md`, deciding to keep Streamlit for MVP validation and defer a separate frontend/professional document editor until MVP workflow evidence and user validation justify the migration risk.
-- WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS recorded that replacement decision UI may be considered only as a small read-only/staged step unless a separate approved package adds mutation safeguards.
-- WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX strengthened staged-vs-applied, no table/session mutation, advisory mapping/export readiness, no Scrub Key writes, no export/download calls and no reinsert-change contracts.
-- WP_REPLACE_LOGIC_UI_IMPLEMENTATION showed the helper panel was technically possible, but coordinator product feedback found it not intuitive enough and too complex for the normal flow.
-- WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK removed the helper panel from the normal Scrub Legal UI flow while preserving helper and contract assets for future redesign.
-- WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY confirmed the helper panel is not visible in the normal app flow.
-- WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION added a simpler optional visual aid: a non-mutating `Markeringen tonen in voorbeeldtekst` toggle.
-- WP_REPLACE_LOGIC_UI_REDESIGN_PLAN defined a task-oriented replacement flow: found value, context, suggested replacement, four simple actions and optional exact-same scope.
-- WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS added contract coverage for the intuitive replacement-review redesign and its side-by-side alignment.
-- WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR anchored `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md` and D021: source text left, processed text right, optional highlights integrated into the main processed pane.
-- WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN added a detailed plan for one unified main review surface with source text left, processed/checked text right, integrated optional highlights, table fallback, serial-review relationship, replacement-review relationship and contract-test requirements.
-- WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS added contract coverage for the side-by-side plan before any UI implementation.
-- WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER added a pure helper model for source/processed panes, processed-pane highlight spans, a compact legend, table fallback, serial-review relationship, replacement-review relationship and scroll-sync feasibility flags.
+- WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK removed the non-intuitive replacement helper panel from the normal flow.
+- WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION added a visual-only `Markeringen tonen in voorbeeldtekst` aid.
+- WP_REPLACE_LOGIC_UI_REDESIGN_PLAN and its contract tests defined a task-oriented replacement flow.
+- WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR, redesign plan, contract tests and prototype helper established the unified source/processed review direction.
+- WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION added a first bounded side-by-side UI surface: brontekst left, verwerkte text right, optional visual markers in the right pane, no synchronized scroll, no custom component, no review table mutation, no Scrub Key/export/reinsert change.
 
 Gaps:
 
-- The stable table-first workflow remains the source of truth and fallback.
-- The current UI still contains multiple review surfaces rather than one unified side-by-side main review surface.
-- The separate highlight-only duplicate preview is not the desired long-term UX.
-- Repeated per-highlight labels such as `Gemarkeerd` add noise and should not be the long-term design.
+- GitHub Actions, Hugging Face sync and app verification are still needed for the side-by-side implementation closeout.
+- The review table remains the source of truth and fallback.
 - Synchronized scrolling is desirable but technically risky and still needs separate planning/testing before implementation.
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
@@ -229,8 +215,7 @@ Gaps:
 
 Recommended workpackages:
 
-- Verify GitHub Actions for WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER.
-- Later approved package — small side-by-side review implementation after separate explicit approval.
+- WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — closeout/app verification after green Actions and Hugging Face sync.
 - Later approved package — small redesigned replacement review implementation after separate explicit approval.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
