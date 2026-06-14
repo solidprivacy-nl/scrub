@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS`
 
-Status: completed tests/documentation-only; awaiting GitHub Actions and Hugging Face sync verification.
+Status: completed after Actions/HF verification.
 
 ## Summary
 
@@ -32,6 +32,7 @@ No production UI was implemented.
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS.md`
+- `handover/workpackages/20260615_0230_review_table_collapsible_contract_tests.md`
 
 ## Tests added/updated
 
@@ -76,6 +77,14 @@ Expected full check:
 python -m pytest -q tests
 ```
 
+Coordinator screenshot evidence:
+
+```text
+Tests #1031 — red on commit 81cdc1f because of stale review-surface assertions unrelated to the collapsible-contract package.
+Tests #1041 — green on commit 143a0fa after WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR.
+Sync to Hugging Face Space #1053 — green on commit 143a0fa.
+```
+
 ## Validation status
 
 - Contract document added.
@@ -87,14 +96,23 @@ python -m pytest -q tests
 - Reinsert behavior was not changed.
 - Replacement behavior was not changed.
 - No dependency/cloud/real-data change.
+- Later full-suite green evidence supersedes the older stale-test failure.
 
 ## GitHub Actions status
 
-Unknown at handover time. A new workflow run is expected after the commits.
+Green by coordinator screenshot evidence: `Tests #1041` for commit `143a0fa`.
+
+Earlier red run:
+
+```text
+Tests #1031 — failed on stale review-surface assertions expecting old highlight label and visible syncToggle.
+```
+
+That failure was repaired by `WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR` and is superseded by the later green run.
 
 ## Hugging Face sync status
 
-Unknown at handover time. This package does not change app/runtime behavior, but sync may still run for documentation/test commits.
+Green by coordinator screenshot evidence: `Sync to Hugging Face Space #1053` for commit `143a0fa`.
 
 ## App verification status
 
@@ -104,18 +122,10 @@ Not applicable. No Streamlit UI/runtime behavior changed.
 
 - The review table is not collapsible yet; this package only locks the contract.
 - A later implementation will edit the review-flow area in `presidio_streamlit.py` and must not run in parallel with other `presidio_streamlit.py` review-flow changes.
-- Actions/HF verification is still required for this package.
 
 ## Next recommended step
 
-Verify:
-
-```text
-Tests — green
-Sync to Hugging Face Space — green
-```
-
-Only after green tests may a separate implementation package start:
+A separate implementation package may start after coordinator approval:
 
 ```text
 WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION
