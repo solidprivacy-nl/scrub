@@ -1,5 +1,54 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — Repair stale review surface control assertions
+
+Status: completed tests/documentation-only repair; awaiting Actions verification.
+
+Files changed:
+
+- `tests/test_review_highlight_toggle_ui_patch.py`
+- `tests/test_side_by_side_sync_scroll_prototype.py`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR.md`
+
+Files added:
+
+- `workpackage_claims/WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR.md`
+- `handover/workpackages/20260615_0240_review_surface_control_cleanup_test_repair.md`
+
+Summary:
+
+- Repaired stale test assertions after the review surface control cleanup.
+- Updated highlight-toggle contract expectations from `Markeringen tonen in verwerkte tekst` to the accepted shorter label `Markeringen tonen`.
+- Preserved the legacy standalone highlight toggle renderer asset tests.
+- Updated sync-scroll production assertions to reflect D023: synchronized scrolling is active by default and no visible `syncToggle` checkbox exists in the production side-by-side renderer.
+- Kept prototype tests for the isolated HTML prototype separate from production behavior.
+
+Validation status:
+
+- No shell/pytest execution was available through the ChatGPT GitHub connector.
+- Expected targeted checks: `pytest tests/test_review_highlight_toggle_ui_patch.py tests/test_side_by_side_sync_scroll_prototype.py`.
+- Expected full check: `python -m pytest -q tests`.
+
+Intentionally not changed:
+
+- No `presidio_streamlit.py` change.
+- No `side_by_side_review_panel_ui.py` change.
+- No production UI behavior change.
+- No review table behavior change.
+- No replacement behavior change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No dependency change.
+- No cloud processing.
+- No real data.
+
+Next recommended step:
+
+- Verify GitHub Actions tests for the repair commit.
+- If green, continue the normal verification path for the pending UI work.
+
 ## WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — Contract tests for collapsible review table section
 
 Status: completed tests/documentation-only; awaiting Actions and Hugging Face sync verification.
