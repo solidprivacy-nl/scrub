@@ -1,50 +1,55 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — Repair side-by-side review contract wording failure
+## WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — Helper-only model for source/processed review panes
 
-Status: completed documentation-only Actions repair; no UI or product code changed.
+Status: completed helper/tests-only; no Streamlit UI or product flow changed.
 
 Files added:
 
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX.md`
-- `handover/workpackages/20260614_2235_side_by_side_review_contract_tests_actions_fix.md`
+- `side_by_side_review.py`
+- `tests/test_side_by_side_review_prototype.py`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER.md`
+- `handover/workpackages/20260614_2250_side_by_side_review_prototype_helper.md`
 
 Files changed:
 
-- `SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER.md`
 
 Summary:
 
-- Added the exact compact contract/safety wording expected by `tests/test_side_by_side_review_contract.py`.
-- Added `only visual aid` to the highlight toggle safety note.
-- Added `Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior.` to the same safety note.
-- No new UX direction was introduced.
+- Added a pure helper model for the future side-by-side review surface.
+- The helper models source text left and processed/checked text right.
+- The helper integrates optional processed-pane highlight terms/spans using the existing exact-match highlight helper.
+- The helper provides a compact legend data shape and avoids repeated inline `Gemarkeerd` labels.
+- The helper records review table source-of-truth/fallback fields.
+- The helper records serial review as a guided layer, not a table replacement.
+- The helper records replacement review as a future task-oriented layer with simple first actions/scopes, while blocking helper/audit internals as user-facing UI.
+- The helper records synchronized scrolling as desired later but not implemented.
+- Added tests for layout, highlight behavior, visual-only toggle contract, review table/serial/replacement relationships, scroll-sync feasibility fields, no product-state changes, compact audit summary, no Streamlit import/calls and synthetic-only values.
 
 Validation status:
 
 - No shell/pytest execution was available through the ChatGPT GitHub connector.
-- Expected check: `pytest tests/test_side_by_side_review_contract.py`.
-- Optional combined check: `pytest tests/test_side_by_side_review_contract.py tests/test_replace_logic_ui_redesign_plan.py`.
-- No app rebuild or app verification required because this was documentation-only.
+- Expected check: `pytest tests/test_side_by_side_review_prototype.py`.
+- Optional combined check: `pytest tests/test_side_by_side_review_prototype.py tests/test_side_by_side_review_contract.py tests/test_review_highlight_toggle.py`.
+- No app rebuild or app verification required because no UI/runtime behavior changed.
 
 Intentionally not changed:
 
 - No Streamlit UI implementation.
-- No product code.
-- No tests.
-- No `presidio_streamlit.py`.
-- No `serial_review_panel_ui.py`.
-- No `review_highlight_toggle_panel_ui.py`.
-- No review table behavior.
-- No replacement behavior.
-- No Scrub Key behavior.
-- No export/download behavior.
-- No reinsert behavior.
+- No changes to `presidio_streamlit.py`.
+- No changes to `serial_review_panel_ui.py`.
+- No changes to `review_highlight_toggle_panel_ui.py`.
+- No review table behavior change.
+- No replacement behavior change.
+- No Scrub Key behavior change.
+- No export/download behavior change.
+- No reinsert behavior change.
 - No synchronized scroll implementation.
-- No custom HTML/component implementation.
+- No custom HTML/component rendering implementation.
 - No click-to-mark.
 - No advanced editor.
 - No full-document marking.
@@ -54,24 +59,23 @@ Intentionally not changed:
 
 Next recommended step:
 
-- After green Actions: `WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER`.
+- Verify GitHub Actions for this helper package.
+- `WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION` only after separate explicit coordinator approval.
+
+## WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — Repair side-by-side review contract wording failure
+
+Status: completed documentation-only Actions repair; no UI or product code changed.
+
+Summary:
+
+- Added the exact compact contract/safety wording expected by `tests/test_side_by_side_review_contract.py`.
+- Added `only visual aid` to the highlight toggle safety note.
+- Added `Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior.` to the same safety note.
+- No new UX direction was introduced.
 
 ## WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — Contract tests for unified side-by-side review UX
 
 Status: completed tests/documentation-only; no UI or product code changed.
-
-Files added:
-
-- `tests/test_side_by_side_review_contract.py`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS.md`
-- `handover/workpackages/20260614_2220_side_by_side_review_contract_tests.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS.md`
 
 Summary:
 
@@ -83,59 +87,9 @@ Summary:
 - Locked review table source-of-truth/fallback and serial-review guided-layer boundaries.
 - Locked blocked behavior: no synchronized scroll implementation, custom HTML/component implementation, UI edits, review table mutation, Scrub Key writes, export/download changes, reinsert changes, click-to-mark, advanced editor or full-document marking.
 
-Validation status:
-
-- No shell/pytest execution was available through the ChatGPT GitHub connector.
-- Expected check: `pytest tests/test_side_by_side_review_contract.py`.
-- Optional combined check: `pytest tests/test_side_by_side_review_contract.py tests/test_replace_logic_ui_redesign_plan.py`.
-- No app rebuild was run.
-- No app verification is required because no UI/runtime behavior changed.
-
-Intentionally not changed:
-
-- No Streamlit UI implementation.
-- No changes to `presidio_streamlit.py`.
-- No changes to `serial_review_panel_ui.py`.
-- No changes to `review_highlight_toggle_panel_ui.py`.
-- No product code changes.
-- No review table behavior change.
-- No synchronized scroll implementation.
-- No custom HTML/component implementation.
-- No panel removal.
-- No replacement mutation.
-- No automatic replacement.
-- No Scrub Key writes.
-- No export blocking.
-- No export/download behavior change.
-- No reinsert behavior change.
-- No click-to-mark.
-- No advanced editor.
-- No full-document marking.
-- No dependency change.
-- No cloud processing.
-- No real data.
-
-Next recommended step:
-
-- `WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER`.
-- Later implementation only after separate explicit coordinator approval.
-
 ## WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — Detailed plan for unified source/processed review surface
 
 Status: completed planning/design/documentation-only; no UI or product code changed.
-
-Files added:
-
-- `SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md`
-- `handover/workpackages/20260614_2205_side_by_side_review_redesign_plan.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md`
 
 Summary:
 
@@ -145,40 +99,6 @@ Summary:
 - Confirmed the review table remains source of truth and fallback.
 - Defined how serial review should remain a guided layer connected to the side-by-side surface.
 - Defined how replacement review should plug into the main surface through simple user-task choices, not raw helper/audit internals.
-- Documented desired and unwanted Dutch UI copy.
-- Defined the smallest safe first implementation as read-only side-by-side source/processed view without synchronized scrolling.
-- Listed contract-test requirements before implementation.
-
-Validation status:
-
-- Documentation/design-only; no app rebuild was run.
-- No product tests required because no product code, UI code or runtime behavior changed.
-- No shell/git diff execution was available through the ChatGPT GitHub connector.
-
-Intentionally not changed:
-
-- No Streamlit UI implementation.
-- No changes to `presidio_streamlit.py`.
-- No changes to `serial_review_panel_ui.py`.
-- No changes to `review_highlight_toggle_panel_ui.py`.
-- No custom HTML/component implementation.
-- No synchronized scroll implementation.
-- No review table behavior change.
-- No replacement behavior change.
-- No Scrub Key change.
-- No export/download change.
-- No reinsert change.
-- No click-to-mark.
-- No advanced editor.
-- No full-document marking.
-- No dependency change.
-- No cloud processing.
-- No real data.
-
-Next recommended step:
-
-- `WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS`.
-- If already completed by another worker: `WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER`.
 
 ## Recent previous entries
 
