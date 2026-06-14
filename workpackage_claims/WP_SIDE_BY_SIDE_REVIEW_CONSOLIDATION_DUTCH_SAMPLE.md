@@ -1,41 +1,26 @@
 # Workpackage claim — WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE
 
-status: in_progress_partial
+status: completed
 repository: solidprivacy-nl/scrub
 workpackage title: WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE
 started timestamp: 2026-06-15T00:55:00+02:00
+completed timestamp: 2026-06-15T01:30:00+02:00
 scope: Consolidate duplicate preview surfaces into one central side-by-side review surface and replace English fallback demo text with longer Dutch synthetic legal text.
 
-partial progress:
-- demo_text.txt was safely updated on main with longer Dutch synthetic legal sample text.
-- serial_review_panel_ui.py now supports include_side_by_side=False, so the lower duplicate side-by-side review can be suppressed when presidio_streamlit.py renders the central review once.
-- UI consolidation in presidio_streamlit.py was not completed.
-- The old upper Invoer / Directe voorbeeldweergave still exists on main.
-- Do not mark this workpackage completed yet.
-
-known issue:
-- A previous low-level create_tree/create_commit attempt created detached commit objects, but main was not moved to those commits. They do not affect the app.
-- Continue only with small GitHub.update_file commits or a clean local patch workflow.
+final commit SHA or PR link: 347592d09728c13975028f47cd576c511129f86b
+handover path: handover/workpackages/20260615_0130_side_by_side_review_consolidation_dutch_sample.md
 
 done commits:
 - demo text update: 693a630d4404da67af98339306fc7b28a51f04dd
 - serial review suppression parameter: c142591498924c46300ac3ccde1ed7b7f4e4ba07
+- central UI consolidation: 2bd925dd10a3a1469aea5c6506e05401e92b6bb6
+- consolidation tests: af3e8fa7f4d2f6127f349d452d5b8c213a75e93a
+- workpackages update: 9873146f40ee568633b0317f5ce3c277d2baa49f
+- changelog update: c93dc156accebd089ccc44a5cc0743b0f265d8fc
+- handover: 347592d09728c13975028f47cd576c511129f86b
 
-boundaries:
-- no export/download behavior change
-- no export blocking
-- no Scrub Key writes or schema changes
-- no reinsert behavior change
-- no dependency change
-- no cloud processing
-- no real data
-- no click-to-mark
-- no advanced editor
-- no full-document marking
-- no startup source mutation
-
-next recommended step:
-- Continue with small, testable changes.
-- Add or update tests for the intended consolidation.
-- Then carefully modify presidio_streamlit.py so the central side-by-side review appears once above the review table and the old Directe voorbeeldweergave is removed.
-- Call render_serial_review_panel(..., include_side_by_side=False) after the central preview is rendered.
+tests/checks: Added tests/test_side_by_side_review_consolidation_dutch_sample.py. No shell/pytest execution available through ChatGPT GitHub connector. Expected: pytest tests/test_side_by_side_review_consolidation_dutch_sample.py; pytest tests/test_review_highlight_toggle.py tests/test_review_highlight_toggle_ui_patch.py; python -m pytest -q tests.
+GitHub Actions status: pending / unknown at claim completion time.
+Hugging Face sync status: pending / unknown at claim completion time.
+app verification status: pending and required because UI behavior changed.
+next recommended step: Verify Actions and Hugging Face sync, then perform app verification screenshot. If green, close out with WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE_VERIFY.
