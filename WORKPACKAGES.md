@@ -38,6 +38,7 @@ WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — completed after Actions/HF/app verificatio
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — completed isolated prototype-only concept and visually approved by coordinator.
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — implemented with explicit coordinator approval; awaiting Actions, Hugging Face sync and app verification.
 WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — implemented; old upper direct preview removed, one central side-by-side review added above review table, Dutch synthetic legal demo text added; awaiting Actions, Hugging Face sync and app verification.
+WP_REVIEW_SURFACE_CONTROL_CLEANUP — implemented; markers default on, marker label shortened, sync scroll remains active but visible sync checkbox removed; awaiting Actions, Hugging Face sync and app verification.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -65,14 +66,13 @@ The normal app now targets:
 5. Download opgeschoonde bestanden
 ```
 
-`WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE` moves the side-by-side review surface above the review table and removes the old upper `Invoer` / `Directe voorbeeldweergave` duplicate preview. The serial review panel can now suppress its embedded side-by-side preview when the central surface has already been rendered.
-
-The central review surface keeps:
+The central review surface now keeps:
 
 - brontekst left;
 - verwerkte/gecontroleerde tekst right;
-- synchronized scrolling;
-- optional visual highlights;
+- synchronized scrolling as default behavior;
+- no visible sync-scroll checkbox;
+- visual markers default on;
 - review table as source of truth and fallback.
 
 Boundaries preserved:
@@ -88,9 +88,9 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE.
+1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP.
 2. Ask coordinator for app verification screenshot.
-3. Close out after verification evidence.
+3. Then continue with review table collapsible or download grouping packages.
 ```
 
 ## Blocked work
