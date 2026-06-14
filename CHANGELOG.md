@@ -1,22 +1,70 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — Helper-only model for source/processed review panes
+## WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — Small unified source/processed review surface
 
-Status: completed helper/tests-only; no Streamlit UI or product flow changed.
+Status: implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
 
 Files added:
 
-- `side_by_side_review.py`
-- `tests/test_side_by_side_review_prototype.py`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER.md`
-- `handover/workpackages/20260614_2250_side_by_side_review_prototype_helper.md`
+- `side_by_side_review_panel_ui.py`
+- `tests/test_side_by_side_review_ui_patch.py`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION.md`
+- `handover/workpackages/20260614_2305_side_by_side_review_implementation.md`
 
 Files changed:
 
+- `serial_review_panel_ui.py`
+- `tests/test_review_highlight_toggle_ui_patch.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER.md`
+- `RELEASE_NOTES.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION.md`
+
+Summary:
+
+- Added a bounded Streamlit side-by-side review surface in the existing review flow.
+- The new visible section is `Controleer de tekst`.
+- The left pane shows `Brontekst`.
+- The right pane shows `Verwerkte tekst`.
+- The `Markeringen tonen in verwerkte tekst` toggle is integrated into the right processed pane.
+- Markers remain visual-only and do not change source text, review table state, export payloads, Scrub Key state or reinsert behavior.
+- The review table remains source of truth and fallback.
+- Serial review remains visible below the side-by-side surface.
+- The old separate highlight-preview call was removed from `serial_review_panel_ui.py`; legacy highlight helper assets remain available for compatibility.
+- The new panel avoids repeated visible per-highlight `Gemarkeerd` labels and uses one compact legend instead.
+
+Validation status:
+
+- No shell/pytest execution was available through the ChatGPT GitHub connector.
+- Expected checks: `python -m py_compile side_by_side_review_panel_ui.py`; `python -m py_compile serial_review_panel_ui.py`; `pytest tests/test_side_by_side_review_ui_patch.py`; `pytest tests/test_review_highlight_toggle_ui_patch.py`; `pytest tests/test_side_by_side_review_prototype.py tests/test_side_by_side_review_contract.py tests/test_review_highlight_toggle.py`; full `pytest`.
+- UI/runtime changed, so Actions, Hugging Face sync and coordinator app verification are required before closeout.
+
+Intentionally not changed:
+
+- No `presidio_streamlit.py` change.
+- No review table behavior change.
+- No replacement behavior change.
+- No Scrub Key writes or schema change.
+- No export/download behavior change.
+- No reinsert behavior change.
+- No synchronized scroll implementation.
+- No custom Streamlit component.
+- No click-to-mark.
+- No advanced editor.
+- No full-document marking.
+- No dependency change.
+- No cloud processing.
+- No real data.
+
+Next recommended step:
+
+- Verify GitHub Actions and Hugging Face sync.
+- Then `WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY` with coordinator app screenshot.
+
+## WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — Helper-only model for source/processed review panes
+
+Status: completed helper/tests-only; no Streamlit UI or product flow changed.
 
 Summary:
 
@@ -28,39 +76,6 @@ Summary:
 - The helper records serial review as a guided layer, not a table replacement.
 - The helper records replacement review as a future task-oriented layer with simple first actions/scopes, while blocking helper/audit internals as user-facing UI.
 - The helper records synchronized scrolling as desired later but not implemented.
-- Added tests for layout, highlight behavior, visual-only toggle contract, review table/serial/replacement relationships, scroll-sync feasibility fields, no product-state changes, compact audit summary, no Streamlit import/calls and synthetic-only values.
-
-Validation status:
-
-- No shell/pytest execution was available through the ChatGPT GitHub connector.
-- Expected check: `pytest tests/test_side_by_side_review_prototype.py`.
-- Optional combined check: `pytest tests/test_side_by_side_review_prototype.py tests/test_side_by_side_review_contract.py tests/test_review_highlight_toggle.py`.
-- No app rebuild or app verification required because no UI/runtime behavior changed.
-
-Intentionally not changed:
-
-- No Streamlit UI implementation.
-- No changes to `presidio_streamlit.py`.
-- No changes to `serial_review_panel_ui.py`.
-- No changes to `review_highlight_toggle_panel_ui.py`.
-- No review table behavior change.
-- No replacement behavior change.
-- No Scrub Key behavior change.
-- No export/download behavior change.
-- No reinsert behavior change.
-- No synchronized scroll implementation.
-- No custom HTML/component rendering implementation.
-- No click-to-mark.
-- No advanced editor.
-- No full-document marking.
-- No dependency change.
-- No cloud processing.
-- No real data.
-
-Next recommended step:
-
-- Verify GitHub Actions for this helper package.
-- `WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION` only after separate explicit coordinator approval.
 
 ## WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — Repair side-by-side review contract wording failure
 
@@ -85,37 +100,18 @@ Summary:
 - Locked the long-term rejection of separate highlight-only duplicate preview as the main review pattern.
 - Locked the long-term rejection of repeated per-highlight `Gemarkeerd` labels, allowing at most one compact legend.
 - Locked review table source-of-truth/fallback and serial-review guided-layer boundaries.
-- Locked blocked behavior: no synchronized scroll implementation, custom HTML/component implementation, UI edits, review table mutation, Scrub Key writes, export/download changes, reinsert changes, click-to-mark, advanced editor or full-document marking.
-
-## WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — Detailed plan for unified source/processed review surface
-
-Status: completed planning/design/documentation-only; no UI or product code changed.
-
-Summary:
-
-- Added a detailed plan for the unified side-by-side review surface.
-- Planned the main layout: brontekst/source text left and verwerkte/gecontroleerde text right.
-- Placed optional highlights in the right processed pane instead of a separate long-term highlight-only duplicate preview.
-- Confirmed the review table remains source of truth and fallback.
-- Defined how serial review should remain a guided layer connected to the side-by-side surface.
-- Defined how replacement review should plug into the main surface through simple user-task choices, not raw helper/audit internals.
 
 ## Recent previous entries
 
 Detailed recent history remains available in Git history and includes:
 
+- WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — detailed plan for unified source/processed review surface.
 - WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — contract tests for intuitive replacement review redesign.
 - WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — unified side-by-side review UX direction.
 - WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — intuitive replacement review flow redesign.
 - WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — closeout/app verification for hidden replacement helper panel.
 - WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — simple masked-text highlight toggle implementation.
 - WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — contract tests for simple masked-text highlight toggle plan.
-- WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN_ACTIONS_FIX3 — restored exact replacement UI plan sequencing phrase.
-- WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — simple masked-text highlight toggle planning.
 - WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — product rollback/hide of the non-intuitive helper panel.
 - WP_REPLACE_LOGIC_UI_IMPLEMENTATION — staged/read-only replacement decision companion panel, technically implemented but product-rejected.
-- WP_REPLACE_LOGIC_UI_CONTRACT_GAP_FIX — strengthened replacement decision UI contract tests before implementation.
-- WP_REPLACE_LOGIC_UI_IMPLEMENTATION_READINESS — readiness check before replacement decision UI implementation.
 - WP39D — DOCX hygiene audit UI implementation.
-- WP39C — DOCX hygiene audit UI contract tests.
-- WP39B — DOCX hygiene audit UI planning.
