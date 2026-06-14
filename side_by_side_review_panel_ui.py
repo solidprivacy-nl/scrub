@@ -1,13 +1,14 @@
 """Streamlit renderer for the bounded side-by-side review surface.
 
-WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION exposes the helper model from
-``side_by_side_review.py`` as a small UI surface:
+WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION integrates the approved
+prototype concept into the existing side-by-side review surface:
 
     Brontekst links | Verwerkte tekst rechts
                     | optional visual-only highlights in the right pane
+                    | optional synchronized scrolling with fallback
 
-This renderer does not implement synchronized scrolling, does not use a custom
-component, does not mutate the review table, does not change replacement
+This renderer uses local escaped HTML/JS through Streamlit's built-in HTML
+component. It does not mutate the review table, does not change replacement
 behavior, does not write Scrub Key data, does not change export/download
 behavior, does not change reinsert behavior, does not add dependencies, does not
 call cloud services and does not use real data.
@@ -19,16 +20,58 @@ from html import escape
 from typing import Any
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 from review_highlight_toggle_panel_ui import build_preview_text
 from side_by_side_review import build_side_by_side_review_model
 
 
 SIDE_BY_SIDE_REVIEW_PANE_HEIGHT = 320
+SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT = 430
 
-_SIDE_BY_SIDE_CSS = f"""
+_SYNC_SCROLL_COMPONENT_CSS = f"""
 <style>
-.sp-side-by-side-review-pane {{
+.sp-sync-scroll-wrapper {{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #111827;
+}}
+.sp-sync-scroll-toolbar {{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 0 0 0.75rem 0;
+    color: #4b5563;
+    font-size: 0.92rem;
+}}
+.sp-sync-scroll-toolbar label {{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #111827;
+    font-weight: 600;
+}}
+.sp-sync-scroll-grid {{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}}
+.sp-sync-scroll-title {{
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin: 0 0 0.45rem 0;
+}}
+.sp-sync-scroll-title strong {{
+    font-size: 1rem;
+}}
+.sp-sync-scroll-legend {{
+    color: #6b7280;
+    font-size: 0.86rem;
+}}
+.sp-sync-scroll-pane {{
     background: #f8fafc;
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
@@ -48,17 +91,17 @@ _SIDE_BY_SIDE_CSS = f"""
     border-radius: 0.25rem;
     padding: 0.05rem 0.15rem;
 }}
+.sp-sync-scroll-footer {{
+    margin-top: 0.6rem;
+    color: #6b7280;
+    font-size: 0.86rem;
+}}
 </style>
 """.strip()
 
 
-def _highlighted_processed_html(processed_text: str, highlight_spans: list[tuple[int, int]]) -> str:
-    """Return escaped static HTML for the processed pane only.
-
-    The document text is escaped before wrapping exact already-computed spans.
-    No repeated visible inline label is inserted; a compact legend in the UI
-    explains the marker meaning once.
-    """
+def _highlighted_processed_inner_html(processed_text: str, highlight_spans: list[tuple[int, int]]) -> str:
+    """Return escaped inner HTML for the processed pane only."""
 
     parts: list[str] = []
     cursor = 0
@@ -71,7 +114,101 @@ def _highlighted_processed_html(processed_text: str, highlight_spans: list[tuple
         )
         cursor = end
     parts.append(escape(processed_text[cursor:]))
-    return f'{_SIDE_BY_SIDE_CSS}\n<div class="sp-side-by-side-review-pane">{"".join(parts)}</div>'
+    return "".join(parts)
+
+
+def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, processed_html: str, show_markers: bool) -> str:
+    """Build local escaped HTML/JS for synchronized side-by-side scrolling.
+
+    The source text is escaped here. The processed HTML must be produced by
+    ``_highlighted_processed_inner_html`` or ``escape`` before this function is
+    called. No external scripts, network calls or persistence are used.
+    """
+
+    source_html = escape(source_text)
+    processed_legend = "Geel = vervangen of gemaskeerde waarde" if show_markers else "Verwerkte tekst"
+    checked_attribute = "checked"
+    return f"""
+{_SYNC_SCROLL_COMPONENT_CSS}
+<div class="sp-sync-scroll-wrapper">
+  <div class="sp-sync-scroll-toolbar" aria-label="side-by-side scroll controls">
+    <label>
+      <input id="syncToggle" type="checkbox" {checked_attribute}>
+      Synchroon scrollen
+    </label>
+    <span id="syncStatus">Sync aan: scroll links of rechts om het andere paneel mee te bewegen.</span>
+  </div>
+  <div class="sp-sync-scroll-grid" aria-label="side-by-side review panes">
+    <section>
+      <div class="sp-sync-scroll-title">
+        <strong>Brontekst</strong>
+        <span class="sp-sync-scroll-legend">Originele tekst</span>
+      </div>
+      <div id="sourcePane" class="sp-sync-scroll-pane" tabindex="0" aria-label="Brontekst">{source_html}</div>
+    </section>
+    <section>
+      <div class="sp-sync-scroll-title">
+        <strong>Verwerkte tekst</strong>
+        <span class="sp-sync-scroll-legend">{escape(processed_legend)}</span>
+      </div>
+      <div id="processedPane" class="sp-sync-scroll-pane" tabindex="0" aria-label="Verwerkte tekst">{processed_html}</div>
+    </section>
+  </div>
+  <div class="sp-sync-scroll-footer">
+    Alleen visuele hulp. Percentage-based sync kan bij ongelijke bron/verwerkte tekst valse uitlijning geven; zet sync uit voor onafhankelijk scrollen.
+  </div>
+</div>
+<script>
+(function () {{
+  const sourcePane = document.getElementById('sourcePane');
+  const processedPane = document.getElementById('processedPane');
+  const syncToggle = document.getElementById('syncToggle');
+  const syncStatus = document.getElementById('syncStatus');
+  let isSyncing = false;
+
+  function scrollRatio(element) {{
+    const maxScroll = element.scrollHeight - element.clientHeight;
+    if (maxScroll <= 0) {{
+      return 0;
+    }}
+    return element.scrollTop / maxScroll;
+  }}
+
+  function setScrollRatio(element, ratio) {{
+    const maxScroll = element.scrollHeight - element.clientHeight;
+    element.scrollTop = ratio * maxScroll;
+  }}
+
+  function syncScroll(fromPane, toPane) {{
+    if (!syncToggle.checked || isSyncing) {{
+      return;
+    }}
+    isSyncing = true;
+    window.requestAnimationFrame(function () {{
+      setScrollRatio(toPane, scrollRatio(fromPane));
+      isSyncing = false;
+    }});
+  }}
+
+  sourcePane.addEventListener('scroll', function () {{
+    syncScroll(sourcePane, processedPane);
+  }});
+
+  processedPane.addEventListener('scroll', function () {{
+    syncScroll(processedPane, sourcePane);
+  }});
+
+  syncToggle.addEventListener('change', function () {{
+    if (syncToggle.checked) {{
+      syncStatus.textContent = 'Sync aan: scroll links of rechts om het andere paneel mee te bewegen.';
+      syncScroll(sourcePane, processedPane);
+    }} else {{
+      syncStatus.textContent = 'Sync uit: beide panelen scrollen onafhankelijk.';
+    }}
+  }});
+}}());
+</script>
+""".strip()
 
 
 def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df: Any) -> dict[str, Any]:
@@ -104,39 +241,25 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         highlights_enabled=show_markers,
     )
     compact_legend = model["compact_legend"]
-
-    left_column, right_column = st.columns(2)
-    with left_column:
-        st.markdown("**Brontekst**")
-        st.text_area(
-            label="Brontekst",
-            value=model["source_pane"]["text"],
-            height=SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
-            key="side_by_side_review_source_text",
-            disabled=True,
+    processed_html = (
+        _highlighted_processed_inner_html(
+            model["processed_pane"]["text"],
+            model["processed_pane"]["highlight_spans"],
         )
+        if show_markers and model["processed_pane"]["highlight_spans"]
+        else escape(model["processed_pane"]["text"])
+    )
 
-    with right_column:
-        st.markdown("**Verwerkte tekst**")
-        if show_markers and model["processed_pane"]["highlight_spans"]:
-            st.caption("Geel = vervangen of gemaskeerde waarde")
-            st.markdown(
-                _highlighted_processed_html(
-                    model["processed_pane"]["text"],
-                    model["processed_pane"]["highlight_spans"],
-                ),
-                unsafe_allow_html=True,
-            )
-        else:
-            if show_markers:
-                st.caption("Geen gemarkeerde vervangingen beschikbaar in deze verwerkte tekst.")
-            st.text_area(
-                label="Verwerkte tekst",
-                value=model["processed_pane"]["text"],
-                height=SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
-                key="side_by_side_review_processed_text",
-                disabled=True,
-            )
+    components.html(
+        _side_by_side_sync_scroll_html(
+            source_text=model["source_pane"]["text"],
+            processed_text=model["processed_pane"]["text"],
+            processed_html=processed_html,
+            show_markers=bool(show_markers and model["processed_pane"]["highlight_spans"]),
+        ),
+        height=SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT,
+        scrolling=False,
+    )
 
     st.caption("Alleen visuele hulp. Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior.")
     st.caption(model["review_table"]["copy"])
@@ -150,10 +273,12 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         "scrub_key_writes": False,
         "export_download_behavior_change": False,
         "reinsert_behavior_change": False,
-        "synchronized_scroll_implementation": False,
+        "synchronized_scroll_implementation": True,
+        "sync_scroll_percentage_based": True,
+        "sync_scroll_fallback_independent": True,
         "custom_component_rendering": False,
+        "uses_streamlit_components_html": True,
         "pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
-        "processed_pane_scrolls_independently": True,
         "compact_legend": compact_legend,
         "model": model,
     }
