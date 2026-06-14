@@ -209,6 +209,7 @@ Current mitigations:
 - WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY confirmed the helper panel is not visible in the normal app flow.
 - WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION added a simpler optional visual aid: a non-mutating `Markeringen tonen in voorbeeldtekst` toggle.
 - WP_REPLACE_LOGIC_UI_REDESIGN_PLAN defined a task-oriented replacement flow: found value, context, suggested replacement, four simple actions and optional exact-same scope.
+- WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS added contract coverage for the intuitive replacement-review redesign and its side-by-side alignment.
 - WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR anchored `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md` and D021: source text left, processed text right, optional highlights integrated into the main processed pane.
 
 Gaps:
@@ -222,13 +223,12 @@ Gaps:
 - No professional document editor exists.
 - No separate frontend migration is approved.
 - Replacement-decision helper internals should not be exposed directly as a user-facing panel.
-- The side-by-side redesign still needs plan and contract tests before any new UI implementation.
+- The side-by-side redesign still needs contract tests before any new UI implementation.
 
 Recommended workpackages:
 
-- WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — detailed design for the unified source/processed review surface.
 - WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side direction before implementation.
-- WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — lock the simple replacement-choice plan.
+- WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — helper-only exploration after side-by-side contracts are in place.
 - Later approved package — small side-by-side review implementation after separate explicit approval.
 - Later approved package — small redesigned replacement review implementation after separate explicit approval.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
