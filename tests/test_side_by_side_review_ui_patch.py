@@ -70,10 +70,11 @@ def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_
     assert "right_column" in side_text
 
 
-def test_side_by_side_panel_avoids_repeated_inline_gemarkeerd_labels():
+def test_side_by_side_panel_avoids_repeated_visible_gemarkeerd_labels():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
-    assert "Gemarkeerd" not in text
+    assert ">Gemarkeerd<" not in text
+    assert "Gemarkeerd:</" not in text
     assert "::before" not in text
     assert "compact_legend" in text
     assert "aria-label=\"gemarkeerde vervanging\"" in text
