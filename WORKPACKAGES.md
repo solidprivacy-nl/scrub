@@ -38,6 +38,7 @@ WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — completed after Actions/HF verific
 WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — completed after Actions/HF/app verification.
 WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — completed product rollback/hide; replacement helper panel is removed from the normal Scrub Legal UI flow.
 WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — completed after Actions/HF/app verification; hidden replacement helper panel closeout completed.
+WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — completed planning/design/documentation-only; old helper panel must not return as normal user-facing panel.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -68,6 +69,30 @@ The rollback/hide is verified:
 Current post-rollback Actions screenshot evidence shows green Tests and green Sync to Hugging Face Space on current main.
 Coordinator app screenshot shows the normal Scrub Legal flow with review table, serial review, highlight toggle, export/download and DOCX hygiene audit visible, while the Replacement decision helper panel is not visible.
 ```
+
+The redesigned replacement review direction is now:
+
+```text
+one found item -> context -> suggested replacement -> one simple choice -> optional exact-same scope -> existing table remains fallback
+```
+
+Visible first-choice labels should be user-task labels, not helper/audit internals:
+
+```text
+Vervangen
+Zichtbaar houden
+Aanpassen
+Later controleren
+```
+
+First-phase scope should stay simple:
+
+```text
+Alleen deze plek
+Alle exact dezelfde waarden
+```
+
+Do not expose `all_normalized`, `creates_mapping`, `mapping_candidates`, `export_readiness`, raw decision states or audit internals as the main UI.
 
 The implemented review highlight toggle is intentionally small and optional:
 
@@ -103,7 +128,8 @@ Implementation boundaries:
 ## Active / next recommended execution queue
 
 ```text
-1. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
+1. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — lock the redesign plan before any new implementation.
+2. WP_REPLACE_LOGIC_UI_REDESIGNED_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
@@ -114,6 +140,7 @@ Do not start yet without separate approval:
 new replacement UI implementation
 mutating replacement decision implementation
 automatic replacement
+Scrub Key writes
 export blocking
 click-to-mark
 advanced editor
