@@ -39,6 +39,7 @@ WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — completed isolated prototype-on
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — implemented with explicit coordinator approval; awaiting Actions, Hugging Face sync and app verification.
 WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — implemented; old upper direct preview removed, one central side-by-side review added above review table, Dutch synthetic legal demo text added; awaiting Actions, Hugging Face sync and app verification.
 WP_REVIEW_SURFACE_CONTROL_CLEANUP — implemented; markers default on, marker label shortened, sync scroll remains active but visible sync checkbox removed; awaiting Actions, Hugging Face sync and app verification.
+WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed tests/documentation-only; awaiting Actions/HF verification.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -61,7 +62,7 @@ The normal app now targets:
 ```text
 1. Voeg document of tekst toe
 2. Controleer de tekst: one central side-by-side review surface
-3. Controleer gevonden gegevens: review table remains source of truth
+3. Controleer gevonden gegevens: review table remains source of truth, may become collapsible after tests/approval
 4. Serial review / extra review aids
 5. Download opgeschoonde bestanden
 ```
@@ -74,6 +75,12 @@ The central review surface now keeps:
 - no visible sync-scroll checkbox;
 - visual markers default on;
 - review table as source of truth and fallback.
+
+Review table collapsible contract:
+
+- `REVIEW_TABLE_COLLAPSIBLE_CONTRACT.md` records the future collapsible-section rules.
+- `tests/test_review_table_collapsible_contract.py` locks that `Controleer gevonden gegevens` may support an item count but the table remains source of truth/fallback.
+- Future implementation must preserve `replacement_editor`, `include`, `remember`, `find`, `replace_with`, export/download labels and no Scrub Key/reinsert/replacement behavior changes.
 
 Boundaries preserved:
 
@@ -88,9 +95,10 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP.
-2. Ask coordinator for app verification screenshot.
-3. Then continue with review table collapsible or download grouping packages.
+1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS.
+2. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP.
+3. Ask coordinator for app verification screenshot where UI behavior changed.
+4. After green contract tests, consider WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION only if no other presidio_streamlit.py review-flow work is active.
 ```
 
 ## Blocked work
