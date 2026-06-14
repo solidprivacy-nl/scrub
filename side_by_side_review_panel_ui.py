@@ -1,17 +1,9 @@
 """Streamlit renderer for the bounded side-by-side review surface.
 
-WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION integrates the approved
-prototype concept into the existing side-by-side review surface:
-
-    Brontekst links | Verwerkte tekst rechts
-                    | optional visual-only highlights in the right pane
-                    | optional synchronized scrolling with fallback
-
-This renderer uses local escaped HTML/JS through Streamlit's built-in HTML
-component. It does not mutate the review table, does not change replacement
-behavior, does not write Scrub Key data, does not change export/download
-behavior, does not change reinsert behavior, does not add dependencies, does not
-call cloud services and does not use real data.
+The side-by-side review surface shows source text on the left and processed text
+on the right. Highlights are visual-only. Scrolling is synchronized by default.
+The returned model is report-only and is not used to change review-table,
+replacement, export, Scrub Key or reinsert behavior.
 """
 
 from __future__ import annotations
@@ -27,29 +19,13 @@ from side_by_side_review import build_side_by_side_review_model
 
 
 SIDE_BY_SIDE_REVIEW_PANE_HEIGHT = 320
-SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT = 430
+SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT = 410
 
 _SYNC_SCROLL_COMPONENT_CSS = f"""
 <style>
 .sp-sync-scroll-wrapper {{
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     color: #111827;
-}}
-.sp-sync-scroll-toolbar {{
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin: 0 0 0.75rem 0;
-    color: #4b5563;
-    font-size: 0.92rem;
-}}
-.sp-sync-scroll-toolbar label {{
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: #111827;
-    font-weight: 600;
 }}
 .sp-sync-scroll-grid {{
     display: grid;
@@ -118,26 +94,13 @@ def _highlighted_processed_inner_html(processed_text: str, highlight_spans: list
 
 
 def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, processed_html: str, show_markers: bool) -> str:
-    """Build local escaped HTML/JS for synchronized side-by-side scrolling.
-
-    The source text is escaped here. The processed HTML must be produced by
-    ``_highlighted_processed_inner_html`` or ``escape`` before this function is
-    called. No external scripts, network calls or persistence are used.
-    """
+    """Build escaped HTML for synchronized side-by-side scrolling."""
 
     source_html = escape(source_text)
     processed_legend = "Geel = vervangen of gemaskeerde waarde" if show_markers else "Verwerkte tekst"
-    checked_attribute = "checked"
     return f"""
 {_SYNC_SCROLL_COMPONENT_CSS}
 <div class="sp-sync-scroll-wrapper">
-  <div class="sp-sync-scroll-toolbar" aria-label="side-by-side scroll controls">
-    <label>
-      <input id="syncToggle" type="checkbox" {checked_attribute}>
-      Synchroon scrollen
-    </label>
-    <span id="syncStatus">Sync aan: scroll links of rechts om het andere paneel mee te bewegen.</span>
-  </div>
   <div class="sp-sync-scroll-grid" aria-label="side-by-side review panes">
     <section>
       <div class="sp-sync-scroll-title">
@@ -155,15 +118,13 @@ def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, pro
     </section>
   </div>
   <div class="sp-sync-scroll-footer">
-    Alleen visuele hulp. Percentage-based sync kan bij ongelijke bron/verwerkte tekst valse uitlijning geven; zet sync uit voor onafhankelijk scrollen.
+    De panelen scrollen synchroon. Bij grote tekstverschillen kan de visuele uitlijning iets afwijken.
   </div>
 </div>
 <script>
 (function () {{
   const sourcePane = document.getElementById('sourcePane');
   const processedPane = document.getElementById('processedPane');
-  const syncToggle = document.getElementById('syncToggle');
-  const syncStatus = document.getElementById('syncStatus');
   let isSyncing = false;
 
   function scrollRatio(element) {{
@@ -180,7 +141,7 @@ def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, pro
   }}
 
   function syncScroll(fromPane, toPane) {{
-    if (!syncToggle.checked || isSyncing) {{
+    if (isSyncing) {{
       return;
     }}
     isSyncing = true;
@@ -197,26 +158,13 @@ def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, pro
   processedPane.addEventListener('scroll', function () {{
     syncScroll(processedPane, sourcePane);
   }});
-
-  syncToggle.addEventListener('change', function () {{
-    if (syncToggle.checked) {{
-      syncStatus.textContent = 'Sync aan: scroll links of rechts om het andere paneel mee te bewegen.';
-      syncScroll(sourcePane, processedPane);
-    }} else {{
-      syncStatus.textContent = 'Sync uit: beide panelen scrollen onafhankelijk.';
-    }}
-  }});
 }}());
 </script>
 """.strip()
 
 
 def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df: Any) -> dict[str, Any]:
-    """Render a small source/processed comparison surface.
-
-    The returned model is report-only. It is not used to mutate replacement rows,
-    export payloads, Scrub Key state or reinsert behavior.
-    """
+    """Render a small source/processed comparison surface."""
 
     processed_text = build_preview_text(source_text, edited_replacements_df)
 
@@ -228,8 +176,8 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
     )
 
     show_markers = st.checkbox(
-        "Markeringen tonen in verwerkte tekst",
-        value=False,
+        "Markeringen tonen",
+        value=True,
         key="side_by_side_review_show_markers",
         help="Alleen visuele hulp. Wijzigt niets aan de vervangtabel, export, Scrub Key of terugzetten.",
     )
@@ -275,7 +223,8 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         "reinsert_behavior_change": False,
         "synchronized_scroll_implementation": True,
         "sync_scroll_percentage_based": True,
-        "sync_scroll_fallback_independent": True,
+        "sync_scroll_always_on": True,
+        "sync_scroll_visible_checkbox": False,
         "custom_component_rendering": False,
         "uses_streamlit_components_html": True,
         "pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
