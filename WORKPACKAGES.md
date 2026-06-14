@@ -42,7 +42,7 @@ WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed planning/design/documentation
 WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — completed tests/documentation-only; side-by-side review plan is contract-locked before implementation.
 WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — completed documentation-only wording repair for highlight safety contract phrases.
 WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — completed helper/tests-only; pure source/processed pane model, highlight metadata, legend and scroll-sync feasibility fields added.
-WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
+WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — implemented with explicit coordinator approval; WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX completed narrow wording/test repair; awaiting GitHub Actions, Hugging Face sync and app verification.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -99,6 +99,8 @@ WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION added:
 - no review table behavior change;
 - no Scrub Key/export/reinsert behavior change.
 
+WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX repaired a narrow test wording issue in a helper docstring. No runtime behavior changed.
+
 The old separate highlight-preview call was removed from `serial_review_panel_ui.py`; its helper assets remain available for compatibility.
 
 Required verification for closeout:
@@ -128,7 +130,7 @@ App verification should confirm:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION.
+1. Verify GitHub Actions and Hugging Face sync for WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX.
 2. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — after green Actions/sync and app screenshot.
 ```
 
