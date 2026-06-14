@@ -39,6 +39,7 @@ WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — completed isolated prototype-on
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — implemented with explicit coordinator approval; awaiting Actions, Hugging Face sync and app verification.
 WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — implemented; old upper direct preview removed, one central side-by-side review added above review table, Dutch synthetic legal demo text added; awaiting Actions, Hugging Face sync and app verification.
 WP_REVIEW_SURFACE_CONTROL_CLEANUP — implemented; markers default on, marker label shortened, sync scroll remains active but visible sync checkbox removed; awaiting Actions, Hugging Face sync and app verification.
+WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed tests/documentation-only; stale assertions repaired after marker/sync-control cleanup; awaiting Actions verification.
 WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed tests/documentation-only; awaiting Actions/HF verification.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
@@ -95,10 +96,11 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS.
-2. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP.
-3. Ask coordinator for app verification screenshot where UI behavior changed.
-4. After green contract tests, consider WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION only if no other presidio_streamlit.py review-flow work is active.
+1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR.
+2. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS.
+3. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP.
+4. Ask coordinator for app verification screenshot where UI behavior changed.
+5. After green contract tests, consider WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION only if no other presidio_streamlit.py review-flow work is active.
 ```
 
 ## Blocked work
