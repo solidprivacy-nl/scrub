@@ -202,12 +202,15 @@ Current mitigations:
 - WP_REPLACE_LOGIC_UI_REDESIGN_PLAN and its contract tests defined a task-oriented replacement flow.
 - WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR, redesign plan, contract tests and prototype helper established the unified source/processed review direction.
 - WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION added a first bounded side-by-side UI surface: brontekst left, verwerkte text right, optional visual markers in the right pane, no synchronized scroll, no custom component, no review table mutation, no Scrub Key/export/reinsert change.
+- WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX made the side-by-side panes visually equal-height with local processed-pane scrolling.
+- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY recorded why synchronized scrolling is attractive but risky in the current Streamlit MVP, and recommended keeping equal-height independent panes as the safe baseline.
 
 Gaps:
 
-- GitHub Actions, Hugging Face sync and app verification are still needed for the side-by-side implementation closeout.
+- GitHub Actions, Hugging Face sync and app verification are still needed for the side-by-side implementation/height-fix closeout.
 - The review table remains the source of truth and fallback.
-- Synchronized scrolling is desirable but technically risky and still needs separate planning/testing before implementation.
+- Synchronized scrolling remains desirable but technically risky and is not approved for implementation.
+- Naive percentage-based synchronized scrolling can create false visual alignment because source and processed text are not guaranteed to match line-by-line after masking/replacement.
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
 - No separate frontend migration is approved.
@@ -216,6 +219,7 @@ Gaps:
 Recommended workpackages:
 
 - WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — closeout/app verification after green Actions and Hugging Face sync.
+- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_CONTRACT_TESTS — only if coordinator still wants synchronized scroll after current UI closeout.
 - Later approved package — small redesigned replacement review implementation after separate explicit approval.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
 
