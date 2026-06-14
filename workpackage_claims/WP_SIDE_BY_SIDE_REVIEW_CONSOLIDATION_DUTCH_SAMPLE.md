@@ -8,14 +8,18 @@ scope: Consolidate duplicate preview surfaces into one central side-by-side revi
 
 partial progress:
 - demo_text.txt was safely updated on main with longer Dutch synthetic legal sample text.
+- serial_review_panel_ui.py now supports include_side_by_side=False, so the lower duplicate side-by-side review can be suppressed when presidio_streamlit.py renders the central review once.
 - UI consolidation in presidio_streamlit.py was not completed.
 - The old upper Invoer / Directe voorbeeldweergave still exists on main.
-- The lower side-by-side review surface still exists through serial_review_panel_ui.py.
 - Do not mark this workpackage completed yet.
 
 known issue:
 - A previous low-level create_tree/create_commit attempt created detached commit objects, but main was not moved to those commits. They do not affect the app.
 - Continue only with small GitHub.update_file commits or a clean local patch workflow.
+
+done commits:
+- demo text update: 693a630d4404da67af98339306fc7b28a51f04dd
+- serial review suppression parameter: c142591498924c46300ac3ccde1ed7b7f4e4ba07
 
 boundaries:
 - no export/download behavior change
@@ -32,6 +36,6 @@ boundaries:
 
 next recommended step:
 - Continue with small, testable changes.
-- First add tests for the intended consolidation.
-- Then modify serial_review_panel_ui.py to allow suppressing its side-by-side block.
+- Add or update tests for the intended consolidation.
 - Then carefully modify presidio_streamlit.py so the central side-by-side review appears once above the review table and the old Directe voorbeeldweergave is removed.
+- Call render_serial_review_panel(..., include_side_by_side=False) after the central preview is rendered.
