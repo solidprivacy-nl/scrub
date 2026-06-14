@@ -6,6 +6,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SERIAL_RENDERER = REPO_ROOT / "serial_review_panel_ui.py"
 TOGGLE_RENDERER = REPO_ROOT / "review_highlight_toggle_panel_ui.py"
+SIDE_BY_SIDE_RENDERER = REPO_ROOT / "side_by_side_review_panel_ui.py"
 HELPER = REPO_ROOT / "review_highlight_toggle.py"
 APP = REPO_ROOT / "presidio_streamlit.py"
 
@@ -15,20 +16,25 @@ def _combined_text() -> str:
         [
             SERIAL_RENDERER.read_text(encoding="utf-8"),
             TOGGLE_RENDERER.read_text(encoding="utf-8"),
+            SIDE_BY_SIDE_RENDERER.read_text(encoding="utf-8"),
             HELPER.read_text(encoding="utf-8"),
         ]
     )
 
 
-def test_review_highlight_toggle_renderer_is_connected_to_serial_review_panel():
+def test_review_highlight_toggle_is_now_reached_through_side_by_side_panel():
     serial_text = SERIAL_RENDERER.read_text(encoding="utf-8")
+    side_by_side_text = SIDE_BY_SIDE_RENDERER.read_text(encoding="utf-8")
 
-    assert "from review_highlight_toggle_panel_ui import render_review_highlight_toggle_panel" in serial_text
-    assert "render_review_highlight_toggle_panel(" in serial_text
+    assert "from side_by_side_review_panel_ui import render_side_by_side_review_panel" in serial_text
+    assert "render_side_by_side_review_panel(" in serial_text
+    assert "render_review_highlight_toggle_panel(" not in serial_text
+    assert "Markeringen tonen in verwerkte tekst" in side_by_side_text
+    assert "side_by_side_review_show_markers" in side_by_side_text
     assert "review_highlight_toggle_show_markers" not in APP.read_text(encoding="utf-8")
 
 
-def test_review_highlight_toggle_user_copy_and_keys_exist():
+def test_legacy_review_highlight_toggle_renderer_assets_are_preserved():
     text = TOGGLE_RENDERER.read_text(encoding="utf-8")
 
     assert "Voorbeeldtekst met optionele markeringen" in text
@@ -36,6 +42,7 @@ def test_review_highlight_toggle_user_copy_and_keys_exist():
     assert "review_highlight_toggle_show_markers" in text
     assert "Gecontroleerde voorbeeldtekst" in text
     assert "Geen gemarkeerde vervangingen beschikbaar in deze voorbeeldtekst." in text
+    assert "def build_preview_text(" in text
 
 
 def test_review_highlight_toggle_visible_boundaries_exist():
