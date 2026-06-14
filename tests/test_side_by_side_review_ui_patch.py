@@ -21,14 +21,14 @@ def _normal_review_flow_text() -> str:
     )
 
 
-def test_side_by_side_panel_is_connected_through_existing_serial_review_route():
+def test_side_by_side_panel_is_connected_through_existing_review_route():
     app_text = APP.read_text(encoding="utf-8")
     serial_text = SERIAL_PANEL.read_text(encoding="utf-8")
 
+    assert "from side_by_side_review_panel_ui import render_side_by_side_review_panel" in app_text
+    assert "render_side_by_side_review_panel(" in app_text
     assert "from serial_review_panel_ui import render_serial_review_panel" in app_text
-    assert "render_serial_review_panel(" in app_text
     assert "from side_by_side_review_panel_ui import render_side_by_side_review_panel" in serial_text
-    assert "render_side_by_side_review_panel(" in serial_text
 
 
 def test_side_by_side_panel_uses_helper_model_and_existing_preview_logic():
@@ -41,7 +41,7 @@ def test_side_by_side_panel_uses_helper_model_and_existing_preview_logic():
     assert SIDE_BY_SIDE_HELPER.exists()
 
 
-def test_user_facing_side_by_side_copy_exists():
+def test_user_facing_side_by_side_copy_exists_and_controls_are_simplified():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     for phrase in [
@@ -49,22 +49,25 @@ def test_user_facing_side_by_side_copy_exists():
         "Vergelijk links de brontekst met rechts de verwerkte tekst",
         "Brontekst",
         "Verwerkte tekst",
-        "Markeringen tonen in verwerkte tekst",
+        "Markeringen tonen",
         "Geel = vervangen of gemaskeerde waarde",
         "De vervangtabel blijft leidend",
         "Alleen visuele hulp",
-        "Synchroon scrollen",
-        "Sync uit: beide panelen scrollen onafhankelijk.",
+        "De panelen scrollen synchroon. Bij grote tekstverschillen kan de visuele uitlijning iets afwijken.",
         "Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior",
     ]:
         assert phrase in text
+
+    assert "Markeringen tonen in verwerkte tekst" not in text
+    assert "Synchroon scrollen" not in text
+    assert "Sync uit: beide panelen scrollen onafhankelijk." not in text
 
 
 def test_side_by_side_panes_have_equal_height_and_sync_scroll_component():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     assert "SIDE_BY_SIDE_REVIEW_PANE_HEIGHT = 320" in text
-    assert "SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT = 430" in text
+    assert "SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT = 410" in text
     assert "height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
     assert "max-height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
     assert "min-height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
@@ -74,28 +77,40 @@ def test_side_by_side_panes_have_equal_height_and_sync_scroll_component():
     assert '"pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT' in text
 
 
-def test_side_by_side_panel_integrates_bidirectional_sync_scroll_from_prototype():
+def test_side_by_side_panel_keeps_bidirectional_sync_scroll_without_visible_toggle():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     for required in [
         "import streamlit.components.v1 as components",
         'id="sourcePane"',
         'id="processedPane"',
-        'id="syncToggle"',
         "function scrollRatio(element)",
         "function setScrollRatio(element, ratio)",
         "function syncScroll(fromPane, toPane)",
         "sourcePane.addEventListener('scroll'",
         "processedPane.addEventListener('scroll'",
-        "syncToggle.addEventListener('change'",
         "window.requestAnimationFrame",
         "element.scrollTop = ratio * maxScroll",
         '"synchronized_scroll_implementation": True',
         '"sync_scroll_percentage_based": True',
-        '"sync_scroll_fallback_independent": True',
+        '"sync_scroll_always_on": True',
+        '"sync_scroll_visible_checkbox": False',
         '"uses_streamlit_components_html": True',
     ]:
         assert required in text
+
+    assert 'id="syncToggle"' not in text
+    assert "syncToggle.addEventListener" not in text
+
+
+def test_marker_toggle_defaults_on_and_stays_report_only():
+    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+
+    assert "side_by_side_review_show_markers" in text
+    assert "value=True" in text
+    assert '"report_only": True' in text
+    assert '"visual_only": True' in text
+    assert '"mutation_allowed": False' in text
 
 
 def test_side_by_side_panel_escapes_document_text_before_component_rendering():
@@ -104,7 +119,6 @@ def test_side_by_side_panel_escapes_document_text_before_component_rendering():
     assert "source_html = escape(source_text)" in text
     assert "else escape(model[\"processed_pane\"][\"text\"])" in text
     assert "_highlighted_processed_inner_html(" in text
-    assert "No external scripts, network calls or persistence are used" in text
 
 
 def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_panel():
