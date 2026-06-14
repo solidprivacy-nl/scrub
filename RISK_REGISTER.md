@@ -211,6 +211,7 @@ Current mitigations:
 - WP_REPLACE_LOGIC_UI_REDESIGN_PLAN defined a task-oriented replacement flow: found value, context, suggested replacement, four simple actions and optional exact-same scope.
 - WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS added contract coverage for the intuitive replacement-review redesign and its side-by-side alignment.
 - WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR anchored `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md` and D021: source text left, processed text right, optional highlights integrated into the main processed pane.
+- WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN added a detailed plan for one unified main review surface with source text left, processed/checked text right, integrated optional highlights, table fallback, serial-review relationship, replacement-review relationship and contract-test requirements.
 
 Gaps:
 
@@ -218,7 +219,7 @@ Gaps:
 - The current UI still contains multiple review surfaces rather than one unified side-by-side main review surface.
 - The separate highlight-only duplicate preview is not the desired long-term UX.
 - Repeated per-highlight labels such as `Gemarkeerd` add noise and should not be the long-term design.
-- Synchronized scrolling is desirable but technically risky and not yet planned/tested.
+- Synchronized scrolling is desirable but technically risky and still needs separate planning/testing before implementation.
 - No click-to-mark sensitive text prototype.
 - No professional document editor exists.
 - No separate frontend migration is approved.
@@ -227,7 +228,7 @@ Gaps:
 
 Recommended workpackages:
 
-- WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side direction before implementation.
+- WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side redesign plan before implementation.
 - WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — helper-only exploration after side-by-side contracts are in place.
 - Later approved package — small side-by-side review implementation after separate explicit approval.
 - Later approved package — small redesigned replacement review implementation after separate explicit approval.
