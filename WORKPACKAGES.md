@@ -44,6 +44,7 @@ WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — completed roadmap/specification/docume
 WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed planning/design/documentation-only; detailed side-by-side source/processed review plan is now available.
 WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — completed tests/documentation-only; side-by-side review plan is contract-locked before implementation.
 WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — completed documentation-only wording repair for highlight safety contract phrases.
+WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — completed helper/tests-only; pure source/processed pane model, highlight metadata, legend and scroll-sync feasibility fields added.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -69,15 +70,29 @@ brontekst links | verwerkte/gecontroleerde tekst rechts
                 | optionele markeringen geïntegreerd in de verwerkte tekst
 ```
 
-This is now anchored, planned and contract-locked in:
+This is now anchored, planned, contract-locked and helper-modeled in:
 
 ```text
 DECISION_LOG.md — D021
 SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md
 SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md
 tests/test_side_by_side_review_contract.py
+side_by_side_review.py
+tests/test_side_by_side_review_prototype.py
 ROADMAP.md
 ```
+
+The side-by-side prototype helper adds a pure non-UI model for:
+
+- source pane left;
+- processed pane right;
+- optional processed-pane highlight spans;
+- compact single legend;
+- review table source-of-truth/fallback fields;
+- serial review guided-layer relationship;
+- replacement review future task-oriented relationship;
+- synchronized scroll desired-later but not implemented;
+- explicit no-mutation/no-export/no-Scrub-Key/no-reinsert boundaries.
 
 The detailed side-by-side redesign plan states:
 
@@ -97,13 +112,6 @@ The replacement decision helper internals are not a user-facing feature:
 
 ```text
 Do not expose replacement_decision helper internals as a user-facing panel.
-```
-
-The rollback/hide is verified:
-
-```text
-Current post-rollback Actions screenshot evidence shows green Tests and green Sync to Hugging Face Space on current main.
-Coordinator app screenshot shows the normal Scrub Legal flow with review table, serial review, highlight toggle, export/download and DOCX hygiene audit visible, while the Replacement decision helper panel is not visible.
 ```
 
 The redesigned replacement review direction is now locked by contract tests:
@@ -130,14 +138,6 @@ Alle exact dezelfde waarden
 
 Do not expose `all_normalized`, `creates_mapping`, `mapping_candidates`, `export_readiness`, raw decision states or audit internals as the main UI.
 
-The highlight direction is now:
-
-```text
-Markeringen tonen belongs near/in the main side-by-side review surface.
-The separate highlight-only duplicate preview is not the long-term target.
-Repeated per-highlight labels such as Gemarkeerd are not the long-term target.
-```
-
 Current implementation boundaries remain:
 
 - no startup source mutation;
@@ -155,24 +155,15 @@ Current implementation boundaries remain:
 
 ## Workpackage sequence from side-by-side insight
 
-### Planning / contract line
+### Planning / contract/helper line
 
 ```text
 1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed.
 2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — completed.
 3. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — completed.
-4. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed.
+4. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — completed.
+5. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed.
 ```
-
-These are documentation/tests-only and may be partially parallelized if they do not edit the same files at the same time.
-
-### Helper/prototype line
-
-```text
-5. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — next.
-```
-
-This should be helper-only and should not edit Streamlit UI. It may explore safe data structures for source/processed panes, highlight ranges, optional legend and scroll-sync feasibility.
 
 ### Implementation line — gated
 
@@ -186,9 +177,8 @@ Implementation packages must be sequential if they touch any shared UI files.
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions for WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX.
-2. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — after green Actions.
-3. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — only after separate explicit coordinator approval.
+1. Verify GitHub Actions for WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER.
+2. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
