@@ -50,8 +50,8 @@ def _highlighted_processed_html(processed_text: str, highlight_spans: list[tuple
     """Return escaped static HTML for the processed pane only.
 
     The document text is escaped before wrapping exact already-computed spans.
-    No repeated inline labels such as ``Gemarkeerd`` are inserted; a compact
-    legend in the UI explains the marker meaning once.
+    No repeated visible inline label is inserted; a compact legend in the UI
+    explains the marker meaning once.
     """
 
     parts: list[str] = []
