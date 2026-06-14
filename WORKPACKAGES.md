@@ -39,6 +39,7 @@ WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — completed after Actions/HF/app ver
 WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — completed product rollback/hide; replacement helper panel is removed from the normal Scrub Legal UI flow.
 WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — completed after Actions/HF/app verification; hidden replacement helper panel closeout completed.
 WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — completed planning/design/documentation-only; old helper panel must not return as normal user-facing panel.
+WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — completed roadmap/specification/documentation-only; unified side-by-side review UX direction is now anchored.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -57,6 +58,21 @@ The working baseline remains:
 table-first review table = source of truth and fallback
 ```
 
+The new review UX target is:
+
+```text
+brontekst links | verwerkte/gecontroleerde tekst rechts
+                | optionele markeringen geïntegreerd in de verwerkte tekst
+```
+
+This is now anchored in:
+
+```text
+DECISION_LOG.md — D021
+SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md
+ROADMAP.md
+```
+
 The replacement decision helper internals are not a user-facing feature:
 
 ```text
@@ -70,7 +86,7 @@ Current post-rollback Actions screenshot evidence shows green Tests and green Sy
 Coordinator app screenshot shows the normal Scrub Legal flow with review table, serial review, highlight toggle, export/download and DOCX hygiene audit visible, while the Replacement decision helper panel is not visible.
 ```
 
-The redesigned replacement review direction is now:
+The redesigned replacement review direction remains:
 
 ```text
 one found item -> context -> suggested replacement -> one simple choice -> optional exact-same scope -> existing table remains fallback
@@ -94,23 +110,15 @@ Alle exact dezelfde waarden
 
 Do not expose `all_normalized`, `creates_mapping`, `mapping_candidates`, `export_readiness`, raw decision states or audit internals as the main UI.
 
-The implemented review highlight toggle is intentionally small and optional:
+The highlight direction is now:
 
 ```text
-[ ] Markeringen tonen in voorbeeldtekst
+Markeringen tonen belongs near/in the main side-by-side review surface.
+The separate highlight-only duplicate preview is not the long-term target.
+Repeated per-highlight labels such as Gemarkeerd are not the long-term target.
 ```
 
-It shows subtle visual markers for already masked/replaced values in the checked preview text. It remains visual-only, read-only, non-authoritative and non-mutating. The review table remains the source of truth and fallback.
-
-Verification evidence for the highlight implementation:
-
-```text
-Tests #880 — green for commit 83556af
-Sync to Hugging Face Space #892 — green for commit 83556af
-App verification — positive by coordinator screenshot
-```
-
-Implementation boundaries:
+Current implementation boundaries remain:
 
 - no startup source mutation;
 - no static-highlight startup patch;
@@ -125,11 +133,47 @@ Implementation boundaries:
 - no cloud processing;
 - no real data.
 
+## Workpackage sequence from side-by-side insight
+
+### Planning / contract line
+
+```text
+1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN
+2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS
+3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS
+```
+
+These are documentation/tests-only and may be partially parallelized if they do not edit the same files at the same time.
+
+### Helper/prototype line
+
+```text
+4. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER
+```
+
+This should be helper-only and should not edit Streamlit UI. It may explore safe data structures for source/processed panes, highlight ranges, optional legend and scroll-sync feasibility.
+
+### Implementation line — gated
+
+```text
+5. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — only after separate explicit coordinator approval.
+6. WP_REPLACE_LOGIC_UI_REDESIGNED_IMPLEMENTATION — only after separate explicit coordinator approval.
+```
+
+Implementation packages must be sequential if they touch any shared UI files.
+
 ## Active / next recommended execution queue
 
 ```text
-1. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — lock the redesign plan before any new implementation.
-2. WP_REPLACE_LOGIC_UI_REDESIGNED_IMPLEMENTATION — only after separate explicit coordinator approval.
+1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — detailed plan for unified source/processed review surface.
+2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side plan before implementation.
+3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — lock the simple replacement-choice plan.
+```
+
+Safe parallel option:
+
+```text
+WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN and WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS can be worked by different workers if both stay documentation/tests-only and avoid central-doc conflicts.
 ```
 
 ## Blocked work
@@ -137,6 +181,9 @@ Implementation boundaries:
 Do not start yet without separate approval:
 
 ```text
+new side-by-side review UI implementation
+synchronized scroll implementation
+custom HTML/component rendering implementation
 new replacement UI implementation
 mutating replacement decision implementation
 automatic replacement
