@@ -43,6 +43,7 @@ WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed tests/documentation-on
 WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — completed roadmap/specification/documentation-only; unified side-by-side review UX direction is now anchored.
 WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed planning/design/documentation-only; detailed side-by-side source/processed review plan is now available.
 WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — completed tests/documentation-only; side-by-side review plan is contract-locked before implementation.
+WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — completed documentation-only wording repair for highlight safety contract phrases.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -84,6 +85,8 @@ The detailed side-by-side redesign plan states:
 - source/brontekst on the left;
 - processed/checked text on the right;
 - optional highlights integrated into the right processed pane;
+- highlight toggle is an only visual aid;
+- highlight toggle must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior;
 - the separate highlight-only duplicate preview is not the long-term target;
 - repeated per-highlight labels such as `Gemarkeerd` are not the long-term design;
 - at most one compact legend should explain highlights;
@@ -157,7 +160,8 @@ Current implementation boundaries remain:
 ```text
 1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed.
 2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — completed.
-3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed.
+3. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — completed.
+4. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed.
 ```
 
 These are documentation/tests-only and may be partially parallelized if they do not edit the same files at the same time.
@@ -165,7 +169,7 @@ These are documentation/tests-only and may be partially parallelized if they do 
 ### Helper/prototype line
 
 ```text
-4. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — next.
+5. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — next.
 ```
 
 This should be helper-only and should not edit Streamlit UI. It may explore safe data structures for source/processed panes, highlight ranges, optional legend and scroll-sync feasibility.
@@ -173,8 +177,8 @@ This should be helper-only and should not edit Streamlit UI. It may explore safe
 ### Implementation line — gated
 
 ```text
-5. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — only after separate explicit coordinator approval.
-6. WP_REPLACE_LOGIC_UI_REDESIGNED_IMPLEMENTATION — only after separate explicit coordinator approval.
+6. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — only after separate explicit coordinator approval.
+7. WP_REPLACE_LOGIC_UI_REDESIGNED_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 Implementation packages must be sequential if they touch any shared UI files.
@@ -182,8 +186,9 @@ Implementation packages must be sequential if they touch any shared UI files.
 ## Active / next recommended execution queue
 
 ```text
-1. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — helper-only; no Streamlit UI edits.
-2. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — only after separate explicit coordinator approval.
+1. Verify GitHub Actions for WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX.
+2. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — after green Actions.
+3. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
