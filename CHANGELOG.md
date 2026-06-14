@@ -1,43 +1,43 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY — Feasibility review for synchronized side-by-side scrolling
+## WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY — Closeout/app verification for side-by-side review implementation
 
-Status: completed documentation-only feasibility review; no implementation or runtime behavior changed.
+Status: completed verification/documentation-only closeout; no product code or UI code changed.
 
 Files added:
 
-- `SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY.md`
-- `handover/workpackages/20260615_0005_side_by_side_review_sync_scroll_feasibility.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY.md`
+- `handover/workpackages/20260615_0015_side_by_side_review_implementation_verify.md`
 
 Files changed:
 
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY.md`
 
 Summary:
 
-- Reviewed whether synchronized scrolling should be added to the side-by-side review surface.
-- Recorded that synchronized scrolling is attractive for long-document comparison but risky because source and processed text are not guaranteed to align line-by-line or by scroll percentage after masking/replacement.
-- Compared independent scroll panes, percentage-based custom component sync, anchor-based sync and selected-item focus.
-- Recommended keeping equal-height independent panes as the MVP baseline.
-- Recommended not implementing synchronized scroll in the current Streamlit MVP flow.
-- Recommended contract tests and a separate approved spike only if the coordinator later still wants synchronized scroll.
+- Closed out the first bounded side-by-side review implementation after coordinator evidence.
+- Confirmed GitHub Actions green and Sync to Hugging Face Space green for the side-by-side/height/sync-scroll documentation sequence.
+- Confirmed app screenshot evidence: side-by-side review visible, highlights visible, equal pane height visible, local processed-pane scrolling visible.
+- Recorded that synchronized scroll is intentionally not implemented and is not a bug.
+- Recorded the current MVP baseline as equal-height independent panes.
 
 Validation status:
 
-- Documentation-only; no app rebuild or product tests required.
-- No shell/git diff execution was available through the ChatGPT GitHub connector.
+- Verification/documentation-only package.
+- No shell/pytest execution was performed through the ChatGPT GitHub connector.
+- Coordinator screenshots provided validation evidence for Actions, Hugging Face sync and app behavior.
 
 Intentionally not changed:
 
+- No product code.
+- No UI code.
+- No tests.
 - No synchronized scroll implementation.
-- No custom Streamlit component rendering.
+- No custom Streamlit component.
 - No JavaScript injection.
-- No Streamlit UI code change.
-- No product code change.
 - No review table behavior change.
 - No replacement behavior change.
 - No Scrub Key behavior change.
@@ -49,12 +49,25 @@ Intentionally not changed:
 
 Next recommended step:
 
-- `WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_VERIFY` after green Actions/sync and app screenshot.
-- Only if the coordinator still wants synchronized scroll after that: `WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_CONTRACT_TESTS`.
+- Continue MVP workflow simplification through separately approved packages.
+- If synchronized scroll is still desired later: `WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_CONTRACT_TESTS` before any spike.
+
+## WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_FEASIBILITY — Feasibility review for synchronized side-by-side scrolling
+
+Status: completed documentation-only feasibility review; no implementation or runtime behavior changed.
+
+Summary:
+
+- Reviewed whether synchronized scrolling should be added to the side-by-side review surface.
+- Recorded that synchronized scrolling is attractive for long-document comparison but risky because source and processed text are not guaranteed to align line-by-line or by scroll percentage after masking/replacement.
+- Compared independent scroll panes, percentage-based custom component sync, anchor-based sync and selected-item focus.
+- Recommended keeping equal-height independent panes as the MVP baseline.
+- Recommended not implementing synchronized scroll in the current Streamlit MVP flow.
+- Recommended contract tests and a separate approved spike only if the coordinator later still wants synchronized scroll.
 
 ## WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — Equal-height side-by-side review panes
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed after Actions/HF/app verification.
 
 Summary:
 
@@ -64,19 +77,9 @@ Summary:
 - This is not synchronized scrolling.
 - No custom Streamlit component was added.
 
-## WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX — Repair side-by-side UI patch wording failure
-
-Status: completed narrow Actions repair; no runtime behavior changed.
-
-Summary:
-
-- Removed the exact `Gemarkeerd` wording from a side-by-side panel docstring so the UI patch test can correctly guard against repeated visible per-highlight labels in the new panel.
-- Kept the actual UI behavior unchanged.
-- Kept the compact legend and visual-only highlight behavior unchanged.
-
 ## WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — Small unified source/processed review surface
 
-Status: implemented with explicit coordinator approval; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed after Actions/HF/app verification.
 
 Summary:
 
@@ -95,6 +98,7 @@ Summary:
 
 Detailed recent history remains available in Git history and includes:
 
+- WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION_ACTIONS_FIX — narrow test/wording repair after side-by-side implementation.
 - WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — helper-only model for source/processed review panes.
 - WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS_ACTIONS_FIX — contract wording repair.
 - WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — contract tests for unified side-by-side review UX.
@@ -103,5 +107,4 @@ Detailed recent history remains available in Git history and includes:
 - WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — unified side-by-side review UX direction.
 - WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — closeout/app verification for hidden replacement helper panel.
 - WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — simple masked-text highlight toggle implementation.
-- WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — product rollback/hide of the non-intuitive helper panel.
 - WP39D — DOCX hygiene audit UI implementation.
