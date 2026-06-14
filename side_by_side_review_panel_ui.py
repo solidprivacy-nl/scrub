@@ -24,24 +24,30 @@ from review_highlight_toggle_panel_ui import build_preview_text
 from side_by_side_review import build_side_by_side_review_model
 
 
-_SIDE_BY_SIDE_CSS = """
+SIDE_BY_SIDE_REVIEW_PANE_HEIGHT = 320
+
+_SIDE_BY_SIDE_CSS = f"""
 <style>
-.sp-side-by-side-review-pane {
+.sp-side-by-side-review-pane {{
     background: #f8fafc;
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
+    box-sizing: border-box;
+    height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px;
+    max-height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px;
+    min-height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px;
+    overflow-y: auto;
     padding: 0.75rem;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     line-height: 1.45;
-    min-height: 18rem;
-}
-.sp-side-by-side-highlight-token {
+}}
+.sp-side-by-side-highlight-token {{
     background: #fef3c7;
     border: 1px solid #f59e0b;
     border-radius: 0.25rem;
     padding: 0.05rem 0.15rem;
-}
+}}
 </style>
 """.strip()
 
@@ -105,7 +111,7 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         st.text_area(
             label="Brontekst",
             value=model["source_pane"]["text"],
-            height=320,
+            height=SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
             key="side_by_side_review_source_text",
             disabled=True,
         )
@@ -127,7 +133,7 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
             st.text_area(
                 label="Verwerkte tekst",
                 value=model["processed_pane"]["text"],
-                height=320,
+                height=SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
                 key="side_by_side_review_processed_text",
                 disabled=True,
             )
@@ -146,6 +152,8 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         "reinsert_behavior_change": False,
         "synchronized_scroll_implementation": False,
         "custom_component_rendering": False,
+        "pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
+        "processed_pane_scrolls_independently": True,
         "compact_legend": compact_legend,
         "model": model,
     }
