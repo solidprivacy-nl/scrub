@@ -42,6 +42,7 @@ WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — completed planning/design/documentation-on
 WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed tests/documentation-only; intuitive replacement review redesign is contract-locked.
 WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — completed roadmap/specification/documentation-only; unified side-by-side review UX direction is now anchored.
 WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed planning/design/documentation-only; detailed side-by-side source/processed review plan is now available.
+WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — completed tests/documentation-only; side-by-side review plan is contract-locked before implementation.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -67,12 +68,13 @@ brontekst links | verwerkte/gecontroleerde tekst rechts
                 | optionele markeringen geïntegreerd in de verwerkte tekst
 ```
 
-This is now anchored and planned in:
+This is now anchored, planned and contract-locked in:
 
 ```text
 DECISION_LOG.md — D021
 SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md
 SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md
+tests/test_side_by_side_review_contract.py
 ROADMAP.md
 ```
 
@@ -154,7 +156,7 @@ Current implementation boundaries remain:
 
 ```text
 1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — completed.
-2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — next.
+2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — completed.
 3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed.
 ```
 
@@ -163,7 +165,7 @@ These are documentation/tests-only and may be partially parallelized if they do 
 ### Helper/prototype line
 
 ```text
-4. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER
+4. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — next.
 ```
 
 This should be helper-only and should not edit Streamlit UI. It may explore safe data structures for source/processed panes, highlight ranges, optional legend and scroll-sync feasibility.
@@ -180,14 +182,8 @@ Implementation packages must be sequential if they touch any shared UI files.
 ## Active / next recommended execution queue
 
 ```text
-1. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side plan before implementation.
-2. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — only after side-by-side contracts are in place.
-```
-
-If `WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS` is already completed by another worker, move to:
-
-```text
-WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER
+1. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — helper-only; no Streamlit UI edits.
+2. WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — only after separate explicit coordinator approval.
 ```
 
 ## Blocked work
