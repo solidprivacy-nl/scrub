@@ -141,6 +141,12 @@ Safety copy, if shown, should stay compact:
 Alleen visuele hulp. Wijzigt niets aan de vervangtabel of export.
 ```
 
+Contract/safety note:
+
+```text
+only visual aid. Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior.
+```
+
 The toggle affects only the right column. It should not change source text, review table state, export payloads, Scrub Key state or reinsert behavior.
 
 ## 5. What happens to the existing separate highlight preview?
