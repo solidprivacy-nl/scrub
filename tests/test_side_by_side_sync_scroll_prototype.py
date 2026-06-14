@@ -86,7 +86,7 @@ def test_sync_scroll_prototype_uses_synthetic_content_only():
         assert forbidden not in text
 
 
-def test_sync_scroll_prototype_is_not_connected_to_normal_app_flow():
+def test_sync_scroll_prototype_file_is_not_loaded_by_normal_app_flow():
     prototype_path = "prototypes/side_by_side_sync_scroll_prototype.html"
     production_text = "\n".join(
         [
@@ -97,9 +97,16 @@ def test_sync_scroll_prototype_is_not_connected_to_normal_app_flow():
     )
 
     assert prototype_path not in production_text
-    assert "syncToggle" not in production_text
-    assert "sourcePane.addEventListener" not in production_text
-    assert "processedPane.addEventListener" not in production_text
+
+
+def test_sync_scroll_concept_is_now_integrated_through_safe_renderer_not_prototype_file():
+    production_text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+
+    assert "syncToggle" in production_text
+    assert "sourcePane.addEventListener" in production_text
+    assert "processedPane.addEventListener" in production_text
+    assert "_side_by_side_sync_scroll_html" in production_text
+    assert "prototypes/side_by_side_sync_scroll_prototype.html" not in production_text
 
 
 def test_sync_scroll_prototype_does_not_touch_production_behavior_markers():
