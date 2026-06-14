@@ -37,6 +37,7 @@ WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — completed planning/specification-only for a 
 WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — completed after Actions/HF verification by coordinator screenshot evidence.
 WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — completed after Actions/HF/app verification.
 WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — completed product rollback/hide; replacement helper panel is removed from the normal Scrub Legal UI flow.
+WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — completed after Actions/HF/app verification; hidden replacement helper panel closeout completed.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
 ```
@@ -55,7 +56,20 @@ The working baseline remains:
 table-first review table = source of truth and fallback
 ```
 
-The planned and now implemented review highlight toggle is intentionally small and optional:
+The replacement decision helper internals are not a user-facing feature:
+
+```text
+Do not expose replacement_decision helper internals as a user-facing panel.
+```
+
+The rollback/hide is verified:
+
+```text
+Current post-rollback Actions screenshot evidence shows green Tests and green Sync to Hugging Face Space on current main.
+Coordinator app screenshot shows the normal Scrub Legal flow with review table, serial review, highlight toggle, export/download and DOCX hygiene audit visible, while the Replacement decision helper panel is not visible.
+```
+
+The implemented review highlight toggle is intentionally small and optional:
 
 ```text
 [ ] Markeringen tonen in voorbeeldtekst
@@ -63,7 +77,7 @@ The planned and now implemented review highlight toggle is intentionally small a
 
 It shows subtle visual markers for already masked/replaced values in the checked preview text. It remains visual-only, read-only, non-authoritative and non-mutating. The review table remains the source of truth and fallback.
 
-Verification evidence:
+Verification evidence for the highlight implementation:
 
 ```text
 Tests #880 — green for commit 83556af
@@ -89,8 +103,7 @@ Implementation boundaries:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK.
-2. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
+1. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
 ```
 
 ## Blocked work
