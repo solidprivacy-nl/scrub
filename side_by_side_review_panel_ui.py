@@ -97,6 +97,7 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         review_rows=edited_replacements_df,
         highlights_enabled=show_markers,
     )
+    compact_legend = model["compact_legend"]
 
     left_column, right_column = st.columns(2)
     with left_column:
@@ -145,5 +146,6 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         "reinsert_behavior_change": False,
         "synchronized_scroll_implementation": False,
         "custom_component_rendering": False,
+        "compact_legend": compact_legend,
         "model": model,
     }
