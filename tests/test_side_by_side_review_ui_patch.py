@@ -53,22 +53,58 @@ def test_user_facing_side_by_side_copy_exists():
         "Geel = vervangen of gemaskeerde waarde",
         "De vervangtabel blijft leidend",
         "Alleen visuele hulp",
+        "Synchroon scrollen",
+        "Sync uit: beide panelen scrollen onafhankelijk.",
         "Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior",
     ]:
         assert phrase in text
 
 
-def test_side_by_side_panes_have_equal_height_and_local_processed_scroll():
+def test_side_by_side_panes_have_equal_height_and_sync_scroll_component():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     assert "SIDE_BY_SIDE_REVIEW_PANE_HEIGHT = 320" in text
+    assert "SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT = 430" in text
     assert "height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
     assert "max-height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
     assert "min-height: {SIDE_BY_SIDE_REVIEW_PANE_HEIGHT}px" in text
     assert "overflow-y: auto" in text
-    assert "height=SIDE_BY_SIDE_REVIEW_PANE_HEIGHT" in text
+    assert "components.html(" in text
+    assert "height=SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT" in text
     assert '"pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT' in text
-    assert '"processed_pane_scrolls_independently": True' in text
+
+
+def test_side_by_side_panel_integrates_bidirectional_sync_scroll_from_prototype():
+    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+
+    for required in [
+        "import streamlit.components.v1 as components",
+        'id="sourcePane"',
+        'id="processedPane"',
+        'id="syncToggle"',
+        "function scrollRatio(element)",
+        "function setScrollRatio(element, ratio)",
+        "function syncScroll(fromPane, toPane)",
+        "sourcePane.addEventListener('scroll'",
+        "processedPane.addEventListener('scroll'",
+        "syncToggle.addEventListener('change'",
+        "window.requestAnimationFrame",
+        "element.scrollTop = ratio * maxScroll",
+        '"synchronized_scroll_implementation": True',
+        '"sync_scroll_percentage_based": True',
+        '"sync_scroll_fallback_independent": True',
+        '"uses_streamlit_components_html": True',
+    ]:
+        assert required in text
+
+
+def test_side_by_side_panel_escapes_document_text_before_component_rendering():
+    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+
+    assert "source_html = escape(source_text)" in text
+    assert "else escape(model[\"processed_pane\"][\"text\"])" in text
+    assert "_highlighted_processed_inner_html(" in text
+    assert "No external scripts, network calls or persistence are used" in text
 
 
 def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_panel():
@@ -80,7 +116,7 @@ def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_
     assert "side_by_side_review_show_markers" in side_text
     assert "processed_pane" in side_text
     assert "highlight_spans" in side_text
-    assert "right_column" in side_text
+    assert "processedPane" in side_text
 
 
 def test_side_by_side_panel_avoids_repeated_visible_gemarkeerd_labels():
@@ -105,12 +141,10 @@ def test_side_by_side_panel_preserves_existing_review_table_and_serial_review_bo
     assert "side-by-side review" in text
 
 
-def test_side_by_side_panel_does_not_add_blocked_behaviors_or_flow_mutations():
+def test_side_by_side_panel_does_not_add_blocked_flow_mutations():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8").lower()
 
     forbidden = [
-        "streamlit.components",
-        "components.html",
         "st.download_button",
         "download_button(",
         "scrub_key_to_json(",
@@ -122,12 +156,15 @@ def test_side_by_side_panel_does_not_add_blocked_behaviors_or_flow_mutations():
         "apply_replacements_to_text(",
         "save_remembered_replacements(",
         "clear_remembered_replacements(",
-        "synchronized scroll implementation",
         "click-to-mark",
         "advanced editor",
         "full-document marking",
         "automatic_replacement = true",
         "review_table_mutation = true",
+        "fetch(",
+        "xmlhttprequest",
+        "localstorage",
+        "sessionstorage",
     ]
     for marker in forbidden:
         assert marker not in text
@@ -145,8 +182,6 @@ def test_side_by_side_panel_returns_report_only_contract():
         '"scrub_key_writes": False',
         '"export_download_behavior_change": False',
         '"reinsert_behavior_change": False',
-        '"synchronized_scroll_implementation": False',
-        '"custom_component_rendering": False',
     ]:
         assert required in text
 
