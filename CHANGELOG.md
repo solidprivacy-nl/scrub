@@ -1,5 +1,43 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — Contract tests for collapsible review table section
+
+Status: completed tests/documentation-only; awaiting Actions and Hugging Face sync verification.
+
+Files added:
+
+- `REVIEW_TABLE_COLLAPSIBLE_CONTRACT.md`
+- `tests/test_review_table_collapsible_contract.py`
+- `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS.md`
+- `handover/workpackages/20260615_0230_review_table_collapsible_contract_tests.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS.md`
+
+Summary:
+
+- Added documentation and contract tests for a future collapsible `Controleer gevonden gegevens` review table section.
+- Locked the future heading shape `Controleer gevonden gegevens — {item_count} items`.
+- Preserved the review table as source of truth and fallback.
+- Contract tests verify that `replacement_editor`, `include`, `remember`, `find` and `replace_with` remain available.
+- Contract tests verify that export/download labels remain present.
+- Explicitly blocks export/download changes, export blocking, Scrub Key changes, reinsert changes, replacement behavior changes, click-to-mark, advanced editor and full-document marking.
+- No production UI implementation was added.
+
+Validation status:
+
+- No shell/pytest execution was available through the ChatGPT GitHub connector.
+- Expected targeted check: `pytest tests/test_review_table_collapsible_contract.py`.
+- Expected full check: `python -m pytest -q tests`.
+
+Next recommended step:
+
+- Verify GitHub Actions and Hugging Face sync.
+- Only after green tests may `WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION` start, and it must not run in parallel with other `presidio_streamlit.py` review-flow changes.
+
 ## WP_REVIEW_SURFACE_CONTROL_CLEANUP — Simplify side-by-side review controls
 
 Status: implemented; awaiting Actions, Hugging Face sync and app verification.
