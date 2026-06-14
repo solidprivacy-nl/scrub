@@ -112,7 +112,7 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
     with right_column:
         st.markdown("**Verwerkte tekst**")
         if show_markers and model["processed_pane"]["highlight_spans"]:
-            st.caption(model["compact_legend"]["label"])
+            st.caption("Geel = vervangen of gemaskeerde waarde")
             st.markdown(
                 _highlighted_processed_html(
                     model["processed_pane"]["text"],
