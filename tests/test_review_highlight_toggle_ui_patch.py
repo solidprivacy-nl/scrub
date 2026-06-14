@@ -29,8 +29,10 @@ def test_review_highlight_toggle_is_now_reached_through_side_by_side_panel():
     assert "from side_by_side_review_panel_ui import render_side_by_side_review_panel" in serial_text
     assert "render_side_by_side_review_panel(" in serial_text
     assert "render_review_highlight_toggle_panel(" not in serial_text
-    assert "Markeringen tonen in verwerkte tekst" in side_by_side_text
+    assert "Markeringen tonen" in side_by_side_text
+    assert "Markeringen tonen in verwerkte tekst" not in side_by_side_text
     assert "side_by_side_review_show_markers" in side_by_side_text
+    assert "value=True" in side_by_side_text
     assert "review_highlight_toggle_show_markers" not in APP.read_text(encoding="utf-8")
 
 
