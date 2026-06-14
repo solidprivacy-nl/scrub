@@ -17,18 +17,15 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 
 ### Review
 
-- Review table and review guidance are available.
-- Final review summary and export sanity checks help users understand remaining risk.
-- The review area includes a side-by-side review surface: `Brontekst` on the left and `Verwerkte tekst` on the right.
-- The side-by-side source and processed panes use equal visual height.
-- The side-by-side panes now include optional synchronized scrolling.
-- `Synchroon scrollen` can be turned off so both panes scroll independently.
+- The review flow has one central side-by-side review surface near the top of the review workflow.
+- `Brontekst` appears on the left and `Verwerkte tekst` on the right.
+- The side-by-side panes use equal visual height.
+- The side-by-side panes scroll together by default.
+- A short note explains that visual alignment can differ when source and processed text differ structurally.
+- Markers are on by default and can be hidden with `Markeringen tonen`.
 - The replacement table remains the source of truth and fallback.
-- Serial review remains available as a small read-only review aid below the side-by-side comparison.
-- The right-side processed pane includes an optional `Markeringen tonen in verwerkte tekst` toggle.
-- When the marker toggle is off, the processed text remains calm and normally readable.
-- When the marker toggle is on, already masked/replaced values can receive subtle visual markers in the processed pane.
-- These markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.
+- Serial review remains available as a small read-only review aid below the replacement table.
+- Markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.
 
 ### Scrub Key
 
