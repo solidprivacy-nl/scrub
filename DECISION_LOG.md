@@ -4,9 +4,38 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-15 — D023 — Synchronized scrolling is default review behavior, not a user-facing technical control
+
+Status: accepted bounded UX refinement decision
+
+Decision:
+
+```text
+In the central side-by-side review surface, synchronized scrolling should be on by default and should not be exposed as a visible checkbox.
+```
+
+Rationale:
+
+The coordinator confirmed that there is no clear normal-user use case for turning synchronized scrolling off. In this review task, synchronized movement of source and processed panes is expected behavior rather than a technical choice. Removing the checkbox reduces interface noise.
+
+Accepted UI behavior:
+
+- markers default on;
+- marker control remains available as `Markeringen tonen`;
+- synchronized scrolling stays active;
+- no visible synchronized-scroll checkbox;
+- short explanatory copy remains visible;
+- review table remains source of truth and fallback.
+
+Boundary:
+
+This decision does not change replacement behavior, export/download behavior, Scrub Key behavior or reinsert behavior.
+
+---
+
 ## 2026-06-15 — D022 — Bounded synchronized side-by-side scrolling approved after prototype review
 
-Status: accepted bounded UX implementation decision
+Status: accepted bounded UX implementation decision; refined by D023 for visible control behavior
 
 Decision:
 
@@ -21,7 +50,7 @@ The coordinator confirmed that the isolated prototype looked good and may be int
 Implementation boundaries:
 
 - Use local escaped HTML/JS inside the app.
-- Keep a visible sync on/off fallback.
+- Keep synchronized scrolling bounded to the side-by-side review surface.
 - Do not change replacement behavior.
 - Do not mutate review table state.
 - Do not write or change Scrub Key data.
@@ -62,6 +91,7 @@ Implications:
 - Repeated per-highlight labels such as `Gemarkeerd` should not be the long-term design when the marker itself is sufficient.
 - Synchronized scrolling is a valid UX goal but requires separate planning/testing because it may need custom HTML/component work.
 - D022 records the later approved bounded implementation route for synchronized scrolling after prototype review.
+- D023 records that synchronized scrolling should now behave as default UI behavior without a visible checkbox.
 - The review table remains source of truth and fallback.
 - Serial review remains a guided review layer, not a replacement of the table.
 - The old replacement decision helper panel must not return as normal user-facing UI.
@@ -123,7 +153,7 @@ Implications:
 
 ## 2026-06-12 — D018 — Stay with Streamlit for MVP validation and defer frontend migration
 
-Status: accepted frontend architecture decision; implementation-route superseded where it conflicts with D019/D021/D022
+Status: accepted frontend architecture decision; implementation-route superseded where it conflicts with D019/D021/D022/D023
 
 Decision:
 
@@ -149,7 +179,7 @@ Implications:
 
 ## 2026-06-12 — D017 — Streamlit is feasible only for a bounded read-only highlight preview
 
-Status: accepted feasibility boundary decision; any implementation route using startup source mutation is superseded by D019/D021/D022
+Status: accepted feasibility boundary decision; any implementation route using startup source mutation is superseded by D019/D021/D022/D023
 
 Decision:
 
@@ -163,7 +193,7 @@ Streamlit is fast for online MVP validation, but clickable markers, synchronized
 
 Implications:
 
-- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` remains a historical feasibility boundary, but D019 governs the route after the failed WP42D startup-mutation attempt and D021/D022 govern the unified side-by-side review target.
+- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` remains a historical feasibility boundary, but D019 governs the route after the failed WP42D startup-mutation attempt and D021/D022/D023 govern the unified side-by-side review target.
 - The old static-highlight startup source mutation route must not be restarted.
 - Future UI preview work may be considered only after helper/model tests and explicit approval.
 - Click-to-mark sensitive text remains blocked until later decision/implementation packages.
@@ -174,7 +204,7 @@ Implications:
 
 ## 2026-06-12 — D016 — Highlight-based review starts as bounded read-only prototype after feasibility review
 
-Status: accepted prototype decision; implementation route superseded where it conflicts with D019/D021/D022
+Status: accepted prototype decision; implementation route superseded where it conflicts with D019/D021/D022/D023
 
 Decision:
 
