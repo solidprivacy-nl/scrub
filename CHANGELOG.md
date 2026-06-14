@@ -1,5 +1,65 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — Detailed plan for unified source/processed review surface
+
+Status: completed planning/design/documentation-only; no UI or product code changed.
+
+Files added:
+
+- `SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md`
+- `handover/workpackages/20260614_2205_side_by_side_review_redesign_plan.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN.md`
+
+Summary:
+
+- Added a detailed plan for the unified side-by-side review surface.
+- Planned the main layout: brontekst/source text left and verwerkte/gecontroleerde text right.
+- Placed optional highlights in the right processed pane instead of a separate long-term highlight-only duplicate preview.
+- Confirmed the review table remains source of truth and fallback.
+- Defined how serial review should remain a guided layer connected to the side-by-side surface.
+- Defined how replacement review should plug into the main surface through simple user-task choices, not raw helper/audit internals.
+- Documented desired and unwanted Dutch UI copy.
+- Defined the smallest safe first implementation as read-only side-by-side source/processed view without synchronized scrolling.
+- Listed contract-test requirements before implementation.
+
+Validation status:
+
+- Documentation/design-only; no app rebuild was run.
+- No product tests required because no product code, UI code or runtime behavior changed.
+- No shell/git diff execution was available through the ChatGPT GitHub connector.
+
+Intentionally not changed:
+
+- No Streamlit UI implementation.
+- No changes to `presidio_streamlit.py`.
+- No changes to `serial_review_panel_ui.py`.
+- No changes to `review_highlight_toggle_panel_ui.py`.
+- No custom HTML/component implementation.
+- No synchronized scroll implementation.
+- No review table behavior change.
+- No replacement behavior change.
+- No Scrub Key change.
+- No export/download change.
+- No reinsert change.
+- No click-to-mark.
+- No advanced editor.
+- No full-document marking.
+- No dependency change.
+- No cloud processing.
+- No real data.
+
+Next recommended step:
+
+- `WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS`.
+- If already completed by another worker: `WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER`.
+
 ## WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — Contract tests for intuitive replacement review redesign
 
 Status: completed tests/documentation-only; no UI or product code changed.
