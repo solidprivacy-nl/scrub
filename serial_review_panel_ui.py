@@ -179,13 +179,30 @@ def _show_context_card(card: dict[str, Any] | None, warnings: list[str]) -> None
         st.caption("Waarschuwingen: " + " · ".join(warnings))
 
 
-def render_serial_review_panel(*, displayed_text: str, edited_replacements_df: Any) -> dict[str, Any] | None:
-    """Render the side-by-side review surface plus small serial review aid."""
+def render_serial_review_panel(
+    *,
+    displayed_text: str,
+    edited_replacements_df: Any,
+    include_side_by_side: bool = True,
+) -> dict[str, Any] | None:
+    """Render the small serial review aid.
 
-    side_by_side_state = render_side_by_side_review_panel(
-        source_text=displayed_text,
-        edited_replacements_df=edited_replacements_df,
-    )
+    ``include_side_by_side`` defaults to True for backward compatibility. The
+    consolidated review flow can pass False after rendering the central
+    side-by-side review surface once above the review table.
+    """
+
+    side_by_side_state: dict[str, Any] | None = None
+    if include_side_by_side:
+        side_by_side_state = render_side_by_side_review_panel(
+            source_text=displayed_text,
+            edited_replacements_df=edited_replacements_df,
+        )
+    else:
+        side_by_side_state = {
+            "rendered": False,
+            "reason": "side-by-side review already rendered centrally",
+        }
 
     st.subheader("Serial review — experimentele reviewhulp")
     st.info(
