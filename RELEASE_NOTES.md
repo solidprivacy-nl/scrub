@@ -20,6 +20,8 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 - Review table and review guidance are available.
 - Final review summary and export sanity checks help users understand remaining risk.
 - The review area now includes a first side-by-side review surface: `Brontekst` on the left and `Verwerkte tekst` on the right.
+- The side-by-side source and processed panes now use equal visual height.
+- Long processed/highlighted text scrolls inside its own pane; synchronized scrolling is not implemented.
 - The replacement table remains the source of truth and fallback.
 - Serial review remains available as a small read-only review aid below the side-by-side comparison.
 - The right-side processed pane includes an optional `Markeringen tonen in verwerkte tekst` toggle.
