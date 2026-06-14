@@ -2,7 +2,7 @@
 
 ## WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — Simple masked-text highlight toggle implementation
 
-Status: implemented; awaiting GitHub Actions, Hugging Face sync and app verification.
+Status: completed after Actions/HF/app verification.
 
 Files added:
 
@@ -18,7 +18,9 @@ Files changed:
 - `serial_review_panel_ui.py`
 - `RELEASE_NOTES.md`
 - `CHANGELOG.md`
+- `WORKPACKAGES.md`
 - `workpackage_claims/WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION.md`
+- `handover/workpackages/20260613_1805_review_highlight_toggle_implementation.md`
 
 Summary:
 
@@ -29,9 +31,10 @@ Summary:
 
 Validation status:
 
-- No shell/pytest execution was available through the GitHub connector.
-- Expected checks: `pytest tests/test_review_highlight_toggle.py tests/test_review_highlight_toggle_ui_patch.py tests/test_review_highlight_toggle_plan.py` and full `python -m pytest -q tests`.
-- UI behavior changed, so app verification is required after green Actions and Hugging Face sync.
+- Coordinator screenshot evidence confirmed latest shown `Tests #880` green for commit `83556af`.
+- Coordinator screenshot evidence confirmed latest shown `Sync to Hugging Face Space #892` green for commit `83556af`.
+- Earlier `Sync #890` failed with external `429`, but it is superseded by later green sync evidence.
+- App verification was positive by coordinator screenshot: app starts, review table and serial review remain visible, the optional highlight toggle is visible, and subtle markers are shown.
 
 ## WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — Contract tests for simple masked-text highlight toggle plan
 
