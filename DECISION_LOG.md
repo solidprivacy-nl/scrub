@@ -4,6 +4,34 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-14 — D021 — Unified side-by-side review surface is the target review UX
+
+Status: accepted product/UX direction
+
+Decision:
+
+```text
+The review UX should move toward one unified side-by-side main review surface: source text on the left, processed/checked text on the right, with optional highlights integrated in the processed-text pane. The product should not keep adding separate helper panels or duplicate preview expanders for every review feature.
+```
+
+Rationale:
+
+The current interface risks becoming less intuitive because each new review function can become another expander/panel. The coordinator feedback is that a simpler professional workflow should let the user compare source and processed output directly, with visual support in the same main review area. A separate highlight-only preview and repeated inline labels such as `Gemarkeerd` add cognitive noise when the highlight color already communicates the marker.
+
+Implications:
+
+- Add `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md` as the central direction document for this UX line.
+- Future review UX work should centralize around source-vs-processed comparison.
+- The highlight toggle should belong near/in the main side-by-side review surface, not primarily as a separate duplicate preview panel.
+- Repeated per-highlight labels such as `Gemarkeerd` should not be the long-term design when the marker itself is sufficient.
+- Synchronized scrolling is a valid UX goal but requires separate planning/testing because it may need custom HTML/component work.
+- The review table remains source of truth and fallback.
+- Serial review remains a guided review layer, not a replacement of the table.
+- The old replacement decision helper panel must not return as normal user-facing UI.
+- Do not start custom side-by-side rendering, synchronized scrolling, panel removal, click-to-mark, advanced editor, full-document marking, Scrub Key writes, export blocking or reinsert behavior changes without separate approved packages.
+
+---
+
 ## 2026-06-13 — D020 — Do not expose replacement helper internals as a user-facing panel
 
 Status: accepted UX rollback decision
@@ -58,7 +86,7 @@ Implications:
 
 ## 2026-06-12 — D018 — Stay with Streamlit for MVP validation and defer frontend migration
 
-Status: accepted frontend architecture decision; implementation-route superseded where it conflicts with D019
+Status: accepted frontend architecture decision; implementation-route superseded where it conflicts with D019/D021
 
 Decision:
 
@@ -84,7 +112,7 @@ Implications:
 
 ## 2026-06-12 — D017 — Streamlit is feasible only for a bounded read-only highlight preview
 
-Status: accepted feasibility boundary decision; any implementation route using startup source mutation is superseded by D019
+Status: accepted feasibility boundary decision; any implementation route using startup source mutation is superseded by D019/D021
 
 Decision:
 
@@ -98,7 +126,7 @@ Streamlit is fast for online MVP validation, but clickable markers, synchronized
 
 Implications:
 
-- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` remains a historical feasibility boundary, but D019 governs the route after the failed WP42D startup-mutation attempt.
+- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` remains a historical feasibility boundary, but D019 governs the route after the failed WP42D startup-mutation attempt and D021 governs the unified side-by-side review target.
 - The old static-highlight startup source mutation route must not be restarted.
 - Future UI preview work may be considered only after helper/model tests and explicit approval.
 - Click-to-mark sensitive text remains blocked until later decision/implementation packages.
@@ -109,7 +137,7 @@ Implications:
 
 ## 2026-06-12 — D016 — Highlight-based review starts as bounded read-only prototype after feasibility review
 
-Status: accepted prototype decision; implementation route superseded where it conflicts with D019
+Status: accepted prototype decision; implementation route superseded where it conflicts with D019/D021
 
 Decision:
 
@@ -129,6 +157,7 @@ Implications:
 - Raw HTML/highlight rendering must consider escaping, accessibility, color-not-alone design and state safety.
 - Current review table remains the audit/control surface.
 - D019 supersedes any interpretation that would restart static-highlight startup source mutation.
+- D021 supersedes any interpretation that would make a separate duplicate highlight preview the long-term target.
 
 ---
 
