@@ -49,7 +49,6 @@ def test_sync_scroll_prototype_contains_bidirectional_percentage_sync():
         "function syncScroll(fromPane, toPane)",
         "sourcePane.addEventListener('scroll'",
         "processedPane.addEventListener('scroll'",
-        "syncToggle.addEventListener('change'",
         "window.requestAnimationFrame",
         "element.scrollTop = ratio * maxScroll",
     ]:
@@ -102,9 +101,11 @@ def test_sync_scroll_prototype_file_is_not_loaded_by_normal_app_flow():
 def test_sync_scroll_concept_is_now_integrated_through_safe_renderer_not_prototype_file():
     production_text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
-    assert "syncToggle" in production_text
-    assert "sourcePane.addEventListener" in production_text
-    assert "processedPane.addEventListener" in production_text
+    assert "syncToggle" not in production_text
+    assert "sync_scroll_always_on" in production_text
+    assert "sync_scroll_visible_checkbox" in production_text
+    assert "sourcePane.addEventListener('scroll'" in production_text
+    assert "processedPane.addEventListener('scroll'" in production_text
     assert "_side_by_side_sync_scroll_html" in production_text
     assert "prototypes/side_by_side_sync_scroll_prototype.html" not in production_text
 
