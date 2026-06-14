@@ -56,15 +56,18 @@ def test_lower_duplicate_side_by_side_is_suppressed_in_serial_review_call():
     assert "include_side_by_side=False" in app_text
 
 
-def test_sync_scroll_and_highlight_toggle_remain_available():
+def test_sync_scroll_and_highlight_toggle_remain_available_but_sync_control_is_hidden():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
-    assert "Synchroon scrollen" in text
+    assert "De panelen scrollen synchroon" in text
     assert "sourcePane.addEventListener('scroll'" in text
     assert "processedPane.addEventListener('scroll'" in text
     assert "side_by_side_review_show_markers" in text
     assert "Markeringen tonen" in text
+    assert "value=True" in text
     assert "Geel = vervangen of gemaskeerde waarde" in text
+    assert "Synchroon scrollen" not in text
+    assert 'id="syncToggle"' not in text
 
 
 def test_review_table_and_download_labels_are_preserved():
