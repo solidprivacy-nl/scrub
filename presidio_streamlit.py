@@ -59,6 +59,7 @@ from ui_texts_nl import (
     ADVANCED_SETTINGS_HELP,
 )
 from display_labels_nl import entity_label, source_label, confidence_label
+from side_by_side_review_panel_ui import render_side_by_side_review_panel
 from serial_review_panel_ui import render_serial_review_panel
 from docx_hygiene_audit_panel_ui import render_docx_hygiene_audit_panel
 
@@ -422,12 +423,10 @@ if uploaded_file is not None:
     except Exception as upload_error:
         st.error(f"Kon het bestand niet lezen: {upload_error}")
 
-col1, col2 = st.columns(2)
-col1.subheader("Invoer")
-st_text = col1.text_area(
+st_text = st.text_area(
     label="Plak tekst of controleer de uit het document gehaalde tekst",
     value=input_text,
-    height=400,
+    height=300,
     key="text_input",
 )
 
@@ -482,56 +481,10 @@ try:
     )
 
     if st_operator not in ("highlight", "synthesize"):
-        with col2:
-            st.subheader("Directe voorbeeldweergave")
-            st_anonymize_results = anonymize(
-                text=st_text,
-                operator=st_operator,
-                mask_char=st_mask_char,
-                number_of_chars=st_number_of_chars,
-                encrypt_key=st_encrypt_key,
-                analyze_results=st_analyze_results,
-            )
-            st.text_area(label="Automatisch resultaat", value=st_anonymize_results.text, height=400)
-
         _, report_rows = build_placeholder_replacements(st_text, st_analyze_results)
         candidate_rows = []
         if st_recognition_profile == "Dutch Legal Strict":
             candidate_rows = scan_unmasked_candidates(st_text, st_analyze_results, max_candidates=50)
-
-        st.divider()
-        st.subheader("2. Controleer gevonden gegevens")
-        st.caption(
-            "Vink fout-positieven uit, pas placeholders aan, voeg handmatige vervangingen toe "
-            "en vink Onthouden aan voor vervangingen die je opnieuw wilt gebruiken. "
-            "Mogelijke kandidaten staan standaard uitgevinkt."
-        )
-
-        if st_recognition_profile == "Dutch Legal Strict":
-            with st.expander("Mogelijke gemiste waarden", expanded=bool(candidate_rows)):
-                if candidate_rows:
-                    st.warning(
-                        "Deze waarden zijn niet automatisch vervangen, maar lijken mogelijk op juridische of administratieve referenties. "
-                        "Controleer ze en vink ze alleen aan als ze echt vervangen moeten worden."
-                    )
-                    candidate_display_df = pd.DataFrame(candidate_rows)
-                    candidate_display_df["type_gegeven"] = candidate_display_df["entity_type"].map(entity_label)
-                    candidate_display_df["zekerheid"] = candidate_display_df["score"].map(confidence_label)
-                    candidate_display_df = candidate_display_df[
-                        ["type_gegeven", "text", "placeholder", "zekerheid", "reason", "context"]
-                    ].rename(
-                        columns={
-                            "type_gegeven": "Type gegeven",
-                            "text": "Gevonden tekst",
-                            "placeholder": "Voorgestelde vervanging",
-                            "zekerheid": "Zekerheid",
-                            "reason": "Reden",
-                            "context": "Context",
-                        }
-                    )
-                    st.dataframe(candidate_display_df, use_container_width=True)
-                else:
-                    st.success("Geen mogelijke gemiste referenties gevonden door de auditlaag.")
 
         remembered_rows = load_remembered_replacements()
         default_editor_rows = []
@@ -628,6 +581,52 @@ try:
             ]
 
         replacement_editor_df = pd.DataFrame(default_editor_rows)
+
+        st.divider()
+        st.subheader("2. Controleer de tekst")
+        st.caption(
+            "Centrale side-by-side reviewweergave. Brontekst links, verwerkte tekst rechts. "
+            "Synchroon scrollen en optionele markeringen blijven visuele hulp."
+        )
+        render_side_by_side_review_panel(
+            source_text=st_text,
+            edited_replacements_df=replacement_editor_df,
+        )
+
+        st.divider()
+        st.subheader("3. Controleer gevonden gegevens")
+        st.caption(
+            "Vink fout-positieven uit, pas placeholders aan, voeg handmatige vervangingen toe "
+            "en vink Onthouden aan voor vervangingen die je opnieuw wilt gebruiken. "
+            "Mogelijke kandidaten staan standaard uitgevinkt. De vervangtabel blijft leidend."
+        )
+
+        if st_recognition_profile == "Dutch Legal Strict":
+            with st.expander("Mogelijke gemiste waarden", expanded=bool(candidate_rows)):
+                if candidate_rows:
+                    st.warning(
+                        "Deze waarden zijn niet automatisch vervangen, maar lijken mogelijk op juridische of administratieve referenties. "
+                        "Controleer ze en vink ze alleen aan als ze echt vervangen moeten worden."
+                    )
+                    candidate_display_df = pd.DataFrame(candidate_rows)
+                    candidate_display_df["type_gegeven"] = candidate_display_df["entity_type"].map(entity_label)
+                    candidate_display_df["zekerheid"] = candidate_display_df["score"].map(confidence_label)
+                    candidate_display_df = candidate_display_df[
+                        ["type_gegeven", "text", "placeholder", "zekerheid", "reason", "context"]
+                    ].rename(
+                        columns={
+                            "type_gegeven": "Type gegeven",
+                            "text": "Gevonden tekst",
+                            "placeholder": "Voorgestelde vervanging",
+                            "zekerheid": "Zekerheid",
+                            "reason": "Reden",
+                            "context": "Context",
+                        }
+                    )
+                    st.dataframe(candidate_display_df, use_container_width=True)
+                else:
+                    st.success("Geen mogelijke gemiste referenties gevonden door de auditlaag.")
+
         edited_replacements_df = st.data_editor(
             replacement_editor_df,
             hide_index=True,
@@ -689,6 +688,7 @@ try:
         render_serial_review_panel(
             displayed_text=st_text,
             edited_replacements_df=edited_replacements_df,
+            include_side_by_side=False,
         )
 
         edited_replacements = {}
@@ -716,10 +716,8 @@ try:
         st.info(f"{len(edited_replacements)} vervanging(en) worden toegepast op de exports.")
 
         export_text = apply_replacements_to_text(st_text, edited_replacements)
-        with st.expander("Voorbeeld op basis van de gecontroleerde vervangtabel", expanded=False):
-            st.text_area(label="Gecontroleerde voorbeeldtekst", value=export_text, height=300, key="edited_export_preview")
 
-        st.subheader("3. Onthoud herbruikbare vervangingen")
+        st.subheader("4. Onthoud herbruikbare vervangingen")
         remember_rows_to_save = []
         for _, row in edited_replacements_df.iterrows():
             include = safe_bool(row.get("include", False))
@@ -741,7 +739,7 @@ try:
                 clear_remembered_replacements()
                 st.warning("Onthouden vervangingen gewist.")
 
-        st.subheader("4. Download opgeschoonde bestanden")
+        st.subheader("5. Download opgeschoonde bestanden")
         if uploaded_file is not None:
             st.info(f"Bestand beschikbaar voor export: {uploaded_file.name}")
         else:
@@ -803,10 +801,9 @@ try:
             st.error(f"Kon geen PDF-export maken: {pdf_error}")
 
     elif st_operator == "synthesize":
-        with col2:
-            st.subheader("Synthetische tekst")
-            fake_data = create_fake_data(st_text, st_analyze_results, open_ai_params)
-            st.text_area(label="Synthetische data", value=fake_data, height=400)
+        st.subheader("Synthetische tekst")
+        fake_data = create_fake_data(st_text, st_analyze_results, open_ai_params)
+        st.text_area(label="Synthetische data", value=fake_data, height=400)
     else:
         st.subheader("Gemarkeerde tekst")
         annotated_tokens = annotate(text=st_text, analyze_results=st_analyze_results)
