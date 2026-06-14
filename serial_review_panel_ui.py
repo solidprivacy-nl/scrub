@@ -1,10 +1,9 @@
 """Small Streamlit renderer for the non-destructive serial review panel.
 
 WP_SERIAL_REVIEW_UI keeps the existing review table as the source of truth. This
-module only renders a helper-driven, report-only panel from review_panel_view_model.py.
-It does not mutate review rows, apply replacements, write Scrub Key mappings,
-block export, change reinsert behavior, add dependencies, call cloud services or
-use real-data fixtures.
+module renders helper-driven, report-only review aids. It does not mutate review
+rows, apply replacements, write Scrub Key mappings, block export, change reinsert
+behavior, add dependencies, call cloud services or use real-data fixtures.
 """
 
 from __future__ import annotations
@@ -14,7 +13,7 @@ from typing import Any
 import streamlit as st
 
 from review_panel_view_model import build_review_panel_view_model
-from review_highlight_toggle_panel_ui import render_review_highlight_toggle_panel
+from side_by_side_review_panel_ui import render_side_by_side_review_panel
 
 
 FILTER_LABELS = {
@@ -181,7 +180,12 @@ def _show_context_card(card: dict[str, Any] | None, warnings: list[str]) -> None
 
 
 def render_serial_review_panel(*, displayed_text: str, edited_replacements_df: Any) -> dict[str, Any] | None:
-    """Render the small serial review panel and return the report-only view model."""
+    """Render the side-by-side review surface plus small serial review aid."""
+
+    side_by_side_state = render_side_by_side_review_panel(
+        source_text=displayed_text,
+        edited_replacements_df=edited_replacements_df,
+    )
 
     st.subheader("Serial review — experimentele reviewhulp")
     st.info(
@@ -196,7 +200,7 @@ def render_serial_review_panel(*, displayed_text: str, edited_replacements_df: A
     review_rows = build_serial_review_panel_rows(displayed_text, edited_replacements_df)
     if not review_rows:
         st.warning("Geen serial review items beschikbaar. De bestaande vervangtabel blijft de fallback.")
-        return None
+        return {"side_by_side_review": side_by_side_state, "serial_review": None}
 
     current_index = int(st.session_state.get("serial_review_current_index", 0) or 0)
     current_occurrence_id = st.session_state.get("serial_review_current_occurrence_id")
@@ -262,9 +266,5 @@ def render_serial_review_panel(*, displayed_text: str, edited_replacements_df: A
             st.session_state["serial_review_current_occurrence_id"] = next_unresolved.get("occurrence_id")
             st.rerun()
 
-    render_review_highlight_toggle_panel(
-        displayed_text=displayed_text,
-        edited_replacements_df=edited_replacements_df,
-    )
-
+    view_model["side_by_side_review"] = side_by_side_state
     return view_model
