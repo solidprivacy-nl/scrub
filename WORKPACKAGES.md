@@ -35,7 +35,7 @@ WP40-WP43 — review UX/frontend line completed through frontend architecture de
 WP42D — experimental static highlight preview attempted but fully rolled back/parked after repeated runtime failures.
 WP_REVIEW_HIGHLIGHT_TOGGLE_PLAN — completed planning/specification-only for a simple masked-text highlight toggle.
 WP_REVIEW_HIGHLIGHT_TOGGLE_CONTRACT_TESTS — completed after Actions/HF verification by coordinator screenshot evidence.
-WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — implemented; awaiting Actions/HF/app verification.
+WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — completed after Actions/HF/app verification.
 WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — completed product rollback/hide; replacement helper panel is removed from the normal Scrub Legal UI flow.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
@@ -63,6 +63,14 @@ The planned and now implemented review highlight toggle is intentionally small a
 
 It shows subtle visual markers for already masked/replaced values in the checked preview text. It remains visual-only, read-only, non-authoritative and non-mutating. The review table remains the source of truth and fallback.
 
+Verification evidence:
+
+```text
+Tests #880 — green for commit 83556af
+Sync to Hugging Face Space #892 — green for commit 83556af
+App verification — positive by coordinator screenshot
+```
+
 Implementation boundaries:
 
 - no startup source mutation;
@@ -81,10 +89,8 @@ Implementation boundaries:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION.
-2. Request app verification screenshot because UI behavior changed.
-3. Verify GitHub Actions and Hugging Face sync for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK.
-4. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
+1. Verify GitHub Actions and Hugging Face sync for WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK.
+2. WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — only after separate coordinator approval.
 ```
 
 ## Blocked work
