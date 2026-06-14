@@ -39,6 +39,7 @@ WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — completed after Actions/HF/app ver
 WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK — completed product rollback/hide; replacement helper panel is removed from the normal Scrub Legal UI flow.
 WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — completed after Actions/HF/app verification; hidden replacement helper panel closeout completed.
 WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — completed planning/design/documentation-only; old helper panel must not return as normal user-facing panel.
+WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed tests/documentation-only; intuitive replacement review redesign is contract-locked.
 WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — completed roadmap/specification/documentation-only; unified side-by-side review UX direction is now anchored.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 WP50-WP51 — pilot/ICP thinking artifacts completed, but Phase 7 is parked.
@@ -86,7 +87,7 @@ Current post-rollback Actions screenshot evidence shows green Tests and green Sy
 Coordinator app screenshot shows the normal Scrub Legal flow with review table, serial review, highlight toggle, export/download and DOCX hygiene audit visible, while the Replacement decision helper panel is not visible.
 ```
 
-The redesigned replacement review direction remains:
+The redesigned replacement review direction is now locked by contract tests:
 
 ```text
 one found item -> context -> suggested replacement -> one simple choice -> optional exact-same scope -> existing table remains fallback
@@ -140,7 +141,7 @@ Current implementation boundaries remain:
 ```text
 1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN
 2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS
-3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS
+3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — completed
 ```
 
 These are documentation/tests-only and may be partially parallelized if they do not edit the same files at the same time.
@@ -165,15 +166,14 @@ Implementation packages must be sequential if they touch any shared UI files.
 ## Active / next recommended execution queue
 
 ```text
-1. WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN — detailed plan for unified source/processed review surface.
-2. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side plan before implementation.
-3. WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS — lock the simple replacement-choice plan.
+1. WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS — lock the side-by-side direction before implementation.
+2. WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER — only after side-by-side contracts are in place.
 ```
 
-Safe parallel option:
+If `WP_SIDE_BY_SIDE_REVIEW_CONTRACT_TESTS` is already completed by another worker, move to:
 
 ```text
-WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN and WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS can be worked by different workers if both stay documentation/tests-only and avoid central-doc conflicts.
+WP_SIDE_BY_SIDE_REVIEW_PROTOTYPE_HELPER
 ```
 
 ## Blocked work
