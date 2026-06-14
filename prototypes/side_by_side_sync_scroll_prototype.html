@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SolidPrivacy Scrub — sync scroll prototype</title>
+  <style>
+    :root {
+      --border: #d9dee8;
+      --panel: #f8fafc;
+      --text: #111827;
+      --muted: #5b6472;
+      --accent: #2563eb;
+      --highlight: #fef3c7;
+      --highlight-border: #f59e0b;
+      --warning-bg: #fff7ed;
+      --warning-border: #fed7aa;
+    }
+
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .subtitle,
+    .note {
+      color: var(--muted);
+      margin: 0 0 16px;
+    }
+
+    .warning {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 16px 0 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 18px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f9fafb;
+    }
+
+    .toolbar label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .pane-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin: 0 0 8px;
+    }
+
+    .pane-title h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .legend {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pane {
+      height: 430px;
+      overflow-y: auto;
+      box-sizing: border-box;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 18px 20px;
+      scroll-behavior: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .pane:focus {
+      outline: 3px solid rgba(37, 99, 235, 0.25);
+      outline-offset: 2px;
+    }
+
+    mark {
+      background: var(--highlight);
+      border: 1px solid var(--highlight-border);
+      border-radius: 4px;
+      padding: 0 3px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    code {
+      background: #eef2ff;
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Side-by-side synchronized scroll prototype</h1>
+    <p class="subtitle">Geïsoleerd prototype. Niet gekoppeld aan de normale Scrub Legal-flow.</p>
+
+    <div class="warning">
+      <strong>Prototype-only.</strong>
+      Dit bestand gebruikt alleen synthetische tekst. Het schrijft geen Scrub Key, verandert geen export, verandert geen reinsert en muteert geen review table.
+      De sync is percentage-based en kan valse uitlijning geven wanneer bron en verwerkte tekst inhoudelijk niet regel-op-regel gelijklopen.
+    </div>
+
+    <div class="toolbar" aria-label="prototype controls">
+      <label>
+        <input id="syncToggle" type="checkbox" checked>
+        Synchroon scrollen
+      </label>
+      <span id="syncStatus" class="status">Sync aan: scroll links of rechts om het andere paneel mee te bewegen.</span>
+    </div>
+
+    <section class="grid" aria-label="synthetic side-by-side review prototype">
+      <article>
+        <div class="pane-title">
+          <h2>Brontekst</h2>
+          <span class="legend">Synthetische testtekst</span>
+        </div>
+        <div id="sourcePane" class="pane" tabindex="0" aria-label="synthetische brontekst">
+AANSPRAKELIJKSTELLING LETSELSCHADE
+
+Schadenummer: SYNTHETIC_DAMAGE_001
+Polisnummer: SYNTHETIC_POLICY_002
+Dossiernummer: SYNTHETIC_FILE_003
+Claimreferentie verzekeraar: SYNTHETIC_CLAIM_004
+
+Geachte heer/mevrouw,
+
+Namens synthetische betrokkene A, wonende aan synthetisch adres A, stel ik hierbij synthetische organisatie B aansprakelijk voor de gevolgen van het ongeval op een synthetische locatie.
+
+Het ongeval vond plaats op een kruising. De betrokkene fietste rechtdoor, terwijl een voertuig vanaf rechts de bocht maakte. De bestuurder had onvoldoende zicht op de fietser. De betrokkene liep letsel op aan schouder en knie.
+
+De huisarts heeft de betrokkene verwezen naar een fysiotherapeut. De fysiotherapeut rapporteert pijnklachten, beperkte mobiliteit en tijdelijke arbeidsongeschiktheid. De werkgever heeft bevestigd dat de betrokkene tijdelijk minder uren kan werken.
+
+Voor de beoordeling van aansprakelijkheid zijn de volgende synthetische stukken relevant:
+
+1. Schadeformulier met synthetisch kenmerk A.
+2. Medische samenvatting met synthetisch kenmerk B.
+3. Werkgeversverklaring met synthetisch kenmerk C.
+4. Correspondentie met synthetische verzekeraar.
+5. Foto's van de synthetische ongevalslocatie.
+
+Ik verzoek u binnen veertien dagen aansprakelijkheid te erkennen. Daarnaast verzoek ik om betaling van een voorschot op de schadevergoeding. De schade bestaat uit medische kosten, reiskosten, verlies aan inkomsten en overige aantoonbare kosten.
+
+De persoonsgegevens en mater-identifiers in dit prototype zijn bewust synthetisch. Er staan geen echte namen, adressen, polisnummers, medische dossiers of rekeningnummers in dit bestand.
+
+Tweede contextblok:
+
+De betrokkene heeft aangegeven dat de klachten het dagelijks functioneren beperken. Traplopen, fietsen en langdurig zitten geven pijn. De fysiotherapeut verwacht herstel, maar noemt een onzeker hersteltraject.
+
+Derde contextblok:
+
+De verzekeraar heeft om aanvullende informatie gevraagd. In een echte workflow zou de gebruiker hier controleren welke waarden gemaskeerd zijn en of de juridische betekenis behouden blijft.
+
+Vierde contextblok:
+
+Deze langere alinea bestaat alleen om scrollgedrag zichtbaar te maken. De tekst is expres lang genoeg om het paneel te laten scrollen. De rechterkant bevat placeholders en markeringen, waardoor de visuele hoogte per passage iets kan verschillen. Dat laat zien waarom synchroon scrollen handig kan lijken, maar ook waarom het zorgvuldig getest moet worden.
+
+Vijfde contextblok:
+
+Afsluitend verzoek ik om schriftelijke bevestiging van de ontvangst van deze aansprakelijkstelling en om een inhoudelijke reactie binnen de gestelde termijn.
+        </div>
+      </article>
+
+      <article>
+        <div class="pane-title">
+          <h2>Verwerkte tekst</h2>
+          <span class="legend">Geel = vervangen of gemaskeerde waarde</span>
+        </div>
+        <div id="processedPane" class="pane" tabindex="0" aria-label="synthetische verwerkte tekst">
+AANSPRAKELIJKSTELLING LETSELSCHADE
+
+Schadenummer: <mark>[SCHADE_OF_POLISNUMMER_01]</mark>
+Polisnummer: <mark>[SCHADE_OF_POLISNUMMER_02]</mark>
+Dossiernummer: <mark>[DOSSIERNUMMER_01]</mark>
+Claimreferentie verzekeraar: <mark>[CLAIMNUMMER_01]</mark>
+
+Geachte heer/mevrouw,
+
+Namens <mark>[PERSOON_01]</mark>, wonende aan <mark>[ADRES_01]</mark>, stel ik hierbij <mark>[ORGANISATIE_01]</mark> aansprakelijk voor de gevolgen van het ongeval op <mark>[LOCATIE_01]</mark>.
+
+Het ongeval vond plaats op een kruising. De betrokkene fietste rechtdoor, terwijl een voertuig vanaf rechts de bocht maakte. De bestuurder had onvoldoende zicht op de fietser. De betrokkene liep letsel op aan schouder en knie.
+
+De huisarts heeft de betrokkene verwezen naar een fysiotherapeut. De fysiotherapeut rapporteert pijnklachten, beperkte mobiliteit en tijdelijke arbeidsongeschiktheid. <mark>[ORGANISATIE_02]</mark> heeft bevestigd dat de betrokkene tijdelijk minder uren kan werken.
+
+Voor de beoordeling van aansprakelijkheid zijn de volgende synthetische stukken relevant:
+
+1. Schadeformulier met <mark>[DOCUMENTKENMERK_01]</mark>.
+2. Medische samenvatting met <mark>[DOCUMENTKENMERK_02]</mark>.
+3. Werkgeversverklaring met <mark>[DOCUMENTKENMERK_03]</mark>.
+4. Correspondentie met <mark>[ORGANISATIE_03]</mark>.
+5. Foto's van de synthetische ongevalslocatie.
+
+Ik verzoek u binnen veertien dagen aansprakelijkheid te erkennen. Daarnaast verzoek ik om betaling van een voorschot op de schadevergoeding. De schade bestaat uit medische kosten, reiskosten, verlies aan inkomsten en overige aantoonbare kosten.
+
+De persoonsgegevens en mater-identifiers in dit prototype zijn vervangen door synthetische placeholders. Juridische termen zoals betrokkene, verzekeraar, werkgever en huisarts blijven inhoudelijk behouden.
+
+Tweede contextblok:
+
+De betrokkene heeft aangegeven dat de klachten het dagelijks functioneren beperken. Traplopen, fietsen en langdurig zitten geven pijn. De fysiotherapeut verwacht herstel, maar noemt een onzeker hersteltraject.
+
+Derde contextblok:
+
+De verzekeraar heeft om aanvullende informatie gevraagd. In een echte workflow zou de gebruiker hier controleren welke waarden gemaskeerd zijn en of de juridische betekenis behouden blijft.
+
+Vierde contextblok:
+
+Deze langere alinea bestaat alleen om scrollgedrag zichtbaar te maken. De tekst is expres lang genoeg om het paneel te laten scrollen. De rechterkant bevat placeholders en markeringen, waardoor de visuele hoogte per passage iets kan verschillen. Dat laat zien waarom synchroon scrollen handig kan lijken, maar ook waarom het zorgvuldig getest moet worden.
+
+Vijfde contextblok:
+
+Afsluitend verzoek ik om schriftelijke bevestiging van de ontvangst van deze aansprakelijkstelling en om een inhoudelijke reactie binnen de gestelde termijn.
+        </div>
+      </article>
+    </section>
+
+    <p class="footer-note">
+      Techniek: wanneer sync aan staat, wordt de scrollpositie als percentage gekopieerd naar het andere paneel.
+      Dit is een werkend concept, geen productiefeature. Fallback: zet sync uit en beide panelen scrollen onafhankelijk.
+    </p>
+  </main>
+
+  <script>
+    (function () {
+      const sourcePane = document.getElementById('sourcePane');
+      const processedPane = document.getElementById('processedPane');
+      const syncToggle = document.getElementById('syncToggle');
+      const syncStatus = document.getElementById('syncStatus');
+      let isSyncing = false;
+
+      function scrollRatio(element) {
+        const maxScroll = element.scrollHeight - element.clientHeight;
+        if (maxScroll <= 0) {
+          return 0;
+        }
+        return element.scrollTop / maxScroll;
+      }
+
+      function setScrollRatio(element, ratio) {
+        const maxScroll = element.scrollHeight - element.clientHeight;
+        element.scrollTop = ratio * maxScroll;
+      }
+
+      function syncScroll(fromPane, toPane) {
+        if (!syncToggle.checked || isSyncing) {
+          return;
+        }
+        isSyncing = true;
+        window.requestAnimationFrame(function () {
+          setScrollRatio(toPane, scrollRatio(fromPane));
+          isSyncing = false;
+        });
+      }
+
+      sourcePane.addEventListener('scroll', function () {
+        syncScroll(sourcePane, processedPane);
+      });
+
+      processedPane.addEventListener('scroll', function () {
+        syncScroll(processedPane, sourcePane);
+      });
+
+      syncToggle.addEventListener('change', function () {
+        if (syncToggle.checked) {
+          syncStatus.textContent = 'Sync aan: scroll links of rechts om het andere paneel mee te bewegen.';
+          syncScroll(sourcePane, processedPane);
+        } else {
+          syncStatus.textContent = 'Sync uit: beide panelen scrollen onafhankelijk.';
+        }
+      });
+    }());
+  </script>
+</body>
+</html>
