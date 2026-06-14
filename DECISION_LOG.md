@@ -4,6 +4,42 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-15 — D022 — Bounded synchronized side-by-side scrolling approved after prototype review
+
+Status: accepted bounded UX implementation decision
+
+Decision:
+
+```text
+After visual review of the isolated synchronized-scroll prototype, bounded synchronized scrolling may be integrated into the existing side-by-side review surface.
+```
+
+Rationale:
+
+The coordinator confirmed that the isolated prototype looked good and may be integrated into the production environment. The integration must remain bounded: source and processed panes stay in the review surface, the review table remains source of truth and fallback, and synchronized scrolling remains a visual/navigation aid only.
+
+Implementation boundaries:
+
+- Use local escaped HTML/JS inside the app.
+- Keep a visible sync on/off fallback.
+- Do not change replacement behavior.
+- Do not mutate review table state.
+- Do not write or change Scrub Key data.
+- Do not change export/download behavior.
+- Do not change reinsert behavior.
+- Do not add dependencies.
+- Do not use cloud processing.
+- Do not use real data.
+- Preserve the warning that percentage-based sync can be imperfect when source and processed text differ structurally.
+
+Verification requirement:
+
+```text
+GitHub Actions green -> Hugging Face sync green -> coordinator app screenshot.
+```
+
+---
+
 ## 2026-06-14 — D021 — Unified side-by-side review surface is the target review UX
 
 Status: accepted product/UX direction
@@ -25,10 +61,11 @@ Implications:
 - The highlight toggle should belong near/in the main side-by-side review surface, not primarily as a separate duplicate preview panel.
 - Repeated per-highlight labels such as `Gemarkeerd` should not be the long-term design when the marker itself is sufficient.
 - Synchronized scrolling is a valid UX goal but requires separate planning/testing because it may need custom HTML/component work.
+- D022 records the later approved bounded implementation route for synchronized scrolling after prototype review.
 - The review table remains source of truth and fallback.
 - Serial review remains a guided review layer, not a replacement of the table.
 - The old replacement decision helper panel must not return as normal user-facing UI.
-- Do not start custom side-by-side rendering, synchronized scrolling, panel removal, click-to-mark, advanced editor, full-document marking, Scrub Key writes, export blocking or reinsert behavior changes without separate approved packages.
+- Do not start panel removal, click-to-mark, advanced editor, full-document marking, Scrub Key writes, export blocking or reinsert behavior changes without separate approved packages.
 
 ---
 
@@ -86,7 +123,7 @@ Implications:
 
 ## 2026-06-12 — D018 — Stay with Streamlit for MVP validation and defer frontend migration
 
-Status: accepted frontend architecture decision; implementation-route superseded where it conflicts with D019/D021
+Status: accepted frontend architecture decision; implementation-route superseded where it conflicts with D019/D021/D022
 
 Decision:
 
@@ -112,7 +149,7 @@ Implications:
 
 ## 2026-06-12 — D017 — Streamlit is feasible only for a bounded read-only highlight preview
 
-Status: accepted feasibility boundary decision; any implementation route using startup source mutation is superseded by D019/D021
+Status: accepted feasibility boundary decision; any implementation route using startup source mutation is superseded by D019/D021/D022
 
 Decision:
 
@@ -126,7 +163,7 @@ Streamlit is fast for online MVP validation, but clickable markers, synchronized
 
 Implications:
 
-- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` remains a historical feasibility boundary, but D019 governs the route after the failed WP42D startup-mutation attempt and D021 governs the unified side-by-side review target.
+- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` remains a historical feasibility boundary, but D019 governs the route after the failed WP42D startup-mutation attempt and D021/D022 govern the unified side-by-side review target.
 - The old static-highlight startup source mutation route must not be restarted.
 - Future UI preview work may be considered only after helper/model tests and explicit approval.
 - Click-to-mark sensitive text remains blocked until later decision/implementation packages.
@@ -137,60 +174,10 @@ Implications:
 
 ## 2026-06-12 — D016 — Highlight-based review starts as bounded read-only prototype after feasibility review
 
-Status: accepted prototype decision; implementation route superseded where it conflicts with D019/D021
+Status: accepted prototype decision; implementation route superseded where it conflicts with D019/D021/D022
 
 Decision:
 
 ```text
-Highlight-based document review should be pursued, but only as a small bounded prototype after Streamlit feasibility is reviewed. The first prototype should be read-only, text-based, synthetic, highlight-and-detail oriented, table-linked and explicitly non-authoritative. It must not change review table behavior, export/download behavior, Scrub Key behavior or runtime behavior.
+Build a small, read-only proof-of-concept for visual review of scrubbed output using highlighted placeholders before considering any broader document-editor direction.
 ```
-
-Rationale:
-
-Document context is needed for trustworthy review, but clickable highlights and synchronized panes touch fragile UI/state areas. A broad UI rewrite now would risk destabilizing the current workflow. The safer route is WP42 first, then a small synthetic text-based highlight proof if feasible.
-
-Implications:
-
-- WP41 is decision/documentation-only.
-- WP42 should decide whether Streamlit can safely support the prototype.
-- No worker should implement broad document-centric UI before WP42.
-- Raw HTML/highlight rendering must consider escaping, accessibility, color-not-alone design and state safety.
-- Current review table remains the audit/control surface.
-- D019 supersedes any interpretation that would restart static-highlight startup source mutation.
-- D021 supersedes any interpretation that would make a separate duplicate highlight preview the long-term target.
-
----
-
-## 2026-06-12 — D015 — Local installer is deferred until the final roadmap phase
-
-Status: accepted roadmap sequencing decision
-
-Decision:
-
-```text
-Local installer and production desktop packaging work must move to the end of the roadmap. Scrub should validate as much as possible through the online/web prototype and GitHub workflow first. Only after logic, interface, security and trustworthiness are acceptable should the project invest serious effort in local installer/MSI/desktop packaging.
-```
-
-Rationale:
-
-Testing an installable app is much more labor-intensive than testing a web interface. Installer work introduces OS, antivirus, signing, dependency, update, rollback, offline, network, temp-file, support and enterprise-management complexity. Starting packaging too early risks spending effort on distributing logic and UI that may still change. The Hugging Face/Streamlit prototype remains the fastest surface for synthetic and approved non-confidential validation of product behavior.
-
-Implications:
-
-- `ROADMAP.md` now places final local desktop/offline installer work after trust, review, document hygiene, online workflow validation, pilot validation and scale-readiness work.
-- `WP48B` or `WP49B` are not default next workpackages; they require explicit coordinator approval.
-- MSI, signed installer, auto-updater, Tauri/Electron implementation and production packaging claims remain blocked until late-phase evidence is strong.
-- Workers must not start installer or packaging implementation as a side effect of local-runtime, UI or trust work.
-
----
-
-## Earlier active decisions
-
-Earlier detailed decisions remain available in Git history and include:
-
-- D014 — Desktop packaging starts with portable Python folder, MSI later only.
-- D013 — Scrub Key deletion remains explicit and user-controlled.
-- D012 — Recommended future robust placeholder format.
-- D011 — Local runtime starts with Streamlit launcher, later desktop shell; superseded in sequence by D015.
-- D010 — Scrub Key MVP lifecycle starts warning-first before encryption.
-- D001-D009 — Earlier roadmap, PDF, Scrub Key, review UI, documentation and parallelization decisions.
