@@ -168,7 +168,6 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
 
     processed_text = build_preview_text(source_text, edited_replacements_df)
 
-    st.subheader("Controleer de tekst")
     st.caption("Vergelijk links de brontekst met rechts de verwerkte tekst. De vervangtabel blijft leidend.")
     st.caption(
         "side-by-side review · table-first baseline · visual-only highlights · "
