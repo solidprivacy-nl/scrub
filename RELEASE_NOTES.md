@@ -24,7 +24,8 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 - The side-by-side panes scroll together by default.
 - A short note explains that visual alignment can differ when source and processed text differ structurally.
 - Markers are on by default and can be hidden with `Markeringen tonen`.
-- The replacement table remains the source of truth and fallback.
+- The section `Controleer gevonden gegevens` is visually quieter: the replacement table is now under a collapsed `Vervangtabel controleren — <items> items` section.
+- The replacement table remains the source of truth and fallback for review decisions and export construction.
 - Serial review remains available as a small read-only review aid below the replacement table.
 - Markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.
 
