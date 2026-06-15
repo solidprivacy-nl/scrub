@@ -41,11 +41,18 @@ def test_side_by_side_panel_uses_helper_model_and_existing_preview_logic():
     assert SIDE_BY_SIDE_HELPER.exists()
 
 
+def test_central_step_heading_is_not_duplicated_inside_side_by_side_component():
+    app_text = APP.read_text(encoding="utf-8")
+    side_text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+
+    assert 'st.subheader("2. Controleer de tekst")' in app_text
+    assert 'st.subheader("Controleer de tekst")' not in side_text
+
+
 def test_user_facing_side_by_side_copy_exists_and_controls_are_simplified():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     for phrase in [
-        "Controleer de tekst",
         "Vergelijk links de brontekst met rechts de verwerkte tekst",
         "Brontekst",
         "Verwerkte tekst",
