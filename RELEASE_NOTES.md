@@ -18,6 +18,7 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 ### Review
 
 - The review flow has one central side-by-side review surface near the top of the review workflow.
+- The side-by-side review surface uses one section heading: `2. Controleer de tekst`.
 - `Brontekst` appears on the left and `Verwerkte tekst` on the right.
 - The side-by-side panes use equal visual height.
 - The side-by-side panes scroll together by default.
