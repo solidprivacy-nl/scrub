@@ -36,14 +36,14 @@ WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — completed after Actions/HF/app v
 WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — completed after Actions/HF/app verification; first bounded source/processed side-by-side review surface is live.
 WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — completed after Actions/HF/app verification; equal-height side-by-side panes with local processed-pane scrolling are live.
 WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — completed isolated prototype-only concept and visually approved by coordinator.
-WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — implemented with explicit coordinator approval; awaiting Actions, Hugging Face sync and app verification.
-WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — implemented; old upper direct preview removed, one central side-by-side review added above review table, Dutch synthetic legal demo text added; awaiting Actions, Hugging Face sync and app verification.
-WP_REVIEW_SURFACE_CONTROL_CLEANUP — implemented; markers default on, marker label shortened, sync scroll remains active but visible sync checkbox removed; awaiting Actions, Hugging Face sync and app verification.
+WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — completed after later app verification evidence; synchronized scrolling remains active by default.
+WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — completed after later app verification evidence; one central side-by-side review is live with Dutch synthetic legal demo text.
+WP_REVIEW_SURFACE_CONTROL_CLEANUP — completed after later Actions/HF/app verification evidence; markers default on, marker label shortened, visible sync-scroll checkbox removed.
 WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed after Actions/HF verification; stale assertions repaired after marker/sync-control cleanup.
 WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — completed after Actions/HF/app verification by coordinator screenshot evidence; duplicate internal `Controleer de tekst` heading removed from the central side-by-side component.
-WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verification; implementation may start after coordinator approval.
-WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION — blocked/released after coordinator-approved takeover attempt; safe direct `presidio_streamlit.py` implementation route still required.
-WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — completed as inactive candidate file; active `presidio_streamlit.py` unchanged.
+WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verification.
+WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — completed as inactive candidate file and later promoted.
+WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — completed after promotion/app verification; normal app flow now shows `Vervangtabel controleren — <items> items` as collapsed review-table section.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -61,17 +61,17 @@ The working baseline remains:
 table-first review table = source of truth and fallback
 ```
 
-The normal app now targets:
+The normal app now uses:
 
 ```text
 1. Voeg document of tekst toe
 2. Controleer de tekst: one central side-by-side review surface
-3. Controleer gevonden gegevens: review table remains source of truth, may become collapsible after implementation approval
+3. Controleer gevonden gegevens: review guidance remains visible, while the editable replacement table sits inside the collapsed `Vervangtabel controleren — <items> items` section
 4. Serial review / extra review aids
 5. Download opgeschoonde bestanden
 ```
 
-The central review surface now keeps:
+The central review surface keeps:
 
 - a single outer step heading: `2. Controleer de tekst`;
 - no duplicate internal `Controleer de tekst` heading inside the side-by-side component;
@@ -82,24 +82,33 @@ The central review surface now keeps:
 - visual markers default on;
 - review table as source of truth and fallback.
 
-Review table collapsible contract:
+The promoted collapsible review table keeps:
 
-- `REVIEW_TABLE_COLLAPSIBLE_CONTRACT.md` records the future collapsible-section rules.
-- `tests/test_review_table_collapsible_contract.py` locks that `Controleer gevonden gegevens` may support an item count but the table remains source of truth/fallback.
-- Future implementation must preserve `replacement_editor`, `include`, `remember`, `find`, `replace_with`, export/download labels and no Scrub Key/reinsert/replacement behavior changes.
-- Verification evidence: `Tests #1041` green and `Sync to Hugging Face Space #1053` green by coordinator screenshot evidence; earlier red `Tests #1031` was a stale review-surface assertion and is superseded.
+- `3. Controleer gevonden gegevens` visible in the normal app flow;
+- the editable `replacement_editor` table under `Vervangtabel controleren — <items> items`;
+- collapsed default state with `expanded=False`;
+- `include`, `remember`, `find`, `replace_with` controls;
+- Dutch labels `Meenemen`, `Onthouden`, `Gevonden tekst`, `Vervangen door`;
+- export/download labels unchanged;
+- DOCX hygiene audit remains visible.
 
-Collapsible implementation status:
+Verification evidence:
 
-- The stale/in-progress implementation claim has been released as blocked.
-- The ChatGPT connector takeover did not safely complete the runtime UI implementation because the required change touches the central `presidio_streamlit.py` review-table flow.
-- `presidio_streamlit_collapsible_candidate.py` is now available as an inactive candidate file for manual rename/testing.
-- The active app file remains unchanged until the coordinator manually promotes the candidate file.
-- A future active implementation should still use a safe direct full-file/branch patch route and should not use hidden startup mutation, global monkeypatching or side effects.
+- Promotion branch used by coordinator: `test/collapsible-review-table`.
+- Promotion commit: `15f5173c893668566e9d62524ef4d0b5449f37b8` — `Promote collapsible review table candidate`.
+- GitHub Actions: `Tests #1074` completed successfully for the promotion commit.
+- Coordinator local checks:
+  - `python -m py_compile presidio_streamlit.py`
+  - `python -m pytest -q tests/test_review_table_collapsible_candidate_file.py` — 5 passed
+  - `python -m pytest -q tests/test_review_table_collapsible_contract.py` — 11 passed
+  - `python -m pytest -q tests/test_side_by_side_review_ui_patch.py` — 15 passed
+  - `python -m pytest -q tests/test_side_by_side_review_consolidation_dutch_sample.py` — 7 passed
+  - `python -m pytest -q tests` — 545 passed
+- Coordinator app screenshot confirmed the live app starts and shows the collapsed `Vervangtabel controleren — 16 items` section with side-by-side review, serial review, export/download and DOCX hygiene audit still visible.
 
 Boundaries preserved:
 
-- active app unchanged by the candidate file;
+- review table remains source of truth and fallback;
 - no replacement behavior change;
 - no Scrub Key change;
 - no export/download change;
@@ -111,10 +120,9 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify Actions for WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE.
-2. If the coordinator wants to test it, manually promote `presidio_streamlit_collapsible_candidate.py` to `presidio_streamlit.py` on a branch or local clone.
-3. Run py_compile/pytest and app verification after promotion.
-4. Do not promote directly to main without a reversible backup/branch.
+1. Do not start a new feature automatically.
+2. Possible next UX step only after separate coordinator approval: make Serial review compacter/collapsible.
+3. Alternative next direction: freeze review UX temporarily and return to detection/recall issues.
 ```
 
 ## Blocked work
