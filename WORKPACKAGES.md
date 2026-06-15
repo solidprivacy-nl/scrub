@@ -43,6 +43,7 @@ WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed after Actions/HF ver
 WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — completed after Actions/HF/app verification by coordinator screenshot evidence; duplicate internal `Controleer de tekst` heading removed from the central side-by-side component.
 WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verification; implementation may start after coordinator approval.
 WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION — blocked/released after coordinator-approved takeover attempt; safe direct `presidio_streamlit.py` implementation route still required.
+WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — completed as inactive candidate file; active `presidio_streamlit.py` unchanged.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -92,10 +93,13 @@ Collapsible implementation status:
 
 - The stale/in-progress implementation claim has been released as blocked.
 - The ChatGPT connector takeover did not safely complete the runtime UI implementation because the required change touches the central `presidio_streamlit.py` review-table flow.
-- A future implementation must use a safe direct full-file/branch patch route and should not use hidden startup mutation, global monkeypatching or side effects.
+- `presidio_streamlit_collapsible_candidate.py` is now available as an inactive candidate file for manual rename/testing.
+- The active app file remains unchanged until the coordinator manually promotes the candidate file.
+- A future active implementation should still use a safe direct full-file/branch patch route and should not use hidden startup mutation, global monkeypatching or side effects.
 
 Boundaries preserved:
 
+- active app unchanged by the candidate file;
 - no replacement behavior change;
 - no Scrub Key change;
 - no export/download change;
@@ -107,9 +111,10 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Re-run WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION only with a worker/environment that can safely edit `presidio_streamlit.py` as a complete file and run tests.
-2. Keep the implementation narrow: make the review table collapsible while preserving `replacement_editor`, include, remember, find and replace_with.
-3. After implementation: verify GitHub Actions, Hugging Face sync and coordinator app screenshot.
+1. Verify Actions for WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE.
+2. If the coordinator wants to test it, manually promote `presidio_streamlit_collapsible_candidate.py` to `presidio_streamlit.py` on a branch or local clone.
+3. Run py_compile/pytest and app verification after promotion.
+4. Do not promote directly to main without a reversible backup/branch.
 ```
 
 ## Blocked work
