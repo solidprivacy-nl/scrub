@@ -40,8 +40,9 @@ WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — implemented with explicit 
 WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — implemented; old upper direct preview removed, one central side-by-side review added above review table, Dutch synthetic legal demo text added; awaiting Actions, Hugging Face sync and app verification.
 WP_REVIEW_SURFACE_CONTROL_CLEANUP — implemented; markers default on, marker label shortened, sync scroll remains active but visible sync checkbox removed; awaiting Actions, Hugging Face sync and app verification.
 WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed after Actions/HF verification; stale assertions repaired after marker/sync-control cleanup.
-WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — implemented; duplicate internal `Controleer de tekst` heading removed from the central side-by-side component; awaiting Actions, Hugging Face sync and app verification.
+WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — completed after Actions/HF/app verification by coordinator screenshot evidence; duplicate internal `Controleer de tekst` heading removed from the central side-by-side component.
 WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verification; implementation may start after coordinator approval.
+WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION — blocked/released after coordinator-approved takeover attempt; safe direct `presidio_streamlit.py` implementation route still required.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -87,6 +88,12 @@ Review table collapsible contract:
 - Future implementation must preserve `replacement_editor`, `include`, `remember`, `find`, `replace_with`, export/download labels and no Scrub Key/reinsert/replacement behavior changes.
 - Verification evidence: `Tests #1041` green and `Sync to Hugging Face Space #1053` green by coordinator screenshot evidence; earlier red `Tests #1031` was a stale review-surface assertion and is superseded.
 
+Collapsible implementation status:
+
+- The stale/in-progress implementation claim has been released as blocked.
+- The ChatGPT connector takeover did not safely complete the runtime UI implementation because the required change touches the central `presidio_streamlit.py` review-table flow.
+- A future implementation must use a safe direct full-file/branch patch route and should not use hidden startup mutation, global monkeypatching or side effects.
+
 Boundaries preserved:
 
 - no replacement behavior change;
@@ -100,9 +107,9 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP.
-2. Ask coordinator for app verification screenshot because UI copy/layout changed.
-3. Then return to WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION only after a safe patch route is available.
+1. Re-run WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION only with a worker/environment that can safely edit `presidio_streamlit.py` as a complete file and run tests.
+2. Keep the implementation narrow: make the review table collapsible while preserving `replacement_editor`, include, remember, find and replace_with.
+3. After implementation: verify GitHub Actions, Hugging Face sync and coordinator app screenshot.
 ```
 
 ## Blocked work
