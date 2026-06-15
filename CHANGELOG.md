@@ -1,5 +1,42 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — Inactive candidate file for collapsible review table
+
+Status: completed as inactive candidate file; active app file unchanged.
+
+Files added:
+
+- `presidio_streamlit_collapsible_candidate.py`
+- `tests/test_review_table_collapsible_candidate_file.py`
+- `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE.md`
+- `handover/workpackages/20260615_1135_review_table_collapsible_candidate_file.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE.md`
+
+Summary:
+
+- Added a manually renameable candidate app file for testing a collapsible `Controleer gevonden gegevens` review table section.
+- The active `presidio_streamlit.py` was not changed.
+- The candidate keeps `3. Controleer gevonden gegevens` visible and places the editable `replacement_editor` table in a collapsed `Vervangtabel controleren — {item_count} items` expander.
+- The candidate preserves `replacement_editor`, include, remember, find, replace_with and the Dutch table labels.
+- Added static candidate-file contract tests to confirm the candidate exists, keeps the review table controls and preserves download labels.
+
+Validation status:
+
+- No shell/pytest execution was available through the ChatGPT GitHub connector.
+- Expected targeted checks: `pytest tests/test_review_table_collapsible_candidate_file.py`; `pytest tests/test_review_table_collapsible_contract.py`; `pytest tests/test_side_by_side_review_ui_patch.py`; `pytest tests/test_side_by_side_review_consolidation_dutch_sample.py`.
+- Expected compile check after manual promotion: `python -m py_compile presidio_streamlit.py`.
+
+Important boundary:
+
+- This is not yet a live app implementation.
+- Manual promotion must happen on a branch or local clone by renaming the candidate file to `presidio_streamlit.py` after backing up the active file.
+- Do not promote directly to main without a reversible backup/branch and tests.
+
 ## WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION — Takeover attempt blocked/released
 
 Status: blocked/released after coordinator-approved takeover attempt.
@@ -26,7 +63,7 @@ Summary:
 
 Next recommended step:
 
-- Re-run `WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION` only with a worker/environment that can safely edit `presidio_streamlit.py` as a complete file and run tests.
+- Use the inactive candidate file for manual branch/local testing, or re-run the active implementation with a safe full-file edit environment.
 - Do not use startup source mutation, global monkeypatching or hidden side effects for this UI change.
 
 ## WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — Remove duplicate central review heading
