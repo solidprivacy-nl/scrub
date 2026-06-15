@@ -1,10 +1,14 @@
-"""Streamlit app for SolidPrivacy Scrub Legal.
+"""Candidate copy of the Streamlit app with a collapsible review table.
 
-v9 Dutch Legal UI Layer:
-- presents Scrub as a Dutch legal document scrubber instead of a technical demo;
-- keeps recognizer/engine internals under the hood;
-- adds Dutch workflow labels, Dutch review table labels and Dutch download labels;
-- preserves the existing detection, audit-candidate and export workflow.
+Manual test flow:
+- keep the active `presidio_streamlit.py` untouched while reviewing this file;
+- if approved, rename the active file to a backup and rename this candidate to
+  `presidio_streamlit.py`;
+- then run the normal startup/test flow.
+
+This candidate directly changes only the review-table presentation area:
+`3. Controleer gevonden gegevens` remains visible, while the editable
+`replacement_editor` table is placed in a collapsed expander.
 """
 
 from __future__ import annotations
@@ -13,6 +17,7 @@ import ast
 import logging
 import os
 import traceback
+from datetime import datetime, timezone
 from pathlib import Path
 
 import dotenv
@@ -59,6 +64,23 @@ from ui_texts_nl import (
     ADVANCED_SETTINGS_HELP,
 )
 from display_labels_nl import entity_label, source_label, confidence_label
+from review_status import review_status_for_source, review_status_label, review_status_order
+from review_filters import REVIEW_FILTER_OPTIONS, FILTER_SHOW_ALL, filter_review_dataframe
+from review_table_config import main_review_columns, technical_display_columns
+from review_guidance import (
+    REVIEW_INTRO_GUIDANCE,
+    CANDIDATE_GUIDANCE,
+    FOCUS_FILTER_GUIDANCE,
+    TECHNICAL_DETAILS_GUIDANCE,
+    AI_USAGE_GUIDANCE,
+    EXPORT_GUIDANCE,
+)
+from review_summary import build_review_summary, review_summary_markdown
+from export_sanity import build_export_sanity_checks, export_sanity_warnings
+from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key
+from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result
+from scrub_key_reinsert import reinsert_from_scrub_key
+from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes
 from side_by_side_review_panel_ui import render_side_by_side_review_panel
 from serial_review_panel_ui import render_serial_review_panel
 from docx_hygiene_audit_panel_ui import render_docx_hygiene_audit_panel
@@ -285,12 +307,11 @@ with st.sidebar.expander("Geavanceerde instellingen", expanded=False):
     st_number_of_chars = st.number_input("Aantal te maskeren tekens", value=15, min_value=0, max_value=100)
     st_encrypt_key = st.text_input("AES-sleutel", value="WmZq4t7w!z%C&F)J")
 
-    st_deny_allow_expander = st.expander("Woordenlijsten", expanded=False)
-    with st_deny_allow_expander:
-        st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
-        st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
-        st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
-        st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
+    st.markdown("**Woordenlijsten**")
+    st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
+    st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
+    st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
+    st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
 
 analyzer_params = (st_model_package, st_model, st_ta_key, st_ta_endpoint)
 open_ai_params = None
@@ -496,6 +517,7 @@ try:
             if not find_text or not replace_with:
                 continue
             entity_type = row.get("entity_type", "REMEMBERED")
+            review_status = review_status_for_source("remembered", entity_type, None)
             default_editor_rows.append(
                 {
                     "include": row.get("include", True),
@@ -508,6 +530,9 @@ try:
                     "score": None,
                     "source_label": source_label("remembered"),
                     "source": "remembered",
+                    "review_status": review_status,
+                    "review_status_label": review_status_label(review_status),
+                    "review_order": review_status_order(review_status),
                     "reason": "Opgeslagen herbruikbare vervanging",
                     "context": "",
                 }
@@ -520,6 +545,7 @@ try:
                 continue
             entity_type = row.get("entity_type", "")
             score = row.get("score", None)
+            review_status = review_status_for_source("detected", entity_type, score)
             default_editor_rows.append(
                 {
                     "include": True,
@@ -532,6 +558,9 @@ try:
                     "score": score,
                     "source_label": source_label("detected"),
                     "source": "detected",
+                    "review_status": review_status,
+                    "review_status_label": review_status_label(review_status),
+                    "review_order": review_status_order(review_status),
                     "reason": "Automatisch herkend",
                     "context": "",
                 }
@@ -544,6 +573,7 @@ try:
                 continue
             entity_type = candidate.get("entity_type", "NL_SUSPICIOUS_REFERENCE_CANDIDATE")
             score = candidate.get("score", None)
+            review_status = review_status_for_source("candidate", entity_type, score)
             default_editor_rows.append(
                 {
                     "include": False,
@@ -556,6 +586,9 @@ try:
                     "score": score,
                     "source_label": source_label("candidate"),
                     "source": "candidate",
+                    "review_status": review_status,
+                    "review_status_label": review_status_label(review_status),
+                    "review_order": review_status_order(review_status),
                     "reason": candidate.get("reason", "Mogelijke gemiste waarde"),
                     "context": candidate.get("context", ""),
                 }
@@ -563,6 +596,7 @@ try:
             seen_find_values.add(find_text)
 
         if not default_editor_rows:
+            review_status = review_status_for_source("manual", "MANUAL", None)
             default_editor_rows = [
                 {
                     "include": True,
@@ -575,6 +609,9 @@ try:
                     "score": None,
                     "source_label": source_label("manual"),
                     "source": "manual",
+                    "review_status": review_status,
+                    "review_status_label": review_status_label(review_status),
+                    "review_order": review_status_order(review_status),
                     "reason": "Handmatige vervangingsregel",
                     "context": "",
                 }
@@ -600,6 +637,38 @@ try:
             "en vink Onthouden aan voor vervangingen die je opnieuw wilt gebruiken. "
             "Mogelijke kandidaten staan standaard uitgevinkt. De vervangtabel blijft leidend."
         )
+        st.caption("De vervangtabel blijft leidend voor beslissingen en export.")
+        st.info(REVIEW_INTRO_GUIDANCE)
+        with st.expander("Uitleg bij deze controle", expanded=False):
+            st.markdown(f"- {CANDIDATE_GUIDANCE}")
+            st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
+            st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
+            st.markdown(f"- {AI_USAGE_GUIDANCE}")
+
+        if "review_order" in replacement_editor_df.columns:
+            replacement_editor_df = replacement_editor_df.sort_values(
+                by=["review_order", "type_label", "find"], kind="stable"
+            ).reset_index(drop=True)
+        if "review_status_label" in replacement_editor_df.columns:
+            status_counts = replacement_editor_df["review_status_label"].value_counts().to_dict()
+            status_parts = [f"{label}: {count}" for label, count in status_counts.items()]
+            if status_parts:
+                st.caption("Reviewstatus: " + " · ".join(status_parts))
+
+        review_filter = st.selectbox(
+            "Focusfilter voor controle",
+            REVIEW_FILTER_OPTIONS,
+            index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
+            help=FOCUS_FILTER_GUIDANCE,
+        )
+        if review_filter != FILTER_SHOW_ALL:
+            focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
+            st.caption(f"{len(focus_df)} van {len(replacement_editor_df)} rij(en) zichtbaar in dit focusoverzicht.")
+            st.dataframe(
+                focus_df[[col for col in ["review_status_label", "find", "replace_with", "type_label", "confidence", "source_label"] if col in focus_df.columns]],
+                use_container_width=True,
+            )
+            st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
 
         if st_recognition_profile == "Dutch Legal Strict":
             with st.expander("Mogelijke gemiste waarden", expanded=bool(candidate_rows)):
@@ -627,63 +696,63 @@ try:
                 else:
                     st.success("Geen mogelijke gemiste referenties gevonden door de auditlaag.")
 
-        edited_replacements_df = st.data_editor(
-            replacement_editor_df,
-            hide_index=True,
-            num_rows="dynamic",
-            use_container_width=True,
-            column_order=[
-                "include",
-                "remember",
-                "find",
-                "replace_with",
-                "type_label",
-                "confidence",
-                "source_label",
-                "reason",
-                "context",
-                "entity_type",
-                "score",
-                "source",
-            ],
-            column_config={
-                "include": st.column_config.CheckboxColumn(
-                    "Meenemen", help="Vink uit om deze vervanging niet toe te passen.", default=True
-                ),
-                "remember": st.column_config.CheckboxColumn(
-                    "Onthouden", help="Bewaar deze vervanging voor later gebruik.", default=False
-                ),
-                "find": st.column_config.TextColumn(
-                    "Gevonden tekst", help="Exacte tekst die vervangen moet worden."
-                ),
-                "replace_with": st.column_config.TextColumn(
-                    "Vervangen door", help="Placeholder of vervangende tekst."
-                ),
-                "type_label": st.column_config.TextColumn(
-                    "Type gegeven", help="Gebruiksvriendelijke categorie."
-                ),
-                "confidence": st.column_config.TextColumn(
-                    "Zekerheid", help="Globale inschatting van de herkenningszekerheid."
-                ),
-                "source_label": st.column_config.TextColumn(
-                    "Bron", help="Automatisch herkend, mogelijke kandidaat, onthouden of handmatig."
-                ),
-                "reason": st.column_config.TextColumn(
-                    "Reden", help="Waarom deze regel is voorgesteld."
-                ),
-                "context": st.column_config.TextColumn(
-                    "Context", help="Nabije tekst voor kandidaatregels."
-                ),
-                "entity_type": st.column_config.TextColumn(
-                    "Technisch type", help="Interne herkennercategorie."
-                ),
-                "score": st.column_config.NumberColumn(
-                    "Technische score", help="Numerieke score, indien beschikbaar.", format="%.3f"
-                ),
-                "source": st.column_config.TextColumn("Technische bron"),
-            },
-            key="replacement_editor",
-        )
+        with st.expander(f"Vervangtabel controleren — {len(replacement_editor_df.index)} items", expanded=False):
+            st.caption("De vervangtabel blijft leidend voor beslissingen en export.")
+            edited_replacements_df = st.data_editor(
+                replacement_editor_df,
+                hide_index=True,
+                num_rows="dynamic",
+                use_container_width=True,
+                column_order=main_review_columns(replacement_editor_df.columns),
+                column_config={
+                    "include": st.column_config.CheckboxColumn(
+                        "Meenemen", help="Vink uit om deze vervanging niet toe te passen.", default=True
+                    ),
+                    "remember": st.column_config.CheckboxColumn(
+                        "Onthouden", help="Bewaar deze vervanging voor later gebruik.", default=False
+                    ),
+                    "review_status_label": st.column_config.TextColumn(
+                        "Status", help="Reviewstatus: automatisch vervangen, controle nodig, handmatig of onthouden."
+                    ),
+                    "find": st.column_config.TextColumn(
+                        "Gevonden tekst", help="Exacte tekst die vervangen moet worden."
+                    ),
+                    "replace_with": st.column_config.TextColumn(
+                        "Vervangen door", help="Placeholder of vervangende tekst."
+                    ),
+                    "type_label": st.column_config.TextColumn(
+                        "Type gegeven", help="Gebruiksvriendelijke categorie."
+                    ),
+                    "confidence": st.column_config.TextColumn(
+                        "Zekerheid", help="Globale inschatting van de herkenningszekerheid."
+                    ),
+                    "source_label": st.column_config.TextColumn(
+                        "Bron", help="Automatisch herkend, mogelijke kandidaat, onthouden of handmatig."
+                    ),
+                    "reason": st.column_config.TextColumn(
+                        "Reden", help="Waarom deze regel is voorgesteld."
+                    ),
+                    "context": st.column_config.TextColumn(
+                        "Context", help="Nabije tekst voor kandidaatregels."
+                    ),
+                    "entity_type": st.column_config.TextColumn(
+                        "Technisch type", help="Interne herkennercategorie."
+                    ),
+                    "score": st.column_config.NumberColumn(
+                        "Technische score", help="Numerieke score, indien beschikbaar.", format="%.3f"
+                    ),
+                    "source": st.column_config.TextColumn("Technische bron"),
+                },
+                key="replacement_editor",
+            )
+
+        with st.expander("Technische details bij de vervangtabel", expanded=False):
+            st.caption(TECHNICAL_DETAILS_GUIDANCE)
+            technical_columns = technical_display_columns(replacement_editor_df.columns)
+            if technical_columns:
+                st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
+            else:
+                st.caption("Geen technische detailkolommen beschikbaar.")
 
         render_serial_review_panel(
             displayed_text=st_text,
@@ -709,6 +778,8 @@ try:
                     "placeholder": replace_text,
                     "score": score if score is not None else "",
                     "source": safe_cell(row.get("source", "")),
+                    "review_status": safe_cell(row.get("review_status", "")),
+                    "review_status_label": safe_cell(row.get("review_status_label", "")),
                     "reason": safe_cell(row.get("reason", "")),
                 }
             )
