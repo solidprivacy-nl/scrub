@@ -200,11 +200,13 @@ Current mitigations:
 - WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION added the bounded side-by-side review surface.
 - WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX made the side-by-side panes visually equal-height.
 - WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE was visually approved by the coordinator.
-- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION integrated optional percentage-based synchronized scrolling with a sync-off fallback in the side-by-side renderer.
+- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION integrated bounded percentage-based synchronized scrolling in the side-by-side renderer.
+- WP_REVIEW_SURFACE_CONTROL_CLEANUP made synchronized scrolling default without exposing a visible sync-checkbox and kept markers default-on.
+- WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP removed a duplicate review heading from the central side-by-side review surface.
+- WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY closed out the promoted collapsible review table: visual pressure in the review phase is reduced while the replacement table remains source of truth and fallback.
 
 Gaps:
 
-- Actions, Hugging Face sync and app verification are still needed for the synchronized-scroll implementation closeout.
 - The review table remains the source of truth and fallback.
 - Percentage-based synchronized scrolling can create imperfect alignment when source and processed text differ structurally after masking/replacement.
 - No click-to-mark sensitive text prototype.
@@ -214,9 +216,9 @@ Gaps:
 
 Recommended workpackages:
 
-- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION_VERIFY — closeout/app verification after green Actions and Hugging Face sync.
 - Later approved package — small redesigned replacement review implementation after separate explicit approval.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
+- Optional later UX cleanup — make Serial review compacter/collapsible only after separate coordinator approval.
 
 ---
 
