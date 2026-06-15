@@ -1,8 +1,37 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION — Takeover attempt blocked/released
+
+Status: blocked/released after coordinator-approved takeover attempt.
+
+Files added:
+
+- `review_table_collapsible_ui.py`
+- `handover/workpackages/20260615_1115_review_table_collapsible_implementation_takeover_blocked.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION.md`
+
+Summary:
+
+- The coordinator could not find the original active worker and approved a takeover attempt.
+- The existing claim was reused and then released as blocked rather than creating a duplicate claim.
+- The required safe implementation still needs a direct `presidio_streamlit.py` review-table patch.
+- The ChatGPT GitHub connector could not safely complete that central full-file UI edit without risking an unsafe overwrite or hidden startup/monkeypatch behavior.
+- A small helper artifact was added but is not wired into production UI.
+- No runtime UI implementation was completed.
+
+Next recommended step:
+
+- Re-run `WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION` only with a worker/environment that can safely edit `presidio_streamlit.py` as a complete file and run tests.
+- Do not use startup source mutation, global monkeypatching or hidden side effects for this UI change.
+
 ## WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — Remove duplicate central review heading
 
-Status: implemented; awaiting Actions, Hugging Face sync and app verification.
+Status: completed after Actions/HF/app verification by coordinator screenshot evidence.
 
 Files changed:
 
@@ -26,10 +55,8 @@ Summary:
 
 Validation status:
 
-- No shell/pytest execution was available through the ChatGPT GitHub connector.
-- Expected targeted checks: `pytest tests/test_side_by_side_review_ui_patch.py`; `pytest tests/test_side_by_side_review_consolidation_dutch_sample.py`.
-- Expected full check: `python -m pytest -q tests`.
-- UI copy/layout changed, so Actions, Hugging Face sync and coordinator app verification are required.
+- Coordinator screenshot evidence showed green Tests and green Sync to Hugging Face Space for the duplicate heading cleanup claim.
+- Coordinator app screenshot confirmed that only one `Controleer de tekst` heading appears above the side-by-side review surface.
 
 Intentionally not changed:
 
@@ -47,11 +74,6 @@ Intentionally not changed:
 - No click-to-mark.
 - No advanced editor.
 - No full-document marking.
-
-Next recommended step:
-
-- Verify GitHub Actions and Hugging Face sync.
-- Then ask coordinator to verify the app: only one `Controleer de tekst` heading appears above the side-by-side review surface.
 
 ## WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — Contract tests for collapsible review table section
 
@@ -89,7 +111,7 @@ Validation status:
 
 Next recommended step:
 
-- `WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION` may start after coordinator approval.
+- `WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION` may start after coordinator approval, but must use a safe direct full-file/branch patch route.
 - The implementation package must not run in parallel with other `presidio_streamlit.py` review-flow changes.
 
 ## WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — Repair stale review surface control assertions
