@@ -40,6 +40,7 @@ WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — implemented with explicit 
 WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — implemented; old upper direct preview removed, one central side-by-side review added above review table, Dutch synthetic legal demo text added; awaiting Actions, Hugging Face sync and app verification.
 WP_REVIEW_SURFACE_CONTROL_CLEANUP — implemented; markers default on, marker label shortened, sync scroll remains active but visible sync checkbox removed; awaiting Actions, Hugging Face sync and app verification.
 WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed after Actions/HF verification; stale assertions repaired after marker/sync-control cleanup.
+WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — implemented; duplicate internal `Controleer de tekst` heading removed from the central side-by-side component; awaiting Actions, Hugging Face sync and app verification.
 WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verification; implementation may start after coordinator approval.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
@@ -70,6 +71,8 @@ The normal app now targets:
 
 The central review surface now keeps:
 
+- a single outer step heading: `2. Controleer de tekst`;
+- no duplicate internal `Controleer de tekst` heading inside the side-by-side component;
 - brontekst left;
 - verwerkte/gecontroleerde tekst right;
 - synchronized scrolling as default behavior;
@@ -97,10 +100,9 @@ Boundaries preserved:
 ## Active / next recommended execution queue
 
 ```text
-1. Ask coordinator approval for WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION.
-2. If approved, implement the collapsible review table section only when no other presidio_streamlit.py review-flow work is active.
-3. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_CONTROL_CLEANUP.
-4. Ask coordinator for app verification screenshot where UI behavior changed.
+1. Verify GitHub Actions and Hugging Face sync for WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP.
+2. Ask coordinator for app verification screenshot because UI copy/layout changed.
+3. Then return to WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION only after a safe patch route is available.
 ```
 
 ## Blocked work
