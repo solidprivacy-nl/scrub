@@ -47,7 +47,7 @@ WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — completed after promotion/app ver
 WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — completed; temporary candidate/helper artifacts removed after verified promotion.
 WP_DUTCH_LEGAL_RECALL_GAP_TESTS — completed; tests-only baseline for known Dutch legal recall gaps.
 WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — completed; targeted candidate-scanner pattern fixes for Dutch legal references.
-WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed with static/connector verification; local tests, GitHub Actions and Hugging Face sync were not visible/runnable in this environment.
+WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed after coordinator Actions/HF/app verification evidence.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -132,7 +132,13 @@ Verification evidence:
 - Cleanup package removed only temporary candidate/helper artifacts; active behavior remains in `presidio_streamlit.py`.
 - Recall-gap baseline package added tests only; no product-code, recognizer, UI, export/download, Scrub Key or reinsert behavior changed.
 - Recall pattern fixes touched only helper-level candidate scanning and tests; no UI/export/Scrub Key/reinsert behavior changed.
-- Recall pattern verification confirmed the changed files and test coverage statically through GitHub connector, but local pytest, GitHub Actions and Hugging Face sync were unavailable/unknown through this environment.
+- Recall pattern verification static pass: changed files and test coverage were confirmed through GitHub connector.
+- Coordinator external verification for `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY`:
+  - `Tests #1115` for commit `e1e44b3` completed successfully.
+  - `Sync to Hugging Face Space #1116` for commit `e1e44b3` completed successfully.
+  - Earlier `Sync to Hugging Face Space #1112` for commit `ca5cb3f` failed, but was superseded by later successful sync evidence.
+  - Hugging Face app screenshot shows the Space running without Script execution error.
+  - App screenshot confirms `2. Controleer de tekst`, side-by-side review, `3. Controleer gevonden gegevens`, collapsed `Vervangtabel controleren — 16 items`, Serial review, export/download buttons and DOCX hygiene audit remain visible.
 
 Boundaries preserved:
 
@@ -149,8 +155,8 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. If coordinator can verify Actions/HF externally, record evidence in a follow-up closeout note only.
-3. If verification later exposes remaining gaps, consider WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2 after separate approval.
+2. No immediate extra pattern round is required based on current coordinator verification evidence.
+3. If later app/user testing exposes remaining detection gaps, consider WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2 after separate approval.
 4. Alternative next quality step after separate approval: WP_RECALL_SCORECARD_REFRESH.
 ```
 
