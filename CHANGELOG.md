@@ -1,5 +1,71 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — Verify Dutch legal recall pattern fixes
+
+Status: completed as verification/closeout-only with validation limitations.
+
+Files added:
+
+- `workpackage_claims/WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY.md`
+- `handover/workpackages/20260617_0032_dutch_legal_recall_pattern_fixes_verify.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY.md`
+
+Summary:
+
+- Confirmed prerequisite `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES` is completed.
+- Verified the implementation scope by comparing the pattern-fix commit range: product/helper code change is limited to `candidate_scanner.py`; tests changed in `tests/test_dutch_legal_recall_gap_baseline.py`; no `presidio_streamlit.py` product-code change was part of the pattern-fix range.
+- Verified the candidate scanner keeps the new case-number-shaped scan context-bound and value-only.
+- Verified the Dutch legal recall baseline now contains normal assertions for legal references, client/dossier/zaak references, CLM reference not as phone, role-word preservation and over-masking prevention.
+- Verified existing review/export contract tests still assert preservation of `replacement_editor`, download labels, side-by-side boundaries and no export/Scrub Key/reinsert mutations.
+
+Tests/checks:
+
+- Local clone/test execution failed because the container could not resolve `github.com`.
+- `python -m py_compile presidio_streamlit.py` could not be run locally.
+- `python -m pytest -q tests/test_dutch_legal_recall_gap_baseline.py` could not be run locally.
+- Required review tests could not be run locally for the same reason.
+- GitHub connector static checks and commit comparisons were completed.
+
+GitHub Actions / Hugging Face:
+
+- GitHub connector returned no combined statuses and no workflow runs for checked pattern-fix commits.
+- Public web lookup for Actions/Hugging Face was unavailable in this environment.
+- Hugging Face sync remains unknown from this worker.
+- App verification was not performed because HF sync could not be confirmed green here.
+
+Intentionally not changed:
+
+- No product code change in this verify package.
+- No recognizer or pattern change in this verify package.
+- No `presidio_streamlit.py` change.
+- No UI change.
+- No review table layout change.
+- No side-by-side or marker change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No DOCX/PDF flow change.
+- No Docker/startup/dependency change.
+- No cloud processing.
+- No real personal data.
+
+Remaining gaps:
+
+- Execution proof is still missing from this worker because local tests, GitHub Actions visibility and Hugging Face sync visibility were unavailable.
+- The first pattern-fix round improves candidate visibility; it does not prove complete automatic recognizer classification for every Dutch legal reference type.
+
+Next recommended step:
+
+- Do not automatically continue into another pattern round.
+- If coordinator can verify Actions/HF externally, record that evidence only.
+- If remaining gaps appear, consider `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2` after separate approval.
+
 ## WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — Improve Dutch legal reference detection
 
 Status: completed as a targeted helper-level detection improvement.
@@ -152,154 +218,14 @@ Next recommended step:
 - Do not start a new review-UX feature automatically.
 - Coordinator can separately choose detection/recall gap tests, serial review compacting, or temporary review-UX freeze with recall/document hygiene focus.
 
-## WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — Promoted and verified collapsible review table
-
-Status: completed after coordinator promotion, local test evidence, GitHub Actions evidence and app verification screenshot.
-
-Files added:
-
-- `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY.md`
-- `handover/workpackages/20260615_1210_review_table_collapsible_promote_verify.md`
-
-Files changed:
-
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RELEASE_NOTES.md`
-- `RISK_REGISTER.md`
-- `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY.md`
-
-Summary:
-
-- Verified that the previously inactive collapsible review-table candidate has been promoted into the live app.
-- Verified active `presidio_streamlit.py` now keeps `3. Controleer gevonden gegevens` visible while the editable replacement table sits in a collapsed `Vervangtabel controleren — {items} items` expander.
-- Verified the expander uses `expanded=False` and preserves `key="replacement_editor"`.
-- Verified required review-table fields and labels remain present: `include`, `remember`, `find`, `replace_with`, `Meenemen`, `Onthouden`, `Gevonden tekst`, `Vervangen door`.
-- Verified export/download labels remain present.
-- Recorded coordinator app verification showing side-by-side review, marker toggle, collapsed review table, serial review, export/download and DOCX hygiene audit remain visible without Script execution error.
-
-Evidence:
-
-- Branch used by coordinator: `test/collapsible-review-table`.
-- Promotion commit: `15f5173c893668566e9d62524ef4d0b5449f37b8` — `Promote collapsible review table candidate`.
-- GitHub Actions: `Tests #1074` completed successfully for the promotion commit.
-- Coordinator local checks:
-  - `python -m py_compile presidio_streamlit.py`
-  - `python -m pytest -q tests/test_review_table_collapsible_candidate_file.py` — 5 passed
-  - `python -m pytest -q tests/test_review_table_collapsible_contract.py` — 11 passed
-  - `python -m pytest -q tests/test_side_by_side_review_ui_patch.py` — 15 passed
-  - `python -m pytest -q tests/test_side_by_side_review_consolidation_dutch_sample.py` — 7 passed
-  - `python -m pytest -q tests` — 545 passed
-- Coordinator app verification screenshot confirms the live app shows collapsed `Vervangtabel controleren — 16 items` while the rest of the review/export flow remains visible.
-
-Validation status:
-
-- Completed/app-verified by coordinator evidence.
-- No new product UI was built in this verification package.
-
-Intentionally not changed:
-
-- No `presidio_streamlit.py` change in this verification package.
-- No review table behavior change in this verification package.
-- No side-by-side behavior change.
-- No marker/sync-scroll behavior change.
-- No replacement behavior change.
-- No export/download behavior change.
-- No Scrub Key behavior change.
-- No reinsert behavior change.
-- No startup patch.
-- No Docker CMD change.
-- No monkeypatch.
-- No dependency change.
-- No cloud processing.
-- No real data.
-- No click-to-mark, advanced editor or full-document marking.
-
-Next recommended step:
-
-- Do not start a new feature automatically.
-- Possible next UX step only after separate coordinator approval: make Serial review compacter/collapsible.
-- Alternative: freeze review UX temporarily and return to detection/recall issues.
-
-## WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — Inactive candidate file for collapsible review table
-
-Status: completed as inactive candidate file and later promoted through `WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY`.
-
-Summary:
-
-- Added a manually renameable candidate app file for testing a collapsible `Controleer gevonden gegevens` review table section.
-- The candidate kept `3. Controleer gevonden gegevens` visible and placed the editable `replacement_editor` table in a collapsed `Vervangtabel controleren — {item_count} items` expander.
-- The candidate preserved `replacement_editor`, include, remember, find, replace_with and the Dutch table labels.
-- Static candidate-file contract tests confirmed the candidate existed, kept the review table controls and preserved download labels.
-- The candidate was later promoted and verified by coordinator evidence.
-- The temporary candidate file and its static candidate-file test were removed by `WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP` after verified promotion.
-
-## WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION — Takeover attempt blocked/released
-
-Status: superseded by candidate promotion/verification route.
-
-Summary:
-
-- The coordinator could not find the original active worker and approved a takeover attempt.
-- The existing claim was reused and then released as blocked rather than creating a duplicate claim.
-- The ChatGPT GitHub connector could not safely complete that central full-file UI edit without risking an unsafe overwrite or hidden startup/monkeypatch behavior.
-- A small helper artifact was added but was not wired into production UI.
-- The later candidate-file route and coordinator promotion verified the collapsible review table in the live app.
-- The temporary helper artifact was removed by `WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP` after verified promotion.
-
-## WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — Remove duplicate central review heading
-
-Status: completed after Actions/HF/app verification by coordinator screenshot evidence.
-
-Summary:
-
-- Removed the internal `st.subheader("Controleer de tekst")` from the side-by-side review component.
-- The outer app-level step heading `2. Controleer de tekst` remains the single heading for the review surface.
-- The side-by-side explanatory copy still appears directly under the step heading.
-- Brontekst, Verwerkte tekst, marker toggle and synchronized-scroll behavior are unchanged.
-- Review table, export/download, Scrub Key, reinsert and replacement behavior are unchanged.
-
-## WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — Contract tests for collapsible review table section
-
-Status: completed after Actions/HF verification.
-
-Summary:
-
-- Added documentation and contract tests for a future collapsible `Controleer gevonden gegevens` review table section.
-- Locked the future heading shape `Controleer gevonden gegevens — {item_count} items`.
-- Preserved the review table as source of truth and fallback.
-- Contract tests verify that `replacement_editor`, `include`, `remember`, `find` and `replace_with` remain available.
-- Contract tests verify that export/download labels remain present.
-- Explicitly blocks export/download changes, export blocking, Scrub Key changes, reinsert changes, replacement behavior changes, click-to-mark, advanced editor and full-document marking.
-
-## WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — Repair stale review surface control assertions
-
-Status: completed after Actions/HF verification.
-
-Summary:
-
-- Repaired stale test assertions after the review surface control cleanup.
-- Updated highlight-toggle contract expectations from `Markeringen tonen in verwerkte tekst` to the accepted shorter label `Markeringen tonen`.
-- Updated sync-scroll production assertions to reflect D023: synchronized scrolling is active by default and no visible `syncToggle` checkbox exists in the production side-by-side renderer.
-- Coordinator screenshot evidence confirmed `Tests #1041` green and `Sync to Hugging Face Space #1053` green for commit `143a0fa`.
-
-## WP_REVIEW_SURFACE_CONTROL_CLEANUP — Simplify side-by-side review controls
-
-Status: completed after later verification evidence.
-
-Summary:
-
-- Marker toggle label shortened to `Markeringen tonen`.
-- Marker toggle now defaults to on.
-- Visible sync-scroll checkbox removed from the central side-by-side component.
-- Synchronized scrolling remains active by default.
-- A short sync-scroll explanation remains visible below the panes.
-- Tests updated for the simplified control model.
-
 ## Recent previous entries
 
 Detailed recent history remains available in Git history and includes:
 
+- WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — verified promoted collapsible review table.
+- WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — contract tests for collapsible review table section.
+- WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — repaired stale review surface control assertions.
+- WP_REVIEW_SURFACE_CONTROL_CLEANUP — simplified side-by-side review controls.
 - WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — Consolidate preview surfaces and Dutch legal sample.
 - WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — Production integration of synchronized side-by-side scrolling.
 - WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — isolated working concept for synchronized side-by-side scrolling.
