@@ -39,19 +39,20 @@ Current mitigations:
 - Review guidance and final review summary.
 - WP19-WP24 created the recall/trust benchmark and report-only residual-risk foundation.
 - WP_DUTCH_LEGAL_RECALL_GAP_TESTS added tests-only xfail baselines for known Dutch legal recall gaps.
+- WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the review-candidate layer for selected Dutch legal reference values.
 
 Gaps:
 
 - No complete gold-label sidecars for the corpus yet.
 - No accepted production recall/precision threshold or production-blocking gate exists.
 - No production safety claim is supported.
-- Known Dutch legal reference gaps are now test-visible but not fixed: legal reference numbers, rolnummers, client/dossier/zaak numbers and legal-code misclassification.
+- Dutch legal reference gaps are reduced for selected helper-level review candidates, but final CI/app evidence is still required.
 
 Recommended workpackages:
 
 - Later benchmark data package — complete gold-label sidecars.
 - Later gated package — accepted thresholds and regression gate.
-- Later approved package — Dutch legal recognizer/pattern fixes that turn selected xfail baseline tests into passing tests.
+- Later approved package — verify and, if needed, continue a second narrow Dutch legal pattern round.
 
 ---
 
@@ -302,16 +303,17 @@ Current mitigations:
 
 - Human review table remains source of truth and fallback.
 - `RECALL_BENCHMARK_SPEC.md` defines legal reference classes, context terms to preserve and over-masking traps.
-- `tests/test_dutch_legal_recall_gap_baseline.py` now captures the known gaps as test-visible baseline cases using synthetic text and `xfail(strict=False)`.
+- `tests/test_dutch_legal_recall_gap_baseline.py` captures known Dutch legal reference and role-preservation cases using synthetic text.
+- WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the candidate scanner for case-number-shaped values with spaces and extra Dutch legal/admin context cues.
 
 Gaps:
 
-- Under-detection remains unresolved for legal reference numbers, Rechtspraak-like rolnummers and client/dossier/zaak numbers.
-- Misclassification remains possible for legal reference values that resemble phone-number patterns.
-- Over-masking remains possible for role words such as `slachtoffer`, `arts`, `getuige`, `eiser`, `verweerder` and `minderjarige`.
-- This WP makes these risks testable; it does not fix recognizer behavior.
+- This first pattern round improves review candidates; it does not prove all recognizer/entity classifications are complete.
+- Final CI/HF verification is still required because local test execution was unavailable in this environment.
+- Broader production recall/precision thresholds and corpus sidecars remain future work.
+- Role-word preservation still needs continued regression coverage as recognizers evolve.
 
 Recommended workpackages:
 
-- Later approved package — `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES`, focused on improving patterns and converting selected xfail tests into passing tests.
+- Later approved package — `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY` to verify Actions/HF and review whether any gaps remain.
 - Later benchmark package — expand gold-label sidecars for Dutch legal/care documents.
