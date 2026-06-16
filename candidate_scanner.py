@@ -71,6 +71,7 @@ GENERIC_CONTEXTUAL_VALUE_RE_PART = (
 )
 
 CONTEXTUAL_VALUE_RE = re.compile(r"\b(?:" + CASE_NUMBER_VALUE_RE_PART + r"|" + GENERIC_CONTEXTUAL_VALUE_RE_PART + r")\b")
+CASE_NUMBER_VALUE_RE = re.compile(r"\b" + CASE_NUMBER_VALUE_RE_PART + r"\b", flags=re.IGNORECASE | re.MULTILINE)
 
 # Stand-alone suspicious codes. These are shown as candidates only when they are
 # not already detected and not obviously a date/article/amount.
@@ -109,11 +110,18 @@ GENERIC_CONTEXT_CUES = {
     "code",
     "registratie",
     "zaak",
+    "rolnummer",
+    "rolnr",
+    "client",
+    "cliënt",
     "factuur",
     "contract",
     "polis",
     "claim",
     "school",
+    "camera",
+    "incident",
+    "reparatie",
     "uwv",
     "ind",
     "gemeente",
@@ -295,7 +303,30 @@ def scan_unmasked_candidates(text: str, analyzer_results=None, max_candidates: i
                     )
                 )
 
-    # 2) Structured labelled KvK values. The value is numeric-only, so it needs a
+    # 2) Case-number shaped values can include spaces and therefore are not caught
+    # by the standalone code scanner. Keep this context-bound and value-only.
+    for match in CASE_NUMBER_VALUE_RE.finditer(source):
+        start, end = match.span()
+        value = match.group(0)
+        ctx = _window(source, start, end)
+        if _overlaps(start, end, existing_spans) or _is_negative_candidate(value, ctx):
+            continue
+        if not _has_context_cue(ctx):
+            continue
+        candidates.append(
+            Candidate(
+                text=value,
+                entity_type="NL_LEGAL_CASE_NUMBER",
+                placeholder=_placeholder_for("NL_LEGAL_CASE_NUMBER"),
+                score=0.72,
+                start=start,
+                end=end,
+                reason="Case-number-shaped value near Dutch legal/admin context",
+                context=_normalise_space(ctx),
+            )
+        )
+
+    # 3) Structured labelled KvK values. The value is numeric-only, so it needs a
     # dedicated context-bound fallback instead of the generic uppercase code logic.
     for match in KVK_LABELLED_VALUE_RE.finditer(source):
         start, end = match.span("value")
@@ -316,7 +347,7 @@ def scan_unmasked_candidates(text: str, analyzer_results=None, max_candidates: i
             )
         )
 
-    # 3) License plate / vehicle compact candidates. These are context-bound, not
+    # 4) License plate / vehicle compact candidates. These are context-bound, not
     # blind plate recognition, because fake/test material often uses compact
     # examples such as XX123X.
     for match in re.finditer(r"\b(?=[A-Z0-9]{5,12}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{5,12}\b", source):
@@ -339,7 +370,7 @@ def scan_unmasked_candidates(text: str, analyzer_results=None, max_candidates: i
                 )
             )
 
-    # 4) Remaining standalone codes with generic legal/admin context nearby.
+    # 5) Remaining standalone codes with generic legal/admin context nearby.
     for match in STANDALONE_CODE_RE.finditer(source):
         start, end = match.span()
         value = match.group(0)
