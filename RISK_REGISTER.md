@@ -204,6 +204,7 @@ Current mitigations:
 - WP_REVIEW_SURFACE_CONTROL_CLEANUP made synchronized scrolling default without exposing a visible sync-checkbox and kept markers default-on.
 - WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP removed a duplicate review heading from the central side-by-side review surface.
 - WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY closed out the promoted collapsible review table: visual pressure in the review phase is reduced while the replacement table remains source of truth and fallback.
+- WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP removed temporary candidate/helper artifacts after verified promotion, reducing repo confusion without changing active app behavior.
 
 Gaps:
 
