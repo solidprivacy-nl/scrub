@@ -45,6 +45,7 @@ WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verifi
 WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — completed as inactive candidate file, later promoted and removed by cleanup.
 WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — completed after promotion/app verification; normal app flow now shows `Vervangtabel controleren — <items> items` as collapsed review-table section.
 WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — completed; temporary candidate/helper artifacts removed after verified promotion.
+WP_DUTCH_LEGAL_RECALL_GAP_TESTS — completed; tests-only baseline for known Dutch legal recall gaps.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -99,6 +100,14 @@ Temporary candidate/helper artifacts no longer remain in the active repository a
 - `tests/test_review_table_collapsible_candidate_file.py` removed;
 - `review_table_collapsible_ui.py` removed.
 
+Dutch legal recall baseline now records known gaps without changing product behavior:
+
+- legal reference numbers and Rechtspraak-like rolnummers;
+- client, dossier and zaak numbers;
+- legal reference misclassification risk;
+- generic legal role-word preservation;
+- over-masking risk where legal role structure becomes unreadable.
+
 Verification evidence:
 
 - Promotion branch used by coordinator: `test/collapsible-review-table`.
@@ -113,6 +122,7 @@ Verification evidence:
   - `python -m pytest -q tests` — 545 passed
 - Coordinator app screenshot confirmed the live app starts and shows the collapsed `Vervangtabel controleren — 16 items` section with side-by-side review, serial review, export/download and DOCX hygiene audit still visible.
 - Cleanup package removed only temporary candidate/helper artifacts; active behavior remains in `presidio_streamlit.py`.
+- Recall-gap baseline package added tests only; no product-code, recognizer, UI, export/download, Scrub Key or reinsert behavior changed.
 
 Boundaries preserved:
 
@@ -129,8 +139,9 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. Possible next UX step only after separate coordinator approval: make Serial review compacter/collapsible.
-3. Alternative next direction: freeze review UX temporarily and return to detection/recall issues.
+2. Likely next detection direction only after separate coordinator approval: WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES.
+3. Alternative next direction: freeze review UX temporarily and continue recall/document hygiene work.
+4. Possible next UX step only after separate coordinator approval: make Serial review compacter/collapsible.
 ```
 
 ## Blocked work
@@ -141,6 +152,7 @@ Do not start yet without separate approval:
 new replacement UI implementation
 mutating replacement decision implementation
 automatic replacement
+Dutch legal recognizer/pattern fixes
 Scrub Key writes
 export blocking
 click-to-mark
