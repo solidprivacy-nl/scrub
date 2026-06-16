@@ -42,8 +42,9 @@ WP_REVIEW_SURFACE_CONTROL_CLEANUP — completed after later Actions/HF/app verif
 WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed after Actions/HF verification; stale assertions repaired after marker/sync-control cleanup.
 WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — completed after Actions/HF/app verification by coordinator screenshot evidence; duplicate internal `Controleer de tekst` heading removed from the central side-by-side component.
 WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verification.
-WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — completed as inactive candidate file and later promoted.
+WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — completed as inactive candidate file, later promoted and removed by cleanup.
 WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — completed after promotion/app verification; normal app flow now shows `Vervangtabel controleren — <items> items` as collapsed review-table section.
+WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — completed; temporary candidate/helper artifacts removed after verified promotion.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -92,19 +93,26 @@ The promoted collapsible review table keeps:
 - export/download labels unchanged;
 - DOCX hygiene audit remains visible.
 
+Temporary candidate/helper artifacts no longer remain in the active repository after cleanup:
+
+- `presidio_streamlit_collapsible_candidate.py` removed;
+- `tests/test_review_table_collapsible_candidate_file.py` removed;
+- `review_table_collapsible_ui.py` removed.
+
 Verification evidence:
 
 - Promotion branch used by coordinator: `test/collapsible-review-table`.
 - Promotion commit: `15f5173c893668566e9d62524ef4d0b5449f37b8` — `Promote collapsible review table candidate`.
 - GitHub Actions: `Tests #1074` completed successfully for the promotion commit.
-- Coordinator local checks:
+- Coordinator local checks before artifact cleanup:
   - `python -m py_compile presidio_streamlit.py`
-  - `python -m pytest -q tests/test_review_table_collapsible_candidate_file.py` — 5 passed
+  - `python -m pytest -q tests/test_review_table_collapsible_candidate_file.py` — 5 passed before that temporary candidate-file test was removed
   - `python -m pytest -q tests/test_review_table_collapsible_contract.py` — 11 passed
   - `python -m pytest -q tests/test_side_by_side_review_ui_patch.py` — 15 passed
   - `python -m pytest -q tests/test_side_by_side_review_consolidation_dutch_sample.py` — 7 passed
   - `python -m pytest -q tests` — 545 passed
 - Coordinator app screenshot confirmed the live app starts and shows the collapsed `Vervangtabel controleren — 16 items` section with side-by-side review, serial review, export/download and DOCX hygiene audit still visible.
+- Cleanup package removed only temporary candidate/helper artifacts; active behavior remains in `presidio_streamlit.py`.
 
 Boundaries preserved:
 
