@@ -1,5 +1,60 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — Remove temporary candidate artifacts
+
+Status: completed as repo-hygiene cleanup after verified promotion.
+
+Files removed:
+
+- `presidio_streamlit_collapsible_candidate.py`
+- `tests/test_review_table_collapsible_candidate_file.py`
+- `review_table_collapsible_ui.py`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP.md`
+- `handover/workpackages/20260616_2108_review_table_collapsible_artifact_cleanup.md`
+
+Summary:
+
+- Removed temporary candidate/helper files after the collapsible review table was promoted, tested and app-verified.
+- Active app behavior is unchanged.
+- The collapsible review-table behavior remains in `presidio_streamlit.py`.
+- The active app still keeps `3. Controleer gevonden gegevens` visible and places the editable table under `Vervangtabel controleren — <items> items` with `expanded=False`.
+- Review table source-of-truth controls remain preserved: `include`, `remember`, `find`, `replace_with`, `Meenemen`, `Onthouden`, `Gevonden tekst`, `Vervangen door`.
+
+Validation status:
+
+- GitHub contents check confirmed the temporary files were present before cleanup and removed afterward.
+- Active `presidio_streamlit.py` was not changed in this package.
+- Local shell/pytest execution was not available in this environment because the repository could not be cloned from GitHub due DNS/network restriction; GitHub Actions/Hugging Face sync were checked from GitHub after push where connector visibility allowed.
+
+Intentionally not changed:
+
+- No `presidio_streamlit.py` change.
+- No active Streamlit UI change.
+- No review table behavior change.
+- No side-by-side behavior change.
+- No marker/sync-scroll behavior change.
+- No replacement behavior change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No Docker CMD change.
+- No startup patch.
+- No monkeypatch.
+- No dependency change.
+- No cloud processing.
+- No real data.
+
+Next recommended step:
+
+- Do not start a new review-UX feature automatically.
+- Coordinator can separately choose detection/recall gap tests, serial review compacting, or temporary review-UX freeze with recall/document hygiene focus.
+
 ## WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — Promoted and verified collapsible review table
 
 Status: completed after coordinator promotion, local test evidence, GitHub Actions evidence and app verification screenshot.
@@ -80,6 +135,7 @@ Summary:
 - The candidate preserved `replacement_editor`, include, remember, find, replace_with and the Dutch table labels.
 - Static candidate-file contract tests confirmed the candidate existed, kept the review table controls and preserved download labels.
 - The candidate was later promoted and verified by coordinator evidence.
+- The temporary candidate file and its static candidate-file test were removed by `WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP` after verified promotion.
 
 ## WP_REVIEW_TABLE_COLLAPSIBLE_IMPLEMENTATION — Takeover attempt blocked/released
 
@@ -92,6 +148,7 @@ Summary:
 - The ChatGPT GitHub connector could not safely complete that central full-file UI edit without risking an unsafe overwrite or hidden startup/monkeypatch behavior.
 - A small helper artifact was added but was not wired into production UI.
 - The later candidate-file route and coordinator promotion verified the collapsible review table in the live app.
+- The temporary helper artifact was removed by `WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP` after verified promotion.
 
 ## WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — Remove duplicate central review heading
 
