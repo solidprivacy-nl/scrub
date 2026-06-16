@@ -47,6 +47,7 @@ WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — completed after promotion/app ver
 WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — completed; temporary candidate/helper artifacts removed after verified promotion.
 WP_DUTCH_LEGAL_RECALL_GAP_TESTS — completed; tests-only baseline for known Dutch legal recall gaps.
 WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — completed; targeted candidate-scanner pattern fixes for Dutch legal references.
+WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed with static/connector verification; local tests, GitHub Actions and Hugging Face sync were not visible/runnable in this environment.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -109,7 +110,7 @@ Dutch legal recall baseline now records known gaps without changing product beha
 - generic legal role-word preservation;
 - over-masking risk where legal role structure becomes unreadable.
 
-Dutch legal recall pattern fixes now improve the review-candidate layer for:
+Dutch legal recall pattern fixes improve the review-candidate layer for:
 
 - case-number-shaped values with spaces, such as numeric court role references and `ARN 26/4412`-style references;
 - contextual codes near `client`, `cliënt`, `camera`, `incident` and `reparatie` context;
@@ -131,6 +132,7 @@ Verification evidence:
 - Cleanup package removed only temporary candidate/helper artifacts; active behavior remains in `presidio_streamlit.py`.
 - Recall-gap baseline package added tests only; no product-code, recognizer, UI, export/download, Scrub Key or reinsert behavior changed.
 - Recall pattern fixes touched only helper-level candidate scanning and tests; no UI/export/Scrub Key/reinsert behavior changed.
+- Recall pattern verification confirmed the changed files and test coverage statically through GitHub connector, but local pytest, GitHub Actions and Hugging Face sync were unavailable/unknown through this environment.
 
 Boundaries preserved:
 
@@ -147,9 +149,9 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. Likely next detection direction only after separate coordinator approval: WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY.
-3. Alternative next direction if verification exposes remaining xfail-level gaps: WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2.
-4. Possible next UX step only after separate coordinator approval: make Serial review compacter/collapsible.
+2. If coordinator can verify Actions/HF externally, record evidence in a follow-up closeout note only.
+3. If verification later exposes remaining gaps, consider WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2 after separate approval.
+4. Alternative next quality step after separate approval: WP_RECALL_SCORECARD_REFRESH.
 ```
 
 ## Blocked work
