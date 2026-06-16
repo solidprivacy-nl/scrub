@@ -1,5 +1,53 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — Improve Dutch legal reference detection
+
+Status: completed as a targeted helper-level detection improvement.
+
+Files changed:
+
+- `candidate_scanner.py`
+- `tests/test_dutch_legal_recall_gap_baseline.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `RELEASE_NOTES.md`
+- `workpackage_claims/WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES.md`
+- `handover/workpackages/20260616_2211_dutch_legal_recall_pattern_fixes.md`
+
+Summary:
+
+- Improved the Dutch Legal candidate scanner for reference-like values that should be surfaced in the review/replacement table when recognizers miss them.
+- Added context-bound case-number scanning for values with spaces, including numeric court role references and `ARN 26/4412`-style references.
+- Broadened safe context cues for `client`, `cliënt`, `camera`, `incident`, `reparatie`, `rolnummer` and `rolnr`.
+- Converted the Dutch legal recall baseline from `xfail(strict=False)` gap documentation to direct helper-level passing assertions for the first fixed round.
+- Kept role-word preservation tests for `slachtoffer`, `arts`, `getuige`, `eiser`, `verweerder` and `minderjarige`.
+
+Validation status:
+
+- Local tests were attempted but could not run in this environment because the container still cannot resolve `github.com` for a local clone.
+- GitHub Actions/Hugging Face sync must be used as final execution proof.
+
+Intentionally not changed:
+
+- No `presidio_streamlit.py` change.
+- No UI change.
+- No review-table layout change.
+- No side-by-side or marker change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No placeholder-format change.
+- No Docker/startup/dependency change.
+- No cloud processing.
+- No real personal data.
+- No broad refactor.
+
+Next recommended step:
+
+- Do not automatically continue into another pattern round.
+- Recommended next package after separate coordinator approval: `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY`.
+
 ## WP_DUTCH_LEGAL_RECALL_GAP_TESTS — Add tests for known Dutch legal recall gaps
 
 Status: completed as tests/documentation-only baseline.
