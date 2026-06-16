@@ -41,6 +41,7 @@ Current mitigations:
 - WP_DUTCH_LEGAL_RECALL_GAP_TESTS added tests-only xfail baselines for known Dutch legal recall gaps.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the review-candidate layer for selected Dutch legal reference values.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY confirmed the implementation is scope-contained and coordinator evidence confirms Actions/HF/app verification for the closeout commit.
+- WP_RECALL_SCORECARD_REFRESH records the post-fix recall/precision status, evidence level and remaining benchmark gaps in `RECALL_PRECISION_SCORECARD.md`.
 
 Gaps:
 
@@ -308,15 +309,17 @@ Current mitigations:
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the candidate scanner for case-number-shaped values with spaces and extra Dutch legal/admin context cues.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY statically confirmed that the implementation is context-bound, value-only and limited to the candidate helper/test layer.
 - Coordinator evidence confirms `Tests #1115`, `Sync to Hugging Face Space #1116` and app smoke verification are green for the verify closeout.
+- `RECALL_PRECISION_SCORECARD.md` now records current coverage status, CLM/phone risk reduction, role-word preservation evidence and open benchmark gaps.
 
 Gaps:
 
 - This first pattern round improves review candidates; it does not prove all recognizer/entity classifications are complete.
 - Broader production recall/precision thresholds and corpus sidecars remain future work.
 - Role-word preservation still needs continued regression coverage as recognizers evolve.
+- `arts Jansen`-style cases still need broader benchmark coverage: role word preserved, identifying name masked.
 
 Recommended workpackages:
 
-- No immediate extra pattern round is required based on current coordinator verification evidence.
+- No immediate extra pattern round is required based on current coordinator verification evidence and scorecard refresh.
 - If verification later exposes remaining gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
 - Later benchmark package — expand gold-label sidecars for Dutch legal/care documents.
