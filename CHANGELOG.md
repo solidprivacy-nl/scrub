@@ -1,5 +1,74 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_RECALL_SCORECARD_REFRESH — Refresh recall/precision scorecard after Dutch legal fixes
+
+Status: completed as benchmark/documentation-only.
+
+Files added:
+
+- `RECALL_PRECISION_SCORECARD.md`
+- `workpackage_claims/WP_RECALL_SCORECARD_REFRESH.md`
+- `handover/workpackages/20260617_0112_recall_scorecard_refresh.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_RECALL_SCORECARD_REFRESH.md`
+
+Summary:
+
+- Added `RECALL_PRECISION_SCORECARD.md` because no scorecard file existed at repo root.
+- Refreshed Dutch legal recall/precision status after the gap tests, first pattern-fix round and verify closeout.
+- Recorded coverage for the documented legal reference values, CLM/phone-number risk, role-word preservation and over-masking guard.
+- Clarified that the improvement is review-candidate visibility, not a complete automatic-recognition guarantee.
+- Recorded that no immediate `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2` is recommended unless concrete new misses are observed.
+
+Tests/checks:
+
+- Local tests were not runnable in this environment because the container cannot clone/access GitHub for a local working tree.
+- Required test commands remain:
+  - `python -m py_compile presidio_streamlit.py`
+  - `python -m pytest -q tests/test_dutch_legal_recall_gap_baseline.py`
+  - `python -m pytest -q tests/test_review_table_collapsible_contract.py`
+  - `python -m pytest -q tests/test_side_by_side_review_ui_patch.py`
+  - `python -m pytest -q tests/test_side_by_side_review_consolidation_dutch_sample.py`
+- GitHub Actions and Hugging Face sync should be used as final execution proof for the documentation commits.
+
+Intentionally not changed:
+
+- No product code change.
+- No `candidate_scanner.py` change.
+- No `dutch_recognizers.py` change.
+- No `presidio_streamlit.py` change.
+- No recognizer/pattern fix.
+- No UI change.
+- No review table change.
+- No side-by-side change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No DOCX/PDF flow change.
+- No Docker/startup/dependency change.
+- No cloud processing.
+- No real personal data.
+
+Remaining gaps:
+
+- No full gold-label corpus sidecars yet.
+- No formal recall/precision threshold yet.
+- No production-blocking benchmark gate yet.
+- Candidate surfacing requires human review and is not automatic recognition.
+- DOCX hidden content and metadata remain a separate risk line.
+
+Next recommended step:
+
+- Do not automatically start another pattern-fix round.
+- Use `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2` only if concrete new recall gaps are demonstrated.
+- Consider a benchmark/gold-label corpus package if quantitative recall/precision measurement is needed.
+- Consider `WP_DOCX_HYGIENE_RECALL_FOLLOWUP` if document/export risks now dominate.
+
 ## WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — Verify Dutch legal recall pattern fixes
 
 Status: completed after coordinator Actions/HF/app verification evidence.
