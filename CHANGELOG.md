@@ -1,5 +1,54 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_DUTCH_LEGAL_RECALL_GAP_TESTS — Add tests for known Dutch legal recall gaps
+
+Status: completed as tests/documentation-only baseline.
+
+Files added:
+
+- `tests/test_dutch_legal_recall_gap_baseline.py`
+- `workpackage_claims/WP_DUTCH_LEGAL_RECALL_GAP_TESTS.md`
+- `handover/workpackages/20260616_2209_dutch_legal_recall_gap_tests.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_DUTCH_LEGAL_RECALL_GAP_TESTS.md`
+
+Summary:
+
+- Added a tests-only baseline for known Dutch legal recall and precision gaps.
+- Used synthetic legal text only.
+- Captured known gaps for legal reference numbers, Rechtspraak-like rolnummers, client/dossier/zaak numbers, legal-code misclassification, role-word preservation and over-masking risk.
+- Used `pytest.mark.xfail(..., strict=False)` for current known gaps so CI can remain green while the shortcomings stay visible.
+- Added two normal fixture coverage tests for the synthetic legal-reference and role-word baselines.
+
+Validation status:
+
+- Local shell/pytest execution was not available in this environment because GitHub access from the container is restricted; connector/static checks verified the added file content.
+- GitHub Actions/Hugging Face sync should be used as the source of truth for final test execution.
+
+Intentionally not changed:
+
+- No product code change.
+- No `presidio_streamlit.py` change.
+- No recognizer or pattern fix.
+- No UI change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No placeholder-format change.
+- No Docker/startup/dependency change.
+- No cloud processing.
+- No real personal data.
+
+Next recommended step:
+
+- Do not automatically start recognizer fixes.
+- Likely next package after separate coordinator approval: `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES`.
+
 ## WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — Remove temporary candidate artifacts
 
 Status: completed as repo-hygiene cleanup after verified promotion.
