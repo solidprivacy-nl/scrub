@@ -4,11 +4,11 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — Verify Dutch legal recall pattern fixes after implementation`
 
-Status: completed as verification/closeout-only with validation limitations.
+Status: completed after coordinator Actions/HF/app verification evidence.
 
 ## Summary
 
-Verified the Dutch legal recall pattern-fix package through GitHub connector/static checks and commit comparison. No product code, recognizer code, UI, export, Scrub Key, reinsert, Docker/startup or dependency changes were made in this verify package.
+Verified the Dutch legal recall pattern-fix package through GitHub connector/static checks and commit comparison. The coordinator then supplied external evidence that Actions, Hugging Face sync and a live app smoke check are green. No product code, recognizer code, UI, export, Scrub Key, reinsert, Docker/startup or dependency changes were made in this verify package.
 
 The implementation being verified remains narrow: the only product/helper code changed by the pattern-fix package is `candidate_scanner.py`, with tests updated in `tests/test_dutch_legal_recall_gap_baseline.py`.
 
@@ -22,7 +22,8 @@ The implementation being verified remains narrow: the only product/helper code c
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY.md` pending final closeout update after this handover file
+- `workpackage_claims/WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY.md`
+- `handover/workpackages/20260617_0032_dutch_legal_recall_pattern_fixes_verify.md`
 
 ## Product-code changes in this verify package
 
@@ -33,6 +34,7 @@ None.
 - `77090c5d7cba75bc30d49a77a56116e37a78b0fc` — candidate scanner helper change.
 - `440bd27c4e02006c231fbb61a38567a8635d783f` — Dutch legal recall baseline test conversion.
 - Pattern-fix closeout claim commit: `5345912f62e83ea49d55884c6b4bd6c5da50d5f2`.
+- Verify closeout commit checked by coordinator: `e1e44b3cb664f913414ed80baa6086cf207d67f0`.
 
 ## Verification performed
 
@@ -47,6 +49,17 @@ Static/connector verification:
 - Confirmed `CLM-2026-112233` is tested as not `PHONE` in returned entity types.
 - Confirmed existing review/export contract tests still assert review-table, side-by-side and download boundaries.
 - Confirmed `presidio_streamlit.py` was not changed by the pattern-fix package and still imports the candidate scanner into the existing review table candidate flow.
+
+Coordinator external verification evidence:
+
+- GitHub Actions `Tests #1115` for commit `e1e44b3` completed successfully.
+- `Sync to Hugging Face Space #1116` for commit `e1e44b3` completed successfully.
+- Earlier `Sync to Hugging Face Space #1112` for commit `ca5cb3f` failed, but was superseded by later green sync evidence.
+- Hugging Face app screenshot shows the Space running without Script execution error.
+- App screenshot confirms `2. Controleer de tekst` and side-by-side review remain visible.
+- App screenshot confirms `3. Controleer gevonden gegevens` remains visible.
+- App screenshot confirms collapsed `Vervangtabel controleren — 16 items` remains visible.
+- App screenshot confirms Serial review, export/download buttons and DOCX hygiene audit remain visible.
 
 ## Tests/checks run
 
@@ -67,23 +80,37 @@ Connector checks:
 
 - `get_commit_combined_status` returned no statuses for checked pattern-fix commits.
 - `fetch_commit_workflow_runs` returned empty workflow-run lists for checked pattern-fix commits.
-- Public web lookup for GitHub Actions/Hugging Face was unavailable in this environment.
+- Coordinator screenshot evidence was used as external source of truth for Actions and Hugging Face status.
 
 ## GitHub Actions status
 
-Unknown from this worker. No statuses/workflow runs were exposed through the connector for the checked commits.
+Green by coordinator screenshot evidence:
+
+- `Tests #1115` for commit `e1e44b3` succeeded.
 
 ## Hugging Face sync status
 
-Unknown from this worker. Sync could not be confirmed green.
+Green by coordinator screenshot evidence:
+
+- `Sync to Hugging Face Space #1116` for commit `e1e44b3` succeeded.
 
 ## App verification status
 
-Not performed. The workpackage requested light app verification only if Hugging Face sync is green. HF sync could not be confirmed green from this environment.
+Confirmed by coordinator screenshot evidence.
+
+Verified visible in the live app:
+
+- Space running without Script execution error.
+- `2. Controleer de tekst` side-by-side review.
+- `3. Controleer gevonden gegevens`.
+- Collapsed `Vervangtabel controleren — 16 items`.
+- Serial review.
+- Export/download buttons.
+- DOCX hygiene audit.
 
 ## Fixed gaps verified
 
-Static verification confirms test and helper coverage for:
+Static verification and green CI evidence confirm test/helper coverage for:
 
 - Legal reference values including Rechtspraak-like case/role references.
 - Client/dossier/zaak references in synthetic test text.
@@ -93,22 +120,20 @@ Static verification confirms test and helper coverage for:
 
 ## Remaining gaps
 
-- No local pytest execution evidence from this worker.
-- No GitHub Actions/HF sync evidence from this worker.
-- No live app verification from this worker.
 - The implemented fix improves review-candidate visibility, not complete automatic recognizer classification for every Dutch legal reference type.
+- Broader recall/precision scorecard and gold-label corpus work remain future work.
 
 ## Remaining risks
 
-- CI or runtime may still expose issues that static review cannot catch.
 - Helper-level candidate surfacing requires human review; candidates are not automatically applied.
 - Broader recall/precision scorecard and gold-label corpus work remain future work.
+- A later app/user test may still identify new Dutch legal patterns that need a separate approved round.
 
 ## Next recommended step
 
 Do not automatically start a new pattern-fix round.
 
-If the coordinator can verify GitHub Actions/HF sync externally, record that evidence only. If remaining gaps appear after real test/app verification, use a separately approved:
+No immediate extra pattern round is required based on current coordinator verification evidence. If remaining gaps appear after real test/app usage, use a separately approved:
 
 ```text
 WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2
