@@ -13,6 +13,8 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 - Upload and process supported document text flows in the Streamlit prototype.
 - Review detected replacement candidates before export.
 - Preserve legal/professional context where possible.
+- Nederlandse juridische referenties zoals dossier-, zaak-, cliënt- en administratieve referentiecodes worden beter als review-kandidaat zichtbaar gemaakt wanneer automatische herkenning ze mist.
+- Juridische rolwoorden blijven beter behouden als juridische context; Scrub doet geen claim dat alle juridische nummers altijd automatisch worden herkend.
 - Export scrubbed outputs according to existing app behavior.
 
 ### Review
