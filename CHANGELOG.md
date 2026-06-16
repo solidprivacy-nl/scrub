@@ -2,7 +2,7 @@
 
 ## WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — Verify Dutch legal recall pattern fixes
 
-Status: completed as verification/closeout-only with validation limitations.
+Status: completed after coordinator Actions/HF/app verification evidence.
 
 Files added:
 
@@ -15,6 +15,7 @@ Files changed:
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
 - `workpackage_claims/WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY.md`
+- `handover/workpackages/20260617_0032_dutch_legal_recall_pattern_fixes_verify.md`
 
 Summary:
 
@@ -23,21 +24,23 @@ Summary:
 - Verified the candidate scanner keeps the new case-number-shaped scan context-bound and value-only.
 - Verified the Dutch legal recall baseline now contains normal assertions for legal references, client/dossier/zaak references, CLM reference not as phone, role-word preservation and over-masking prevention.
 - Verified existing review/export contract tests still assert preservation of `replacement_editor`, download labels, side-by-side boundaries and no export/Scrub Key/reinsert mutations.
+- Added coordinator verification evidence for Actions, Hugging Face sync and app flow.
 
 Tests/checks:
 
 - Local clone/test execution failed because the container could not resolve `github.com`.
-- `python -m py_compile presidio_streamlit.py` could not be run locally.
-- `python -m pytest -q tests/test_dutch_legal_recall_gap_baseline.py` could not be run locally.
-- Required review tests could not be run locally for the same reason.
 - GitHub connector static checks and commit comparisons were completed.
+- Coordinator screenshot evidence shows `Tests #1115` green for commit `e1e44b3`.
+- Coordinator screenshot evidence shows `Sync to Hugging Face Space #1116` green for commit `e1e44b3`.
+- Earlier `Sync to Hugging Face Space #1112` for commit `ca5cb3f` was red, but this was superseded by later successful sync evidence.
 
-GitHub Actions / Hugging Face:
+App verification:
 
-- GitHub connector returned no combined statuses and no workflow runs for checked pattern-fix commits.
-- Public web lookup for Actions/Hugging Face was unavailable in this environment.
-- Hugging Face sync remains unknown from this worker.
-- App verification was not performed because HF sync could not be confirmed green here.
+- Coordinator app screenshot confirms the Hugging Face Space is running without Script execution error.
+- Screenshot confirms `2. Controleer de tekst` and side-by-side review remain visible.
+- Screenshot confirms `3. Controleer gevonden gegevens` remains visible.
+- Screenshot confirms collapsed `Vervangtabel controleren — 16 items` remains visible.
+- Screenshot confirms Serial review, export/download buttons and DOCX hygiene audit remain visible.
 
 Intentionally not changed:
 
@@ -57,14 +60,14 @@ Intentionally not changed:
 
 Remaining gaps:
 
-- Execution proof is still missing from this worker because local tests, GitHub Actions visibility and Hugging Face sync visibility were unavailable.
 - The first pattern-fix round improves candidate visibility; it does not prove complete automatic recognizer classification for every Dutch legal reference type.
+- Broader recall/precision scorecard and gold-label corpus work remain future work.
 
 Next recommended step:
 
 - Do not automatically continue into another pattern round.
-- If coordinator can verify Actions/HF externally, record that evidence only.
-- If remaining gaps appear, consider `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2` after separate approval.
+- No immediate extra pattern round is required based on current coordinator verification evidence.
+- If remaining gaps appear in later app/user testing, consider `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2` after separate approval.
 
 ## WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — Improve Dutch legal reference detection
 
