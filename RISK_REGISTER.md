@@ -40,20 +40,20 @@ Current mitigations:
 - WP19-WP24 created the recall/trust benchmark and report-only residual-risk foundation.
 - WP_DUTCH_LEGAL_RECALL_GAP_TESTS added tests-only xfail baselines for known Dutch legal recall gaps.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the review-candidate layer for selected Dutch legal reference values.
-- WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY confirmed the implementation is scope-contained, but execution proof remains pending because local tests and CI/HF status were unavailable to this worker.
+- WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY confirmed the implementation is scope-contained and coordinator evidence confirms Actions/HF/app verification for the closeout commit.
 
 Gaps:
 
 - No complete gold-label sidecars for the corpus yet.
 - No accepted production recall/precision threshold or production-blocking gate exists.
 - No production safety claim is supported.
-- Dutch legal reference gaps are reduced for selected helper-level review candidates, but final CI/app evidence is still required.
+- Dutch legal reference gaps are reduced for selected helper-level review candidates, but this does not prove complete automatic classification for all Dutch legal references.
 
 Recommended workpackages:
 
 - Later benchmark data package — complete gold-label sidecars.
 - Later gated package — accepted thresholds and regression gate.
-- Later approved package only if needed — second narrow Dutch legal pattern round after verified test evidence.
+- Later approved package only if needed — second narrow Dutch legal pattern round after new verified gap evidence.
 
 ---
 
@@ -307,16 +307,16 @@ Current mitigations:
 - `tests/test_dutch_legal_recall_gap_baseline.py` captures known Dutch legal reference and role-preservation cases using synthetic text.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the candidate scanner for case-number-shaped values with spaces and extra Dutch legal/admin context cues.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY statically confirmed that the implementation is context-bound, value-only and limited to the candidate helper/test layer.
+- Coordinator evidence confirms `Tests #1115`, `Sync to Hugging Face Space #1116` and app smoke verification are green for the verify closeout.
 
 Gaps:
 
 - This first pattern round improves review candidates; it does not prove all recognizer/entity classifications are complete.
-- Final CI/HF/app verification is still required because local test execution and external status lookup were unavailable in this environment.
 - Broader production recall/precision thresholds and corpus sidecars remain future work.
 - Role-word preservation still needs continued regression coverage as recognizers evolve.
 
 Recommended workpackages:
 
-- If external CI/HF is green, no immediate extra pattern work is required.
+- No immediate extra pattern round is required based on current coordinator verification evidence.
 - If verification later exposes remaining gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
 - Later benchmark package — expand gold-label sidecars for Dutch legal/care documents.
