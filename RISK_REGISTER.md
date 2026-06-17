@@ -45,19 +45,20 @@ Current mitigations:
 - WP_RECALL_GOLD_LABEL_CORPUS_SEED added the first synthetic source/sidecar corpus seed with exact gold-label offsets for future quantitative measurement.
 - WP_RECALL_GOLD_LABEL_CORPUS_EXPAND expanded the synthetic gold-label corpus to cover more legal/care reference values, false-positive traps and role-preservation cases.
 - WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds a diagnostic runner that compares analyzer/helper predictions against the expanded gold-label corpus.
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT adds a GitHub Actions artifact workflow so diagnostic runner output becomes visible as JSON and Markdown.
 
 Gaps:
 
 - No accepted production recall/precision threshold exists.
 - No production-blocking benchmark gate exists.
 - No production safety claim is supported.
-- Dutch legal and care reference gaps are now more measurable, but this does not prove complete automatic classification for all reference types.
-- Runner output is diagnostic until thresholds and governance are separately approved.
+- Dutch legal and care reference gaps are now more measurable and visible, but this does not prove complete automatic classification for all reference types.
+- Runner/report output is diagnostic until thresholds and governance are separately approved.
 
 Recommended workpackages:
 
+- Later approved package — review the first diagnostic report artifact.
 - Later approved package — recall/precision thresholds plan without enforcement.
-- Later approved package — benchmark report artifact for CI diagnostics.
 - Later gated package — accepted thresholds and regression gate only after planning approval.
 - Later approved package only if needed — second narrow Dutch legal pattern round after new verified gap evidence.
 
@@ -283,14 +284,17 @@ Current mitigations:
 - Workpackages record Actions/sync status.
 - `STATUS_MONITORING_RUNBOOK.md` exists and defines standard status states plus the expected Actions/Hugging Face verification order.
 - Workers are instructed to use connector status tools first, then ask for coordinator evidence only when connector lookup is incomplete.
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT adds a CI-visible diagnostic recall benchmark artifact workflow for benchmark evidence.
 
 Gaps:
 
 - Connector workflow-run lookup can still be incomplete for some push-triggered runs.
-- No automated status artifact exists yet.
+- The new report artifact still needs GitHub Actions verification on first run.
+- No generalized automated status artifact exists yet.
 
 Recommended workpackages:
 
+- First verify the diagnostic recall benchmark report artifact workflow.
 - Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
@@ -318,6 +322,7 @@ Current mitigations:
 - WP_RECALL_GOLD_LABEL_CORPUS_SEED added synthetic legal and care gold-label source/sidecar files, including role/name preservation cases and care-reference examples.
 - WP_RECALL_GOLD_LABEL_CORPUS_EXPAND added legal false-positive traps, legal mixed identifiers, care role-preservation examples and care mixed identifiers.
 - WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds diagnostic reporting for missed labels, wrong types, false-positive candidates, preserve-term hits and known-trap hits.
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT makes the diagnostic report visible as a JSON/Markdown CI artifact.
 
 Gaps:
 
@@ -325,11 +330,11 @@ Gaps:
 - Broader production recall/precision thresholds remain future work.
 - The corpus is improved but remains synthetic and not exhaustive.
 - Role-word preservation still needs continued regression coverage as recognizers evolve.
-- Diagnostic runner output does not yet create a production gate.
+- Diagnostic runner/report output does not yet create a production gate.
 
 Recommended workpackages:
 
-- No immediate extra pattern round is required based on current coordinator verification evidence, expanded corpus and diagnostic runner.
+- No immediate extra pattern round is required based on current coordinator verification evidence, expanded corpus, diagnostic runner and report artifact.
+- Later approved package — `WP_RECALL_BENCHMARK_REPORT_REVIEW` to review first artifact output.
 - Later approved package — `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` before any threshold/gate implementation.
-- Later approved package — `WP_RECALL_BENCHMARK_REPORT_ARTIFACT` for CI-visible diagnostic reports.
 - If verification later exposes remaining detection gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
