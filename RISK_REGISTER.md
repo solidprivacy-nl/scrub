@@ -46,7 +46,8 @@ Current mitigations:
 - WP_RECALL_GOLD_LABEL_CORPUS_EXPAND expanded the synthetic gold-label corpus to cover more legal/care reference values, false-positive traps and role-preservation cases.
 - WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds a diagnostic runner that compares analyzer/helper predictions against the expanded gold-label corpus.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT adds a GitHub Actions artifact workflow so diagnostic runner output becomes visible as JSON and Markdown.
-- WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first artifact output and identified that raw counts are not ready for threshold planning because of mapping/taxonomy/deduplication noise.
+- WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first artifact output and identified that raw counts were not ready for threshold planning because of mapping/taxonomy/deduplication noise.
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX cleans diagnostic mapping/counting noise for `NL_ADDRESS`, `NL_IBAN`, `NL_CASE_REFERENCE`, `NL_LEGAL_PARTY_NAME`, care `ZORG-CL-*` references, selected care-location references, duplicate prediction accounting and benchmark-only email behavior.
 
 Gaps:
 
@@ -54,13 +55,13 @@ Gaps:
 - No production-blocking benchmark gate exists.
 - No production safety claim is supported.
 - Dutch legal and care reference gaps are now more measurable and visible, but this does not prove complete automatic classification for all reference types.
-- The first artifact shows 34 missed required labels and 11 wrong-type findings, but several are likely runner mapping, taxonomy or duplicate prediction accounting issues.
-- Email and person-name coverage remain open diagnostic risks.
-- Runner/report output is diagnostic until thresholds and governance are separately approved.
+- Cleaned artifact output still needs to be generated and reviewed before threshold planning.
+- Person/email/care-reference risks remain diagnostic until a cleaned artifact confirms improved accounting.
+- Runner/report output remains diagnostic until thresholds and governance are separately approved.
 
 Recommended workpackages:
 
-- Next approved package — `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX` to clean runner/report mapping, dedupe and benchmark taxonomy before threshold planning.
+- Next approved package — `WP_RECALL_BENCHMARK_REPORT_REVIEW_2` to review the cleaned artifact output.
 - Later approved package — recall/precision thresholds plan without enforcement.
 - Later gated package — accepted thresholds and regression gate only after planning approval.
 - Later approved package only if needed — second narrow Dutch legal pattern round after new verified gap evidence.
@@ -285,16 +286,17 @@ Current mitigations:
 - Workers are instructed to use connector status tools first, then ask for coordinator evidence only when connector lookup is incomplete.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT adds a CI-visible diagnostic recall benchmark artifact workflow for benchmark evidence.
 - WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first uploaded artifact files and recorded findings in `RECALL_BENCHMARK_REPORT_REVIEW.md`.
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX cleans report mapping/counting noise so the next artifact should be easier to interpret.
 
 Gaps:
 
 - Connector workflow-run lookup can still be incomplete for some push-triggered runs.
-- First artifact review shows the artifact is visible and useful, but report metrics still need mapping/dedup cleanup before thresholds.
+- Cleaned report artifact still needs Actions verification and review.
 - No generalized automated status artifact exists yet.
 
 Recommended workpackages:
 
-- Next approved benchmark package — `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX`.
+- Next approved benchmark package — `WP_RECALL_BENCHMARK_REPORT_REVIEW_2` after the cleaned artifact is available.
 - Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
@@ -324,6 +326,7 @@ Current mitigations:
 - WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds diagnostic reporting for missed labels, wrong types, false-positive candidates, preserve-term hits and known-trap hits.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT makes the diagnostic report visible as a JSON/Markdown CI artifact.
 - WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first artifact and confirmed `preserve_term_hit_count = 0`, but also found mapping/taxonomy/deduplication noise.
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX adds runner/report mapping cleanup and duplicate accounting cleanup without changing product recognition.
 
 Gaps:
 
@@ -331,13 +334,12 @@ Gaps:
 - Broader production recall/precision thresholds remain future work.
 - The corpus is improved but remains synthetic and not exhaustive.
 - Role-word preservation still needs continued regression coverage as recognizers evolve.
-- The reviewed artifact reports 34 missed required labels, including many person/email labels.
-- Some wrong-type findings are probably runner mapping issues, not product detection failures.
+- Cleaned artifact output still needs review before threshold planning.
 - Diagnostic runner/report output does not yet create a production gate.
 
 Recommended workpackages:
 
 - No immediate extra pattern round is recommended based on the first artifact review.
-- Next approved package — `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX` to repair/clarify runner mapping, deduplication and benchmark taxonomy.
+- Next approved package — `WP_RECALL_BENCHMARK_REPORT_REVIEW_2` to review cleaned artifact output.
 - Later approved package — `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` before any threshold/gate implementation.
 - If future cleaned report output exposes remaining detection gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
