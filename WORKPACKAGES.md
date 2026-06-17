@@ -49,6 +49,7 @@ WP_DUTCH_LEGAL_RECALL_GAP_TESTS — completed; tests-only baseline for known Dut
 WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — completed; targeted candidate-scanner pattern fixes for Dutch legal references.
 WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed after coordinator Actions/HF/app verification evidence.
 WP_RECALL_SCORECARD_REFRESH — completed; recall/precision scorecard refreshed after Dutch legal recall fixes.
+WP_RECALL_GOLD_LABEL_CORPUS_SEED — completed; synthetic gold-label corpus seed added for future recall/precision benchmarking.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -125,6 +126,14 @@ Recall/precision scorecard refresh now records:
 - review/export boundary coverage;
 - open benchmark risks: no full gold sidecars, no formal recall/precision thresholds and no broad production safety claim.
 
+Gold-label corpus seed now adds:
+
+- `corpus/README.md`;
+- synthetic legal reference source plus `.gold.json` sidecar;
+- synthetic legal role-preservation source plus `.gold.json` sidecar;
+- synthetic care reference source plus `.gold.json` sidecar;
+- `tests/test_recall_gold_label_corpus_seed.py` to validate sidecar JSON, source paths, offsets, labels, preserve terms and `.example.test` email domains.
+
 Verification evidence:
 
 - Promotion branch used by coordinator: `test/collapsible-review-table`.
@@ -149,6 +158,7 @@ Verification evidence:
   - Hugging Face app screenshot shows the Space running without Script execution error.
   - App screenshot confirms `2. Controleer de tekst`, side-by-side review, `3. Controleer gevonden gegevens`, collapsed `Vervangtabel controleren — 16 items`, Serial review, export/download buttons and DOCX hygiene audit remain visible.
 - Scorecard refresh added `RECALL_PRECISION_SCORECARD.md`; no product code or user-facing app behavior changed.
+- Gold-label corpus seed added synthetic corpus/sidecars and a sidecar-integrity test only; no runner or product behavior changed.
 
 Boundaries preserved:
 
@@ -165,9 +175,9 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification and scorecard refresh.
-3. If later app/user testing exposes concrete new detection gaps, consider WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2 after separate approval.
-4. Alternative next quality step after separate approval: benchmark/gold-label corpus package.
+2. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, scorecard refresh and corpus seed.
+3. If quantitative measurement is now desired, consider WP_RECALL_BENCHMARK_RUNNER_MINIMAL after separate approval.
+4. If more data is desired before a runner, consider WP_RECALL_GOLD_LABEL_CORPUS_EXPAND after separate approval.
 5. Alternative risk step after separate approval: WP_DOCX_HYGIENE_RECALL_FOLLOWUP.
 ```
 
