@@ -53,7 +53,7 @@ WP_RECALL_GOLD_LABEL_CORPUS_SEED — completed; synthetic gold-label corpus seed
 WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — completed; synthetic gold-label corpus expanded for future recall/precision benchmarking.
 WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed; minimal diagnostic recall/precision runner added for synthetic gold-label corpus.
 WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed and coordinator-verified; corpus email-domain validator domain handling repaired after Actions failure.
-WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed; diagnostic recall benchmark report helper, workflow and artifact documentation added.
+WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed and coordinator-verified; diagnostic recall benchmark report helper, workflow and artifact documentation added.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -116,7 +116,7 @@ Recall/benchmark status:
 - `recall_benchmark_runner.py` loads sidecars, collects recognizer/candidate-scanner predictions when available and reports diagnostic exact/text-normalized/overlap matches.
 - `tests/test_recall_benchmark_runner_minimal.py` covers runner loading, normalization, matching, preserve term hits, known trap hits and JSON-serializable corpus smoke reports.
 - `RECALL_BENCHMARK_RUNNER_MINIMAL.md` documents the diagnostic runner and its limitations.
-- `recall_benchmark_report.py` now writes a diagnostic JSON report and Markdown summary to an explicit output directory.
+- `recall_benchmark_report.py` writes a diagnostic JSON report and Markdown summary to an explicit output directory.
 - `.github/workflows/recall-benchmark-report.yml` generates and uploads `diagnostic-recall-benchmark-report` as a GitHub Actions artifact.
 - `tests/test_recall_benchmark_report_artifact.py` covers report metadata, Markdown summary, file writing, no-threshold behavior and CLI smoke output.
 - `RECALL_BENCHMARK_REPORT_ARTIFACT.md` documents artifact usage and non-claim boundaries.
@@ -142,8 +142,12 @@ Verification evidence:
   - `222ebb8` — Tests green.
   - `8c84523` — Tests green / HF sync green.
   - `927a564` — Tests green / HF sync green.
+- Diagnostic recall benchmark report artifact coordinator evidence:
+  - `a3df5c7` — `Diagnostic recall benchmark report #1` green.
+  - `31ee53b` — `Tests #1193` green.
+  - `31ee53b` — `Sync to Hugging Face Space #1204` green.
+  - Hugging Face app screenshot shows the Space running without Script execution error.
 - Scorecard/corpus/runner/report packages added benchmark documentation/data/tooling/tests only; no product UI or user-facing app behavior changed.
-- Report artifact workflow verification is pending for the report-artifact package commits.
 
 Boundaries preserved:
 
@@ -161,11 +165,10 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. First verify GitHub Actions, Hugging Face sync and the new Diagnostic recall benchmark report artifact for this package.
-3. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, expanded corpus, diagnostic runner and report artifact.
-4. If benchmark governance is now desired, consider WP_RECALL_BENCHMARK_REPORT_REVIEW after separate approval.
-5. If threshold planning is desired after reviewing artifact output, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN after separate approval.
-6. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
+2. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, expanded corpus, diagnostic runner and report artifact.
+3. If benchmark governance is now desired, consider WP_RECALL_BENCHMARK_REPORT_REVIEW after separate approval.
+4. If threshold planning is desired after reviewing artifact output, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN after separate approval.
+5. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
 ```
 
 ## Blocked work
