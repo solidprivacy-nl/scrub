@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — Clean diagnostic recall benchmark report mapping and counting noise`
 
-Status: completed as benchmark/tooling/tests/documentation-only, pending Actions/HF/artifact verification.
+Status: completed and verified as benchmark/tooling/tests/documentation-only.
 
 ## Summary
 
@@ -28,7 +28,7 @@ This package changes benchmark/report tooling and selected benchmark sidecar acc
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md` pending final claim closeout update
+- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md`
 
 ## Product-code changes
 
@@ -96,7 +96,16 @@ Spans and source text were not changed.
 
 Local tests were not runnable in this environment because no local GitHub working tree is available for pytest/py_compile execution.
 
-Required checks remain:
+Coordinator screenshot evidence confirms:
+
+```text
+Tests #1218 for commit 59473fb — green
+Sync to Hugging Face Space #1228 for commit 59473fb — green
+Diagnostic recall benchmark report runs for the relevant benchmark cleanup commits — green
+Hugging Face Space app — running without Script execution error
+```
+
+Required local checks remain for any future local worker:
 
 ```text
 python -m pytest -q tests/test_recall_gold_label_corpus_seed.py
@@ -108,27 +117,28 @@ python -m py_compile presidio_streamlit.py
 python recall_benchmark_report.py --corpus corpus --output output/recall_benchmark --strict
 ```
 
-Additional regression checks if feasible:
-
-```text
-python -m pytest -q tests/test_dutch_legal_recall_gap_baseline.py
-python -m pytest -q tests/test_review_table_collapsible_contract.py
-python -m pytest -q tests/test_side_by_side_review_ui_patch.py
-python -m pytest -q tests/test_side_by_side_review_consolidation_dutch_sample.py
-python -m pytest -q tests
-```
-
 ## GitHub Actions status
 
-Pending at handover time.
+Verified green by coordinator screenshot evidence.
+
+```text
+Tests #1218 for commit 59473fb — green
+```
 
 ## Diagnostic report workflow status
 
-Pending at handover time. Verify:
+Verified green by coordinator screenshot evidence for the relevant benchmark cleanup commits.
+
+Workflow:
 
 ```text
 Diagnostic recall benchmark report
-artifact: diagnostic-recall-benchmark-report
+```
+
+Artifact:
+
+```text
+diagnostic-recall-benchmark-report
 ```
 
 Expected artifact files:
@@ -140,11 +150,17 @@ output/recall_benchmark/recall_benchmark_summary.md
 
 ## Hugging Face sync status
 
-Pending at handover time.
+Verified green by coordinator screenshot evidence.
+
+```text
+Sync to Hugging Face Space #1228 for commit 59473fb — green
+```
 
 ## App verification status
 
-Not required. This package is benchmark/tooling/tests/documentation-only and no app behavior changed.
+Verified healthy by coordinator screenshot evidence. The Hugging Face Space is running without Script execution error.
+
+No app verification was functionally required because this package is benchmark/tooling/tests/documentation-only and no app behavior changed.
 
 ## Updated risks
 
@@ -164,8 +180,7 @@ Risk interpretation:
 
 ## Remaining gaps
 
-- Cleaned artifact needs Actions/report workflow verification.
-- Cleaned artifact output needs review.
+- Cleaned artifact output needs content review.
 - No accepted recall threshold exists.
 - No accepted precision threshold exists.
 - No production-blocking benchmark gate exists.
@@ -180,16 +195,7 @@ Risk interpretation:
 
 ## Next recommended step
 
-First verify:
-
-```text
-Tests
-Sync to Hugging Face Space
-Diagnostic recall benchmark report workflow
-Artifact availability
-```
-
-Then, after separate coordinator approval:
+After separate coordinator approval:
 
 ```text
 WP_RECALL_BENCHMARK_REPORT_REVIEW_2
