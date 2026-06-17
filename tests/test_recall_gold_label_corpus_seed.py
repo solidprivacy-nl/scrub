@@ -38,6 +38,44 @@ ALLOWED_ENTITY_CLASSES = {
     "ROLE_OR_CONTEXT_TERM_TO_PRESERVE",
 }
 
+ROLE_WORDS = {
+    "slachtoffer",
+    "arts",
+    "getuige",
+    "eiser",
+    "verweerder",
+    "minderjarige",
+    "cliënt",
+    "zorgmedewerker",
+    "verpleegkundige",
+    "behandelaar",
+    "mantelzorger",
+}
+
+ALLOWED_PRESERVE_CONTEXT_TERMS = ROLE_WORDS | {
+    "zaaknummer",
+    "rolnummer",
+    "dossier",
+    "dossiernummer",
+    "artikel",
+    "lid",
+    "pagina",
+    "bijlage",
+    "productie",
+    "kamer",
+    "afdeling",
+}
+
+EXPECTED_GOLD_SIDECARS = {
+    "legal/legal_reference_seed_001.gold.json",
+    "legal/legal_role_preservation_seed_001.gold.json",
+    "legal/legal_false_positive_traps_seed_001.gold.json",
+    "legal/legal_mixed_identifiers_seed_001.gold.json",
+    "care/care_reference_seed_001.gold.json",
+    "care/care_role_preservation_seed_001.gold.json",
+    "care/care_mixed_identifiers_seed_001.gold.json",
+}
+
 
 def _gold_files() -> list[Path]:
     return sorted(CORPUS_ROOT.glob("**/*.gold.json"))
@@ -45,11 +83,10 @@ def _gold_files() -> list[Path]:
 
 def test_gold_label_seed_files_exist():
     gold_files = _gold_files()
+    relative_gold_files = {gold_file.relative_to(CORPUS_ROOT).as_posix() for gold_file in gold_files}
 
     assert gold_files, "Expected at least one .gold.json sidecar in corpus/"
-    assert CORPUS_ROOT.joinpath("legal/legal_reference_seed_001.gold.json") in gold_files
-    assert CORPUS_ROOT.joinpath("legal/legal_role_preservation_seed_001.gold.json") in gold_files
-    assert CORPUS_ROOT.joinpath("care/care_reference_seed_001.gold.json") in gold_files
+    assert EXPECTED_GOLD_SIDECARS <= relative_gold_files
 
 
 def test_gold_label_sidecars_are_valid_and_synthetic():
@@ -94,13 +131,11 @@ def test_seed_corpus_uses_reserved_example_email_domain_only():
         assert email.endswith(".example.test"), f"Use .example.test only, got {email}"
 
 
-def test_role_words_are_preserve_terms_not_sensitive_labels():
-    role_words = {"slachtoffer", "arts", "getuige", "eiser", "verweerder", "minderjarige", "cliënt", "zorgmedewerker", "verpleegkundige"}
-
+def test_role_and_context_terms_are_preserved_not_sensitive_labels():
     for gold_file in _gold_files():
         sidecar = json.loads(gold_file.read_text(encoding="utf-8"))
         sensitive_label_texts = {label["text"].lower() for label in sidecar["labels"]}
         preserved_terms = {term["term"].lower() for term in sidecar.get("preserve_terms", [])}
 
-        assert sensitive_label_texts.isdisjoint(role_words)
-        assert preserved_terms <= role_words | {"zaaknummer", "dossiernummer"}
+        assert sensitive_label_texts.isdisjoint(ROLE_WORDS)
+        assert preserved_terms <= ALLOWED_PRESERVE_CONTEXT_TERMS
