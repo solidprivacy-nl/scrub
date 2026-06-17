@@ -1,6 +1,6 @@
 # Recall / Precision Scorecard — Dutch legal and care benchmark refresh
 
-Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion, minimal diagnostic runner, diagnostic report artifact and first artifact review.  
+Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion, minimal diagnostic runner, diagnostic report artifact, first artifact review and report artifact cleanup.  
 Repository: `solidprivacy-nl/scrub`.  
 Scope: benchmark/documentation-only. No product UI, export, Scrub Key or reinsert behavior is changed by this document.
 
@@ -20,6 +20,7 @@ WP_RECALL_GOLD_LABEL_CORPUS_EXPAND
 WP_RECALL_BENCHMARK_RUNNER_MINIMAL
 WP_RECALL_BENCHMARK_REPORT_ARTIFACT
 WP_RECALL_BENCHMARK_REPORT_REVIEW
+WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX
 ```
 
 Current evidence:
@@ -29,20 +30,20 @@ Current evidence:
 - A synthetic gold-label corpus seed was added and then expanded.
 - A minimal diagnostic benchmark runner exists.
 - A diagnostic report artifact workflow exists and was coordinator-verified green.
-- The first diagnostic report artifact output has now been reviewed in `RECALL_BENCHMARK_REPORT_REVIEW.md`.
-- The artifact is structurally valid and contains diagnostic JSON and Markdown outputs.
+- The first diagnostic report artifact output was reviewed in `RECALL_BENCHMARK_REPORT_REVIEW.md`.
+- Diagnostic artifact mapping/counting cleanup is now implemented.
 - Quantitative recall/precision remains diagnostic only until thresholds and gates are separately planned and approved.
 
 Important interpretation:
 
 ```text
 Improved candidate surfacing != complete automatic recognizer guarantee.
-Gold-label corpus + diagnostic runner + report artifact + review != production quality gate.
+Gold-label corpus + diagnostic runner + report artifact + cleanup != production quality gate.
 ```
 
 ---
 
-## 2. Corpus, runner, report and review inventory
+## 2. Corpus, runner, report and cleanup inventory
 
 ```text
 Legal documents: 4
@@ -57,34 +58,26 @@ Report tests: tests/test_recall_benchmark_report_artifact.py
 Report workflow: .github/workflows/recall-benchmark-report.yml
 Report docs: RECALL_BENCHMARK_REPORT_ARTIFACT.md
 Report review: RECALL_BENCHMARK_REPORT_REVIEW.md
+Report cleanup docs: RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md
 Report artifact: diagnostic-recall-benchmark-report
-```
-
-Artifact files reviewed:
-
-```text
-recall_benchmark_report.json
-recall_benchmark_summary.md
 ```
 
 ---
 
 ## 3. First artifact review summary
 
-Artifact integrity passed:
+The first reviewed artifact had valid metadata and structure:
 
 ```text
 metadata.status = diagnostic_only
 metadata.synthetic_corpus = true
 metadata.production_gate = false
 metadata.thresholds_enforced = false
-report.summary exists
-report.documents exists
 document_count = 7
 gold_label_count = 75
 ```
 
-Summary values from the reviewed artifact:
+Raw values from the first reviewed artifact:
 
 | Metric | Value |
 |---|---:|
@@ -101,58 +94,85 @@ Summary values from the reviewed artifact:
 | preserve_term_hit_count | 0 |
 | known_trap_hit_count | 1 |
 
-Diagnostic interpretation:
+Diagnostic interpretation from the review:
 
 - The artifact is useful for engineering review.
-- The current raw counts are not yet suitable for threshold planning.
-- Several missed/wrong-type findings appear to be caused by runner mapping, acceptable-entity taxonomy or duplicate prediction reporting.
+- Raw counts were not suitable for threshold planning yet.
+- Several missed/wrong-type findings appeared to be caused by runner mapping, acceptable-entity taxonomy or duplicate prediction reporting.
 - The artifact does not support any production accuracy claim.
 
 ---
 
-## 4. Main artifact review findings
+## 4. Diagnostic cleanup completed
 
-### 4.1 Positive findings
+Cleanup completed in `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX`:
 
-- Artifact metadata correctly blocks production-gate interpretation.
-- Corpus and report structure are present.
-- 41 required labels are matched exactly/text-normalized/overlap in the current diagnostic report.
-- `preserve_term_hit_count = 0`, so the reviewed artifact did not show direct role/context-term over-masking.
-- Legal/care references are now measurable and visible in a CI artifact.
+### Mapping cleanup
 
-### 4.2 Diagnostic concerns
+The diagnostic runner now maps/accepts:
 
-- `missed_required_count = 34`.
-- `wrong_type_count = 11`.
-- `false_positive_candidate_count = 8`.
-- `known_trap_hit_count = 1`.
+```text
+NL_ADDRESS -> ADDRESS
+NL_IBAN -> IBAN
+NL_CASE_REFERENCE -> CASE_NUMBER
+NL_LEGAL_PARTY_NAME -> PERSON
+EMAIL_ADDRESS -> EMAIL
+```
 
-Main likely causes:
+This is benchmark/report mapping only and does not change product recognition behavior.
 
-- runner mapping does not accept `NL_ADDRESS` as address/location;
-- runner mapping does not accept `NL_IBAN` as IBAN;
-- runner mapping does not accept `NL_CASE_REFERENCE` as case number;
-- `NL_LEGAL_PARTY_NAME` may need a benchmark decision for person-name matching;
-- care `ZORG-CL-*` references are detected as `NL_CLIENT_REFERENCE` but gold labels expect care-reference classes;
-- repeated predictions inflate wrong-type and false-positive counts;
-- email labels are missed in the reviewed artifact and need investigation.
+### Care taxonomy cleanup
+
+Selected care sidecars now accept benchmark-compatible implementation outputs:
+
+```text
+ZORG-CL-* care references -> NL_CLIENT_REFERENCE accepted where appropriate
+care department/location references -> NL_ADDRESS accepted where appropriate
+care role/person labels -> NL_LEGAL_PARTY_NAME accepted as person-name output where appropriate
+```
+
+This is benchmark taxonomy cleanup only. Spans and source text are unchanged.
+
+### Dedup/counting cleanup
+
+The runner now deduplicates predictions for diagnostic accounting using:
+
+```text
+text
+entity_type
+start
+end
+source
+```
+
+Deduplication applies before document comparison and to wrong-type, preserve-term, known-trap and false-positive accounting.
+
+### Email behavior
+
+The runner now adds benchmark-only `EMAIL_ADDRESS` predictions for synthetic email fixtures. These predictions use source:
+
+```text
+benchmark_builtin
+```
+
+This is not a product recognizer and does not change app behavior.
 
 ---
 
-## 5. Dutch legal and care coverage status
+## 5. Current coverage status
 
 | Area | Current state | Risk status |
 |---|---|---|
 | Dutch legal reference baseline | Present and normal assertions after pattern fix | Reduced for listed samples |
 | CLM / phone confusion | Baseline assertion plus multiple gold sidecar labels | Reduced for documented samples |
-| Role-word preservation | Baseline assertions plus legal/care preserve terms; artifact showed 0 preserve-term hits | Diagnostically measurable, not production-proof |
+| Role-word preservation | Baseline assertions plus legal/care preserve terms; first artifact showed 0 preserve-term hits | Diagnostically measurable, not production-proof |
 | Over-masking role structure | Baseline assertion and expanded role seeds | Diagnostically measurable, not production-proof |
 | Legal false-positive traps | Expanded corpus includes legal articles, dates, times, money, page/attachment labels | Diagnostically measurable |
-| Care references | Expanded corpus includes client, dossier, incident, BIG-like, room/department, medication and device examples | Measurable, but taxonomy/mapping needs cleanup |
-| Person names | Many missed in artifact | Open recognizer/mapping risk |
-| Email | Missed in artifact | Open runner/coverage risk |
-| Address/IBAN/case reference mapping | Detected values currently reported as wrong/missed in some cases | Open runner mapping risk |
-| Diagnostic runner | Present | Improves measurement, not trust claim |
+| Care references | Expanded corpus includes client, dossier, incident, BIG-like, room/department, medication and device examples | Measurable; taxonomy cleanup added |
+| Person names | `NL_LEGAL_PARTY_NAME` now maps to `PERSON` in benchmark | Improved diagnostic mapping, not product claim |
+| Email | Benchmark-only email predictions added | Improved diagnostic runner behavior, not product recognizer |
+| Address/IBAN/case reference mapping | Mapping cleanup added | Improved diagnostic mapping |
+| Diagnostic runner | Present and cleaned | Improves measurement, not trust claim |
 | Diagnostic report artifact | Present and reviewed | Improves evidence visibility, not trust claim |
 | Quantitative recall | Diagnostic only until thresholds exist | Open |
 | Quantitative precision | Diagnostic only until thresholds exist | Open |
@@ -162,7 +182,7 @@ Main likely causes:
 
 ## 6. Review/export regression boundaries
 
-The runner/report workflow and artifact review do not execute or change the app, review table, export, Scrub Key or reinsert behavior.
+The runner/report cleanup does not execute or change the app, review table, export, Scrub Key or reinsert behavior.
 
 Existing boundary tests remain relevant:
 
@@ -190,11 +210,11 @@ Open risks:
 - No formal recall threshold exists.
 - No formal precision threshold exists.
 - No production-blocking benchmark gate exists.
-- Runner/report metrics are diagnostic only.
+- Runner/report metrics remain diagnostic only.
 - Helper-level candidate surfacing is not the same as automatic recognition.
 - Candidate rows require human review and are not automatically applied.
 - Corpus coverage is expanded but still not exhaustive.
-- First artifact review shows raw metrics are noisy because of mapping/taxonomy/deduplication issues.
+- A cleaned artifact still needs to be generated and reviewed before threshold planning.
 - DOCX metadata, comments, tracked changes, headers and footers remain separate document-hygiene risks.
 - The app must not claim: `alle juridische nummers worden altijd herkend`.
 
@@ -216,21 +236,16 @@ Alle juridische nummers worden altijd herkend.
 
 Do not start threshold planning yet.
 
-The reviewed artifact is structurally valid and useful, but its current raw counts are too noisy for threshold planning because several findings likely come from runner mapping, benchmark taxonomy or duplicate prediction accounting.
-
 Recommended next workpackage after separate approval:
 
 ```text
-WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX
+WP_RECALL_BENCHMARK_REPORT_REVIEW_2
 ```
 
-Suggested scope:
+Purpose:
 
-- review/repair runner mapping for `NL_ADDRESS`, `NL_IBAN`, `NL_CASE_REFERENCE`, and possibly `NL_LEGAL_PARTY_NAME`;
-- dedupe repeated predictions before wrong-type/false-positive reporting;
-- clarify care-reference acceptable types for `ZORG-CL-*` values;
-- investigate absent `EMAIL_ADDRESS` predictions;
-- keep the report diagnostic only;
-- do not add product UI, recognizer/pattern product changes, thresholds or gates.
+- review the cleaned artifact output;
+- confirm whether mapping/dedup/taxonomy cleanup reduced noise;
+- decide whether threshold planning is now reasonable.
 
-Only after that should `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` be considered.
+Only after a cleaned artifact review should `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` be considered.
