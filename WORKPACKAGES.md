@@ -1,5 +1,7 @@
 # SolidPrivacy Scrub — Workpackages
 
+Repository: `solidprivacy-nl/scrub`.
+
 ## Required start sequence
 
 Read in order:
@@ -9,55 +11,29 @@ Read in order:
 3. `WORKPACKAGES.md`
 4. `CHANGELOG.md`
 
-Repository: `solidprivacy-nl/scrub`.
+## Claim rule
 
-## Required workpackage claim check
-
-Before starting implementation or documentation changes, check:
-
-```text
-workpackage_claims/
-```
-
-If a claim file for the same workpackage exists with status `in_progress`, stop and report that another worker has already claimed the package.
-
-If no claim exists, create a new claim file before changing code, tests, UI, export, schema or shared documentation. Use `GitHub.create_file` so a duplicate claim fails instead of silently overwriting another worker.
-
-When done, update the same claim file to `completed` and include the final commit/PR, handover path, tests/checks and next step.
+Before starting a package, check `workpackage_claims/`. If a claim for the same workpackage is already `in_progress`, stop and report the collision. If no claim exists, create one before changing files. When done, update the claim with status, final commit, handover path, validation and next step.
 
 ## Current status
 
 ```text
-WP28C — completed after Actions/HF/app verification for Scrub Key warning/reinsert acknowledgement UI.
-WP35-WP39 — DOCX hygiene line completed through clean-DOCX export policy.
-WP39D — completed after Actions/HF/app verification; DOCX hygiene audit UI is report-only and app-verified.
-WP_REVIEW_HIGHLIGHT_TOGGLE_IMPLEMENTATION — completed after Actions/HF/app verification.
-WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK_VERIFY — completed after Actions/HF/app verification; hidden replacement helper panel closeout completed.
-WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION — completed after Actions/HF/app verification; first bounded source/processed side-by-side review surface is live.
-WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX — completed after Actions/HF/app verification; equal-height side-by-side panes with local processed-pane scrolling are live.
-WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE — completed isolated prototype-only concept and visually approved by coordinator.
-WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION — completed after later app verification evidence; synchronized scrolling remains active by default.
-WP_SIDE_BY_SIDE_REVIEW_CONSOLIDATION_DUTCH_SAMPLE — completed after later app verification evidence; one central side-by-side review is live with Dutch synthetic legal demo text.
-WP_REVIEW_SURFACE_CONTROL_CLEANUP — completed after later Actions/HF/app verification evidence; markers default on, marker label shortened, visible sync-scroll checkbox removed.
-WP_REVIEW_SURFACE_CONTROL_CLEANUP_TEST_REPAIR — completed after Actions/HF verification; stale assertions repaired after marker/sync-control cleanup.
-WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP — completed after Actions/HF/app verification by coordinator screenshot evidence; duplicate internal `Controleer de tekst` heading removed from the central side-by-side component.
-WP_REVIEW_TABLE_COLLAPSIBLE_CONTRACT_TESTS — completed after Actions/HF verification.
-WP_REVIEW_TABLE_COLLAPSIBLE_CANDIDATE_FILE — completed as inactive candidate file, later promoted and removed by cleanup.
-WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — completed after promotion/app verification; normal app flow now shows `Vervangtabel controleren — <items> items` as collapsed review-table section.
-WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — completed; temporary candidate/helper artifacts removed after verified promotion.
-WP_DUTCH_LEGAL_RECALL_GAP_TESTS — completed; tests-only baseline for known Dutch legal recall gaps.
-WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — completed; targeted candidate-scanner pattern fixes for Dutch legal references.
-WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed after coordinator Actions/HF/app verification evidence.
-WP_RECALL_SCORECARD_REFRESH — completed; recall/precision scorecard refreshed after Dutch legal recall fixes.
-WP_RECALL_GOLD_LABEL_CORPUS_SEED — completed; synthetic gold-label corpus seed added for future recall/precision benchmarking.
-WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — completed; synthetic gold-label corpus expanded for future recall/precision benchmarking.
-WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed; minimal diagnostic recall/precision runner added for synthetic gold-label corpus.
-WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed and coordinator-verified; corpus email-domain validator domain handling repaired after Actions failure.
-WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed and coordinator-verified; diagnostic recall benchmark report helper, workflow and artifact documentation added.
-WP_RECALL_BENCHMARK_REPORT_REVIEW — completed; first diagnostic report artifact reviewed and follow-up recommendation recorded.
-WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed and coordinator-verified; diagnostic report mapping/counting cleanup added.
-WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — completed; cleaned diagnostic report artifact reviewed and threshold-planning readiness recorded.
-WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
+WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — completed and verified.
+WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — completed.
+WP_DUTCH_LEGAL_RECALL_GAP_TESTS — completed.
+WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — completed.
+WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed and verified.
+WP_RECALL_SCORECARD_REFRESH — completed.
+WP_RECALL_GOLD_LABEL_CORPUS_SEED — completed.
+WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — completed.
+WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed.
+WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed and verified.
+WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed and verified.
+WP_RECALL_BENCHMARK_REPORT_REVIEW — completed.
+WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed and verified.
+WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — completed.
+WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — completed; planning-only threshold policy design added.
+WP_SERIAL_REVIEW_UI — completed and app-verified.
 ```
 
 ## Active product line
@@ -66,68 +42,26 @@ WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verificati
 Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 ```
 
-## Review UX / frontend status
+## Review UX / frontend baseline
 
-The working baseline remains:
+The review table remains source of truth and fallback. The normal app keeps one central side-by-side review surface, visible visual markers, the collapsible replacement table under `Vervangtabel controleren — <items> items`, Serial review, export/download and DOCX hygiene audit.
 
-```text
-table-first review table = source of truth and fallback
-```
-
-The normal app now uses:
-
-```text
-1. Voeg document of tekst toe
-2. Controleer de tekst: one central side-by-side review surface
-3. Controleer gevonden gegevens: review guidance remains visible, while the editable replacement table sits inside the collapsed `Vervangtabel controleren — <items> items` section
-4. Serial review / extra review aids
-5. Download opgeschoonde bestanden
-```
-
-The central review surface keeps:
-
-- a single outer step heading: `2. Controleer de tekst`;
-- no duplicate internal `Controleer de tekst` heading inside the side-by-side component;
-- brontekst left;
-- verwerkte/gecontroleerde tekst right;
-- synchronized scrolling as default behavior;
-- no visible sync-scroll checkbox;
-- visual markers default on;
-- review table as source of truth and fallback.
-
-The promoted collapsible review table keeps:
-
-- `3. Controleer gevonden gegevens` visible in the normal app flow;
-- the editable `replacement_editor` table under `Vervangtabel controleren — <items> items`;
-- collapsed default state with `expanded=False`;
-- `include`, `remember`, `find`, `replace_with` controls;
-- Dutch labels `Meenemen`, `Onthouden`, `Gevonden tekst`, `Vervangen door`;
-- export/download labels unchanged;
-- DOCX hygiene audit remains visible.
-
-Temporary candidate/helper artifacts no longer remain in the active repository after cleanup:
-
-- `presidio_streamlit_collapsible_candidate.py` removed;
-- `tests/test_review_table_collapsible_candidate_file.py` removed;
-- `review_table_collapsible_ui.py` removed.
+No current benchmark/planning package changes app behavior.
 
 ## Recall/benchmark status
 
-- Dutch legal recall pattern fixes improve review-candidate visibility only; they are not a complete automatic-recognition guarantee.
-- Gold-label corpus contains 4 legal source documents and 3 care source documents with `.gold.json` sidecars.
-- `tests/test_recall_gold_label_corpus_seed.py` validates sidecar JSON, source paths, offsets, labels, preserve terms and `@example.test` email domains.
-- `recall_benchmark_runner.py` loads sidecars, collects recognizer/candidate-scanner predictions when available and reports diagnostic exact/text-normalized/overlap matches.
-- `tests/test_recall_benchmark_runner_minimal.py` covers runner loading, normalization, mapping cleanup, deduplication, matching, preserve term hits, known trap hits and JSON-serializable corpus smoke reports.
-- `RECALL_BENCHMARK_RUNNER_MINIMAL.md` documents the diagnostic runner and its limitations.
-- `recall_benchmark_report.py` writes a diagnostic JSON report and Markdown summary to an explicit output directory.
-- `.github/workflows/recall-benchmark-report.yml` generates and uploads `diagnostic-recall-benchmark-report` as a GitHub Actions artifact.
-- `tests/test_recall_benchmark_report_artifact.py` covers report metadata, Markdown summary, file writing, no-threshold behavior and CLI smoke output.
-- `RECALL_BENCHMARK_REPORT_ARTIFACT.md` documents artifact usage and non-claim boundaries.
-- `RECALL_BENCHMARK_REPORT_REVIEW.md` reviews the first artifact output.
-- `RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md` documents the mapping/counting cleanup.
-- `RECALL_BENCHMARK_REPORT_REVIEW_2.md` reviews the cleaned artifact output.
+The diagnostic benchmark stack now includes:
 
-Cleaned artifact review summary:
+```text
+corpus/**/*.gold.json
+recall_benchmark_runner.py
+recall_benchmark_report.py
+.github/workflows/recall-benchmark-report.yml
+RECALL_BENCHMARK_REPORT_REVIEW_2.md
+RECALL_BENCHMARK_THRESHOLDS_PLAN.md
+```
+
+Cleaned artifact baseline:
 
 ```text
 document_count = 7
@@ -143,103 +77,52 @@ preserve_term_hit_count = 0
 known_trap_hit_count = 1
 ```
 
-Improvement versus first artifact:
+Threshold plan status:
 
 ```text
-matched_required_exact_count: 41 -> 56
-missed_required_count: 34 -> 18
-wrong_type_count: 11 -> 1
-false_positive_candidate_count: 8 -> 1
-preserve_term_hit_count: 0 -> 0
-known_trap_hit_count: 1 -> 1
+planning-only
+no CI gate
+no production blocking
+no threshold enforcement
+no product claim
 ```
 
-Interpretation:
+Remaining diagnostic gaps:
 
-- cleanup materially reduced mapping/counting noise;
-- remaining misses are concentrated in person names, care room/location references and one client-number example;
-- threshold planning is now reasonable as a planning-only package;
-- no production threshold, CI gate or product claim exists.
+```text
+14 missed PERSON labels
+3 missed MEDICAL_OR_CARE_REFERENCE care room/location labels
+1 missed/wrong CLIENT_NUMBER
+1 nested false-positive BSN-like hit inside a phone-like value
+1 known-trap care-location review signal
+```
 
 ## Verification evidence
 
-- Promotion branch used by coordinator: `test/collapsible-review-table`.
-- Promotion commit: `15f5173c893668566e9d62524ef4d0b5449f37b8` — `Promote collapsible review table candidate`.
-- GitHub Actions: `Tests #1074` completed successfully for the promotion commit.
-- Coordinator app screenshot confirmed the live app starts and shows the collapsed `Vervangtabel controleren — 16 items` section with side-by-side review, serial review, export/download and DOCX hygiene audit still visible.
-- Recall pattern verification coordinator evidence:
-  - `Tests #1115` for commit `e1e44b3` completed successfully.
-  - `Sync to Hugging Face Space #1116` for commit `e1e44b3` completed successfully.
-  - Hugging Face app screenshot shows the Space running without Script execution error.
-- Email-domain validator final repair coordinator evidence:
-  - `222ebb8` — Tests green.
-  - `8c84523` — Tests green / HF sync green.
-  - `927a564` — Tests green / HF sync green.
-- Diagnostic recall benchmark report artifact coordinator evidence:
-  - `a3df5c7` — `Diagnostic recall benchmark report #1` green.
-  - `31ee53b` — `Tests #1193` green.
-  - `31ee53b` — `Sync to Hugging Face Space #1204` green.
-  - Hugging Face app screenshot shows the Space running without Script execution error.
-- Diagnostic report artifact cleanup coordinator evidence:
-  - `59473fb` — `Tests #1218` green.
-  - `59473fb` — `Sync to Hugging Face Space #1228` green.
-  - Diagnostic recall benchmark report workflow green for relevant cleanup commits.
-  - Hugging Face app screenshot shows the Space running without Script execution error.
-- Cleaned artifact review used uploaded `recall_benchmark_report.json` and `recall_benchmark_summary.md` from `diagnostic-recall-benchmark-report`.
+Recent relevant verification evidence:
 
-Boundaries preserved:
+```text
+a3df5c7 — Diagnostic recall benchmark report #1 green
+31ee53b — Tests #1193 green
+31ee53b — Sync to Hugging Face Space #1204 green
+59473fb — Tests #1218 green
+59473fb — Sync to Hugging Face Space #1228 green
+Diagnostic recall benchmark report workflow green for relevant cleanup commits
+Hugging Face app screenshot showed running without Script execution error
+```
 
-- review table remains source of truth and fallback;
-- no replacement behavior change;
-- no Scrub Key change;
-- no export/download change;
-- no reinsert change;
-- no dependency change;
-- no cloud processing;
-- no real data;
-- no production threshold or blocking gate.
+`WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` is documentation-only and does not require app verification.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after separate approval: WP_RECALL_BENCHMARK_THRESHOLDS_PLAN.
-3. WP_RECALL_BENCHMARK_THRESHOLDS_PLAN must be planning-only: no CI gate, no production blocking, no threshold enforcement and no product claim.
-4. Remaining diagnostic backlog after threshold planning may include WP_RECALL_PERSON_NAME_COVERAGE_REVIEW, WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN and WP_CLIENT_REFERENCE_COVERAGE_REVIEW.
-5. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
+2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_COVERAGE_REVIEW.
+3. Alternative next packages: WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN, WP_CLIENT_REFERENCE_COVERAGE_REVIEW, WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS.
+4. A future gate route may be planned later as WP_RECALL_BENCHMARK_GATE_PLAN, but that is still planning and not implementation.
+5. If document/export risks dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
 ```
 
-## Blocked work
+## Boundaries
 
-Do not start yet without separate approval:
-
-```text
-new replacement UI implementation
-mutating replacement decision implementation
-automatic replacement
-additional Dutch legal recognizer/pattern rounds
-Scrub Key writes
-export blocking
-click-to-mark
-advanced editor
-full-document marking
-clean DOCX export blocking
-DOCX cleaner/removal
-production recall/precision gate
-```
-
-Also blocked until separate approval or later specs:
-
-- Scrub Key encryption implementation.
-- Scrub Key JSON schema migration.
-- Placeholder migration.
-- Robust placeholder generation in product flow.
-- DOCX comment/tracked-change removal.
-- Restored PDF output.
-- OCR.
-- Cloud document processing.
-- MSI implementation.
-- Broad document-centric Streamlit UI rewrite.
-- Separate frontend migration.
-- Professional document editor implementation.
-- Static highlight preview startup source mutation.
+Do not start UI, export/download, Scrub Key, reinsert, recognizer, candidate-scanner, benchmark-gate, local packaging or broad architecture work without separate coordinator approval and a dedicated workpackage.
