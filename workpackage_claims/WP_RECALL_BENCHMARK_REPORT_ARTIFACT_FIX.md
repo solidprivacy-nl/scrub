@@ -1,12 +1,13 @@
-status: completed
+status: completed_verified
 repository: solidprivacy-nl/scrub
 workpackage title: WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — Clean diagnostic recall benchmark report mapping and counting noise
 started timestamp: 2026-06-17 21:41 Europe/Amsterdam
 completed timestamp: 2026-06-17 21:41 Europe/Amsterdam
+verified timestamp: 2026-06-17 22:06 Europe/Amsterdam
 scope: benchmark/tooling/tests/documentation-only diagnostic runner/report cleanup
 boundaries: no product UI, no product recognizer changes, no app pattern fixes, no export, no Scrub Key, no reinsert changes, no thresholds, no production gate
 
-final commit SHA or PR link: 3fe3b9bd0330b146c64597642f40567e3ae70dff
+final commit SHA or PR link: 59473fb47fda6b6c6ac71d1fef0e4369a2be72f2
 handover path: handover/workpackages/20260617_2141_recall_benchmark_report_artifact_fix.md
 
 files added:
@@ -50,18 +51,17 @@ email behavior decision:
 - this is not a product recognizer and does not change app behavior
 
 tests/checks:
-- Local tests were not runnable because no local GitHub working tree is available in this environment.
+- Coordinator screenshot evidence shows green Tests runs for the cleanup commits, including Tests #1218 for commit 59473fb.
 - Updated tests/test_recall_benchmark_runner_minimal.py for mapping, care acceptable types, deduplication, matched-not-false-positive, and benchmark-only email behavior.
-- Required checks remain corpus validator, benchmark runner tests, report artifact tests, py_compile for runner/report/app, and diagnostic report generation.
+- Local tests were not runnable because no local GitHub working tree is available in this environment.
 
-GitHub Actions status: pending after final commit.
-diagnostic workflow/artifact status: pending after final commit.
-Hugging Face sync status: pending after final commit.
-app verification status: not required; benchmark/tooling/tests/documentation-only and no app behavior changed.
+GitHub Actions status: verified green by coordinator screenshot evidence. Tests #1218 for commit 59473fb green.
+diagnostic workflow/artifact status: verified green by coordinator screenshot evidence. Diagnostic recall benchmark report ran green for the relevant benchmark cleanup commits, including the mapping/dedup and care-taxonomy commits.
+Hugging Face sync status: verified green by coordinator screenshot evidence. Sync to Hugging Face Space #1228 for commit 59473fb green.
+app verification status: verified healthy by coordinator screenshot evidence. Hugging Face Space running without Script execution error; no app behavior change was expected.
 
 remaining gaps:
-- Cleaned artifact needs Actions/report workflow verification.
-- Cleaned artifact output needs review.
+- Cleaned artifact output still needs content review.
 - No accepted recall/precision thresholds.
 - No production benchmark gate.
 - Corpus is synthetic and not exhaustive.
@@ -71,4 +71,4 @@ remaining risks:
 - Future thresholds/gates require separate approval.
 - A product pattern-fix round should not start from raw artifact metrics without cleaned artifact review.
 
-next recommended step: first verify Tests, Sync to Hugging Face Space and Diagnostic recall benchmark report workflow/artifact. Then consider WP_RECALL_BENCHMARK_REPORT_REVIEW_2 after separate coordinator approval. Only after cleaned artifact review should WP_RECALL_BENCHMARK_THRESHOLDS_PLAN be considered.
+next recommended step: WP_RECALL_BENCHMARK_REPORT_REVIEW_2 after separate coordinator approval to review the cleaned artifact output. Only after cleaned artifact review should WP_RECALL_BENCHMARK_THRESHOLDS_PLAN be considered.
