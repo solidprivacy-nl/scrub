@@ -42,17 +42,20 @@ Current mitigations:
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the review-candidate layer for selected Dutch legal reference values.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY confirmed the implementation is scope-contained and coordinator evidence confirms Actions/HF/app verification for the closeout commit.
 - WP_RECALL_SCORECARD_REFRESH records the post-fix recall/precision status, evidence level and remaining benchmark gaps in `RECALL_PRECISION_SCORECARD.md`.
+- WP_RECALL_GOLD_LABEL_CORPUS_SEED adds the first synthetic source/sidecar corpus seed with exact gold-label offsets for future quantitative measurement.
 
 Gaps:
 
-- No complete gold-label sidecars for the corpus yet.
+- Only a small gold-label corpus seed exists; the full corpus is not complete yet.
 - No accepted production recall/precision threshold or production-blocking gate exists.
 - No production safety claim is supported.
 - Dutch legal reference gaps are reduced for selected helper-level review candidates, but this does not prove complete automatic classification for all Dutch legal references.
+- A benchmark runner still needs to compare analyzer/helper output with the gold sidecars.
 
 Recommended workpackages:
 
-- Later benchmark data package — complete gold-label sidecars.
+- Later approved package — minimal benchmark runner to compare predictions against the gold-label seed.
+- Later benchmark data package — expand gold-label sidecars.
 - Later gated package — accepted thresholds and regression gate.
 - Later approved package only if needed — second narrow Dutch legal pattern round after new verified gap evidence.
 
@@ -309,17 +312,19 @@ Current mitigations:
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the candidate scanner for case-number-shaped values with spaces and extra Dutch legal/admin context cues.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY statically confirmed that the implementation is context-bound, value-only and limited to the candidate helper/test layer.
 - Coordinator evidence confirms `Tests #1115`, `Sync to Hugging Face Space #1116` and app smoke verification are green for the verify closeout.
-- `RECALL_PRECISION_SCORECARD.md` now records current coverage status, CLM/phone risk reduction, role-word preservation evidence and open benchmark gaps.
+- `RECALL_PRECISION_SCORECARD.md` records current coverage status, CLM/phone risk reduction, role-word preservation evidence and open benchmark gaps.
+- WP_RECALL_GOLD_LABEL_CORPUS_SEED adds synthetic legal and care gold-label source/sidecar files, including `arts Jansen`-style preservation cases and care-reference examples.
 
 Gaps:
 
 - This first pattern round improves review candidates; it does not prove all recognizer/entity classifications are complete.
-- Broader production recall/precision thresholds and corpus sidecars remain future work.
+- Broader production recall/precision thresholds and a benchmark runner remain future work.
+- The corpus seed is intentionally small and needs expansion before broad claims can be made.
 - Role-word preservation still needs continued regression coverage as recognizers evolve.
-- `arts Jansen`-style cases still need broader benchmark coverage: role word preserved, identifying name masked.
 
 Recommended workpackages:
 
-- No immediate extra pattern round is required based on current coordinator verification evidence and scorecard refresh.
-- If verification later exposes remaining gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
-- Later benchmark package — expand gold-label sidecars for Dutch legal/care documents.
+- No immediate extra pattern round is required based on current coordinator verification evidence, scorecard refresh and corpus seed.
+- Later approved package — `WP_RECALL_BENCHMARK_RUNNER_MINIMAL` to compare analyzer/helper output against gold sidecars.
+- Later approved package — `WP_RECALL_GOLD_LABEL_CORPUS_EXPAND` for broader legal/care coverage.
+- If verification later exposes remaining detection gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
