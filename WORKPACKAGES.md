@@ -33,6 +33,7 @@ WP_RECALL_BENCHMARK_REPORT_REVIEW — completed.
 WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed and verified.
 WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — completed.
 WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — completed; planning-only threshold policy design added.
+WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — completed; PERSON-name coverage gaps reviewed and follow-up route planned.
 WP_SERIAL_REVIEW_UI — completed and app-verified.
 ```
 
@@ -59,6 +60,7 @@ recall_benchmark_report.py
 .github/workflows/recall-benchmark-report.yml
 RECALL_BENCHMARK_REPORT_REVIEW_2.md
 RECALL_BENCHMARK_THRESHOLDS_PLAN.md
+RECALL_PERSON_NAME_COVERAGE_REVIEW.md
 ```
 
 Cleaned artifact baseline:
@@ -77,13 +79,15 @@ preserve_term_hit_count = 0
 known_trap_hit_count = 1
 ```
 
-Threshold plan status:
+PERSON coverage review status:
 
 ```text
-planning-only
-no CI gate
-no production blocking
-no threshold enforcement
+14 missed PERSON labels classified
+no recognizer changes
+no candidate scanner changes
+no runner/report changes
+no thresholds
+no gate
 no product claim
 ```
 
@@ -111,16 +115,16 @@ Diagnostic recall benchmark report workflow green for relevant cleanup commits
 Hugging Face app screenshot showed running without Script execution error
 ```
 
-`WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` is documentation-only and does not require app verification.
+`WP_RECALL_PERSON_NAME_COVERAGE_REVIEW` is documentation-only and does not require app verification.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_COVERAGE_REVIEW.
-3. Alternative next packages: WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN, WP_CLIENT_REFERENCE_COVERAGE_REVIEW, WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS.
-4. A future gate route may be planned later as WP_RECALL_BENCHMARK_GATE_PLAN, but that is still planning and not implementation.
-5. If document/export risks dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
+2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_COVERAGE_TESTS.
+3. Alternative if design should come first: WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN.
+4. Other backlog candidates: WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN, WP_CLIENT_REFERENCE_COVERAGE_REVIEW, WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS.
+5. A future gate route may be planned later as WP_RECALL_BENCHMARK_GATE_PLAN, but that is still planning and not implementation.
 ```
 
 ## Boundaries
