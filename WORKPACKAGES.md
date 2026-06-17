@@ -55,7 +55,8 @@ WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed; minimal diagnostic recall/prec
 WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed and coordinator-verified; corpus email-domain validator domain handling repaired after Actions failure.
 WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed and coordinator-verified; diagnostic recall benchmark report helper, workflow and artifact documentation added.
 WP_RECALL_BENCHMARK_REPORT_REVIEW — completed; first diagnostic report artifact reviewed and follow-up recommendation recorded.
-WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed; diagnostic report mapping/counting cleanup added.
+WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed and coordinator-verified; diagnostic report mapping/counting cleanup added.
+WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — completed; cleaned diagnostic report artifact reviewed and threshold-planning readiness recorded.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -124,41 +125,47 @@ Temporary candidate/helper artifacts no longer remain in the active repository a
 - `RECALL_BENCHMARK_REPORT_ARTIFACT.md` documents artifact usage and non-claim boundaries.
 - `RECALL_BENCHMARK_REPORT_REVIEW.md` reviews the first artifact output.
 - `RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md` documents the mapping/counting cleanup.
+- `RECALL_BENCHMARK_REPORT_REVIEW_2.md` reviews the cleaned artifact output.
 
-Diagnostic cleanup added:
+Cleaned artifact review summary:
 
 ```text
-NL_ADDRESS -> ADDRESS
-NL_IBAN -> IBAN
-NL_CASE_REFERENCE -> CASE_NUMBER
-NL_LEGAL_PARTY_NAME -> PERSON
-EMAIL_ADDRESS -> EMAIL
-ZORG-CL-* care references accept NL_CLIENT_REFERENCE where appropriate
-care department/location labels accept NL_ADDRESS where appropriate
-benchmark-only email predictions use source benchmark_builtin
-prediction accounting dedupes repeated predictions by text/entity/start/end/source
+document_count = 7
+gold_label_count = 75
+prediction_count = 60
+matched_required_exact_count = 56
+matched_required_text_normalized_count = 57
+matched_required_overlap_count = 57
+missed_required_count = 18
+wrong_type_count = 1
+false_positive_candidate_count = 1
+preserve_term_hit_count = 0
+known_trap_hit_count = 1
 ```
 
-Boundaries:
+Improvement versus first artifact:
 
-- This is benchmark/report mapping only.
-- No product recognizers changed.
-- No candidate scanner changed.
-- No app behavior changed.
-- No thresholds or production gate added.
+```text
+matched_required_exact_count: 41 -> 56
+missed_required_count: 34 -> 18
+wrong_type_count: 11 -> 1
+false_positive_candidate_count: 8 -> 1
+preserve_term_hit_count: 0 -> 0
+known_trap_hit_count: 1 -> 1
+```
+
+Interpretation:
+
+- cleanup materially reduced mapping/counting noise;
+- remaining misses are concentrated in person names, care room/location references and one client-number example;
+- threshold planning is now reasonable as a planning-only package;
+- no production threshold, CI gate or product claim exists.
 
 ## Verification evidence
 
 - Promotion branch used by coordinator: `test/collapsible-review-table`.
 - Promotion commit: `15f5173c893668566e9d62524ef4d0b5449f37b8` — `Promote collapsible review table candidate`.
 - GitHub Actions: `Tests #1074` completed successfully for the promotion commit.
-- Coordinator local checks before artifact cleanup:
-  - `python -m py_compile presidio_streamlit.py`
-  - `python -m pytest -q tests/test_review_table_collapsible_candidate_file.py` — 5 passed before that temporary candidate-file test was removed
-  - `python -m pytest -q tests/test_review_table_collapsible_contract.py` — 11 passed
-  - `python -m pytest -q tests/test_side_by_side_review_ui_patch.py` — 15 passed
-  - `python -m pytest -q tests/test_side_by_side_review_consolidation_dutch_sample.py` — 7 passed
-  - `python -m pytest -q tests` — 545 passed
 - Coordinator app screenshot confirmed the live app starts and shows the collapsed `Vervangtabel controleren — 16 items` section with side-by-side review, serial review, export/download and DOCX hygiene audit still visible.
 - Recall pattern verification coordinator evidence:
   - `Tests #1115` for commit `e1e44b3` completed successfully.
@@ -173,8 +180,12 @@ Boundaries:
   - `31ee53b` — `Tests #1193` green.
   - `31ee53b` — `Sync to Hugging Face Space #1204` green.
   - Hugging Face app screenshot shows the Space running without Script execution error.
-- First artifact review used uploaded `recall_benchmark_report.json` and `recall_benchmark_summary.md` from `diagnostic-recall-benchmark-report`.
-- Diagnostic report artifact fix is pending Actions/HF/artifact verification.
+- Diagnostic report artifact cleanup coordinator evidence:
+  - `59473fb` — `Tests #1218` green.
+  - `59473fb` — `Sync to Hugging Face Space #1228` green.
+  - Diagnostic recall benchmark report workflow green for relevant cleanup commits.
+  - Hugging Face app screenshot shows the Space running without Script execution error.
+- Cleaned artifact review used uploaded `recall_benchmark_report.json` and `recall_benchmark_summary.md` from `diagnostic-recall-benchmark-report`.
 
 Boundaries preserved:
 
@@ -192,11 +203,10 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. First verify Tests, Sync to Hugging Face Space and Diagnostic recall benchmark report workflow for WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.
-3. Then review the cleaned artifact output with WP_RECALL_BENCHMARK_REPORT_REVIEW_2 after separate approval.
-4. Do not start threshold planning yet.
-5. Only after cleaned artifact review, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN.
-6. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
+2. Recommended next after separate approval: WP_RECALL_BENCHMARK_THRESHOLDS_PLAN.
+3. WP_RECALL_BENCHMARK_THRESHOLDS_PLAN must be planning-only: no CI gate, no production blocking, no threshold enforcement and no product claim.
+4. Remaining diagnostic backlog after threshold planning may include WP_RECALL_PERSON_NAME_COVERAGE_REVIEW, WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN and WP_CLIENT_REFERENCE_COVERAGE_REVIEW.
+5. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
 ```
 
 ## Blocked work
