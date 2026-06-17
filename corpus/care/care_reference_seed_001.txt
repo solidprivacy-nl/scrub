@@ -1,0 +1,6 @@
+Cliëntnummer ZORG-CL-2026-00441 staat in het synthetische zorgdossier.
+Zorgdossier ZD-2026-99121 bevat incidentnummer MIC-2026-0188.
+Kamer B-214 ligt op afdeling Magnolia 2.
+BIG-nummer 12345678901 hoort bij de arts in deze testtekst.
+Ahmed El Idrissi is contactpersoon en is bereikbaar via 06 33445566 en ahmed.elidrissi@example.test.
+De cliënt sprak met de zorgmedewerker en de verpleegkundige over het zorgplan.
