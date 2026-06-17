@@ -1,0 +1,6 @@
+Kamer C-118 ligt op afdeling Rozenhof 3.
+Incidentnummer MIC-2026-7720 hoort bij cliëntnummer ZORG-CL-2026-88990 en zorgdossier ZD-2026-55661.
+Medicatiecode MED-2026-AX91 en apparaat VOS-UNIT-2026-441 staan in het zorgplan.
+BIG-nummer 11223344556 hoort bij de arts in deze synthetische casus.
+Hassan El Amrani en Mila van Dijk zijn bereikbaar via hassan.elamrani@example.test en 06 55667788.
+De cliënt sprak met de verpleegkundige en de zorgmedewerker op de afdeling.
