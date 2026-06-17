@@ -76,6 +76,8 @@ EXPECTED_GOLD_SIDECARS = {
     "care/care_mixed_identifiers_seed_001.gold.json",
 }
 
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]*[A-Za-z0-9]")
+
 
 def _gold_files() -> list[Path]:
     return sorted(CORPUS_ROOT.glob("**/*.gold.json"))
@@ -124,7 +126,7 @@ def test_seed_corpus_uses_reserved_example_email_domain_only():
     found_emails = []
     for source_file in CORPUS_ROOT.glob("**/*.txt"):
         source_text = source_file.read_text(encoding="utf-8")
-        found_emails.extend(re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+", source_text))
+        found_emails.extend(EMAIL_RE.findall(source_text))
 
     assert found_emails, "Expected at least one synthetic email fixture in corpus/"
     for email in found_emails:
