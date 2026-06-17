@@ -1,8 +1,8 @@
-# Recall / Precision Scorecard — Dutch legal and care corpus refresh
+# Recall / Precision Scorecard — Dutch legal and care benchmark refresh
 
-Status: refreshed after Dutch legal pattern fixes, scorecard refresh, gold-label corpus seed and corpus expansion.  
+Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion and minimal diagnostic runner.  
 Repository: `solidprivacy-nl/scrub`.  
-Scope: benchmark/documentation-only. No product code, recognizer code, UI, export, Scrub Key or reinsert behavior is changed by this document.
+Scope: benchmark/documentation-only. No product UI, export, Scrub Key or reinsert behavior is changed by this document.
 
 ---
 
@@ -17,6 +17,7 @@ WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY
 WP_RECALL_SCORECARD_REFRESH
 WP_RECALL_GOLD_LABEL_CORPUS_SEED
 WP_RECALL_GOLD_LABEL_CORPUS_EXPAND
+WP_RECALL_BENCHMARK_RUNNER_MINIMAL
 ```
 
 Current evidence:
@@ -24,20 +25,21 @@ Current evidence:
 - Dutch legal recall gap tests exist and cover documented legal reference values and role-word preservation.
 - The first pattern-fix round improved `candidate_scanner.py` only.
 - Coordinator evidence confirmed GitHub Actions `Tests #1115`, `Sync to Hugging Face Space #1116` and live Hugging Face smoke check for the pattern-fix verify closeout.
-- A synthetic gold-label corpus seed was added.
-- The gold-label corpus is now expanded with additional legal/care documents and sidecars.
-- Quantitative recall/precision is still pending a runner and accepted thresholds.
+- A synthetic gold-label corpus seed was added and then expanded.
+- A minimal diagnostic benchmark runner now exists.
+- The runner compares sidecars with recognizer/candidate-scanner output and reports exact, text-normalized and overlap diagnostics.
+- Quantitative recall/precision remains diagnostic only until thresholds and gates are separately planned and approved.
 
 Important interpretation:
 
 ```text
 Improved candidate surfacing != complete automatic recognizer guarantee.
-Gold-label corpus != quantitative score until a runner compares predictions with sidecars.
+Gold-label corpus + diagnostic runner != production quality gate.
 ```
 
 ---
 
-## 2. Corpus inventory
+## 2. Corpus and runner inventory
 
 Current corpus inventory:
 
@@ -46,6 +48,9 @@ Legal documents: 4
 Care documents: 3
 Gold sidecars: 7
 Validator: tests/test_recall_gold_label_corpus_seed.py
+Runner: recall_benchmark_runner.py
+Runner tests: tests/test_recall_benchmark_runner_minimal.py
+Runner docs: RECALL_BENCHMARK_RUNNER_MINIMAL.md
 ```
 
 Corpus files:
@@ -67,46 +72,49 @@ corpus/care/care_mixed_identifiers_seed_001.txt
 corpus/care/care_mixed_identifiers_seed_001.gold.json
 ```
 
-Sidecars provide:
+---
 
-- `labels` with exact zero-based offsets;
-- `preserve_terms` for legal/care role and context terms;
-- `known_traps` for legal articles, dates, times, money amounts, role words, attachment/page labels and care-location ambiguity;
-- `synthetic: true` for every document;
-- `.example.test` email domains only.
+## 3. Runner status
+
+The minimal diagnostic runner:
+
+- loads all `.gold.json` sidecars under `corpus/`;
+- validates source offsets for labels and preserve terms;
+- collects predictions from Dutch recognizers and the candidate scanner when available;
+- safely falls back to an empty diagnostic prediction set if optional analyzer dependencies are unavailable;
+- compares labels and predictions using exact span, text-normalized and overlap diagnostic matching;
+- reports missed required labels, wrong-type hits, false-positive candidates, preserve-term hits and known-trap hits;
+- returns a JSON-serializable report with per-document and summary sections;
+- does not start Streamlit;
+- does not change product behavior;
+- does not enforce thresholds or gates.
+
+Runner command:
+
+```bash
+python recall_benchmark_runner.py --corpus corpus --json
+```
 
 ---
 
-## 3. Dutch legal reference coverage
+## 4. Dutch legal reference coverage
 
 | Value/risk group | Coverage status | Evidence | Scorecard interpretation |
 |---|---|---|---|
-| `10598721 / UE VERZ 26-441` | baseline + gold sidecar | `test_rechtspraak_like_rolnummers_are_detectable`; `legal_reference_seed_001.gold.json` | Reduced known rolnummer gap; ready for runner measurement. |
-| `ARN 26/4412` | baseline + gold sidecar | `test_rechtspraak_like_rolnummers_are_detectable`; `legal_reference_seed_001.gold.json` | Reduced Rechtspraak-like reference gap; broader variants now partly expanded. |
-| `ZK-WOON-55091`, `ZK-ARBEID-2026-0007`, `ZK-HUUR-2026-8831` | baseline + expanded corpus | legal reference, false-positive and mixed identifier sidecars | Better measurable case-number coverage. |
-| dossier references | baseline + expanded corpus | `DOS-2026-778899`, `DOS-ARBEID-2026-9911`, `DOS-HUUR-2026-1200` | Better measurable dossier-number coverage. |
-| client references | baseline + expanded corpus | `CL-FAM-55201`, `CLNT-2026-0042`, `CL-HUUR-2026-0009` | Better measurable client-reference coverage. |
-| claim references | baseline + expanded corpus | `CLM-2026-112233`, `CLM-2026-778899` | Specific CLM/phone confusion risk can now be measured across more than one sample. |
-| ECLI values | expanded corpus | `ECLI:NL:RBAMS:2026:1234`, `ECLI:NL:RBROT:2026:4455`, `ECLI:NL:RBDHA:2026:8821` | Better measurable ECLI coverage. |
-| legal false-positive traps | expanded corpus | articles, page, attachment, production, date, time, money amount | Better precision trap measurability. |
-
----
-
-## 4. CLM / phone-number risk
-
-The baseline explicitly checks that `CLM-2026-112233` is not treated as a phone entity. The expanded corpus now also includes `CLM-2026-778899`.
-
-Risk update:
-
-- Known CLM/phone confusion risk is reduced for documented samples.
-- Multiple CLM-style examples are now available for a future runner.
-- This still does not prove that every future legal reference resembling a phone number will always be classified correctly.
+| `10598721 / UE VERZ 26-441` | baseline + gold sidecar + runner-readable | `test_rechtspraak_like_rolnummers_are_detectable`; `legal_reference_seed_001.gold.json` | Reduced known rolnummer gap; measurable by runner. |
+| `ARN 26/4412` | baseline + gold sidecar + runner-readable | `test_rechtspraak_like_rolnummers_are_detectable`; `legal_reference_seed_001.gold.json` | Reduced Rechtspraak-like reference gap; measurable by runner. |
+| `ZK-WOON-55091`, `ZK-ARBEID-2026-0007`, `ZK-HUUR-2026-8831` | baseline + expanded corpus + runner-readable | legal reference, false-positive and mixed identifier sidecars | Better measurable case-number coverage. |
+| dossier references | baseline + expanded corpus + runner-readable | `DOS-2026-778899`, `DOS-ARBEID-2026-9911`, `DOS-HUUR-2026-1200` | Better measurable dossier-number coverage. |
+| client references | baseline + expanded corpus + runner-readable | `CL-FAM-55201`, `CLNT-2026-0042`, `CL-HUUR-2026-0009` | Better measurable client-reference coverage. |
+| claim references | baseline + expanded corpus + runner-readable | `CLM-2026-112233`, `CLM-2026-778899` | CLM/phone confusion can now be diagnosed across more than one sample. |
+| ECLI values | expanded corpus + runner-readable | three synthetic ECLI values | Better measurable ECLI coverage. |
+| legal false-positive traps | expanded corpus + runner-readable | articles, page, attachment, production, date, time, money amount | Better precision trap measurability. |
 
 ---
 
 ## 5. Role words / over-masking
 
-The baseline protects these role/context words from being treated as person values on their own:
+The runner can now report preserve-term hits when predictions overlap context terms such as:
 
 ```text
 slachtoffer
@@ -115,11 +123,6 @@ getuige
 eiser
 verweerder
 minderjarige
-```
-
-The expanded corpus adds or reinforces:
-
-```text
 cliënt
 zorgmedewerker
 verpleegkundige
@@ -129,7 +132,7 @@ kamer
 afdeling
 ```
 
-Role/name combinations now represented include:
+Role/name combinations represented in the corpus include:
 
 ```text
 arts Jansen
@@ -143,7 +146,7 @@ mantelzorger Fatima Zahra
 
 Risk update:
 
-- Role-word over-masking measurability is improved.
+- Role-word over-masking is now diagnostically measurable.
 - Legal/care meaning must remain readable.
 - Names next to role words should be detected as `PERSON`, while role words remain context.
 
@@ -151,7 +154,7 @@ Risk update:
 
 ## 6. Care coverage
 
-The expanded care corpus improves measurability for:
+The expanded care corpus and runner improve measurability for:
 
 - care client numbers;
 - zorgdossier references;
@@ -164,27 +167,11 @@ The expanded care corpus improves measurability for:
 - care role/name combinations;
 - person, phone and email direct identifiers.
 
-Examples now in sidecars:
-
-```text
-ZORG-CL-2026-00441
-ZORG-CL-2026-77881
-ZORG-CL-2026-88990
-ZD-2026-99121
-ZD-2026-11220
-ZD-2026-55661
-MIC-2026-0188
-MIC-2026-6612
-MIC-2026-7720
-MED-2026-AX91
-VOS-UNIT-2026-441
-```
-
 ---
 
 ## 7. Review/export regression boundaries
 
-The corpus expansion does not execute or change the app, analyzer, review table, export, Scrub Key or reinsert behavior.
+The runner does not execute or change the app, review table, export, Scrub Key or reinsert behavior.
 
 Existing boundary tests remain relevant:
 
@@ -201,7 +188,7 @@ Coverage summary:
 - Side-by-side review remains report/visual only.
 - No Scrub Key writes are introduced.
 - No reinsert behavior change is introduced.
-- Corpus tests do not run Presidio, Streamlit or anonymization output.
+- Runner tests do not start Streamlit or export flows.
 
 ---
 
@@ -209,10 +196,10 @@ Coverage summary:
 
 Open risks:
 
-- No benchmark runner exists yet.
 - No formal recall threshold exists.
 - No formal precision threshold exists.
 - No production-blocking benchmark gate exists.
+- Runner metrics are diagnostic only.
 - Helper-level candidate surfacing is not the same as automatic recognition.
 - Candidate rows require human review and are not automatically applied.
 - Corpus coverage is expanded but still not exhaustive.
@@ -222,7 +209,7 @@ Open risks:
 Allowed wording:
 
 ```text
-Nederlandse juridische referenties worden beter als review-kandidaat zichtbaar gemaakt wanneer automatische herkenning ze mist.
+De diagnostische runner vergelijkt huidige analyzer/helper-output met de synthetische gold-label corpus.
 ```
 
 Disallowed wording:
@@ -235,21 +222,21 @@ Alle juridische nummers worden altijd herkend.
 
 ## 9. Recommendation
 
-No immediate `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2` should start unless new concrete misses are demonstrated.
+No immediate `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2` should start unless runner output or later app/user testing demonstrates concrete misses.
 
 Recommended next options:
 
 ```text
-WP_RECALL_BENCHMARK_RUNNER_MINIMAL — compare sidecars with analyzer/helper output.
-WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — add more synthetic legal/care documents if coverage is still too thin.
-WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2 — only if concrete new recall gaps are found.
+WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — plan thresholds without enforcing them.
+WP_RECALL_BENCHMARK_REPORT_ARTIFACT — generate diagnostic report artifacts.
+WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — add more synthetic documents if coverage is thin.
 WP_DOCX_HYGIENE_RECALL_FOLLOWUP — if document/export risks now dominate.
 ```
 
 Most useful next benchmark step:
 
 ```text
-Build a minimal diagnostic runner before adding more pattern work.
+Plan diagnostic thresholds/reporting before any production gate.
 ```
 
 ---
@@ -260,12 +247,13 @@ Build a minimal diagnostic runner before adding more pattern work.
 |---|---|---|
 | Dutch legal reference baseline | Present and normal assertions after pattern fix | Reduced for listed samples |
 | CLM / phone confusion | Baseline assertion plus multiple gold sidecar labels | Reduced for documented samples |
-| Role-word preservation | Baseline assertions plus legal/care preserve terms | Reduced for documented samples |
-| Over-masking role structure | Baseline assertion and expanded role seeds | Reduced for documented samples |
-| Legal false-positive traps | Expanded corpus includes legal articles, dates, times, money, page/attachment labels | Improved precision measurability |
-| Care references | Expanded corpus includes client, dossier, incident, BIG-like, room/department, medication and device examples | Improved measurability |
+| Role-word preservation | Baseline assertions plus legal/care preserve terms | Diagnostically measurable |
+| Over-masking role structure | Baseline assertion and expanded role seeds | Diagnostically measurable |
+| Legal false-positive traps | Expanded corpus includes legal articles, dates, times, money, page/attachment labels | Diagnostically measurable |
+| Care references | Expanded corpus includes client, dossier, incident, BIG-like, room/department, medication and device examples | Diagnostically measurable |
 | Review/export regression | Covered by existing contract tests | Guarded, CI remains source of truth |
 | Gold-label corpus sidecars | 7 synthetic sidecars present | Improved measurability |
-| Quantitative recall | Not available until runner exists | Open |
-| Quantitative precision | Not available until runner exists | Open |
+| Diagnostic runner | Present | Improves measurement, not trust claim |
+| Quantitative recall | Diagnostic only until thresholds exist | Open |
+| Quantitative precision | Diagnostic only until thresholds exist | Open |
 | Production safety claim | Not supported | Must remain blocked |
