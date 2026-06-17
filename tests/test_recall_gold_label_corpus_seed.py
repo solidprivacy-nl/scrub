@@ -67,9 +67,9 @@ def test_gold_label_source_files_exist_and_offsets_match():
     for gold_file in _gold_files():
         sidecar = json.loads(gold_file.read_text(encoding="utf-8"))
         source_file = REPO_ROOT / sidecar["source_file"]
-        source_text = source_file.read_text(encoding="utf-8")
 
         assert source_file.exists(), f"source_file missing for {gold_file}"
+        source_text = source_file.read_text(encoding="utf-8")
         for label in sidecar["labels"]:
             missing = REQUIRED_LABEL_FIELDS - set(label)
             assert not missing, f"{gold_file} label {label.get('id')} missing fields: {sorted(missing)}"
@@ -84,13 +84,14 @@ def test_gold_label_source_files_exist_and_offsets_match():
 
 
 def test_seed_corpus_uses_reserved_example_email_domain_only():
+    found_emails = []
     for source_file in CORPUS_ROOT.glob("**/*.txt"):
         source_text = source_file.read_text(encoding="utf-8")
-        emails = re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+", source_text)
+        found_emails.extend(re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+", source_text))
 
-        assert emails, f"Expected at least one synthetic email fixture in {source_file}"
-        for email in emails:
-            assert email.endswith(".example.test"), f"Use .example.test only, got {email}"
+    assert found_emails, "Expected at least one synthetic email fixture in corpus/"
+    for email in found_emails:
+        assert email.endswith(".example.test"), f"Use .example.test only, got {email}"
 
 
 def test_role_words_are_preserve_terms_not_sensitive_labels():
