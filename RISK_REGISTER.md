@@ -48,6 +48,7 @@ Current mitigations:
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT adds a GitHub Actions artifact workflow so diagnostic runner output becomes visible as JSON and Markdown.
 - WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first artifact output and identified that raw counts were not ready for threshold planning because of mapping/taxonomy/deduplication noise.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX cleans diagnostic mapping/counting noise for `NL_ADDRESS`, `NL_IBAN`, `NL_CASE_REFERENCE`, `NL_LEGAL_PARTY_NAME`, care `ZORG-CL-*` references, selected care-location references, duplicate prediction accounting and benchmark-only email behavior.
+- WP_RECALL_BENCHMARK_REPORT_REVIEW_2 reviewed the cleaned artifact and confirmed the output is substantially less noisy: missed required 34 -> 18, wrong-type 11 -> 1 and false-positive candidates 8 -> 1.
 
 Gaps:
 
@@ -55,16 +56,16 @@ Gaps:
 - No production-blocking benchmark gate exists.
 - No production safety claim is supported.
 - Dutch legal and care reference gaps are now more measurable and visible, but this does not prove complete automatic classification for all reference types.
-- Cleaned artifact output still needs to be generated and reviewed before threshold planning.
-- Person/email/care-reference risks remain diagnostic until a cleaned artifact confirms improved accounting.
+- Cleaned artifact review still shows 18 missed required labels, concentrated in person names, care room/location references and one client-number example.
+- Remaining one false-positive candidate is a nested `NL_BSN` hit inside a phone-like value.
 - Runner/report output remains diagnostic until thresholds and governance are separately approved.
 
 Recommended workpackages:
 
-- Next approved package — `WP_RECALL_BENCHMARK_REPORT_REVIEW_2` to review the cleaned artifact output.
-- Later approved package — recall/precision thresholds plan without enforcement.
+- Next approved package — `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN`, planning-only without enforcement.
+- Later approved packages if needed — person-name coverage review, care-location/reference candidate planning and client-reference coverage review.
 - Later gated package — accepted thresholds and regression gate only after planning approval.
-- Later approved package only if needed — second narrow Dutch legal pattern round after new verified gap evidence.
+- Later approved package only if cleaned metrics expose narrow pattern gaps — second narrow Dutch legal pattern round.
 
 ---
 
@@ -286,17 +287,18 @@ Current mitigations:
 - Workers are instructed to use connector status tools first, then ask for coordinator evidence only when connector lookup is incomplete.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT adds a CI-visible diagnostic recall benchmark artifact workflow for benchmark evidence.
 - WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first uploaded artifact files and recorded findings in `RECALL_BENCHMARK_REPORT_REVIEW.md`.
-- WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX cleans report mapping/counting noise so the next artifact should be easier to interpret.
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX cleaned report mapping/counting noise.
+- WP_RECALL_BENCHMARK_REPORT_REVIEW_2 reviewed the cleaned artifact files and recorded threshold-planning readiness.
 
 Gaps:
 
 - Connector workflow-run lookup can still be incomplete for some push-triggered runs.
-- Cleaned report artifact still needs Actions verification and review.
 - No generalized automated status artifact exists yet.
+- Future threshold planning must remain planning-only until separate gate approval.
 
 Recommended workpackages:
 
-- Next approved benchmark package — `WP_RECALL_BENCHMARK_REPORT_REVIEW_2` after the cleaned artifact is available.
+- Next approved benchmark package — `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` as planning-only.
 - Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
@@ -326,7 +328,8 @@ Current mitigations:
 - WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds diagnostic reporting for missed labels, wrong types, false-positive candidates, preserve-term hits and known-trap hits.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT makes the diagnostic report visible as a JSON/Markdown CI artifact.
 - WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first artifact and confirmed `preserve_term_hit_count = 0`, but also found mapping/taxonomy/deduplication noise.
-- WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX adds runner/report mapping cleanup and duplicate accounting cleanup without changing product recognition.
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX added runner/report mapping cleanup and duplicate accounting cleanup without changing product recognition.
+- WP_RECALL_BENCHMARK_REPORT_REVIEW_2 confirmed the cleaned artifact is substantially less noisy and has `preserve_term_hit_count = 0`.
 
 Gaps:
 
@@ -334,12 +337,12 @@ Gaps:
 - Broader production recall/precision thresholds remain future work.
 - The corpus is improved but remains synthetic and not exhaustive.
 - Role-word preservation still needs continued regression coverage as recognizers evolve.
-- Cleaned artifact output still needs review before threshold planning.
+- Cleaned artifact still reports 14 missed person labels, 3 missed care room/location references and 1 missed/wrong client number.
 - Diagnostic runner/report output does not yet create a production gate.
 
 Recommended workpackages:
 
-- No immediate extra pattern round is recommended based on the first artifact review.
-- Next approved package — `WP_RECALL_BENCHMARK_REPORT_REVIEW_2` to review cleaned artifact output.
-- Later approved package — `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` before any threshold/gate implementation.
-- If future cleaned report output exposes remaining detection gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
+- No immediate extra pattern round is recommended based on the cleaned artifact review.
+- Next approved package — `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN`, planning-only before any threshold/gate implementation.
+- Later follow-ups if planning confirms need — person-name coverage review, care-location candidate planning and client-reference coverage review.
+- If future cleaned report output exposes narrow detection gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
