@@ -50,6 +50,7 @@ WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — completed; targeted candidate-scanner pa
 WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed after coordinator Actions/HF/app verification evidence.
 WP_RECALL_SCORECARD_REFRESH — completed; recall/precision scorecard refreshed after Dutch legal recall fixes.
 WP_RECALL_GOLD_LABEL_CORPUS_SEED — completed; synthetic gold-label corpus seed added for future recall/precision benchmarking.
+WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — completed; synthetic gold-label corpus expanded for future recall/precision benchmarking.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -104,35 +105,29 @@ Temporary candidate/helper artifacts no longer remain in the active repository a
 - `tests/test_review_table_collapsible_candidate_file.py` removed;
 - `review_table_collapsible_ui.py` removed.
 
-Dutch legal recall baseline now records known gaps without changing product behavior:
-
-- legal reference numbers and Rechtspraak-like rolnummers;
-- client, dossier and zaak numbers;
-- legal reference misclassification risk;
-- generic legal role-word preservation;
-- over-masking risk where legal role structure becomes unreadable.
-
 Dutch legal recall pattern fixes improve the review-candidate layer for:
 
 - case-number-shaped values with spaces, such as numeric court role references and `ARN 26/4412`-style references;
 - contextual codes near `client`, `cliënt`, `camera`, `incident` and `reparatie` context;
 - role-word preservation regression checks through direct helper-level tests.
 
-Recall/precision scorecard refresh now records:
+Recall/precision scorecard now records:
 
-- all known Dutch legal reference samples from the baseline;
-- CLM/phone-number risk reduction for `CLM-2026-112233`;
+- known Dutch legal reference samples from the baseline;
+- CLM/phone-number risk reduction;
 - role-word and over-masking protection status;
 - review/export boundary coverage;
-- open benchmark risks: no full gold sidecars, no formal recall/precision thresholds and no broad production safety claim.
+- gold-label corpus seed and expansion status;
+- open benchmark risks: no runner, no formal recall/precision thresholds and no broad production safety claim.
 
-Gold-label corpus seed now adds:
+Gold-label corpus now includes:
 
 - `corpus/README.md`;
-- synthetic legal reference source plus `.gold.json` sidecar;
-- synthetic legal role-preservation source plus `.gold.json` sidecar;
-- synthetic care reference source plus `.gold.json` sidecar;
-- `tests/test_recall_gold_label_corpus_seed.py` to validate sidecar JSON, source paths, offsets, labels, preserve terms and `.example.test` email domains.
+- 4 legal source documents with `.gold.json` sidecars;
+- 3 care source documents with `.gold.json` sidecars;
+- `tests/test_recall_gold_label_corpus_seed.py` to validate sidecar JSON, source paths, offsets, labels, preserve terms and `.example.test` email domains;
+- legal false-positive traps for articles, dates, times, money, page/attachment labels and exhibit labels;
+- care role-preservation and mixed care reference examples.
 
 Verification evidence:
 
@@ -147,18 +142,11 @@ Verification evidence:
   - `python -m pytest -q tests/test_side_by_side_review_consolidation_dutch_sample.py` — 7 passed
   - `python -m pytest -q tests` — 545 passed
 - Coordinator app screenshot confirmed the live app starts and shows the collapsed `Vervangtabel controleren — 16 items` section with side-by-side review, serial review, export/download and DOCX hygiene audit still visible.
-- Cleanup package removed only temporary candidate/helper artifacts; active behavior remains in `presidio_streamlit.py`.
-- Recall-gap baseline package added tests only; no product-code, recognizer, UI, export/download, Scrub Key or reinsert behavior changed.
-- Recall pattern fixes touched only helper-level candidate scanning and tests; no UI/export/Scrub Key/reinsert behavior changed.
-- Recall pattern verification static pass: changed files and test coverage were confirmed through GitHub connector.
-- Coordinator external verification for `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY`:
+- Recall pattern verification coordinator evidence:
   - `Tests #1115` for commit `e1e44b3` completed successfully.
   - `Sync to Hugging Face Space #1116` for commit `e1e44b3` completed successfully.
-  - Earlier `Sync to Hugging Face Space #1112` for commit `ca5cb3f` failed, but was superseded by later successful sync evidence.
   - Hugging Face app screenshot shows the Space running without Script execution error.
-  - App screenshot confirms `2. Controleer de tekst`, side-by-side review, `3. Controleer gevonden gegevens`, collapsed `Vervangtabel controleren — 16 items`, Serial review, export/download buttons and DOCX hygiene audit remain visible.
-- Scorecard refresh added `RECALL_PRECISION_SCORECARD.md`; no product code or user-facing app behavior changed.
-- Gold-label corpus seed added synthetic corpus/sidecars and a sidecar-integrity test only; no runner or product behavior changed.
+- Scorecard/corpus packages added benchmark documentation/data/tests only; no product code or user-facing app behavior changed.
 
 Boundaries preserved:
 
@@ -175,10 +163,9 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, scorecard refresh and corpus seed.
+2. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, scorecard refresh and expanded corpus.
 3. If quantitative measurement is now desired, consider WP_RECALL_BENCHMARK_RUNNER_MINIMAL after separate approval.
-4. If more data is desired before a runner, consider WP_RECALL_GOLD_LABEL_CORPUS_EXPAND after separate approval.
-5. Alternative risk step after separate approval: WP_DOCX_HYGIENE_RECALL_FOLLOWUP.
+4. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
 ```
 
 ## Blocked work
