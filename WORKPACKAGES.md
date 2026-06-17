@@ -52,7 +52,8 @@ WP_RECALL_SCORECARD_REFRESH — completed; recall/precision scorecard refreshed 
 WP_RECALL_GOLD_LABEL_CORPUS_SEED — completed; synthetic gold-label corpus seed added for future recall/precision benchmarking.
 WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — completed; synthetic gold-label corpus expanded for future recall/precision benchmarking.
 WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed; minimal diagnostic recall/precision runner added for synthetic gold-label corpus.
-WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed; corpus email-domain validator punctuation handling repaired after Actions failure.
+WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed and coordinator-verified; corpus email-domain validator domain handling repaired after Actions failure.
+WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed; diagnostic recall benchmark report helper, workflow and artifact documentation added.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -111,11 +112,14 @@ Recall/benchmark status:
 
 - Dutch legal recall pattern fixes improve review-candidate visibility only; they are not a complete automatic-recognition guarantee.
 - Gold-label corpus contains 4 legal source documents and 3 care source documents with `.gold.json` sidecars.
-- `tests/test_recall_gold_label_corpus_seed.py` validates sidecar JSON, source paths, offsets, labels, preserve terms and `.example.test` email domains.
-- The corpus email-domain validator now avoids capturing sentence-final punctuation after synthetic `.example.test` addresses.
-- `recall_benchmark_runner.py` now loads sidecars, collects recognizer/candidate-scanner predictions when available and reports diagnostic exact/text-normalized/overlap matches.
+- `tests/test_recall_gold_label_corpus_seed.py` validates sidecar JSON, source paths, offsets, labels, preserve terms and `@example.test` email domains.
+- `recall_benchmark_runner.py` loads sidecars, collects recognizer/candidate-scanner predictions when available and reports diagnostic exact/text-normalized/overlap matches.
 - `tests/test_recall_benchmark_runner_minimal.py` covers runner loading, normalization, matching, preserve term hits, known trap hits and JSON-serializable corpus smoke reports.
 - `RECALL_BENCHMARK_RUNNER_MINIMAL.md` documents the diagnostic runner and its limitations.
+- `recall_benchmark_report.py` now writes a diagnostic JSON report and Markdown summary to an explicit output directory.
+- `.github/workflows/recall-benchmark-report.yml` generates and uploads `diagnostic-recall-benchmark-report` as a GitHub Actions artifact.
+- `tests/test_recall_benchmark_report_artifact.py` covers report metadata, Markdown summary, file writing, no-threshold behavior and CLI smoke output.
+- `RECALL_BENCHMARK_REPORT_ARTIFACT.md` documents artifact usage and non-claim boundaries.
 
 Verification evidence:
 
@@ -134,8 +138,12 @@ Verification evidence:
   - `Tests #1115` for commit `e1e44b3` completed successfully.
   - `Sync to Hugging Face Space #1116` for commit `e1e44b3` completed successfully.
   - Hugging Face app screenshot shows the Space running without Script execution error.
-- Scorecard/corpus/runner packages added benchmark documentation/data/tooling/tests only; no product UI or user-facing app behavior changed.
-- Email-domain validator repair is tests-only and awaits Actions/HF confirmation for repair commit `151749e4e4f19d3eaeffce52b1b83a807e15df5c`.
+- Email-domain validator final repair coordinator evidence:
+  - `222ebb8` — Tests green.
+  - `8c84523` — Tests green / HF sync green.
+  - `927a564` — Tests green / HF sync green.
+- Scorecard/corpus/runner/report packages added benchmark documentation/data/tooling/tests only; no product UI or user-facing app behavior changed.
+- Report artifact workflow verification is pending for the report-artifact package commits.
 
 Boundaries preserved:
 
@@ -153,10 +161,10 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. First verify the email-domain validator repair commit in GitHub Actions and Hugging Face sync.
-3. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, expanded corpus and diagnostic runner.
-4. If benchmark governance is now desired, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN after separate approval.
-5. If CI/reporting artifacts are desired first, consider WP_RECALL_BENCHMARK_REPORT_ARTIFACT after separate approval.
+2. First verify GitHub Actions, Hugging Face sync and the new Diagnostic recall benchmark report artifact for this package.
+3. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, expanded corpus, diagnostic runner and report artifact.
+4. If benchmark governance is now desired, consider WP_RECALL_BENCHMARK_REPORT_REVIEW after separate approval.
+5. If threshold planning is desired after reviewing artifact output, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN after separate approval.
 6. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
 ```
 
