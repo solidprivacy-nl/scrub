@@ -77,6 +77,7 @@ EXPECTED_GOLD_SIDECARS = {
 }
 
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]*[A-Za-z0-9]")
+RESERVED_EMAIL_DOMAIN = "example.test"
 
 
 def _gold_files() -> list[Path]:
@@ -130,7 +131,8 @@ def test_seed_corpus_uses_reserved_example_email_domain_only():
 
     assert found_emails, "Expected at least one synthetic email fixture in corpus/"
     for email in found_emails:
-        assert email.endswith(".example.test"), f"Use .example.test only, got {email}"
+        _, domain = email.rsplit("@", 1)
+        assert domain == RESERVED_EMAIL_DOMAIN, f"Use @{RESERVED_EMAIL_DOMAIN} only, got {email}"
 
 
 def test_role_and_context_terms_are_preserved_not_sensitive_labels():
