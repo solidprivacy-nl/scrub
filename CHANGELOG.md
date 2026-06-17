@@ -1,77 +1,33 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — Fix corpus email-domain validator punctuation handling
-
-Status: completed as tests-only repair after GitHub Actions failure.
-
-Files added:
-
-- `workpackage_claims/WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX.md`
-- `handover/workpackages/20260617_0920_recall_benchmark_runner_email_domain_test_fix.md`
-
-Files changed:
-
-- `tests/test_recall_gold_label_corpus_seed.py`
-- `CHANGELOG.md`
-
-Summary:
-
-- GitHub Actions screenshots showed `tests/test_recall_gold_label_corpus_seed.py::test_seed_corpus_uses_reserved_example_email_domain_only` failing.
-- Root cause: the email regex captured sentence-final punctuation, for example `sami.elamrani@example.test.`.
-- Fixed the validator regex so email matches end on an alphanumeric domain character.
-- This keeps `.example.test` enforcement intact while allowing normal punctuation after synthetic email addresses.
-
-Tests/checks:
-
-- Local tests were not runnable in this environment because no local GitHub working tree is available.
-- GitHub Actions should be used as final execution proof for repair commit `151749e4e4f19d3eaeffce52b1b83a807e15df5c`.
-
-Intentionally not changed:
-
-- No product code change.
-- No runner logic change.
-- No recognizer/pattern fix.
-- No UI/export/Scrub Key/reinsert behavior change.
-
-Next recommended step:
-
-- Wait for GitHub Actions Tests and Hugging Face sync for the repair commit before starting a new workpackage.
-
-## WP_RECALL_BENCHMARK_RUNNER_MINIMAL — Add minimal diagnostic recall/precision runner
+## WP_RECALL_BENCHMARK_REPORT_ARTIFACT — Add diagnostic recall benchmark report artifact
 
 Status: completed as benchmark/tooling/tests/documentation-only.
 
 Files added:
 
-- `recall_benchmark_runner.py`
-- `tests/test_recall_benchmark_runner_minimal.py`
-- `RECALL_BENCHMARK_RUNNER_MINIMAL.md`
-- `workpackage_claims/WP_RECALL_BENCHMARK_RUNNER_MINIMAL.md`
-- `handover/workpackages/20260617_0912_recall_benchmark_runner_minimal.md`
+- `recall_benchmark_report.py`
+- `tests/test_recall_benchmark_report_artifact.py`
+- `.github/workflows/recall-benchmark-report.yml`
+- `RECALL_BENCHMARK_REPORT_ARTIFACT.md`
+- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT.md`
+- `handover/workpackages/20260617_1758_recall_benchmark_report_artifact.md`
 
 Files changed:
 
-- `corpus/legal/legal_false_positive_traps_seed_001.gold.json`
-- `corpus/legal/legal_mixed_identifiers_seed_001.gold.json`
-- `corpus/care/care_role_preservation_seed_001.gold.json`
-- `corpus/care/care_mixed_identifiers_seed_001.gold.json`
 - `RECALL_PRECISION_SCORECARD.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_RECALL_BENCHMARK_RUNNER_MINIMAL.md`
+- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT.md`
 
 Summary:
 
-- Added a minimal diagnostic recall/precision runner for the synthetic gold-label corpus.
-- Runner loads sidecars, validates source offsets and collects recognizer/candidate-scanner predictions when optional dependencies are available.
-- Runner compares gold labels and predictions using exact span, text-normalized and overlap diagnostic matching.
-- Runner reports missed required labels, wrong-type hits, false-positive candidates, preserve-term hits and known-trap hits.
-- Added a JSON-serializable per-document and summary report structure.
-- Added optional CLI usage: `python recall_benchmark_runner.py --corpus corpus --json`.
-- Added tests for sidecar loading, normalization, matching, preserve-term hits, known-trap hits and corpus smoke reporting.
-- Corrected four expanded-corpus sidecars using recalculated offsets so the sidecar validator can check the expanded corpus reliably.
-- Added `RECALL_BENCHMARK_RUNNER_MINIMAL.md` documenting purpose, inputs, outputs, matching rules, entity mapping, limitations and non-claim boundaries.
+- Added `recall_benchmark_report.py` to wrap the existing diagnostic runner output with metadata and write JSON/Markdown report files.
+- Added `tests/test_recall_benchmark_report_artifact.py` for JSON metadata, Markdown summary, file writing, no-threshold behavior and CLI smoke output.
+- Added `.github/workflows/recall-benchmark-report.yml` to run corpus/runner/report tests, generate the diagnostic report and upload it as an artifact.
+- Added `RECALL_BENCHMARK_REPORT_ARTIFACT.md` documenting the workflow, artifact files, report formats, interpretation and non-claim boundaries.
+- Updated the recall/precision scorecard, workpackage status and risk register to record that runner output is now CI-visible as a diagnostic artifact.
 
 Tests/checks:
 
@@ -79,10 +35,12 @@ Tests/checks:
 - Required test commands remain:
   - `python -m pytest -q tests/test_recall_gold_label_corpus_seed.py`
   - `python -m pytest -q tests/test_recall_benchmark_runner_minimal.py`
+  - `python -m pytest -q tests/test_recall_benchmark_report_artifact.py`
   - `python -m py_compile recall_benchmark_runner.py`
+  - `python -m py_compile recall_benchmark_report.py`
   - `python -m py_compile presidio_streamlit.py`
-  - `python -m pytest -q tests/test_dutch_legal_recall_gap_baseline.py`
-- GitHub Actions and Hugging Face sync should be used as final execution proof for the benchmark/tooling commits.
+- GitHub Actions and Hugging Face sync should be used as final execution proof.
+- The new `Diagnostic recall benchmark report` workflow should be checked for artifact availability.
 
 Intentionally not changed:
 
@@ -100,21 +58,50 @@ Intentionally not changed:
 - No Docker/startup/dependency change.
 - No cloud processing.
 - No production threshold or blocking gate.
+- No product accuracy claim.
 
 Remaining gaps:
 
-- Runner metrics are diagnostic only.
+- Report metrics are diagnostic only.
 - No accepted recall/precision thresholds exist yet.
 - No production-blocking benchmark gate exists yet.
 - Corpus coverage is improved but still synthetic and not exhaustive.
-- No product accuracy claim is supported.
+- First artifact output still needs review.
 
 Next recommended step:
 
 - Do not automatically start another pattern-fix round.
-- Consider `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` after separate approval if benchmark governance is next.
-- Consider `WP_RECALL_BENCHMARK_REPORT_ARTIFACT` after separate approval if CI artifacts/diagnostic reports are desired first.
+- Verify the new report workflow and artifact first.
+- Consider `WP_RECALL_BENCHMARK_REPORT_REVIEW` after separate approval if the first artifact output should be reviewed.
+- Consider `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` only after artifact review and separate approval.
 - Consider `WP_DOCX_HYGIENE_RECALL_FOLLOWUP` if document/export risks now dominate.
+
+## WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — Fix corpus email-domain validator punctuation handling
+
+Status: completed as tests-only repair after GitHub Actions failure.
+
+Summary:
+
+- GitHub Actions screenshots showed `tests/test_recall_gold_label_corpus_seed.py::test_seed_corpus_uses_reserved_example_email_domain_only` failing.
+- Root cause: the email regex first captured sentence-final punctuation, and the assertion then used the wrong suffix check for `@example.test` domains.
+- Final repair checks the email domain after `@` equals `example.test`.
+- Coordinator evidence later showed the repair commits green in Tests and HF sync.
+
+## WP_RECALL_BENCHMARK_RUNNER_MINIMAL — Add minimal diagnostic recall/precision runner
+
+Status: completed as benchmark/tooling/tests/documentation-only.
+
+Summary:
+
+- Added a minimal diagnostic recall/precision runner for the synthetic gold-label corpus.
+- Runner loads sidecars, validates source offsets and collects recognizer/candidate-scanner predictions when optional dependencies are available.
+- Runner compares gold labels and predictions using exact span, text-normalized and overlap diagnostic matching.
+- Runner reports missed required labels, wrong-type hits, false-positive candidates, preserve-term hits and known-trap hits.
+- Added a JSON-serializable per-document and summary report structure.
+- Added optional CLI usage: `python recall_benchmark_runner.py --corpus corpus --json`.
+- Added tests for sidecar loading, normalization, matching, preserve-term hits, known-trap hits and corpus smoke reporting.
+- Corrected four expanded-corpus sidecars using recalculated offsets so the sidecar validator can check the expanded corpus reliably.
+- Added `RECALL_BENCHMARK_RUNNER_MINIMAL.md` documenting purpose, inputs, outputs, matching rules, entity mapping, limitations and non-claim boundaries.
 
 ## WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — Expand synthetic gold-label corpus
 
