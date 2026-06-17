@@ -1,21 +1,87 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_RECALL_BENCHMARK_REPORT_REVIEW — Review first diagnostic recall benchmark artifact
+## WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — Clean diagnostic recall benchmark report mapping/counting
 
-Status: completed as review/documentation-only.
+Status: completed as benchmark/tooling/tests/documentation-only.
 
 Files added:
 
-- `RECALL_BENCHMARK_REPORT_REVIEW.md`
-- `handover/workpackages/20260617_2116_recall_benchmark_report_review.md`
+- `RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md`
+- `handover/workpackages/20260617_2141_recall_benchmark_report_artifact_fix.md`
 
 Files changed:
 
+- `recall_benchmark_runner.py`
+- `tests/test_recall_benchmark_runner_minimal.py`
+- `corpus/care/care_reference_seed_001.gold.json`
+- `corpus/care/care_role_preservation_seed_001.gold.json`
+- `corpus/care/care_mixed_identifiers_seed_001.gold.json`
 - `RECALL_PRECISION_SCORECARD.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_REVIEW.md`
+- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md`
+
+Summary:
+
+- Cleaned diagnostic runner/report mapping and counting noise found in the first artifact review.
+- Added benchmark/report mappings for `NL_ADDRESS`, `NL_IBAN`, `NL_CASE_REFERENCE`, `NL_LEGAL_PARTY_NAME` and `EMAIL_ADDRESS`.
+- Added benchmark-only email predictions with source `benchmark_builtin` so synthetic `@example.test` email labels are not missed merely because the runner does not instantiate Presidio default recognizers.
+- Added prediction deduplication for report accounting by text/entity/start/end/source.
+- Deduplication now applies before document comparison and to wrong-type, false-positive, preserve-term and known-trap accounting.
+- Clarified selected care corpus acceptable entity types for `ZORG-CL-*`, care department/location values and legal-party-name person-name output.
+- Added tests for mapping cleanup, care reference acceptable type handling, deduplication, matched-prediction false-positive prevention and benchmark-only email behavior.
+- Added `RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md` documenting mapping changes, dedup changes, email behavior and remaining diagnostic limitations.
+
+Tests/checks:
+
+- Local tests were not runnable in this environment because there is no local GitHub working tree available for pytest/py_compile execution.
+- Required checks remain:
+  - `python -m pytest -q tests/test_recall_gold_label_corpus_seed.py`
+  - `python -m pytest -q tests/test_recall_benchmark_runner_minimal.py`
+  - `python -m pytest -q tests/test_recall_benchmark_report_artifact.py`
+  - `python -m py_compile recall_benchmark_runner.py`
+  - `python -m py_compile recall_benchmark_report.py`
+  - `python -m py_compile presidio_streamlit.py`
+  - `python recall_benchmark_report.py --corpus corpus --output output/recall_benchmark --strict`
+- GitHub Actions and the Diagnostic recall benchmark report workflow should be used as execution proof.
+
+Intentionally not changed:
+
+- No `presidio_streamlit.py` change.
+- No `candidate_scanner.py` change.
+- No `dutch_recognizers.py` change.
+- No product recognizer/pattern fix.
+- No product UI change.
+- No review table change.
+- No side-by-side change.
+- No export/download behavior change.
+- No Scrub Key behavior change.
+- No reinsert behavior change.
+- No DOCX/PDF flow change.
+- No Docker/startup/dependency change.
+- No cloud processing.
+- No production threshold or blocking gate.
+- No product accuracy claim.
+
+Remaining gaps:
+
+- Cleaned artifact still needs GitHub Actions/report artifact verification.
+- Cleaned artifact output still needs review before threshold planning.
+- No accepted recall/precision thresholds exist yet.
+- No production-blocking benchmark gate exists yet.
+- Corpus coverage is improved but still synthetic and not exhaustive.
+
+Next recommended step:
+
+- Do not start threshold planning yet.
+- First verify Tests, Sync to Hugging Face Space and the Diagnostic recall benchmark report workflow.
+- Then consider `WP_RECALL_BENCHMARK_REPORT_REVIEW_2` after separate approval to review cleaned artifact output.
+- Only after cleaned artifact review, consider `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN`.
+
+## WP_RECALL_BENCHMARK_REPORT_REVIEW — Review first diagnostic recall benchmark artifact
+
+Status: completed as review/documentation-only.
 
 Artifact reviewed:
 
@@ -31,48 +97,9 @@ Main findings:
 - Raw metrics are likely inflated by runner mapping, acceptable-type taxonomy and duplicate prediction accounting issues.
 - Likely mapping/taxonomy follow-ups include `NL_ADDRESS`, `NL_IBAN`, `NL_CASE_REFERENCE`, `NL_LEGAL_PARTY_NAME`, care `ZORG-CL-*` values and absent email predictions.
 
-Tests/checks:
-
-- Local tests were not runnable in this environment because there is no local GitHub working tree available.
-- This package is review/documentation-only.
-- Previous coordinator evidence remains the execution proof for the artifact workflow:
-  - `a3df5c7` — `Diagnostic recall benchmark report #1` green.
-  - `31ee53b` — `Tests #1193` green.
-  - `31ee53b` — `Sync to Hugging Face Space #1204` green.
-
-Intentionally not changed:
-
-- No product code change.
-- No `presidio_streamlit.py` change.
-- No `candidate_scanner.py` change.
-- No `dutch_recognizers.py` change.
-- No `recall_benchmark_runner.py` change.
-- No `recall_benchmark_report.py` change.
-- No workflow change.
-- No recognizer/pattern fix.
-- No UI/export/Scrub Key/reinsert behavior change.
-- No thresholds.
-- No production gate.
-- No product accuracy claim.
-
-Next recommended step:
-
-- Do not start threshold planning yet.
-- Recommended next after separate approval: `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX`.
-- Only after mapping/dedup/taxonomy cleanup, consider `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN`.
-
 ## WP_RECALL_BENCHMARK_REPORT_ARTIFACT — Add diagnostic recall benchmark report artifact
 
 Status: completed and coordinator-verified as benchmark/tooling/tests/documentation-only.
-
-Files added:
-
-- `recall_benchmark_report.py`
-- `tests/test_recall_benchmark_report_artifact.py`
-- `.github/workflows/recall-benchmark-report.yml`
-- `RECALL_BENCHMARK_REPORT_ARTIFACT.md`
-- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT.md`
-- `handover/workpackages/20260617_1758_recall_benchmark_report_artifact.md`
 
 Summary:
 
