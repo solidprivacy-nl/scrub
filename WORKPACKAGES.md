@@ -51,6 +51,7 @@ WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed after coordinator Actio
 WP_RECALL_SCORECARD_REFRESH — completed; recall/precision scorecard refreshed after Dutch legal recall fixes.
 WP_RECALL_GOLD_LABEL_CORPUS_SEED — completed; synthetic gold-label corpus seed added for future recall/precision benchmarking.
 WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — completed; synthetic gold-label corpus expanded for future recall/precision benchmarking.
+WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed; minimal diagnostic recall/precision runner added for synthetic gold-label corpus.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -105,29 +106,14 @@ Temporary candidate/helper artifacts no longer remain in the active repository a
 - `tests/test_review_table_collapsible_candidate_file.py` removed;
 - `review_table_collapsible_ui.py` removed.
 
-Dutch legal recall pattern fixes improve the review-candidate layer for:
+Recall/benchmark status:
 
-- case-number-shaped values with spaces, such as numeric court role references and `ARN 26/4412`-style references;
-- contextual codes near `client`, `cliënt`, `camera`, `incident` and `reparatie` context;
-- role-word preservation regression checks through direct helper-level tests.
-
-Recall/precision scorecard now records:
-
-- known Dutch legal reference samples from the baseline;
-- CLM/phone-number risk reduction;
-- role-word and over-masking protection status;
-- review/export boundary coverage;
-- gold-label corpus seed and expansion status;
-- open benchmark risks: no runner, no formal recall/precision thresholds and no broad production safety claim.
-
-Gold-label corpus now includes:
-
-- `corpus/README.md`;
-- 4 legal source documents with `.gold.json` sidecars;
-- 3 care source documents with `.gold.json` sidecars;
-- `tests/test_recall_gold_label_corpus_seed.py` to validate sidecar JSON, source paths, offsets, labels, preserve terms and `.example.test` email domains;
-- legal false-positive traps for articles, dates, times, money, page/attachment labels and exhibit labels;
-- care role-preservation and mixed care reference examples.
+- Dutch legal recall pattern fixes improve review-candidate visibility only; they are not a complete automatic-recognition guarantee.
+- Gold-label corpus contains 4 legal source documents and 3 care source documents with `.gold.json` sidecars.
+- `tests/test_recall_gold_label_corpus_seed.py` validates sidecar JSON, source paths, offsets, labels, preserve terms and `.example.test` email domains.
+- `recall_benchmark_runner.py` now loads sidecars, collects recognizer/candidate-scanner predictions when available and reports diagnostic exact/text-normalized/overlap matches.
+- `tests/test_recall_benchmark_runner_minimal.py` covers runner loading, normalization, matching, preserve term hits, known trap hits and JSON-serializable corpus smoke reports.
+- `RECALL_BENCHMARK_RUNNER_MINIMAL.md` documents the diagnostic runner and its limitations.
 
 Verification evidence:
 
@@ -146,7 +132,7 @@ Verification evidence:
   - `Tests #1115` for commit `e1e44b3` completed successfully.
   - `Sync to Hugging Face Space #1116` for commit `e1e44b3` completed successfully.
   - Hugging Face app screenshot shows the Space running without Script execution error.
-- Scorecard/corpus packages added benchmark documentation/data/tests only; no product code or user-facing app behavior changed.
+- Scorecard/corpus/runner packages added benchmark documentation/data/tooling/tests only; no product UI or user-facing app behavior changed.
 
 Boundaries preserved:
 
@@ -157,15 +143,17 @@ Boundaries preserved:
 - no reinsert change;
 - no dependency change;
 - no cloud processing;
-- no real data.
+- no real data;
+- no production threshold or blocking gate.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Do not start a new feature automatically.
-2. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, scorecard refresh and expanded corpus.
-3. If quantitative measurement is now desired, consider WP_RECALL_BENCHMARK_RUNNER_MINIMAL after separate approval.
-4. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
+2. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, expanded corpus and diagnostic runner.
+3. If benchmark governance is now desired, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN after separate approval.
+4. If CI/reporting artifacts are desired first, consider WP_RECALL_BENCHMARK_REPORT_ARTIFACT after separate approval.
+5. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
 ```
 
 ## Blocked work
@@ -184,6 +172,7 @@ advanced editor
 full-document marking
 clean DOCX export blocking
 DOCX cleaner/removal
+production recall/precision gate
 ```
 
 Also blocked until separate approval or later specs:
