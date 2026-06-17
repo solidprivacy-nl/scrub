@@ -1,0 +1,9 @@
+Zaaknummer 10598721 / UE VERZ 26-441 staat in deze synthetische beschikking.
+Ook zaak ARN 26/4412 en zaakreferentie ZK-WOON-55091 worden genoemd.
+De clientreferentie is CL-FAM-55201 en het clientnummer is CLNT-2026-0042.
+Dossiernummer DOS-2026-778899 hoort bij interne klantreferentie WR-KLANT-2026-7712.
+Factuur FACT-2026-4481, camera CAM-MAAS-2026-0518, incident INC-2026-0912 en reparatie REP-2026-4410 staan in het dossier.
+Claimreferentie CLM-2026-112233 hoort bij ECLI:NL:RBAMS:2026:1234.
+mr. Noor van Dijk bespreekt dit met Sami El Amrani via 06-12345678 en sami.elamrani@example.test.
+Correspondentieadres: Parklaan 188, 3512 ZX Utrecht.
+Trap: artikel 7:669 BW en bedrag EUR 250,00 mogen geen zaaknummer worden.
