@@ -44,20 +44,21 @@ Current mitigations:
 - WP_RECALL_SCORECARD_REFRESH records the post-fix recall/precision status, evidence level and remaining benchmark gaps in `RECALL_PRECISION_SCORECARD.md`.
 - WP_RECALL_GOLD_LABEL_CORPUS_SEED added the first synthetic source/sidecar corpus seed with exact gold-label offsets for future quantitative measurement.
 - WP_RECALL_GOLD_LABEL_CORPUS_EXPAND expanded the synthetic gold-label corpus to cover more legal/care reference values, false-positive traps and role-preservation cases.
+- WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds a diagnostic runner that compares analyzer/helper predictions against the expanded gold-label corpus.
 
 Gaps:
 
-- No benchmark runner exists yet.
-- No accepted production recall/precision threshold or production-blocking gate exists.
+- No accepted production recall/precision threshold exists.
+- No production-blocking benchmark gate exists.
 - No production safety claim is supported.
-- Dutch legal and care reference gaps are more measurable, but this does not prove complete automatic classification for all reference types.
-- A benchmark runner still needs to compare analyzer/helper output with the gold sidecars.
+- Dutch legal and care reference gaps are now more measurable, but this does not prove complete automatic classification for all reference types.
+- Runner output is diagnostic until thresholds and governance are separately approved.
 
 Recommended workpackages:
 
-- Later approved package — minimal benchmark runner to compare predictions against the expanded gold-label corpus.
-- Later benchmark data package — expand gold-label sidecars again only if needed after runner results.
-- Later gated package — accepted thresholds and regression gate.
+- Later approved package — recall/precision thresholds plan without enforcement.
+- Later approved package — benchmark report artifact for CI diagnostics.
+- Later gated package — accepted thresholds and regression gate only after planning approval.
 - Later approved package only if needed — second narrow Dutch legal pattern round after new verified gap evidence.
 
 ---
@@ -314,18 +315,21 @@ Current mitigations:
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY statically confirmed that the implementation is context-bound, value-only and limited to the candidate helper/test layer.
 - Coordinator evidence confirms `Tests #1115`, `Sync to Hugging Face Space #1116` and app smoke verification are green for the verify closeout.
 - `RECALL_PRECISION_SCORECARD.md` records current coverage status, CLM/phone risk reduction, role-word preservation evidence and open benchmark gaps.
-- WP_RECALL_GOLD_LABEL_CORPUS_SEED added synthetic legal and care gold-label source/sidecar files, including `arts Jansen`-style preservation cases and care-reference examples.
+- WP_RECALL_GOLD_LABEL_CORPUS_SEED added synthetic legal and care gold-label source/sidecar files, including role/name preservation cases and care-reference examples.
 - WP_RECALL_GOLD_LABEL_CORPUS_EXPAND added legal false-positive traps, legal mixed identifiers, care role-preservation examples and care mixed identifiers.
+- WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds diagnostic reporting for missed labels, wrong types, false-positive candidates, preserve-term hits and known-trap hits.
 
 Gaps:
 
 - This first pattern round improves review candidates; it does not prove all recognizer/entity classifications are complete.
-- Broader production recall/precision thresholds and a benchmark runner remain future work.
+- Broader production recall/precision thresholds remain future work.
 - The corpus is improved but remains synthetic and not exhaustive.
 - Role-word preservation still needs continued regression coverage as recognizers evolve.
+- Diagnostic runner output does not yet create a production gate.
 
 Recommended workpackages:
 
-- No immediate extra pattern round is required based on current coordinator verification evidence, scorecard refresh and expanded corpus.
-- Later approved package — `WP_RECALL_BENCHMARK_RUNNER_MINIMAL` to compare analyzer/helper output against gold sidecars.
+- No immediate extra pattern round is required based on current coordinator verification evidence, expanded corpus and diagnostic runner.
+- Later approved package — `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` before any threshold/gate implementation.
+- Later approved package — `WP_RECALL_BENCHMARK_REPORT_ARTIFACT` for CI-visible diagnostic reports.
 - If verification later exposes remaining detection gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
