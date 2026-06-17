@@ -1,6 +1,6 @@
 # Recall / Precision Scorecard — Dutch legal and care benchmark refresh
 
-Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion, minimal diagnostic runner, diagnostic report artifact, first artifact review, report artifact cleanup and cleaned artifact review.  
+Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion, diagnostic runner/report artifact, artifact cleanup, cleaned artifact review and planning-only threshold design.  
 Repository: `solidprivacy-nl/scrub`.  
 Scope: benchmark/documentation-only. No product UI, export, Scrub Key or reinsert behavior is changed by this document.
 
@@ -22,6 +22,7 @@ WP_RECALL_BENCHMARK_REPORT_ARTIFACT
 WP_RECALL_BENCHMARK_REPORT_REVIEW
 WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX
 WP_RECALL_BENCHMARK_REPORT_REVIEW_2
+WP_RECALL_BENCHMARK_THRESHOLDS_PLAN
 ```
 
 Current evidence:
@@ -31,16 +32,19 @@ Current evidence:
 - A synthetic gold-label corpus seed was added and then expanded.
 - A minimal diagnostic benchmark runner exists.
 - A diagnostic report artifact workflow exists and was coordinator-verified green.
-- The first diagnostic report artifact output was reviewed in `RECALL_BENCHMARK_REPORT_REVIEW.md`.
+- The first diagnostic report artifact output was reviewed.
 - Diagnostic artifact mapping/counting cleanup was implemented.
-- The cleaned diagnostic artifact output was reviewed in `RECALL_BENCHMARK_REPORT_REVIEW_2.md`.
-- Quantitative recall/precision remains diagnostic only until thresholds and gates are separately planned and approved.
+- The cleaned diagnostic artifact output was reviewed.
+- `RECALL_BENCHMARK_THRESHOLDS_PLAN.md` now defines a planning-only threshold policy direction.
+- No thresholds are enforced.
+- No production gate exists.
+- No product claim is supported.
 
 Important interpretation:
 
 ```text
 Improved candidate surfacing != complete automatic recognizer guarantee.
-Gold-label corpus + diagnostic runner + report artifact + cleanup + review != production quality gate.
+Gold-label corpus + diagnostic runner + report artifact + cleanup + threshold plan != production quality gate.
 ```
 
 ---
@@ -62,6 +66,7 @@ Report docs: RECALL_BENCHMARK_REPORT_ARTIFACT.md
 First report review: RECALL_BENCHMARK_REPORT_REVIEW.md
 Report cleanup docs: RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md
 Cleaned report review: RECALL_BENCHMARK_REPORT_REVIEW_2.md
+Threshold plan: RECALL_BENCHMARK_THRESHOLDS_PLAN.md
 Report artifact: diagnostic-recall-benchmark-report
 ```
 
@@ -89,63 +94,34 @@ Diagnostic interpretation:
 - Mapping/counting cleanup materially improved benchmark signal quality.
 - The cleaned artifact is structurally valid and substantially less noisy.
 - Remaining misses now look more like real coverage/taxonomy/product-risk questions than report-accounting bugs.
-- Threshold planning is now reasonable as a planning-only package, but no thresholds or gates have been accepted yet.
+- Planning-only threshold design is now documented.
+- No accepted thresholds or gates exist yet.
 
 ---
 
-## 4. Diagnostic cleanup completed
+## 4. Threshold planning status
 
-Cleanup completed in `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX`:
+`WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` completed planning-only.
 
-### Mapping cleanup
-
-The diagnostic runner now maps/accepts:
+Status:
 
 ```text
-NL_ADDRESS -> ADDRESS
-NL_IBAN -> IBAN
-NL_CASE_REFERENCE -> CASE_NUMBER
-NL_LEGAL_PARTY_NAME -> PERSON
-EMAIL_ADDRESS -> EMAIL
+No thresholds enforced.
+No production gate created.
+No release blocking added.
+No product safety claim added.
+Cleaned artifact supports planning-only threshold design.
 ```
 
-This is benchmark/report mapping only and does not change product recognition behavior.
+The plan defines:
 
-### Care taxonomy cleanup
+- metric meanings;
+- hard versus soft diagnostic interpretation;
+- planning baseline, warning threshold, release review threshold and future blocking threshold categories;
+- class-specific planning for person names, legal references, care references, client numbers, email, phone, IBAN, BSN, address/location, preserve terms and known traps;
+- mandatory conditions before any future gate.
 
-Selected care sidecars now accept benchmark-compatible implementation outputs:
-
-```text
-ZORG-CL-* care references -> NL_CLIENT_REFERENCE accepted where appropriate
-care department/location references -> NL_ADDRESS accepted where appropriate
-care role/person labels -> NL_LEGAL_PARTY_NAME accepted as person-name output where appropriate
-```
-
-This is benchmark taxonomy cleanup only. Spans and source text are unchanged.
-
-### Dedup/counting cleanup
-
-The runner now deduplicates predictions for diagnostic accounting using:
-
-```text
-text
-entity_type
-start
-end
-source
-```
-
-Deduplication applies before document comparison and to wrong-type, preserve-term, known-trap and false-positive accounting.
-
-### Email behavior
-
-The runner now adds benchmark-only `EMAIL_ADDRESS` predictions for synthetic email fixtures. These predictions use source:
-
-```text
-benchmark_builtin
-```
-
-This is not a product recognizer and does not change app behavior.
+A future blocking gate is explicitly not allowed until a separate approved workpackage.
 
 ---
 
@@ -165,15 +141,16 @@ This is not a product recognizer and does not change app behavior.
 | Client references | 1 remaining missed/wrong client reference `CL-HUUR-2026-0009` | Open coverage risk |
 | Diagnostic runner | Present and cleaned | Improves measurement, not trust claim |
 | Diagnostic report artifact | Present and reviewed twice | Improves evidence visibility, not trust claim |
-| Quantitative recall | Planning-only thresholds now reasonable, no accepted thresholds yet | Open |
-| Quantitative precision | Planning-only thresholds now reasonable, no accepted thresholds yet | Open |
+| Threshold planning | Planning-only policy exists | No enforcement; risk remains open |
+| Quantitative recall | Planning-only thresholds possible later | Open |
+| Quantitative precision | Planning-only thresholds possible later | Open |
 | Production safety claim | Not supported | Must remain blocked |
 
 ---
 
 ## 6. Review/export regression boundaries
 
-The runner/report cleanup and artifact reviews do not execute or change the app, review table, export, Scrub Key or reinsert behavior.
+The runner/report cleanup, artifact reviews and threshold planning do not execute or change the app, review table, export, Scrub Key or reinsert behavior.
 
 Existing boundary tests remain relevant:
 
@@ -198,8 +175,8 @@ Boundaries still preserved:
 
 Open risks:
 
-- No formal recall threshold exists.
-- No formal precision threshold exists.
+- No formal accepted recall threshold exists.
+- No formal accepted precision threshold exists.
 - No production-blocking benchmark gate exists.
 - Runner/report metrics remain diagnostic only.
 - Helper-level candidate surfacing is not the same as automatic recognition.
@@ -212,13 +189,17 @@ Open risks:
 Allowed wording:
 
 ```text
-De diagnostische runner vergelijkt huidige analyzer/helper-output met de synthetische gold-label corpus en maakt dat zichtbaar als CI-artifact.
+De diagnostische benchmark helpt regressies zichtbaar te maken op een synthetische corpus.
+De output ondersteunt engineeringbeslissingen, maar vervangt geen menselijke review.
 ```
 
 Disallowed wording:
 
 ```text
+Alle persoonsgegevens worden altijd gevonden.
 Alle juridische nummers worden altijd herkend.
+De app is veilig voor productie zonder menselijke review.
+De benchmark bewijst production readiness.
 ```
 
 ---
@@ -228,30 +209,23 @@ Alle juridische nummers worden altijd herkend.
 Recommended next workpackage after separate approval:
 
 ```text
-WP_RECALL_BENCHMARK_THRESHOLDS_PLAN
-```
-
-Scope must remain planning-only:
-
-```text
-no CI gate
-no production blocking
-no threshold enforcement
-no product claim
-```
-
-The plan should explicitly incorporate the remaining gaps:
-
-- 14 missed `PERSON` labels;
-- 3 missed `MEDICAL_OR_CARE_REFERENCE` care room/location labels;
-- 1 missed/wrong `CLIENT_NUMBER` label;
-- 1 nested false-positive `NL_BSN` inside a phone-like value;
-- 1 known-trap care-location review signal.
-
-Possible later follow-ups after threshold planning:
-
-```text
 WP_RECALL_PERSON_NAME_COVERAGE_REVIEW
+```
+
+Alternative next packages depending on coordinator priority:
+
+```text
 WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN
 WP_CLIENT_REFERENCE_COVERAGE_REVIEW
+WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS
 ```
+
+No follow-up package should start automatically.
+
+A future gate path may be planned later, but only as a separate planning package first:
+
+```text
+WP_RECALL_BENCHMARK_GATE_PLAN
+```
+
+`WP_RECALL_BENCHMARK_GATE_PLAN` is still planning, not gate implementation.
