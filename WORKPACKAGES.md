@@ -55,6 +55,7 @@ WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed; minimal diagnostic recall/prec
 WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed and coordinator-verified; corpus email-domain validator domain handling repaired after Actions failure.
 WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed and coordinator-verified; diagnostic recall benchmark report helper, workflow and artifact documentation added.
 WP_RECALL_BENCHMARK_REPORT_REVIEW — completed; first diagnostic report artifact reviewed and follow-up recommendation recorded.
+WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed; diagnostic report mapping/counting cleanup added.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -115,35 +116,36 @@ Temporary candidate/helper artifacts no longer remain in the active repository a
 - Gold-label corpus contains 4 legal source documents and 3 care source documents with `.gold.json` sidecars.
 - `tests/test_recall_gold_label_corpus_seed.py` validates sidecar JSON, source paths, offsets, labels, preserve terms and `@example.test` email domains.
 - `recall_benchmark_runner.py` loads sidecars, collects recognizer/candidate-scanner predictions when available and reports diagnostic exact/text-normalized/overlap matches.
-- `tests/test_recall_benchmark_runner_minimal.py` covers runner loading, normalization, matching, preserve term hits, known trap hits and JSON-serializable corpus smoke reports.
+- `tests/test_recall_benchmark_runner_minimal.py` covers runner loading, normalization, mapping cleanup, deduplication, matching, preserve term hits, known trap hits and JSON-serializable corpus smoke reports.
 - `RECALL_BENCHMARK_RUNNER_MINIMAL.md` documents the diagnostic runner and its limitations.
 - `recall_benchmark_report.py` writes a diagnostic JSON report and Markdown summary to an explicit output directory.
 - `.github/workflows/recall-benchmark-report.yml` generates and uploads `diagnostic-recall-benchmark-report` as a GitHub Actions artifact.
 - `tests/test_recall_benchmark_report_artifact.py` covers report metadata, Markdown summary, file writing, no-threshold behavior and CLI smoke output.
 - `RECALL_BENCHMARK_REPORT_ARTIFACT.md` documents artifact usage and non-claim boundaries.
 - `RECALL_BENCHMARK_REPORT_REVIEW.md` reviews the first artifact output.
+- `RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.md` documents the mapping/counting cleanup.
 
-First artifact review findings:
+Diagnostic cleanup added:
 
 ```text
-document_count = 7
-gold_label_count = 75
-prediction_count = 61
-matched_required_exact_count = 41
-missed_required_count = 34
-wrong_type_count = 11
-false_positive_candidate_count = 8
-preserve_term_hit_count = 0
-known_trap_hit_count = 1
+NL_ADDRESS -> ADDRESS
+NL_IBAN -> IBAN
+NL_CASE_REFERENCE -> CASE_NUMBER
+NL_LEGAL_PARTY_NAME -> PERSON
+EMAIL_ADDRESS -> EMAIL
+ZORG-CL-* care references accept NL_CLIENT_REFERENCE where appropriate
+care department/location labels accept NL_ADDRESS where appropriate
+benchmark-only email predictions use source benchmark_builtin
+prediction accounting dedupes repeated predictions by text/entity/start/end/source
 ```
 
-Interpretation:
+Boundaries:
 
-- Artifact integrity passed.
-- Report output is useful for engineering review.
-- Raw counts are not ready for threshold planning.
-- Several findings are likely runner mapping, acceptable-entity taxonomy or duplicate prediction reporting issues.
-- Preserve-term hits are currently 0, which is a positive diagnostic signal but not production proof.
+- This is benchmark/report mapping only.
+- No product recognizers changed.
+- No candidate scanner changed.
+- No app behavior changed.
+- No thresholds or production gate added.
 
 ## Verification evidence
 
@@ -172,6 +174,7 @@ Interpretation:
   - `31ee53b` — `Sync to Hugging Face Space #1204` green.
   - Hugging Face app screenshot shows the Space running without Script execution error.
 - First artifact review used uploaded `recall_benchmark_report.json` and `recall_benchmark_summary.md` from `diagnostic-recall-benchmark-report`.
+- Diagnostic report artifact fix is pending Actions/HF/artifact verification.
 
 Boundaries preserved:
 
@@ -189,10 +192,10 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. Do not start threshold planning yet.
-3. No immediate Dutch legal pattern-fix Round2 is recommended based on the first artifact review.
-4. Recommended next after separate approval: WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.
-5. Only after runner/report mapping and deduplication cleanup, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN.
+2. First verify Tests, Sync to Hugging Face Space and Diagnostic recall benchmark report workflow for WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.
+3. Then review the cleaned artifact output with WP_RECALL_BENCHMARK_REPORT_REVIEW_2 after separate approval.
+4. Do not start threshold planning yet.
+5. Only after cleaned artifact review, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN.
 6. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
 ```
 
