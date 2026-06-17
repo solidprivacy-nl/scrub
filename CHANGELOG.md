@@ -1,5 +1,42 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — Fix corpus email-domain validator punctuation handling
+
+Status: completed as tests-only repair after GitHub Actions failure.
+
+Files added:
+
+- `workpackage_claims/WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX.md`
+- `handover/workpackages/20260617_0920_recall_benchmark_runner_email_domain_test_fix.md`
+
+Files changed:
+
+- `tests/test_recall_gold_label_corpus_seed.py`
+- `CHANGELOG.md`
+
+Summary:
+
+- GitHub Actions screenshots showed `tests/test_recall_gold_label_corpus_seed.py::test_seed_corpus_uses_reserved_example_email_domain_only` failing.
+- Root cause: the email regex captured sentence-final punctuation, for example `sami.elamrani@example.test.`.
+- Fixed the validator regex so email matches end on an alphanumeric domain character.
+- This keeps `.example.test` enforcement intact while allowing normal punctuation after synthetic email addresses.
+
+Tests/checks:
+
+- Local tests were not runnable in this environment because no local GitHub working tree is available.
+- GitHub Actions should be used as final execution proof for repair commit `151749e4e4f19d3eaeffce52b1b83a807e15df5c`.
+
+Intentionally not changed:
+
+- No product code change.
+- No runner logic change.
+- No recognizer/pattern fix.
+- No UI/export/Scrub Key/reinsert behavior change.
+
+Next recommended step:
+
+- Wait for GitHub Actions Tests and Hugging Face sync for the repair commit before starting a new workpackage.
+
 ## WP_RECALL_BENCHMARK_RUNNER_MINIMAL — Add minimal diagnostic recall/precision runner
 
 Status: completed as benchmark/tooling/tests/documentation-only.
