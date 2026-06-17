@@ -38,7 +38,7 @@ Current mitigations:
 - Human review workflow.
 - Review guidance and final review summary.
 - WP19-WP24 created the recall/trust benchmark and report-only residual-risk foundation.
-- WP_DUTCH_LEGAL_RECALL_GAP_TESTS added tests-only xfail baselines for known Dutch legal recall gaps.
+- WP_DUTCH_LEGAL_RECALL_GAP_TESTS added tests-only baselines for known Dutch legal recall gaps.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES improved the review-candidate layer for selected Dutch legal reference values.
 - WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY confirmed the implementation is scope-contained and coordinator evidence confirms Actions/HF/app verification for the closeout commit.
 - WP_RECALL_SCORECARD_REFRESH records the post-fix recall/precision status, evidence level and remaining benchmark gaps in `RECALL_PRECISION_SCORECARD.md`.
@@ -46,6 +46,7 @@ Current mitigations:
 - WP_RECALL_GOLD_LABEL_CORPUS_EXPAND expanded the synthetic gold-label corpus to cover more legal/care reference values, false-positive traps and role-preservation cases.
 - WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds a diagnostic runner that compares analyzer/helper predictions against the expanded gold-label corpus.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT adds a GitHub Actions artifact workflow so diagnostic runner output becomes visible as JSON and Markdown.
+- WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first artifact output and identified that raw counts are not ready for threshold planning because of mapping/taxonomy/deduplication noise.
 
 Gaps:
 
@@ -53,11 +54,13 @@ Gaps:
 - No production-blocking benchmark gate exists.
 - No production safety claim is supported.
 - Dutch legal and care reference gaps are now more measurable and visible, but this does not prove complete automatic classification for all reference types.
+- The first artifact shows 34 missed required labels and 11 wrong-type findings, but several are likely runner mapping, taxonomy or duplicate prediction accounting issues.
+- Email and person-name coverage remain open diagnostic risks.
 - Runner/report output is diagnostic until thresholds and governance are separately approved.
 
 Recommended workpackages:
 
-- Later approved package — review the first diagnostic report artifact.
+- Next approved package — `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX` to clean runner/report mapping, dedupe and benchmark taxonomy before threshold planning.
 - Later approved package — recall/precision thresholds plan without enforcement.
 - Later gated package — accepted thresholds and regression gate only after planning approval.
 - Later approved package only if needed — second narrow Dutch legal pattern round after new verified gap evidence.
@@ -143,8 +146,6 @@ Current mitigations:
 - WP37 created read-only extraction visibility for headers, footers, comments/person metadata and tracked-change markers.
 - WP38 created a report-only DOCX hygiene audit helper.
 - WP39 created `CLEAN_DOCX_EXPORT_POLICY.md`, defining that current DOCX output must not be claimed as clean DOCX export and that export blocking/clean claims require separate approved implementation.
-- WP39B created `DOCX_HYGIENE_AUDIT_UI_PLAN.md`, planning how the existing report-only hygiene audit can later be surfaced without changing export behavior.
-- WP39C added `tests/test_docx_hygiene_audit_ui_plan.py`, contract-testing that the planned UI remains report-only, does not claim clean DOCX, does not block export, does not clean/remove DOCX content, and does not change Scrub Key or reinsert behavior.
 - WP39D implemented a small report-only DOCX hygiene audit UI panel near DOCX export, using the existing helper without export blocking, clean-DOCX claims, DOCX cleaning/removal, Scrub Key changes or reinsert behavior changes.
 
 Gaps:
@@ -211,12 +212,11 @@ Current mitigations:
 - WP_REPLACE_LOGIC_UI_PRODUCT_ROLLBACK removed the non-intuitive replacement helper panel from the normal flow.
 - WP_SIDE_BY_SIDE_REVIEW_IMPLEMENTATION added the bounded side-by-side review surface.
 - WP_SIDE_BY_SIDE_REVIEW_HEIGHT_FIX made the side-by-side panes visually equal-height.
-- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_PROTOTYPE was visually approved by the coordinator.
-- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION integrated bounded percentage-based synchronized scrolling in the side-by-side renderer.
+- WP_SIDE_BY_SIDE_REVIEW_SYNC_SCROLL_IMPLEMENTATION integrated synchronized scrolling in the side-by-side renderer.
 - WP_REVIEW_SURFACE_CONTROL_CLEANUP made synchronized scrolling default without exposing a visible sync-checkbox and kept markers default-on.
 - WP_REVIEW_SURFACE_DUPLICATE_HEADING_CLEANUP removed a duplicate review heading from the central side-by-side review surface.
-- WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY closed out the promoted collapsible review table: visual pressure in the review phase is reduced while the replacement table remains source of truth and fallback.
-- WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP removed temporary candidate/helper artifacts after verified promotion, reducing repo confusion without changing active app behavior.
+- WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY closed out the promoted collapsible review table.
+- WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP removed temporary candidate/helper artifacts after verified promotion.
 
 Gaps:
 
@@ -231,7 +231,6 @@ Recommended workpackages:
 
 - Later approved package — small redesigned replacement review implementation after separate explicit approval.
 - Click-to-mark sensitive text prototype only after separate approval and after frontend/MVP evidence.
-- Optional later UX cleanup — make Serial review compacter/collapsible only after separate coordinator approval.
 
 ---
 
@@ -267,7 +266,7 @@ Recommended workpackages:
 
 ---
 
-## R8 — Workflow status dependence on coordinator screenshots
+## R8 — Workflow status and benchmark evidence visibility
 
 Status: mitigating  
 Impact: medium
@@ -275,7 +274,7 @@ Impact: medium
 Risk:
 
 ```text
-Development slows because workers wait for coordinator screenshots instead of self-checking GitHub Actions and Hugging Face sync where connector permissions allow.
+Development slows or evidence becomes ambiguous because workers wait for screenshots, connector status can be incomplete, and diagnostic outputs are hard to inspect.
 ```
 
 Current mitigations:
@@ -285,16 +284,17 @@ Current mitigations:
 - `STATUS_MONITORING_RUNBOOK.md` exists and defines standard status states plus the expected Actions/Hugging Face verification order.
 - Workers are instructed to use connector status tools first, then ask for coordinator evidence only when connector lookup is incomplete.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT adds a CI-visible diagnostic recall benchmark artifact workflow for benchmark evidence.
+- WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first uploaded artifact files and recorded findings in `RECALL_BENCHMARK_REPORT_REVIEW.md`.
 
 Gaps:
 
 - Connector workflow-run lookup can still be incomplete for some push-triggered runs.
-- The new report artifact still needs GitHub Actions verification on first run.
+- First artifact review shows the artifact is visible and useful, but report metrics still need mapping/dedup cleanup before thresholds.
 - No generalized automated status artifact exists yet.
 
 Recommended workpackages:
 
-- First verify the diagnostic recall benchmark report artifact workflow.
+- Next approved benchmark package — `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX`.
 - Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
@@ -323,6 +323,7 @@ Current mitigations:
 - WP_RECALL_GOLD_LABEL_CORPUS_EXPAND added legal false-positive traps, legal mixed identifiers, care role-preservation examples and care mixed identifiers.
 - WP_RECALL_BENCHMARK_RUNNER_MINIMAL adds diagnostic reporting for missed labels, wrong types, false-positive candidates, preserve-term hits and known-trap hits.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT makes the diagnostic report visible as a JSON/Markdown CI artifact.
+- WP_RECALL_BENCHMARK_REPORT_REVIEW reviewed the first artifact and confirmed `preserve_term_hit_count = 0`, but also found mapping/taxonomy/deduplication noise.
 
 Gaps:
 
@@ -330,11 +331,13 @@ Gaps:
 - Broader production recall/precision thresholds remain future work.
 - The corpus is improved but remains synthetic and not exhaustive.
 - Role-word preservation still needs continued regression coverage as recognizers evolve.
+- The reviewed artifact reports 34 missed required labels, including many person/email labels.
+- Some wrong-type findings are probably runner mapping issues, not product detection failures.
 - Diagnostic runner/report output does not yet create a production gate.
 
 Recommended workpackages:
 
-- No immediate extra pattern round is required based on current coordinator verification evidence, expanded corpus, diagnostic runner and report artifact.
-- Later approved package — `WP_RECALL_BENCHMARK_REPORT_REVIEW` to review first artifact output.
+- No immediate extra pattern round is recommended based on the first artifact review.
+- Next approved package — `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX` to repair/clarify runner mapping, deduplication and benchmark taxonomy.
 - Later approved package — `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` before any threshold/gate implementation.
-- If verification later exposes remaining detection gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
+- If future cleaned report output exposes remaining detection gaps, use a separately approved `WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_ROUND2`.
