@@ -2,7 +2,7 @@
 
 ## WP_RECALL_BENCHMARK_REPORT_ARTIFACT — Add diagnostic recall benchmark report artifact
 
-Status: completed as benchmark/tooling/tests/documentation-only.
+Status: completed and coordinator-verified as benchmark/tooling/tests/documentation-only.
 
 Files added:
 
@@ -32,15 +32,11 @@ Summary:
 Tests/checks:
 
 - Local tests were not runnable in this environment because there is no local GitHub working tree available for pytest/py_compile execution.
-- Required test commands remain:
-  - `python -m pytest -q tests/test_recall_gold_label_corpus_seed.py`
-  - `python -m pytest -q tests/test_recall_benchmark_runner_minimal.py`
-  - `python -m pytest -q tests/test_recall_benchmark_report_artifact.py`
-  - `python -m py_compile recall_benchmark_runner.py`
-  - `python -m py_compile recall_benchmark_report.py`
-  - `python -m py_compile presidio_streamlit.py`
-- GitHub Actions and Hugging Face sync should be used as final execution proof.
-- The new `Diagnostic recall benchmark report` workflow should be checked for artifact availability.
+- Coordinator evidence shows:
+  - `a3df5c7` — `Diagnostic recall benchmark report #1` green.
+  - `31ee53b` — `Tests #1193` green.
+  - `31ee53b` — `Sync to Hugging Face Space #1204` green.
+  - Hugging Face app screenshot shows the Space running without Script execution error.
 
 Intentionally not changed:
 
@@ -66,12 +62,11 @@ Remaining gaps:
 - No accepted recall/precision thresholds exist yet.
 - No production-blocking benchmark gate exists yet.
 - Corpus coverage is improved but still synthetic and not exhaustive.
-- First artifact output still needs review.
+- First artifact output still needs content review before threshold planning.
 
 Next recommended step:
 
 - Do not automatically start another pattern-fix round.
-- Verify the new report workflow and artifact first.
 - Consider `WP_RECALL_BENCHMARK_REPORT_REVIEW` after separate approval if the first artifact output should be reviewed.
 - Consider `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` only after artifact review and separate approval.
 - Consider `WP_DOCX_HYGIENE_RECALL_FOLLOWUP` if document/export risks now dominate.
