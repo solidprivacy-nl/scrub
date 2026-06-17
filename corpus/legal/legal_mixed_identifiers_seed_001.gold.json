@@ -1,0 +1,38 @@
+{
+  "document_id": "legal_mixed_identifiers_seed_001",
+  "domain": "legal",
+  "document_type": "synthetic_legal_mixed_identifiers_note",
+  "language": "nl",
+  "source_file": "corpus/legal/legal_mixed_identifiers_seed_001.txt",
+  "synthetic": true,
+  "labels": [
+    {"id":"L001","entity_class":"CASE_NUMBER","text":"ZK-HUUR-2026-8831","start":11,"end":28,"sensitivity":"matter_reference","required":true,"acceptable_entity_types":["NL_LEGAL_CASE_NUMBER","NL_SUSPICIOUS_REFERENCE_CANDIDATE"],"notes":"Case number value."},
+    {"id":"L002","entity_class":"CASE_NUMBER","text":"11223344 / KT VERZ 26-882","start":80,"end":106,"sensitivity":"matter_reference","required":true,"acceptable_entity_types":["NL_LEGAL_CASE_NUMBER","NL_SUSPICIOUS_REFERENCE_CANDIDATE"],"notes":"Role/court reference value."},
+    {"id":"L003","entity_class":"DOSSIER_NUMBER","text":"DOS-HUUR-2026-1200","start":118,"end":136,"sensitivity":"dossier_reference","required":true,"acceptable_entity_types":["NL_DOSSIER_NUMBER","NL_SUSPICIOUS_REFERENCE_CANDIDATE"],"notes":"Dossier number value."},
+    {"id":"L004","entity_class":"CLIENT_NUMBER","text":"CL-HUUR-2026-0009","start":154,"end":172,"sensitivity":"client_reference","required":true,"acceptable_entity_types":["NL_CLIENT_REFERENCE","NL_SUSPICIOUS_REFERENCE_CANDIDATE"],"notes":"Client reference value."},
+    {"id":"L005","entity_class":"CLAIM_NUMBER","text":"CLM-2026-778899","start":180,"end":195,"sensitivity":"claim_reference","required":true,"acceptable_entity_types":["NL_CLAIM_NUMBER","NL_SUSPICIOUS_REFERENCE_CANDIDATE"],"notes":"Claim code must not be phone."},
+    {"id":"L006","entity_class":"CLAIM_NUMBER","text":"FACT-2026-8801","start":207,"end":221,"sensitivity":"administrative_reference","required":true,"acceptable_entity_types":["NL_INVOICE_NUMBER","NL_SUSPICIOUS_REFERENCE_CANDIDATE"],"notes":"Invoice reference."},
+    {"id":"L007","entity_class":"IBAN","text":"NL91 ABNA 0417 1643 00","start":270,"end":293,"sensitivity":"financial_identifier","required":true,"acceptable_entity_types":["IBAN_CODE","IBAN"],"notes":"Synthetic IBAN-like value."},
+    {"id":"L008","entity_class":"BSN","text":"123456782","start":301,"end":310,"sensitivity":"direct_identifier","required":true,"acceptable_entity_types":["NL_BSN","BSN"],"notes":"Synthetic BSN-like value."},
+    {"id":"L009","entity_class":"ECLI","text":"ECLI:NL:RBDHA:2026:8821","start":346,"end":369,"sensitivity":"matter_reference","required":true,"acceptable_entity_types":["NL_ECLI","ECLI"],"notes":"ECLI value."},
+    {"id":"L010","entity_class":"PERSON","text":"Nora El Yassini","start":390,"end":405,"sensitivity":"direct_identifier","required":true,"acceptable_entity_types":["PERSON"],"notes":"Person name."},
+    {"id":"L011","entity_class":"PERSON","text":"Tariq de Jong","start":409,"end":422,"sensitivity":"direct_identifier","required":true,"acceptable_entity_types":["PERSON"],"notes":"Person name."},
+    {"id":"L012","entity_class":"EMAIL","text":"nora.elyassini@example.test","start":442,"end":469,"sensitivity":"direct_identifier","required":true,"acceptable_entity_types":["EMAIL_ADDRESS"],"notes":"Reserved synthetic email domain."},
+    {"id":"L013","entity_class":"PHONE","text":"070-1234567","start":473,"end":484,"sensitivity":"direct_identifier","required":true,"acceptable_entity_types":["PHONE_NUMBER","NL_PHONE_NUMBER"],"notes":"Landline-like phone number."},
+    {"id":"L014","entity_class":"ADDRESS","text":"Laan van Meerdervoort 100, 2517 AS Den Haag","start":493,"end":536,"sensitivity":"direct_identifier","required":true,"acceptable_entity_types":["LOCATION","ADDRESS"],"notes":"Synthetic address."},
+    {"id":"L015","entity_class":"NL_POSTCODE","text":"2517 AS","start":521,"end":528,"sensitivity":"direct_identifier","required":true,"acceptable_entity_types":["NL_POSTCODE"],"notes":"Dutch postcode value."}
+  ],
+  "preserve_terms": [
+    {"term":"Zaaknummer","start":0,"end":10,"reason":"label/context term; value should be detected, not label"},
+    {"term":"Rolnummer","start":70,"end":79,"reason":"label/context term; value should be detected, not label"},
+    {"term":"dossier","start":110,"end":117,"reason":"label/context term; value should be detected, not label"},
+    {"term":"cliënt","start":147,"end":153,"reason":"legal role/context term"},
+    {"term":"eiser","start":545,"end":550,"reason":"legal role/context term"},
+    {"term":"verweerder","start":554,"end":564,"reason":"legal role/context term"}
+  ],
+  "known_traps": [
+    {"text":"bijlage","trap_type":"attachment_label_must_not_be_reference","notes":"Document section label should remain context."},
+    {"text":"eiser","trap_type":"role_word_must_not_be_person","notes":"Generic legal role term should remain readable."},
+    {"text":"verweerder","trap_type":"role_word_must_not_be_person","notes":"Generic legal role term should remain readable."}
+  ]
+}
