@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_RECALL_BENCHMARK_REPORT_ARTIFACT — Generate diagnostic recall benchmark report artifact`
 
-Status: completed as benchmark/tooling/tests/documentation-only.
+Status: completed and coordinator-verified as benchmark/tooling/tests/documentation-only.
 
 ## Summary
 
@@ -27,7 +27,7 @@ This package does not change product UI, recognizers, candidate scanner logic, e
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT.md` pending final closeout update after this handover file
+- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT.md`
 
 ## Product-code changes
 
@@ -133,24 +133,41 @@ Static checks completed:
 
 ## GitHub Actions status
 
-Unknown at handover time. Connector status visibility for direct-push commits can be incomplete in this repo.
+Coordinator screenshot evidence:
+
+```text
+a3df5c7 — Diagnostic recall benchmark report #1 — green
+31ee53b — Tests #1193 — green
+31ee53b — Sync to Hugging Face Space #1204 — green
+```
 
 ## Diagnostic report workflow status
 
-Pending at handover time. The new workflow should be checked for:
+Verified by coordinator screenshot evidence:
 
-- successful run;
-- artifact named `diagnostic-recall-benchmark-report`;
-- JSON file present;
-- Markdown file present.
+```text
+a3df5c7 — Diagnostic recall benchmark report #1 — green
+```
+
+Artifact expected:
+
+```text
+diagnostic-recall-benchmark-report
+```
 
 ## Hugging Face sync status
 
-Unknown at handover time. This package is benchmark/tooling/tests/documentation-only.
+Verified by coordinator screenshot evidence:
+
+```text
+31ee53b — Sync to Hugging Face Space #1204 — green
+```
 
 ## App verification status
 
-Not required. No app behavior changed.
+Not required because no app behavior changed.
+
+Coordinator app screenshot nevertheless confirms the Hugging Face Space is running without Script execution error and normal Scrub Legal review/export surface remains visible.
 
 ## Updated risks
 
@@ -170,7 +187,7 @@ The artifact reduces evidence visibility risk, but recall/precision risk remains
 - No accepted precision threshold exists.
 - No production-blocking benchmark gate exists.
 - Report output is diagnostic only.
-- First artifact output still needs review.
+- First artifact output still needs content review.
 - Corpus coverage is improved but still synthetic and not exhaustive.
 
 ## Remaining risks
@@ -178,20 +195,10 @@ The artifact reduces evidence visibility risk, but recall/precision risk remains
 - Diagnostic report output must not be interpreted as a product accuracy claim.
 - Candidate scanner output is review-candidate surfacing, not hard automatic masking proof.
 - Future thresholds/gates require separate approval.
-- The new artifact workflow needs Actions confirmation.
 
 ## Next recommended step
 
 Do not automatically start another pattern-fix round.
-
-First verify:
-
-```text
-Tests workflow
-Sync to Hugging Face Space
-Diagnostic recall benchmark report workflow
-Artifact availability
-```
 
 Likely next options after separate coordinator approval:
 
