@@ -54,6 +54,7 @@ WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — completed; synthetic gold-label corpus ex
 WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed; minimal diagnostic recall/precision runner added for synthetic gold-label corpus.
 WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed and coordinator-verified; corpus email-domain validator domain handling repaired after Actions failure.
 WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed and coordinator-verified; diagnostic recall benchmark report helper, workflow and artifact documentation added.
+WP_RECALL_BENCHMARK_REPORT_REVIEW — completed; first diagnostic report artifact reviewed and follow-up recommendation recorded.
 WP_SERIAL_REVIEW_UI — completed and app-verified after Actions/sync verification.
 ```
 
@@ -108,7 +109,7 @@ Temporary candidate/helper artifacts no longer remain in the active repository a
 - `tests/test_review_table_collapsible_candidate_file.py` removed;
 - `review_table_collapsible_ui.py` removed.
 
-Recall/benchmark status:
+## Recall/benchmark status
 
 - Dutch legal recall pattern fixes improve review-candidate visibility only; they are not a complete automatic-recognition guarantee.
 - Gold-label corpus contains 4 legal source documents and 3 care source documents with `.gold.json` sidecars.
@@ -120,8 +121,31 @@ Recall/benchmark status:
 - `.github/workflows/recall-benchmark-report.yml` generates and uploads `diagnostic-recall-benchmark-report` as a GitHub Actions artifact.
 - `tests/test_recall_benchmark_report_artifact.py` covers report metadata, Markdown summary, file writing, no-threshold behavior and CLI smoke output.
 - `RECALL_BENCHMARK_REPORT_ARTIFACT.md` documents artifact usage and non-claim boundaries.
+- `RECALL_BENCHMARK_REPORT_REVIEW.md` reviews the first artifact output.
 
-Verification evidence:
+First artifact review findings:
+
+```text
+document_count = 7
+gold_label_count = 75
+prediction_count = 61
+matched_required_exact_count = 41
+missed_required_count = 34
+wrong_type_count = 11
+false_positive_candidate_count = 8
+preserve_term_hit_count = 0
+known_trap_hit_count = 1
+```
+
+Interpretation:
+
+- Artifact integrity passed.
+- Report output is useful for engineering review.
+- Raw counts are not ready for threshold planning.
+- Several findings are likely runner mapping, acceptable-entity taxonomy or duplicate prediction reporting issues.
+- Preserve-term hits are currently 0, which is a positive diagnostic signal but not production proof.
+
+## Verification evidence
 
 - Promotion branch used by coordinator: `test/collapsible-review-table`.
 - Promotion commit: `15f5173c893668566e9d62524ef4d0b5449f37b8` — `Promote collapsible review table candidate`.
@@ -147,7 +171,7 @@ Verification evidence:
   - `31ee53b` — `Tests #1193` green.
   - `31ee53b` — `Sync to Hugging Face Space #1204` green.
   - Hugging Face app screenshot shows the Space running without Script execution error.
-- Scorecard/corpus/runner/report packages added benchmark documentation/data/tooling/tests only; no product UI or user-facing app behavior changed.
+- First artifact review used uploaded `recall_benchmark_report.json` and `recall_benchmark_summary.md` from `diagnostic-recall-benchmark-report`.
 
 Boundaries preserved:
 
@@ -165,10 +189,11 @@ Boundaries preserved:
 
 ```text
 1. Do not start a new feature automatically.
-2. No immediate Dutch legal pattern-fix Round2 is required based on current coordinator verification, expanded corpus, diagnostic runner and report artifact.
-3. If benchmark governance is now desired, consider WP_RECALL_BENCHMARK_REPORT_REVIEW after separate approval.
-4. If threshold planning is desired after reviewing artifact output, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN after separate approval.
-5. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
+2. Do not start threshold planning yet.
+3. No immediate Dutch legal pattern-fix Round2 is recommended based on the first artifact review.
+4. Recommended next after separate approval: WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX.
+5. Only after runner/report mapping and deduplication cleanup, consider WP_RECALL_BENCHMARK_THRESHOLDS_PLAN.
+6. If document/export risks now dominate, consider WP_DOCX_HYGIENE_RECALL_FOLLOWUP after separate approval.
 ```
 
 ## Blocked work
