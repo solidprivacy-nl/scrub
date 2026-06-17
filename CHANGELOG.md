@@ -1,5 +1,66 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_RECALL_BENCHMARK_REPORT_REVIEW — Review first diagnostic recall benchmark artifact
+
+Status: completed as review/documentation-only.
+
+Files added:
+
+- `RECALL_BENCHMARK_REPORT_REVIEW.md`
+- `handover/workpackages/20260617_2116_recall_benchmark_report_review.md`
+
+Files changed:
+
+- `RECALL_PRECISION_SCORECARD.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_REVIEW.md`
+
+Artifact reviewed:
+
+- `diagnostic-recall-benchmark-report`
+- `recall_benchmark_report.json`
+- `recall_benchmark_summary.md`
+
+Main findings:
+
+- Artifact integrity passed: `diagnostic_only`, synthetic corpus, no production gate and no enforced thresholds.
+- Summary: 7 documents, 75 gold labels, 61 predictions, 41 matched required labels, 34 missed required labels, 11 wrong-type findings, 8 false-positive candidates, 0 preserve-term hits and 1 known-trap hit.
+- The artifact is useful for engineering review, but not ready for threshold planning.
+- Raw metrics are likely inflated by runner mapping, acceptable-type taxonomy and duplicate prediction accounting issues.
+- Likely mapping/taxonomy follow-ups include `NL_ADDRESS`, `NL_IBAN`, `NL_CASE_REFERENCE`, `NL_LEGAL_PARTY_NAME`, care `ZORG-CL-*` values and absent email predictions.
+
+Tests/checks:
+
+- Local tests were not runnable in this environment because there is no local GitHub working tree available.
+- This package is review/documentation-only.
+- Previous coordinator evidence remains the execution proof for the artifact workflow:
+  - `a3df5c7` — `Diagnostic recall benchmark report #1` green.
+  - `31ee53b` — `Tests #1193` green.
+  - `31ee53b` — `Sync to Hugging Face Space #1204` green.
+
+Intentionally not changed:
+
+- No product code change.
+- No `presidio_streamlit.py` change.
+- No `candidate_scanner.py` change.
+- No `dutch_recognizers.py` change.
+- No `recall_benchmark_runner.py` change.
+- No `recall_benchmark_report.py` change.
+- No workflow change.
+- No recognizer/pattern fix.
+- No UI/export/Scrub Key/reinsert behavior change.
+- No thresholds.
+- No production gate.
+- No product accuracy claim.
+
+Next recommended step:
+
+- Do not start threshold planning yet.
+- Recommended next after separate approval: `WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX`.
+- Only after mapping/dedup/taxonomy cleanup, consider `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN`.
+
 ## WP_RECALL_BENCHMARK_REPORT_ARTIFACT — Add diagnostic recall benchmark report artifact
 
 Status: completed and coordinator-verified as benchmark/tooling/tests/documentation-only.
@@ -13,63 +74,13 @@ Files added:
 - `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT.md`
 - `handover/workpackages/20260617_1758_recall_benchmark_report_artifact.md`
 
-Files changed:
-
-- `RECALL_PRECISION_SCORECARD.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
-- `workpackage_claims/WP_RECALL_BENCHMARK_REPORT_ARTIFACT.md`
-
 Summary:
 
 - Added `recall_benchmark_report.py` to wrap the existing diagnostic runner output with metadata and write JSON/Markdown report files.
-- Added `tests/test_recall_benchmark_report_artifact.py` for JSON metadata, Markdown summary, file writing, no-threshold behavior and CLI smoke output.
-- Added `.github/workflows/recall-benchmark-report.yml` to run corpus/runner/report tests, generate the diagnostic report and upload it as an artifact.
-- Added `RECALL_BENCHMARK_REPORT_ARTIFACT.md` documenting the workflow, artifact files, report formats, interpretation and non-claim boundaries.
-- Updated the recall/precision scorecard, workpackage status and risk register to record that runner output is now CI-visible as a diagnostic artifact.
-
-Tests/checks:
-
-- Local tests were not runnable in this environment because there is no local GitHub working tree available for pytest/py_compile execution.
-- Coordinator evidence shows:
-  - `a3df5c7` — `Diagnostic recall benchmark report #1` green.
-  - `31ee53b` — `Tests #1193` green.
-  - `31ee53b` — `Sync to Hugging Face Space #1204` green.
-  - Hugging Face app screenshot shows the Space running without Script execution error.
-
-Intentionally not changed:
-
-- No `presidio_streamlit.py` change.
-- No `candidate_scanner.py` change.
-- No `dutch_recognizers.py` change.
-- No recognizer/pattern fix.
-- No product UI change.
-- No review table change.
-- No side-by-side change.
-- No export/download behavior change.
-- No Scrub Key behavior change.
-- No reinsert behavior change.
-- No DOCX/PDF flow change.
-- No Docker/startup/dependency change.
-- No cloud processing.
-- No production threshold or blocking gate.
-- No product accuracy claim.
-
-Remaining gaps:
-
-- Report metrics are diagnostic only.
-- No accepted recall/precision thresholds exist yet.
-- No production-blocking benchmark gate exists yet.
-- Corpus coverage is improved but still synthetic and not exhaustive.
-- First artifact output still needs content review before threshold planning.
-
-Next recommended step:
-
-- Do not automatically start another pattern-fix round.
-- Consider `WP_RECALL_BENCHMARK_REPORT_REVIEW` after separate approval if the first artifact output should be reviewed.
-- Consider `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` only after artifact review and separate approval.
-- Consider `WP_DOCX_HYGIENE_RECALL_FOLLOWUP` if document/export risks now dominate.
+- Added tests for JSON metadata, Markdown summary, file writing, no-threshold behavior and CLI smoke output.
+- Added workflow `Diagnostic recall benchmark report` to generate and upload `diagnostic-recall-benchmark-report`.
+- Coordinator evidence shows the report workflow, Tests and HF sync were green.
+- No product UI, recognizer, export, Scrub Key, reinsert, threshold or production-gate behavior was changed.
 
 ## WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — Fix corpus email-domain validator punctuation handling
 
