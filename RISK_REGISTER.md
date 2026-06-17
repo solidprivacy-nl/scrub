@@ -23,15 +23,13 @@ Current mitigations:
 
 - Human review workflow.
 - Review guidance and final review summary.
-- WP19-WP24 created the recall/trust benchmark and report-only residual-risk foundation.
 - Dutch legal recall gap tests and pattern-fix verification are present.
 - Synthetic gold-label corpus exists and has been expanded.
 - Minimal diagnostic recall benchmark runner exists.
 - Diagnostic report artifact workflow exists.
-- First artifact review found mapping/counting noise.
-- Artifact cleanup reduced that noise.
-- Cleaned artifact review confirmed the output is substantially less noisy: missed required 34 -> 18, wrong-type 11 -> 1 and false-positive candidates 8 -> 1.
-- `RECALL_BENCHMARK_THRESHOLDS_PLAN.md` now exists as a planning-only threshold policy document.
+- First and cleaned artifact reviews exist.
+- Planning-only threshold policy exists.
+- PERSON-name coverage review now classifies the 14 remaining missed `PERSON` labels.
 
 Gaps:
 
@@ -39,15 +37,18 @@ Gaps:
 - No production benchmark gate exists.
 - No production safety claim is supported.
 - Threshold planning exists, but risk remains open.
-- Cleaned artifact review still shows 18 missed required labels, concentrated in person names, care room/location references and one client-number example.
-- One nested false-positive candidate remains inside a phone-like value.
+- PERSON-name false-negative risk is analyzed but not fixed.
+- No recognizer change was made.
+- No candidate scanner change was made.
+- Risk remains open until tests and implementation follow separately.
+- Remaining non-PERSON gaps include care room/location references, one client-number example and one nested false-positive hit inside a phone-like value.
 - Corpus is synthetic and small.
 
 Recommended workpackages:
 
-- Next approved package — `WP_RECALL_PERSON_NAME_COVERAGE_REVIEW`.
-- Alternative approved packages — `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`, `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`, `WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS`.
-- Later planning package — `WP_RECALL_BENCHMARK_GATE_PLAN`; still planning only, not implementation.
+- Next approved package — `WP_RECALL_PERSON_NAME_COVERAGE_TESTS`.
+- Alternative if design should come first — `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
+- Other approved packages — `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`, `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`, `WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS`.
 
 ---
 
@@ -66,19 +67,12 @@ Current mitigations:
 
 - UI warnings around Scrub Key reinsert.
 - Local-only/no-AI/no-cloud positioning for reinsert.
-- WP25-WP29C covered threat model, lifecycle specs, warning planning/implementation, import/export tests and warning UI test scaffolding.
-- WP28C warning/acknowledgement UI is closed out after Actions/HF/app verification.
+- Scrub Key warning/acknowledgement UI is closed out after Actions/HF/app verification.
 
 Gaps:
 
 - UI acknowledgements are safety prompts only; they are not encryption, protected storage, automatic deletion or a managed key vault.
 - No approved key recovery model.
-
-Recommended workpackages:
-
-- Later implementation package — protected local file handling.
-- Later implementation package — encrypted key container.
-- Later implementation package — local vault / managed key store.
 
 ---
 
@@ -96,7 +90,7 @@ An AI system rewrites, translates, merges or deletes placeholders, causing deter
 Current mitigations:
 
 - Unknown placeholders and not-found placeholders are reported in reinsert audit flows.
-- WP30-WP34 created placeholder robustness review, future robust format proposal, validation helper, audit helper and synthetic AI-output corruption tests.
+- Placeholder robustness review, future robust format proposal, validation helper, audit helper and synthetic AI-output corruption tests exist.
 
 Gaps:
 
@@ -219,16 +213,16 @@ Current mitigations:
 - Diagnostic recall benchmark artifact workflow exists.
 - First and cleaned artifact reviews exist.
 - Planning-only threshold policy exists.
+- PERSON-name coverage review exists.
 
 Gaps:
 
 - Connector workflow-run lookup can still be incomplete for some push-triggered runs.
 - No generalized automated status artifact exists yet.
-- Future threshold work must remain planning-only until separate gate approval.
 
 Recommended workpackages:
 
-- Next approved benchmark package — `WP_RECALL_PERSON_NAME_COVERAGE_REVIEW` or another focused coverage package.
+- Next approved benchmark package — `WP_RECALL_PERSON_NAME_COVERAGE_TESTS` or `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
 - Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
@@ -241,32 +235,35 @@ Impact: high
 Risk:
 
 ```text
-Dutch legal matter references can be missed or misclassified, while generic legal role words can be masked in ways that damage legal meaning.
+Dutch legal matter references can be missed or misclassified, while generic legal/care role words can be masked in ways that damage meaning.
 ```
 
 Current mitigations:
 
 - Human review table remains source of truth and fallback.
-- Recall benchmark spec defines legal reference classes, context terms to preserve and over-masking traps.
-- Dutch legal pattern fixes improve review-candidate visibility.
+- Recall benchmark spec defines reference classes, context terms to preserve and over-masking traps.
 - Diagnostic runner/report artifacts make benchmark evidence visible.
 - Cleaned artifact has `preserve_term_hit_count = 0`.
 - Planning-only threshold policy exists.
+- PERSON-name coverage review classifies role-linked missed names, including care-role and legal-role examples.
 
 Gaps:
 
 - No accepted production threshold exists.
 - No benchmark gate exists.
 - Corpus is synthetic and not exhaustive.
-- Remaining misses include 14 person labels, 3 care room/location references and 1 client-number example.
+- PERSON-name false-negative risk is analyzed but not fixed.
+- Names after care/legal roles need tests before recognizer changes.
+- Single-surname examples remain high ambiguity.
 - Product claim remains blocked.
 
 Recommended workpackages:
 
-- `WP_RECALL_PERSON_NAME_COVERAGE_REVIEW`.
+- `WP_RECALL_PERSON_NAME_COVERAGE_TESTS`.
+- `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
+- `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
 - `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`.
 - `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`.
-- `WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS`.
 
 ---
 
@@ -275,6 +272,7 @@ Recommended workpackages:
 Disallowed claims:
 
 ```text
+Alle persoonsnamen worden altijd gevonden.
 Alle persoonsgegevens worden altijd gevonden.
 Alle juridische nummers worden altijd herkend.
 De app is veilig voor productie zonder menselijke review.
@@ -284,6 +282,7 @@ De benchmark bewijst production readiness.
 Allowed wording:
 
 ```text
-De diagnostische benchmark helpt regressies zichtbaar te maken op een synthetische corpus.
-De output ondersteunt engineeringbeslissingen, maar vervangt geen menselijke review.
+De diagnostische benchmark laat zien welke synthetische persoonsnamen nog gemist worden.
+Deze analyse helpt vervolgtests en herkenningslogica te plannen.
+Menselijke review blijft noodzakelijk.
 ```
