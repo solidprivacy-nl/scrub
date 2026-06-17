@@ -1,0 +1,99 @@
+{
+  "document_id": "legal_role_preservation_seed_001",
+  "domain": "legal",
+  "document_type": "synthetic_legal_role_preservation_note",
+  "language": "nl",
+  "source_file": "corpus/legal/legal_role_preservation_seed_001.txt",
+  "synthetic": true,
+  "labels": [
+    {
+      "id": "L001",
+      "entity_class": "PERSON",
+      "text": "Jansen",
+      "start": 142,
+      "end": 148,
+      "sensitivity": "direct_identifier",
+      "required": true,
+      "acceptable_entity_types": [
+        "PERSON"
+      ],
+      "notes": "Name after role word arts; role word should remain context."
+    },
+    {
+      "id": "L002",
+      "entity_class": "PERSON",
+      "text": "Fatima El Amrani",
+      "start": 161,
+      "end": 177,
+      "sensitivity": "direct_identifier",
+      "required": true,
+      "acceptable_entity_types": [
+        "PERSON"
+      ],
+      "notes": "Name after role word getuige; role word should remain context."
+    },
+    {
+      "id": "L003",
+      "entity_class": "PERSON",
+      "text": "Sami El Amrani",
+      "start": 194,
+      "end": 208,
+      "sensitivity": "direct_identifier",
+      "required": true,
+      "acceptable_entity_types": [
+        "PERSON"
+      ],
+      "notes": "Name after role word minderjarige; role word should remain context."
+    }
+  ],
+  "preserve_terms": [
+    {
+      "term": "eiser",
+      "start": 3,
+      "end": 8,
+      "reason": "legal role/context term"
+    },
+    {
+      "term": "verweerder",
+      "start": 27,
+      "end": 37,
+      "reason": "legal role/context term"
+    },
+    {
+      "term": "getuige",
+      "start": 55,
+      "end": 62,
+      "reason": "legal role/context term"
+    },
+    {
+      "term": "arts",
+      "start": 76,
+      "end": 80,
+      "reason": "legal role/context term"
+    },
+    {
+      "term": "slachtoffer",
+      "start": 90,
+      "end": 101,
+      "reason": "legal role/context term"
+    },
+    {
+      "term": "minderjarige",
+      "start": 108,
+      "end": 120,
+      "reason": "legal role/context term"
+    }
+  ],
+  "known_traps": [
+    {
+      "text": "arts",
+      "trap_type": "role_word_must_not_be_person",
+      "notes": "Role word alone should not be detected as PERSON."
+    },
+    {
+      "text": "minderjarige",
+      "trap_type": "role_word_must_not_remove_legal_meaning",
+      "notes": "Role word should remain readable unless part of identifying name construct."
+    }
+  ]
+}
