@@ -19,7 +19,8 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 
 ```text
 WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN — completed; MVP UI cleanup and export/download redesign route planned.
-WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — completed; contract tests added for professional export/download UX redesign.
+WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — completed and verified; contract tests added for professional export/download UX redesign.
+WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — completed; grouped export/download UX implemented without export semantics changes.
 WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed and verified.
 WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed and verified.
 WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified.
@@ -44,15 +45,18 @@ Current product direction shifts visible work toward MVP UI cleanup and professi
 
 ## MVP UI/export redesign status
 
-Planning and contract files:
+Planning, contract and implementation files:
 
 ```text
 MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md
 EXPORT_DOWNLOAD_UX_CONTRACTS.md
 tests/test_export_download_ux_contracts.py
+EXPORT_DOWNLOAD_UX_IMPLEMENTATION.md
+fix_streamlit_export_download_ux.py
+tests/test_export_download_ux_implementation.py
 ```
 
-Contract protection covers:
+Contract and implementation protection covers:
 
 ```text
 export/download grouping
@@ -72,11 +76,10 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after separate approval: WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION.
-3. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.
-4. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION.
-5. Then: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
-6. Then: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
+2. Recommended next after green Actions/HF/app verification: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.
+3. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION.
+4. Then: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
+5. Then: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
 ```
 
 ## Boundaries
