@@ -1,13 +1,14 @@
-status: completed_pending_verification
+status: completed_verified
 repository: solidprivacy-nl/scrub
 workpackage title: WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — Implement safe helper-level PERSON-name recognition improvements
 started timestamp: 2026-06-18 20:48 Europe/Amsterdam
 completed timestamp: 2026-06-18 20:48 Europe/Amsterdam
 regex-fix timestamp: 2026-06-18 20:58 Europe/Amsterdam
+verified timestamp: 2026-06-18 22:21 Europe/Amsterdam
 scope: helper/recognizer implementation + tests for contract-backed PERSON-name recognition
 boundaries: no UI, no export, no Scrub Key, no reinsert, no threshold enforcement, no production gate, no product claim
 
-final commit SHA or PR link: 88324e49bc3080da95b297ae6638ead394b87009
+final verified commit SHA or PR link: d4e063d
 handover path: handover/workpackages/20260618_2048_recall_person_name_recognizer_implementation_helper_only.md
 
 files added:
@@ -47,12 +48,13 @@ tests/checks:
 - Added tests/test_recall_person_name_recognizer_implementation.py.
 - Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
 - Coordinator screenshot showed first implementation attempt had failing Tests on commit fbefcde.
-- Required checks after regex fix: python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_implementation.py; python -m pytest -q tests/test_recall_person_name_coverage_diagnostics.py; python -m pytest -q tests/test_recall_gold_label_corpus_seed.py.
-- Recommended checks: python -m pytest -q tests/test_recall_benchmark_runner_minimal.py; python -m pytest -q; python -m py_compile person_name_recognizer_helper.py; python -m py_compile dutch_recognizers.py; python -m py_compile candidate_scanner.py; python -m py_compile presidio_streamlit.py; git diff --check.
+- Coordinator screenshot evidence confirms Tests #1292 for commit d4e063d green.
+- Coordinator screenshot evidence confirms Sync to Hugging Face Space #1303 for commit d4e063d green.
+- Coordinator app screenshot evidence confirms Hugging Face Space running without Script execution error.
 
-GitHub Actions status: pending/unknown after regex fix.
-Hugging Face sync status: pending/unknown after regex fix.
-app verification status: pending smoke verification after green Actions/HF sync. No app behavior change is expected because helper is not wired into the Streamlit recognizer setup.
+GitHub Actions status: verified green by coordinator screenshot evidence. Tests #1292 for commit d4e063d green.
+Hugging Face sync status: verified green by coordinator screenshot evidence. Sync to Hugging Face Space #1303 for commit d4e063d green.
+app verification status: verified healthy by coordinator screenshot evidence; no app behavior change was expected because helper is not wired into the Streamlit recognizer setup.
 
 remaining risks:
 - PERSON-name false-negative risk is only partially mitigated for contract-backed role/title helper cases.
