@@ -4,6 +4,39 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-18 — D025 — PERSON-name implementation requires green contract tests first
+
+Status: accepted tests/specification decision
+
+Decision:
+
+```text
+PERSON-name recognizer implementation may only start after contract tests are green.
+```
+
+Reason:
+
+```text
+Value-only matching and role preservation are safety-critical.
+```
+
+Consequence:
+
+```text
+Implementation package must satisfy the contract fixture before benchmark review.
+```
+
+Implications:
+
+- Future implementation must preserve role/context words.
+- Future implementation must match only the sensitive name value for role/title cases.
+- Negative cases such as court names, addresses, care locations, legal articles and document-navigation references must not become PERSON matches.
+- Single-surname handling remains high ambiguity and must follow the contract policy.
+- Weak name-near-contact/reference contexts remain candidate-only unless separately approved.
+- No production threshold or gate is created by this decision.
+
+---
+
 ## 2026-06-18 — D024 — PERSON-name improvement proceeds test-first
 
 Status: accepted planning/specification decision
@@ -129,84 +162,6 @@ Implications:
 - Serial review remains a guided review layer, not a replacement of the table.
 - The old replacement decision helper panel must not return as normal user-facing UI.
 - Do not start panel removal, click-to-mark, advanced editor, full-document marking, Scrub Key writes, export blocking or reinsert behavior changes without separate approved packages.
-
----
-
-## 2026-06-13 — D020 — Do not expose replacement helper internals as a user-facing panel
-
-Status: accepted UX rollback decision
-
-Decision:
-
-```text
-Do not expose replacement_decision helper internals as a user-facing panel in the normal Scrub Legal flow. The technically working replacement decision helper panel is parked/hidden because coordinator product feedback found it not intuitive enough and too complex for normal users.
-```
-
-Rationale:
-
-The replacement decision helper and contract tests remain useful as business-logic foundations, but the first user-facing panel exposed too much helper/audit structure. It made the review flow less clear instead of more intuitive.
-
-Implications:
-
-- Keep `replacement_decision.py`, `REPLACE_LOGIC_UI_PLAN.md` and the contract tests as redesign assets.
-- Do not treat WP_REPLACE_LOGIC_UI_IMPLEMENTATION as a successful user-facing feature.
-- The normal Scrub Legal flow must not show the replacement decision helper panel.
-- The review table remains the source of truth and fallback.
-- The serial review panel may remain visible as a non-destructive review aid.
-- Future replacement UX must be redesigned around a genuinely intuitive review flow, not raw helper/audit internals.
-- Do not start a new replacement UI implementation, mutating decision behavior, automatic replacement, Scrub Key writes, export blocking, click-to-mark, advanced editor or full-document marking without separate coordinator approval.
-
----
-
-## 2026-06-13 — D019 — Table-first baseline restored; static-highlight startup mutation parked
-
-Status: accepted rollback/implementation-route decision
-
-Decision:
-
-```text
-The working table-first Scrub interface is the current baseline and fallback. The failed static-highlight/marking route based on startup source mutation is fully rolled back and parked. Future document-context, marking or editor improvements must be redesigned through helper/model code first, tests first and small approved non-destructive UI panels only after the contracts are stable.
-```
-
-Rationale:
-
-The WP42D static highlight preview attempt repeatedly destabilized Hugging Face runtime startup and required rollback/repair work. The product direction remains document-first review with context, better replacement decisions and later marking/editor capabilities, but the implementation route must not depend on mutating `presidio_streamlit.py` at container startup or on quick UI patch fixes without app-start verification.
-
-Implications:
-
-- Do not restart the old static highlight preview startup mutation route.
-- Do not patch `presidio_streamlit.py` through container startup for preview, marking or editor work.
-- Keep the table-first review workflow as the authoritative working baseline/fallback.
-- Future review improvements should start with pure helper/model modules and tests.
-- UI work should be small, non-destructive and explicitly approved after helper/contract tests are stable.
-- The next recommended work is `WP_SERIAL_REVIEW_HELPER`, followed later by `WP_SERIAL_REVIEW_UI` only after helper/tests and explicit approval.
-- Click-to-mark and advanced editor work remain later-stage candidates requiring separate decisions.
-
----
-
-## 2026-06-12 — D018 — Stay with Streamlit for MVP validation and defer frontend migration
-
-Status: accepted frontend architecture decision; implementation-route superseded where it conflicts with D019/D021/D022/D023
-
-Decision:
-
-```text
-Keep Streamlit as the MVP validation surface for now. Do not migrate to a separate frontend yet. Do not build a professional document editor yet.
-```
-
-Rationale:
-
-The project currently needs validation of product behavior more than a new frontend stack. Streamlit remains the fastest surface for online MVP validation with synthetic and approved non-confidential test data. A frontend migration now would add architecture, security, testing and synchronization complexity before the core workflow is trusted.
-
-Implications:
-
-- Continue using Streamlit for MVP validation.
-- Keep UI thin and helper-driven.
-- Put business rules and safety decisions in reusable Python helpers and tests where possible.
-- Do not replace the current review table without a separate migration package.
-- Do not start click-to-mark, professional document editing, long-document virtualized review or Word/PDF layout rendering yet.
-- Reconsider frontend migration only after MVP workflow evidence and user validation.
-- WP42D is no longer pending preview verification; it is rolled back/parked and closed out through D019/WP42D-ROLLBACK-CLOSEOUT.
 
 ---
 
