@@ -36,6 +36,7 @@ WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — completed; planning-only threshold polic
 WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — completed; PERSON-name coverage gaps reviewed and follow-up route planned.
 WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified; diagnostic PERSON-name gap inventory tests added.
 WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN — completed; safe PERSON-name recognizer improvement plan added.
+WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed; future PERSON-name recognizer contract tests added.
 WP_SERIAL_REVIEW_UI — completed and app-verified.
 ```
 
@@ -65,6 +66,9 @@ RECALL_BENCHMARK_THRESHOLDS_PLAN.md
 RECALL_PERSON_NAME_COVERAGE_REVIEW.md
 tests/test_recall_person_name_coverage_diagnostics.py
 RECALL_PERSON_NAME_RECOGNIZER_PLAN.md
+tests/fixtures/person_name_recognizer_contract_cases.json
+tests/test_recall_person_name_recognizer_contracts.py
+PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md
 ```
 
 Cleaned artifact baseline:
@@ -83,13 +87,15 @@ preserve_term_hit_count = 0
 known_trap_hit_count = 1
 ```
 
-PERSON recognizer planning status:
+PERSON contract test status:
 
 ```text
-safe recognition strategy planned
-contract tests required before implementation
-single-surname handling marked high-risk
-role/context words must remain readable
+future PERSON-name behavior is contract-tested
+role/context words must stay readable
+value-only matching is required
+single-surname policy is explicit
+candidate-only weak context is explicit
+negative cases prevent broad over-masking
 no recognizer implementation
 no candidate scanner implementation
 no runner/report changes
@@ -124,14 +130,14 @@ Diagnostic recall benchmark report workflow green for relevant cleanup commits
 Hugging Face app screenshot showed running without Script execution error
 ```
 
-`WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN` is planning/specification-only and does not require app verification.
+`WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS` is tests/specification-only and does not require app verification.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.
-3. Then consider: WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY.
+2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY.
+3. Then consider: WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW.
 4. Other backlog candidates: WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN, WP_CLIENT_REFERENCE_COVERAGE_REVIEW, WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS.
 5. A future gate route may be planned later as WP_RECALL_BENCHMARK_GATE_PLAN, but that is still planning and not implementation.
 ```
