@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — Add contract tests for professional export/download UX redesign`
 
-Status: completed, pending GitHub Actions/HF verification after production-gate wording fix.
+Status: completed and verified.
 
 ## Summary
 
@@ -97,37 +97,39 @@ Local tests were not run because this environment is connector-only and does not
 
 Coordinator screenshot evidence showed the earlier attempt failed on gate wording. The test now follows the contract document wording.
 
-Required checks after fix:
+Coordinator screenshot evidence now confirms:
 
 ```text
-python -m pytest -q tests/test_export_download_ux_contracts.py
-python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py
-python -m pytest -q tests/test_recall_person_name_recognizer_implementation.py
-python -m py_compile presidio_streamlit.py
-git diff --check
-```
-
-Recommended broader check:
-
-```text
-python -m pytest -q
+Tests #1318 for commit 359447f — green
+Sync to Hugging Face Space #1326 for commit 359447f — green
+Hugging Face Space app — running without Script execution error
 ```
 
 ## Validation status
 
-Implemented as tests/documentation-only. Production-gate wording fix added. Awaiting GitHub Actions verification.
+Verified by coordinator screenshot evidence.
 
 ## GitHub Actions status
 
-Pending/unknown after production-gate wording fix.
+Verified green by coordinator screenshot evidence.
+
+```text
+Tests #1318 for commit 359447f — green
+```
 
 ## Hugging Face sync status
 
-Pending/unknown after production-gate wording fix.
+Verified green by coordinator screenshot evidence.
+
+```text
+Sync to Hugging Face Space #1326 for commit 359447f — green
+```
 
 ## App verification status
 
-Not required. No app behavior changed.
+Verified healthy by coordinator screenshot evidence. The Hugging Face Space is running without Script execution error.
+
+No app behavior changed.
 
 ## Remaining risks
 
