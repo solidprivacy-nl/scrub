@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — Implement professional grouped export/download UX without changing export semantics`
 
-Status: completed, pending GitHub Actions/HF/app verification.
+Status: completed, pending GitHub Actions/HF/app verification after marker-based patch fix.
 
 ## Summary
 
@@ -14,9 +14,9 @@ Implemented grouped export/download UX through a small startup patch:
 fix_streamlit_export_download_ux.py
 ```
 
-The Hugging Face startup command now runs the existing startup patches first and then runs this export UX patch before Streamlit starts. The patch changes only export/download presentation and copy.
+The Hugging Face startup command runs the existing startup patches first and then runs this export UX patch before Streamlit starts. The patch changes only export/download presentation and copy.
 
-The export section becomes:
+The export section should become:
 
 ```text
 5. Exporteer resultaat
@@ -30,7 +30,11 @@ Scrub Key
 Audit en technische bestanden
 ```
 
-A follow-up Dockerfile startup-order fix moved the export UX patch after `fix_streamlit_pdf_text_reinsert.py`, preserving the legacy tested startup substring while still running the export patch before Streamlit.
+Follow-up fixes:
+
+- Dockerfile startup-order fix moved the export UX patch after `fix_streamlit_pdf_text_reinsert.py`, preserving the legacy tested startup substring while still running the export patch before Streamlit.
+- App verification then showed the live app still had the old export section, indicating the exact-block patch did not match the runtime-mutated app source.
+- `fix_streamlit_export_download_ux.py` was changed from exact-block replacement to marker-based replacement, from the old export-section header to the `elif st_operator == "synthesize"` branch marker.
 
 ## Files added
 
@@ -47,12 +51,13 @@ A follow-up Dockerfile startup-order fix moved the export UX patch after `fix_st
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
 - `RELEASE_NOTES.md`
+- `fix_streamlit_export_download_ux.py`
 - `workpackage_claims/WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION.md`
 - `handover/workpackages/20260618_2341_export_download_ux_implementation.md`
 
 ## Product-code changes
 
-Added a startup patch that modifies the Streamlit app source at container startup.
+Added and refined a startup patch that modifies the Streamlit app source at container startup.
 
 The patch replaces only the export/download UI block. It does not change export payload helpers or document processing helpers.
 
@@ -60,7 +65,7 @@ The patch replaces only the export/download UI block. It does not change export 
 
 No direct edit to `presidio_streamlit.py` was made through the GitHub contents API.
 
-Runtime behavior changes because Docker now runs:
+Runtime behavior changes because Docker runs:
 
 ```text
 python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py && python fix_streamlit_export_download_ux.py && streamlit run presidio_streamlit.py
@@ -85,7 +90,7 @@ Unchanged by design:
 
 No reinsert changes.
 
-Scrub Key is now visually separated in the export area with this warning:
+Scrub Key is visually separated in the export area with this warning:
 
 ```text
 De Scrub Key kan originele waarden herstellen. Bewaar dit bestand veilig.
@@ -139,7 +144,9 @@ python fix_streamlit_export_download_ux.py
 
 before Streamlit starts.
 
-Required checks:
+Coordinator app screenshot evidence then showed the live app still had the old export section. The export patch was therefore changed to marker-based replacement.
+
+Required checks after marker-based fix:
 
 ```text
 python -m pytest -q tests/test_export_download_ux_contracts.py
@@ -159,15 +166,15 @@ python -m pytest -q
 
 ## Validation status
 
-Implemented and documented. Dockerfile startup-order fix applied. Awaiting GitHub Actions/HF/app verification.
+Implemented and documented. Dockerfile startup-order fix applied. Marker-based export patch fix applied. Awaiting GitHub Actions/HF/app verification.
 
 ## GitHub Actions status
 
-Pending/unknown after Dockerfile startup-order fix.
+Pending/unknown after marker-based patch fix.
 
 ## Hugging Face sync status
 
-Pending/unknown after Dockerfile startup-order fix.
+Pending/unknown after marker-based patch fix.
 
 ## App verification status
 
