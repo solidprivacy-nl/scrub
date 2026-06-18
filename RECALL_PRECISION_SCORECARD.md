@@ -1,8 +1,8 @@
 # Recall / Precision Scorecard — Dutch legal and care benchmark refresh
 
-Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion, diagnostic runner/report artifact, artifact cleanup, cleaned artifact review, planning-only threshold design and PERSON-name coverage review.  
+Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion, diagnostic runner/report artifact, artifact cleanup, cleaned artifact review, planning-only threshold design, PERSON-name coverage review and PERSON-name diagnostic tests.  
 Repository: `solidprivacy-nl/scrub`.  
-Scope: benchmark/documentation-only. No product UI, export, Scrub Key or reinsert behavior is changed by this document.
+Scope: benchmark/tests/documentation-only. No product UI, export, Scrub Key or reinsert behavior is changed by this document.
 
 ---
 
@@ -24,6 +24,7 @@ WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX
 WP_RECALL_BENCHMARK_REPORT_REVIEW_2
 WP_RECALL_BENCHMARK_THRESHOLDS_PLAN
 WP_RECALL_PERSON_NAME_COVERAGE_REVIEW
+WP_RECALL_PERSON_NAME_COVERAGE_TESTS
 ```
 
 Current evidence:
@@ -31,9 +32,12 @@ Current evidence:
 - Diagnostic benchmark artifacts and reviews exist.
 - Cleaned artifact output is substantially less noisy than the first artifact.
 - Planning-only threshold policy exists.
-- PERSON gaps are now classified in `RECALL_PERSON_NAME_COVERAGE_REVIEW.md`.
+- PERSON gaps are classified in `RECALL_PERSON_NAME_COVERAGE_REVIEW.md`.
+- PERSON gap inventory is now covered by diagnostic tests in `tests/test_recall_person_name_coverage_diagnostics.py`.
 - No recognizer changes were made.
-- No thresholds are enforced.
+- No candidate scanner changes were made.
+- No runner/report changes were made.
+- No threshold enforcement exists.
 - No production gate exists.
 - No product claim is supported.
 
@@ -68,16 +72,18 @@ Remaining diagnostic gaps:
 
 ---
 
-## 3. PERSON-name coverage review status
+## 3. PERSON-name coverage diagnostics status
 
-`WP_RECALL_PERSON_NAME_COVERAGE_REVIEW` completed review/planning-only.
+`WP_RECALL_PERSON_NAME_COVERAGE_TESTS` completed tests/documentation-only.
 
-Findings:
+Diagnostic tests now cover:
 
-- The 14 remaining missed `PERSON` labels are classified.
-- Common gap categories include Arabic/Moroccan-style multi-token names, Dutch names with tussenvoegsels, names after care/legal roles, names after professional titles and single surnames.
-- The issue now looks mostly like recognizer coverage and candidate-design work, not benchmark mapping noise.
-- Single-surname cases such as `Bakker` and `Jansen` require careful design because broad matching could over-mask normal words.
+- the PERSON gap inventory;
+- the underlying synthetic corpus/source grounding;
+- PERSON gold sidecar label expectations;
+- context category examples;
+- non-claim boundaries;
+- no enforcement/gate boundary for PERSON coverage.
 
 No changes:
 
@@ -85,14 +91,29 @@ No changes:
 No recognizer changes.
 No candidate scanner changes.
 No runner/report changes.
-No thresholds enforced.
+No threshold enforcement.
 No production gate.
 No product claim.
 ```
 
+The tests do not require current recognizers to pass all PERSON examples. They keep the known risk visible for future planning.
+
 ---
 
-## 4. Threshold planning status
+## 4. PERSON-name coverage review status
+
+`WP_RECALL_PERSON_NAME_COVERAGE_REVIEW` completed review/planning-only.
+
+Findings:
+
+- The remaining missed `PERSON` labels are classified.
+- Common gap categories include Arabic/Moroccan-style multi-token names, Dutch names with tussenvoegsels, names after care/legal roles, names after professional titles and single surnames.
+- The issue now looks mostly like recognizer coverage and candidate-design work, not benchmark mapping noise.
+- Single-surname cases such as `Bakker` and `Jansen` require careful design because broad matching could over-mask normal words.
+
+---
+
+## 5. Threshold planning status
 
 `WP_RECALL_BENCHMARK_THRESHOLDS_PLAN` completed planning-only.
 
@@ -109,19 +130,19 @@ No product claim.
 PERSON threshold impact:
 
 - `PERSON` exact/text-normalized match should become high over time.
-- With 14 remaining misses, a hard PERSON threshold is too early.
-- Coverage tests should come before recognizer/candidate planning.
+- With remaining PERSON misses, a hard PERSON threshold is too early.
+- Coverage tests now exist, and recognizer/candidate planning should come next.
 
 ---
 
-## 5. Current coverage status
+## 6. Current coverage status
 
 | Area | Current state | Risk status |
 |---|---|---|
 | Dutch legal reference baseline | Present and normal assertions after pattern fix | Reduced for listed samples |
 | Role-word preservation | Cleaned artifact shows 0 preserve-term hits | Diagnostically measurable, not production-proof |
 | Care references | Remaining room/location gaps | Open coverage risk |
-| Person names | 14 missed labels classified | Open direct-identifier risk |
+| Person names | Gaps classified and diagnostic tests added | Open direct-identifier risk |
 | Email | Benchmark-only email predictions now match email labels | Improved diagnostic runner behavior, not product recognizer proof |
 | Address/IBAN/case reference mapping | Mapping cleanup effective | Improved diagnostic mapping |
 | Client references | 1 missed/wrong client reference `CL-HUUR-2026-0009` | Open coverage risk |
@@ -131,7 +152,7 @@ PERSON threshold impact:
 
 ---
 
-## 6. Open scorecard risks
+## 7. Open scorecard risks
 
 Open risks:
 
@@ -142,7 +163,7 @@ Open risks:
 - Helper-level candidate surfacing is not the same as automatic recognition.
 - Candidate rows require human review and are not automatically applied.
 - Corpus coverage is expanded but still synthetic and not exhaustive.
-- PERSON-name false-negative risk is analyzed but not fixed.
+- PERSON-name false-negative risk now has diagnostic test coverage, but no fix.
 - DOCX metadata, comments, tracked changes, headers and footers remain separate document-hygiene risks.
 
 Allowed wording:
@@ -164,23 +185,18 @@ De benchmark bewijst production readiness.
 
 ---
 
-## 7. Recommendation
+## 8. Recommendation
 
 Recommended next workpackage after separate approval:
-
-```text
-WP_RECALL_PERSON_NAME_COVERAGE_TESTS
-```
-
-Alternative next package if design should come first:
 
 ```text
 WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN
 ```
 
-Other backlog candidates:
+Alternative next packages:
 
 ```text
+WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS
 WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN
 WP_CLIENT_REFERENCE_COVERAGE_REVIEW
 WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS
