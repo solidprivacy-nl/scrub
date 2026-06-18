@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — Implement safe helper-level PERSON-name recognition improvements`
 
-Status: completed, pending GitHub Actions/HF verification after regex casing fix.
+Status: completed and verified.
 
 ## Summary
 
@@ -97,44 +97,39 @@ Local tests were not run because this environment is connector-only and does not
 
 Coordinator screenshot evidence showed the first implementation attempt had failing tests. The most likely cause was global `re.IGNORECASE` in `person_name_recognizer_helper.py`, which could let lowercase sentence words become part of a name-value span. The helper was fixed by scoping case-insensitivity to the role/title cue only.
 
-Required checks:
+Coordinator screenshot evidence now confirms:
 
 ```text
-python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py
-python -m pytest -q tests/test_recall_person_name_recognizer_implementation.py
-python -m pytest -q tests/test_recall_person_name_coverage_diagnostics.py
-python -m pytest -q tests/test_recall_gold_label_corpus_seed.py
-```
-
-Recommended broader checks:
-
-```text
-python -m pytest -q tests/test_recall_benchmark_runner_minimal.py
-python -m pytest -q
-python -m py_compile person_name_recognizer_helper.py
-python -m py_compile dutch_recognizers.py
-python -m py_compile candidate_scanner.py
-python -m py_compile presidio_streamlit.py
-git diff --check
+Tests #1292 for commit d4e063d — green
+Sync to Hugging Face Space #1303 for commit d4e063d — green
+Hugging Face Space app — running without Script execution error
 ```
 
 ## Validation status
 
-Implementation and tests added. Regex casing fix added. Awaiting GitHub Actions verification.
+Verified by coordinator screenshot evidence.
 
 ## GitHub Actions status
 
-Pending/unknown after regex casing fix.
+Verified green by coordinator screenshot evidence.
+
+```text
+Tests #1292 for commit d4e063d — green
+```
 
 ## Hugging Face sync status
 
-Pending/unknown after regex casing fix.
+Verified green by coordinator screenshot evidence.
+
+```text
+Sync to Hugging Face Space #1303 for commit d4e063d — green
+```
 
 ## App verification status
 
-Pending smoke verification after green Actions/HF sync.
+Verified healthy by coordinator screenshot evidence. The Hugging Face Space is running without Script execution error.
 
-No app behavior change is expected because the helper is not wired into the Streamlit recognizer setup in this package, but a smoke check is still recommended because a Python helper file was added.
+No app behavior change was expected because the helper is not wired into the Streamlit recognizer setup in this package.
 
 ## Remaining risks
 
