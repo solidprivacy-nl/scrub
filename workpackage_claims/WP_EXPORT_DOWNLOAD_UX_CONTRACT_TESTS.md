@@ -4,10 +4,11 @@ workpackage title: WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — Add contract tests f
 started timestamp: 2026-06-18 22:39 Europe/Amsterdam
 completed timestamp: 2026-06-18 22:39 Europe/Amsterdam
 wording-fix timestamp: 2026-06-18 23:23 Europe/Amsterdam
+production-gate-fix timestamp: 2026-06-18 23:28 Europe/Amsterdam
 scope: tests/documentation-only contract tests for export/download UX redesign
-boundaries: no product UI implementation, no Streamlit code changes, no export semantics changes, no Scrub Key changes, no reinsert changes, no recognizer changes, no benchmark gates, no product claim
+boundaries: no product UI implementation, no Streamlit code changes, no export semantics changes, no Scrub Key changes, no reinsert changes, no recognizer changes, no production gate, no product claim
 
-final commit SHA or PR link: d069f9af9ade880e363094c31bfdaf0d187976bc
+final commit SHA or PR link: 8ed0026b2220e5d0414a1721ed9effc2a5de5a92
 handover path: handover/workpackages/20260618_2239_export_download_ux_contract_tests.md
 
 files added:
@@ -38,17 +39,17 @@ effects:
 - Protected audit/technical details availability as secondary layers.
 - Protected no export semantics change boundary.
 - Protected implementation route.
-- Fixed brittle wording assertion by accepting both no benchmark gate and no benchmark gates wording.
+- Fixed brittle gate wording assertion to use the contract wording No production gate.
 
 tests/checks:
 - Added tests/test_export_download_ux_contracts.py.
 - Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
-- Coordinator screenshot showed first attempt failed on exact singular wording No benchmark gate while docs used plural/equivalent wording.
-- Required checks after fix: python -m pytest -q tests/test_export_download_ux_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_implementation.py; python -m py_compile presidio_streamlit.py; git diff --check.
+- Coordinator screenshots showed earlier attempts failed on gate wording.
+- Required checks after production-gate wording fix: python -m pytest -q tests/test_export_download_ux_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_implementation.py; python -m py_compile presidio_streamlit.py; git diff --check.
 - Recommended broader check: python -m pytest -q.
 
-GitHub Actions status: pending/unknown after wording fix.
-Hugging Face sync status: pending/unknown after wording fix.
+GitHub Actions status: pending/unknown after production-gate wording fix.
+Hugging Face sync status: pending/unknown after production-gate wording fix.
 app verification status: not required; no app behavior changed.
 
 remaining risks:
