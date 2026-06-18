@@ -1,13 +1,14 @@
-status: completed_pending_verification
+status: completed_verified
 repository: solidprivacy-nl/scrub
 workpackage title: WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — Add contract tests for safe future PERSON-name recognition
 started timestamp: 2026-06-18 18:52 Europe/Amsterdam
 completed timestamp: 2026-06-18 18:52 Europe/Amsterdam
 wording-fix timestamp: 2026-06-18 18:59 Europe/Amsterdam
+verified timestamp: 2026-06-18 19:14 Europe/Amsterdam
 scope: tests/specification-only PERSON-name recognizer contract tests
 boundaries: no product code, no recognizer implementation, no candidate scanner implementation, no runner/report changes, no UI, no export, no Scrub Key, no reinsert, no thresholds, no gate, no product claim
 
-final commit SHA or PR link: 8b68dd885abba4a7a8bc50b50874c1d511b31d2e
+final verified commit SHA or PR link: 4dd4c5fea6d88905ba6e9a577431ded1388e9b7c
 handover path: handover/workpackages/20260618_1852_recall_person_name_recognizer_contract_tests.md
 
 files added:
@@ -43,13 +44,13 @@ effects:
 tests/checks:
 - Added tests/test_recall_person_name_recognizer_contracts.py.
 - Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
-- Required verification command: python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py
-- Recommended additional checks: python -m pytest -q tests/test_recall_person_name_coverage_diagnostics.py; python -m pytest -q tests/test_recall_gold_label_corpus_seed.py; git diff --check.
-- Coordinator screenshot before wording fix showed failing test_recall_person_name_coverage_diagnostics due missing exact phrase no recognizer changes in scorecard. Wording fix restored that phrase.
+- Coordinator screenshot evidence confirms Tests #1278 for commit 4dd4c5f green.
+- Coordinator screenshot evidence confirms Sync to Hugging Face Space #1289 for commit 4dd4c5f green.
+- Coordinator app screenshot evidence confirms Hugging Face Space running without Script execution error.
 
-GitHub Actions status: pending/unknown after wording fix.
-Hugging Face sync status: pending/unknown after wording fix; earlier screenshot showed HF HTTP 429, likely transient/rate-limit.
-app verification status: not required; no app behavior changed.
+GitHub Actions status: verified green by coordinator screenshot evidence. Tests #1278 for commit 4dd4c5f green.
+Hugging Face sync status: verified green by coordinator screenshot evidence. Sync to Hugging Face Space #1289 for commit 4dd4c5f green.
+app verification status: verified healthy by coordinator screenshot evidence; no app behavior change was expected.
 
 remaining risks:
 - PERSON-name false-negative risk now has diagnostic and contract test coverage but remains unfixed.
@@ -60,4 +61,4 @@ remaining risks:
 - No threshold or gate exists.
 - Product claims remain blocked.
 
-next recommended step after green verification: WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY after separate coordinator approval. Then consider WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW. Do not start follow-up work automatically.
+next recommended step: WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY after separate coordinator approval. Then consider WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW. Do not start follow-up work automatically.
