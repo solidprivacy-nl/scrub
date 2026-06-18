@@ -32,25 +32,26 @@ Current mitigations:
 - PERSON-name coverage review classifies the remaining missed `PERSON` labels.
 - PERSON-name false-negative risk has diagnostic test coverage in `tests/test_recall_person_name_coverage_diagnostics.py`.
 - PERSON-name false-negative risk has a planning/specification-only recognition improvement plan in `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`.
-- PERSON-name false-negative risk now has contract test coverage for future recognizer behavior in `tests/test_recall_person_name_recognizer_contracts.py` and `tests/fixtures/person_name_recognizer_contract_cases.json`.
+- PERSON-name false-negative risk has contract test coverage for future recognizer behavior in `tests/test_recall_person_name_recognizer_contracts.py` and `tests/fixtures/person_name_recognizer_contract_cases.json`.
+- PERSON-name false-negative risk is now partially mitigated for contract-backed role/title name cases by `person_name_recognizer_helper.py` and `tests/test_recall_person_name_recognizer_implementation.py`.
 
 Gaps:
 
 - No accepted production recall/precision threshold exists.
 - No production benchmark gate exists.
 - No production safety claim is supported.
-- PERSON-name false-negative risk is analyzed, test-covered and planned, but not fixed.
-- No recognizer change was made.
+- PERSON-name false-negative risk is only partially mitigated for contract-backed role/title helper cases.
+- App-registered recognizer behavior and benchmark artifact impact still need review.
+- Candidate-only weak contexts are not automatic.
 - No candidate scanner change was made.
 - No gate or threshold enforcement was added.
-- Risk remains open until implementation follows separately.
+- Single-surname risk remains bounded by strong-context rules.
 - Remaining non-PERSON gaps include care room/location references, one client-number example and one nested false-positive hit inside a phone-like value.
 - Corpus is synthetic and small.
 
 Recommended workpackages:
 
-- Next approved package — `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
-- Then consider — `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
+- Next approved package — `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
 - Other approved packages — `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`, `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`, `WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS`.
 
 ---
@@ -220,6 +221,7 @@ Current mitigations:
 - PERSON-name diagnostic tests exist.
 - PERSON-name recognizer planning exists.
 - PERSON-name contract tests exist.
+- PERSON-name helper implementation tests exist.
 
 Gaps:
 
@@ -228,7 +230,7 @@ Gaps:
 
 Recommended workpackages:
 
-- Next approved benchmark package — `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
+- Next approved benchmark package — `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
 - Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
@@ -254,21 +256,21 @@ Current mitigations:
 - PERSON-name coverage review classifies role-linked missed names, including care-role and legal-role examples.
 - PERSON-name diagnostic tests preserve the gap inventory and non-claim boundaries without requiring current recognizers to pass all examples.
 - PERSON-name recognizer planning records a test-first route and value-only role/context boundary before implementation.
-- PERSON-name recognizer contract tests now specify future value-only, preserve-term, single-surname and negative-case behavior.
+- PERSON-name recognizer contract tests specify future value-only, preserve-term, single-surname and negative-case behavior.
+- PERSON-name helper implementation now enforces value-only role/title matching for contract-backed helper cases.
 
 Gaps:
 
 - No accepted production threshold exists.
 - No benchmark gate exists.
 - Corpus is synthetic and not exhaustive.
-- PERSON-name false-negative risk is analyzed, test-covered and contract-covered but not fixed.
-- Names after care/legal roles require implementation and benchmark review after contract tests.
-- Single-surname examples remain high ambiguity.
+- PERSON-name false-negative risk is only partially mitigated for contract-backed role/title helper cases.
+- Benchmark artifact impact still needs review.
+- Single-surname examples remain high ambiguity and must stay limited to strong context.
 - Product claim remains blocked.
 
 Recommended workpackages:
 
-- `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
 - `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
 - `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`.
 - `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`.
@@ -290,6 +292,6 @@ De benchmark bewijst production readiness.
 Allowed wording:
 
 ```text
-The PERSON-name recognizer contracts define future safe behavior for synthetic examples.
+The PERSON-name helper implements contract-backed value-only role/title matching for synthetic examples.
 Human review remains necessary.
 ```
