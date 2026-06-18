@@ -4,6 +4,9 @@ WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION keeps export semantics unchanged. This patc
 only changes presentation/copy/grouping in the export/download section. It does
 not change bytes, filenames, MIME types, Scrub Key contents, reinsert behavior,
 recognizers or benchmark logic.
+
+The patch is marker-based instead of exact-block based because earlier startup
+patches may already have adjusted nearby Streamlit source before this patch runs.
 """
 
 from __future__ import annotations
@@ -12,69 +15,8 @@ from pathlib import Path
 
 
 APP_FILE = Path(__file__).with_name("presidio_streamlit.py")
-
-
-OLD_EXPORT_DOWNLOAD_SECTION = '''        st.subheader("5. Download opgeschoonde bestanden")
-        if uploaded_file is not None:
-            st.info(f"Bestand beschikbaar voor export: {uploaded_file.name}")
-        else:
-            st.info("Geen uploadbestand aanwezig. Export wordt gemaakt op basis van het tekstvak.")
-
-        st.download_button(
-            label="Download opgeschoonde tekst (.txt)",
-            data=export_text.encode("utf-8"),
-            file_name="opgeschoonde_tekst.txt",
-            mime="text/plain",
-            key="download_txt",
-        )
-        st.download_button(
-            label="Download vervangtabel (.csv)",
-            data=replacement_report_csv(edited_report_rows),
-            file_name="vervangtabel.csv",
-            mime="text/csv",
-            key="download_csv",
-        )
-        st.download_button(
-            label="Download scrubrapport (.txt)",
-            data=scrub_report_txt(
-                edited_report_rows,
-                profile=profile_label,
-                source_filename=uploaded_file.name if uploaded_file is not None else None,
-            ),
-            file_name="scrubrapport.txt",
-            mime="text/plain",
-            key="download_scrub_report",
-        )
-
-        try:
-            if uploaded_file is not None and uploaded_file.name.lower().endswith(".docx"):
-                docx_bytes = anonymized_docx_from_original(uploaded_file, edited_replacements)
-                docx_filename = "opgeschoond_" + uploaded_file.name
-            else:
-                docx_bytes = docx_from_text(export_text)
-                docx_filename = "opgeschoonde_tekst.docx"
-            render_docx_hygiene_audit_panel(docx_bytes, source_label=docx_filename)
-            st.download_button(
-                label="Download opgeschoond Word-bestand (.docx)",
-                data=docx_bytes,
-                file_name=docx_filename,
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                key="download_docx",
-            )
-        except Exception as docx_error:
-            st.error(f"Kon geen DOCX-export maken: {docx_error}")
-
-        try:
-            st.download_button(
-                label="Download opgeschoonde PDF (.pdf)",
-                data=pdf_from_text(export_text),
-                file_name="opgeschoonde_tekst.pdf",
-                mime="application/pdf",
-                key="download_pdf",
-            )
-        except Exception as pdf_error:
-            st.error(f"Kon geen PDF-export maken: {pdf_error}")
-'''
+START_MARKER = '        st.subheader("5. Download opgeschoonde bestanden")'
+END_MARKER = '\n    elif st_operator == "synthesize":'
 
 
 NEW_EXPORT_DOWNLOAD_SECTION = '''        st.subheader("5. Exporteer resultaat")
@@ -184,13 +126,17 @@ NEW_EXPORT_DOWNLOAD_SECTION = '''        st.subheader("5. Exporteer resultaat")
 
 
 def apply_export_download_ux_patch(source: str) -> str:
-    """Return app source with grouped export/download UI, if the old block exists."""
+    """Return app source with grouped export/download UI."""
 
     if 'st.subheader("5. Exporteer resultaat")' in source:
         return source
-    if OLD_EXPORT_DOWNLOAD_SECTION not in source:
+    start_index = source.find(START_MARKER)
+    if start_index == -1:
         return source
-    return source.replace(OLD_EXPORT_DOWNLOAD_SECTION, NEW_EXPORT_DOWNLOAD_SECTION, 1)
+    end_index = source.find(END_MARKER, start_index)
+    if end_index == -1:
+        return source
+    return source[:start_index] + NEW_EXPORT_DOWNLOAD_SECTION + source[end_index:]
 
 
 def main() -> None:
