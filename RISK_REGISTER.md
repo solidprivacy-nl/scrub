@@ -19,40 +19,14 @@ Risk:
 Sensitive data remains in the scrubbed output and the user wrongly trusts the result.
 ```
 
-Current mitigations:
+Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work and planning-only threshold policy.
 
-- Human review workflow.
-- Review guidance and final review summary.
-- Dutch legal recall gap tests and pattern-fix verification are present.
-- Synthetic gold-label corpus exists and has been expanded.
-- Minimal diagnostic recall benchmark runner exists.
-- Diagnostic report artifact workflow exists.
-- First and cleaned artifact reviews exist.
-- Planning-only threshold policy exists.
-- PERSON-name coverage review classifies the remaining missed `PERSON` labels.
-- PERSON-name false-negative risk has diagnostic test coverage in `tests/test_recall_person_name_coverage_diagnostics.py`.
-- PERSON-name false-negative risk has a planning/specification-only recognition improvement plan in `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`.
-- PERSON-name false-negative risk has contract test coverage for future recognizer behavior in `tests/test_recall_person_name_recognizer_contracts.py` and `tests/fixtures/person_name_recognizer_contract_cases.json`.
-- PERSON-name false-negative risk is now partially mitigated for contract-backed role/title name cases by `person_name_recognizer_helper.py` and `tests/test_recall_person_name_recognizer_implementation.py`.
-
-Gaps:
+Remaining gaps:
 
 - No accepted production recall/precision threshold exists.
 - No production benchmark gate exists.
 - No production safety claim is supported.
-- PERSON-name false-negative risk is only partially mitigated for contract-backed role/title helper cases.
-- App-registered recognizer behavior and benchmark artifact impact still need review.
-- Candidate-only weak contexts are not automatic.
-- No candidate scanner change was made.
-- No gate or threshold enforcement was added.
-- Single-surname risk remains bounded by strong-context rules.
-- Remaining non-PERSON gaps include care room/location references, one client-number example and one nested false-positive hit inside a phone-like value.
-- Corpus is synthetic and small.
-
-Recommended workpackages:
-
-- Next approved package — `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
-- Other approved packages — `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`, `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`, `WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS`.
+- Human review remains necessary.
 
 ---
 
@@ -67,16 +41,7 @@ Risk:
 The Scrub Key is shared, leaked, retained too long, tampered with or mishandled, allowing full re-identification of scrubbed content.
 ```
 
-Current mitigations:
-
-- UI warnings around Scrub Key reinsert.
-- Local-only/no-AI/no-cloud positioning for reinsert.
-- Scrub Key warning/acknowledgement UI is closed out after Actions/HF/app verification.
-
-Gaps:
-
-- UI acknowledgements are safety prompts only; they are not encryption, protected storage, automatic deletion or a managed key vault.
-- No approved key recovery model.
+Current mitigations include warnings and acknowledgements. UI cleanup must keep Scrub Key clearly separate from ordinary document exports.
 
 ---
 
@@ -91,16 +56,7 @@ Risk:
 An AI system rewrites, translates, merges or deletes placeholders, causing deterministic reinsert to fail or restore incompletely.
 ```
 
-Current mitigations:
-
-- Unknown placeholders and not-found placeholders are reported in reinsert audit flows.
-- Placeholder robustness review, future robust format proposal, validation helper, audit helper and synthetic AI-output corruption tests exist.
-
-Gaps:
-
-- Robust placeholder generation has not been implemented in product flow.
-- No migration or backward-compatibility implementation exists yet.
-- No Scrub Key schema/version support for robust placeholder metadata exists yet.
+Current mitigations include placeholder robustness helper/test work and reinsert audit reporting.
 
 ---
 
@@ -115,17 +71,7 @@ Risk:
 DOCX metadata, comments, tracked changes, headers, footers or hidden content contain sensitive data that is not scrubbed or cleaned.
 ```
 
-Current mitigations:
-
-- DOCX hidden-content risk review, visibility helpers and report-only hygiene audit are present.
-- Clean DOCX export policy exists.
-- DOCX hygiene audit UI is report-only and does not claim clean DOCX output.
-
-Gaps:
-
-- Word comments / kantlijncommentaren are still not scrubbed or removed by the current DOCX scrub/reinsert flow.
-- No clean DOCX export implementation exists.
-- No approved export-blocking implementation exists for high-risk hidden content.
+DOCX hygiene audit remains report-only. MVP UI cleanup may make it visually calmer, but audit details must remain available and must not imply a clean-DOCX guarantee.
 
 ---
 
@@ -140,29 +86,19 @@ Risk:
 The final product promise is local-first, but the current fast validation surface is the Hugging Face cloud demo.
 ```
 
-Current mitigations:
-
-- Roadmap includes local desktop/offline direction.
-- UI messaging emphasizes local/no-AI/no-cloud where applicable.
-- Local runtime/packaging decision line is completed through packaging deferral.
-
-Gaps:
-
-- No full offline demonstration.
-- No production security certification is supported.
-- No signed or managed enterprise deployment proof exists.
+Local/offline installer work remains later. The current focus is making the web prototype workflow credible first.
 
 ---
 
-## R6 — Review UX and replace-flow ceiling
+## R6 — Review UX and interface clarity risk
 
 Status: mitigating  
-Impact: medium
+Impact: high
 
 Risk:
 
 ```text
-The review interface may not support the document-centric review experience needed for high-trust legal/care workflows.
+The interface still feels like a technical prototype, which can reduce confidence and increase review mistakes.
 ```
 
 Current mitigations:
@@ -170,12 +106,21 @@ Current mitigations:
 - Review table remains source of truth and fallback.
 - Side-by-side review surface, synced scrolling and collapsible review table are live and verified.
 - Serial review remains available as a non-destructive review aid.
+- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` now defines a route to move debug/audit details out of the primary flow and improve export/download hierarchy.
 
 Gaps:
 
-- The review table remains the source of truth and fallback.
-- Percentage-based synchronized scrolling can be imperfect when source and processed text differ structurally.
-- No professional document editor exists.
+- Export/download still needs implementation work.
+- Debug-like labels and technical captions still need to be collapsed, renamed or moved.
+- Risk remains open until UI/export implementation and app verification are complete.
+
+Recommended workpackages:
+
+- `WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS`
+- `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION`
+- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN`
+- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION`
+- `WP_REVIEW_COPY_POLISH_IMPLEMENTATION`
 
 ---
 
@@ -190,16 +135,11 @@ Risk:
 Users may assume PDF support means complete restored PDF reinsert or OCR, while the approved scope is text-based extraction to restored TXT only.
 ```
 
-Boundaries:
-
-- No restored PDF output.
-- No OCR.
-- No PDF-to-DOCX reconstruction.
-- No layout preservation promises.
+PDF limitations must remain clear in export/reinsert copy.
 
 ---
 
-## R8 — Workflow status and benchmark evidence visibility
+## R8 — Workflow status, audit visibility and evidence clarity
 
 Status: mitigating  
 Impact: medium
@@ -207,31 +147,20 @@ Impact: medium
 Risk:
 
 ```text
-Evidence becomes ambiguous because connector status can be incomplete and diagnostic outputs are hard to inspect.
+Evidence and audit controls become either too hidden to trust or too technical for normal users.
 ```
 
 Current mitigations:
 
 - Coordinator screenshots/evidence are recorded when connector lookup is incomplete.
-- Workpackages record Actions/sync status.
 - Diagnostic recall benchmark artifact workflow exists.
-- First and cleaned artifact reviews exist.
-- Planning-only threshold policy exists.
-- PERSON-name coverage review exists.
-- PERSON-name diagnostic tests exist.
-- PERSON-name recognizer planning exists.
-- PERSON-name contract tests exist.
-- PERSON-name helper implementation tests exist.
+- Audit/report details exist.
+- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` states that technical/audit details must remain available but become secondary.
 
 Gaps:
 
-- Connector workflow-run lookup can still be incomplete for some push-triggered runs.
+- Technical details are not yet consistently grouped under a professional audit/advanced layer.
 - No generalized automated status artifact exists yet.
-
-Recommended workpackages:
-
-- Next approved benchmark package — `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
-- Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
 
@@ -246,34 +175,7 @@ Risk:
 Dutch legal matter references can be missed or misclassified, while generic legal/care role words can be masked in ways that damage meaning.
 ```
 
-Current mitigations:
-
-- Human review table remains source of truth and fallback.
-- Recall benchmark spec defines reference classes, context terms to preserve and over-masking traps.
-- Diagnostic runner/report artifacts make benchmark evidence visible.
-- Cleaned artifact has `preserve_term_hit_count = 0`.
-- Planning-only threshold policy exists.
-- PERSON-name coverage review classifies role-linked missed names, including care-role and legal-role examples.
-- PERSON-name diagnostic tests preserve the gap inventory and non-claim boundaries without requiring current recognizers to pass all examples.
-- PERSON-name recognizer planning records a test-first route and value-only role/context boundary before implementation.
-- PERSON-name recognizer contract tests specify future value-only, preserve-term, single-surname and negative-case behavior.
-- PERSON-name helper implementation now enforces value-only role/title matching for contract-backed helper cases.
-
-Gaps:
-
-- No accepted production threshold exists.
-- No benchmark gate exists.
-- Corpus is synthetic and not exhaustive.
-- PERSON-name false-negative risk is only partially mitigated for contract-backed role/title helper cases.
-- Benchmark artifact impact still needs review.
-- Single-surname examples remain high ambiguity and must stay limited to strong context.
-- Product claim remains blocked.
-
-Recommended workpackages:
-
-- `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
-- `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`.
-- `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`.
+Current mitigations include diagnostic benchmark work, preservation guidance and PERSON-name contract/helper work. Benchmark follow-up is temporarily parked for UI/export work unless a concrete blocker appears.
 
 ---
 
@@ -292,6 +194,6 @@ De benchmark bewijst production readiness.
 Allowed wording:
 
 ```text
-The PERSON-name helper implements contract-backed value-only role/title matching for synthetic examples.
-Human review remains necessary.
+Scrub helpt gevonden gegevens te controleren en exporteren, maar menselijke review blijft noodzakelijk.
+Technische en auditdetails blijven beschikbaar voor controle.
 ```
