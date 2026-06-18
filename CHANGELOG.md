@@ -1,23 +1,58 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_RECALL_PERSON_NAME_COVERAGE_TESTS — Add diagnostic tests for PERSON-name coverage gaps
+## WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN — Plan safe PERSON-name recognition improvements
 
-Status: completed as tests/documentation-only.
+Status: completed as planning/specification-only.
 
 Files added:
 
-- `tests/test_recall_person_name_coverage_diagnostics.py`
-- `handover/workpackages/20260618_0822_recall_person_name_coverage_tests.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_TESTS.md`
+- `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`
+- `handover/workpackages/20260618_1848_recall_person_name_recognizer_plan.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`
 
 Files changed:
 
-- `RECALL_PERSON_NAME_COVERAGE_REVIEW.md`
 - `RECALL_PRECISION_SCORECARD.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_TESTS.md`
+- `DECISION_LOG.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`
+
+Summary:
+
+- Added a planning/specification-only document for safe future PERSON-name recognition improvements.
+- Planned a test-first route for PERSON-name coverage work.
+- Recorded role/context preservation requirements and single-surname ambiguity.
+- Defined that contract tests are required before any future implementation.
+
+Intentionally not changed:
+
+- No product code.
+- No implementation code.
+- No candidate scanner implementation.
+- No runner/report behavior changes.
+- No workflow changes.
+- No tests changed.
+- No threshold enforcement.
+- No gate.
+- No product claim.
+- No UI/export/Scrub Key/reinsert behavior changes.
+
+Tests/checks:
+
+- Local tests were not run because this package is planning/specification-only and only markdown/governance files changed.
+- `git diff --check` was not runnable in this connector-only environment.
+
+Next recommended step:
+
+- Recommended next after separate approval: `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
+- Then consider `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
+- Do not start follow-up work automatically.
+
+## WP_RECALL_PERSON_NAME_COVERAGE_TESTS — Add diagnostic tests for PERSON-name coverage gaps
+
+Status: completed and verified as tests/documentation-only.
 
 Summary:
 
@@ -26,30 +61,7 @@ Summary:
 - Tests verify context categories such as Arabic/Moroccan-style multi-token names, Dutch tussenvoegsel names, single surnames, professional-title contexts, care/legal role contexts and names near contact/reference data.
 - Tests verify non-claim boundaries and absence of active PERSON coverage enforcement/gate wording.
 - Tests intentionally do not require current recognizers to pass all PERSON examples.
-
-Intentionally not changed:
-
-- No product code.
-- No recognizer changes.
-- No candidate scanner changes.
-- No runner/report behavior changes.
-- No workflow changes.
-- No threshold enforcement.
-- No gate.
-- No product claim.
-- No UI/export/Scrub Key/reinsert behavior changes.
-
-Tests/checks:
-
-- Added `tests/test_recall_person_name_coverage_diagnostics.py`.
-- Local tests were not run because this environment is connector-only and has no local Git working tree for pytest execution.
-- Required GitHub Actions checks should run the new test as part of the existing test suite.
-
-Next recommended step:
-
-- Recommended next after separate approval: `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
-- Then consider `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
-- Do not start follow-up work automatically.
+- Coordinator evidence showed Tests #1253 and Sync to Hugging Face Space #1264 green for commit `0927bec`.
 
 ## WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — Review remaining PERSON-name recall gaps
 
@@ -86,20 +98,9 @@ Main findings:
 - Cleanup materially reduced noise versus the first artifact.
 - Remaining misses are concentrated in person names, care room/location references and one client-number example.
 
-## WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — Clean diagnostic recall benchmark report mapping/counting
-
-Status: completed and coordinator-verified as benchmark/tooling/tests/documentation-only.
-
-Summary:
-
-- Cleaned diagnostic runner/report mapping and counting noise found in the first artifact review.
-- Added benchmark/report mappings for `NL_ADDRESS`, `NL_IBAN`, `NL_CASE_REFERENCE`, `NL_LEGAL_PARTY_NAME` and `EMAIL_ADDRESS`.
-- Added benchmark-only email predictions with source `benchmark_builtin`.
-- Added prediction deduplication for report accounting by text/entity/start/end/source.
-- Coordinator evidence showed Tests, HF sync and Diagnostic recall benchmark report workflow green for the cleanup commits.
-
 ## Previous benchmark entries
 
+- WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed and coordinator-verified mapping/counting cleanup.
 - WP_RECALL_BENCHMARK_REPORT_REVIEW — completed first diagnostic artifact review.
 - WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed and coordinator-verified diagnostic artifact workflow.
 - WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed tests-only repair.
