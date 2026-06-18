@@ -1,8 +1,8 @@
 # Recall / Precision Scorecard — Dutch legal and care benchmark refresh
 
-Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion, diagnostic runner/report artifact, artifact cleanup, cleaned artifact review, planning-only threshold design, PERSON-name coverage review, PERSON-name diagnostic tests, PERSON-name recognizer planning and PERSON-name recognizer contract tests.  
+Status: refreshed after Dutch legal pattern fixes, gold-label corpus expansion, diagnostic runner/report artifact, artifact cleanup, cleaned artifact review, planning-only threshold design, PERSON-name coverage review, PERSON-name diagnostic tests, PERSON-name recognizer planning, PERSON-name recognizer contract tests and helper-level PERSON-name recognition implementation.  
 Repository: `solidprivacy-nl/scrub`.  
-Scope: benchmark/tests/documentation-only. No product UI, export, Scrub Key or reinsert behavior is changed by this document.
+Scope: benchmark/helper/tests/documentation. No product UI, export, Scrub Key or reinsert behavior is changed by this document.
 
 ---
 
@@ -27,6 +27,7 @@ WP_RECALL_PERSON_NAME_COVERAGE_REVIEW
 WP_RECALL_PERSON_NAME_COVERAGE_TESTS
 WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN
 WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS
+WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY
 ```
 
 Current evidence:
@@ -37,10 +38,13 @@ Current evidence:
 - PERSON gaps are classified in `RECALL_PERSON_NAME_COVERAGE_REVIEW.md`.
 - PERSON gap inventory is covered by diagnostic tests in `tests/test_recall_person_name_coverage_diagnostics.py`.
 - PERSON-name recognition has a safe planning/specification document in `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`.
-- Contract fixture and tests now define future PERSON-name recognizer behavior.
-- No recognizer changes were made.
-- No recognizer implementation was added.
-- No candidate scanner implementation was added.
+- Contract fixture and tests define future PERSON-name recognizer behavior.
+- `person_name_recognizer_helper.py` now implements contract-backed, value-only role/title PERSON-name matching for helper-level use.
+- `tests/test_recall_person_name_recognizer_implementation.py` validates the helper against contract-backed positive, negative, single-surname and candidate-only boundary cases.
+- No app UI changes were made.
+- No registered app recognizer changes were made in `dutch_recognizers.py`.
+- No recognizer changes were made to the existing app-registered Dutch recognizer setup.
+- No candidate scanner changes were made.
 - No runner/report changes were made.
 - No threshold enforcement exists.
 - No production gate exists.
@@ -65,7 +69,7 @@ preserve_term_hit_count = 0
 known_trap_hit_count = 1
 ```
 
-Remaining diagnostic gaps:
+Remaining diagnostic gaps before helper implementation review:
 
 ```text
 14 missed PERSON labels
@@ -75,13 +79,58 @@ Remaining diagnostic gaps:
 1 known-trap care-location review signal
 ```
 
+The helper implementation targets only contract-backed role/title PERSON-name examples. It does not yet prove benchmark recall improvement in the artifact report.
+
 ---
 
-## 3. PERSON-name recognizer contract test status
+## 3. PERSON-name helper implementation status
+
+`WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY` completed helper/recognizer implementation + tests.
+
+Implementation:
+
+```text
+person_name_recognizer_helper.py
+```
+
+Tests:
+
+```text
+tests/test_recall_person_name_recognizer_implementation.py
+```
+
+Implemented scope:
+
+- contract-backed value-only role/title PERSON-name matching;
+- strong-context single-surname handling for examples like `arts Bakker` and `Arts Jansen`;
+- negative cases remain unmatched as PERSON-name values;
+- candidate-only weak contexts remain not automatic.
+
+Not changed:
+
+```text
+No UI/export/Scrub Key/reinsert change.
+No registered app recognizer change in dutch_recognizers.py.
+No candidate scanner change.
+No runner/report change.
+No threshold enforcement.
+No production gate.
+No product claim.
+```
+
+Recommended next:
+
+```text
+WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW
+```
+
+---
+
+## 4. PERSON-name recognizer contract test status
 
 `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS` completed tests/specification-only.
 
-The new contract layer includes:
+The contract layer includes:
 
 ```text
 tests/fixtures/person_name_recognizer_contract_cases.json
@@ -98,27 +147,9 @@ The contract fixture and tests define future behavior for:
 - preserve-term policy;
 - no product-claim/no threshold/no gate boundaries.
 
-No changes:
-
-```text
-No recognizer changes.
-No recognizer implementation.
-No candidate scanner implementation.
-No runner/report changes.
-No threshold enforcement.
-No production gate.
-No product claim.
-```
-
-Recommended next:
-
-```text
-WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY
-```
-
 ---
 
-## 4. PERSON-name recognizer planning status
+## 5. PERSON-name recognizer planning status
 
 `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN` completed planning/specification-only.
 
@@ -131,23 +162,6 @@ The plan records:
 - contract-test requirements before implementation;
 - review-table/source-of-truth boundaries;
 - product-claim boundaries.
-
----
-
-## 5. PERSON-name coverage diagnostics status
-
-`WP_RECALL_PERSON_NAME_COVERAGE_TESTS` completed tests/documentation-only.
-
-Diagnostic tests cover:
-
-- the PERSON gap inventory;
-- the underlying synthetic corpus/source grounding;
-- PERSON gold sidecar label expectations;
-- context category examples;
-- non-claim boundaries;
-- no enforcement/gate boundary for PERSON coverage.
-
-The tests do not require current recognizers to pass all PERSON examples. They keep the known risk visible for future planning.
 
 ---
 
@@ -168,9 +182,8 @@ No product claim.
 PERSON threshold impact:
 
 - `PERSON` exact/text-normalized match should become high over time.
-- With remaining PERSON misses, a hard PERSON threshold is too early.
-- Coverage tests, recognizer planning and contract tests now exist.
-- Helper-only implementation should come before any threshold reconsideration.
+- With remaining PERSON misses, a hard PERSON threshold is still too early.
+- Helper-level implementation must be followed by benchmark review before threshold reconsideration.
 
 ---
 
@@ -181,7 +194,7 @@ PERSON threshold impact:
 | Dutch legal reference baseline | Present and normal assertions after pattern fix | Reduced for listed samples |
 | Role-word preservation | Cleaned artifact shows 0 preserve-term hits | Diagnostically measurable, not production-proof |
 | Care references | Remaining room/location gaps | Open coverage risk |
-| Person names | Gaps classified, diagnostic tests added, plan added, contract tests added | Open direct-identifier risk |
+| Person names | Gaps classified, diagnostic tests added, plan added, contract tests added, helper implementation added | Partially mitigated for contract-backed role/title examples |
 | Email | Benchmark-only email predictions now match email labels | Improved diagnostic runner behavior, not product recognizer proof |
 | Address/IBAN/case reference mapping | Mapping cleanup effective | Improved diagnostic mapping |
 | Client references | 1 missed/wrong client reference `CL-HUUR-2026-0009` | Open coverage risk |
@@ -199,16 +212,17 @@ Open risks:
 - No formal accepted precision threshold exists.
 - No production benchmark gate exists.
 - Runner/report metrics remain diagnostic only.
-- Helper-level candidate surfacing is not the same as automatic recognition.
+- Helper-level recognition is not the same as production-readiness proof.
 - Candidate rows require human review and are not automatically applied.
 - Corpus coverage is expanded but still synthetic and not exhaustive.
-- PERSON-name false-negative risk now has diagnostic and contract test coverage, but no implementation.
+- PERSON-name false-negative risk is only partially mitigated for contract-backed role/title cases.
+- App-registered recognizer behavior and diagnostic report artifact impact still need review.
 - DOCX metadata, comments, tracked changes, headers and footers remain separate document-hygiene risks.
 
 Allowed wording:
 
 ```text
-The PERSON-name recognizer contracts define future safe behavior for synthetic examples.
+The PERSON-name helper implements contract-backed value-only role/title matching for synthetic examples.
 Human review remains necessary.
 ```
 
@@ -225,13 +239,7 @@ De benchmark bewijst production readiness.
 
 ## 9. Recommendation
 
-Recommended next workpackage after separate approval:
-
-```text
-WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY
-```
-
-Then consider:
+Recommended next workpackage after green tests/HF sync/app smoke:
 
 ```text
 WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW
