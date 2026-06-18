@@ -14,7 +14,7 @@ Implemented grouped export/download UX through a small startup patch:
 fix_streamlit_export_download_ux.py
 ```
 
-The Hugging Face startup command now runs this patch before Streamlit starts. The patch changes only export/download presentation and copy.
+The Hugging Face startup command now runs the existing startup patches first and then runs this export UX patch before Streamlit starts. The patch changes only export/download presentation and copy.
 
 The export section becomes:
 
@@ -29,6 +29,8 @@ Document downloaden
 Scrub Key
 Audit en technische bestanden
 ```
+
+A follow-up Dockerfile startup-order fix moved the export UX patch after `fix_streamlit_pdf_text_reinsert.py`, preserving the legacy tested startup substring while still running the export patch before Streamlit.
 
 ## Files added
 
@@ -45,7 +47,8 @@ Audit en technische bestanden
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
 - `RELEASE_NOTES.md`
-- `workpackage_claims/WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION.md` pending final closeout update after this handover file
+- `workpackage_claims/WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION.md`
+- `handover/workpackages/20260618_2341_export_download_ux_implementation.md`
 
 ## Product-code changes
 
@@ -60,10 +63,8 @@ No direct edit to `presidio_streamlit.py` was made through the GitHub contents A
 Runtime behavior changes because Docker now runs:
 
 ```text
-python fix_streamlit_export_download_ux.py
+python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py && python fix_streamlit_export_download_ux.py && streamlit run presidio_streamlit.py
 ```
-
-before launching Streamlit.
 
 The patch keeps the DOCX hygiene audit outside a nested expander.
 
@@ -122,6 +123,22 @@ tests/test_export_download_ux_contracts.py
 
 Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
 
+Coordinator screenshot evidence showed two Dockerfile regression tests failed because the export patch was inserted between the existing nested-expander and PDF text reinsert startup patches.
+
+The Dockerfile was fixed to preserve the expected tested startup substring:
+
+```text
+python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py
+```
+
+and then run:
+
+```text
+python fix_streamlit_export_download_ux.py
+```
+
+before Streamlit starts.
+
 Required checks:
 
 ```text
@@ -142,15 +159,15 @@ python -m pytest -q
 
 ## Validation status
 
-Implemented and documented. Awaiting GitHub Actions/HF/app verification.
+Implemented and documented. Dockerfile startup-order fix applied. Awaiting GitHub Actions/HF/app verification.
 
 ## GitHub Actions status
 
-Pending/unknown at handover time.
+Pending/unknown after Dockerfile startup-order fix.
 
 ## Hugging Face sync status
 
-Pending/unknown at handover time.
+Pending/unknown after Dockerfile startup-order fix.
 
 ## App verification status
 
