@@ -30,7 +30,8 @@ Current mitigations:
 - First and cleaned artifact reviews exist.
 - Planning-only threshold policy exists.
 - PERSON-name coverage review classifies the remaining missed `PERSON` labels.
-- PERSON-name false-negative risk now has diagnostic test coverage in `tests/test_recall_person_name_coverage_diagnostics.py`.
+- PERSON-name false-negative risk has diagnostic test coverage in `tests/test_recall_person_name_coverage_diagnostics.py`.
+- PERSON-name false-negative risk now has a planning/specification-only recognition improvement plan in `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`.
 
 Gaps:
 
@@ -38,7 +39,7 @@ Gaps:
 - No production benchmark gate exists.
 - No production safety claim is supported.
 - Threshold planning exists, but risk remains open.
-- PERSON-name false-negative risk is analyzed and test-covered, but not fixed.
+- PERSON-name false-negative risk is analyzed, test-covered and planned, but not fixed.
 - No recognizer change was made.
 - No candidate scanner change was made.
 - No gate or threshold enforcement was added.
@@ -48,8 +49,8 @@ Gaps:
 
 Recommended workpackages:
 
-- Next approved package — `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
-- Then consider — `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
+- Next approved package — `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
+- Then consider — `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
 - Other approved packages — `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`, `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`, `WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS`.
 
 ---
@@ -217,6 +218,7 @@ Current mitigations:
 - Planning-only threshold policy exists.
 - PERSON-name coverage review exists.
 - PERSON-name diagnostic tests exist.
+- PERSON-name recognizer planning exists.
 
 Gaps:
 
@@ -225,7 +227,7 @@ Gaps:
 
 Recommended workpackages:
 
-- Next approved benchmark package — `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
+- Next approved benchmark package — `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
 - Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
@@ -249,22 +251,23 @@ Current mitigations:
 - Cleaned artifact has `preserve_term_hit_count = 0`.
 - Planning-only threshold policy exists.
 - PERSON-name coverage review classifies role-linked missed names, including care-role and legal-role examples.
-- PERSON-name diagnostic tests now preserve the gap inventory and non-claim boundaries without requiring current recognizers to pass all examples.
+- PERSON-name diagnostic tests preserve the gap inventory and non-claim boundaries without requiring current recognizers to pass all examples.
+- PERSON-name recognizer planning records a test-first route and value-only role/context boundary before implementation.
 
 Gaps:
 
 - No accepted production threshold exists.
 - No benchmark gate exists.
 - Corpus is synthetic and not exhaustive.
-- PERSON-name false-negative risk is analyzed and test-covered but not fixed.
-- Names after care/legal roles need recognizer/candidate planning before implementation.
+- PERSON-name false-negative risk is analyzed, test-covered and planned but not fixed.
+- Names after care/legal roles require contract tests before implementation.
 - Single-surname examples remain high ambiguity.
 - Product claim remains blocked.
 
 Recommended workpackages:
 
-- `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
 - `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
+- `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
 - `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`.
 - `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`.
 
@@ -285,7 +288,6 @@ De benchmark bewijst production readiness.
 Allowed wording:
 
 ```text
-De diagnostische benchmark laat zien welke synthetische persoonsnamen nog gemist worden.
-Deze analyse helpt vervolgtests en herkenningslogica te plannen.
+De PERSON-name recognizer planning beschrijft hoe synthetische naamgaps veilig kunnen worden aangepakt.
 Menselijke review blijft noodzakelijk.
 ```
