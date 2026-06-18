@@ -37,7 +37,8 @@ WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — completed; PERSON-name coverage gaps r
 WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified; diagnostic PERSON-name gap inventory tests added.
 WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN — completed; safe PERSON-name recognizer improvement plan added.
 WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed and verified; future PERSON-name recognizer contract tests added.
-WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed; contract-backed helper-level PERSON-name recognition implemented.
+WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed and verified; contract-backed helper-level PERSON-name recognition implemented.
+WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN — completed; MVP UI cleanup and export/download redesign route planned.
 WP_SERIAL_REVIEW_UI — completed and app-verified.
 ```
 
@@ -51,11 +52,11 @@ Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 
 The review table remains source of truth and fallback. The normal app keeps one central side-by-side review surface, visible visual markers, the collapsible replacement table under `Vervangtabel controleren — <items> items`, Serial review, export/download and DOCX hygiene audit.
 
-This package does not change the Streamlit UI or export/reinsert flows.
+Current product direction now shifts visible work toward MVP UI cleanup and professional export/download flow before more recall/benchmark follow-up.
 
 ## Recall/benchmark status
 
-The diagnostic benchmark stack now includes:
+The diagnostic benchmark stack includes:
 
 ```text
 corpus/**/*.gold.json
@@ -106,14 +107,25 @@ no gate
 no product claim
 ```
 
-Remaining diagnostic gaps before benchmark review:
+Recall/benchmark follow-up packages are temporarily parked unless a concrete blocker appears.
+
+## MVP UI/export redesign status
+
+Planning document:
 
 ```text
-14 missed PERSON labels in prior cleaned artifact baseline
-3 missed MEDICAL_OR_CARE_REFERENCE care room/location labels
-1 missed/wrong CLIENT_NUMBER
-1 nested false-positive BSN-like hit inside a phone-like value
-1 known-trap care-location review signal
+MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md
+```
+
+Planned focus:
+
+```text
+calmer MVP interface
+professional export/download flow
+technical/debug details moved to secondary audit/advanced layers
+Scrub Key clearly separated from normal document exports
+review table remains source of truth and fallback
+no export semantics change
 ```
 
 ## Verification evidence
@@ -130,21 +142,29 @@ a3df5c7 — Diagnostic recall benchmark report #1 green
 0927bec — Sync to Hugging Face Space #1264 green
 4dd4c5f — Tests #1278 green
 4dd4c5f — Sync to Hugging Face Space #1289 green
-Diagnostic recall benchmark report workflow green for relevant cleanup commits
+d4e063d — Tests #1292 green
+d4e063d — Sync to Hugging Face Space #1303 green
 Hugging Face app screenshot showed running without Script execution error
 ```
 
-`WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY` changes helper behavior and should be followed by GitHub Actions/HF sync and app smoke verification.
+`WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN` is planning/design-only and does not require app verification.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after green tests/HF sync/app smoke: WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW.
-3. Other backlog candidates: WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN, WP_CLIENT_REFERENCE_COVERAGE_REVIEW, WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS.
-4. A future gate route may be planned later as WP_RECALL_BENCHMARK_GATE_PLAN, but that is still planning and not implementation.
+2. Recommended next after separate approval: WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS.
+3. Then: WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION.
+4. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.
+5. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION.
+6. Then: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
+7. Verification closeout after UI implementation: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
 ```
+
+Recall/benchmark follow-up packages are temporarily parked unless a concrete blocker appears.
 
 ## Boundaries
 
-Do not start UI, export/download, Scrub Key, reinsert, benchmark-gate, local packaging or broad architecture work without separate coordinator approval and a dedicated workpackage.
+Do not start UI implementation, export/download implementation, Scrub Key, reinsert, benchmark-gate, local packaging or broad architecture work without separate coordinator approval and a dedicated workpackage.
+
+Do not run parallel edits to `presidio_streamlit.py`, review table flow or export/download flow.
