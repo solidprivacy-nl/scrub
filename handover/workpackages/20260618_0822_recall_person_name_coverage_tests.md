@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_RECALL_PERSON_NAME_COVERAGE_TESTS — Add diagnostic tests for remaining PERSON-name recall gaps`
 
-Status: completed as tests/documentation-only, pending GitHub Actions/HF verification.
+Status: completed and verified as tests/documentation-only.
 
 ## Summary
 
@@ -25,7 +25,7 @@ The tests preserve the known gap inventory and context categories without requir
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_TESTS.md` pending final closeout update after this handover file
+- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_TESTS.md`
 
 ## Product-code changes
 
@@ -65,35 +65,41 @@ Coverage:
 
 Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
 
-Required verification command for GitHub/local runner:
+Coordinator screenshot evidence confirms:
 
 ```text
-python -m pytest -q tests/test_recall_person_name_coverage_diagnostics.py
+Tests #1253 for commit 0927bec — green
+Sync to Hugging Face Space #1264 for commit 0927bec — green
+Hugging Face Space app — running without Script execution error
 ```
 
-Recommended additional checks:
-
-```text
-python -m pytest -q tests/test_recall_gold_label_corpus_seed.py
-python -m pytest -q tests/test_recall_benchmark_runner_minimal.py
-git diff --check
-```
+Earlier red runs for commit `9930663` were superseded by later green commits after documentation/non-claim boundary updates.
 
 ## Validation status
 
-Implemented as tests/documentation-only. Awaiting GitHub Actions verification.
+Verified by coordinator screenshot evidence.
 
 ## GitHub Actions status
 
-Pending/unknown at handover time.
+Verified green by coordinator screenshot evidence.
+
+```text
+Tests #1253 for commit 0927bec — green
+```
 
 ## Hugging Face sync status
 
-Pending/unknown at handover time.
+Verified green by coordinator screenshot evidence.
+
+```text
+Sync to Hugging Face Space #1264 for commit 0927bec — green
+```
 
 ## App verification status
 
-Not required. No app behavior changed.
+Verified healthy by coordinator screenshot evidence. The Hugging Face Space is running without Script execution error.
+
+No app verification was functionally required because no app behavior changed.
 
 ## Summary of diagnostic test coverage
 
