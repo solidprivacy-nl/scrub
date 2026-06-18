@@ -4,6 +4,39 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-18 — D024 — PERSON-name improvement proceeds test-first
+
+Status: accepted planning/specification decision
+
+Decision:
+
+```text
+PERSON-name improvement will proceed test-first.
+```
+
+Reason:
+
+```text
+Single-surname and role/context cases are high-risk for over-masking and legal/care meaning damage.
+```
+
+Consequence:
+
+```text
+Contract tests are required before recognizer implementation.
+```
+
+Implications:
+
+- Role/context words such as `cliënt`, `slachtoffer`, `minderjarige`, `arts`, `getuige`, `eiser`, `verweerder`, `verpleegkundige`, `zorgmedewerker`, `behandelaar` and `mantelzorger` must remain readable.
+- Future PERSON-name matching should mask the sensitive name value, not the legal/care role meaning.
+- Broad capitalization-based matching is not acceptable as a design route.
+- Single-surname handling requires strong context and may remain candidate-only unless contract tests prove low false-positive risk.
+- Human review remains necessary.
+- No production threshold or gate is created by this decision.
+
+---
+
 ## 2026-06-15 — D023 — Synchronized scrolling is default review behavior, not a user-facing technical control
 
 Status: accepted bounded UX refinement decision
@@ -177,37 +210,6 @@ Implications:
 
 ---
 
-## 2026-06-12 — D017 — Streamlit is feasible only for a bounded read-only highlight preview
+## Historical note
 
-Status: accepted feasibility boundary decision; any implementation route using startup source mutation is superseded by D019/D021/D022/D023
-
-Decision:
-
-```text
-Streamlit may be used for a small static/read-only highlight review preview using synthetic text or extracted main text only. It must not become the long-term professional document-centric review interface yet, and it must not implement click-to-mark, review mutation, export blocking, Scrub Key mutation, Word/PDF layout rendering or broad review-table replacement.
-```
-
-Rationale:
-
-Streamlit is fast for online MVP validation, but clickable markers, synchronized panes, raw HTML rendering, accessibility, long-document performance and state synchronization are high-risk in the current patch-based UI architecture. A bounded read-only prototype can validate whether document context improves review comprehension without destabilizing the current table-first workflow.
-
-Implications:
-
-- `STREAMLIT_FEASIBILITY_BOUNDARY_REVIEW.md` remains a historical feasibility boundary, but D019 governs the route after the failed WP42D startup-mutation attempt and D021/D022/D023 govern the unified side-by-side review target.
-- The old static-highlight startup source mutation route must not be restarted.
-- Future UI preview work may be considered only after helper/model tests and explicit approval.
-- Click-to-mark sensitive text remains blocked until later decision/implementation packages.
-- The production review table remains the authoritative audit/control surface.
-- Any HTML rendering must escape source text and avoid raw user-text HTML.
-
----
-
-## 2026-06-12 — D016 — Highlight-based review starts as bounded read-only prototype after feasibility review
-
-Status: accepted prototype decision; implementation route superseded where it conflicts with D019/D021/D022/D023
-
-Decision:
-
-```text
-Build a small, read-only proof-of-concept for visual review of scrubbed output using highlighted placeholders before considering any broader document-editor direction.
-```
+Older decisions remain available in Git history.
