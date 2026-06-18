@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-06-14 — unified side-by-side review UX direction anchored.
+Last roadmap strategy update: 2026-06-18 — active next direction refocused on MVP UI cleanup and export/download flow.
 
 ---
 
@@ -106,6 +106,7 @@ WP_REPLACE_LOGIC_UI_REDESIGN_PLAN — replacement review redesigned around simpl
 WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — unified side-by-side review UX direction anchored.
 WP45-WP49 — local runtime/packaging decision line; installer deferred.
 WP50-WP51 — pilot/ICP thinking artifacts; parked for now.
+WP_RECALL_PERSON_NAME_* — diagnostic, contract and helper-level PERSON-name work completed; benchmark follow-up temporarily parked unless a concrete blocker appears.
 ```
 
 Important UX status:
@@ -114,6 +115,7 @@ Important UX status:
 The review table remains source of truth and fallback.
 The old replacement decision helper panel must not return as normal user-facing UI.
 The long-term review target is one unified side-by-side main review surface, not more separate helper panels.
+The export/download flow is functional but not yet product-finished.
 ```
 
 ---
@@ -167,7 +169,8 @@ This is governed by:
 
 - `DECISION_LOG.md` D021;
 - `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md`;
-- `REPLACE_LOGIC_UI_REDESIGN_PLAN.md`.
+- `REPLACE_LOGIC_UI_REDESIGN_PLAN.md`;
+- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md`.
 
 UX principles:
 
@@ -177,7 +180,8 @@ UX principles:
 - highlights are visual aid, not mutation mechanism;
 - no repeated per-highlight `Gemarkeerd` labels as the long-term design;
 - no click-to-mark, advanced editor or full-document marking in this phase;
-- no Scrub Key/export/reinsert behavior changes from review UX work without separate approval.
+- no Scrub Key/export/reinsert behavior changes from review UX work without separate approval;
+- technical/debug-like details should move to secondary audit/advanced layers, not disappear.
 
 ### Phase 6 — MVP workflow validation and trust hardening
 
@@ -196,6 +200,8 @@ Focus:
 - unified side-by-side review direction;
 - easier replace/review logic;
 - residual-risk and audit reporting;
+- MVP interface clarity;
+- professional export/download flow;
 - Hugging Face app verification after GitHub Actions/sync when UI changes.
 
 ### Phase 7 — parked pilot validation
@@ -211,12 +217,14 @@ Phase 7 may reopen when the coordinator confirms the MVP product quality gate ha
 Current active priorities:
 
 ```text
-1. Lock the side-by-side review UX direction with plan and contract tests.
-2. Lock the redesigned replacement-review flow with contract tests.
-3. Only then consider small UI implementation packages with separate explicit coordinator approval.
+1. Clean up the MVP interface and export/download flow.
+2. Move debug/audit details out of the primary user path without removing safety controls.
+3. Then continue benchmark/recalibration work where it directly supports user-visible trust.
 ```
 
-Do not implement UI directly from this roadmap step.
+Recall/benchmark follow-up packages are temporarily parked unless a concrete blocker appears.
+
+Do not implement UI directly from this roadmap step. Use the workpackage queue in `WORKPACKAGES.md`: first export/download UX contract tests, then implementation, then review debug/copy cleanup.
 
 Do not start local packaging next steps such as `WP48B` or `WP49B` by default. They require explicit coordinator approval.
 
@@ -234,8 +242,7 @@ Safe to do in parallel:
 - documentation;
 - benchmark data design;
 - risk reviews;
-- non-UI architecture work;
-- `WP_SIDE_BY_SIDE_REVIEW_REDESIGN_PLAN` and `WP_REPLACE_LOGIC_UI_REDESIGN_CONTRACT_TESTS`, if both stay documentation/tests-only.
+- non-UI architecture work.
 
 Do not run in parallel:
 
@@ -260,71 +267,13 @@ Use `workpackage_claims/` before starting a package.
 Current prototype architecture:
 
 ```text
-Hugging Face Space
-Streamlit UI
-Presidio/spaCy recognizers
-Dutch legal recognizers
-Candidate scanner
-Review table
-Serial review / context aids
-Side-by-side review UX direction
-Scrub Key import/export
-Pasted/TXT/DOCX/PDF-to-TXT reinsert
-Exports
-GitHub Actions tests
-GitHub -> Hugging Face sync
+Streamlit app + helper modules + GitHub Actions + Hugging Face Space demo.
 ```
 
-Target architecture remains local-first, but installer work comes late:
+MVP architecture target:
 
 ```text
-Validated online/web workflow first
-Reusable Python core
-Local recognition engine
-Local benchmark/evaluation layer
-Unified review workflow
-Secure Scrub Key handling
-Local exports
-Residual-risk/audit reports
-Final local desktop/offline packaging after validation
+Thin Streamlit UI, helper-driven behavior, tested safety boundaries, local-first direction, and clear export/audit workflow.
 ```
 
----
-
-## 10. Security and trust principles
-
-For the final product:
-
-- no document upload to third-party cloud in the final trust environment;
-- no model training on user documents;
-- no telemetry containing document content;
-- clear warning when using cloud AI outside Scrub;
-- local-only processing as final production default;
-- metadata-aware exports;
-- audit report;
-- residual-risk report;
-- clear distinction between anonymization, pseudonymization and redaction;
-- explicit Scrub Key lifecycle and deletion policy.
-
----
-
-## 11. Development governance
-
-For implementation work:
-
-1. Add or update benchmark/gold-label cases where relevant.
-2. Add or update tests.
-3. Change logic/UI only within the approved package scope.
-4. Verify GitHub Actions tests when possible.
-5. Verify GitHub to Hugging Face sync when relevant.
-6. Test the app in Hugging Face when UI behavior changed.
-7. Update `CHANGELOG.md`.
-8. Update `RELEASE_NOTES.md` for user-facing changes.
-9. Update `WORKPACKAGES.md` when status or next steps change.
-10. Update `ROADMAP.md` only when strategy, phase status or sequence changes.
-
-For parked work:
-
-1. Do not start WP52 by default.
-2. Do not start installer/packaging work by default.
-3. Require explicit coordinator approval to reopen parked lines.
+Do not migrate frontend, add a full document editor, introduce cloud document processing, or alter export/Scrub Key/reinsert semantics without a dedicated approved package.
