@@ -4,6 +4,40 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-06-18 — D026 — Temporarily prioritize MVP UI cleanup and export/download redesign
+
+Status: accepted product-direction decision
+
+Decision:
+
+```text
+Pause new recall/benchmark follow-up packages temporarily and prioritize MVP UI cleanup/export redesign.
+```
+
+Reason:
+
+```text
+The app must move from a prototype/debug interface toward a professional MVP workflow.
+```
+
+Consequence:
+
+```text
+Next packages focus on export/download UX and hiding/collapsing debug details without weakening safety controls.
+```
+
+Implications:
+
+- Recall/benchmark follow-up packages are parked unless a concrete blocker appears.
+- Export/download UX is now the active next user-visible improvement line.
+- Technical/audit details must remain available but move out of the primary flow where appropriate.
+- Scrub Key must stay clearly separated and visibly sensitive.
+- Export semantics must not change silently.
+- The review table remains source of truth and fallback.
+- No Streamlit implementation is approved by this planning decision; implementation requires separate workpackages.
+
+---
+
 ## 2026-06-18 — D025 — PERSON-name implementation requires green contract tests first
 
 Status: accepted tests/specification decision
@@ -25,15 +59,6 @@ Consequence:
 ```text
 Implementation package must satisfy the contract fixture before benchmark review.
 ```
-
-Implications:
-
-- Future implementation must preserve role/context words.
-- Future implementation must match only the sensitive name value for role/title cases.
-- Negative cases such as court names, addresses, care locations, legal articles and document-navigation references must not become PERSON matches.
-- Single-surname handling remains high ambiguity and must follow the contract policy.
-- Weak name-near-contact/reference contexts remain candidate-only unless separately approved.
-- No production threshold or gate is created by this decision.
 
 ---
 
@@ -59,15 +84,6 @@ Consequence:
 Contract tests are required before recognizer implementation.
 ```
 
-Implications:
-
-- Role/context words such as `cliënt`, `slachtoffer`, `minderjarige`, `arts`, `getuige`, `eiser`, `verweerder`, `verpleegkundige`, `zorgmedewerker`, `behandelaar` and `mantelzorger` must remain readable.
-- Future PERSON-name matching should mask the sensitive name value, not the legal/care role meaning.
-- Broad capitalization-based matching is not acceptable as a design route.
-- Single-surname handling requires strong context and may remain candidate-only unless contract tests prove low false-positive risk.
-- Human review remains necessary.
-- No production threshold or gate is created by this decision.
-
 ---
 
 ## 2026-06-15 — D023 — Synchronized scrolling is default review behavior, not a user-facing technical control
@@ -79,19 +95,6 @@ Decision:
 ```text
 In the central side-by-side review surface, synchronized scrolling should be on by default and should not be exposed as a visible checkbox.
 ```
-
-Rationale:
-
-The coordinator confirmed that there is no clear normal-user use case for turning synchronized scrolling off. In this review task, synchronized movement of source and processed panes is expected behavior rather than a technical choice. Removing the checkbox reduces interface noise.
-
-Accepted UI behavior:
-
-- markers default on;
-- marker control remains available as `Markeringen tonen`;
-- synchronized scrolling stays active;
-- no visible synchronized-scroll checkbox;
-- short explanatory copy remains visible;
-- review table remains source of truth and fallback.
 
 Boundary:
 
@@ -109,29 +112,15 @@ Decision:
 After visual review of the isolated synchronized-scroll prototype, bounded synchronized scrolling may be integrated into the existing side-by-side review surface.
 ```
 
-Rationale:
-
-The coordinator confirmed that the isolated prototype looked good and may be integrated into the production environment. The integration must remain bounded: source and processed panes stay in the review surface, the review table remains source of truth and fallback, and synchronized scrolling remains a visual/navigation aid only.
-
 Implementation boundaries:
 
-- Use local escaped HTML/JS inside the app.
 - Keep synchronized scrolling bounded to the side-by-side review surface.
 - Do not change replacement behavior.
 - Do not mutate review table state.
 - Do not write or change Scrub Key data.
 - Do not change export/download behavior.
 - Do not change reinsert behavior.
-- Do not add dependencies.
-- Do not use cloud processing.
 - Do not use real data.
-- Preserve the warning that percentage-based sync can be imperfect when source and processed text differ structurally.
-
-Verification requirement:
-
-```text
-GitHub Actions green -> Hugging Face sync green -> coordinator app screenshot.
-```
 
 ---
 
@@ -145,19 +134,9 @@ Decision:
 The review UX should move toward one unified side-by-side main review surface: source text on the left, processed/checked text on the right, with optional highlights integrated in the processed-text pane. The product should not keep adding separate helper panels or duplicate preview expanders for every review feature.
 ```
 
-Rationale:
-
-The current interface risks becoming less intuitive because each new review function can become another expander/panel. The coordinator feedback is that a simpler professional workflow should let the user compare source and processed output directly, with visual support in the same main review area. A separate highlight-only preview and repeated inline labels such as `Gemarkeerd` add cognitive noise when the highlight color already communicates the marker.
-
 Implications:
 
-- Add `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md` as the central direction document for this UX line.
 - Future review UX work should centralize around source-vs-processed comparison.
-- The highlight toggle should belong near/in the main side-by-side review surface, not primarily as a separate duplicate preview panel.
-- Repeated per-highlight labels such as `Gemarkeerd` should not be the long-term design when the marker itself is sufficient.
-- Synchronized scrolling is a valid UX goal but requires separate planning/testing because it may need custom HTML/component work.
-- D022 records the later approved bounded implementation route for synchronized scrolling after prototype review.
-- D023 records that synchronized scrolling should now behave as default UI behavior without a visible checkbox.
 - The review table remains source of truth and fallback.
 - Serial review remains a guided review layer, not a replacement of the table.
 - The old replacement decision helper panel must not return as normal user-facing UI.
