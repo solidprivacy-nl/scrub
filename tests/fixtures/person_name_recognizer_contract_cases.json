@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "status": "contract_only",
+    "synthetic": true,
+    "product_gate": false,
+    "thresholds_enforced": false,
+    "product_claim": false
+  },
+  "positive_cases": [
+    {
+      "case_id": "care_role_arts_single_surname_value_only",
+      "text": "Later noteerde arts Bakker dat de cliënt stabiel was.",
+      "expected_sensitive_value": "Bakker",
+      "expected_entity_type": "PERSON",
+      "mode": "hard_recognizer_future",
+      "context_type": "care_role_single_surname",
+      "preserve_terms": ["arts", "cliënt"],
+      "strong_context": true,
+      "notes": "Role words must remain readable; only the surname is sensitive."
+    },
+    {
+      "case_id": "legal_role_getuige_full_name_value_only",
+      "text": "Later noteerde de rechter dat getuige Fatima El Amrani aanwezig was.",
+      "expected_sensitive_value": "Fatima El Amrani",
+      "expected_entity_type": "PERSON",
+      "mode": "hard_recognizer_future",
+      "context_type": "legal_role_full_name",
+      "preserve_terms": ["getuige"],
+      "strong_context": true,
+      "notes": "Legal role remains readable; only the following name is sensitive."
+    },
+    {
+      "case_id": "care_role_client_full_name_value_only",
+      "text": "De cliënt Youssef Ait Ben kreeg aanvullende begeleiding.",
+      "expected_sensitive_value": "Youssef Ait Ben",
+      "expected_entity_type": "PERSON",
+      "mode": "hard_recognizer_future",
+      "context_type": "care_role_full_name",
+      "preserve_terms": ["cliënt"],
+      "strong_context": true,
+      "notes": "Care role remains readable; only the name value is sensitive."
+    },
+    {
+      "case_id": "care_role_verpleegkundige_full_name_value_only",
+      "text": "Verpleegkundige Sara El Idrissi sprak met de mantelzorger.",
+      "expected_sensitive_value": "Sara El Idrissi",
+      "expected_entity_type": "PERSON",
+      "mode": "hard_recognizer_future",
+      "context_type": "care_role_full_name",
+      "preserve_terms": ["Verpleegkundige", "mantelzorger"],
+      "strong_context": true,
+      "notes": "Care role is context; name value is sensitive."
+    },
+    {
+      "case_id": "care_role_mantelzorger_full_name_value_only",
+      "text": "Mantelzorger Fatima Zahra kreeg de planning per e-mail.",
+      "expected_sensitive_value": "Fatima Zahra",
+      "expected_entity_type": "PERSON",
+      "mode": "hard_recognizer_future",
+      "context_type": "care_role_full_name",
+      "preserve_terms": ["Mantelzorger"],
+      "strong_context": true,
+      "notes": "Only the name value is sensitive; role meaning must remain."
+    },
+    {
+      "case_id": "professional_title_mr_dutch_tussenvoegsel_value_only",
+      "text": "mr. Lina de Vries bespreekt de zaak met de cliënt.",
+      "expected_sensitive_value": "Lina de Vries",
+      "expected_entity_type": "PERSON",
+      "mode": "hard_recognizer_future",
+      "context_type": "professional_title_full_name",
+      "preserve_terms": ["mr.", "cliënt"],
+      "strong_context": true,
+      "notes": "Professional title remains readable; Dutch tussenvoegsel name is sensitive."
+    },
+    {
+      "case_id": "professional_title_mr_second_dutch_tussenvoegsel_value_only",
+      "text": "mr. Noor van Dijk belt later terug over het dossier.",
+      "expected_sensitive_value": "Noor van Dijk",
+      "expected_entity_type": "PERSON",
+      "mode": "hard_recognizer_future",
+      "context_type": "professional_title_full_name",
+      "preserve_terms": ["mr."],
+      "strong_context": true,
+      "notes": "Professional title remains readable; only the name value is sensitive."
+    },
+    {
+      "case_id": "care_role_arts_jansen_single_surname_value_only",
+      "text": "Arts Jansen bevestigde dat de minderjarige stabiel was.",
+      "expected_sensitive_value": "Jansen",
+      "expected_entity_type": "PERSON",
+      "mode": "hard_recognizer_future",
+      "context_type": "care_role_single_surname",
+      "preserve_terms": ["Arts", "minderjarige"],
+      "strong_context": true,
+      "notes": "Single surname is only allowed with strong role context and value-only span."
+    }
+  ],
+  "candidate_only_cases": [
+    {
+      "case_id": "contact_pair_two_names_candidate_only",
+      "text": "Hassan El Amrani en Mila van Dijk zijn bereikbaar via hassan.elamrani@example.test en 06-55667788.",
+      "expected_sensitive_value": "Hassan El Amrani",
+      "additional_sensitive_values": ["Mila van Dijk"],
+      "expected_entity_type": "PERSON",
+      "mode": "candidate_only_future",
+      "context_type": "name_near_contact_data",
+      "review_required": true,
+      "automatic_replacement_allowed": false,
+      "preserve_terms": [],
+      "notes": "Names near contact data should be review candidates unless a later contract promotes them."
+    },
+    {
+      "case_id": "email_context_arabic_moroccan_name_candidate_only",
+      "text": "Omar Ben Salah reageert via omar.bensalah@example.test op het verzoek.",
+      "expected_sensitive_value": "Omar Ben Salah",
+      "expected_entity_type": "PERSON",
+      "mode": "candidate_only_future",
+      "context_type": "name_near_contact_data",
+      "review_required": true,
+      "automatic_replacement_allowed": false,
+      "preserve_terms": [],
+      "notes": "Name near email is useful as a candidate, not automatic replacement."
+    },
+    {
+      "case_id": "legal_reference_pair_names_candidate_only",
+      "text": "Zaakreferentie ZK-WOON-55091 noemt Nora El Yassini en Tariq de Jong als betrokkenen.",
+      "expected_sensitive_value": "Nora El Yassini",
+      "additional_sensitive_values": ["Tariq de Jong"],
+      "expected_entity_type": "PERSON",
+      "mode": "candidate_only_future",
+      "context_type": "name_near_legal_reference",
+      "review_required": true,
+      "automatic_replacement_allowed": false,
+      "preserve_terms": [],
+      "notes": "Names near legal references need human review before inclusion."
+    },
+    {
+      "case_id": "phone_context_name_candidate_only",
+      "text": "Sami El Amrani is bereikbaar via 06-12345678 voor overleg.",
+      "expected_sensitive_value": "Sami El Amrani",
+      "expected_entity_type": "PERSON",
+      "mode": "candidate_only_future",
+      "context_type": "name_near_contact_data",
+      "review_required": true,
+      "automatic_replacement_allowed": false,
+      "preserve_terms": [],
+      "notes": "Name near phone number should not be automatic without review."
+    }
+  ],
+  "negative_cases": [
+    {
+      "case_id": "court_name_rechtbank_den_haag_not_person",
+      "text": "Rechtbank Den Haag behandelde de zaak op 1 maart.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "court_or_authority",
+      "notes": "Court names must not become PERSON matches."
+    },
+    {
+      "case_id": "court_name_hof_van_discipline_not_person",
+      "text": "Het Hof van Discipline verwijst naar een eerdere beslissing.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "court_or_authority",
+      "notes": "Professional body name must not become PERSON."
+    },
+    {
+      "case_id": "care_location_afdeling_rozenhof_not_person",
+      "text": "Afdeling Rozenhof 3 nam contact op met de zorgmedewerker.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "care_location",
+      "notes": "Care location is not a PERSON-name span."
+    },
+    {
+      "case_id": "address_parklaan_not_person",
+      "text": "Parklaan 188, 3512 ZX Utrecht staat in het dossier.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "address",
+      "notes": "Address text must not become PERSON."
+    },
+    {
+      "case_id": "legal_article_not_person",
+      "text": "artikel 7:669 BW wordt genoemd als wettelijke grondslag.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "legal_article",
+      "notes": "Legal article references must not become PERSON."
+    },
+    {
+      "case_id": "production_reference_not_person",
+      "text": "productie 3 bevat de bijlage bij het verzoekschrift.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "document_navigation",
+      "notes": "Document navigation references must not become PERSON."
+    },
+    {
+      "case_id": "attachment_reference_not_person",
+      "text": "bijlage 2 bevat alleen algemene instructies.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "document_navigation",
+      "notes": "Attachment references must not become PERSON."
+    },
+    {
+      "case_id": "single_surname_bakker_without_context_not_person",
+      "text": "Bakker staat los in deze synthetische zin zonder rolcontext.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "single_surname_without_strong_context",
+      "single_surname": "Bakker",
+      "strong_context": false,
+      "notes": "Single surname without strong role/title context must not become a hard PERSON match."
+    },
+    {
+      "case_id": "single_surname_jansen_without_context_not_person",
+      "text": "Jansen staat los in deze synthetische zin zonder rolcontext.",
+      "expected_sensitive_value": null,
+      "mode": "must_not_match_person",
+      "context_type": "single_surname_without_strong_context",
+      "single_surname": "Jansen",
+      "strong_context": false,
+      "notes": "Single surname without strong role/title context must not become a hard PERSON match."
+    }
+  ],
+  "preserve_terms": [
+    "cliënt",
+    "slachtoffer",
+    "minderjarige",
+    "arts",
+    "getuige",
+    "eiser",
+    "verweerder",
+    "verpleegkundige",
+    "zorgmedewerker",
+    "behandelaar",
+    "mantelzorger",
+    "mr."
+  ]
+}
