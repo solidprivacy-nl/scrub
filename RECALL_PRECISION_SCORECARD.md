@@ -38,6 +38,7 @@ Current evidence:
 - PERSON gap inventory is covered by diagnostic tests in `tests/test_recall_person_name_coverage_diagnostics.py`.
 - PERSON-name recognition has a safe planning/specification document in `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`.
 - Contract fixture and tests now define future PERSON-name recognizer behavior.
+- No recognizer changes were made.
 - No recognizer implementation was added.
 - No candidate scanner implementation was added.
 - No runner/report changes were made.
@@ -100,6 +101,7 @@ The contract fixture and tests define future behavior for:
 No changes:
 
 ```text
+No recognizer changes.
 No recognizer implementation.
 No candidate scanner implementation.
 No runner/report changes.
