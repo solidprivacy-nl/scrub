@@ -35,8 +35,10 @@ PRESERVE_TERMS = {
 }
 
 # Role/title cues are deliberately narrow and context-bound. Do not replace this
-# with broad capitalization matching.
-ROLE_OR_TITLE_CUE = r"(?:arts|getuige|cliënt|client|verpleegkundige|mantelzorger|zorgmedewerker|behandelaar|mr\.?)"
+# with broad capitalization matching. The role cue is matched case-insensitively,
+# but the following name value intentionally keeps uppercase-sensitive token
+# checks so lowercase sentence words are not swallowed into the name span.
+ROLE_OR_TITLE_CUE = r"(?i:arts|getuige|cliënt|client|verpleegkundige|mantelzorger|zorgmedewerker|behandelaar|mr\.?)"
 UPPER = r"[A-ZÀ-ÖØ-Þ]"
 NAME_TOKEN = rf"{UPPER}[A-Za-zÀ-ÖØ-öø-ÿ'’\-]*"
 NAME_PARTICLE = r"(?:van|de|der|den|ten|ter|el|al|ait|ben|bin|ibn)"
@@ -45,7 +47,7 @@ NAME_VALUE = rf"{NAME_TOKEN}(?:(?:{NAME_GAP}{NAME_PARTICLE})?{NAME_GAP}{NAME_TOK
 
 ROLE_TITLE_NAME_RE = re.compile(
     rf"(?<!\w)(?P<context>{ROLE_OR_TITLE_CUE}){NAME_GAP}(?P<value>{NAME_VALUE})(?!\w)",
-    flags=re.IGNORECASE | re.MULTILINE,
+    flags=re.MULTILINE,
 )
 
 
