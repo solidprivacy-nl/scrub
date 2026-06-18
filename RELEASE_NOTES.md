@@ -31,6 +31,12 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 - Serial review remains available as a small read-only review aid below the replacement table.
 - Markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.
 
+### Export
+
+- Improved the export/download section by grouping document downloads, Scrub Key and audit/technical files more clearly.
+- Existing export content, filenames and file types remain unchanged.
+- The Scrub Key remains sensitive because it can restore original values.
+
 ### Scrub Key
 
 - Export a Scrub Key JSON mapping file.
