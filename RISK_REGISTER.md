@@ -31,14 +31,14 @@ Current mitigations:
 - Planning-only threshold policy exists.
 - PERSON-name coverage review classifies the remaining missed `PERSON` labels.
 - PERSON-name false-negative risk has diagnostic test coverage in `tests/test_recall_person_name_coverage_diagnostics.py`.
-- PERSON-name false-negative risk now has a planning/specification-only recognition improvement plan in `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`.
+- PERSON-name false-negative risk has a planning/specification-only recognition improvement plan in `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`.
+- PERSON-name false-negative risk now has contract test coverage for future recognizer behavior in `tests/test_recall_person_name_recognizer_contracts.py` and `tests/fixtures/person_name_recognizer_contract_cases.json`.
 
 Gaps:
 
 - No accepted production recall/precision threshold exists.
 - No production benchmark gate exists.
 - No production safety claim is supported.
-- Threshold planning exists, but risk remains open.
 - PERSON-name false-negative risk is analyzed, test-covered and planned, but not fixed.
 - No recognizer change was made.
 - No candidate scanner change was made.
@@ -49,8 +49,8 @@ Gaps:
 
 Recommended workpackages:
 
-- Next approved package — `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
-- Then consider — `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
+- Next approved package — `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
+- Then consider — `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
 - Other approved packages — `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`, `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`, `WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS`.
 
 ---
@@ -219,6 +219,7 @@ Current mitigations:
 - PERSON-name coverage review exists.
 - PERSON-name diagnostic tests exist.
 - PERSON-name recognizer planning exists.
+- PERSON-name contract tests exist.
 
 Gaps:
 
@@ -227,7 +228,7 @@ Gaps:
 
 Recommended workpackages:
 
-- Next approved benchmark package — `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
+- Next approved benchmark package — `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
 - Later status package — automated status artifact/check if connector limitations continue to slow closeouts.
 
 ---
@@ -253,21 +254,22 @@ Current mitigations:
 - PERSON-name coverage review classifies role-linked missed names, including care-role and legal-role examples.
 - PERSON-name diagnostic tests preserve the gap inventory and non-claim boundaries without requiring current recognizers to pass all examples.
 - PERSON-name recognizer planning records a test-first route and value-only role/context boundary before implementation.
+- PERSON-name recognizer contract tests now specify future value-only, preserve-term, single-surname and negative-case behavior.
 
 Gaps:
 
 - No accepted production threshold exists.
 - No benchmark gate exists.
 - Corpus is synthetic and not exhaustive.
-- PERSON-name false-negative risk is analyzed, test-covered and planned but not fixed.
-- Names after care/legal roles require contract tests before implementation.
+- PERSON-name false-negative risk is analyzed, test-covered and contract-covered but not fixed.
+- Names after care/legal roles require implementation and benchmark review after contract tests.
 - Single-surname examples remain high ambiguity.
 - Product claim remains blocked.
 
 Recommended workpackages:
 
-- `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
 - `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
+- `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
 - `WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN`.
 - `WP_CLIENT_REFERENCE_COVERAGE_REVIEW`.
 
@@ -288,6 +290,6 @@ De benchmark bewijst production readiness.
 Allowed wording:
 
 ```text
-De PERSON-name recognizer planning beschrijft hoe synthetische naamgaps veilig kunnen worden aangepakt.
-Menselijke review blijft noodzakelijk.
+The PERSON-name recognizer contracts define future safe behavior for synthetic examples.
+Human review remains necessary.
 ```
