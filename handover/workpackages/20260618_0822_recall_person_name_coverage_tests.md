@@ -1,0 +1,160 @@
+# Handover — WP_RECALL_PERSON_NAME_COVERAGE_TESTS
+
+Repository worked in: `solidprivacy-nl/scrub`
+
+Workpackage title: `WP_RECALL_PERSON_NAME_COVERAGE_TESTS — Add diagnostic tests for remaining PERSON-name recall gaps`
+
+Status: completed as tests/documentation-only, pending GitHub Actions/HF verification.
+
+## Summary
+
+Added diagnostic tests for the PERSON-name coverage gap inventory.
+
+The tests preserve the known gap inventory and context categories without requiring current recognizers to pass all PERSON examples. This package does not fix the gaps and does not add thresholds, gates or product claims.
+
+## Files added
+
+- `tests/test_recall_person_name_coverage_diagnostics.py`
+- `handover/workpackages/20260618_0822_recall_person_name_coverage_tests.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_TESTS.md`
+
+## Files changed
+
+- `RECALL_PERSON_NAME_COVERAGE_REVIEW.md`
+- `RECALL_PRECISION_SCORECARD.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_TESTS.md` pending final closeout update after this handover file
+
+## Product-code changes
+
+None.
+
+## Recognizer changes
+
+None.
+
+## Candidate scanner changes
+
+None.
+
+## Runner/report changes
+
+None.
+
+## Tests added/updated
+
+Added:
+
+```text
+tests/test_recall_person_name_coverage_diagnostics.py
+```
+
+Coverage:
+
+- gap inventory names are documented in `RECALL_PERSON_NAME_COVERAGE_REVIEW.md`;
+- gap names remain grounded in synthetic corpus source text or gold sidecars;
+- relevant PERSON labels remain required direct identifiers;
+- acceptable entity types include `PERSON` or `NL_LEGAL_PARTY_NAME` where appropriate;
+- context categories have examples;
+- disallowed product claims only appear as explicit non-claim/disallowed boundaries;
+- no active PERSON coverage enforcement/gate was introduced.
+
+## Tests/checks run
+
+Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
+
+Required verification command for GitHub/local runner:
+
+```text
+python -m pytest -q tests/test_recall_person_name_coverage_diagnostics.py
+```
+
+Recommended additional checks:
+
+```text
+python -m pytest -q tests/test_recall_gold_label_corpus_seed.py
+python -m pytest -q tests/test_recall_benchmark_runner_minimal.py
+git diff --check
+```
+
+## Validation status
+
+Implemented as tests/documentation-only. Awaiting GitHub Actions verification.
+
+## GitHub Actions status
+
+Pending/unknown at handover time.
+
+## Hugging Face sync status
+
+Pending/unknown at handover time.
+
+## App verification status
+
+Not required. No app behavior changed.
+
+## Summary of diagnostic test coverage
+
+The tests make the PERSON-name gap inventory testable without changing the product or demanding full recognition yet.
+
+The tested inventory includes:
+
+```text
+Hassan El Amrani
+Mila van Dijk
+Ahmed El Idrissi
+Bakker
+Sara El Idrissi
+Youssef Ait Ben
+Fatima Zahra
+Lina de Vries
+Omar Ben Salah
+Nora El Yassini
+Tariq de Jong
+Noor van Dijk
+Sami El Amrani
+Jansen
+Fatima El Amrani
+```
+
+The tested context categories include:
+
+```text
+arabic_moroccan_style_multi_token
+dutch_tussenvoegsel_name
+first_name_plus_surname
+single_surname
+professional_title_context
+care_role_context
+legal_role_context
+name_near_contact_data
+name_near_care_or_legal_reference
+```
+
+## Remaining risks
+
+- PERSON-name false-negative risk now has diagnostic test coverage but remains unfixed.
+- No recognizer implementation was added.
+- No candidate scanner fallback was added.
+- Single-surname detection remains ambiguous.
+- Human review remains necessary.
+- No threshold or gate exists.
+- Product claims remain blocked.
+
+## Next recommended step
+
+Recommended next package after separate coordinator approval:
+
+```text
+WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN
+```
+
+Then consider:
+
+```text
+WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS
+```
+
+Do not start follow-up work automatically.
