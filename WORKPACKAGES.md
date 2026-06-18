@@ -34,7 +34,8 @@ WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed and verified.
 WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — completed.
 WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — completed; planning-only threshold policy design added.
 WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — completed; PERSON-name coverage gaps reviewed and follow-up route planned.
-WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed; diagnostic PERSON-name gap inventory tests added.
+WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified; diagnostic PERSON-name gap inventory tests added.
+WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN — completed; safe PERSON-name recognizer improvement plan added.
 WP_SERIAL_REVIEW_UI — completed and app-verified.
 ```
 
@@ -63,6 +64,7 @@ RECALL_BENCHMARK_REPORT_REVIEW_2.md
 RECALL_BENCHMARK_THRESHOLDS_PLAN.md
 RECALL_PERSON_NAME_COVERAGE_REVIEW.md
 tests/test_recall_person_name_coverage_diagnostics.py
+RECALL_PERSON_NAME_RECOGNIZER_PLAN.md
 ```
 
 Cleaned artifact baseline:
@@ -81,14 +83,15 @@ preserve_term_hit_count = 0
 known_trap_hit_count = 1
 ```
 
-PERSON coverage diagnostic status:
+PERSON recognizer planning status:
 
 ```text
-PERSON gap inventory covered by tests
-name-type categories covered by tests
-no full-recognition requirement yet
-no recognizer changes
-no candidate scanner changes
+safe recognition strategy planned
+contract tests required before implementation
+single-surname handling marked high-risk
+role/context words must remain readable
+no recognizer implementation
+no candidate scanner implementation
 no runner/report changes
 no thresholds
 no gate
@@ -115,22 +118,24 @@ a3df5c7 — Diagnostic recall benchmark report #1 green
 31ee53b — Sync to Hugging Face Space #1204 green
 59473fb — Tests #1218 green
 59473fb — Sync to Hugging Face Space #1228 green
+0927bec — Tests #1253 green
+0927bec — Sync to Hugging Face Space #1264 green
 Diagnostic recall benchmark report workflow green for relevant cleanup commits
 Hugging Face app screenshot showed running without Script execution error
 ```
 
-`WP_RECALL_PERSON_NAME_COVERAGE_TESTS` is tests/documentation-only and does not require app verification.
+`WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN` is planning/specification-only and does not require app verification.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN.
-3. Then consider: WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.
+2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.
+3. Then consider: WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY.
 4. Other backlog candidates: WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN, WP_CLIENT_REFERENCE_COVERAGE_REVIEW, WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS.
 5. A future gate route may be planned later as WP_RECALL_BENCHMARK_GATE_PLAN, but that is still planning and not implementation.
 ```
 
 ## Boundaries
 
-Do not start UI, export/download, Scrub Key, reinsert, recognizer, candidate-scanner, benchmark-gate, local packaging or broad architecture work without separate coordinator approval and a dedicated workpackage.
+Do not start UI, export/download, Scrub Key, reinsert, recognizer implementation, candidate-scanner implementation, benchmark-gate, local packaging or broad architecture work without separate coordinator approval and a dedicated workpackage.
