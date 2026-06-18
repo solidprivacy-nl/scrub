@@ -42,10 +42,12 @@ def test_plan_exists_and_names_target_export_surface():
 
 def test_export_grouping_separates_scrub_key_from_document_downloads():
     plan_text = read_doc(PLAN_PATH)
+    wireframe_start = plan_text.index("### Target wireframe")
+    wireframe = plan_text[wireframe_start:]
 
-    document_index = plan_text.index("Document downloaden")
-    scrub_key_index = plan_text.index("Scrub Key")
-    audit_index = plan_text.index("Audit en technische bestanden")
+    document_index = wireframe.index("Document downloaden")
+    scrub_key_index = wireframe.index("Scrub Key")
+    audit_index = wireframe.index("Audit en technische bestanden")
 
     assert document_index < scrub_key_index < audit_index, (
         "Export plan must separate normal document downloads, Scrub Key, and audit/technical downloads"
