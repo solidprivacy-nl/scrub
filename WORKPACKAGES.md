@@ -34,6 +34,7 @@ WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed and verified.
 WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — completed.
 WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — completed; planning-only threshold policy design added.
 WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — completed; PERSON-name coverage gaps reviewed and follow-up route planned.
+WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed; diagnostic PERSON-name gap inventory tests added.
 WP_SERIAL_REVIEW_UI — completed and app-verified.
 ```
 
@@ -61,6 +62,7 @@ recall_benchmark_report.py
 RECALL_BENCHMARK_REPORT_REVIEW_2.md
 RECALL_BENCHMARK_THRESHOLDS_PLAN.md
 RECALL_PERSON_NAME_COVERAGE_REVIEW.md
+tests/test_recall_person_name_coverage_diagnostics.py
 ```
 
 Cleaned artifact baseline:
@@ -79,10 +81,12 @@ preserve_term_hit_count = 0
 known_trap_hit_count = 1
 ```
 
-PERSON coverage review status:
+PERSON coverage diagnostic status:
 
 ```text
-14 missed PERSON labels classified
+PERSON gap inventory covered by tests
+name-type categories covered by tests
+no full-recognition requirement yet
 no recognizer changes
 no candidate scanner changes
 no runner/report changes
@@ -115,14 +119,14 @@ Diagnostic recall benchmark report workflow green for relevant cleanup commits
 Hugging Face app screenshot showed running without Script execution error
 ```
 
-`WP_RECALL_PERSON_NAME_COVERAGE_REVIEW` is documentation-only and does not require app verification.
+`WP_RECALL_PERSON_NAME_COVERAGE_TESTS` is tests/documentation-only and does not require app verification.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_COVERAGE_TESTS.
-3. Alternative if design should come first: WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN.
+2. Recommended next after separate approval: WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN.
+3. Then consider: WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.
 4. Other backlog candidates: WP_CARE_LOCATION_REFERENCE_CANDIDATE_PLAN, WP_CLIENT_REFERENCE_COVERAGE_REVIEW, WP_RECALL_BENCHMARK_THRESHOLDS_CONTRACT_TESTS.
 5. A future gate route may be planned later as WP_RECALL_BENCHMARK_GATE_PLAN, but that is still planning and not implementation.
 ```
