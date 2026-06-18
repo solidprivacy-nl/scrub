@@ -4,13 +4,15 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — Add contract tests for professional export/download UX redesign`
 
-Status: completed, pending GitHub Actions/HF verification.
+Status: completed, pending GitHub Actions/HF verification after wording fix.
 
 ## Summary
 
 Added contract tests and documentation for the professional export/download UX redesign.
 
 The tests lock the planning contract before implementation: grouped document exports, separated Scrub Key area, secondary audit/technical downloads, no export semantics change, no Scrub Key/reinsert changes and no product claim.
+
+A follow-up wording fix made the benchmark-gate assertion accept both singular and plural wording (`no benchmark gate` / `no benchmark gates`). This does not weaken the boundary; it only avoids brittle wording failure.
 
 ## Files added
 
@@ -25,7 +27,8 @@ The tests lock the planning contract before implementation: grouped document exp
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
 - `tests/test_export_download_ux_contracts.py`
-- `workpackage_claims/WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS.md` pending final closeout update after this handover file
+- `handover/workpackages/20260618_2239_export_download_ux_contract_tests.md`
+- `workpackage_claims/WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS.md`
 
 ## Product-code changes
 
@@ -78,6 +81,10 @@ The tests verify:
 - this package does not approve implementation or semantic changes;
 - the contract test file does not import Streamlit or mutate runtime app state.
 
+Follow-up test fix:
+
+- `test_this_package_does_not_approve_implementation_or_semantic_changes` now accepts both `no benchmark gate` and `no benchmark gates` wording.
+
 Documentation added:
 
 ```text
@@ -88,7 +95,9 @@ EXPORT_DOWNLOAD_UX_CONTRACTS.md
 
 Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
 
-Required checks:
+Coordinator screenshot evidence showed the first attempt failed on exact singular wording `No benchmark gate` while the docs used plural/equivalent wording.
+
+Required checks after fix:
 
 ```text
 python -m pytest -q tests/test_export_download_ux_contracts.py
@@ -106,15 +115,15 @@ python -m pytest -q
 
 ## Validation status
 
-Implemented as tests/documentation-only. Awaiting GitHub Actions verification.
+Implemented as tests/documentation-only. Wording fix added. Awaiting GitHub Actions verification.
 
 ## GitHub Actions status
 
-Pending/unknown at handover time.
+Pending/unknown after wording fix.
 
 ## Hugging Face sync status
 
-Pending/unknown at handover time.
+Pending/unknown after wording fix.
 
 ## App verification status
 
