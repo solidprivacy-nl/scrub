@@ -4,13 +4,15 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — Add contract tests for safe future PERSON-name recognition`
 
-Status: completed as tests/specification-only, pending GitHub Actions/HF verification.
+Status: completed as tests/specification-only, pending GitHub Actions/HF verification after docs-only wording fix.
 
 ## Summary
 
 Added contract fixture, contract tests and specification documentation for safe future PERSON-name recognition behavior.
 
 This package does not implement recognizers, does not change candidate scanner behavior, does not change runner/report behavior, does not change the app, and does not create thresholds, gates or product claims.
+
+A follow-up docs-only wording fix restored the exact `No recognizer changes.` phrase in `RECALL_PRECISION_SCORECARD.md`, because an existing regression test checks for that phrase while the new scorecard initially said only `No recognizer implementation.`
 
 ## Files added
 
@@ -27,7 +29,7 @@ This package does not implement recognizers, does not change candidate scanner b
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
 - `DECISION_LOG.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md` pending final claim closeout update after this handover file
+- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md`
 
 ## Product-code changes
 
@@ -116,6 +118,15 @@ single surname without strong context
 
 Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
 
+Coordinator screenshot evidence showed a failing regression test before the docs-only wording fix:
+
+```text
+tests/test_recall_person_name_coverage_diagnostics.py::test_person_coverage_diagnostics_do_not_introduce_enforcement_or_gate_claims
+AssertionError: expected "no recognizer changes" in RECALL_PRECISION_SCORECARD.md
+```
+
+Docs-only fix commit added the exact expected phrase back to the scorecard.
+
 Required verification command for GitHub/local runner:
 
 ```text
@@ -132,15 +143,15 @@ git diff --check
 
 ## Validation status
 
-Implemented as tests/specification-only. Awaiting GitHub Actions verification.
+Implemented as tests/specification-only. Awaiting GitHub Actions verification after wording fix.
 
 ## GitHub Actions status
 
-Pending/unknown at handover time.
+Pending/unknown after wording fix.
 
 ## Hugging Face sync status
 
-Pending/unknown at handover time.
+Pending/unknown after wording fix. Earlier HF sync failures showed HTTP 429 from Hugging Face and may be transient/rate-limit related.
 
 ## App verification status
 
