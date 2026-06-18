@@ -1,30 +1,31 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — Review remaining PERSON-name recall gaps
+## WP_RECALL_PERSON_NAME_COVERAGE_TESTS — Add diagnostic tests for PERSON-name coverage gaps
 
-Status: completed as review/planning/documentation-only.
+Status: completed as tests/documentation-only.
 
 Files added:
 
-- `RECALL_PERSON_NAME_COVERAGE_REVIEW.md`
-- `handover/workpackages/20260617_2223_recall_person_name_coverage_review.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_REVIEW.md`
+- `tests/test_recall_person_name_coverage_diagnostics.py`
+- `handover/workpackages/20260618_0822_recall_person_name_coverage_tests.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_TESTS.md`
 
 Files changed:
 
+- `RECALL_PERSON_NAME_COVERAGE_REVIEW.md`
 - `RECALL_PRECISION_SCORECARD.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_REVIEW.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_COVERAGE_TESTS.md`
 
 Summary:
 
-- Reviewed and classified the 14 remaining missed `PERSON` labels from the cleaned diagnostic benchmark artifact.
-- Added inventory table with document, source, missed name, context, likely pattern, likely cause, risk and follow-up.
-- Classified name types: Dutch names with tussenvoegsel, Arabic/Moroccan-style multi-token names, first-name/surname patterns, single surnames, professional-title context, care-role context, legal-role context, names near contact data and names near care/legal references.
-- Concluded that remaining PERSON gaps now look mostly like recognizer/candidate-design coverage issues, not benchmark mapping noise.
-- Recommended tests/contracts before any recognizer implementation.
+- Added diagnostic tests for the PERSON-name gap inventory.
+- Tests verify that the reviewed PERSON names remain documented, grounded in the synthetic corpus and represented as required direct-identifier PERSON gold labels.
+- Tests verify context categories such as Arabic/Moroccan-style multi-token names, Dutch tussenvoegsel names, single surnames, professional-title contexts, care/legal role contexts and names near contact/reference data.
+- Tests verify non-claim boundaries and absence of active PERSON coverage enforcement/gate wording.
+- Tests intentionally do not require current recognizers to pass all PERSON examples.
 
 Intentionally not changed:
 
@@ -33,22 +34,34 @@ Intentionally not changed:
 - No candidate scanner changes.
 - No runner/report behavior changes.
 - No workflow changes.
-- No tests enforcing thresholds.
-- No UI/export/Scrub Key/reinsert behavior changes.
-- No thresholds.
+- No threshold enforcement.
 - No gate.
 - No product claim.
+- No UI/export/Scrub Key/reinsert behavior changes.
 
 Tests/checks:
 
-- Local tests were not run because this package is review/planning/documentation-only and only markdown/governance files changed.
-- `git diff --check` was not runnable in this connector-only environment.
+- Added `tests/test_recall_person_name_coverage_diagnostics.py`.
+- Local tests were not run because this environment is connector-only and has no local Git working tree for pytest execution.
+- Required GitHub Actions checks should run the new test as part of the existing test suite.
 
 Next recommended step:
 
-- Recommended next after separate approval: `WP_RECALL_PERSON_NAME_COVERAGE_TESTS`.
-- Alternative if design should come first: `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
+- Recommended next after separate approval: `WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN`.
+- Then consider `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
 - Do not start follow-up work automatically.
+
+## WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — Review remaining PERSON-name recall gaps
+
+Status: completed as review/planning/documentation-only.
+
+Summary:
+
+- Reviewed and classified the remaining missed `PERSON` labels from the cleaned diagnostic benchmark artifact.
+- Added inventory table with document, source, missed name, context, likely pattern, likely cause, risk and follow-up.
+- Classified name types: Dutch names with tussenvoegsel, Arabic/Moroccan-style multi-token names, first-name/surname patterns, single surnames, professional-title context, care-role context, legal-role context, names near contact data and names near care/legal references.
+- Concluded that remaining PERSON gaps now look mostly like recognizer/candidate-design coverage issues, not benchmark mapping noise.
+- Recommended tests/contracts before any recognizer implementation.
 
 ## WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — Plan diagnostic recall/precision thresholds without enforcement
 
