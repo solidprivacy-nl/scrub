@@ -1,14 +1,16 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN — Plan safe PERSON-name recognition improvements
+## WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — Add contract tests for safe future PERSON-name recognition
 
-Status: completed as planning/specification-only.
+Status: completed as tests/specification-only.
 
 Files added:
 
-- `RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`
-- `handover/workpackages/20260618_1848_recall_person_name_recognizer_plan.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`
+- `tests/fixtures/person_name_recognizer_contract_cases.json`
+- `tests/test_recall_person_name_recognizer_contracts.py`
+- `PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md`
+- `handover/workpackages/20260618_1852_recall_person_name_recognizer_contract_tests.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md`
 
 Files changed:
 
@@ -17,23 +19,22 @@ Files changed:
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
 - `DECISION_LOG.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md`
 
 Summary:
 
-- Added a planning/specification-only document for safe future PERSON-name recognition improvements.
-- Planned a test-first route for PERSON-name coverage work.
-- Recorded role/context preservation requirements and single-surname ambiguity.
-- Defined that contract tests are required before any future implementation.
+- Added contract fixture and tests for future safe PERSON-name recognition behavior.
+- Contract cases cover future value-only hard recognizer cases, candidate-only weak-context cases, negative cases, single-surname policy and preserve terms.
+- Tests validate fixture metadata, group completeness, value-only behavior, candidate-only review boundaries, negative-case boundaries, single-surname policy, preserve terms, non-claim boundaries and no enforcement/gate status.
+- Added `PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md` to document the contract-only scope and next implementation route.
 
 Intentionally not changed:
 
 - No product code.
-- No implementation code.
+- No recognizer implementation.
 - No candidate scanner implementation.
 - No runner/report behavior changes.
 - No workflow changes.
-- No tests changed.
 - No threshold enforcement.
 - No gate.
 - No product claim.
@@ -41,14 +42,26 @@ Intentionally not changed:
 
 Tests/checks:
 
-- Local tests were not run because this package is planning/specification-only and only markdown/governance files changed.
-- `git diff --check` was not runnable in this connector-only environment.
+- Added `tests/test_recall_person_name_recognizer_contracts.py`.
+- Local tests were not run because this environment is connector-only and has no local Git working tree for pytest execution.
+- Required check: `python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py`.
 
 Next recommended step:
 
-- Recommended next after separate approval: `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS`.
-- Then consider `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
+- Recommended next after separate approval: `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
+- Then consider `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
 - Do not start follow-up work automatically.
+
+## WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN — Plan safe PERSON-name recognition improvements
+
+Status: completed as planning/specification-only.
+
+Summary:
+
+- Added a planning/specification-only document for safe future PERSON-name recognition improvements.
+- Planned a test-first route for PERSON-name coverage work.
+- Recorded role/context preservation requirements and single-surname ambiguity.
+- Defined that contract tests are required before any future implementation.
 
 ## WP_RECALL_PERSON_NAME_COVERAGE_TESTS — Add diagnostic tests for PERSON-name coverage gaps
 
@@ -59,7 +72,6 @@ Summary:
 - Added diagnostic tests for the PERSON-name gap inventory.
 - Tests verify that the reviewed PERSON names remain documented, grounded in the synthetic corpus and represented as required direct-identifier PERSON gold labels.
 - Tests verify context categories such as Arabic/Moroccan-style multi-token names, Dutch tussenvoegsel names, single surnames, professional-title contexts, care/legal role contexts and names near contact/reference data.
-- Tests verify non-claim boundaries and absence of active PERSON coverage enforcement/gate wording.
 - Tests intentionally do not require current recognizers to pass all PERSON examples.
 - Coordinator evidence showed Tests #1253 and Sync to Hugging Face Space #1264 green for commit `0927bec`.
 
@@ -70,10 +82,7 @@ Status: completed as review/planning/documentation-only.
 Summary:
 
 - Reviewed and classified the remaining missed `PERSON` labels from the cleaned diagnostic benchmark artifact.
-- Added inventory table with document, source, missed name, context, likely pattern, likely cause, risk and follow-up.
-- Classified name types: Dutch names with tussenvoegsel, Arabic/Moroccan-style multi-token names, first-name/surname patterns, single surnames, professional-title context, care-role context, legal-role context, names near contact data and names near care/legal references.
-- Concluded that remaining PERSON gaps now look mostly like recognizer/candidate-design coverage issues, not benchmark mapping noise.
-- Recommended tests/contracts before any recognizer implementation.
+- Classified name types and recommended tests/contracts before any recognizer implementation.
 
 ## WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — Plan diagnostic recall/precision thresholds without enforcement
 
@@ -83,9 +92,6 @@ Summary:
 
 - Added a planning-only threshold policy document for the diagnostic recall/precision benchmark.
 - Recorded the cleaned artifact baseline.
-- Defined metric meanings and which metrics are hard, soft or diagnostic-only.
-- Defined planning categories: planning baseline, warning threshold, release review threshold and future blocking threshold.
-- Added class-specific planning and mandatory conditions before any real gate.
 - No product code, tests, workflow, CI gate, production blocking, threshold enforcement or product claim was added.
 
 ## WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — Review cleaned diagnostic recall benchmark artifact
