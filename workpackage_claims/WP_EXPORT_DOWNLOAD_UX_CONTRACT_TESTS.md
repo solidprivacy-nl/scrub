@@ -3,10 +3,11 @@ repository: solidprivacy-nl/scrub
 workpackage title: WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — Add contract tests for professional export/download UX redesign
 started timestamp: 2026-06-18 22:39 Europe/Amsterdam
 completed timestamp: 2026-06-18 22:39 Europe/Amsterdam
+wording-fix timestamp: 2026-06-18 23:23 Europe/Amsterdam
 scope: tests/documentation-only contract tests for export/download UX redesign
 boundaries: no product UI implementation, no Streamlit code changes, no export semantics changes, no Scrub Key changes, no reinsert changes, no recognizer changes, no benchmark gates, no product claim
 
-final commit SHA or PR link: 9be2cf9cc4d97660e78156591da4298334a9631d
+final commit SHA or PR link: d069f9af9ade880e363094c31bfdaf0d187976bc
 handover path: handover/workpackages/20260618_2239_export_download_ux_contract_tests.md
 
 files added:
@@ -20,6 +21,7 @@ files changed:
 - CHANGELOG.md
 - RISK_REGISTER.md
 - tests/test_export_download_ux_contracts.py
+- handover/workpackages/20260618_2239_export_download_ux_contract_tests.md
 - workpackage_claims/WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS.md
 
 product-code changes: none
@@ -36,15 +38,17 @@ effects:
 - Protected audit/technical details availability as secondary layers.
 - Protected no export semantics change boundary.
 - Protected implementation route.
+- Fixed brittle wording assertion by accepting both no benchmark gate and no benchmark gates wording.
 
 tests/checks:
 - Added tests/test_export_download_ux_contracts.py.
 - Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
-- Required checks: python -m pytest -q tests/test_export_download_ux_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_implementation.py; python -m py_compile presidio_streamlit.py; git diff --check.
+- Coordinator screenshot showed first attempt failed on exact singular wording No benchmark gate while docs used plural/equivalent wording.
+- Required checks after fix: python -m pytest -q tests/test_export_download_ux_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py; python -m pytest -q tests/test_recall_person_name_recognizer_implementation.py; python -m py_compile presidio_streamlit.py; git diff --check.
 - Recommended broader check: python -m pytest -q.
 
-GitHub Actions status: pending/unknown at closeout time.
-Hugging Face sync status: pending/unknown at closeout time.
+GitHub Actions status: pending/unknown after wording fix.
+Hugging Face sync status: pending/unknown after wording fix.
 app verification status: not required; no app behavior changed.
 
 remaining risks:
