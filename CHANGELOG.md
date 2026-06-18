@@ -1,16 +1,15 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — Add contract tests for safe future PERSON-name recognition
+## WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — Implement contract-backed helper-level PERSON-name recognition
 
-Status: completed as tests/specification-only.
+Status: completed as helper/recognizer implementation + tests, pending verification.
 
 Files added:
 
-- `tests/fixtures/person_name_recognizer_contract_cases.json`
-- `tests/test_recall_person_name_recognizer_contracts.py`
-- `PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md`
-- `handover/workpackages/20260618_1852_recall_person_name_recognizer_contract_tests.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md`
+- `person_name_recognizer_helper.py`
+- `tests/test_recall_person_name_recognizer_implementation.py`
+- `handover/workpackages/20260618_2048_recall_person_name_recognizer_implementation_helper_only.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY.md`
 
 Files changed:
 
@@ -18,39 +17,50 @@ Files changed:
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
-- `DECISION_LOG.md`
-- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md`
+- `workpackage_claims/WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY.md`
+
+Summary:
+
+- Added a small contract-backed helper for role/title PERSON-name recognition.
+- Added implementation tests that load the existing contract fixture.
+- Positive role/title cases must return value-only name spans.
+- Negative cases must not return PERSON-name matches.
+- Single-surname matching remains limited to strong role/title context.
+- Candidate-only weak-context examples remain not automatic.
+
+Intentionally not changed:
+
+- No UI changes.
+- No export/download changes.
+- No Scrub Key changes.
+- No reinsert changes.
+- No candidate scanner changes.
+- No runner/report semantic changes.
+- No threshold enforcement.
+- No production gate.
+- No product claim.
+
+Tests/checks:
+
+- Added `tests/test_recall_person_name_recognizer_implementation.py`.
+- Local tests were not run because this environment is connector-only and has no local Git working tree for pytest execution.
+- Required checks include the new implementation tests plus existing contract, coverage and corpus tests.
+
+Next recommended step:
+
+- After green tests, HF sync and app smoke: `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
+- Do not start follow-up work automatically.
+
+## WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — Add contract tests for safe future PERSON-name recognition
+
+Status: completed and verified as tests/specification-only.
 
 Summary:
 
 - Added contract fixture and tests for future safe PERSON-name recognition behavior.
 - Contract cases cover future value-only hard recognizer cases, candidate-only weak-context cases, negative cases, single-surname policy and preserve terms.
 - Tests validate fixture metadata, group completeness, value-only behavior, candidate-only review boundaries, negative-case boundaries, single-surname policy, preserve terms, non-claim boundaries and no enforcement/gate status.
-- Added `PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md` to document the contract-only scope and next implementation route.
-
-Intentionally not changed:
-
-- No product code.
-- No recognizer implementation.
-- No candidate scanner implementation.
-- No runner/report behavior changes.
-- No workflow changes.
-- No threshold enforcement.
-- No gate.
-- No product claim.
-- No UI/export/Scrub Key/reinsert behavior changes.
-
-Tests/checks:
-
-- Added `tests/test_recall_person_name_recognizer_contracts.py`.
-- Local tests were not run because this environment is connector-only and has no local Git working tree for pytest execution.
-- Required check: `python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py`.
-
-Next recommended step:
-
-- Recommended next after separate approval: `WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY`.
-- Then consider `WP_RECALL_PERSON_NAME_RECOGNIZER_BENCHMARK_REVIEW`.
-- Do not start follow-up work automatically.
+- Coordinator evidence showed Tests #1278 and Sync to Hugging Face Space #1289 green for commit `4dd4c5f`.
 
 ## WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN — Plan safe PERSON-name recognition improvements
 
