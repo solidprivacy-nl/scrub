@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — Add contract tests for safe future PERSON-name recognition`
 
-Status: completed as tests/specification-only, pending GitHub Actions/HF verification after docs-only wording fix.
+Status: completed and verified as tests/specification-only.
 
 ## Summary
 
@@ -118,7 +118,7 @@ single surname without strong context
 
 Local tests were not run because this environment is connector-only and does not expose a local Git working tree for pytest execution.
 
-Coordinator screenshot evidence showed a failing regression test before the docs-only wording fix:
+Coordinator screenshot evidence initially showed a failing regression test before the docs-only wording fix:
 
 ```text
 tests/test_recall_person_name_coverage_diagnostics.py::test_person_coverage_diagnostics_do_not_introduce_enforcement_or_gate_claims
@@ -127,35 +127,39 @@ AssertionError: expected "no recognizer changes" in RECALL_PRECISION_SCORECARD.m
 
 Docs-only fix commit added the exact expected phrase back to the scorecard.
 
-Required verification command for GitHub/local runner:
+Coordinator screenshot evidence now confirms:
 
 ```text
-python -m pytest -q tests/test_recall_person_name_recognizer_contracts.py
-```
-
-Recommended additional checks:
-
-```text
-python -m pytest -q tests/test_recall_person_name_coverage_diagnostics.py
-python -m pytest -q tests/test_recall_gold_label_corpus_seed.py
-git diff --check
+Tests #1278 for commit 4dd4c5f — green
+Sync to Hugging Face Space #1289 for commit 4dd4c5f — green
+Hugging Face Space app — running without Script execution error
 ```
 
 ## Validation status
 
-Implemented as tests/specification-only. Awaiting GitHub Actions verification after wording fix.
+Verified by coordinator screenshot evidence.
 
 ## GitHub Actions status
 
-Pending/unknown after wording fix.
+Verified green by coordinator screenshot evidence.
+
+```text
+Tests #1278 for commit 4dd4c5f — green
+```
 
 ## Hugging Face sync status
 
-Pending/unknown after wording fix. Earlier HF sync failures showed HTTP 429 from Hugging Face and may be transient/rate-limit related.
+Verified green by coordinator screenshot evidence.
+
+```text
+Sync to Hugging Face Space #1289 for commit 4dd4c5f — green
+```
 
 ## App verification status
 
-Not required. No app behavior changed.
+Verified healthy by coordinator screenshot evidence. The Hugging Face Space is running without Script execution error.
+
+No app verification was functionally required because no app behavior changed.
 
 ## Remaining risks
 
