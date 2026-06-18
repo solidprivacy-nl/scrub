@@ -54,7 +54,7 @@ This does not prove product safety.
 | legal_role_preservation_seed_001 | legal | corpus/legal/legal_role_preservation_seed_001.txt | Jansen | `Later noteerde arts Jansen dat getuige Fatima El Amrani ...` | L001 | single surname after professional role | single surname ambiguity; `arts` role not currently covered by legal-party pattern | direct identifier but high ambiguity | design single-surname rules carefully before implementation |
 | legal_role_preservation_seed_001 | legal | corpus/legal/legal_role_preservation_seed_001.txt | Fatima El Amrani | `... getuige Fatima El Amrani de minderjarige ...` | L002 | legal role + Arabic/Moroccan-style full name | recognizer coverage issue despite legal role context; mapping already cleaned | direct identifier tied to legal role | add legal role + full-name regression tests |
 
-Note: `Sami El Amrani` also appears in `legal_role_preservation_seed_001`, but the cleaned artifact reports one exact match in that document; the remaining listed 14 misses do not include that occurrence as a missed label after cleanup.
+Note: `Sami El Amrani` also appears in `legal_role_preservation_seed_001`, but the cleaned artifact reports one exact match in that document; the remaining listed 14 misses do not include that occurrence as a missed label after cleanup. The diagnostic test inventory keeps the full review inventory visible and is not an automatic recall claim.
 
 ---
 
@@ -211,3 +211,15 @@ De diagnostische benchmark laat zien welke synthetische persoonsnamen nog gemist
 Deze analyse helpt vervolgtests en herkenningslogica te plannen.
 Menselijke review blijft noodzakelijk.
 ```
+
+---
+
+## 9. Diagnostic tests
+
+`WP_RECALL_PERSON_NAME_COVERAGE_TESTS` adds diagnostic tests for the gap inventory.
+
+The tests do not require current recognizers to pass all PERSON examples.
+
+The tests preserve the gap inventory and non-claim boundaries.
+
+The tests are intentionally diagnostic: they keep the known PERSON-name risk visible without converting it into a CI gate, threshold enforcement or product claim.
