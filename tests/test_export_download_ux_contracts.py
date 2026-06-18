@@ -156,10 +156,10 @@ def test_this_package_does_not_approve_implementation_or_semantic_changes():
         "No Scrub Key",
         "No reinsert",
         "No recognizer",
+        "No production gate",
         "No product claim",
     ]:
         assert_contains(text, term)
-    assert "no benchmark gate" in normalise(text) or "no benchmark gates" in normalise(text)
 
 
 def test_contract_tests_do_not_import_streamlit_or_mutate_runtime_app_state():
