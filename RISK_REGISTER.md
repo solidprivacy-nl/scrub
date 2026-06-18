@@ -41,7 +41,7 @@ Risk:
 The Scrub Key is shared, leaked, retained too long, tampered with or mishandled, allowing full re-identification of scrubbed content.
 ```
 
-Current mitigations include warnings and acknowledgements. UI cleanup must keep Scrub Key clearly separate from ordinary document exports.
+Current mitigations include warnings and acknowledgements. UI cleanup must keep Scrub Key clearly separate from ordinary document exports. Export/download UX now has contract-test protection that requires Scrub Key separation and visible warning before implementation.
 
 ---
 
@@ -106,7 +106,8 @@ Current mitigations:
 - Review table remains source of truth and fallback.
 - Side-by-side review surface, synced scrolling and collapsible review table are live and verified.
 - Serial review remains available as a non-destructive review aid.
-- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` now defines a route to move debug/audit details out of the primary flow and improve export/download hierarchy.
+- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` defines a route to move debug/audit details out of the primary flow and improve export/download hierarchy.
+- `EXPORT_DOWNLOAD_UX_CONTRACTS.md` and `tests/test_export_download_ux_contracts.py` now protect the professional export/download direction before implementation.
 
 Gaps:
 
@@ -116,7 +117,6 @@ Gaps:
 
 Recommended workpackages:
 
-- `WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS`
 - `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION`
 - `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN`
 - `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION`
@@ -156,6 +156,7 @@ Current mitigations:
 - Diagnostic recall benchmark artifact workflow exists.
 - Audit/report details exist.
 - `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` states that technical/audit details must remain available but become secondary.
+- Export/download UX now has contract-test protection that audit/technical details remain available while becoming secondary.
 
 Gaps:
 
