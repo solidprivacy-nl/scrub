@@ -18,29 +18,17 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 ## Current status
 
 ```text
-WP_REVIEW_TABLE_COLLAPSIBLE_PROMOTE_VERIFY — completed and verified.
-WP_REVIEW_TABLE_COLLAPSIBLE_ARTIFACT_CLEANUP — completed.
-WP_DUTCH_LEGAL_RECALL_GAP_TESTS — completed.
-WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES — completed.
-WP_DUTCH_LEGAL_RECALL_PATTERN_FIXES_VERIFY — completed and verified.
-WP_RECALL_SCORECARD_REFRESH — completed.
-WP_RECALL_GOLD_LABEL_CORPUS_SEED — completed.
-WP_RECALL_GOLD_LABEL_CORPUS_EXPAND — completed.
-WP_RECALL_BENCHMARK_RUNNER_MINIMAL — completed.
-WP_RECALL_BENCHMARK_RUNNER_EMAIL_DOMAIN_TEST_FIX — completed and verified.
-WP_RECALL_BENCHMARK_REPORT_ARTIFACT — completed and verified.
-WP_RECALL_BENCHMARK_REPORT_REVIEW — completed.
-WP_RECALL_BENCHMARK_REPORT_ARTIFACT_FIX — completed and verified.
-WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — completed.
-WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — completed; planning-only threshold policy design added.
-WP_RECALL_PERSON_NAME_COVERAGE_REVIEW — completed; PERSON-name coverage gaps reviewed and follow-up route planned.
-WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified; diagnostic PERSON-name gap inventory tests added.
-WP_RECALL_PERSON_NAME_RECOGNIZER_PLAN — completed; safe PERSON-name recognizer improvement plan added.
-WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed and verified; future PERSON-name recognizer contract tests added.
-WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed and verified; contract-backed helper-level PERSON-name recognition implemented.
 WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN — completed; MVP UI cleanup and export/download redesign route planned.
+WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — completed; contract tests added for professional export/download UX redesign.
+WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed and verified.
+WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed and verified.
+WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified.
+WP_RECALL_BENCHMARK_THRESHOLDS_PLAN — completed.
+WP_RECALL_BENCHMARK_REPORT_REVIEW_2 — completed.
 WP_SERIAL_REVIEW_UI — completed and app-verified.
 ```
+
+Earlier completed workpackages remain available in Git history and handover files.
 
 ## Active product line
 
@@ -50,118 +38,46 @@ Import -> Scrub -> Review -> Replace -> Scrub Key -> Reinsert -> Export -> Audit
 
 ## Review UX / frontend baseline
 
-The review table remains source of truth and fallback. The normal app keeps one central side-by-side review surface, visible visual markers, the collapsible replacement table under `Vervangtabel controleren — <items> items`, Serial review, export/download and DOCX hygiene audit.
+The review table remains source of truth and fallback. The normal app keeps one central side-by-side review surface, visible markers, the collapsible replacement table, Serial review, export/download and DOCX hygiene audit.
 
-Current product direction now shifts visible work toward MVP UI cleanup and professional export/download flow before more recall/benchmark follow-up.
-
-## Recall/benchmark status
-
-The diagnostic benchmark stack includes:
-
-```text
-corpus/**/*.gold.json
-recall_benchmark_runner.py
-recall_benchmark_report.py
-.github/workflows/recall-benchmark-report.yml
-RECALL_BENCHMARK_REPORT_REVIEW_2.md
-RECALL_BENCHMARK_THRESHOLDS_PLAN.md
-RECALL_PERSON_NAME_COVERAGE_REVIEW.md
-tests/test_recall_person_name_coverage_diagnostics.py
-RECALL_PERSON_NAME_RECOGNIZER_PLAN.md
-tests/fixtures/person_name_recognizer_contract_cases.json
-tests/test_recall_person_name_recognizer_contracts.py
-PERSON_NAME_RECOGNIZER_CONTRACT_TESTS.md
-person_name_recognizer_helper.py
-tests/test_recall_person_name_recognizer_implementation.py
-```
-
-Cleaned artifact baseline before helper implementation review:
-
-```text
-document_count = 7
-gold_label_count = 75
-prediction_count = 60
-matched_required_exact_count = 56
-matched_required_text_normalized_count = 57
-matched_required_overlap_count = 57
-missed_required_count = 18
-wrong_type_count = 1
-false_positive_candidate_count = 1
-preserve_term_hit_count = 0
-known_trap_hit_count = 1
-```
-
-PERSON helper implementation status:
-
-```text
-contract-backed role/title PERSON-name helper implemented
-value-only spans are enforced
-role/context words remain readable
-negative cases prevent broad over-masking
-single-surname matching is limited to strong context
-candidate-only weak context remains not automatic
-no UI/export/Scrub Key/reinsert change
-no runner/report semantic change
-no thresholds
-no gate
-no product claim
-```
-
-Recall/benchmark follow-up packages are temporarily parked unless a concrete blocker appears.
+Current product direction shifts visible work toward MVP UI cleanup and professional export/download flow before more recall/benchmark follow-up.
 
 ## MVP UI/export redesign status
 
-Planning document:
+Planning and contract files:
 
 ```text
 MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md
+EXPORT_DOWNLOAD_UX_CONTRACTS.md
+tests/test_export_download_ux_contracts.py
 ```
 
-Planned focus:
+Contract protection covers:
 
 ```text
-calmer MVP interface
-professional export/download flow
-technical/debug details moved to secondary audit/advanced layers
-Scrub Key clearly separated from normal document exports
-review table remains source of truth and fallback
+export/download grouping
+Scrub Key separation and warning
+primary document downloads vs audit downloads
 no export semantics change
+audit/technical details remain available
+copy-cleanup direction
+implementation route
 ```
 
-## Verification evidence
+## Recall/benchmark status
 
-Recent relevant verification evidence:
-
-```text
-a3df5c7 — Diagnostic recall benchmark report #1 green
-31ee53b — Tests #1193 green
-31ee53b — Sync to Hugging Face Space #1204 green
-59473fb — Tests #1218 green
-59473fb — Sync to Hugging Face Space #1228 green
-0927bec — Tests #1253 green
-0927bec — Sync to Hugging Face Space #1264 green
-4dd4c5f — Tests #1278 green
-4dd4c5f — Sync to Hugging Face Space #1289 green
-d4e063d — Tests #1292 green
-d4e063d — Sync to Hugging Face Space #1303 green
-Hugging Face app screenshot showed running without Script execution error
-```
-
-`WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN` is planning/design-only and does not require app verification.
+Recall/benchmark follow-up packages are temporarily parked unless a concrete blocker appears.
 
 ## Active / next recommended execution queue
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after separate approval: WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS.
-3. Then: WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION.
-4. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.
-5. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION.
-6. Then: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
-7. Verification closeout after UI implementation: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
+2. Recommended next after separate approval: WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION.
+3. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.
+4. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION.
+5. Then: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
+6. Then: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
 ```
-
-Recall/benchmark follow-up packages are temporarily parked unless a concrete blocker appears.
 
 ## Boundaries
 
