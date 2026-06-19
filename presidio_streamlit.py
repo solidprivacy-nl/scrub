@@ -77,7 +77,11 @@ from review_guidance import (
 )
 from review_summary import build_review_summary, review_summary_markdown
 from export_sanity import build_export_sanity_checks, export_sanity_warnings
-from scrub_key import build_scrub_key, scrub_key_to_json, validate_scrub_key
+from scrub_key import (
+    build_scrub_key as build_export_scrub_key,
+    scrub_key_to_json as export_key_json,
+    validate_scrub_key as validate_export_scrub_key,
+)
 from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result
 from scrub_key_reinsert import reinsert_from_scrub_key
 from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes
@@ -883,8 +887,8 @@ try:
         else:
             scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
 
-        scrub_key = build_scrub_key(scrub_key_rows)
-        scrub_key_issues = validate_scrub_key(scrub_key)
+        scrub_key = build_export_scrub_key(scrub_key_rows)
+        scrub_key_issues = validate_export_scrub_key(scrub_key)
         if scrub_key_issues:
             st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
         else:
@@ -892,7 +896,7 @@ try:
                 st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")
             st.download_button(
                 "Download Scrub Key (.json)",
-                data=scrub_key_to_json(scrub_key),
+                data=export_key_json(scrub_key),
                 file_name="solidprivacy_scrub_key.json",
                 mime="application/json",
                 key="download_scrub_key",
@@ -900,14 +904,14 @@ try:
 
         st.markdown("**Audit en technische bestanden**")
         st.download_button(
-            label="Vervangtabel downloaden (.csv)",
+            label="Download vervangtabel (.csv)",
             data=replacement_report_csv(edited_report_rows),
             file_name="vervangtabel.csv",
             mime="text/csv",
             key="download_csv",
         )
         st.download_button(
-            label="Scrubrapport downloaden (.txt)",
+            label="Download scrubrapport (.txt)",
             data=scrub_report_txt(
                 edited_report_rows,
                 profile=profile_label,

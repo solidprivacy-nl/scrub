@@ -54,8 +54,8 @@ def test_existing_download_concepts_remain_available():
         "Download opgeschoonde tekst",
         "Download opgeschoond Word-bestand",
         "Download opgeschoonde PDF",
-        "Vervangtabel downloaden",
-        "Scrubrapport downloaden",
+        "Download vervangtabel",
+        "Download scrubrapport",
         "Download Scrub Key",
     ]:
         assert_contains(source, term)
