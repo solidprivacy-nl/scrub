@@ -1,18 +1,30 @@
 # Changelog — SolidPrivacy Scrub
 
-## WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — Implement grouped export/download UX
+## WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR — Directly implement grouped export/download UX
 
 Status: completed, pending verification.
 
 Summary:
 
-- Implemented grouped export/download presentation.
-- Added document, key and audit/technical groups.
-- Existing export content and behavior are unchanged.
+- Removed the unreliable export startup-patch route after live app verification stayed old.
+- Implemented the grouped export/download section directly in `presidio_streamlit.py`.
+- Dockerfile no longer runs the export startup patch.
+- Existing export content and behavior are intended unchanged.
 
 Next recommended step:
 
-- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN` after verification.
+- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN` after green Actions, HF sync and app verification.
+
+---
+
+## WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — Implement grouped export/download UX
+
+Status: superseded by direct repair.
+
+Summary:
+
+- Initial startup-patch route was not reliable in the live app.
+- Replaced by `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR`.
 
 ---
 
