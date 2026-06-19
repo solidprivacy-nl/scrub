@@ -41,7 +41,7 @@ Risk:
 The Scrub Key is shared, leaked, retained too long, tampered with or mishandled, allowing full re-identification of scrubbed content.
 ```
 
-Current mitigations include warnings and acknowledgements. Export/download UX grouping is now implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Risk remains open until live app verification confirms the final UI.
+Current mitigations include warnings and acknowledgements. Export/download UX grouping is now implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Live app verification confirmed the grouped export UI.
 
 ---
 
@@ -71,7 +71,7 @@ Risk:
 DOCX metadata, comments, tracked changes, headers, footers or hidden content contain sensitive data that is not scrubbed or cleaned.
 ```
 
-DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee.
+DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee. The review debug collapse plan explicitly keeps audit details available rather than removing them.
 
 ---
 
@@ -107,17 +107,16 @@ Current mitigations:
 - Side-by-side review surface, synced scrolling and collapsible review table are live and verified.
 - Serial review remains available as a non-destructive review aid.
 - `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` defines a route to move debug/audit details out of the primary flow and improve export/download hierarchy.
-- `EXPORT_DOWNLOAD_UX_CONTRACTS.md` and `tests/test_export_download_ux_contracts.py` protect the professional export/download direction before implementation.
-- Startup-patch route failed live app verification and was replaced by direct app implementation in `presidio_streamlit.py`.
+- Export/download UX is directly implemented in `presidio_streamlit.py` and live verified.
+- `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` narrows the next implementation to interface cleanup only: rename/collapse existing debug-like UI elements without creating a new review layer, benchmark gate or safeguard loop.
 
 Gaps:
 
-- Debug-like labels and technical captions still need to be collapsed, renamed or moved.
-- Risk remains open until app verification confirms the live grouped export UI.
+- Debug-like labels and technical captions still need to be collapsed, renamed or moved in implementation.
+- Implementation must avoid weakening review controls or hiding audit details.
 
 Recommended workpackages:
 
-- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN`
 - `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION`
 - `WP_REVIEW_COPY_POLISH_IMPLEMENTATION`
 
@@ -156,11 +155,12 @@ Current mitigations:
 - Audit/report details exist.
 - `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` states that technical/audit details must remain available but become secondary.
 - Export/download UX now groups document downloads, key file, and audit/technical files while keeping audit details available.
+- `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` classifies audit/technical UI elements so the next implementation can make them secondary without removing them.
 
 Gaps:
 
-- App verification is still needed for the live grouped export UI.
 - No generalized automated status artifact exists yet.
+- The next UI cleanup still needs app verification because product UI will change.
 
 ---
 
