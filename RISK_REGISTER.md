@@ -71,7 +71,7 @@ Risk:
 DOCX metadata, comments, tracked changes, headers, footers or hidden content contain sensitive data that is not scrubbed or cleaned.
 ```
 
-DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee. The review debug collapse plan explicitly keeps audit details available rather than removing them.
+DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee. The review debug collapse line explicitly keeps audit details available rather than removing them.
 
 ---
 
@@ -105,20 +105,19 @@ Current mitigations:
 
 - Review table remains source of truth and fallback.
 - Side-by-side review surface, synced scrolling and collapsible review table are live and verified.
-- Serial review remains available as a non-destructive review aid.
-- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` defines a route to move debug/audit details out of the primary flow and improve export/download hierarchy.
 - Export/download UX is directly implemented in `presidio_streamlit.py` and live verified.
-- `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` narrows the next implementation to interface cleanup only: rename/collapse existing debug-like UI elements without creating a new review layer, benchmark gate or safeguard loop.
+- `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` narrows review UI cleanup to a small interface pass, not a new review loop.
+- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION` made the existing step-by-step review aid collapsed by default and removed debug/governance wording from the primary UI.
 
 Gaps:
 
-- Debug-like labels and technical captions still need to be collapsed, renamed or moved in implementation.
+- App verification is still required for the latest visible UI change.
+- Additional copy polish is still needed for remaining technical labels outside the step-by-step review panel.
 - Implementation must avoid weakening review controls or hiding audit details.
 
 Recommended workpackages:
 
-- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION`
-- `WP_REVIEW_COPY_POLISH_IMPLEMENTATION`
+- `WP_REVIEW_COPY_POLISH_IMPLEMENTATION` after verification.
 
 ---
 
@@ -155,12 +154,12 @@ Current mitigations:
 - Audit/report details exist.
 - `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` states that technical/audit details must remain available but become secondary.
 - Export/download UX now groups document downloads, key file, and audit/technical files while keeping audit details available.
-- `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` classifies audit/technical UI elements so the next implementation can make them secondary without removing them.
+- The step-by-step review aid is now secondary by default, while review table and audit controls remain available.
 
 Gaps:
 
 - No generalized automated status artifact exists yet.
-- The next UI cleanup still needs app verification because product UI will change.
+- The latest UI cleanup still needs app verification.
 
 ---
 
