@@ -1,8 +1,26 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN — Plan review debug/prototype UI cleanup
+
+Status: completed as planning/design-only.
+
+Summary:
+
+- Added `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md`.
+- Classified visible review/debug/audit UI elements into keep, collapse, rename, audit-only and do-not-change categories.
+- Explicitly constrained the next package to interface cleanup only: no new review layer, benchmark gate, export gate or safeguard loop.
+- Prepared the next implementation package: `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION`.
+
+Tests:
+
+- No product tests required because only planning/governance markdown was changed.
+- `git diff --check` still needs coordinator-side confirmation if not visible through connector.
+
+---
+
 ## WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR — Directly implement grouped export/download UX
 
-Status: completed, pending verification.
+Status: completed and verified.
 
 Summary:
 
