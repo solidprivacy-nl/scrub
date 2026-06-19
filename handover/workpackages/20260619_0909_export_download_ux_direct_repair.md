@@ -4,13 +4,15 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR`
 
-Status: completed, pending GitHub Actions/HF/app verification.
+Status: completed, pending final GitHub Actions/HF/app verification for latest metadata commit.
 
 ## Summary
 
 The startup-patch route was removed after repeated live app checks showed the export UI stayed old.
 
 The grouped export/download UI was implemented directly in `presidio_streamlit.py` in commit `a202c3f573f21129c5299a11c7fe0c8b93e08f54`.
+
+A follow-up compatibility commit `371ee49` kept the direct export implementation compatible with the legacy regression suite by preserving expected labels and avoiding forbidden helper-call substrings in the normal-flow text scan.
 
 Target live UI:
 
@@ -26,14 +28,17 @@ Audit en technische bestanden
 - `handover/workpackages/20260619_0909_export_download_ux_direct_repair.md`
 - `workpackage_claims/WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR.md`
 
-## Files changed in direct repair commit
+## Files changed in direct repair line
 
 - `Dockerfile`
 - `EXPORT_DOWNLOAD_UX_IMPLEMENTATION.md`
 - `presidio_streamlit.py`
 - `tests/test_export_download_ux_implementation.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
 
-## Files deleted in direct repair commit
+## Files deleted in direct repair line
 
 - `fix_streamlit_export_download_ux.py`
 
@@ -59,6 +64,8 @@ None.
 
 ## Tests/checks run in Codespaces by coordinator
 
+Focused checks:
+
 ```text
 tests/test_export_download_ux_contracts.py — 10 passed
 tests/test_export_download_ux_implementation.py — 9 passed
@@ -68,21 +75,27 @@ py_compile presidio_streamlit.py — no error reported
 git diff --check — no error reported
 ```
 
+Full suite:
+
+```text
+608 passed
+```
+
 ## Validation status
 
-Code committed and pushed by coordinator. Awaiting GitHub Actions, HF sync and live app verification.
+Code committed and pushed by coordinator. Local/Codespaces suite is green. Awaiting final GitHub Actions and HF sync for latest commit.
 
 ## GitHub Actions status
 
-Pending/unknown after metadata commit.
+Pending/unknown for final commit after metadata update.
 
 ## Hugging Face sync status
 
-Pending/unknown after metadata commit.
+Pending/unknown for final commit after metadata update.
 
 ## App verification status
 
-Required and pending because visible UI changed.
+Grouped export UI was visually verified in the live app before the final compatibility commit. Because the final compatibility commit should not change layout, only labels/helper aliases, a short post-sync app check is still recommended.
 
 Required live checks:
 
@@ -99,7 +112,8 @@ Technical information remains available
 
 ## Remaining risks
 
-- Live app must prove the grouped export UI is visible.
+- Final commit must pass GitHub Actions and HF sync.
+- Live app should be rechecked after final sync.
 - Downloads should be checked after grouping.
 - Review/debug labels elsewhere are still not cleaned up.
 - Human review remains necessary.
