@@ -1,5 +1,24 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION — Collapse step-by-step review UI
+
+Status: completed pending verification.
+
+Summary:
+
+- Made the existing step-by-step review panel collapsed by default under `Stap voor stap controleren`.
+- Replaced prototype wording with shorter Dutch user-facing copy.
+- Removed the governance/debug caption from the primary UI.
+- Renamed the serial review filter to `Filter voor stap-voor-stap controle`.
+- Did not change review logic, review table data, export/download behavior, Scrub Key behavior, reinsert behavior, recognizers, benchmark logic, Dockerfile or runtime setup.
+
+Tests:
+
+- Coordinator-side test run required.
+- Recommended focused tests are listed in the workpackage handover.
+
+---
+
 ## WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN — Plan review debug/prototype UI cleanup
 
 Status: completed as planning/design-only.
@@ -8,13 +27,12 @@ Summary:
 
 - Added `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md`.
 - Classified visible review/debug/audit UI elements into keep, collapse, rename, audit-only and do-not-change categories.
-- Explicitly constrained the next package to interface cleanup only: no new review layer, benchmark gate, export gate or safeguard loop.
+- Explicitly constrained the next package to interface cleanup only: no new review layer, benchmark gate or export gate.
 - Prepared the next implementation package: `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION`.
 
 Tests:
 
 - No product tests required because only planning/governance markdown was changed.
-- `git diff --check` still needs coordinator-side confirmation if not visible through connector.
 
 ---
 
