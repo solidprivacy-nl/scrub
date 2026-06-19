@@ -21,7 +21,7 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN — completed; MVP UI cleanup and export/download redesign route planned.
 WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — completed and verified; contract tests added for professional export/download UX redesign.
 WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — superseded by direct repair after startup-patch app verification failed.
-WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR — completed pending verification; export/download UX implemented directly in presidio_streamlit.py.
+WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR — completed and verified; export/download UX implemented directly in presidio_streamlit.py.
 WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed and verified.
 WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed and verified.
 WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified.
@@ -57,7 +57,7 @@ tests/test_export_download_ux_implementation.py
 presidio_streamlit.py
 ```
 
-The failed startup-patch route was removed after live app verification showed the old export section. Direct implementation now lives in `presidio_streamlit.py`.
+The failed startup-patch route was removed after live app verification showed the old export section. Direct implementation now lives in `presidio_streamlit.py` and is verified in the live app.
 
 Contract and implementation protection covers:
 
@@ -79,7 +79,7 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next after green Actions/HF/app verification: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.
+2. Recommended next: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.
 3. Then: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION.
 4. Then: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
 5. Then: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
