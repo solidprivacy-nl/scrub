@@ -20,7 +20,8 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 ```text
 WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN — completed; MVP UI cleanup and export/download redesign route planned.
 WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — completed and verified; contract tests added for professional export/download UX redesign.
-WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — completed; grouped export/download UX implemented without export semantics changes.
+WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — superseded by direct repair after startup-patch app verification failed.
+WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR — completed pending verification; export/download UX implemented directly in presidio_streamlit.py.
 WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed and verified.
 WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed and verified.
 WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified.
@@ -52,9 +53,11 @@ MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md
 EXPORT_DOWNLOAD_UX_CONTRACTS.md
 tests/test_export_download_ux_contracts.py
 EXPORT_DOWNLOAD_UX_IMPLEMENTATION.md
-fix_streamlit_export_download_ux.py
 tests/test_export_download_ux_implementation.py
+presidio_streamlit.py
 ```
+
+The failed startup-patch route was removed after live app verification showed the old export section. Direct implementation now lives in `presidio_streamlit.py`.
 
 Contract and implementation protection covers:
 
