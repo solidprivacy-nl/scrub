@@ -204,84 +204,80 @@ def render_serial_review_panel(
             "reason": "side-by-side review already rendered centrally",
         }
 
-    st.subheader("Serial review — experimentele reviewhulp")
-    st.info(
-        "Alleen-lezen hulpweergave. De bestaande vervangtabel blijft leidend voor "
-        "beslissingen, Scrub Key en export."
-    )
-    st.caption(
-        "table-first baseline · non-destructive · report-only · no Scrub Key mutation · "
-        "no export blocking · no reinsert behavior change"
-    )
+    with st.expander("Stap voor stap controleren", expanded=False):
+        st.info(
+            "Controleer gevonden gegevens één voor één. "
+            "De vervangtabel blijft leidend voor beslissingen en export."
+        )
 
-    review_rows = build_serial_review_panel_rows(displayed_text, edited_replacements_df)
-    if not review_rows:
-        st.warning("Geen serial review items beschikbaar. De bestaande vervangtabel blijft de fallback.")
-        return {"side_by_side_review": side_by_side_state, "serial_review": None}
+        review_rows = build_serial_review_panel_rows(displayed_text, edited_replacements_df)
+        if not review_rows:
+            st.warning("Geen stap-voor-stap items beschikbaar. De bestaande vervangtabel blijft de fallback.")
+            return {"side_by_side_review": side_by_side_state, "serial_review": None}
 
-    current_index = int(st.session_state.get("serial_review_current_index", 0) or 0)
-    current_occurrence_id = st.session_state.get("serial_review_current_occurrence_id")
-    current_filter = st.session_state.get("serial_review_filter_mode", "all")
-    if current_filter not in FILTER_LABELS:
-        current_filter = "all"
+        current_index = int(st.session_state.get("serial_review_current_index", 0) or 0)
+        current_occurrence_id = st.session_state.get("serial_review_current_occurrence_id")
+        current_filter = st.session_state.get("serial_review_filter_mode", "all")
+        if current_filter not in FILTER_LABELS:
+            current_filter = "all"
 
-    filter_mode = st.selectbox(
-        "Serial review filter",
-        list(FILTER_LABELS.keys()),
-        index=list(FILTER_LABELS.keys()).index(current_filter),
-        format_func=lambda value: FILTER_LABELS[value],
-        key="serial_review_filter_mode",
-        help="Dit filter wijzigt alleen de hulpweergave en niet de vervangtabel.",
-    )
+        filter_mode = st.selectbox(
+            "Filter voor stap-voor-stap controle",
+            list(FILTER_LABELS.keys()),
+            index=list(FILTER_LABELS.keys()).index(current_filter),
+            format_func=lambda value: FILTER_LABELS[value],
+            key="serial_review_filter_mode",
+            help="Dit filter wijzigt alleen de hulpweergave en niet de vervangtabel.",
+        )
 
-    view_model = build_review_panel_view_model(
-        displayed_text=displayed_text,
-        review_rows=review_rows,
-        current_index=current_index,
-        current_occurrence_id=current_occurrence_id,
-        filter_mode=filter_mode,
-        context_window=80,
-    )
-    queue = view_model["queue"]
-    resolved_index = queue.get("current_index")
-    if resolved_index is not None:
-        st.session_state["serial_review_current_index"] = resolved_index
+        view_model = build_review_panel_view_model(
+            displayed_text=displayed_text,
+            review_rows=review_rows,
+            current_index=current_index,
+            current_occurrence_id=current_occurrence_id,
+            filter_mode=filter_mode,
+            context_window=80,
+        )
+        queue = view_model["queue"]
+        resolved_index = queue.get("current_index")
+        if resolved_index is not None:
+            st.session_state["serial_review_current_index"] = resolved_index
 
-    metrics = st.columns(5)
-    metrics[0].metric("Totaal", queue.get("total_items", 0))
-    item_number = 0 if resolved_index is None else resolved_index + 1
-    metrics[1].metric("Huidig", item_number)
-    metrics[2].metric("Open", view_model.get("unresolved_count", 0))
-    metrics[3].metric("Risico", view_model.get("high_risk_count", 0))
-    metrics[4].metric("Exact gelijk", view_model.get("duplicate_exact_value_count", 0))
+        metrics = st.columns(5)
+        metrics[0].metric("Totaal", queue.get("total_items", 0))
+        item_number = 0 if resolved_index is None else resolved_index + 1
+        metrics[1].metric("Huidig", item_number)
+        metrics[2].metric("Open", view_model.get("unresolved_count", 0))
+        metrics[3].metric("Risico", view_model.get("high_risk_count", 0))
+        metrics[4].metric("Exact gelijk", view_model.get("duplicate_exact_value_count", 0))
 
-    current_item = view_model.get("current_item")
-    if current_item is None:
-        st.warning("Geen huidig item beschikbaar binnen dit filter.")
-    else:
-        left, right = st.columns(2)
-        with left:
-            _show_current_item(current_item)
-        with right:
-            _show_context_card(view_model.get("current_context_card"), view_model.get("warnings", []))
+        current_item = view_model.get("current_item")
+        if current_item is None:
+            st.warning("Geen huidig item beschikbaar binnen dit filter.")
+        else:
+            left, right = st.columns(2)
+            with left:
+                _show_current_item(current_item)
+            with right:
+                _show_context_card(view_model.get("current_context_card"), view_model.get("warnings", []))
 
-    nav_prev, nav_next, nav_unresolved = st.columns(3)
-    with nav_prev:
-        if st.button("Vorige", key="serial_review_previous_button", disabled=resolved_index in (None, 0)):
-            st.session_state["serial_review_current_index"] = max((resolved_index or 0) - 1, 0)
-            st.session_state["serial_review_current_occurrence_id"] = None
-            st.rerun()
-    with nav_next:
-        at_end = resolved_index is None or resolved_index >= max(queue.get("total_items", 0) - 1, 0)
-        if st.button("Volgende", key="serial_review_next_button", disabled=at_end):
-            st.session_state["serial_review_current_index"] = (resolved_index or 0) + 1
-            st.session_state["serial_review_current_occurrence_id"] = None
-            st.rerun()
-    with nav_unresolved:
-        next_unresolved = view_model.get("next_item")
-        if st.button("Volgende onopgeloste", key="serial_review_next_unresolved_button", disabled=next_unresolved is None):
-            st.session_state["serial_review_current_occurrence_id"] = next_unresolved.get("occurrence_id")
-            st.rerun()
+        nav_prev, nav_next, nav_unresolved = st.columns(3)
+        with nav_prev:
+            if st.button("Vorige", key="serial_review_previous_button", disabled=resolved_index in (None, 0)):
+                st.session_state["serial_review_current_index"] = max((resolved_index or 0) - 1, 0)
+                st.session_state["serial_review_current_occurrence_id"] = None
+                st.rerun()
+        with nav_next:
+            at_end = resolved_index is None or resolved_index >= max(queue.get("total_items", 0) - 1, 0)
+            if st.button("Volgende", key="serial_review_next_button", disabled=at_end):
+                st.session_state["serial_review_current_index"] = (resolved_index or 0) + 1
+                st.session_state["serial_review_current_occurrence_id"] = None
+                st.rerun()
+        with nav_unresolved:
+            next_unresolved = view_model.get("next_item")
+            if st.button("Volgende onopgeloste", key="serial_review_next_unresolved_button", disabled=next_unresolved is None):
+                st.session_state["serial_review_current_occurrence_id"] = next_unresolved.get("occurrence_id")
+                st.rerun()
 
-    view_model["side_by_side_review"] = side_by_side_state
-    return view_model
+        view_model["side_by_side_review"] = side_by_side_state
+        return view_model
