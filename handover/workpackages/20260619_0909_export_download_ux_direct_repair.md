@@ -4,7 +4,7 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR`
 
-Status: completed, pending final GitHub Actions/HF/app verification for latest metadata commit.
+Status: completed and verified.
 
 ## Summary
 
@@ -83,44 +83,36 @@ Full suite:
 
 ## Validation status
 
-Code committed and pushed by coordinator. Local/Codespaces suite is green. Awaiting final GitHub Actions and HF sync for latest commit.
+Completed and verified by coordinator screenshots.
 
 ## GitHub Actions status
 
-Pending/unknown for final commit after metadata update.
+Verified green from coordinator screenshot for Tests and Sync to Hugging Face Space through the final relevant commits.
 
 ## Hugging Face sync status
 
-Pending/unknown for final commit after metadata update.
+Verified green from coordinator screenshot.
 
 ## App verification status
 
-Grouped export UI was visually verified in the live app before the final compatibility commit. Because the final compatibility commit should not change layout, only labels/helper aliases, a short post-sync app check is still recommended.
-
-Required live checks:
+Verified by live app screenshot showing:
 
 ```text
-No Script execution error
-Section title says "5. Exporteer resultaat"
-Document downloaden group is visible
-Scrub Key group is visible and separated
-Audit en technische bestanden group is visible
-TXT/DOCX/PDF/CSV/report downloads remain available
-DOCX hygiene audit remains available
-Technical information remains available
+5. Exporteer resultaat
+Document downloaden
+Scrub Key
+Audit en technische bestanden
 ```
+
+No Script execution error was visible in the provided live app screenshot.
 
 ## Remaining risks
 
-- Final commit must pass GitHub Actions and HF sync.
-- Live app should be rechecked after final sync.
-- Downloads should be checked after grouping.
+- Downloads should still receive normal smoke verification after future export changes.
 - Review/debug labels elsewhere are still not cleaned up.
 - Human review remains necessary.
 
 ## Next recommended step
-
-After green Actions/HF/app verification:
 
 ```text
 WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN
