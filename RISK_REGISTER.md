@@ -41,7 +41,7 @@ Risk:
 The Scrub Key is shared, leaked, retained too long, tampered with or mishandled, allowing full re-identification of scrubbed content.
 ```
 
-Current mitigations include warnings and acknowledgements. Export/download UX grouping is now implemented so the Scrub Key is visually separated from normal document exports and shown with a specific warning. Risk remains open until live app verification confirms the final UI.
+Current mitigations include warnings and acknowledgements. Export/download UX grouping is now implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Risk remains open until live app verification confirms the final UI.
 
 ---
 
@@ -108,7 +108,7 @@ Current mitigations:
 - Serial review remains available as a non-destructive review aid.
 - `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` defines a route to move debug/audit details out of the primary flow and improve export/download hierarchy.
 - `EXPORT_DOWNLOAD_UX_CONTRACTS.md` and `tests/test_export_download_ux_contracts.py` protect the professional export/download direction before implementation.
-- Export/download UX grouping is implemented through `fix_streamlit_export_download_ux.py` and protected by implementation tests.
+- Startup-patch route failed live app verification and was replaced by direct app implementation in `presidio_streamlit.py`.
 
 Gaps:
 
@@ -155,7 +155,7 @@ Current mitigations:
 - Diagnostic recall benchmark artifact workflow exists.
 - Audit/report details exist.
 - `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` states that technical/audit details must remain available but become secondary.
-- Export/download UX now groups document downloads, Scrub Key, and audit/technical files while keeping audit details available.
+- Export/download UX now groups document downloads, key file, and audit/technical files while keeping audit details available.
 
 Gaps:
 
