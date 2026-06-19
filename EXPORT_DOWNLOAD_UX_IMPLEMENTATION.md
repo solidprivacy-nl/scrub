@@ -1,44 +1,44 @@
 # Export/download UX implementation
 
-Workpackage: `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION`
+Workpackage: `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR`
 
 Repository: `solidprivacy-nl/scrub`
 
-Status: implemented, pending verification.
+Status: direct repair implemented, pending verification.
 
 ## Summary
 
-Implemented the grouped export/download UX through a startup patch:
+The earlier startup-patch route was removed because live app verification showed it did not affect the Hugging Face app.
+
+The grouped export/download UX is now implemented directly in:
 
 ```text
-fix_streamlit_export_download_ux.py
+presidio_streamlit.py
 ```
 
-The Hugging Face startup command now runs this patch after the existing nested-expander patch and before Streamlit starts.
-
-This keeps the change small and isolated while preserving existing export semantics.
-
-## User-facing export groups
-
-The export section is changed from:
-
-```text
-5. Download opgeschoonde bestanden
-```
-
-to:
+The export section is now:
 
 ```text
 5. Exporteer resultaat
 ```
 
-The section now groups controls under:
+with visible groups:
 
 ```text
 Document downloaden
 Scrub Key
 Audit en technische bestanden
 ```
+
+## Removed route
+
+The failed startup patch file was removed:
+
+```text
+fix_streamlit_export_download_ux.py
+```
+
+The Dockerfile no longer runs that patch.
 
 ## Safety boundaries
 
@@ -51,69 +51,29 @@ filenames
 MIME types
 export eligibility
 Scrub Key contents
-Scrub Key creation logic
+Scrub Key helper logic
 reinsert behavior
 review table behavior
+side-by-side review behavior
+serial review behavior
 candidate scanner behavior
 recognizer behavior
 benchmark/report logic
 ```
 
-Not added:
+## Verification required
+
+Live app verification is required because visible UI changed.
+
+Required live checks:
 
 ```text
-ZIP export
-new bundled package export
-new combined export format
-new export blocking
-new Scrub Key acknowledgement
-new gate
-product claim
+No Script execution error
+Section title says "5. Exporteer resultaat"
+Document downloaden group is visible
+Scrub Key group is visible and separated
+Audit en technische bestanden group is visible
+TXT/DOCX/PDF/CSV/report downloads remain available
+DOCX hygiene audit remains available
+Technical information remains available
 ```
-
-## Scrub Key
-
-The Scrub Key appears in its own visible group with this warning:
-
-```text
-De Scrub Key kan originele waarden herstellen. Bewaar dit bestand veilig.
-```
-
-The JSON content is still produced by the existing `build_scrub_key` and `scrub_key_to_json` helpers.
-
-## Audit and technical files
-
-The audit group keeps these existing outputs available:
-
-```text
-Vervangtabel downloaden (.csv)
-Scrubrapport downloaden (.txt)
-DOCX hygiene audit
-Technische informatie
-```
-
-The DOCX hygiene audit remains report-only and is not nested inside another Streamlit expander.
-
-## Tests
-
-Implementation tests:
-
-```text
-tests/test_export_download_ux_implementation.py
-```
-
-Contract tests remain:
-
-```text
-tests/test_export_download_ux_contracts.py
-```
-
-## Next recommended step
-
-After green Actions, HF sync and app verification:
-
-```text
-WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN
-```
-
-Do not start follow-up work automatically.
