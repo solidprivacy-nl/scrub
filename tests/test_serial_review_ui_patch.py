@@ -26,14 +26,19 @@ def test_presidio_uses_safe_serial_review_panel_renderer_and_view_model():
 def test_serial_review_panel_visible_text_and_safety_message_exist():
     text = _combined_ui_text()
 
-    assert "Serial review — experimentele reviewhulp" in text
-    assert "Alleen-lezen hulpweergave" in text
-    assert "De bestaande vervangtabel blijft leidend" in text
+    assert "Stap voor stap controleren" in text
+    assert "expanded=False" in text
+    assert "Controleer gevonden gegevens één voor één" in text
+    assert "De vervangtabel blijft leidend voor beslissingen en export" in text
     assert "Gevonden waarde" in text
     assert "Voorgestelde vervanging" in text
     assert "Status" in text
     assert "Risico’s" in text
     assert "Context" in text
+
+    assert "Serial review — experimentele reviewhulp" not in text
+    assert "Alleen-lezen hulpweergave" not in text
+    assert "De bestaande vervangtabel blijft leidend" not in text
 
 
 def test_serial_review_panel_navigation_labels_exist():
@@ -45,17 +50,25 @@ def test_serial_review_panel_navigation_labels_exist():
     assert "serial_review_current_index" in text
     assert "serial_review_current_occurrence_id" in text
     assert "serial_review_filter_mode" in text
+    assert "Filter voor stap-voor-stap controle" in text
 
 
-def test_serial_review_panel_boundary_language_is_visible():
+def test_serial_review_panel_boundary_contract_remains_in_code_but_not_primary_caption():
     text = _combined_ui_text()
+    renderer_text = RENDERER.read_text(encoding="utf-8")
 
-    assert "table-first baseline" in text
-    assert "non-destructive" in text
-    assert "report-only" in text
-    assert "no Scrub Key mutation" in text
-    assert "no export blocking" in text
-    assert "no reinsert behavior change" in text
+    assert "table-first baseline" not in text
+    assert "no Scrub Key mutation" not in text
+    assert "no export blocking" not in text
+    assert "no reinsert behavior change" not in text
+
+    for phrase in [
+        "does not mutate review",
+        "does not write Scrub Key mappings",
+        "block export",
+        "change reinsert behavior",
+    ]:
+        assert phrase in renderer_text
 
 
 def test_serial_review_ui_does_not_reintroduce_static_highlight_startup_mutation():
@@ -73,8 +86,8 @@ def test_serial_review_ui_does_not_implement_blocked_editor_or_marking_features(
     assert "click-to-mark" not in renderer_text
     assert "advanced editor" not in renderer_text
     assert "unsafe_allow_html" not in renderer_text
-    assert "export_blocking = True" not in renderer_text
-    assert "scrub_key_mapping_written = True" not in renderer_text
+    assert "export_blocking = true" not in renderer_text
+    assert "scrub_key_mapping_written = true" not in renderer_text
 
 
 def test_serial_review_ui_tests_use_synthetic_boundaries_only():
