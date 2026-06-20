@@ -70,6 +70,18 @@ def test_sync_scroll_and_highlight_toggle_remain_available_but_sync_control_is_h
     assert 'id="syncToggle"' not in text
 
 
+def test_side_by_side_primary_ui_does_not_show_debug_governance_caption():
+    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+
+    assert "table-first baseline" not in text
+    assert "visual-only highlights" not in text
+    assert "no Scrub Key writes" not in text
+    assert "no export/download changes" not in text
+    assert "no reinsert behavior change" not in text
+    assert "Must not change source text" not in text
+    assert "Alleen visuele hulp. Controleer bij twijfel altijd de vervangtabel hieronder." in text
+
+
 def test_review_table_and_download_labels_are_preserved():
     text = _app_text()
 
