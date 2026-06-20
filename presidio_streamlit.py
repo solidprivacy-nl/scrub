@@ -675,7 +675,7 @@ try:
             st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
 
         if st_recognition_profile == "Dutch Legal Strict":
-            with st.expander("Mogelijke gemiste waarden", expanded=bool(candidate_rows)):
+            with st.expander("Mogelijk extra te controleren waarden", expanded=bool(candidate_rows)):
                 if candidate_rows:
                     st.warning(
                         "Deze waarden zijn niet automatisch vervangen, maar lijken mogelijk op juridische of administratieve referenties. "
@@ -750,7 +750,7 @@ try:
                 key="replacement_editor",
             )
 
-        with st.expander("Technische details bij de vervangtabel", expanded=False):
+        with st.expander("Geavanceerde details bij de vervangtabel", expanded=False):
             st.caption(TECHNICAL_DETAILS_GUIDANCE)
             technical_columns = technical_display_columns(replacement_editor_df.columns)
             if technical_columns:
@@ -940,7 +940,7 @@ try:
         annotated_tokens = annotate(text=st_text, analyze_results=st_analyze_results)
         annotated_text(*annotated_tokens)
 
-    with st.expander("Technische herkenningen", expanded=False):
+    with st.expander("Geavanceerde herkenningsdetails", expanded=False):
         if st_analyze_results:
             df = pd.DataFrame.from_records([r.to_dict() for r in st_analyze_results])
             df["text"] = [st_text[res.start : res.end] for res in st_analyze_results]

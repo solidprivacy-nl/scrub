@@ -56,15 +56,22 @@ def test_serial_review_panel_remains_available_and_table_first():
     normal_flow = _normal_flow_text()
     serial_text = SERIAL_PANEL.read_text(encoding="utf-8")
 
-    assert "Serial review — experimentele reviewhulp" in serial_text
-    assert "Alleen-lezen hulpweergave" in serial_text
-    assert "De bestaande vervangtabel blijft leidend" in serial_text
-    assert "table-first baseline" in serial_text
-    assert "no Scrub Key mutation" in serial_text
-    assert "no export blocking" in serial_text
-    assert "no reinsert behavior change" in serial_text
-    assert "edited_replacements_df" in normal_flow
+    assert "Stap voor stap controleren" in serial_text
+    assert "expanded=False" in serial_text
+    assert "Controleer gevonden gegevens één voor één" in serial_text
+    assert "De vervangtabel blijft leidend voor beslissingen en export" in serial_text
+    assert "Filter voor stap-voor-stap controle" in serial_text
 
+    assert "Serial review — experimentele reviewhulp" not in serial_text
+    assert "table-first baseline" not in serial_text
+    assert "no Scrub Key mutation" not in serial_text
+    assert "no export blocking" not in serial_text
+    assert "no reinsert behavior change" not in serial_text
+
+    assert "render_serial_review_panel(" in normal_flow
+    assert "include_side_by_side=False" in normal_flow
+    assert "render_side_by_side_review_panel(" in normal_flow
+    assert "replacement_editor" in normal_flow
 
 def test_parked_replacement_panel_still_documents_non_mutating_boundaries():
     renderer_text = _renderer_text()
