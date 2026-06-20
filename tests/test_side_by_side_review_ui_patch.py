@@ -60,14 +60,15 @@ def test_user_facing_side_by_side_copy_exists_and_controls_are_simplified():
         "Geel = vervangen of gemaskeerde waarde",
         "De vervangtabel blijft leidend",
         "Alleen visuele hulp",
+        "Controleer bij twijfel altijd de vervangtabel hieronder",
         "De panelen scrollen synchroon. Bij grote tekstverschillen kan de visuele uitlijning iets afwijken.",
-        "Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior",
     ]:
         assert phrase in text
 
     assert "Markeringen tonen in verwerkte tekst" not in text
     assert "Synchroon scrollen" not in text
     assert "Sync uit: beide panelen scrollen onafhankelijk." not in text
+    assert "Must not change source text" not in text
 
 
 def test_side_by_side_panes_have_equal_height_and_sync_scroll_component():
@@ -154,12 +155,16 @@ def test_side_by_side_panel_preserves_existing_review_table_and_serial_review_bo
     text = _normal_review_flow_text().lower()
 
     assert "replacement_editor" in text
-    assert "serial review — experimentele reviewhulp" in text
-    assert "table-first baseline" in text
-    assert "no scrub key mutation" in text
-    assert "no export blocking" in text
-    assert "no reinsert behavior change" in text
+    assert "stap voor stap controleren" in text
+    assert "expanded=false" in text
+    assert "controleer gevonden gegevens één voor één" in text
     assert "side-by-side review" in text
+
+    assert "serial review — experimentele reviewhulp" not in text
+    assert "table-first baseline" not in text
+    assert "no scrub key mutation" not in text
+    assert "no export blocking" not in text
+    assert "no reinsert behavior change" not in text
 
 
 def test_side_by_side_panel_does_not_add_blocked_flow_mutations():
