@@ -169,10 +169,6 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
     processed_text = build_preview_text(source_text, edited_replacements_df)
 
     st.caption("Vergelijk links de brontekst met rechts de verwerkte tekst. De vervangtabel blijft leidend.")
-    st.caption(
-        "side-by-side review · table-first baseline · visual-only highlights · "
-        "no Scrub Key writes · no export/download changes · no reinsert behavior change"
-    )
 
     show_markers = st.checkbox(
         "Markeringen tonen",
@@ -208,7 +204,7 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         scrolling=False,
     )
 
-    st.caption("Alleen visuele hulp. Must not change source text, review table state, export payloads, Scrub Key state or reinsert behavior.")
+    st.caption("Alleen visuele hulp. Controleer bij twijfel altijd de vervangtabel hieronder.")
     st.caption(model["review_table"]["copy"])
 
     return {
