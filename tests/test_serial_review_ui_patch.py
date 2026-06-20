@@ -64,7 +64,7 @@ def test_serial_review_panel_boundary_contract_remains_in_code_but_not_primary_c
 
     for phrase in [
         "does not mutate review",
-        "does not write Scrub Key mappings",
+        "write Scrub Key mappings",
         "block export",
         "change reinsert behavior",
     ]:
