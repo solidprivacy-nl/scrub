@@ -12,6 +12,7 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 
 - Upload and process supported document text flows in the Streamlit prototype.
 - Review detected replacement candidates before export.
+- Add a missed value manually with `Gemiste waarde toevoegen` so it enters the existing replacement table before export.
 - Preserve legal/professional context where possible.
 - Nederlandse juridische referenties zoals dossier-, zaak-, cliënt- en administratieve referentiecodes worden beter als review-kandidaat zichtbaar gemaakt wanneer automatische herkenning ze mist.
 - Juridische rolwoorden blijven beter behouden als juridische context; Scrub doet geen claim dat alle juridische nummers altijd automatisch worden herkend.
@@ -26,6 +27,7 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 - The side-by-side panes scroll together by default.
 - A short note explains that visual alignment can differ when source and processed text differ structurally.
 - Markers are on by default and can be hidden with `Markeringen tonen`.
+- Users can add a missed value manually near `3. Controleer gevonden gegevens`; it is added to the same replacement table used for export.
 - The section `Controleer gevonden gegevens` is visually quieter: the replacement table is now under a collapsed `Vervangtabel controleren — <items> items` section.
 - The replacement table remains the source of truth and fallback for review decisions and export construction.
 - Serial review remains available as a small read-only review aid below the replacement table.
@@ -41,7 +43,7 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 
 - Export a Scrub Key JSON mapping file.
 - Import/reload a Scrub Key for controlled reinsert.
-- Clear warnings are shown because the Scrub Key can restore sensitive/confidential values.
+- Clear warnings are shown because the Scrub Key can restore confidential values.
 - Scrub Key export and import now require an explicit acknowledgement before the high-risk action button is active.
 
 ### Reinsert
@@ -75,10 +77,10 @@ PDF support is intentionally limited:
 - The Hugging Face Space is a demo/development environment, not the final local confidential processing environment.
 - The final product direction is local-first/offline capable.
 - The Scrub Key is sensitive because it can re-identify scrubbed content.
-- UI acknowledgements are safety prompts, not encryption, automatic deletion, expiry enforcement or managed key storage.
+- UI acknowledgements are safety prompts, not managed key storage.
 - Side-by-side synchronized scrolling is percentage-based and can still create imperfect alignment when source and processed text differ structurally.
 - The review table remains the source of truth and fallback.
-- The side-by-side review surface does not implement click-to-mark, an advanced editor or full-document marking.
+- The side-by-side review surface does not implement direct marking in the document text, an advanced editor or full-document marking.
 - DOCX metadata, comments, tracked changes, headers and footers require further document-hygiene work.
 - Detection quality needs formal recall/precision benchmarking before strong trust claims can be made.
 
@@ -89,7 +91,7 @@ PDF support is intentionally limited:
 The roadmap prioritizes MVP product quality across:
 
 ```text
-Import → Scrub → Review → Replace → Scrub Key → Reinsert → Export → Audit
+Import → Scrub → Review → Handmatig aanvullen → Replace → Scrub Key → Reinsert → Export → Audit
 ```
 
 Local installer work remains later, after the core workflow is good enough.
