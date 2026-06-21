@@ -2,7 +2,7 @@
 
 ## WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION — Collapse step-by-step review UI
 
-Status: completed pending verification.
+Status: completed and verified.
 
 Summary:
 
@@ -14,8 +14,10 @@ Summary:
 
 Tests:
 
-- Coordinator-side test run required.
-- Recommended focused tests are listed in the workpackage handover.
+- Coordinator full suite: `609 passed`.
+- GitHub Actions green.
+- Hugging Face sync green.
+- Live app verified.
 
 ---
 
