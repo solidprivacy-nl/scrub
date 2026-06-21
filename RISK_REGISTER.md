@@ -19,7 +19,7 @@ Risk:
 Sensitive data remains in the scrubbed output and the user wrongly trusts the result.
 ```
 
-Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a simple manual missed-value entry that adds user-supplied values to the existing replacement table.
+Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table.
 
 Remaining gaps:
 
@@ -27,7 +27,6 @@ Remaining gaps:
 - No production benchmark gate exists.
 - No production safety claim is supported.
 - Human review remains necessary.
-- The manual missed-value entry still needs live app verification after Hugging Face sync.
 
 ---
 
@@ -44,7 +43,7 @@ The Scrub Key is shared, leaked, retained too long, tampered with or mishandled,
 
 Current mitigations include warnings and acknowledgements. Export/download UX grouping is now implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Live app verification confirmed the grouped export UI.
 
-The manual missed-value entry is designed to flow through the existing replacement table and existing Scrub Key/export paths without changing key semantics.
+The manual missed-value entry flows through the existing replacement table and existing Scrub Key/export paths without changing key semantics.
 
 ---
 
@@ -111,17 +110,16 @@ Current mitigations:
 - Export/download UX is directly implemented in `presidio_streamlit.py` and live verified.
 - `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` narrows review UI cleanup to a small interface pass, not a new review loop.
 - `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION` made the existing step-by-step review aid collapsed by default and removed debug/governance wording from the primary UI.
-- `WP_MVP_FAST_MANUAL_MASK_ENTRY` adds a simple user-facing path to add missed values to the existing replacement table.
+- `WP_MVP_FAST_MANUAL_MASK_ENTRY` adds a verified simple user-facing path to add missed values to the existing replacement table.
 
 Gaps:
 
-- App verification is still required for the latest manual missed-value UI change.
 - Additional copy polish may still be needed, but it should remain separate and small.
 - Implementation must avoid weakening review controls or hiding audit details.
 
 Recommended workpackages:
 
-- Verify `WP_MVP_FAST_MANUAL_MASK_ENTRY` in Actions, Hugging Face sync and live app.
+- Do not start a new feature automatically; consider `WP_MVP_UI_APP_VERIFICATION_CLOSEOUT` or a very small UI simplification package only with coordinator approval.
 
 ---
 
@@ -159,12 +157,11 @@ Current mitigations:
 - `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` states that technical/audit details must remain available but become secondary.
 - Export/download UX now groups document downloads, key file, and audit/technical files while keeping audit details available.
 - The step-by-step review aid is now secondary by default, while review table and audit controls remain available.
-- The manual missed-value entry is intentionally placed in the primary review path because it directly supports faster anonymization.
+- The verified manual missed-value entry is intentionally placed in the primary review path because it directly supports faster anonymization.
 
 Gaps:
 
 - No generalized automated status artifact exists yet.
-- The latest UI change still needs app verification.
 
 ---
 
@@ -179,7 +176,7 @@ Risk:
 Dutch legal matter references can be missed or misclassified, while generic legal/care role words can be masked in ways that damage meaning.
 ```
 
-Current mitigations include diagnostic benchmark work, preservation guidance, PERSON-name contract/helper work and a manual missed-value entry path. Benchmark follow-up is temporarily parked for UI/export work unless a concrete blocker appears.
+Current mitigations include diagnostic benchmark work, preservation guidance, PERSON-name contract/helper work and a verified manual missed-value entry path. Benchmark follow-up is temporarily parked for UI/export work unless a concrete blocker appears.
 
 ---
 
