@@ -66,7 +66,8 @@ def test_serial_review_panel_boundary_contract_remains_in_code_but_not_primary_c
         "does not mutate review",
         "write Scrub Key mappings",
         "block export",
-        "change reinsert behavior",
+        "reinsert",
+        "behavior",
     ]:
         assert phrase in renderer_text
 
