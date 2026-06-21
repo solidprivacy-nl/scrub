@@ -4,11 +4,11 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_MVP_FAST_MANUAL_MASK_ENTRY`
 
-Status: completed_pending_verification.
+Status: completed_verified.
 
 ## Summary
 
-Implemented a small MVP improvement that lets a user add a missed value manually from the review flow. The manual row is added to the existing replacement table and therefore uses the existing replacement/export path.
+Implemented and verified a small MVP improvement that lets a user add a missed value manually from the review flow. The manual row is added to the existing replacement table and therefore uses the existing replacement/export path.
 
 The package keeps the existing review table as source of truth and does not change export, Scrub Key, reinsert, recognizer, benchmark, Docker or runtime behavior.
 
@@ -54,54 +54,46 @@ git status — clean after d57cec4
 
 ## Validation status
 
-Local/focused validation passed. GitHub Actions validation is pending/unknown after the final governance commits.
+Verified.
 
 ## GitHub Actions status
 
-Pending/unknown.
+Green by coordinator screenshot after final manual-mask-entry commits.
 
 ## Hugging Face sync status
 
-Pending/unknown.
+Green by coordinator screenshot after final manual-mask-entry commits.
 
 ## App verification status
 
-Pending.
+Verified by coordinator screenshot.
 
-Required live app checks:
+Observed in live app:
 
 ```text
 Geen Script execution error
-1. Voeg document of tekst toe werkt
-2. Controleer de tekst blijft zichtbaar
-3. Controleer gevonden gegevens blijft zichtbaar
-Gemiste waarde toevoegen is zichtbaar en simpel
-Een handmatig toegevoegde waarde verschijnt in de vervangtabel
-De waarde wordt toegepast in de verwerkte tekst/export
+1. Voeg document of tekst toe zichtbaar
+2. Controleer de tekst zichtbaar
+3. Controleer gevonden gegevens zichtbaar
+Gemiste waarde toevoegen zichtbaar en simpel
+Handmatig toegevoegde waarde verschijnt in Vervangtabel controleren
+Aantal vervangingen stijgt naar 17
 Stap voor stap controleren blijft ingeklapt
 Geavanceerde details blijven ingeklapt
-5. Exporteer resultaat blijft zichtbaar
-Download opgeschoonde tekst werkt
-Scrub Key-waarschuwing blijft zichtbaar
+5. Exporteer resultaat zichtbaar
+Download opgeschoonde tekst zichtbaar
+Scrub Key-waarschuwing zichtbaar
 ```
 
 ## Remaining risks
 
-- Live app verification is still required.
 - Human review remains necessary.
-- The manual entry path helps with false negatives but does not prove detection quality.
+- The manual entry path helps correct missed values but does not prove detection completeness.
 - Further UI simplification should remain small and separately approved.
 
 ## Next recommended step
 
 ```text
-Verify GitHub Actions, Hugging Face sync and live app for WP_MVP_FAST_MANUAL_MASK_ENTRY.
+Do not start a new feature automatically.
+Recommended next: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT or a very small UI simplification package.
 ```
-
-After verification only:
-
-```text
-Mark WP_MVP_FAST_MANUAL_MASK_ENTRY completed_verified.
-```
-
-Do not start follow-up work automatically.
