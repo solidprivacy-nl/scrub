@@ -23,7 +23,7 @@ WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — completed and verified; contract tests 
 WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — superseded by direct repair after startup-patch app verification failed.
 WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR — completed and verified; export/download UX implemented directly in presidio_streamlit.py.
 WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN — completed; sharp interface cleanup plan added without adding a new review loop.
-WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION — completed_pending_verification; step-by-step review collapsed by default and debug governance caption removed from primary UI.
+WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION — completed and verified; step-by-step review collapsed by default, debug governance captions removed from primary UI, Actions/HF/app verified.
 WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed and verified.
 WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed and verified.
 WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified.
@@ -59,11 +59,12 @@ tests/test_export_download_ux_implementation.py
 REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md
 presidio_streamlit.py
 serial_review_panel_ui.py
+side_by_side_review_panel_ui.py
 ```
 
 The failed startup-patch route was removed after live app verification showed the old export section. Direct implementation now lives in `presidio_streamlit.py` and is verified in the live app.
 
-The review debug collapse implementation keeps the change interface-focused: the existing serial review renderer is collapsed by default and no new review/benchmark/safeguard loop is introduced.
+The review debug collapse implementation keeps the change interface-focused: the existing serial review renderer is collapsed by default and no new review/benchmark/safeguard loop is introduced. Verification shows the primary review UI no longer displays old debug/governance captions.
 
 Contract and implementation protection covers:
 
@@ -85,9 +86,8 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 
 ```text
 1. Do not start a new feature automatically.
-2. Verify WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION with tests, Actions/HF and live app screenshot.
-3. Recommended next after verification: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
-4. Then: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
+2. Recommended next after verification: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
+3. Then: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
 ```
 
 ## Boundaries
