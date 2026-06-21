@@ -24,7 +24,7 @@ WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — superseded by direct repair after start
 WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR — completed and verified; export/download UX implemented directly in presidio_streamlit.py.
 WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN — completed; sharp interface cleanup plan added without adding a new review loop.
 WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION — completed and verified; step-by-step review collapsed by default, debug governance captions removed from primary UI, Actions/HF/app verified.
-WP_MVP_FAST_MANUAL_MASK_ENTRY — completed_pending_verification; simple manual entry for missed values is implemented in the existing review flow and awaits Actions/HF/app verification.
+WP_MVP_FAST_MANUAL_MASK_ENTRY — completed and verified; simple manual entry for missed values is implemented in the existing review flow and live app verified.
 WP_RECALL_PERSON_NAME_RECOGNIZER_IMPLEMENTATION_HELPER_ONLY — completed and verified.
 WP_RECALL_PERSON_NAME_RECOGNIZER_CONTRACT_TESTS — completed and verified.
 WP_RECALL_PERSON_NAME_COVERAGE_TESTS — completed and verified.
@@ -68,7 +68,7 @@ The failed startup-patch route was removed after live app verification showed th
 
 The review debug collapse implementation keeps the change interface-focused: the existing serial review renderer is collapsed by default and no new review/benchmark/safeguard loop is introduced. Verification shows the primary review UI no longer displays old debug/governance captions.
 
-The fast manual mask entry implementation adds a simple MVP control near `3. Controleer gevonden gegevens` so a user can add a missed value to the existing replacement table. It does not add right-click, context menu, custom editor, export semantics, Scrub Key semantics, reinsert semantics or recognizer changes.
+The fast manual mask entry implementation adds a simple MVP control near `3. Controleer gevonden gegevens` so a user can add a missed value to the existing replacement table. It does not add right-click, context menu, custom editor, export semantics, Scrub Key semantics, reinsert semantics or recognizer changes. Actions, Hugging Face sync and live app verification are complete.
 
 Contract and implementation protection covers:
 
@@ -90,10 +90,9 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 ## Active / next recommended execution queue
 
 ```text
-1. Verify WP_MVP_FAST_MANUAL_MASK_ENTRY in GitHub Actions, Hugging Face sync and the live app.
-2. If verified, mark WP_MVP_FAST_MANUAL_MASK_ENTRY completed_verified.
-3. Do not start a new feature automatically.
-4. Recommended next after verification: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT or a very small UI simplification package.
+1. Do not start a new feature automatically.
+2. Recommended next: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT or a very small UI simplification package.
+3. If coordinator prefers copy polish first: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
 ```
 
 ## Boundaries
