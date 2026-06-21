@@ -88,6 +88,13 @@ from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes
 from side_by_side_review_panel_ui import render_side_by_side_review_panel
 from serial_review_panel_ui import render_serial_review_panel
 from docx_hygiene_audit_panel_ui import render_docx_hygiene_audit_panel
+from manual_mask_entry import (
+    MANUAL_MASK_TYPE_OPTIONS,
+    build_manual_mask_row,
+    build_manual_placeholder,
+    manual_mask_document_key,
+    validate_manual_mask_input,
+)
 
 try:
     from candidate_scanner import scan_unmasked_candidates
@@ -621,6 +628,16 @@ try:
                 }
             ]
 
+        manual_mask_key = manual_mask_document_key(st_text)
+        manual_mask_rows = st.session_state.get("manual_mask_rows", {})
+        if not isinstance(manual_mask_rows, dict):
+            manual_mask_rows = {}
+        for manual_row in manual_mask_rows.get(manual_mask_key, []):
+            manual_find_text = str(manual_row.get("find", "")).strip()
+            if manual_find_text and manual_find_text not in seen_find_values:
+                default_editor_rows.append(manual_row)
+                seen_find_values.add(manual_find_text)
+
         replacement_editor_df = pd.DataFrame(default_editor_rows)
 
         st.divider()
@@ -658,6 +675,43 @@ try:
             status_parts = [f"{label}: {count}" for label, count in status_counts.items()]
             if status_parts:
                 st.caption("Reviewstatus: " + " · ".join(status_parts))
+
+        st.markdown("**Gemiste waarde toevoegen**")
+        st.caption("Voeg snel een waarde toe die Scrub heeft gemist.")
+        with st.form("manual_mask_entry_form", clear_on_submit=True):
+            manual_value = st.text_input("Waarde die alsnog gemaskeerd moet worden")
+            manual_type_label = st.selectbox("Type gegeven", list(MANUAL_MASK_TYPE_OPTIONS))
+            manual_placeholder = build_manual_placeholder(manual_type_label, replacement_editor_df)
+            manual_replace_with = st.text_input("Vervangen door", value=manual_placeholder)
+            manual_submit = st.form_submit_button("Toevoegen aan vervangtabel")
+
+        if manual_submit:
+            existing_find_values = (
+                replacement_editor_df["find"].tolist()
+                if "find" in replacement_editor_df.columns
+                else []
+            )
+            validation = validate_manual_mask_input(
+                manual_value,
+                source_text=st_text,
+                existing_find_values=existing_find_values,
+            )
+            if not validation.is_valid:
+                st.warning(validation.message)
+            else:
+                manual_row = build_manual_mask_row(
+                    find_text=manual_value,
+                    manual_type=manual_type_label,
+                    replace_with=manual_replace_with,
+                    existing_rows=replacement_editor_df,
+                )
+                manual_mask_rows = st.session_state.get("manual_mask_rows", {})
+                if not isinstance(manual_mask_rows, dict):
+                    manual_mask_rows = {}
+                manual_mask_rows[manual_mask_key] = manual_mask_rows.get(manual_mask_key, []) + [manual_row]
+                st.session_state["manual_mask_rows"] = manual_mask_rows
+                st.success("Toegevoegd aan de vervangtabel.")
+                st.rerun()
 
         review_filter = st.selectbox(
             "Focusfilter voor controle",
