@@ -4,11 +4,11 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION`
 
-Status: completed_pending_verification.
+Status: completed_verified.
 
 ## Summary
 
-Implemented the small review UI cleanup package without adding a new review layer, benchmark gate or safeguard loop.
+Implemented and verified the small review UI cleanup package without adding a new review layer, benchmark gate or safeguard loop.
 
 The existing step-by-step review aid is now collapsed by default under `Stap voor stap controleren`. Prototype/debug wording was removed from the primary UI. Remaining review/debug labels in `presidio_streamlit.py` were renamed to more user-friendly advanced labels. Follow-up test-only fixes aligned older regression tests with the new intended UI.
 
@@ -65,6 +65,9 @@ bed72ef — Remove side by side debug captions from primary UI
 4912635 — Fix serial review boundary contract test wording
 d26a5b4 — Make serial review boundary test robust
 1bef7f9 — Record final green tests for review debug collapse implementation
+58552c4 — Update review debug collapse handover with final test status
+5b3b38f — Mark review debug collapse implementation verified
+1188c7c — Verify review debug collapse implementation claim
 ```
 
 ## Tests run by coordinator in Codespaces
@@ -87,22 +90,24 @@ tests/test_export_download_ux_contracts.py + tests/test_export_download_ux_imple
 
 ## Validation status
 
-Coordinator Codespaces validation passed. Final status remains pending GitHub Actions and Hugging Face sync confirmation for final commit `d26a5b4` / metadata commit `1bef7f9`.
+Coordinator Codespaces validation passed.
 
 ## GitHub Actions status
 
-Pending/unknown after final commits.
+Verified green in coordinator screenshot for the final handover/status commits visible at verification time.
 
 ## Hugging Face sync status
 
-Pending/unknown after final commits.
+Verified green in coordinator screenshot for the final handover/status commits visible at verification time.
 
 ## App verification status
 
-Live screenshots after the side-by-side caption repair show the intended UI state:
+Verified in coordinator screenshot.
+
+Verified live checks:
 
 ```text
-Geen visible side-by-side debug/governance caption under 2. Controleer de tekst
+No visible side-by-side debug/governance caption under 2. Controleer de tekst
 Stap voor stap controleren is visible as collapsed section
 Serial review — experimentele reviewhulp is not visible
 Geavanceerde details bij de vervangtabel is visible
@@ -110,30 +115,17 @@ Geavanceerde herkenningsdetails is visible
 5. Exporteer resultaat remains visible
 ```
 
-Final app verification should still be checked after Hugging Face sync for the final commit.
-
 ## Remaining risks
 
-- GitHub Actions and Hugging Face sync still need confirmation.
 - Human review remains necessary.
 - Further copy polish should remain separate and small.
 
 ## Next recommended step
 
 ```text
-Verify final commit in GitHub Actions, Hugging Face sync, and the live app.
-```
-
-After verification only:
-
-```text
-Mark WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION completed_verified.
-```
-
-After that:
-
-```text
 WP_REVIEW_COPY_POLISH_IMPLEMENTATION
 ```
+
+Only start after explicit coordinator approval.
 
 Do not start automatically.
