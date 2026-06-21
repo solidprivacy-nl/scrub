@@ -1,12 +1,13 @@
-status: completed_pending_verification
+status: completed_verified
 repository: solidprivacy-nl/scrub
 workpackage title: WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION
 started timestamp: 2026-06-19 10:05 Europe/Amsterdam
-completed timestamp: 2026-06-21 22:36 Europe/Amsterdam
+verified timestamp: 2026-06-21 22:43 Europe/Amsterdam
 scope: small UI implementation to collapse/rename debug-like review elements
 boundaries: no new review layer, no benchmark, no export changes, no Scrub Key changes, no reinsert changes, no recognizer changes, no Docker/runtime changes
 
 final implementation/test commit SHA: d26a5b4
+final verification metadata commits: 1bef7f9, 58552c4, 5b3b38f
 handover path: handover/workpackages/20260619_1005_review_debug_elements_collapse_implementation.md
 
 files changed:
@@ -30,12 +31,20 @@ tests/checks reported by coordinator:
 - git diff --check — no error reported
 - git status — clean after commit d26a5b4
 
-GitHub Actions status: pending/unknown after final commit d26a5b4
-Hugging Face sync status: pending/unknown after final commit d26a5b4
-app verification status: live screenshots show intended UI, but final Actions/HF confirmation is still required before completed_verified
+GitHub Actions status: verified green in coordinator screenshot
+Hugging Face sync status: verified green in coordinator screenshot
+app verification status: verified in coordinator screenshot
+
+verified app observations:
+- no visible side-by-side debug/governance caption under 2. Controleer de tekst
+- Stap voor stap controleren is visible as collapsed section
+- Serial review — experimentele reviewhulp is not visible
+- Geavanceerde details bij de vervangtabel is visible
+- Geavanceerde herkenningsdetails is visible
+- 5. Exporteer resultaat remains visible
 
 remaining risks:
-- Actions/HF sync must be confirmed for final commit d26a5b4
 - human review remains necessary
+- further copy polish should remain separate and small
 
-next recommended step: verify final commit d26a5b4 in Actions/HF/live app; after verification, mark completed_verified. After that, consider WP_REVIEW_COPY_POLISH_IMPLEMENTATION. Do not start follow-up work automatically.
+next recommended step: WP_REVIEW_COPY_POLISH_IMPLEMENTATION, only after explicit coordinator approval. Do not start follow-up work automatically.
