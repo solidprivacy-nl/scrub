@@ -1,5 +1,37 @@
 # Changelog — SolidPrivacy Scrub
 
+## WP_MVP_FAST_MANUAL_MASK_ENTRY — Simple manual entry for missed values
+
+Status: completed_pending_verification.
+
+Summary:
+
+- Added `manual_mask_entry.py` as a Streamlit-free helper for manual replacement rows.
+- Added helper tests and UI source tests for the manual missed-value flow.
+- Wired a simple `Gemiste waarde toevoegen` form into `presidio_streamlit.py` near `3. Controleer gevonden gegevens`.
+- Manual rows are added to the existing replacement table and therefore use the existing replacement/export path.
+- Manual rows are scoped to the current text with `manual_mask_document_key`.
+- Did not change export/download semantics, Scrub Key semantics, reinsert semantics, recognition logic, benchmark logic, Dockerfile or runtime setup.
+
+Tests:
+
+- `tests/test_manual_mask_entry.py` — 11 passed.
+- `tests/test_mvp_fast_manual_mask_entry_ui.py` — 8 passed.
+- `tests/test_replace_logic_ui_patch.py` — 7 passed.
+- `tests/test_review_table_collapsible_contract.py` — 11 passed.
+- `tests/test_side_by_side_review_consolidation_dutch_sample.py` — 8 passed.
+- `tests/test_export_download_ux_contracts.py` and `tests/test_export_download_ux_implementation.py` — 19 passed.
+- `py_compile` reported no errors for touched UI/helper modules.
+- `git diff --check` reported no errors.
+
+Validation status:
+
+- GitHub Actions pending/unknown.
+- Hugging Face sync pending/unknown.
+- Live app verification pending.
+
+---
+
 ## WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION — Collapse step-by-step review UI
 
 Status: completed and verified.
