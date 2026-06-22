@@ -53,15 +53,15 @@ def test_user_facing_side_by_side_copy_exists_and_controls_are_simplified():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     for phrase in [
-        "Vergelijk links de brontekst met rechts de verwerkte tekst",
+        "Vergelijk links de originele tekst met rechts de gecontroleerde versie",
         "Brontekst",
         "Verwerkte tekst",
         "Markeringen tonen",
         "Geel = vervangen of gemaskeerde waarde",
-        "De vervangtabel blijft leidend",
-        "Alleen visuele hulp",
-        "Controleer bij twijfel altijd de vervangtabel hieronder",
-        "De panelen scrollen synchroon. Bij grote tekstverschillen kan de visuele uitlijning iets afwijken.",
+        "De vervangtabel hieronder blijft leidend",
+        "Deze weergave is alleen bedoeld om te vergelijken",
+        "Pas beslissingen aan in de vervangtabel hieronder",
+        "De panelen scrollen samen. Bij grote tekstverschillen kan de uitlijning iets afwijken.",
     ]:
         assert phrase in text
 
@@ -157,7 +157,7 @@ def test_side_by_side_panel_preserves_existing_review_table_and_serial_review_bo
     assert "replacement_editor" in text
     assert "stap voor stap controleren" in text
     assert "expanded=false" in text
-    assert "controleer gevonden gegevens één voor één" in text
+    assert "loop de gevonden gegevens één voor één na" in text
     assert "side-by-side review" in text
 
     assert "serial review — experimentele reviewhulp" not in text
