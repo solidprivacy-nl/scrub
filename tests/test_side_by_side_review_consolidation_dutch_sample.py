@@ -30,7 +30,6 @@ def test_app_uses_one_central_side_by_side_review_surface_before_review_table():
 
     assert "from side_by_side_review_panel_ui import render_side_by_side_review_panel" in text
     assert 'st.subheader("2. Controleer de tekst")' in text
-    assert "Centrale side-by-side reviewweergave" in text
     assert "render_side_by_side_review_panel(" in text
     assert 'st.subheader("3. Controleer gevonden gegevens")' in text
     assert text.index("render_side_by_side_review_panel(") < text.index("st.data_editor(")
@@ -59,7 +58,7 @@ def test_lower_duplicate_side_by_side_is_suppressed_in_serial_review_call():
 def test_sync_scroll_and_highlight_toggle_remain_available_but_sync_control_is_hidden():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
-    assert "De panelen scrollen synchroon" in text
+    assert "De panelen scrollen samen" in text
     assert "sourcePane.addEventListener('scroll'" in text
     assert "processedPane.addEventListener('scroll'" in text
     assert "side_by_side_review_show_markers" in text
@@ -79,7 +78,7 @@ def test_side_by_side_primary_ui_does_not_show_debug_governance_caption():
     assert "no export/download changes" not in text
     assert "no reinsert behavior change" not in text
     assert "Must not change source text" not in text
-    assert "Alleen visuele hulp. Controleer bij twijfel altijd de vervangtabel hieronder." in text
+    assert "Deze weergave is alleen bedoeld om te vergelijken. Pas beslissingen aan in de vervangtabel hieronder." in text
 
 
 def test_review_table_and_download_labels_are_preserved():
