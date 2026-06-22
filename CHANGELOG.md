@@ -1,5 +1,43 @@
 # Changelog — SolidPrivacy Scrub
 
+## SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION — Review copy polish
+
+Status: completed as small UI-copy implementation.
+
+Summary:
+
+- Polished visible Dutch helper text in `side_by_side_review_panel_ui.py`.
+- Polished visible Dutch labels and helper text in `serial_review_panel_ui.py`.
+- Added `tests/test_review_copy_polish_ui.py` to protect the new copy and boundaries.
+- Updated `RELEASE_NOTES.md` with the user-facing copy polish.
+- Kept the review table as source of truth and fallback.
+
+Tests:
+
+- Added source-level UI copy tests for side-by-side review and serial review.
+- Added boundary tests confirming export, Scrub Key and reinsert references remain in the app flow.
+- Local tests were not run in this connector session.
+
+Validation status:
+
+- GitHub Actions: pending after PR.
+- Hugging Face sync: pending after merge.
+- App verification: required after merge because visible UI copy changed.
+
+Intentionally not changed:
+
+- `presidio_streamlit.py`
+- `fix_streamlit_nested_expanders.py`
+- review table data flow
+- export/download behavior and file semantics
+- Scrub Key behavior
+- reinsert behavior
+- recognizer/benchmark behavior
+- local packaging/runtime setup
+- cloud document processing
+
+---
+
 ## SCRUB-WP_MAIN_NOOP_CLEANUP — Remove accidental files from main
 
 Status: completed as emergency repository cleanup.

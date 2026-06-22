@@ -28,12 +28,12 @@ def test_serial_review_panel_visible_text_and_safety_message_exist():
 
     assert "Stap voor stap controleren" in text
     assert "expanded=False" in text
-    assert "Controleer gevonden gegevens één voor één" in text
-    assert "De vervangtabel blijft leidend voor beslissingen en export" in text
+    assert "Loop de gevonden gegevens één voor één na" in text
+    assert "de vervangtabel blijft leidend voor export" in text
     assert "Gevonden waarde" in text
     assert "Voorgestelde vervanging" in text
     assert "Status" in text
-    assert "Risico’s" in text
+    assert "Let op:" in text
     assert "Context" in text
 
     assert "Serial review — experimentele reviewhulp" not in text
@@ -46,7 +46,7 @@ def test_serial_review_panel_navigation_labels_exist():
 
     assert "Vorige" in text
     assert "Volgende" in text
-    assert "Volgende onopgeloste" in text
+    assert "Volgende open item" in text
     assert "serial_review_current_index" in text
     assert "serial_review_current_occurrence_id" in text
     assert "serial_review_filter_mode" in text

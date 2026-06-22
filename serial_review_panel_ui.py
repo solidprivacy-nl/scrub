@@ -18,9 +18,9 @@ from side_by_side_review_panel_ui import render_side_by_side_review_panel
 
 FILTER_LABELS = {
     "all": "Alle items",
-    "unresolved": "Openstaande items",
-    "high_risk": "Risico-items",
-    "high_risk_unresolved": "Openstaande risico-items",
+    "unresolved": "Nog controleren",
+    "high_risk": "Risico controleren",
+    "high_risk_unresolved": "Open risico-items",
 }
 
 VALID_PANEL_STATES = {
@@ -151,24 +151,24 @@ def _show_current_item(current_item: dict[str, Any]) -> None:
     st.caption("Voorgestelde vervanging")
     st.code(current_item.get("suggested_replacement", ""), language=None)
     risk_flags = current_item.get("risk_flags") or []
-    st.caption("Risico’s: " + (", ".join(risk_flags) if risk_flags else "geen extra risicovlaggen"))
+    st.caption("Let op: " + (", ".join(risk_flags) if risk_flags else "geen extra aandachtspunt"))
 
 
 def _show_context_card(card: dict[str, Any] | None, warnings: list[str]) -> None:
     st.markdown("**Context**")
     if card is None:
-        st.warning("Geen contextkaart beschikbaar; gebruik de bestaande vervangtabel als fallback.")
+        st.warning("Geen extra context beschikbaar. Gebruik de vervangtabel als controlepunt.")
     elif card.get("card_type") == "context_preview_fallback":
-        st.caption("Context preview fallback")
+        st.caption("Context uit de vervangtabel")
         st.text(card.get("context_preview", ""))
         st.caption("Match")
         st.code(card.get("match_text", ""), language=None)
     else:
-        st.caption("Prefix")
+        st.caption("Tekst ervoor")
         st.text(card.get("prefix_text", ""))
         st.caption("Match")
         st.code(card.get("match_text", ""), language=None)
-        st.caption("Suffix")
+        st.caption("Tekst erna")
         st.text(card.get("suffix_text", ""))
 
         validation_errors = card.get("validation_errors") or []
@@ -206,13 +206,13 @@ def render_serial_review_panel(
 
     with st.expander("Stap voor stap controleren", expanded=False):
         st.info(
-            "Controleer gevonden gegevens één voor één. "
-            "De vervangtabel blijft leidend voor beslissingen en export."
+            "Loop de gevonden gegevens één voor één na. "
+            "Deze hulpweergave verandert niets; de vervangtabel blijft leidend voor export."
         )
 
         review_rows = build_serial_review_panel_rows(displayed_text, edited_replacements_df)
         if not review_rows:
-            st.warning("Geen stap-voor-stap items beschikbaar. De bestaande vervangtabel blijft de fallback.")
+            st.warning("Geen stap-voor-stap items beschikbaar. Controleer de vervangtabel als fallback.")
             return {"side_by_side_review": side_by_side_state, "serial_review": None}
 
         current_index = int(st.session_state.get("serial_review_current_index", 0) or 0)
@@ -227,7 +227,7 @@ def render_serial_review_panel(
             index=list(FILTER_LABELS.keys()).index(current_filter),
             format_func=lambda value: FILTER_LABELS[value],
             key="serial_review_filter_mode",
-            help="Dit filter wijzigt alleen de hulpweergave en niet de vervangtabel.",
+            help="Dit filter wijzigt alleen deze hulpweergave, niet de vervangtabel.",
         )
 
         view_model = build_review_panel_view_model(
@@ -249,7 +249,7 @@ def render_serial_review_panel(
         metrics[1].metric("Huidig", item_number)
         metrics[2].metric("Open", view_model.get("unresolved_count", 0))
         metrics[3].metric("Risico", view_model.get("high_risk_count", 0))
-        metrics[4].metric("Exact gelijk", view_model.get("duplicate_exact_value_count", 0))
+        metrics[4].metric("Dubbel", view_model.get("duplicate_exact_value_count", 0))
 
         current_item = view_model.get("current_item")
         if current_item is None:
@@ -275,7 +275,7 @@ def render_serial_review_panel(
                 st.rerun()
         with nav_unresolved:
             next_unresolved = view_model.get("next_item")
-            if st.button("Volgende onopgeloste", key="serial_review_next_unresolved_button", disabled=next_unresolved is None):
+            if st.button("Volgende open item", key="serial_review_next_unresolved_button", disabled=next_unresolved is None):
                 st.session_state["serial_review_current_occurrence_id"] = next_unresolved.get("occurrence_id")
                 st.rerun()
 

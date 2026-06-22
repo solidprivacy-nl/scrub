@@ -118,7 +118,7 @@ def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, pro
     </section>
   </div>
   <div class="sp-sync-scroll-footer">
-    De panelen scrollen synchroon. Bij grote tekstverschillen kan de visuele uitlijning iets afwijken.
+    De panelen scrollen samen. Bij grote tekstverschillen kan de uitlijning iets afwijken.
   </div>
 </div>
 <script>
@@ -168,13 +168,13 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
 
     processed_text = build_preview_text(source_text, edited_replacements_df)
 
-    st.caption("Vergelijk links de brontekst met rechts de verwerkte tekst. De vervangtabel blijft leidend.")
+    st.caption("Vergelijk links de originele tekst met rechts de gecontroleerde versie. De vervangtabel hieronder blijft leidend.")
 
     show_markers = st.checkbox(
         "Markeringen tonen",
         value=True,
         key="side_by_side_review_show_markers",
-        help="Alleen visuele hulp. Wijzigt niets aan de vervangtabel, export, Scrub Key of terugzetten.",
+        help="Visuele hulp bij het controleren; dit wijzigt de vervangtabel, export, Scrub Key of terugzetten niet.",
     )
 
     model = build_side_by_side_review_model(
@@ -204,7 +204,7 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         scrolling=False,
     )
 
-    st.caption("Alleen visuele hulp. Controleer bij twijfel altijd de vervangtabel hieronder.")
+    st.caption("Deze weergave is alleen bedoeld om te vergelijken. Pas beslissingen aan in de vervangtabel hieronder.")
     st.caption(model["review_table"]["copy"])
 
     return {
