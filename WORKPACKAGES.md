@@ -18,6 +18,7 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 ## Current status
 
 ```text
+SCRUB-WP_MVP_UI_APP_VERIFICATION_CLOSEOUT — completed; verification/closeout-only status recorded for the current MVP UI baseline, no product code or export semantics changed.
 WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN — completed; MVP UI cleanup and export/download redesign route planned.
 WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — completed and verified; contract tests added for professional export/download UX redesign.
 WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — superseded by direct repair after startup-patch app verification failed.
@@ -53,6 +54,7 @@ Planning, contract and implementation files:
 
 ```text
 MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md
+MVP_UI_APP_VERIFICATION_CLOSEOUT.md
 EXPORT_DOWNLOAD_UX_CONTRACTS.md
 tests/test_export_download_ux_contracts.py
 EXPORT_DOWNLOAD_UX_IMPLEMENTATION.md
@@ -70,6 +72,8 @@ The review debug collapse implementation keeps the change interface-focused: the
 
 The fast manual mask entry implementation adds a simple MVP control near `3. Controleer gevonden gegevens` so a user can add a missed value to the existing replacement table. It does not add right-click, context menu, custom editor, export semantics, Scrub Key semantics, reinsert semantics or recognizer changes. Actions, Hugging Face sync and live app verification are complete.
 
+The MVP UI app verification closeout records the current verified MVP UI baseline as an administrative checkpoint only. It does not change product code, UI behavior, export semantics, Scrub Key semantics, reinsert semantics, recognizer logic, benchmark logic or local packaging.
+
 Contract and implementation protection covers:
 
 ```text
@@ -81,6 +85,7 @@ audit/technical details remain available
 copy-cleanup direction
 implementation route
 manual missed-value entry through the existing replacement table
+MVP UI verification closeout without product behavior change
 ```
 
 ## Recall/benchmark status
@@ -91,8 +96,8 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 
 ```text
 1. Do not start a new feature automatically.
-2. Recommended next: WP_MVP_UI_APP_VERIFICATION_CLOSEOUT or a very small UI simplification package.
-3. If coordinator prefers copy polish first: WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
+2. Current closeout is recorded: SCRUB-WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
+3. Recommended next only with coordinator approval: SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION or a very small UI simplification package.
 ```
 
 ## Boundaries
