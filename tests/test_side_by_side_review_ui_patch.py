@@ -45,7 +45,7 @@ def test_central_step_heading_is_not_duplicated_inside_side_by_side_component():
     app_text = APP.read_text(encoding="utf-8")
     side_text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
-    assert 'st.subheader("2. Controleer de tekst")' in app_text
+    assert 'st.subheader("2. Controleer resultaat")' in app_text
     assert 'st.subheader("Controleer de tekst")' not in side_text
 
 

@@ -29,9 +29,9 @@ def test_app_uses_one_central_side_by_side_review_surface_before_review_table():
     text = _app_text()
 
     assert "from side_by_side_review_panel_ui import render_side_by_side_review_panel" in text
-    assert 'st.subheader("2. Controleer de tekst")' in text
+    assert 'st.subheader("2. Controleer resultaat")' in text
     assert "render_side_by_side_review_panel(" in text
-    assert 'st.subheader("3. Controleer gevonden gegevens")' in text
+    assert 'st.subheader("3. Exporteer resultaat")' in text
     assert text.index("render_side_by_side_review_panel(") < text.index("st.data_editor(")
 
 

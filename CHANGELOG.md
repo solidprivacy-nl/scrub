@@ -1,5 +1,55 @@
 # Changelog — SolidPrivacy Scrub
 
+## SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART — Execution interface simplification
+
+Status: implemented on branch `scrub-execution-interface-simplification-restart`; ready for PR.
+
+Summary:
+
+- Simplified the default app flow toward `1. Voeg document of tekst toe`, `2. Controleer resultaat`, `3. Exporteer resultaat`.
+- Edited `presidio_streamlit.py` directly; no startup patch, runtime hook, sitecustomize hook or Dockerfile startup change was added.
+- Collapsed secondary controls by default while keeping them available:
+  - control-mode explanation;
+  - recognition details;
+  - review guidance;
+  - manual missed-value entry;
+  - focus filter / extra control helpers;
+  - candidate audit values;
+  - replacement table;
+  - technical replacement details;
+  - step-by-step review;
+  - reusable replacements;
+  - Scrub Key download;
+  - audit/technical downloads.
+- Kept side-by-side review visible as the main review surface.
+- Kept the replacement table as source of truth and export input.
+- Kept primary document downloads visible.
+
+Tests:
+
+- `tests/test_execution_interface_simplification_ui.py` — 6 passed.
+- Side-by-side, serial review and replace logic UI tests — 37 passed.
+- Export/download contract and implementation tests — 19 passed.
+- `git diff --check` to be rerun before commit.
+
+Intentionally not changed:
+
+- export semantics;
+- download file contents;
+- download filenames;
+- Scrub Key JSON semantics;
+- Scrub Key warning meaning;
+- reinsert behavior;
+- recognizer logic;
+- benchmark thresholds;
+- document processing behavior;
+- cloud processing;
+- local packaging;
+- Dockerfile startup behavior;
+- runtime mutation behavior.
+
+---
+
 ## SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION — Review copy polish
 
 Status: completed as small UI-copy implementation.
