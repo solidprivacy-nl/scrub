@@ -58,8 +58,8 @@ def test_serial_review_panel_remains_available_and_table_first():
 
     assert "Stap voor stap controleren" in serial_text
     assert "expanded=False" in serial_text
-    assert "Controleer gevonden gegevens één voor één" in serial_text
-    assert "De vervangtabel blijft leidend voor beslissingen en export" in serial_text
+    assert "Loop de gevonden gegevens één voor één na" in serial_text
+    assert "De vervangtabel blijft leidend voor export" in serial_text
     assert "Filter voor stap-voor-stap controle" in serial_text
 
     assert "Serial review — experimentele reviewhulp" not in serial_text
@@ -72,6 +72,7 @@ def test_serial_review_panel_remains_available_and_table_first():
     assert "include_side_by_side=False" in normal_flow
     assert "render_side_by_side_review_panel(" in normal_flow
     assert "replacement_editor" in normal_flow
+
 
 def test_parked_replacement_panel_still_documents_non_mutating_boundaries():
     renderer_text = _renderer_text()
