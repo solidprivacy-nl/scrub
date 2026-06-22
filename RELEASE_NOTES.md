@@ -25,12 +25,12 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 - `Brontekst` appears on the left and `Verwerkte tekst` on the right.
 - The side-by-side panes use equal visual height.
 - The side-by-side panes scroll together by default.
-- A short note explains that visual alignment can differ when source and processed text differ structurally.
+- The side-by-side helper text is shorter and clearer: it says that this view is for comparison and that decisions are still made in the replacement table.
 - Markers are on by default and can be hidden with `Markeringen tonen`.
 - Users can add a missed value manually near `3. Controleer gevonden gegevens`; it is added to the same replacement table used for export.
 - The section `Controleer gevonden gegevens` is visually quieter: the replacement table is now under a collapsed `Vervangtabel controleren — <items> items` section.
 - The replacement table remains the source of truth and fallback for review decisions and export construction.
-- Serial review remains available as a small read-only review aid below the replacement table.
+- Serial review remains available as a small read-only review aid below the replacement table, with clearer Dutch labels for open items, risk items, duplicate values and next open item.
 - Markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.
 
 ### Export
