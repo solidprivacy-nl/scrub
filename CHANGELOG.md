@@ -1,5 +1,45 @@
 # Changelog — SolidPrivacy Scrub
 
+## SCRUB-WP_MVP_UI_APP_VERIFICATION_CLOSEOUT — MVP UI app verification closeout
+
+Status: completed as verification/closeout-only.
+
+Summary:
+
+- Added `MVP_UI_APP_VERIFICATION_CLOSEOUT.md` to record the currently verified MVP UI baseline.
+- Recorded that the current normal app baseline keeps one central side-by-side review surface, visible markers, simple manual missed-value entry, collapsible replacement table, optional step-by-step review, export/download and DOCX hygiene audit.
+- Confirmed this package is administrative only and does not change product code, UI behavior, export semantics, Scrub Key semantics, reinsert semantics, recognition logic, benchmark logic, Dockerfile/runtime setup or local packaging.
+- Added a namespaced claim file for `SCRUB-WP_MVP_UI_APP_VERIFICATION_CLOSEOUT`.
+
+Tests:
+
+- No local tests were run in this package because it is documentation/closeout-only.
+- Prior verification evidence remains recorded for the underlying product changes in `WORKPACKAGES.md` and earlier changelog entries.
+
+Validation status:
+
+- GitHub Actions: unknown from connector for this closeout branch.
+- Hugging Face sync: unknown from connector for this closeout branch.
+- App verification: not newly requested because no UI behavior changed in this package; existing verified app baseline remains recorded.
+
+Intentionally not changed:
+
+- `presidio_streamlit.py`
+- `fix_streamlit_nested_expanders.py`
+- review table flow
+- export/download flow
+- Scrub Key behavior
+- reinsert behavior
+- recognizer/benchmark behavior
+- local packaging/runtime setup
+
+Next recommended step:
+
+- Do not start a new feature automatically.
+- With explicit coordinator approval only: `SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION` or another very small UI simplification package.
+
+---
+
 ## WP_MVP_FAST_MANUAL_MASK_ENTRY — Simple manual entry for missed values
 
 Status: completed and verified.
