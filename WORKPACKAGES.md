@@ -18,6 +18,8 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 ## Current status
 
 ```text
+SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION — completed; small visible Dutch copy polish for side-by-side review and serial review labels, no product behavior or export semantics changed.
+SCRUB-WP_MAIN_NOOP_CLEANUP — completed; accidental noop files and accidental copy-polish claim were removed from main.
 SCRUB-WP_MVP_UI_APP_VERIFICATION_CLOSEOUT — completed; verification/closeout-only status recorded for the current MVP UI baseline, no product code or export semantics changed.
 WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN — completed; MVP UI cleanup and export/download redesign route planned.
 WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — completed and verified; contract tests added for professional export/download UX redesign.
@@ -64,6 +66,7 @@ manual_mask_entry.py
 presidio_streamlit.py
 serial_review_panel_ui.py
 side_by_side_review_panel_ui.py
+tests/test_review_copy_polish_ui.py
 ```
 
 The failed startup-patch route was removed after live app verification showed the old export section. Direct implementation now lives in `presidio_streamlit.py` and is verified in the live app.
@@ -73,6 +76,8 @@ The review debug collapse implementation keeps the change interface-focused: the
 The fast manual mask entry implementation adds a simple MVP control near `3. Controleer gevonden gegevens` so a user can add a missed value to the existing replacement table. It does not add right-click, context menu, custom editor, export semantics, Scrub Key semantics, reinsert semantics or recognizer changes. Actions, Hugging Face sync and live app verification are complete.
 
 The MVP UI app verification closeout records the current verified MVP UI baseline as an administrative checkpoint only. It does not change product code, UI behavior, export semantics, Scrub Key semantics, reinsert semantics, recognizer logic, benchmark logic or local packaging.
+
+The review copy polish implementation improves visible Dutch helper text in the side-by-side review and serial review panel only. It does not change the review table, export construction, Scrub Key, reinsert, recognizers, benchmarks or local packaging.
 
 Contract and implementation protection covers:
 
@@ -86,6 +91,7 @@ copy-cleanup direction
 implementation route
 manual missed-value entry through the existing replacement table
 MVP UI verification closeout without product behavior change
+copy polish without product behavior change
 ```
 
 ## Recall/benchmark status
@@ -96,8 +102,9 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 
 ```text
 1. Do not start a new feature automatically.
-2. Current closeout is recorded: SCRUB-WP_MVP_UI_APP_VERIFICATION_CLOSEOUT.
-3. Recommended next only with coordinator approval: SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION or a very small UI simplification package.
+2. Current copy polish is recorded: SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
+3. Recommended next: app verification for the copy polish after green Actions and Hugging Face sync.
+4. Do not start broader UI/export/Scrub Key/reinsert/benchmark/local-packaging work without separate coordinator approval.
 ```
 
 ## Boundaries
