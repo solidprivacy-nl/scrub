@@ -29,7 +29,7 @@ def test_serial_review_panel_visible_text_and_safety_message_exist():
     assert "Stap voor stap controleren" in text
     assert "expanded=False" in text
     assert "Loop de gevonden gegevens één voor één na" in text
-    assert "De vervangtabel blijft leidend voor export" in text
+    assert "de vervangtabel blijft leidend voor export" in text
     assert "Gevonden waarde" in text
     assert "Voorgestelde vervanging" in text
     assert "Status" in text
