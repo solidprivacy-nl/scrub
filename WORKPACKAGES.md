@@ -18,7 +18,7 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 ## Current status
 
 ```text
-SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART — implemented; default UI flow simplified toward execution interface, secondary controls collapsed, no export/Scrub Key/reinsert/recognizer/benchmark/startup semantics changed.
+SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART — completed and verified; default UI flow simplified toward execution interface, secondary controls collapsed, no export/Scrub Key/reinsert/recognizer/benchmark/startup semantics changed.
 SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION — completed; small visible Dutch copy polish for side-by-side review and serial review labels, no product behavior or export semantics changed.
 SCRUB-WP_MAIN_NOOP_CLEANUP — completed; accidental noop files and accidental copy-polish claim were removed from main.
 SCRUB-WP_MVP_UI_APP_VERIFICATION_CLOSEOUT — completed; verification/closeout-only status recorded for the current MVP UI baseline, no product code or export semantics changed.
@@ -74,7 +74,7 @@ The failed startup-patch route was removed after live app verification showed th
 
 The review debug collapse implementation keeps the change interface-focused: the existing serial review renderer is collapsed by default and no new review/benchmark/safeguard loop is introduced. Verification shows the primary review UI no longer displays old debug/governance captions.
 
-The fast manual mask entry implementation adds a simple MVP control near `3. Controleer gevonden gegevens` so a user can add a missed value to the existing replacement table. It does not add right-click, context menu, custom editor, export semantics, Scrub Key semantics, reinsert semantics or recognizer changes. Actions, Hugging Face sync and live app verification are complete.
+The fast manual mask entry implementation adds a simple MVP control near `2. Controleer resultaat` so a user can add a missed value to the existing replacement table. It does not add right-click, context menu, custom editor, export semantics, Scrub Key semantics, reinsert semantics or recognizer changes. Actions, Hugging Face sync and live app verification are complete.
 
 The MVP UI app verification closeout records the current verified MVP UI baseline as an administrative checkpoint only. It does not change product code, UI behavior, export semantics, Scrub Key semantics, reinsert semantics, recognizer logic, benchmark logic or local packaging.
 
@@ -104,8 +104,8 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 ```text
 1. Do not start a new feature automatically.
 2. Current copy polish is recorded: SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
-3. Current active implementation: SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART is ready for PR after local tests.
-4. After PR merge: verify main Tests, Hugging Face sync and live app interface simplification.
+3. SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART is completed and verified on `main`.
+4. Do not start a new feature automatically; create a new dedicated workpackage if further UI polish is desired.
 ```
 
 ## Boundaries

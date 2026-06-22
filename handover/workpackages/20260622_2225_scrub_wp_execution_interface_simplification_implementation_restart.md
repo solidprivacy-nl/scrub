@@ -4,13 +4,15 @@ Repository worked in: `solidprivacy-nl/scrub`
 
 Workpackage title: `SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART`
 
-Status: implemented locally on branch `scrub-execution-interface-simplification-restart`; ready for PR.
+Status: completed and verified on `main`.
 
 Files added/changed:
 
 - `presidio_streamlit.py`
 - `tests/test_execution_interface_simplification_ui.py`
 - `tests/test_export_download_ux_implementation.py`
+- `tests/test_mvp_fast_manual_mask_entry_ui.py`
+- `tests/test_review_table_collapsible_contract.py`
 - `tests/test_side_by_side_review_consolidation_dutch_sample.py`
 - `tests/test_side_by_side_review_ui_patch.py`
 - `CHANGELOG.md`
@@ -22,29 +24,32 @@ Files added/changed:
 Tests:
 
 - `python -m pytest -q tests/test_execution_interface_simplification_ui.py` — 6 passed
-- `python -m pytest -q tests/test_side_by_side_review_ui_patch.py tests/test_side_by_side_review_consolidation_dutch_sample.py tests/test_serial_review_ui_patch.py tests/test_replace_logic_ui_patch.py` — 37 passed
-- `python -m pytest -q tests/test_export_download_ux_contracts.py tests/test_export_download_ux_implementation.py` — 19 passed
-- `git diff --check` — to be rerun before commit
+- side-by-side / serial review / replace logic UI tests — 37 passed
+- export/download contract and implementation tests — 19 passed
+- full local test suite — 639 passed
+- PR #6 checks — green
+- main Tests run — green
 
 Validation status:
 
-- Local/source-level validation passed for the targeted test set.
-- Full test suite not yet run unless performed after this handover.
+- UI simplification implemented directly in `presidio_streamlit.py`.
+- Default visible flow is now `1. Voeg document of tekst toe`, `2. Controleer resultaat`, `3. Exporteer resultaat`.
+- Secondary controls are collapsed but still available.
+- Review table remains source of truth and fallback.
+- Export, Scrub Key, reinsert, recognizer, benchmark, startup and runtime semantics were preserved.
 
-GitHub Actions status: pending PR.
+GitHub Actions status: passed on PR #6 and on `main`.
 
-Hugging Face sync status: pending merge to `main`.
+Hugging Face sync status: passed on `main`.
 
-App verification status: required after main Tests and Hugging Face sync are green.
+App verification status: passed by coordinator screenshot on 2026-06-23.
 
 Remaining risks:
 
-- Visual app verification is still required because this is a UI simplification package.
-- The implementation intentionally collapses secondary controls; coordinator must confirm the app feels calmer while controls remain discoverable.
-- No runtime/startup patch was used.
+- The app is calmer, but it remains a Streamlit MVP with a long page; future visual polish should be a separate workpackage.
+- No custom document editor, right-click marking, cloud processing or runtime patch was introduced.
 
 Next recommended step:
 
-- Run final checks.
-- Commit and open PR.
-- After merge, verify main Tests, Hugging Face sync and live app behavior.
+- Do not start a new feature automatically.
+- If the coordinator wants further UI polish, define a new small UI-only workpackage with explicit boundaries.

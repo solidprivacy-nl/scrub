@@ -29,14 +29,14 @@ For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/
 ### Review
 
 - The review flow has one central side-by-side review surface near the top of the review workflow.
-- The side-by-side review surface uses one section heading: `2. Controleer de tekst`.
+- The side-by-side review surface uses one section heading: `2. Controleer resultaat`.
 - `Brontekst` appears on the left and `Verwerkte tekst` on the right.
 - The side-by-side panes use equal visual height.
 - The side-by-side panes scroll together by default.
 - The side-by-side helper text is shorter and clearer: it says that this view is for comparison and that decisions are still made in the replacement table.
 - Markers are on by default and can be hidden with `Markeringen tonen`.
-- Users can add a missed value manually near `3. Controleer gevonden gegevens`; it is added to the same replacement table used for export.
-- The section `Controleer gevonden gegevens` is visually quieter: the replacement table is now under a collapsed `Vervangtabel controleren — <items> items` section.
+- Users can add a missed value manually near `2. Controleer resultaat`; it is added to the same replacement table used for export.
+- The detailed replacement-table section is visually quieter: the replacement table is now under a collapsed `Vervangtabel controleren — <items> items` section.
 - The replacement table remains the source of truth and fallback for review decisions and export construction.
 - Serial review remains available as a small read-only review aid below the replacement table, with clearer Dutch labels for open items, risk items, duplicate values and next open item.
 - Markers are visual-only. They do not change the replacement table, export, Scrub Key or reinsert behavior.

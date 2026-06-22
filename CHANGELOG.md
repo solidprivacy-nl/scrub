@@ -2,7 +2,7 @@
 
 ## SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART — Execution interface simplification
 
-Status: implemented on branch `scrub-execution-interface-simplification-restart`; ready for PR.
+Status: completed and verified on `main` via PR #6 (`a34700c`).
 
 Summary:
 
@@ -30,7 +30,12 @@ Tests:
 - `tests/test_execution_interface_simplification_ui.py` — 6 passed.
 - Side-by-side, serial review and replace logic UI tests — 37 passed.
 - Export/download contract and implementation tests — 19 passed.
-- `git diff --check` to be rerun before commit.
+- `git diff --check` — passed.
+- Full local test suite — 639 passed.
+- PR #6 checks — green.
+- Main Tests — green.
+- GitHub to Hugging Face sync — green.
+- Live app verification — passed by coordinator screenshot on 2026-06-23.
 
 Intentionally not changed:
 
