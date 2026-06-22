@@ -25,7 +25,7 @@ def assert_contains(text: str, term: str) -> None:
 def test_direct_app_source_has_new_export_title():
     source = read_text(APP_PATH)
 
-    assert_contains(source, 'st.subheader("5. Exporteer resultaat")')
+    assert_contains(source, 'st.subheader("3. Exporteer resultaat")')
     assert 'st.subheader("5. Download opgeschoonde bestanden")' not in source
 
 

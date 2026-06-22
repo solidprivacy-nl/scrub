@@ -243,7 +243,8 @@ profile_label = st.sidebar.selectbox(
     help=PROFILE_HELP,
 )
 st_recognition_profile = PROFILE_OPTIONS[profile_label]
-st.sidebar.info(PROFILE_DESCRIPTIONS.get(profile_label, ""))
+with st.sidebar.expander("Wat doet deze controlemodus?", expanded=False):
+    st.info(PROFILE_DESCRIPTIONS.get(profile_label, ""))
 
 operator_label = st.sidebar.selectbox(
     "Manier van vervangen",
@@ -396,17 +397,18 @@ with st.expander("Over deze app", expanded=False):
         "altijd zelf de gevonden gegevens en mogelijke kandidaten in de vervangtabel."
     )
 
-if st_recognition_profile == "Dutch Legal Strict":
-    st.info(
-        "Juridische controle is actief. Scrub zoekt extra naar zaaknummers, rolnummers, "
-        "rekestnummers, parketnummers, dossiernummers, clientnummers, CJIB, ECLI, "
-        "procespartijen, instanties en mogelijke juridische referenties."
-    )
-elif st_recognition_profile == "Dutch / EU":
-    st.info(
-        "Algemene Nederlandse controle is actief. Scrub zoekt onder meer naar BSN, postcode, "
-        "KvK, btw-nummer, Nederlandse IBAN, telefoonnummers, adressen, kentekens en BIG-nummers."
-    )
+with st.expander("Controle-instellingen en herkenning", expanded=False):
+    if st_recognition_profile == "Dutch Legal Strict":
+        st.info(
+            "Juridische controle is actief. Scrub zoekt extra naar zaaknummers, rolnummers, "
+            "rekestnummers, parketnummers, dossiernummers, clientnummers, CJIB, ECLI, "
+            "procespartijen, instanties en mogelijke juridische referenties."
+        )
+    elif st_recognition_profile == "Dutch / EU":
+        st.info(
+            "Algemene Nederlandse controle is actief. Scrub zoekt onder meer naar BSN, postcode, "
+            "KvK, btw-nummer, Nederlandse IBAN, telefoonnummers, adressen, kentekens en BIG-nummers."
+        )
 
 try:
     with open("demo_text.txt", encoding="utf-8") as f:
@@ -458,7 +460,7 @@ if uploaded_file is not None:
 st_text = st.text_area(
     label="Plak tekst of controleer de uit het document gehaalde tekst",
     value=input_text,
-    height=300,
+    height=240,
     key="text_input",
 )
 
@@ -641,26 +643,21 @@ try:
         replacement_editor_df = pd.DataFrame(default_editor_rows)
 
         st.divider()
-        st.subheader("2. Controleer de tekst")
+        st.subheader("2. Controleer resultaat")
         st.caption(
-            "Centrale side-by-side reviewweergave. Brontekst links, verwerkte tekst rechts. "
-            "Synchroon scrollen en optionele markeringen blijven visuele hulp."
+            "Controleer het resultaat. Details en extra hulpmiddelen staan standaard ingeklapt."
         )
         render_side_by_side_review_panel(
             source_text=st_text,
             edited_replacements_df=replacement_editor_df,
         )
 
-        st.divider()
-        st.subheader("3. Controleer gevonden gegevens")
+        st.caption("Pas alleen aan wat nodig is; detailcontrole staat hieronder ingeklapt.")
         st.caption(
-            "Vink fout-positieven uit, pas placeholders aan, voeg handmatige vervangingen toe "
-            "en vink Onthouden aan voor vervangingen die je opnieuw wilt gebruiken. "
-            "Mogelijke kandidaten staan standaard uitgevinkt. De vervangtabel blijft leidend."
+            "De vervangtabel blijft leidend en blijft beschikbaar voor detailcontrole."
         )
-        st.caption("De vervangtabel blijft leidend voor beslissingen en export.")
-        st.info(REVIEW_INTRO_GUIDANCE)
-        with st.expander("Uitleg bij deze controle", expanded=False):
+        with st.expander("Waarom controleren?", expanded=False):
+            st.info(REVIEW_INTRO_GUIDANCE)
             st.markdown(f"- {CANDIDATE_GUIDANCE}")
             st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
             st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
@@ -676,14 +673,15 @@ try:
             if status_parts:
                 st.caption("Reviewstatus: " + " · ".join(status_parts))
 
-        st.markdown("**Gemiste waarde toevoegen**")
-        st.caption("Voeg snel een waarde toe die Scrub heeft gemist.")
-        with st.form("manual_mask_entry_form", clear_on_submit=True):
-            manual_value = st.text_input("Waarde die alsnog gemaskeerd moet worden")
-            manual_type_label = st.selectbox("Type gegeven", list(MANUAL_MASK_TYPE_OPTIONS))
-            manual_placeholder = build_manual_placeholder(manual_type_label, replacement_editor_df)
-            manual_replace_with = st.text_input("Vervangen door", value=manual_placeholder)
-            manual_submit = st.form_submit_button("Toevoegen aan vervangtabel")
+        with st.expander("Gemiste waarde toevoegen", expanded=False):
+            st.markdown("**Gemiste waarde toevoegen**")
+            st.caption("Voeg snel een waarde toe die Scrub heeft gemist.")
+            with st.form("manual_mask_entry_form", clear_on_submit=True):
+                manual_value = st.text_input("Waarde die alsnog gemaskeerd moet worden")
+                manual_type_label = st.selectbox("Type gegeven", list(MANUAL_MASK_TYPE_OPTIONS))
+                manual_placeholder = build_manual_placeholder(manual_type_label, replacement_editor_df)
+                manual_replace_with = st.text_input("Vervangen door", value=manual_placeholder)
+                manual_submit = st.form_submit_button("Toevoegen aan vervangtabel")
 
         if manual_submit:
             existing_find_values = (
@@ -713,23 +711,24 @@ try:
                 st.success("Toegevoegd aan de vervangtabel.")
                 st.rerun()
 
-        review_filter = st.selectbox(
-            "Focusfilter voor controle",
-            REVIEW_FILTER_OPTIONS,
-            index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
-            help=FOCUS_FILTER_GUIDANCE,
-        )
-        if review_filter != FILTER_SHOW_ALL:
-            focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
-            st.caption(f"{len(focus_df)} van {len(replacement_editor_df)} rij(en) zichtbaar in dit focusoverzicht.")
-            st.dataframe(
-                focus_df[[col for col in ["review_status_label", "find", "replace_with", "type_label", "confidence", "source_label"] if col in focus_df.columns]],
-                use_container_width=True,
+        with st.expander("Extra controlehulpen", expanded=False):
+            review_filter = st.selectbox(
+                "Focusfilter voor controle",
+                REVIEW_FILTER_OPTIONS,
+                index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
+                help=FOCUS_FILTER_GUIDANCE,
             )
-            st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
+            if review_filter != FILTER_SHOW_ALL:
+                focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
+                st.caption(f"{len(focus_df)} van {len(replacement_editor_df)} rij(en) zichtbaar in dit focusoverzicht.")
+                st.dataframe(
+                    focus_df[[col for col in ["review_status_label", "find", "replace_with", "type_label", "confidence", "source_label"] if col in focus_df.columns]],
+                    use_container_width=True,
+                )
+                st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
 
         if st_recognition_profile == "Dutch Legal Strict":
-            with st.expander("Mogelijk extra te controleren waarden", expanded=bool(candidate_rows)):
+            with st.expander("Mogelijk extra te controleren waarden", expanded=False):
                 if candidate_rows:
                     st.warning(
                         "Deze waarden zijn niet automatisch vervangen, maar lijken mogelijk op juridische of administratieve referenties. "
@@ -846,37 +845,32 @@ try:
 
         export_text = apply_replacements_to_text(st_text, edited_replacements)
 
-        st.subheader("4. Onthoud herbruikbare vervangingen")
-        remember_rows_to_save = []
-        for _, row in edited_replacements_df.iterrows():
-            include = safe_bool(row.get("include", False))
-            remember = safe_bool(row.get("remember", False))
-            find_text = safe_cell(row.get("find", ""))
-            replace_text = safe_cell(row.get("replace_with", ""))
-            entity_type = safe_cell(row.get("entity_type", "REMEMBERED")) or "REMEMBERED"
-            if include and remember and find_text and replace_text:
-                remember_rows_to_save.append({"find": find_text, "replace_with": replace_text, "entity_type": entity_type})
+        with st.expander("Herbruikbare vervangingen", expanded=False):
+            remember_rows_to_save = []
+            for _, row in edited_replacements_df.iterrows():
+                include = safe_bool(row.get("include", False))
+                remember = safe_bool(row.get("remember", False))
+                find_text = safe_cell(row.get("find", ""))
+                replace_text = safe_cell(row.get("replace_with", ""))
+                entity_type = safe_cell(row.get("entity_type", "REMEMBERED")) or "REMEMBERED"
+                if include and remember and find_text and replace_text:
+                    remember_rows_to_save.append({"find": find_text, "replace_with": replace_text, "entity_type": entity_type})
 
-        memory_col1, memory_col2 = st.columns(2)
-        with memory_col1:
-            if st.button("Onthouden vervangingen opslaan"):
-                saved_count = save_remembered_replacements(remember_rows_to_save)
-                st.success(f"{saved_count} vervanging(en) opgeslagen.")
-                st.info(f"Geheugenbestand: {get_memory_file_path()}")
-        with memory_col2:
-            if st.button("Onthouden vervangingen wissen"):
-                clear_remembered_replacements()
-                st.warning("Onthouden vervangingen gewist.")
+            memory_col1, memory_col2 = st.columns(2)
+            with memory_col1:
+                if st.button("Onthouden vervangingen opslaan"):
+                    saved_count = save_remembered_replacements(remember_rows_to_save)
+                    st.success(f"{saved_count} vervanging(en) opgeslagen.")
+                    st.info(f"Geheugenbestand: {get_memory_file_path()}")
+            with memory_col2:
+                if st.button("Onthouden vervangingen wissen"):
+                    clear_remembered_replacements()
+                    st.warning("Onthouden vervangingen gewist.")
 
-        st.subheader("5. Exporteer resultaat")
-        st.info(
-            "Je export wordt gemaakt op basis van de gecontroleerde vervangtabel. "
-            "Controleer bij twijfel eerst de gevonden gegevens hierboven."
+        st.subheader("3. Exporteer resultaat")
+        st.caption(
+            "Download de opgeschoonde documenten. Scrub Key en auditbestanden staan in aparte secties."
         )
-        if uploaded_file is not None:
-            st.info(f"Bestand beschikbaar voor export: {uploaded_file.name}")
-        else:
-            st.info("Je gebruikt tekst uit het invoervak. De export wordt gemaakt op basis van deze tekst.")
 
         st.markdown("**Document downloaden**")
         st.download_button(
@@ -918,63 +912,65 @@ try:
         except Exception as pdf_error:
             st.error(f"Kon geen PDF-export maken: {pdf_error}")
 
-        st.markdown("**Scrub Key**")
-        st.warning("De Scrub Key kan originele waarden herstellen. Bewaar dit bestand veilig.")
+        with st.expander("Scrub Key downloaden", expanded=False):
+            st.markdown("**Scrub Key**")
+            st.warning("De Scrub Key kan originele waarden herstellen. Bewaar dit bestand veilig.")
 
-        scrub_key_rows = edited_replacements_df.copy()
-        scrub_key_field_map = {
-            "find": "original_value",
-            "replace_with": "placeholder",
-            "entity_type": "entity_type",
-            "type_label": "type_label",
-            "source": "source",
-            "review_status": "review_status",
-            "include": "include",
-        }
-        for scrub_key_source_column, scrub_key_target_column in scrub_key_field_map.items():
-            if scrub_key_source_column in scrub_key_rows.columns:
-                scrub_key_rows[scrub_key_target_column] = scrub_key_rows[scrub_key_source_column]
+            scrub_key_rows = edited_replacements_df.copy()
+            scrub_key_field_map = {
+                "find": "original_value",
+                "replace_with": "placeholder",
+                "entity_type": "entity_type",
+                "type_label": "type_label",
+                "source": "source",
+                "review_status": "review_status",
+                "include": "include",
+            }
+            for scrub_key_source_column, scrub_key_target_column in scrub_key_field_map.items():
+                if scrub_key_source_column in scrub_key_rows.columns:
+                    scrub_key_rows[scrub_key_target_column] = scrub_key_rows[scrub_key_source_column]
 
-        scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-        if "timestamp" not in scrub_key_rows.columns:
-            scrub_key_rows["timestamp"] = scrub_key_timestamp
-        else:
-            scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
+            scrub_key_timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+            if "timestamp" not in scrub_key_rows.columns:
+                scrub_key_rows["timestamp"] = scrub_key_timestamp
+            else:
+                scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
 
-        scrub_key = build_export_scrub_key(scrub_key_rows)
-        scrub_key_issues = validate_export_scrub_key(scrub_key)
-        if scrub_key_issues:
-            st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
-        else:
-            if scrub_key.get("item_count", 0) == 0:
-                st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")
+            scrub_key = build_export_scrub_key(scrub_key_rows)
+            scrub_key_issues = validate_export_scrub_key(scrub_key)
+            if scrub_key_issues:
+                st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
+            else:
+                if scrub_key.get("item_count", 0) == 0:
+                    st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")
+                st.download_button(
+                    "Download Scrub Key (.json)",
+                    data=export_key_json(scrub_key),
+                    file_name="solidprivacy_scrub_key.json",
+                    mime="application/json",
+                    key="download_scrub_key",
+                )
+
+        with st.expander("Audit en technische bestanden", expanded=False):
+            st.markdown("**Audit en technische bestanden**")
             st.download_button(
-                "Download Scrub Key (.json)",
-                data=export_key_json(scrub_key),
-                file_name="solidprivacy_scrub_key.json",
-                mime="application/json",
-                key="download_scrub_key",
+                label="Download vervangtabel (.csv)",
+                data=replacement_report_csv(edited_report_rows),
+                file_name="vervangtabel.csv",
+                mime="text/csv",
+                key="download_csv",
             )
-
-        st.markdown("**Audit en technische bestanden**")
-        st.download_button(
-            label="Download vervangtabel (.csv)",
-            data=replacement_report_csv(edited_report_rows),
-            file_name="vervangtabel.csv",
-            mime="text/csv",
-            key="download_csv",
-        )
-        st.download_button(
-            label="Download scrubrapport (.txt)",
-            data=scrub_report_txt(
-                edited_report_rows,
-                profile=profile_label,
-                source_filename=uploaded_file.name if uploaded_file is not None else None,
-            ),
-            file_name="scrubrapport.txt",
-            mime="text/plain",
-            key="download_scrub_report",
-        )
+            st.download_button(
+                label="Download scrubrapport (.txt)",
+                data=scrub_report_txt(
+                    edited_report_rows,
+                    profile=profile_label,
+                    source_filename=uploaded_file.name if uploaded_file is not None else None,
+                ),
+                file_name="scrubrapport.txt",
+                mime="text/plain",
+                key="download_scrub_report",
+            )
 
         if docx_bytes is not None:
             render_docx_hygiene_audit_panel(docx_bytes, source_label=docx_filename)

@@ -1,5 +1,13 @@
 # SolidPrivacy Scrub — Release Notes
 
+## Execution interface simplification
+
+- The default Scrub flow is calmer and more execution-oriented: add document/text, check result, export result.
+- Secondary controls remain available but are collapsed by default.
+- Primary document downloads remain visible; Scrub Key and audit downloads are separated into optional sections.
+- No export, Scrub Key, reinsert or recognition behavior was changed.
+
+
 This file is the user-facing product changelog.
 
 For internal workpackage history, see `CHANGELOG.md` and `handover/workpackages/`.
