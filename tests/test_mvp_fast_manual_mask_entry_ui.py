@@ -62,7 +62,7 @@ def test_manual_mask_entry_ui_is_visible_and_simple():
 def test_manual_mask_entry_ui_is_near_review_table_before_data_editor():
     app_text = _app_text()
 
-    assert app_text.index('st.subheader("3. Controleer gevonden gegevens")') < app_text.index("Gemiste waarde toevoegen")
+    assert app_text.index('st.subheader("2. Controleer resultaat")') < app_text.index("Gemiste waarde toevoegen")
     assert app_text.index("Gemiste waarde toevoegen") < app_text.index("st.data_editor(")
     assert app_text.index("build_manual_mask_row(") < app_text.index("st.data_editor(")
 
