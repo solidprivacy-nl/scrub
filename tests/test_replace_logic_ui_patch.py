@@ -59,7 +59,7 @@ def test_serial_review_panel_remains_available_and_table_first():
     assert "Stap voor stap controleren" in serial_text
     assert "expanded=False" in serial_text
     assert "Loop de gevonden gegevens één voor één na" in serial_text
-    assert "De vervangtabel blijft leidend voor export" in serial_text
+    assert "de vervangtabel blijft leidend voor export" in serial_text
     assert "Filter voor stap-voor-stap controle" in serial_text
 
     assert "Serial review — experimentele reviewhulp" not in serial_text
