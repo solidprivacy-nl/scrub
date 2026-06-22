@@ -1,5 +1,34 @@
 # Changelog — SolidPrivacy Scrub
 
+## SCRUB-WP_MAIN_NOOP_CLEANUP — Remove accidental files from main
+
+Status: completed as emergency repository cleanup.
+
+Summary:
+
+- Removed accidental `_noop_branch_anchor*.txt` files from `main`.
+- Removed the accidental `workpackage_claims/scrub_wp_review_copy_polish_implementation.md` claim from `main`.
+- Confirmed the accidental files are no longer returned by repository search.
+- No product code, UI behavior, export semantics, Scrub Key behavior, reinsert behavior, recognizer logic, benchmark logic, Dockerfile/runtime setup or local packaging changed.
+
+Tests:
+
+- No local tests were run because this was a repository cleanup only.
+
+Validation status:
+
+- Repository search no longer returns `_noop_branch_anchor` or `scrub_wp_review_copy_polish_implementation`.
+- GitHub Actions: not checked for cleanup commits.
+- Hugging Face sync: not checked for cleanup commits.
+- App verification: not applicable because no app behavior changed.
+
+Next recommended step:
+
+- Restart `SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION` only after the repository is confirmed clean.
+- Use a fresh branch and claim; do not reuse the removed accidental claim.
+
+---
+
 ## SCRUB-WP_MVP_UI_APP_VERIFICATION_CLOSEOUT — MVP UI app verification closeout
 
 Status: completed as verification/closeout-only.
