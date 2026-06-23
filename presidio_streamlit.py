@@ -88,6 +88,7 @@ from scrub_key_document_reinsert import reinsert_docx_bytes, reinsert_txt_bytes
 from side_by_side_review_panel_ui import render_side_by_side_review_panel
 from serial_review_panel_ui import render_serial_review_panel
 from docx_hygiene_audit_panel_ui import render_docx_hygiene_audit_panel
+from reinsert_mode_ui import render_reinsert_mode
 from manual_mask_entry import (
     MANUAL_MASK_TYPE_OPTIONS,
     build_manual_mask_row,
@@ -385,6 +386,18 @@ st.title(APP_TITLE)
 st.subheader(APP_SUBTITLE)
 st.write(APP_INTRO)
 st.info(LOCAL_PROCESSING_NOTE)
+
+st.markdown("**Kies werkmodus**")
+solidprivacy_work_mode = st.radio(
+    "Werkmodus",
+    ["Anonimiseren", "Originele waarden terugzetten"],
+    horizontal=True,
+    key="solidprivacy_work_mode",
+    help="Kies Anonimiseren voor opschonen en export. Kies Originele waarden terugzetten voor lokaal terugzetten met een Scrub Key.",
+)
+if solidprivacy_work_mode == "Originele waarden terugzetten":
+    render_reinsert_mode()
+    st.stop()
 
 with st.expander("Over deze app", expanded=False):
     st.write(

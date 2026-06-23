@@ -1,3 +1,15 @@
+## 2026-06-23 20:43 Europe/Amsterdam — Reinsert interface simplified
+
+- The “Originele waarden terugzetten” workflow is now presented as a clearer four-step flow:
+  1. Voeg Scrub Key toe
+  2. Voeg tekst of document toe
+  3. Controleer herstelrapport
+  4. Download herstelde output
+- Existing safety controls remain in place: Scrub Key warnings, acknowledgement gates and restored-output warnings.
+- Existing restored output semantics remain unchanged: filenames, MIME types and supported output types are preserved.
+- PDF reinsert remains TXT-only: no restored PDF, no OCR, no cloud processing and no AI processing.
+
+
 # SolidPrivacy Scrub — Release Notes
 
 ## Execution interface simplification

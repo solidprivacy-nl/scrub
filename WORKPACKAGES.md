@@ -1,3 +1,34 @@
+## 2026-06-23 20:52 Europe/Amsterdam — Full-suite validation update — SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION
+
+- Full suite passed: `python -m pytest tests -x -vv` → 647 passed in 108.30s.
+- `git diff --check` passed.
+- Local implementation validation complete.
+- GitHub Actions, GitHub to Hugging Face sync and live app verification remain pending until PR/merge/sync.
+
+## SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION
+
+Status: in_progress / implementation complete / full-suite validation pending
+
+Scope completed:
+- migrated reinsert UI to direct source via `reinsert_mode_ui.py`;
+- simplified visible reinsert flow into four user-facing steps;
+- kept `presidio_streamlit.py` change minimal;
+- added startup no-op guard for direct-source reinsert UI;
+- added source-level UI contract tests.
+
+Validation so far:
+- targeted reinsert simplification test passed;
+- existing reinsert UI patch tests passed;
+- warning/two-mode UI tests passed.
+
+Remaining:
+- run full test suite;
+- commit and open PR;
+- verify GitHub Actions;
+- verify GitHub to Hugging Face sync;
+- request live app verification.
+
+
 # SolidPrivacy Scrub — Workpackages
 
 Repository: `solidprivacy-nl/scrub`.
