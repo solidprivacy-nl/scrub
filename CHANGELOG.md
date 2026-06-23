@@ -1,5 +1,13 @@
 ## 2026-06-23 20:52 Europe/Amsterdam — Full-suite validation update — SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION
 
+## 2026-06-23 — SCRUB-WP_DOCX_SIDE_BY_SIDE_TEXT_ORDER_TRIAGE
+
+- Fixed DOCX plain-text extraction order for side-by-side preview.
+- DOCX body paragraphs and tables are now read in document XML order instead of all paragraphs first and all tables afterwards.
+- Added synthetic regression coverage for interleaved paragraph/table order.
+- Preserved DOCX export, Scrub Key and reinsert semantics.
+- Validation: `python -m pytest tests -x -vv` → 649 passed in 102.51s.
+
 - Full suite passed: `python -m pytest tests -x -vv` → 647 passed in 108.30s.
 - `git diff --check` passed.
 - Local implementation validation complete.
