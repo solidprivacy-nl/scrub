@@ -157,3 +157,17 @@ Summary:
 Validation:
 - Targeted DOCX/reinsert/hygiene tests: 40 passed.
 - Full suite: 649 passed in 102.51s.
+
+## SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_PLAN — completed
+
+Status: completed as planning/design-only; ready for PR review.
+
+Summary:
+- Added `REVIEW_SURFACE_SIMPLIFICATION_PLAN.md` for the next premium MVP review-surface simplification line.
+- Target flow: `1. Voeg document toe` -> `2. Controleer resultaat` -> `3. Download veilig`.
+- Keeps side-by-side review central, review table available as source of truth/fallback, and safety/audit controls available through calmer secondary layers.
+- Defines `SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_CONTRACT_TESTS` as the recommended next package before implementation touches `presidio_streamlit.py` or review flow.
+
+Validation:
+- Planning/design-only package; no product tests required.
+- No app verification required because no UI behavior changed.
