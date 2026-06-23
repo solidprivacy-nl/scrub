@@ -10,6 +10,8 @@ except Exception:
 
 import fitz  # PyMuPDF
 from docx import Document
+from docx.table import Table as DocxTable
+from docx.text.paragraph import Paragraph as DocxParagraph
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
@@ -245,11 +247,13 @@ def extract_pdf_text(pdf_bytes):
 
 
 def iter_docx_paragraphs(doc):
-    """Yield paragraphs from body, tables, headers and footers."""
-    for paragraph in doc.paragraphs:
-        yield paragraph
-    for table in doc.tables:
-        yield from iter_table_paragraphs(table)
+    """Yield paragraphs from body, tables, headers and footers.
+
+    Main document body content is yielded in document XML order so interleaved
+    paragraphs and tables keep the same reading order in plain-text preview.
+    Header and footer content remains appended after the main body.
+    """
+    yield from iter_docx_body_paragraphs(doc)
     for section in doc.sections:
         header_footer_parts = [
             section.header,
@@ -264,6 +268,16 @@ def iter_docx_paragraphs(doc):
                 yield paragraph
             for table in part.tables:
                 yield from iter_table_paragraphs(table)
+
+
+def iter_docx_body_paragraphs(doc):
+    """Yield body paragraphs and table paragraphs in document XML order."""
+    body = doc._body
+    for child in doc.element.body.iterchildren():
+        if child.tag.endswith("}p"):
+            yield DocxParagraph(child, body)
+        elif child.tag.endswith("}tbl"):
+            yield from iter_table_paragraphs(DocxTable(child, body))
 
 
 def iter_table_paragraphs(table):

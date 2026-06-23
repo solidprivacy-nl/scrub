@@ -144,3 +144,16 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 Do not start further UI implementation, export/download implementation, Scrub Key, reinsert, benchmark-gate, local packaging or broad architecture work without separate coordinator approval and a dedicated workpackage.
 
 Do not run parallel edits to `presidio_streamlit.py`, review table flow or export/download flow.
+
+## SCRUB-WP_DOCX_SIDE_BY_SIDE_TEXT_ORDER_TRIAGE — completed
+
+Status: completed / ready for PR verification.
+
+Summary:
+- Reproduced DOCX side-by-side preview order issue with synthetic paragraph/table markers.
+- Fixed DOCX plain-text extraction to preserve interleaved paragraph/table body order.
+- No export, Scrub Key or reinsert semantics changed.
+
+Validation:
+- Targeted DOCX/reinsert/hygiene tests: 40 passed.
+- Full suite: 649 passed in 102.51s.

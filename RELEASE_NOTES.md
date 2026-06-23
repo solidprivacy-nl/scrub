@@ -1,5 +1,13 @@
 ## 2026-06-23 20:43 Europe/Amsterdam — Reinsert interface simplified
 
+## 2026-06-23 — SCRUB-WP_DOCX_SIDE_BY_SIDE_TEXT_ORDER_TRIAGE
+
+- Fixed DOCX plain-text extraction order for side-by-side preview.
+- DOCX body paragraphs and tables are now read in document XML order instead of all paragraphs first and all tables afterwards.
+- Added synthetic regression coverage for interleaved paragraph/table order.
+- Preserved DOCX export, Scrub Key and reinsert semantics.
+- Validation: `python -m pytest tests -x -vv` → 649 passed in 102.51s.
+
 - The “Originele waarden terugzetten” workflow is now presented as a clearer four-step flow:
   1. Voeg Scrub Key toe
   2. Voeg tekst of document toe
