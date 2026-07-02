@@ -1,3 +1,20 @@
+## 2026-07-02 00:00 UTC — SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_CONTRACT_TESTS
+
+Status: implemented contract-tests-only / targeted pytest pending in execution environment.
+
+Summary:
+- Added `REVIEW_SURFACE_SIMPLIFICATION_CONTRACTS.md`.
+- Added `tests/test_review_surface_simplification_contracts.py`.
+- Based this package on `scrub-review-surface-simplification-plan` because `REVIEW_SURFACE_SIMPLIFICATION_PLAN.md` is not on `main` yet.
+- No product code, UI, export/download, Scrub Key, reinsert, recognizer, benchmark, runtime/startup or dependency behavior changed.
+
+Validation:
+- GitHub Actions not manually triggered to preserve credits.
+- Targeted pytest command still needs to be run in an execution environment: `python -m pytest -q tests/test_review_surface_simplification_contracts.py`.
+
+Next recommended package after targeted validation passes:
+- `SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION`.
+
 ## 2026-06-23 20:52 Europe/Amsterdam — Full-suite validation update — SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION
 
 - Full suite passed: `python -m pytest tests -x -vv` → 647 passed in 108.30s.
@@ -49,6 +66,7 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 ## Current status
 
 ```text
+SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_CONTRACT_TESTS — implemented contract-tests-only; targeted pytest pending in execution environment.
 SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART — completed and verified; default UI flow simplified toward execution interface, secondary controls collapsed, no export/Scrub Key/reinsert/recognizer/benchmark/startup semantics changed.
 SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION — completed; small visible Dutch copy polish for side-by-side review and serial review labels, no product behavior or export semantics changed.
 SCRUB-WP_MAIN_NOOP_CLEANUP — completed; accidental noop files and accidental copy-polish claim were removed from main.
@@ -99,6 +117,9 @@ presidio_streamlit.py
 serial_review_panel_ui.py
 side_by_side_review_panel_ui.py
 tests/test_review_copy_polish_ui.py
+REVIEW_SURFACE_SIMPLIFICATION_PLAN.md
+REVIEW_SURFACE_SIMPLIFICATION_CONTRACTS.md
+tests/test_review_surface_simplification_contracts.py
 ```
 
 The failed startup-patch route was removed after live app verification showed the old export section. Direct implementation now lives in `presidio_streamlit.py` and is verified in the live app.
@@ -110,6 +131,8 @@ The fast manual mask entry implementation adds a simple MVP control near `2. Con
 The MVP UI app verification closeout records the current verified MVP UI baseline as an administrative checkpoint only. It does not change product code, UI behavior, export semantics, Scrub Key semantics, reinsert semantics, recognizer logic, benchmark logic or local packaging.
 
 The review copy polish implementation improves visible Dutch helper text in the side-by-side review and serial review panel only. It does not change the review table, export construction, Scrub Key, reinsert, recognizers, benchmarks or local packaging.
+
+The review surface simplification contract line protects the calmer three-step direction before implementation touches `presidio_streamlit.py` or review flow. Targeted pytest remains pending in an execution environment.
 
 Contract and implementation protection covers:
 
@@ -124,6 +147,7 @@ implementation route
 manual missed-value entry through the existing replacement table
 MVP UI verification closeout without product behavior change
 copy polish without product behavior change
+review-surface simplification boundaries before implementation
 ```
 
 ## Recall/benchmark status
@@ -133,10 +157,10 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 ## Active / next recommended execution queue
 
 ```text
-1. Do not start a new feature automatically.
-2. Current copy polish is recorded: SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
-3. SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART is completed and verified on `main`.
-4. Do not start a new feature automatically; create a new dedicated workpackage if further UI polish is desired.
+1. Run targeted validation for SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_CONTRACT_TESTS if an execution environment is available.
+2. Do not start review-surface implementation until contract tests are validated.
+3. After validation passes, next package: SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION.
+4. Do not start broader UI/reinsert/export work without a dedicated workpackage.
 ```
 
 ## Boundaries
