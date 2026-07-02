@@ -125,9 +125,27 @@ For implementation tasks, run targeted tests first, then related regression test
 
 Do not claim success if tests were not run. State the exact validation status.
 
+## Budget-aware validation
+
+Validation must be proportionate to product risk and mindful of GitHub Actions/Codespaces credit usage.
+
+GitHub Actions are not a debugging loop. Use static inspection, targeted checks and targeted tests before CI.
+
+Do not trigger repeated push/PR cycles for small iteration fixes. Batch fixes before requesting CI.
+
+The coordinator is not expected to run local tests, Codespaces or Codex validation as a fallback.
+
+For documentation-only or specification-only work, Actions may be recorded as `not required / not run to preserve credits` unless repository automation triggers them automatically.
+
+For helper-only work, targeted tests are preferred over full-suite tests unless the helper touches broad shared product flows.
+
+For UI, export/download, reinsert, Scrub Key, recognizer, document-processing or runtime/startup changes, run targeted checks first and use one deliberate CI validation when the change is ready for merge or release.
+
+Full-suite validation should be reserved for broad, shared, sensitive or release-level changes.
+
 ## GitHub Actions and sync
 
-Where possible, check GitHub Actions and GitHub-to-Hugging-Face sync status for the relevant commit.
+Where possible and proportionate to risk, check GitHub Actions and GitHub-to-Hugging-Face sync status for the relevant commit.
 
 If connector or environment access prevents status lookup, say so clearly.
 
@@ -176,7 +194,7 @@ The handover file must include:
 - remaining risks;
 - next recommended step.
 
-For Codex or other parallel worker tasks, do not paste the full handover into the coordinator chat when the handover has been committed to the repository.
+For parallel worker tasks, do not paste the full handover into the coordinator chat when the handover has been committed to the repository.
 
 Instead, the final worker response should provide only:
 
