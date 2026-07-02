@@ -46,9 +46,22 @@ Read in order:
 
 Before starting a package, check `workpackage_claims/`. If a claim for the same workpackage is already `in_progress`, stop and report the collision. If no claim exists, create one before changing files. When done, update the claim with status, final commit, handover path, validation and next step.
 
+## Budget-aware validation note
+
+All future workpackages must use budget-aware validation.
+
+Documentation-only work should not require GitHub Actions unless repository policy triggers them automatically.
+
+Product behavior changes should still receive deliberate CI validation before merge/release, but Actions must not be used as the first debugging loop.
+
+Workers should prefer small scoped workpackages, static inspection, targeted checks and targeted tests before CI. The coordinator is not expected to run local tests, Codespaces or Codex validation as a fallback.
+
+Every handover must report whether Actions were run, skipped, pending, automation-triggered or not required to preserve credits.
+
 ## Current status
 
 ```text
+SCRUB-WP_ACTIONS_BUDGET_VALIDATION_POLICY — completed governance/docs-only on branch scrub-wp-actions-budget-validation-policy-clean; budget-aware validation recorded for future workpackages; no product code/UI/export/Scrub Key/reinsert/recognizer/runtime behavior changed.
 SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART — completed and verified; default UI flow simplified toward execution interface, secondary controls collapsed, no export/Scrub Key/reinsert/recognizer/benchmark/startup semantics changed.
 SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION — completed; small visible Dutch copy polish for side-by-side review and serial review labels, no product behavior or export semantics changed.
 SCRUB-WP_MAIN_NOOP_CLEANUP — completed; accidental noop files and accidental copy-polish claim were removed from main.
@@ -134,9 +147,10 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 
 ```text
 1. Do not start a new feature automatically.
-2. Current copy polish is recorded: SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
-3. SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART is completed and verified on `main`.
-4. Do not start a new feature automatically; create a new dedicated workpackage if further UI polish is desired.
+2. Budget-aware validation is now the default execution rule for future workpackages.
+3. Current copy polish is recorded: SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
+4. SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART is completed and verified on `main`.
+5. Do not start a new feature automatically; create a new dedicated workpackage if further UI polish is desired.
 ```
 
 ## Boundaries
