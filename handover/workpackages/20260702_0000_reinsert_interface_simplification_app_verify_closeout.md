@@ -1,13 +1,13 @@
 # Handover — SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
 
 Repository: solidprivacy-nl/scrub  
-Status: blocked; awaiting coordinator live app verification
+Status: completed and live-app verified
 
 ## Summary
 
-Repository evidence supports keeping the reinsert interface simplification as product-desired. PR #7 is merged and records targeted tests, full-suite evidence, py_compile and diff-check evidence. The source keeps the four-step reinsert flow, Scrub Key warnings, acknowledgement gates, restored download warnings and the existing PDF limitation wording.
+The simplified reinsert interface is product-desired and live-app verified. Repository evidence supports keeping the implementation: PR #7 is merged and records targeted tests, full-suite evidence, py_compile and diff-check evidence. The source keeps the four-step reinsert flow, Scrub Key warnings, acknowledgement gates, restored download warnings and the existing PDF limitation wording.
 
-This package is not completed yet because the required live app verification has not been confirmed by the coordinator.
+Coordinator screenshots confirmed the live Hugging Face app shows the simplified reinsert flow and that TXT reinsert works with synthetic data.
 
 ## Files added
 
@@ -16,9 +16,10 @@ This package is not completed yet because the required live app verification has
 
 ## Files changed
 
-- None.
+- `workpackage_claims/scrub_wp_reinsert_interface_simplification_app_verify_closeout.md`
+- `handover/workpackages/20260702_0000_reinsert_interface_simplification_app_verify_closeout.md`
 
-A central `WORKPACKAGES.md` update was attempted but the connector blocked the full-file update. It should be retried only after coordinator live app verification, preferably as one small documentation patch.
+A central `WORKPACKAGES.md` update was attempted earlier but the connector blocked the full-file update. The closeout result is therefore recorded in this claim and handover branch without changing product files.
 
 ## Tests / checks
 
@@ -32,31 +33,35 @@ Checked existing repository evidence:
 
 No new tests were run because this is closeout-only and no product code changed.
 
+## Live app verification
+
+Coordinator screenshots confirmed:
+
+- Work mode `Originele waarden terugzetten` is selectable and selected.
+- Four visible steps are shown:
+  - `1. Voeg Scrub Key toe`
+  - `2. Voeg tekst of document toe`
+  - `3. Controleer herstelrapport`
+  - `4. Download herstelde output`
+- Scrub Key warning and acknowledgement gate are visible.
+- TXT tab is available and TXT reinsert was tested with synthetic data.
+- App reported 12 value(s) locally restored.
+- Restored TXT text was shown in the recovery report.
+- Download restored output section is visible with confidentiality warning and acknowledgement gate.
+- No Script execution error was visible.
+
 ## Validation
 
 - GitHub Actions: not manually triggered to preserve credits.
-- Hugging Face sync: not triggered because this branch was not merged to `main`.
-- App verification: pending coordinator live app verification.
-
-## Required live app verification checklist
-
-The coordinator should verify with synthetic data:
-
-1. Open the reinsert/original-values screen.
-2. Confirm the four visible steps.
-3. Confirm Scrub Key warning and acknowledgement gate.
-4. Test pasted-text reinsert.
-5. Test TXT reinsert if practical.
-6. Test DOCX reinsert if practical.
-7. Confirm restored filenames/downloads are sensible.
-8. Confirm no restored-PDF/OCR/document-reconstruction promise is shown.
-9. Confirm no app error appears.
+- Hugging Face sync: not triggered by this closeout branch because it was not merged to `main`.
+- App verification: passed by coordinator screenshots.
 
 ## Remaining risks
 
-- Live app verification is still pending.
-- Central status files are not yet updated for the closeout outcome.
+- This closeout does not add new tests or change product code.
+- Central status files on `main` still need a small documentation sync if the coordinator wants the branch merged or recorded in main.
+- DOCX reinsert was visible as an option but not separately function-tested in the final screenshot; TXT reinsert path was function-tested.
 
 ## Next recommended step
 
-Coordinator performs live app verification. If it passes, complete a documentation-only closeout update. If it fails, create a narrow fix package for the exact failed behavior.
+Proceed to the next small MVP polish package only with a dedicated workpackage. Recommended next package: `SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_CONTRACT_TESTS`.
