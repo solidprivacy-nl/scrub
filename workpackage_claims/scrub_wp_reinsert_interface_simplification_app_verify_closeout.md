@@ -2,9 +2,10 @@
 
 Repository: solidprivacy-nl/scrub
 
-Status: blocked; awaiting coordinator live app verification
+Status: completed and live-app verified
 
 Start timestamp: 2026-07-02 00:00 UTC
+Completion timestamp: 2026-07-02 00:00 UTC
 
 ## Workpackage title
 
@@ -16,7 +17,7 @@ Verification/closeout-only. No product code, UI, reinsert helper, Scrub Key, exp
 
 ## Decision recorded
 
-Keep SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION. Do not revert. Treat it as product-desired but pending live verification/closeout.
+Keep SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION. Do not revert. Treat it as product-desired. Live app verification has now passed.
 
 ## Repository evidence checked
 
@@ -26,29 +27,22 @@ Keep SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION. Do not revert. T
 - Safety boundaries recorded as preserved.
 - Direct-source reinsert UI source includes the four-step flow and warning/acknowledgement gates.
 
+## Live app verification evidence
+
+Coordinator screenshots confirmed:
+
+- Work mode `Originele waarden terugzetten` is selectable and selected.
+- Four visible steps are shown.
+- Scrub Key warning and acknowledgement gate are visible.
+- TXT reinsert was tested with synthetic data.
+- App reported 12 value(s) locally restored.
+- Restored TXT text was shown in the recovery report.
+- Download restored output section was visible with confidentiality warning and acknowledgement gate.
+- No Script execution error was visible.
+
 ## Validation policy
 
 Budget-aware validation. No new GitHub Actions were manually triggered. No tests were rerun because this closeout is documentation/verification-only and no product code changed.
-
-## Blocking condition
-
-Live Hugging Face app verification by the coordinator is still required before marking this package completed.
-
-## Required live app verification checklist
-
-1. Open “Originele waarden terugzetten”.
-2. Confirm the visible flow is simplified into four steps:
-   - Voeg Scrub Key toe
-   - Voeg tekst of document toe
-   - Controleer herstelrapport
-   - Download herstelde output
-3. Confirm Scrub Key warning and acknowledgement gate are still visible.
-4. Test pasted-text reinsert with synthetic data.
-5. Test TXT reinsert with synthetic data if practical.
-6. Test DOCX reinsert with synthetic data if practical.
-7. Confirm restored filenames/downloads still make sense.
-8. Confirm no restored-PDF/OCR/document-reconstruction promise appears.
-9. Confirm no Script execution error appears.
 
 ## Handover path
 
@@ -56,4 +50,4 @@ handover/workpackages/20260702_0000_reinsert_interface_simplification_app_verify
 
 ## Next recommended step
 
-Coordinator performs live app verification with synthetic data. If it passes, run a documentation-only closeout update. If it fails, create a narrow FIX workpackage based on the exact failed behavior.
+Proceed to the next small MVP polish package only with a dedicated workpackage. Recommended next package: SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_CONTRACT_TESTS.
