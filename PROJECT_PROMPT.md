@@ -111,12 +111,26 @@ When in doubt, keep UI integration sequential.
 
 ## Testing, sync and self-monitoring
 
-After implementation, workers must not rely on coordinator screenshots as the first verification path.
+Validation must be proportionate to product risk and budget-aware.
 
-Workers should self-check, where connector permissions allow:
+Workers must not use GitHub Actions as the first debugging loop. Use static inspection, targeted checks and targeted tests before triggering CI.
 
-1. GitHub Actions status for the relevant commit.
-2. GitHub to Hugging Face sync status for the relevant commit.
+Avoid repeated push/PR cycles that consume Actions minutes. Batch fixes before requesting CI.
+
+The coordinator is not expected to run local tests or Codespaces validation as a fallback.
+
+For documentation-only or specification-only work, Actions are not required unless repository policy triggers them automatically. Record `Actions not required / not run to preserve credits` in the handover when applicable.
+
+For helper-only changes, targeted tests are preferred over full-suite tests unless the helper touches broad shared product flows.
+
+For UI, export/download, reinsert, Scrub Key, recognizer, document-processing or runtime/startup changes, run targeted tests first and use one deliberate CI validation when the change is ready for merge or release.
+
+Full-suite validation should be reserved for broad, shared, sensitive or release-level changes.
+
+After implementation, workers should self-check where connector permissions allow and where the check is proportionate to the package risk:
+
+1. GitHub Actions status for the relevant commit when CI was required or triggered.
+2. GitHub to Hugging Face sync status for the relevant commit when sync was required or triggered.
 3. Failed-job logs when Actions are red.
 4. Whether a fix workpackage is needed before asking for app verification.
 
@@ -124,12 +138,12 @@ Use `STATUS_MONITORING_RUNBOOK.md` for the monitoring procedure.
 
 Only ask the coordinator/user for:
 
-- app verification when UI behavior changed;
+- app verification when UI behavior changed and Actions/sync evidence is ready;
 - missing permissions or inaccessible logs;
 - subjective UX confirmation;
 - explicit approval for gated workpackages.
 
-Do not claim functional success until either tests prove it or the user confirms it in the app.
+Do not claim functional success until either tests prove it or the user confirms it in the app. If tests or Actions were intentionally not run to preserve credits, state that explicitly.
 
 ---
 
@@ -211,50 +225,11 @@ Status: <completed / implemented / blocked / pending verification>
 
 ## Validation
 
-- GitHub Actions: <green/red/unknown>
-- Hugging Face sync: <green/red/unknown>
+- GitHub Actions: <green/red/unknown/not required/not run to preserve credits>
+- Hugging Face sync: <green/red/unknown/not applicable/not triggered>
 - App verification: <confirmed/pending/not applicable>
 
 ## Notes / risks
 
 - ...
-
-## Next recommended step
-
-- ...
-```
-
----
-
-## Safety and quality rules
-
-- Do not remove existing functionality unless the workpackage explicitly requires it.
-- Do not silently change export semantics.
-- Do not weaken privacy or review controls.
-- Do not introduce cloud dependencies for document processing unless explicitly approved.
-- Do not store secrets, tokens or real personal data.
-- Use synthetic data only.
-- Preserve legal context: replace sensitive values, not legal meaning.
-- Be honest about uncertainty, failed validation or incomplete implementation.
-- Treat the Scrub Key as sensitive data because it can re-identify scrubbed content.
-- Treat false negatives as a product-critical risk, not as a cosmetic bug.
-
----
-
-## Product direction
-
-The product direction remains:
-
-```text
-Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit
-```
-
-The first product wedge remains Dutch confidential professional documents, with Legal and Zorg as the most relevant early validation markets.
-
-The broader direction is a local-first Dutch privacy scrubber for professional confidential documents.
-
-The immediate development discipline is now risk-driven:
-
-```text
-Stabilize open UI work → Trust/recall benchmark → Scrub Key security → Placeholder robustness → Document hygiene → Document-centric review → Local runtime → Pilot validation → Scale features
 ```
