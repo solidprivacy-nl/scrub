@@ -1,3 +1,66 @@
+## 2026-07-02 — SCRUB-WP_ACTIONS_BUDGET_VALIDATION_POLICY
+
+Status: completed governance/docs-only on branch `scrub-wp-actions-budget-validation-policy-clean`.
+
+Purpose:
+
+- Record budget-aware validation as the default governance rule for future Scrub workpackages.
+- Make clear that GitHub Actions should be deliberate validation, not the first debugging loop.
+- Clarify that the coordinator is not expected to run local tests, Codespaces or Codex validation.
+
+Files changed:
+
+- `AGENTS.md`
+- `WORKPACKAGES.md`
+- `STATUS_MONITORING_RUNBOOK.md`
+- `CHANGELOG.md`
+- `workpackage_claims/scrub_wp_actions_budget_validation_policy.md`
+- `handover/workpackages/20260702_0000_actions_budget_validation_policy.md`
+
+What changed:
+
+- Added budget-aware validation rules for workers.
+- Added runbook guidance for when Actions are required, not required, skipped or pending.
+- Added workpackage status/queue notes so future packages report Actions usage explicitly.
+- Kept the package documentation/governance-only.
+
+Validation performed:
+
+- Manual repository content review.
+- Confirmed touched files are governance/status/handover files only.
+- No product code, UI, export, Scrub Key, reinsert, recognizer, benchmark, runtime/startup or dependency files changed.
+
+Actions status:
+
+- Not required / not manually triggered to preserve credits.
+- Work was performed on a branch, not pushed directly to `main`.
+
+Hugging Face sync:
+
+- Not applicable / not triggered because there was no push to `main`.
+
+App verification:
+
+- Not applicable because no app behavior changed.
+
+Intentionally not changed:
+
+- product code;
+- Streamlit UI;
+- export/download behavior;
+- Scrub Key behavior;
+- reinsert behavior;
+- recognizer/benchmark behavior;
+- runtime/startup behavior;
+- dependency configuration;
+- roadmap strategy.
+
+Known limitation:
+
+- `PROJECT_PROMPT.md` update was attempted but blocked by the tool safety layer during full-file replacement. The policy is recorded in `AGENTS.md`, `WORKPACKAGES.md`, `STATUS_MONITORING_RUNBOOK.md`, `CHANGELOG.md`, claim and handover. A later small patch may still align `PROJECT_PROMPT.md` if needed.
+
+---
+
 ## 2026-06-23 20:52 Europe/Amsterdam — Full-suite validation update — SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION
 
 ## 2026-06-23 — SCRUB-WP_DOCX_SIDE_BY_SIDE_TEXT_ORDER_TRIAGE
@@ -258,62 +321,3 @@ Summary:
 - Added `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md`.
 - Classified visible review/debug/audit UI elements into keep, collapse, rename, audit-only and do-not-change categories.
 - Explicitly constrained the next package to interface cleanup only: no new review layer, benchmark gate or export gate.
-- Prepared the next implementation package: `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION`.
-
-Tests:
-
-- No product tests required because only planning/governance markdown was changed.
-
----
-
-## WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR — Directly implement grouped export/download UX
-
-Status: completed and verified.
-
-Summary:
-
-- Removed the unreliable export startup-patch route after live app verification stayed old.
-- Implemented the grouped export/download section directly in `presidio_streamlit.py`.
-- Dockerfile no longer runs the export startup patch.
-- Existing export content and behavior are intended unchanged.
-
-Next recommended step:
-
-- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN` after green Actions, HF sync and app verification.
-
----
-
-## WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION — Implement grouped export/download UX
-
-Status: superseded by direct repair.
-
-Summary:
-
-- Initial startup-patch route was not reliable in the live app.
-- Replaced by `WP_EXPORT_DOWNLOAD_UX_IMPLEMENTATION_DIRECT_REPAIR`.
-
----
-
-## WP_EXPORT_DOWNLOAD_UX_CONTRACT_TESTS — Add contract tests for professional export/download UX redesign
-
-Status: completed and verified as tests/documentation-only.
-
-Summary:
-
-- Added contract tests and documentation for the professional export/download UX redesign.
-- Protected export grouping, key separation, audit/technical detail availability, copy-cleanup direction and no export semantics change.
-
----
-
-## WP_MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN — Plan MVP interface cleanup and professional export/download flow
-
-Status: completed as planning/design-only.
-
-Summary:
-
-- Planned MVP interface cleanup and export/download redesign.
-- Updated the active direction toward UI/export polish before further benchmark follow-up.
-
----
-
-Historical changelog entries remain available in Git history before this planning note.
