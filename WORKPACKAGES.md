@@ -1,3 +1,22 @@
+## 2026-07-03 00:00 UTC — SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented / PR validation pending.
+
+Summary:
+- Calmer side-by-side review copy implemented in `side_by_side_review_panel_ui.py`.
+- The review surface now refers more clearly to the safe download step while keeping the comparison report-only.
+- Added `tests/test_review_surface_simplification_implementation.py`.
+- Updated source-level copy tests for the calmer review surface.
+- No replacement logic, export content, filenames, MIME types, Scrub Key JSON, reinsert behavior, recognizers, benchmarks, runtime/startup or dependency behavior changed.
+
+Validation:
+- Targeted and related tests are expected through PR validation/GitHub Actions.
+- Hugging Face sync required after merge.
+- Live app verification required after Actions and sync are green because visible UI copy changed.
+
+Next recommended step:
+- Review PR validation. If green, merge and request live app verification.
+
 ## 2026-06-23 20:52 Europe/Amsterdam — Full-suite validation update — SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION
 
 - Full suite passed: `python -m pytest tests -x -vv` → 647 passed in 108.30s.
@@ -49,6 +68,9 @@ Before starting a package, check `workpackage_claims/`. If a claim for the same 
 ## Current status
 
 ```text
+SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION — implemented / PR validation pending; visible review copy changed; live app verification required after Actions/HF sync.
+SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_CONTRACT_TESTS — completed / merged to main / Actions + HF sync green.
+SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_PLAN — completed / merged to main / Actions + HF sync green.
 SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART — completed and verified; default UI flow simplified toward execution interface, secondary controls collapsed, no export/Scrub Key/reinsert/recognizer/benchmark/startup semantics changed.
 SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION — completed; small visible Dutch copy polish for side-by-side review and serial review labels, no product behavior or export semantics changed.
 SCRUB-WP_MAIN_NOOP_CLEANUP — completed; accidental noop files and accidental copy-polish claim were removed from main.
@@ -99,6 +121,10 @@ presidio_streamlit.py
 serial_review_panel_ui.py
 side_by_side_review_panel_ui.py
 tests/test_review_copy_polish_ui.py
+REVIEW_SURFACE_SIMPLIFICATION_PLAN.md
+REVIEW_SURFACE_SIMPLIFICATION_CONTRACTS.md
+tests/test_review_surface_simplification_contracts.py
+tests/test_review_surface_simplification_implementation.py
 ```
 
 The failed startup-patch route was removed after live app verification showed the old export section. Direct implementation now lives in `presidio_streamlit.py` and is verified in the live app.
@@ -110,6 +136,8 @@ The fast manual mask entry implementation adds a simple MVP control near `2. Con
 The MVP UI app verification closeout records the current verified MVP UI baseline as an administrative checkpoint only. It does not change product code, UI behavior, export semantics, Scrub Key semantics, reinsert semantics, recognizer logic, benchmark logic or local packaging.
 
 The review copy polish implementation improves visible Dutch helper text in the side-by-side review and serial review panel only. It does not change the review table, export construction, Scrub Key, reinsert, recognizers, benchmarks or local packaging.
+
+The review surface simplification line protects and implements a calmer side-by-side review copy before broader review-flow implementation. Export, Scrub Key, reinsert and recognition behavior remain unchanged.
 
 Contract and implementation protection covers:
 
@@ -124,6 +152,7 @@ implementation route
 manual missed-value entry through the existing replacement table
 MVP UI verification closeout without product behavior change
 copy polish without product behavior change
+review-surface simplification boundaries before implementation
 ```
 
 ## Recall/benchmark status
@@ -133,10 +162,10 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 ## Active / next recommended execution queue
 
 ```text
-1. Do not start a new feature automatically.
-2. Current copy polish is recorded: SCRUB-WP_REVIEW_COPY_POLISH_IMPLEMENTATION.
-3. SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_IMPLEMENTATION_RESTART is completed and verified on `main`.
-4. Do not start a new feature automatically; create a new dedicated workpackage if further UI polish is desired.
+1. Complete PR validation for SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION.
+2. If validation passes, merge and verify GitHub to Hugging Face sync.
+3. Ask coordinator for live app verification because visible UI copy changed.
+4. If app verification passes, close out. If it fails, create a narrow FIX package.
 ```
 
 ## Boundaries
@@ -160,7 +189,7 @@ Validation:
 
 ## SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_PLAN — completed
 
-Status: completed as planning/design-only; ready for PR review.
+Status: completed as planning/design-only; merged to main.
 
 Summary:
 - Added `REVIEW_SURFACE_SIMPLIFICATION_PLAN.md` for the next premium MVP review-surface simplification line.
