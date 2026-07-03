@@ -137,8 +137,8 @@ def test_current_ui_paths_still_exist_for_future_mode_split() -> None:
 
 def test_contract_package_does_not_approve_implementation_yet() -> None:
     for marker in [
-        "Do not implement the mode switch until contract tests are merged.",
-        "mode switch is visibility-only",
+        "Implementation must not start until contract tests are merged.",
+        "switching mode does not reset session state",
         "no export/Scrub Key/reinsert/recognizer/benchmark/runtime semantics changed",
     ]:
         assert marker in PLAN_TEXT
