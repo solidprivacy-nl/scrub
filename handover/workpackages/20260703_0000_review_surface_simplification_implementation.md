@@ -1,13 +1,13 @@
 # Handover — SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION
 
 Repository: solidprivacy-nl/scrub  
-Status: implemented / PR validation pending
+Status: completed and app-verified
 
 ## Summary
 
-Implemented a restrained review-surface simplification focused on calmer side-by-side review copy. The review surface now gives shorter guidance, keeps the source-vs-processed comparison central, and explicitly points users toward the safe download step without changing review-table, export, Scrub Key or reinsert semantics.
+Implemented and verified a restrained review-surface simplification focused on calmer side-by-side review copy. The review surface now gives shorter guidance, keeps the source-vs-processed comparison central, and explicitly points users toward the safe download step without changing review-table, export, Scrub Key or reinsert semantics.
 
-This implementation follows the merged planning and contract-test line and keeps the change narrow: no broad `presidio_streamlit.py` rewrite, no startup patch, no second review flow and no export/reinsert behavior change.
+This implementation followed the merged planning and contract-test line and kept the change narrow: no broad `presidio_streamlit.py` rewrite, no startup patch, no second review flow and no export/reinsert behavior change.
 
 ## Files added
 
@@ -18,6 +18,8 @@ This implementation follows the merged planning and contract-test line and keeps
 
 - `side_by_side_review_panel_ui.py`
 - `tests/test_review_copy_polish_ui.py`
+- `tests/test_side_by_side_review_consolidation_dutch_sample.py`
+- `tests/test_side_by_side_review_ui_patch.py`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RELEASE_NOTES.md`
@@ -39,20 +41,39 @@ Added source-level implementation tests covering:
 
 Updated existing side-by-side copy tests to reflect the calmer copy.
 
-Targeted test commands expected in PR validation:
+Validation evidence:
 
-```text
-python -m pytest -q tests/test_review_surface_simplification_contracts.py tests/test_review_surface_simplification_implementation.py
-python -m pytest -q tests/test_review_copy_polish_ui.py tests/test_mvp_fast_manual_mask_entry_ui.py tests/test_review_table_collapsible_contract.py tests/test_export_download_ux_contracts.py tests/test_export_download_ux_implementation.py
-```
+- PR #12 first run failed on two stale source-level copy expectations.
+- Narrow fix updated only stale test expectations.
+- PR #12 Tests passed after the narrow fix.
+- PR #12 was merged to `main`.
+- Main Tests for commit `41cf304` passed.
+- GitHub to Hugging Face sync for commit `41cf304` passed.
+- Coordinator live app screenshot verified the UI.
 
-No manual full-suite run was performed in this connector session.
+No manual full-suite run was performed outside GitHub Actions.
 
 ## Validation
 
-- GitHub Actions: pending after PR.
-- Hugging Face sync: pending after merge.
-- App verification: pending after Actions and sync are green because visible UI copy changed.
+- GitHub Actions: green after narrow fix and green on `main` after merge.
+- Hugging Face sync: green on `main` after merge.
+- App verification: passed by coordinator screenshot.
+
+## App verification evidence
+
+Coordinator screenshot confirmed:
+
+- App starts without Script execution error.
+- Normal anonymization flow remains visible and calmer.
+- Side-by-side review remains visible.
+- `Markeringen tonen` remains visible.
+- The updated calmer review copy is live.
+- Manual missed-value entry remains reachable.
+- Replacement table remains reachable and source of truth.
+- Step-by-step review remains reachable as optional secondary aid.
+- Scrub Key remains separate and warning-protected.
+- Primary document downloads remain visible.
+- Audit/technical downloads and DOCX hygiene audit remain available.
 
 ## Intentionally not changed
 
@@ -73,23 +94,11 @@ No manual full-suite run was performed in this connector session.
 
 ## Remaining risks
 
-- PR validation still needs to complete.
-- Live app verification is required after merge and Hugging Face sync.
 - The implementation is intentionally restrained; broader grouping of all secondary review expanders should be a separate package if desired.
+- App verification was screenshot-based and covered the normal anonymization flow. It did not separately retest every download byte or Scrub Key JSON because those semantics were intentionally unchanged and protected by existing tests.
 
 ## Next recommended step
 
-Review GitHub Actions for the open PR, merge if green, verify Hugging Face sync, then ask the coordinator to verify the live app:
+Do not start broader UI/reinsert/export work without a dedicated workpackage.
 
-```text
-1. App starts without Script execution error.
-2. Normal anonymization flow is calmer and less form-like.
-3. Side-by-side review remains visible.
-4. Markeringen tonen remains visible.
-5. Manual missed-value entry remains reachable.
-6. Replacement table remains reachable and source of truth.
-7. Step-by-step review remains reachable as optional secondary aid.
-8. Scrub Key remains separate and warning-protected.
-9. Primary document downloads remain visible.
-10. Audit/technical downloads and DOCX hygiene audit remain available.
-```
+Recommended next step: decide whether further secondary-control grouping is desired as a separate small package, or return to recall/benchmark follow-up if product UI is good enough for the current MVP pass.
