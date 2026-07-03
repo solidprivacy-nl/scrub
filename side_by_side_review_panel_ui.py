@@ -168,7 +168,10 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
 
     processed_text = build_preview_text(source_text, edited_replacements_df)
 
-    st.caption("Vergelijk links de originele tekst met rechts de gecontroleerde versie. De vervangtabel hieronder blijft leidend.")
+    st.caption(
+        "Controleer links de brontekst en rechts de verwerkte tekst. "
+        "Daarna kun je veilig downloaden via de stap Download veilig."
+    )
 
     show_markers = st.checkbox(
         "Markeringen tonen",
@@ -204,7 +207,10 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         scrolling=False,
     )
 
-    st.caption("Deze weergave is alleen bedoeld om te vergelijken. Pas beslissingen aan in de vervangtabel hieronder.")
+    st.caption(
+        "Twijfel je over een waarde? Open de vervangtabel of Meer controleopties hieronder. "
+        "Deze vergelijking wijzigt zelf niets."
+    )
     st.caption(model["review_table"]["copy"])
 
     return {

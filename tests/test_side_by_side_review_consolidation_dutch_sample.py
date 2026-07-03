@@ -78,7 +78,8 @@ def test_side_by_side_primary_ui_does_not_show_debug_governance_caption():
     assert "no export/download changes" not in text
     assert "no reinsert behavior change" not in text
     assert "Must not change source text" not in text
-    assert "Deze weergave is alleen bedoeld om te vergelijken. Pas beslissingen aan in de vervangtabel hieronder." in text
+    assert "Twijfel je over een waarde? Open de vervangtabel of Meer controleopties hieronder." in text
+    assert "Deze vergelijking wijzigt zelf niets." in text
 
 
 def test_review_table_and_download_labels_are_preserved():

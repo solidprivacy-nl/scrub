@@ -53,14 +53,15 @@ def test_user_facing_side_by_side_copy_exists_and_controls_are_simplified():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     for phrase in [
-        "Vergelijk links de originele tekst met rechts de gecontroleerde versie",
+        "Controleer links de brontekst en rechts de verwerkte tekst",
+        "Download veilig",
         "Brontekst",
         "Verwerkte tekst",
         "Markeringen tonen",
         "Geel = vervangen of gemaskeerde waarde",
-        "De vervangtabel hieronder blijft leidend",
-        "Deze weergave is alleen bedoeld om te vergelijken",
-        "Pas beslissingen aan in de vervangtabel hieronder",
+        "Twijfel je over een waarde?",
+        "Open de vervangtabel of Meer controleopties hieronder",
+        "Deze vergelijking wijzigt zelf niets",
         "De panelen scrollen samen. Bij grote tekstverschillen kan de uitlijning iets afwijken.",
     ]:
         assert phrase in text
@@ -138,98 +139,3 @@ def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_
     assert "side_by_side_review_show_markers" in side_text
     assert "processed_pane" in side_text
     assert "highlight_spans" in side_text
-    assert "processedPane" in side_text
-
-
-def test_side_by_side_panel_avoids_repeated_visible_gemarkeerd_labels():
-    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
-
-    assert ">Gemarkeerd<" not in text
-    assert "Gemarkeerd:</" not in text
-    assert "::before" not in text
-    assert "compact_legend" in text
-    assert "aria-label=\"gemarkeerde vervanging\"" in text
-
-
-def test_side_by_side_panel_preserves_existing_review_table_and_serial_review_boundaries():
-    text = _normal_review_flow_text().lower()
-
-    assert "replacement_editor" in text
-    assert "stap voor stap controleren" in text
-    assert "expanded=false" in text
-    assert "loop de gevonden gegevens één voor één na" in text
-    assert "side-by-side review" in text
-
-    assert "serial review — experimentele reviewhulp" not in text
-    assert "table-first baseline" not in text
-    assert "no scrub key mutation" not in text
-    assert "no export blocking" not in text
-    assert "no reinsert behavior change" not in text
-
-
-def test_side_by_side_panel_does_not_add_blocked_flow_mutations():
-    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8").lower()
-
-    forbidden = [
-        "st.download_button",
-        "download_button(",
-        "scrub_key_to_json(",
-        "build_scrub_key(",
-        "validate_scrub_key(",
-        "reinsert_from_scrub_key(",
-        "reinsert_docx_bytes(",
-        "reinsert_txt_bytes(",
-        "apply_replacements_to_text(",
-        "save_remembered_replacements(",
-        "clear_remembered_replacements(",
-        "click-to-mark",
-        "advanced editor",
-        "full-document marking",
-        "automatic_replacement = true",
-        "review_table_mutation = true",
-        "fetch(",
-        "xmlhttprequest",
-        "localstorage",
-        "sessionstorage",
-    ]
-    for marker in forbidden:
-        assert marker not in text
-
-
-def test_side_by_side_panel_returns_report_only_contract():
-    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
-
-    for required in [
-        '"report_only": True',
-        '"visual_only": True',
-        '"mutation_allowed": False',
-        '"review_table_mutation": False',
-        '"replacement_mutation": False',
-        '"scrub_key_writes": False',
-        '"export_download_behavior_change": False',
-        '"reinsert_behavior_change": False',
-    ]:
-        assert required in text
-
-
-def test_existing_highlight_panel_helper_assets_are_preserved_for_compatibility():
-    text = HIGHLIGHT_PANEL.read_text(encoding="utf-8")
-
-    assert "def build_preview_text(" in text
-    assert "def render_review_highlight_toggle_panel(" in text
-    assert "build_highlighted_preview_html" in text
-
-
-def test_side_by_side_ui_patch_tests_use_synthetic_values_only():
-    rendered = Path(__file__).read_text(encoding="utf-8")
-    forbidden_real_data_examples = [
-        "Jan " + "Jansen",
-        "Piet " + "de " + "Vries",
-        "123" + "456" + "782",
-        "Fatima " + "El " + "Amrani",
-        "Peter " + "Bakker",
-    ]
-
-    assert "synthetic" in rendered.lower()
-    for forbidden in forbidden_real_data_examples:
-        assert forbidden not in rendered

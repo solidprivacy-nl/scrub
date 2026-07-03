@@ -1,3 +1,56 @@
+## 2026-07-03 — SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented / PR validation pending.
+
+Purpose:
+
+- Make the side-by-side review surface calmer and less form-like.
+- Keep the source-vs-processed comparison central while pointing users toward the safe download step.
+- Preserve review table, manual missed-value entry, serial review, Scrub Key, export/download and audit controls.
+
+Files changed:
+
+- `side_by_side_review_panel_ui.py`
+- `tests/test_review_copy_polish_ui.py`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `workpackage_claims/scrub_wp_review_surface_simplification_implementation.md`
+
+Files added:
+
+- `tests/test_review_surface_simplification_implementation.py`
+- `handover/workpackages/20260703_0000_review_surface_simplification_implementation.md`
+
+Validation status:
+
+- Source-level implementation tests added.
+- Related copy-polish tests updated.
+- GitHub Actions pending for PR validation.
+- Hugging Face sync pending after merge.
+- App verification required after Actions and sync are green.
+
+Intentionally not changed:
+
+- replacement logic;
+- review table data semantics;
+- export content;
+- download filenames;
+- download MIME types;
+- Scrub Key JSON semantics;
+- Scrub Key warning meaning;
+- reinsert behavior;
+- recognizer logic;
+- benchmark logic;
+- DOCX/PDF parsing behavior;
+- runtime/startup behavior;
+- dependencies.
+
+Next recommended step:
+
+- Review PR validation, merge if green, verify Hugging Face sync, then request coordinator live app verification.
+
+---
+
 ## 2026-06-23 20:52 Europe/Amsterdam — Full-suite validation update — SCRUB-WP_REINSERT_INTERFACE_SIMPLIFICATION_IMPLEMENTATION
 
 ## 2026-06-23 — SCRUB-WP_DOCX_SIDE_BY_SIDE_TEXT_ORDER_TRIAGE
