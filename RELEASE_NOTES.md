@@ -1,3 +1,11 @@
+## 2026-07-03 — Review surface calmer
+
+- De controleweergave is rustiger gemaakt: de side-by-side controle gebruikt kortere tekst en verwijst duidelijker naar veilig downloaden als volgende stap.
+- De vervangtabel, handmatige aanvulling, stap-voor-stap controle, Scrub Key, documentdownloads en auditdetails blijven beschikbaar.
+- Export, Scrub Key, reinsert, herkenning en bestandssemantiek zijn niet gewijzigd.
+
+---
+
 ## 2026-06-23 20:43 Europe/Amsterdam — Reinsert interface simplified
 
 ## 2026-06-23 — SCRUB-WP_DOCX_SIDE_BY_SIDE_TEXT_ORDER_TRIAGE
