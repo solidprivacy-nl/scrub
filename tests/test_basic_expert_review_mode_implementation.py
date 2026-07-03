@@ -23,14 +23,14 @@ def test_mode_selector_is_visibility_only() -> None:
     for marker in [
         "Deze keuze wijzigt alleen zichtbaarheid en groepering.",
         "mode_switch_visibility_only",
-        "mutation_allowed": False,
-        "review_table_mutation": False,
-        "replacement_mutation": False,
-        "scrub_key_writes": False,
-        "export_download_behavior_change": False,
-        "reinsert_behavior_change": False,
+        '"mutation_allowed": False',
+        '"review_table_mutation": False',
+        '"replacement_mutation": False',
+        '"scrub_key_writes": False',
+        '"export_download_behavior_change": False',
+        '"reinsert_behavior_change": False',
     ]:
-        assert str(marker) in SIDE_BY_SIDE_TEXT
+        assert marker in SIDE_BY_SIDE_TEXT
 
 
 def test_basis_and_expert_copy_explain_user_paths() -> None:
