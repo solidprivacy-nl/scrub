@@ -16,10 +16,11 @@ def _text(path: Path) -> str:
 def test_side_by_side_copy_is_clearer_and_still_says_table_is_leading() -> None:
     rendered = _text(SIDE_BY_SIDE_UI)
 
-    assert "Vergelijk links de originele tekst met rechts de gecontroleerde versie." in rendered
-    assert "De vervangtabel hieronder blijft leidend." in rendered
-    assert "Deze weergave is alleen bedoeld om te vergelijken." in rendered
-    assert "Pas beslissingen aan in de vervangtabel hieronder." in rendered
+    assert "Controleer links de brontekst en rechts de verwerkte tekst." in rendered
+    assert "Download veilig" in rendered
+    assert "Twijfel je over een waarde?" in rendered
+    assert "Open de vervangtabel of Meer controleopties hieronder." in rendered
+    assert "Deze vergelijking wijzigt zelf niets." in rendered
     assert "Visuele hulp bij het controleren" in rendered
     assert "De panelen scrollen samen." in rendered
 
