@@ -19,6 +19,7 @@ This implementation follows the merged planning and contract-test line and keeps
 - `side_by_side_review_panel_ui.py`
 - `tests/test_review_copy_polish_ui.py`
 - `WORKPACKAGES.md`
+- `CHANGELOG.md`
 - `RELEASE_NOTES.md`
 - `workpackage_claims/scrub_wp_review_surface_simplification_implementation.md`
 
@@ -75,11 +76,10 @@ No manual full-suite run was performed in this connector session.
 - PR validation still needs to complete.
 - Live app verification is required after merge and Hugging Face sync.
 - The implementation is intentionally restrained; broader grouping of all secondary review expanders should be a separate package if desired.
-- `CHANGELOG.md` still needs a small documentation-sync update if the connector blocks full-file replacement.
 
 ## Next recommended step
 
-Open PR, review GitHub Actions, merge if green, verify Hugging Face sync, then ask the coordinator to verify the live app:
+Review GitHub Actions for the open PR, merge if green, verify Hugging Face sync, then ask the coordinator to verify the live app:
 
 ```text
 1. App starts without Script execution error.
