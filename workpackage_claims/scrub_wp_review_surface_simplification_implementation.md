@@ -20,6 +20,7 @@ Implementation of the review-surface simplification only. Make the normal anonym
 - side_by_side_review_panel_ui.py
 - tests/test_review_copy_polish_ui.py
 - WORKPACKAGES.md
+- CHANGELOG.md
 - RELEASE_NOTES.md
 - workpackage_claims/scrub_wp_review_surface_simplification_implementation.md
 
@@ -50,4 +51,4 @@ handover/workpackages/20260703_0000_review_surface_simplification_implementation
 
 ## Next recommended step
 
-Open PR, review GitHub Actions, merge if green, verify Hugging Face sync, then request coordinator live app verification.
+Review PR validation, merge if green, verify Hugging Face sync, then request coordinator live app verification.
