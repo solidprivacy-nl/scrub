@@ -4,6 +4,34 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-03 — D027 — Basiscontrole / Expertcontrole as review-mode direction
+
+Status: accepted planning recommendation, implementation pending contract tests
+
+Decision:
+
+```text
+Use Basiscontrole / Expertcontrole as the planning names for the two normal review-mode layers.
+Basiscontrole is the default MVP path.
+Expertcontrole exposes the full inspection/audit machinery.
+Mode switching changes visibility only, not processing or export semantics.
+```
+
+Reason:
+
+```text
+The MVP interface needs a true less-is-more default path without weakening legal/privacy review controls. Basiscontrole communicates lower cognitive load while keeping the workflow framed as a serious control task.
+```
+
+Boundaries:
+
+- Basiscontrole is not weaker review.
+- The review table remains source of truth internally.
+- Mode switching must not change recognizer behavior, replacement logic, export output, Scrub Key JSON, reinsert behavior or audit generation.
+- Implementation requires contract tests first.
+
+---
+
 ## 2026-06-18 — D026 — Temporarily prioritize MVP UI cleanup and export/download redesign
 
 Status: accepted product-direction decision
