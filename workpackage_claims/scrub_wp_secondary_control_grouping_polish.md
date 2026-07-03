@@ -2,9 +2,10 @@
 
 Repository: solidprivacy-nl/scrub
 
-Status: in_progress
+Status: implemented planning/contract-tests-only / PR validation pending
 
 Start timestamp: 2026-07-03 00:00 UTC
+Update timestamp: 2026-07-03 00:00 UTC
 
 ## Workpackage title
 
@@ -12,36 +13,31 @@ SCRUB-WP_SECONDARY_CONTROL_GROUPING_POLISH — Make secondary review controls ca
 
 ## Scope
 
-Small UI polish for the normal anonymization review surface. Group secondary controls more calmly while preserving side-by-side review, manual missed-value entry, replacement table, step-by-step review, Scrub Key, export/download, audit and DOCX hygiene controls.
+Planning and contract tests for a small UI polish package. The goal is to group secondary controls more calmly while preserving side-by-side review, manual missed-value entry, replacement table, step-by-step review, Scrub Key, export/download, audit and DOCX hygiene controls.
 
-## Allowed files
+## Files added
 
-Implementation:
+- SECONDARY_CONTROL_GROUPING_POLISH_PLAN.md
+- tests/test_secondary_control_grouping_polish_contracts.py
+- handover/workpackages/20260703_0000_secondary_control_grouping_polish.md
 
-- presidio_streamlit.py
+## Files changed
 
-Tests:
-
-- tests/test_secondary_control_grouping_polish.py
-- tests/test_review_surface_simplification_implementation.py
-- tests/test_review_copy_polish_ui.py
-- tests/test_mvp_fast_manual_mask_entry_ui.py
-- tests/test_review_table_collapsible_contract.py
-- tests/test_export_download_ux_contracts.py
-- tests/test_export_download_ux_implementation.py
-
-Documentation/status:
-
-- WORKPACKAGES.md
 - CHANGELOG.md
-- RELEASE_NOTES.md
 - workpackage_claims/scrub_wp_secondary_control_grouping_polish.md
-- handover/workpackages/YYYYMMDD_HHMM_secondary_control_grouping_polish.md
 
 ## Validation policy
 
-Visible UI behavior changes require targeted tests, PR validation/GitHub Actions, Hugging Face sync and live app verification. Avoid nested Streamlit expanders. Do not use Actions as a debugging loop.
+This package is planning/contract-tests-only. GitHub Actions are appropriate for PR validation because it adds tests. App verification is not applicable because no UI behavior changed in this package. The later implementation package will require Actions, Hugging Face sync and live app verification.
 
 ## Boundaries
 
-No replacement logic changes. No export content, filename or MIME changes. No Scrub Key JSON/meaning changes. No reinsert, recognizer, benchmark, runtime/startup or dependency changes. No cloud, AI, OCR, restored PDF, PDF-to-DOCX, click-to-mark, advanced editor, full-document marking or hidden export gate.
+No product code or Streamlit UI changed in this package. No replacement logic changes. No export content, filename or MIME changes. No Scrub Key JSON/meaning changes. No reinsert, recognizer, benchmark, runtime/startup or dependency changes. No cloud, AI, OCR, restored PDF, PDF-to-DOCX, click-to-mark, advanced editor, full-document marking or hidden export gate.
+
+## Handover path
+
+handover/workpackages/20260703_0000_secondary_control_grouping_polish.md
+
+## Next recommended step
+
+Open PR, validate tests, merge if green. Then start `SCRUB-WP_SECONDARY_CONTROL_GROUPING_POLISH_IMPLEMENTATION` for the actual narrow UI implementation.
