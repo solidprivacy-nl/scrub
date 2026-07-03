@@ -1,3 +1,11 @@
+## 2026-07-03 — Secondary review controls calmer
+
+- De extra controleopties onder `2. Controleer resultaat` krijgen een duidelijker verzamelpunt: `Meer controleopties`.
+- Handmatige aanvulling, vervangtabel, stap-voor-stap controle, Scrub Key, downloads en auditdetails blijven beschikbaar.
+- Export, Scrub Key, reinsert, herkenning en bestandssemantiek zijn niet gewijzigd.
+
+---
+
 ## 2026-07-03 — Review surface calmer
 
 - De controleweergave is rustiger gemaakt: de side-by-side controle gebruikt kortere tekst en verwijst duidelijker naar veilig downloaden als volgende stap.
