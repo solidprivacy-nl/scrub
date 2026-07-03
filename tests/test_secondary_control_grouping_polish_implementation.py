@@ -68,7 +68,7 @@ def test_export_scrub_key_reinsert_and_audit_controls_stay_visible() -> None:
         "Scrub Key downloaden",
         "Download Scrub Key (.json)",
         "Audit en technische bestanden",
-        "DOCX hygiene audit",
+        "render_docx_hygiene_audit_panel",
         "Technische informatie",
         "Geavanceerde herkenningsdetails",
     ]:
