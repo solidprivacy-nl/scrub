@@ -1,3 +1,56 @@
+## 2026-07-03 — SCRUB-WP_SECONDARY_CONTROL_GROUPING_POLISH_IMPLEMENTATION
+
+Status: implemented / PR validation pending.
+
+Purpose:
+
+- Make the secondary review controls under `2. Controleer resultaat` calmer and easier to understand.
+- Add a clear `Meer controleopties` grouping cue below the side-by-side review without introducing nested Streamlit expanders.
+- Preserve side-by-side review, manual missed-value entry, replacement table, serial review, Scrub Key, export/download, audit and DOCX hygiene controls.
+
+Files changed:
+
+- `side_by_side_review_panel_ui.py`
+- `RELEASE_NOTES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/scrub_wp_secondary_control_grouping_polish_implementation.md`
+
+Files added:
+
+- `tests/test_secondary_control_grouping_polish_implementation.py`
+- `handover/workpackages/20260703_0000_secondary_control_grouping_polish_implementation.md`
+
+Validation status:
+
+- Source-level implementation tests added.
+- GitHub Actions pending after PR.
+- Hugging Face sync pending after merge.
+- App verification required after merge/sync because visible UI behavior changed.
+
+Intentionally not changed:
+
+- replacement logic;
+- review table data semantics;
+- export content;
+- download filenames;
+- download MIME types;
+- Scrub Key JSON semantics;
+- Scrub Key warning meaning;
+- reinsert behavior;
+- recognizer logic;
+- benchmark logic;
+- DOCX/PDF parsing behavior;
+- runtime/startup behavior;
+- dependencies.
+
+Next recommended step:
+
+- Review PR validation.
+- If green, merge and verify Hugging Face sync.
+- Then request coordinator live app verification for the new `Meer controleopties` grouping cue.
+
+---
+
 ## 2026-07-03 — SCRUB-WP_SECONDARY_CONTROL_GROUPING_POLISH
 
 Status: implemented planning/contract-tests-only; PR validation pending.
