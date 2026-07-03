@@ -1,3 +1,53 @@
+## 2026-07-03 — SCRUB-WP_SECONDARY_CONTROL_GROUPING_POLISH
+
+Status: implemented planning/contract-tests-only; PR validation pending.
+
+Purpose:
+
+- Prepare the final small UI-polish step for calmer grouping of secondary review controls.
+- Avoid nested Streamlit expanders before touching `presidio_streamlit.py`.
+- Preserve side-by-side review, manual missed-value entry, replacement table, serial review, Scrub Key, export/download, audit and DOCX hygiene controls.
+
+Files added:
+
+- `SECONDARY_CONTROL_GROUPING_POLISH_PLAN.md`
+- `tests/test_secondary_control_grouping_polish_contracts.py`
+- `workpackage_claims/scrub_wp_secondary_control_grouping_polish.md`
+- `handover/workpackages/20260703_0000_secondary_control_grouping_polish.md`
+
+Validation status:
+
+- Source-level contract tests added.
+- GitHub Actions pending after PR.
+- Hugging Face sync not applicable until merge.
+- App verification not applicable because no UI behavior changed in this planning/contract step.
+
+Intentionally not changed:
+
+- product code;
+- Streamlit UI;
+- replacement logic;
+- review table data semantics;
+- export content;
+- download filenames;
+- download MIME types;
+- Scrub Key JSON semantics;
+- Scrub Key warning meaning;
+- reinsert behavior;
+- recognizer logic;
+- benchmark logic;
+- DOCX/PDF parsing behavior;
+- runtime/startup behavior;
+- dependencies.
+
+Next recommended step:
+
+- Run PR validation for the contract tests.
+- If green, merge this plan/contract package.
+- Then start `SCRUB-WP_SECONDARY_CONTROL_GROUPING_POLISH_IMPLEMENTATION` as the actual narrow UI implementation.
+
+---
+
 ## 2026-07-03 — SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION
 
 Status: completed and app-verified.
