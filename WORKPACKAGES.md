@@ -1,3 +1,21 @@
+## 2026-07-04 23:18 Europe/Amsterdam — SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_CONTRACT_TESTS
+
+Status: completed / PR validation pending.
+
+Summary:
+- Added source-level contract tests for the duplicate input-surface simplification line.
+- Locked the intended single `1. Voeg document of tekst toe` input step before any implementation touches `presidio_streamlit.py`.
+- Protected existing TXT/DOCX/PDF upload support, synthetic legal examples, pasted/extracted text area, input precedence, review controls, Scrub Key/export/audit surface and startup-patch boundaries.
+- No product code, UI behavior, export semantics, Scrub Key semantics, reinsert behavior, recognizers, dependencies or startup/runtime patches changed.
+
+Validation:
+- Targeted and related source-level checks are expected through PR validation/GitHub Actions.
+- Hugging Face sync is not applicable until merge.
+- App verification is not applicable for this contract-test-only package because no UI behavior changed.
+
+Next recommended step:
+- Review PR validation. If green, merge and start `SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_IMPLEMENTATION` as the next narrow package.
+
 ## 2026-07-03 00:00 UTC — SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented / PR validation pending.
