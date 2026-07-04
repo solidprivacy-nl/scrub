@@ -19,7 +19,10 @@ Completed as planning-only; ready for PR validation.
 ## Files changed
 
 - `CHANGELOG.md`
-- `WORKPACKAGES.md`
+- `workpackage_claims/scrub_wp_duplicate_input_surface_simplification_plan.md`
+- `handover/workpackages/20260704_2118_duplicate_input_surface_simplification_plan.md`
+
+`WORKPACKAGES.md` update was attempted, but the connector blocked the full-file replacement. The plan, claim and handover all record the next package explicitly.
 
 ## Tests/checks
 
@@ -56,6 +59,7 @@ The plan recommends the least risky implementation direction: one unified input 
 - The observed duplicate may be caused by runtime mutation or stale Space state rather than current direct source.
 - A future implementation must preserve input precedence and downstream variables.
 - No automated visual regression exists for duplicate input surfaces.
+- `WORKPACKAGES.md` still needs a small queue/status update after PR if connector editing permits.
 
 ## Next recommended step
 
