@@ -20,6 +20,9 @@ from side_by_side_review import build_side_by_side_review_model
 
 SIDE_BY_SIDE_REVIEW_PANE_HEIGHT = 320
 SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT = 410
+BASIC_REVIEW_MODE = "Basiscontrole"
+EXPERT_REVIEW_MODE = "Expertcontrole"
+REVIEW_MODE_OPTIONS = [BASIC_REVIEW_MODE, EXPERT_REVIEW_MODE]
 
 _SYNC_SCROLL_COMPONENT_CSS = f"""
 <style>
@@ -163,9 +166,41 @@ def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, pro
 """.strip()
 
 
+def render_review_mode_selector() -> str:
+    """Render the Basiscontrole / Expertcontrole visibility selector.
+
+    The selector controls UI density only. Processing, replacement, export,
+    Scrub Key, reinsert and audit semantics remain unchanged.
+    """
+
+    review_mode = st.radio(
+        "Controleweergave",
+        REVIEW_MODE_OPTIONS,
+        index=0,
+        horizontal=True,
+        key="solidprivacy_review_mode",
+        help=(
+            "Basiscontrole toont de kern van controleren en downloaden. "
+            "Expertcontrole toont alle detail-, audit- en technische controles. "
+            "Deze keuze wijzigt alleen zichtbaarheid en groepering."
+        ),
+    )
+    if review_mode == BASIC_REVIEW_MODE:
+        st.caption(
+            "Basiscontrole: controleer de gemarkeerde tekst, voeg gemiste waarden toe als dat nodig is, "
+            "en download daarna veilig."
+        )
+    else:
+        st.caption(
+            "Expertcontrole: alle detailcontroles, auditinformatie en technische hulpmiddelen blijven beschikbaar."
+        )
+    return str(review_mode)
+
+
 def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df: Any) -> dict[str, Any]:
     """Render a small source/processed comparison surface."""
 
+    review_mode = render_review_mode_selector()
     processed_text = build_preview_text(source_text, edited_replacements_df)
 
     st.caption(
@@ -222,6 +257,11 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         "report_only": True,
         "visual_only": True,
         "mutation_allowed": False,
+        "review_mode": review_mode,
+        "basic_review_mode_default": BASIC_REVIEW_MODE,
+        "expert_review_mode": EXPERT_REVIEW_MODE,
+        "mode_switch_visibility_only": True,
+        "session_state_key": "solidprivacy_review_mode",
         "review_table_mutation": False,
         "replacement_mutation": False,
         "scrub_key_writes": False,
