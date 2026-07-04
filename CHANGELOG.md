@@ -1,3 +1,56 @@
+## 2026-07-05 — SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented / local validation passed.
+
+Purpose:
+
+- Resume the duplicate input surface implementation after the connector-only worker was blocked.
+- Keep one visible `1. Voeg document of tekst toe` step and group upload, synthetic example selection and pasted/extracted text into one input surface.
+- Preserve TXT/DOCX/PDF upload support, synthetic legal examples, pasted/extracted text handling and input precedence.
+- Preserve review, export/download, Scrub Key, reinsert, audit and DOCX hygiene behavior.
+
+Files changed:
+
+- `presidio_streamlit.py`
+- `tests/test_duplicate_input_surface_simplification_contracts.py`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `workpackage_claims/scrub_wp_duplicate_input_surface_simplification_implementation.md`
+
+Files added:
+
+- `handover/workpackages/20260705_0113_duplicate_input_surface_implementation.md`
+
+Validation status:
+
+- Local validation passed:
+  - `python -m pytest -q tests/test_duplicate_input_surface_simplification_contracts.py`
+  - related UI/export guardrail tests
+  - `git diff --check`
+- GitHub Actions pending after PR.
+- Hugging Face sync pending after merge.
+- App verification required after merge/sync because visible UI grouping changed.
+
+Intentionally not changed:
+
+- document parsing behavior;
+- upload backend;
+- recognizer logic;
+- replacement logic;
+- export content;
+- download filenames;
+- download MIME types;
+- Scrub Key JSON semantics;
+- reinsert behavior;
+- runtime/startup behavior;
+- dependencies.
+
+Next recommended step:
+
+- Open PR, verify GitHub Actions, merge when green, verify Hugging Face sync, and request live app verification.
+
+---
+
 ## 2026-07-04 — SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_CONTRACT_TESTS
 
 Status: completed / PR validation pending.

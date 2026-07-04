@@ -199,3 +199,18 @@ def test_contract_tests_remain_source_level_only() -> None:
 
     assert "streamlit" not in imported_roots
     assert "presidio_streamlit" not in imported_roots
+
+def test_input_controls_are_grouped_under_single_input_surface() -> None:
+    app_text = read(APP_PATH)
+
+    input_start = app_text.index('st.subheader("1. Voeg document of tekst toe")')
+    review_start = app_text.index('st.subheader("2. Controleer resultaat")')
+    input_section = app_text[input_start:review_start]
+
+    assert "with st.container(border=True):" in input_section
+    assert input_section.count("st.file_uploader(") == 1
+    assert input_section.count("st.text_area(") == 1
+    assert "Gebruik een synthetisch juridisch testvoorbeeld" in input_section
+    assert "uploaded_file_to_text(uploaded_file)" in input_section
+    assert 'type=["txt", "docx", "pdf"]' in input_section
+    assert 'key="text_input"' in input_section

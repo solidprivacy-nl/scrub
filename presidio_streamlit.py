@@ -430,52 +430,57 @@ except Exception:
     demo_text = ["Plak of upload hier tekst om te controleren."]
 
 st.subheader("1. Voeg document of tekst toe")
-uploaded_file = st.file_uploader(
-    "Upload een .txt-, .docx- of tekstgebaseerd .pdf-bestand",
-    type=["txt", "docx", "pdf"],
-    help="Gebruik in deze publieke prototypeomgeving alleen synthetische of goedgekeurde testdocumenten.",
-)
+with st.container(border=True):
+    st.caption(
+        "Voeg hier één bron toe: upload een document, laad optioneel een synthetisch testvoorbeeld "
+        "of plak/bewerk de tekst in hetzelfde invoervlak."
+    )
+    uploaded_file = st.file_uploader(
+        "Upload een .txt-, .docx- of tekstgebaseerd .pdf-bestand",
+        type=["txt", "docx", "pdf"],
+        help="Gebruik in deze publieke prototypeomgeving alleen synthetische of goedgekeurde testdocumenten.",
+    )
 
-uploaded_file_type = None
-input_text = "".join(demo_text)
+    uploaded_file_type = None
+    input_text = "".join(demo_text)
 
-if st_recognition_profile == "Dutch Legal Strict":
-    with st.expander("Gebruik een synthetisch juridisch testvoorbeeld", expanded=False):
-        example_names = get_example_names()
-        if LEGAL_EXAMPLES_IMPORT_ERROR is not None:
-            st.warning(
-                "Kon legal_test_examples.py niet laden. Ingebouwde fallback-voorbeelden worden getoond. "
-                f"Foutmelding: {LEGAL_EXAMPLES_IMPORT_ERROR}"
+    if st_recognition_profile == "Dutch Legal Strict":
+        with st.expander("Gebruik een synthetisch juridisch testvoorbeeld", expanded=False):
+            example_names = get_example_names()
+            if LEGAL_EXAMPLES_IMPORT_ERROR is not None:
+                st.warning(
+                    "Kon legal_test_examples.py niet laden. Ingebouwde fallback-voorbeelden worden getoond. "
+                    f"Foutmelding: {LEGAL_EXAMPLES_IMPORT_ERROR}"
+                )
+            elif not example_names:
+                st.warning("Er zijn geen juridische voorbeelden geladen.")
+                example_names = list(EMBEDDED_LEGAL_TEST_CASES.keys())
+
+            sample_name = st.selectbox(
+                "Laad synthetisch juridisch voorbeeld",
+                ["Geen testvoorbeeld laden"] + example_names,
+                index=0,
             )
-        elif not example_names:
-            st.warning("Er zijn geen juridische voorbeelden geladen.")
-            example_names = list(EMBEDDED_LEGAL_TEST_CASES.keys())
+            if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:
+                example_text = get_example_text(sample_name)
+                if not example_text and sample_name in EMBEDDED_LEGAL_TEST_CASES:
+                    example_text = EMBEDDED_LEGAL_TEST_CASES[sample_name]
+                input_text = example_text
+                st.caption("Synthetische voorbeeldtekst geladen. Er staan geen echte persoonsgegevens in.")
 
-        sample_name = st.selectbox(
-            "Laad synthetisch juridisch voorbeeld",
-            ["Geen testvoorbeeld laden"] + example_names,
-            index=0,
-        )
-        if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:
-            example_text = get_example_text(sample_name)
-            if not example_text and sample_name in EMBEDDED_LEGAL_TEST_CASES:
-                example_text = EMBEDDED_LEGAL_TEST_CASES[sample_name]
-            input_text = example_text
-            st.caption("Synthetische voorbeeldtekst geladen. Er staan geen echte persoonsgegevens in.")
+    if uploaded_file is not None:
+        try:
+            input_text, uploaded_file_type = uploaded_file_to_text(uploaded_file)
+            st.success(f"Bestand geladen: {uploaded_file.name}")
+        except Exception as upload_error:
+            st.error(f"Kon het bestand niet lezen: {upload_error}")
 
-if uploaded_file is not None:
-    try:
-        input_text, uploaded_file_type = uploaded_file_to_text(uploaded_file)
-        st.success(f"Bestand geladen: {uploaded_file.name}")
-    except Exception as upload_error:
-        st.error(f"Kon het bestand niet lezen: {upload_error}")
-
-st_text = st.text_area(
-    label="Plak tekst of controleer de uit het document gehaalde tekst",
-    value=input_text,
-    height=240,
-    key="text_input",
-)
+    st_text = st.text_area(
+        label="Plak tekst of controleer de uit het document gehaalde tekst",
+        value=input_text,
+        height=240,
+        key="text_input",
+    )
 
 try:
     all_supported_entities = list(get_supported_entities(*analyzer_params))
