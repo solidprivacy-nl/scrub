@@ -1,3 +1,22 @@
+## 2026-07-05 01:13 Europe/Amsterdam — SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented / local validation passed.
+
+Summary:
+- Resumed the implementation branch after the connector-only worker was blocked before product edit.
+- Grouped the existing upload, synthetic example selector and pasted/extracted text area into one input surface under the single `1. Voeg document of tekst toe` heading.
+- Preserved existing input variables, input precedence, TXT/DOCX/PDF support, review/export/Scrub Key/reinsert/audit behavior and startup/runtime boundaries.
+- Added a source-level implementation guard for the unified input surface.
+
+Validation:
+- Local validation passed.
+- GitHub Actions pending after PR.
+- Hugging Face sync pending after merge.
+- App verification required after merge/sync because visible UI grouping changed.
+
+Next recommended step:
+- Run required guardrail tests, open PR, verify Actions, merge when green, verify Hugging Face sync, and request live app verification.
+
 ## 2026-07-04 23:18 Europe/Amsterdam — SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_CONTRACT_TESTS
 
 Status: completed / PR validation pending.

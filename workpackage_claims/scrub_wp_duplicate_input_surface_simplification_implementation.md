@@ -4,13 +4,15 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_IMPLEMENTATION — Remove duplicate upload/input presentation while preserving ingestion behavior
 
-Status: blocked before product edit
+Status: implemented / local validation passed
 
 Claimed by: market-predictions via ChatGPT web worker
 
 Claimed at: 2026-07-04 23:27 Europe/Amsterdam
 
 Blocked at: 2026-07-04 23:33 Europe/Amsterdam
+
+Resumed at: 2026-07-05 01:13 Europe/Amsterdam
 
 Branch: scrub-duplicate-input-surface-simplification-implementation
 
@@ -45,3 +47,11 @@ Handover: handover/workpackages/20260704_2333_duplicate_input_surface_implementa
 
 Next recommended step:
 - Continue this implementation in an environment that can safely edit full repository files, for example GitHub Codespaces or a local clone, using the already-merged contract tests as the guardrail.
+
+
+Implemented at: 2026-07-05 01:16 Europe/Amsterdam
+
+Local validation passed:
+- Targeted duplicate input surface contracts: 12 passed.
+- Related UI/export guardrail tests: 56 passed.
+- git diff --check passed after EOF cleanup.
