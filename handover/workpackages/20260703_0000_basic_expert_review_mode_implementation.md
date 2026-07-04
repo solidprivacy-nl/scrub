@@ -1,13 +1,13 @@
 # Handover — SCRUB-WP_BASIC_EXPERT_REVIEW_MODE_IMPLEMENTATION
 
 Repository: solidprivacy-nl/scrub  
-Status: implemented / PR validation pending
+Status: completed and app-verified
 
 ## Summary
 
-Implemented the first visible Basiscontrole / Expertcontrole split in the central side-by-side review surface. The selector defaults to `Basiscontrole` and stores UI state in `solidprivacy_review_mode`. The implementation is intentionally visibility-only: it does not change processing, replacement, export, Scrub Key, reinsert, recognizer, benchmark, runtime/startup or dependency semantics.
+Implemented and verified the first visible Basiscontrole / Expertcontrole split in the central side-by-side review surface. The selector defaults to `Basiscontrole` and stores UI state in `solidprivacy_review_mode`. The implementation is intentionally visibility-only: it does not change processing, replacement, export, Scrub Key, reinsert, recognizer, benchmark, runtime/startup or dependency semantics.
 
-This is a restrained first implementation. It introduces the user-facing mode selector and explanatory copy. Deeper restructuring of all downstream secondary controls should remain a separate follow-up package if needed.
+This is a restrained first implementation. It introduces the user-facing mode selector and explanatory copy. Deeper restructuring of all downstream secondary controls should remain a separate follow-up package.
 
 ## Files added
 
@@ -33,20 +33,36 @@ Added source-level implementation tests covering:
 - contract tests remain guardrail;
 - no prohibited cloud/AI/OCR/restored-PDF/PDF-to-DOCX/click-to-mark/advanced-editor/full-document-marking/hidden-export-gate behavior added by the review-mode UI helper.
 
-Targeted validation expected in PR/GitHub Actions:
+Validation evidence:
 
-```text
-python -m pytest -q tests/test_basic_expert_review_mode_contracts.py tests/test_basic_expert_review_mode_implementation.py
-python -m pytest -q tests/test_review_surface_simplification_implementation.py tests/test_side_by_side_review_ui_patch.py tests/test_review_copy_polish_ui.py
-```
+- PR #17 Tests passed.
+- PR #17 merged to `main`.
+- Hugging Face sync completed sufficiently for live Space verification.
+- Coordinator live app screenshots verified the UI.
 
 No manual full-suite run was performed in this connector session.
 
 ## Validation
 
-- GitHub Actions: pending after PR.
-- Hugging Face sync: pending after merge.
-- App verification: required after merge/sync because visible UI behavior changed.
+- GitHub Actions: green for PR #17.
+- Hugging Face sync: completed sufficiently for live Space verification.
+- App verification: passed by coordinator screenshots.
+
+## App verification evidence
+
+Coordinator screenshots confirmed:
+
+- App starts without Script execution error.
+- `Controleweergave` is visible.
+- `Basiscontrole` / `Expertcontrole` selector is visible.
+- `Basiscontrole` is selected by default.
+- `Expertcontrole` can be selected.
+- Side-by-side review remains visible in both modes.
+- `Markeringen tonen` remains visible.
+- Manual missed-value entry remains reachable.
+- Replacement table remains reachable.
+- Scrub Key, document downloads, audit files, technical details and DOCX hygiene audit remain available.
+- No visible export, Scrub Key, reinsert or recognizer regression observed in the verified path.
 
 ## Documentation sync note
 
@@ -71,22 +87,9 @@ A release-notes update was attempted but blocked by the connector safety layer d
 
 ## Remaining risks
 
-- PR validation still needs to complete.
-- Live app verification is required after Actions and Hugging Face sync are green.
 - This first implementation introduces the mode selector but does not yet fully restructure every downstream secondary control into separate Basic/Expert layouts.
+- A deeper Basic-mode decluttering package should be separate and contract-tested.
 
 ## Next recommended step
 
-Open PR and validate. If green, merge, verify Hugging Face sync, then ask the coordinator for live app verification around `2. Controleer resultaat`:
-
-```text
-1. App starts without Script execution error.
-2. `Basiscontrole` / `Expertcontrole` selector is visible.
-3. `Basiscontrole` is selected by default.
-4. Side-by-side review remains visible.
-5. `Markeringen tonen` remains visible.
-6. Manual missed-value entry remains reachable.
-7. Replacement table remains reachable.
-8. Scrub Key, downloads, audit files and DOCX hygiene audit remain available.
-9. Export/Scrub Key/reinsert/recognizer behavior appears unchanged.
-```
+Start a follow-up package to make Basiscontrole materially cleaner by moving lower-priority secondary controls behind a smaller `Details aanpassen` / `Meer bestanden` structure while keeping Expertcontrole fully available.
