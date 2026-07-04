@@ -2,10 +2,10 @@
 
 Repository: solidprivacy-nl/scrub
 
-Status: implemented / PR validation pending
+Status: completed and app-verified
 
 Start timestamp: 2026-07-03 00:00 UTC
-Update timestamp: 2026-07-03 00:00 UTC
+Completion timestamp: 2026-07-03 00:00 UTC
 
 ## Workpackage title
 
@@ -40,9 +40,26 @@ Visible UI behavior changes require source-level tests, PR validation/GitHub Act
 ## Validation status
 
 - Source-level implementation tests added.
-- PR validation pending.
-- Hugging Face sync pending after merge.
-- App verification required after merge/sync.
+- PR #17 validation passed.
+- PR #17 merged to `main`.
+- Hugging Face sync completed sufficiently for live Space verification.
+- App verification passed by coordinator screenshots.
+
+## App verification evidence
+
+Coordinator screenshots confirmed:
+
+- App starts without Script execution error.
+- `Controleweergave` is visible.
+- `Basiscontrole` / `Expertcontrole` selector is visible.
+- `Basiscontrole` is selected by default.
+- `Expertcontrole` can be selected.
+- Side-by-side review remains visible in both modes.
+- `Markeringen tonen` remains visible.
+- Manual missed-value entry remains reachable.
+- Replacement table remains reachable.
+- Scrub Key, document downloads, audit files, technical details and DOCX hygiene audit remain available.
+- No visible export, Scrub Key, reinsert or recognizer regression observed in the verified path.
 
 ## Boundaries
 
@@ -52,6 +69,10 @@ No replacement logic changes. No export content, filename or MIME changes. No Sc
 
 handover/workpackages/20260703_0000_basic_expert_review_mode_implementation.md
 
+## Remaining risk
+
+This first implementation introduces the mode selector and explanatory copy, but does not yet fully restructure every downstream secondary control into separate Basic/Expert layouts. A deeper Basic-mode decluttering package should be separate and contract-tested.
+
 ## Next recommended step
 
-Open PR, validate GitHub Actions, merge if green, verify Hugging Face sync, then request coordinator live app verification.
+Start a follow-up package to make Basiscontrole materially cleaner by moving the lower-priority secondary controls behind a smaller `Details aanpassen` / `Meer bestanden` structure while keeping Expertcontrole fully available.
