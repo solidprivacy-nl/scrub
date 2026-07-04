@@ -55,10 +55,11 @@ def test_contract_requires_table_and_key_fields_to_remain_available():
 def test_current_review_table_surface_still_exists_in_app():
     text = _app_text()
 
-    assert 'st.subheader(\"2. Controleer resultaat\")' in text
-
-
-    assert 'with st.expander(f\"Vervangtabel controleren — {len(replacement_editor_df.index)} items\", expanded=False)' in text
+    assert 'st.subheader("2. Controleer resultaat")' in text
+    assert "replacement_table_label = (" in text
+    assert "Vervangtabel controleren —" in text
+    assert "Details aanpassen — vervangtabel" in text
+    assert "with st.expander(replacement_table_label, expanded=False)" in text
     assert "De vervangtabel blijft leidend" in text
     assert "st.data_editor(" in text
     assert "replacement_editor" in text

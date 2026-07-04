@@ -37,7 +37,6 @@ def test_secondary_controls_are_collapsed_but_available() -> None:
         'with st.expander("Gemiste waarde toevoegen", expanded=False)',
         'with st.expander("Extra controlehulpen", expanded=False)',
         'with st.expander("Mogelijk extra te controleren waarden", expanded=False)',
-        'with st.expander(f"Vervangtabel controleren — {len(replacement_editor_df.index)} items", expanded=False)',
         'with st.expander("Geavanceerde details bij de vervangtabel", expanded=False)',
         'with st.expander("Herbruikbare vervangingen", expanded=False)',
         'with st.expander("Scrub Key downloaden", expanded=False)',
@@ -45,6 +44,10 @@ def test_secondary_controls_are_collapsed_but_available() -> None:
     ]:
         assert marker in text
 
+    assert "replacement_table_label = (" in text
+    assert "Vervangtabel controleren —" in text
+    assert "Details aanpassen — vervangtabel" in text
+    assert "with st.expander(replacement_table_label, expanded=False)" in text
     assert 'with st.expander("Stap voor stap controleren", expanded=False)' in serial_text
 
 

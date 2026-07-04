@@ -660,21 +660,25 @@ try:
         st.caption(
             "Controleer het resultaat. Details en extra hulpmiddelen staan standaard ingeklapt."
         )
-        render_side_by_side_review_panel(
+        side_by_side_review_state = render_side_by_side_review_panel(
             source_text=st_text,
             edited_replacements_df=replacement_editor_df,
         )
+        review_mode = side_by_side_review_state.get("review_mode", "Basiscontrole")
+        is_expert_review = review_mode == "Expertcontrole"
+        is_basic_review = not is_expert_review
 
         st.caption("Pas alleen aan wat nodig is; detailcontrole staat hieronder ingeklapt.")
         st.caption(
             "De vervangtabel blijft leidend en blijft beschikbaar voor detailcontrole."
         )
-        with st.expander("Waarom controleren?", expanded=False):
-            st.info(REVIEW_INTRO_GUIDANCE)
-            st.markdown(f"- {CANDIDATE_GUIDANCE}")
-            st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
-            st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
-            st.markdown(f"- {AI_USAGE_GUIDANCE}")
+        if is_expert_review:
+            with st.expander("Waarom controleren?", expanded=False):
+                st.info(REVIEW_INTRO_GUIDANCE)
+                st.markdown(f"- {CANDIDATE_GUIDANCE}")
+                st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
+                st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
+                st.markdown(f"- {AI_USAGE_GUIDANCE}")
 
         if "review_order" in replacement_editor_df.columns:
             replacement_editor_df = replacement_editor_df.sort_values(
@@ -724,49 +728,56 @@ try:
                 st.success("Toegevoegd aan de vervangtabel.")
                 st.rerun()
 
-        with st.expander("Extra controlehulpen", expanded=False):
-            review_filter = st.selectbox(
-                "Focusfilter voor controle",
-                REVIEW_FILTER_OPTIONS,
-                index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
-                help=FOCUS_FILTER_GUIDANCE,
-            )
-            if review_filter != FILTER_SHOW_ALL:
-                focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
-                st.caption(f"{len(focus_df)} van {len(replacement_editor_df)} rij(en) zichtbaar in dit focusoverzicht.")
-                st.dataframe(
-                    focus_df[[col for col in ["review_status_label", "find", "replace_with", "type_label", "confidence", "source_label"] if col in focus_df.columns]],
-                    use_container_width=True,
+        if is_expert_review:
+            with st.expander("Extra controlehulpen", expanded=False):
+                review_filter = st.selectbox(
+                    "Focusfilter voor controle",
+                    REVIEW_FILTER_OPTIONS,
+                    index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
+                    help=FOCUS_FILTER_GUIDANCE,
                 )
-                st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
+                if review_filter != FILTER_SHOW_ALL:
+                    focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
+                    st.caption(f"{len(focus_df)} van {len(replacement_editor_df)} rij(en) zichtbaar in dit focusoverzicht.")
+                    st.dataframe(
+                        focus_df[[col for col in ["review_status_label", "find", "replace_with", "type_label", "confidence", "source_label"] if col in focus_df.columns]],
+                        use_container_width=True,
+                    )
+                    st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
 
         if st_recognition_profile == "Dutch Legal Strict":
-            with st.expander("Mogelijk extra te controleren waarden", expanded=False):
-                if candidate_rows:
-                    st.warning(
-                        "Deze waarden zijn niet automatisch vervangen, maar lijken mogelijk op juridische of administratieve referenties. "
-                        "Controleer ze en vink ze alleen aan als ze echt vervangen moeten worden."
-                    )
-                    candidate_display_df = pd.DataFrame(candidate_rows)
-                    candidate_display_df["type_gegeven"] = candidate_display_df["entity_type"].map(entity_label)
-                    candidate_display_df["zekerheid"] = candidate_display_df["score"].map(confidence_label)
-                    candidate_display_df = candidate_display_df[
-                        ["type_gegeven", "text", "placeholder", "zekerheid", "reason", "context"]
-                    ].rename(
-                        columns={
-                            "type_gegeven": "Type gegeven",
-                            "text": "Gevonden tekst",
-                            "placeholder": "Voorgestelde vervanging",
-                            "zekerheid": "Zekerheid",
-                            "reason": "Reden",
-                            "context": "Context",
-                        }
-                    )
-                    st.dataframe(candidate_display_df, use_container_width=True)
-                else:
-                    st.success("Geen mogelijke gemiste referenties gevonden door de auditlaag.")
+            if is_expert_review or candidate_rows:
+                with st.expander("Mogelijk extra te controleren waarden", expanded=False):
+                    if candidate_rows:
+                        st.warning(
+                            "Deze waarden zijn niet automatisch vervangen, maar lijken mogelijk op juridische of administratieve referenties. "
+                            "Controleer ze en vink ze alleen aan als ze echt vervangen moeten worden."
+                        )
+                        candidate_display_df = pd.DataFrame(candidate_rows)
+                        candidate_display_df["type_gegeven"] = candidate_display_df["entity_type"].map(entity_label)
+                        candidate_display_df["zekerheid"] = candidate_display_df["score"].map(confidence_label)
+                        candidate_display_df = candidate_display_df[
+                            ["type_gegeven", "text", "placeholder", "zekerheid", "reason", "context"]
+                        ].rename(
+                            columns={
+                                "type_gegeven": "Type gegeven",
+                                "text": "Gevonden tekst",
+                                "placeholder": "Voorgestelde vervanging",
+                                "zekerheid": "Zekerheid",
+                                "reason": "Reden",
+                                "context": "Context",
+                            }
+                        )
+                        st.dataframe(candidate_display_df, use_container_width=True)
+                    else:
+                        st.success("Geen mogelijke gemiste referenties gevonden door de auditlaag.")
 
-        with st.expander(f"Vervangtabel controleren — {len(replacement_editor_df.index)} items", expanded=False):
+        replacement_table_label = (
+            f"Vervangtabel controleren — {len(replacement_editor_df.index)} items"
+            if is_expert_review
+            else f"Details aanpassen — vervangtabel ({len(replacement_editor_df.index)} items)"
+        )
+        with st.expander(replacement_table_label, expanded=False):
             st.caption("De vervangtabel blijft leidend voor beslissingen en export.")
             edited_replacements_df = st.data_editor(
                 replacement_editor_df,
@@ -816,19 +827,21 @@ try:
                 key="replacement_editor",
             )
 
-        with st.expander("Geavanceerde details bij de vervangtabel", expanded=False):
-            st.caption(TECHNICAL_DETAILS_GUIDANCE)
-            technical_columns = technical_display_columns(replacement_editor_df.columns)
-            if technical_columns:
-                st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
-            else:
-                st.caption("Geen technische detailkolommen beschikbaar.")
+        if is_expert_review:
+            with st.expander("Geavanceerde details bij de vervangtabel", expanded=False):
+                st.caption(TECHNICAL_DETAILS_GUIDANCE)
+                technical_columns = technical_display_columns(replacement_editor_df.columns)
+                if technical_columns:
+                    st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
+                else:
+                    st.caption("Geen technische detailkolommen beschikbaar.")
 
-        render_serial_review_panel(
-            displayed_text=st_text,
-            edited_replacements_df=edited_replacements_df,
-            include_side_by_side=False,
-        )
+        if is_expert_review:
+            render_serial_review_panel(
+                displayed_text=st_text,
+                edited_replacements_df=edited_replacements_df,
+                include_side_by_side=False,
+            )
 
         edited_replacements = {}
         edited_report_rows = []
@@ -858,27 +871,28 @@ try:
 
         export_text = apply_replacements_to_text(st_text, edited_replacements)
 
-        with st.expander("Herbruikbare vervangingen", expanded=False):
-            remember_rows_to_save = []
-            for _, row in edited_replacements_df.iterrows():
-                include = safe_bool(row.get("include", False))
-                remember = safe_bool(row.get("remember", False))
-                find_text = safe_cell(row.get("find", ""))
-                replace_text = safe_cell(row.get("replace_with", ""))
-                entity_type = safe_cell(row.get("entity_type", "REMEMBERED")) or "REMEMBERED"
-                if include and remember and find_text and replace_text:
-                    remember_rows_to_save.append({"find": find_text, "replace_with": replace_text, "entity_type": entity_type})
+        if is_expert_review:
+            with st.expander("Herbruikbare vervangingen", expanded=False):
+                remember_rows_to_save = []
+                for _, row in edited_replacements_df.iterrows():
+                    include = safe_bool(row.get("include", False))
+                    remember = safe_bool(row.get("remember", False))
+                    find_text = safe_cell(row.get("find", ""))
+                    replace_text = safe_cell(row.get("replace_with", ""))
+                    entity_type = safe_cell(row.get("entity_type", "REMEMBERED")) or "REMEMBERED"
+                    if include and remember and find_text and replace_text:
+                        remember_rows_to_save.append({"find": find_text, "replace_with": replace_text, "entity_type": entity_type})
 
-            memory_col1, memory_col2 = st.columns(2)
-            with memory_col1:
-                if st.button("Onthouden vervangingen opslaan"):
-                    saved_count = save_remembered_replacements(remember_rows_to_save)
-                    st.success(f"{saved_count} vervanging(en) opgeslagen.")
-                    st.info(f"Geheugenbestand: {get_memory_file_path()}")
-            with memory_col2:
-                if st.button("Onthouden vervangingen wissen"):
-                    clear_remembered_replacements()
-                    st.warning("Onthouden vervangingen gewist.")
+                memory_col1, memory_col2 = st.columns(2)
+                with memory_col1:
+                    if st.button("Onthouden vervangingen opslaan"):
+                        saved_count = save_remembered_replacements(remember_rows_to_save)
+                        st.success(f"{saved_count} vervanging(en) opgeslagen.")
+                        st.info(f"Geheugenbestand: {get_memory_file_path()}")
+                with memory_col2:
+                    if st.button("Onthouden vervangingen wissen"):
+                        clear_remembered_replacements()
+                        st.warning("Onthouden vervangingen gewist.")
 
         st.subheader("3. Exporteer resultaat")
         st.caption(
@@ -988,11 +1002,12 @@ try:
         if docx_bytes is not None:
             render_docx_hygiene_audit_panel(docx_bytes, source_label=docx_filename)
 
-        with st.expander("Technische informatie", expanded=False):
-            st.caption(
-                "Geavanceerde technische exportinformatie blijft beschikbaar. "
-                "Bestaande exportbestanden, bestandsnamen en inhoud zijn niet gewijzigd."
-            )
+        if is_expert_review:
+            with st.expander("Technische informatie", expanded=False):
+                st.caption(
+                    "Geavanceerde technische exportinformatie blijft beschikbaar. "
+                    "Bestaande exportbestanden, bestandsnamen en inhoud zijn niet gewijzigd."
+                )
 
     elif st_operator == "synthesize":
         st.subheader("Synthetische tekst")
@@ -1003,32 +1018,33 @@ try:
         annotated_tokens = annotate(text=st_text, analyze_results=st_analyze_results)
         annotated_text(*annotated_tokens)
 
-    with st.expander("Geavanceerde herkenningsdetails", expanded=False):
-        if st_analyze_results:
-            df = pd.DataFrame.from_records([r.to_dict() for r in st_analyze_results])
-            df["text"] = [st_text[res.start : res.end] for res in st_analyze_results]
-            df["type_gegeven"] = df["entity_type"].map(entity_label)
-            df["zekerheid"] = df["score"].map(confidence_label)
-            df_subset = df[["type_gegeven", "text", "start", "end", "score", "zekerheid", "entity_type"]].rename(
-                {
-                    "type_gegeven": "Type gegeven",
-                    "text": "Gevonden tekst",
-                    "start": "Start",
-                    "end": "Einde",
-                    "score": "Score",
-                    "zekerheid": "Zekerheid",
-                    "entity_type": "Technisch type",
-                },
-                axis=1,
-            )
-            if st_return_decision_process:
-                analysis_explanation_df = pd.DataFrame.from_records(
-                    [r.analysis_explanation.to_dict() for r in st_analyze_results]
+    if st_operator not in ("highlight", "synthesize") and is_expert_review:
+        with st.expander("Geavanceerde herkenningsdetails", expanded=False):
+            if st_analyze_results:
+                df = pd.DataFrame.from_records([r.to_dict() for r in st_analyze_results])
+                df["text"] = [st_text[res.start : res.end] for res in st_analyze_results]
+                df["type_gegeven"] = df["entity_type"].map(entity_label)
+                df["zekerheid"] = df["score"].map(confidence_label)
+                df_subset = df[["type_gegeven", "text", "start", "end", "score", "zekerheid", "entity_type"]].rename(
+                    {
+                        "type_gegeven": "Type gegeven",
+                        "text": "Gevonden tekst",
+                        "start": "Start",
+                        "end": "Einde",
+                        "score": "Score",
+                        "zekerheid": "Zekerheid",
+                        "entity_type": "Technisch type",
+                    },
+                    axis=1,
                 )
-                df_subset = pd.concat([df_subset, analysis_explanation_df], axis=1)
-            st.dataframe(df_subset.reset_index(drop=True), use_container_width=True)
-        else:
-            st.text("Geen herkenningen gevonden.")
+                if st_return_decision_process:
+                    analysis_explanation_df = pd.DataFrame.from_records(
+                        [r.analysis_explanation.to_dict() for r in st_analyze_results]
+                    )
+                    df_subset = pd.concat([df_subset, analysis_explanation_df], axis=1)
+                st.dataframe(df_subset.reset_index(drop=True), use_container_width=True)
+            else:
+                st.text("Geen herkenningen gevonden.")
 
 except Exception as e:
     print(e)
