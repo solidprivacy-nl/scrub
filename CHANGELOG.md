@@ -1,3 +1,56 @@
+## 2026-07-04 — SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_CONTRACT_TESTS
+
+Status: completed / PR validation pending.
+
+Purpose:
+
+- Lock the single-input-surface contract before the duplicate input implementation touches `presidio_streamlit.py`.
+- Preserve existing TXT/DOCX/PDF upload support, synthetic legal example support, pasted/extracted text handling and input precedence.
+- Preserve review, replacement table, Scrub Key, export/download, audit and DOCX hygiene surfaces.
+- Block duplicate-input runtime/startup patching and prohibited scope expansion.
+
+Files added:
+
+- `tests/test_duplicate_input_surface_simplification_contracts.py`
+- `workpackage_claims/scrub_wp_duplicate_input_surface_simplification_contract_tests.md`
+- `handover/workpackages/20260704_2318_duplicate_input_surface_contract_tests.md`
+
+Files changed:
+
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Validation status:
+
+- Source-level contract tests added.
+- GitHub Actions pending after PR.
+- Hugging Face sync not applicable until merge.
+- App verification not applicable because this package changes no UI behavior.
+
+Intentionally not changed:
+
+- product implementation code;
+- Streamlit UI behavior;
+- document ingestion behavior;
+- export content;
+- download filenames;
+- download MIME types;
+- Scrub Key JSON semantics;
+- reinsert behavior;
+- recognizer logic;
+- benchmark logic;
+- DOCX/PDF parsing behavior;
+- runtime/startup behavior;
+- dependencies.
+
+Next recommended step:
+
+- Review PR validation.
+- If green, merge this contract-test package.
+- Then start `SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_IMPLEMENTATION` as the next narrow implementation package.
+
+---
+
 ## 2026-07-03 — SCRUB-WP_SECONDARY_CONTROL_GROUPING_POLISH_IMPLEMENTATION
 
 Status: implemented / PR validation pending.
