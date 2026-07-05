@@ -243,11 +243,15 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
     )
 
     st.caption(
-        "Twijfel je over een waarde? Open Meer controleopties. "
+        "Twijfel je over een waarde? Open de vervangtabel of Meer controleopties hieronder. "
         "Deze vergelijking wijzigt zelf niets."
     )
+    st.caption(model["review_table"]["copy"])
     st.markdown("#### Meer controleopties")
-    st.caption("Aanvullen en detailcontrole staan hieronder ingeklapt.")
+    st.caption(
+        "Aanvullen, detailcontrole en stap-voor-stap controle staan hieronder compact bij elkaar. "
+        "Alles staat standaard ingeklapt."
+    )
 
     return {
         "report_only": True,
