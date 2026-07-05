@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
-Status: in_progress
+Status: completed / ready for app verification
 
 Claimed by: market-predictions via ChatGPT web worker
 
@@ -27,3 +27,12 @@ Boundaries:
 - no reinsert behavior changes;
 - no startup/runtime patches;
 - no dependency changes.
+
+
+Implemented at: 2026-07-05 22:13 Europe/Amsterdam
+
+
+Local validation passed:
+- Targeted review/export density contracts: 9 passed.
+- Related narrow Review/Export guardrail tests: 40 passed.
+- git diff --check passed.
