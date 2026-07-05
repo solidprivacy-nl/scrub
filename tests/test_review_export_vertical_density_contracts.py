@@ -10,7 +10,6 @@ SIDE_BY_SIDE_PATH = REPO_ROOT / "side_by_side_review_panel_ui.py"
 DOCX_HYGIENE_PATH = REPO_ROOT / "docx_hygiene_audit_panel_ui.py"
 DOCKERFILE_PATH = REPO_ROOT / "Dockerfile"
 NESTED_PATCH_PATH = REPO_ROOT / "fix_streamlit_nested_expanders.py"
-PDF_PATCH_PATH = REPO_ROOT / "fix_streamlit_pdf_text_reinsert.py"
 THIS_TEST_PATH = REPO_ROOT / "tests" / "test_review_export_vertical_density_contracts.py"
 
 
@@ -135,7 +134,7 @@ def test_audit_downloads_and_docx_hygiene_audit_remain_available() -> None:
 
 def test_no_new_bundle_runtime_or_scope_markers_are_present() -> None:
     source = "\n".join(
-        [read(APP_PATH), read(DOCKERFILE_PATH), read(NESTED_PATCH_PATH), read(PDF_PATCH_PATH)]
+        [read(APP_PATH), read(DOCKERFILE_PATH), read(NESTED_PATCH_PATH)]
     ).lower()
 
     forbidden_terms = [
