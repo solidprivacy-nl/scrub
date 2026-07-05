@@ -1,3 +1,28 @@
+## 2026-07-05 22:42 Europe/Amsterdam — SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
+
+Status: completed and app-verified.
+
+Summary:
+- Recorded live app verification for the Review/Export vertical-density implementation.
+- Confirmed the Export section is materially less tall and less form-like because TXT/DOCX/PDF downloads are shown in a compact row.
+- Confirmed Review safety controls remain visible or accessible: Basiscontrole/Expertcontrole, Markeringen tonen, side-by-side review, Gemiste waarde toevoegen, vervangtabel and replacement status.
+- Confirmed Scrub Key, audit/technical files and DOCX hygiene audit remain separate and accessible.
+- No product code, tests, export payloads, filenames, MIME types, Scrub Key JSON, reinsert behavior or startup/runtime behavior changed in this closeout.
+
+Validation:
+- Coordinator live Hugging Face screenshot reviewed.
+- GitHub Actions for PR #26 passed before merge.
+- Live Hugging Face app shows the merged UI behavior.
+- `git diff --check` required before PR.
+
+Next recommended step:
+- Decide whether the current MVP UI is good enough for this pass, or start a new separately approved small UI package.
+
+Related package status:
+- `SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_PLAN` — completed and merged.
+- `SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_CONTRACT_TESTS` — completed and merged.
+- `SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION` — completed and app-verified.
+
 ## 2026-07-05 22:13 Europe/Amsterdam — SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented / local validation passed.

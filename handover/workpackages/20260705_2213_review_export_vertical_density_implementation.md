@@ -8,7 +8,7 @@ SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION — Reduce
 
 ## Status
 
-Implemented / local validation passed.
+Completed and app-verified.
 
 ## Files added
 
@@ -37,15 +37,15 @@ Local validation passed.
 
 ## GitHub Actions status
 
-Pending after PR.
+PR #26 validation passed after the narrow side-by-side copy contract repair.
 
 ## Hugging Face sync status
 
-Pending after merge.
+Verified indirectly by the live Hugging Face app showing the merged UI change.
 
 ## App verification status
 
-Required after Actions and Hugging Face sync because visible Review/Export UI behavior changed.
+Passed by coordinator live Hugging Face screenshot after PR #26 merge/deployment.
 
 ## Remaining risks
 
@@ -57,3 +57,25 @@ Required after Actions and Hugging Face sync because visible Review/Export UI be
 ## Next recommended step
 
 Run local validation, open PR, verify GitHub Actions, merge when green, verify Hugging Face sync, then request live app verification.
+
+
+## App verification evidence
+
+2026-07-05 22:42 Europe/Amsterdam: coordinator live Hugging Face screenshot verified the Review/Export density implementation.
+
+Confirmed:
+- App starts without Script execution error.
+- One coherent input section remains.
+- `2. Controleer resultaat` remains visible.
+- Basiscontrole and Expertcontrole remain visible and selectable.
+- `Markeringen tonen` remains visible.
+- Side-by-side review remains visible.
+- `Gemiste waarde toevoegen` remains accessible.
+- Vervangtabel remains accessible.
+- Replacement count/status remains understandable.
+- `3. Exporteer resultaat` remains visible.
+- TXT/DOCX/PDF downloads are visible in a compact row.
+- Scrub Key remains accessible and separate.
+- Audit and technical files remain accessible.
+- DOCX hygiene audit remains accessible.
+- No export filenames, MIME types, payloads, Scrub Key JSON or reinsert behavior changed.
