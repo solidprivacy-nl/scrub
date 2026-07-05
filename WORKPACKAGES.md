@@ -1,3 +1,23 @@
+## 2026-07-05 22:13 Europe/Amsterdam — SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented / local validation passed.
+
+Summary:
+- Implemented the conservative Option B Review/Export density pass.
+- Compressed repeated Review helper copy without hiding the main side-by-side review.
+- Kept manual missed-value entry and the replacement table collapsed and accessible.
+- Changed the primary TXT/DOCX/PDF document downloads from three stacked buttons into a compact three-column layout.
+- Preserved export payloads, filenames, MIME types, Scrub Key JSON, reinsert behavior, recognition behavior and startup/runtime boundaries.
+
+Validation:
+- Local validation passed.
+- GitHub Actions pending after PR.
+- Hugging Face sync pending after merge.
+- App verification required because visible UI behavior changed.
+
+Next recommended step:
+- `SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_APP_VERIFY`.
+
 ## 2026-07-05 01:13 Europe/Amsterdam — SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented / local validation passed.

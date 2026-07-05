@@ -673,9 +673,8 @@ try:
         is_expert_review = review_mode == "Expertcontrole"
         is_basic_review = not is_expert_review
 
-        st.caption("Pas alleen aan wat nodig is; detailcontrole staat hieronder ingeklapt.")
         st.caption(
-            "De vervangtabel blijft leidend en blijft beschikbaar voor detailcontrole."
+            "Pas alleen aan wat nodig is; de vervangtabel blijft beschikbaar voor detailcontrole."
         )
         if is_expert_review:
             with st.expander("Waarom controleren?", expanded=False):
@@ -872,7 +871,7 @@ try:
                 }
             )
 
-        st.info(f"{len(edited_replacements)} vervanging(en) worden toegepast op de exports.")
+        st.caption(f"{len(edited_replacements)} vervanging(en) worden toegepast op de exports.")
 
         export_text = apply_replacements_to_text(st_text, edited_replacements)
 
@@ -900,18 +899,18 @@ try:
                         st.warning("Onthouden vervangingen gewist.")
 
         st.subheader("3. Exporteer resultaat")
-        st.caption(
-            "Download de opgeschoonde documenten. Scrub Key en auditbestanden staan in aparte secties."
-        )
+        st.caption("Download documenten; Scrub Key en auditbestanden blijven apart.")
 
         st.markdown("**Document downloaden**")
-        st.download_button(
-            label="Download opgeschoonde tekst (.txt)",
-            data=export_text.encode("utf-8"),
-            file_name="opgeschoonde_tekst.txt",
-            mime="text/plain",
-            key="download_txt",
-        )
+        download_txt_col, download_docx_col, download_pdf_col = st.columns(3)
+        with download_txt_col:
+            st.download_button(
+                label="Download opgeschoonde tekst (.txt)",
+                data=export_text.encode("utf-8"),
+                file_name="opgeschoonde_tekst.txt",
+                mime="text/plain",
+                key="download_txt",
+            )
 
         docx_bytes = None
         docx_filename = "opgeschoonde_tekst.docx"
@@ -923,24 +922,26 @@ try:
                 docx_bytes = docx_from_text(export_text)
                 docx_filename = "opgeschoonde_tekst.docx"
 
-            st.download_button(
-                label="Download opgeschoond Word-bestand (.docx)",
-                data=docx_bytes,
-                file_name=docx_filename,
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                key="download_docx",
-            )
+            with download_docx_col:
+                st.download_button(
+                    label="Download opgeschoond Word-bestand (.docx)",
+                    data=docx_bytes,
+                    file_name=docx_filename,
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    key="download_docx",
+                )
         except Exception as docx_error:
             st.error(f"Kon geen DOCX-export maken: {docx_error}")
 
         try:
-            st.download_button(
-                label="Download opgeschoonde PDF (.pdf)",
-                data=pdf_from_text(export_text),
-                file_name="opgeschoonde_tekst.pdf",
-                mime="application/pdf",
-                key="download_pdf",
-            )
+            with download_pdf_col:
+                st.download_button(
+                    label="Download opgeschoonde PDF (.pdf)",
+                    data=pdf_from_text(export_text),
+                    file_name="opgeschoonde_tekst.pdf",
+                    mime="application/pdf",
+                    key="download_pdf",
+                )
         except Exception as pdf_error:
             st.error(f"Kon geen PDF-export maken: {pdf_error}")
 

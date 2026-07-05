@@ -1,3 +1,55 @@
+## 2026-07-05 — SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented / local validation passed.
+
+Purpose:
+
+- Reduce vertical density in the Review and Export areas after plan and contract-test packages were merged.
+- Compress repeated Review helper copy while keeping side-by-side review, marker toggle, manual missed-value entry and replacement table accessible.
+- Put the three primary document downloads in a compact three-column layout.
+- Keep Scrub Key, audit/technical files and DOCX hygiene audit separate and accessible.
+
+Files changed:
+
+- `presidio_streamlit.py`
+- `side_by_side_review_panel_ui.py`
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `workpackage_claims/scrub_wp_review_export_vertical_density_simplification_implementation.md`
+
+Files added:
+
+- `handover/workpackages/20260705_2213_review_export_vertical_density_implementation.md`
+
+Validation status:
+
+- Local validation passed.
+- GitHub Actions pending after PR.
+- Hugging Face sync pending after merge.
+- App verification required after sync because visible UI behavior changed.
+
+Intentionally not changed:
+
+- recognizer logic;
+- replacement logic;
+- review table semantics;
+- export payloads;
+- download filenames;
+- MIME types;
+- Scrub Key JSON semantics;
+- Scrub Key warning meaning;
+- reinsert behavior;
+- DOCX/PDF parsing;
+- startup/runtime behavior;
+- dependencies;
+- benchmark or recall logic.
+
+Next recommended step:
+
+- Open PR, verify GitHub Actions, merge when green, verify Hugging Face sync, then request live app verification.
+
+---
+
 ## 2026-07-05 — SCRUB-WP_DUPLICATE_INPUT_SURFACE_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented / local validation passed.
