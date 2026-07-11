@@ -1,3 +1,59 @@
+## 2026-07-05 — SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
+
+Status: completed and app-verified.
+
+Purpose:
+
+- Record live app verification for `SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION`.
+- Close the Review/Export vertical-density implementation line after PR #26 merge and live Hugging Face verification.
+- Add concise closeout notes for the related plan and contract-test packages that were previously missing from `CHANGELOG.md`.
+
+Verification evidence:
+
+- Coordinator live Hugging Face screenshot reviewed.
+- The app starts without Script execution error.
+- The input section remains coherent.
+- `2. Controleer resultaat` remains visible.
+- Basiscontrole / Expertcontrole remain visible.
+- `Markeringen tonen` and side-by-side review remain visible.
+- `Gemiste waarde toevoegen` and the vervangtabel remain accessible.
+- `3. Exporteer resultaat` remains visible.
+- TXT/DOCX/PDF downloads are visible in a compact row.
+- Scrub Key, audit/technical files and DOCX hygiene audit remain separate and accessible.
+
+Files changed:
+
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `workpackage_claims/scrub_wp_review_export_vertical_density_simplification_implementation.md`
+- `workpackage_claims/scrub_wp_review_export_vertical_density_simplification_app_verify_closeout.md`
+- `handover/workpackages/20260705_2213_review_export_vertical_density_implementation.md`
+- `handover/workpackages/20260705_2242_review_export_vertical_density_app_verify_closeout.md`
+
+Intentionally not changed:
+
+- product code;
+- tests;
+- recognizer logic;
+- replacement logic;
+- export payloads;
+- download filenames;
+- MIME types;
+- Scrub Key JSON;
+- reinsert behavior;
+- startup/runtime behavior.
+
+Related package closeout:
+
+- `SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_PLAN` — completed and merged; planning-only.
+- `SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_CONTRACT_TESTS` — completed and merged; source-level guardrails only.
+
+Next recommended step:
+
+- Decide whether the current MVP UI is good enough for this pass, or start a new separately approved small UI package.
+
+---
+
 ## 2026-07-05 — SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented / local validation passed.

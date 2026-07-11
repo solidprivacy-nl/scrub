@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
-Status: completed / ready for app verification
+Status: completed and app-verified
 
 Claimed by: market-predictions via ChatGPT web worker
 
@@ -36,3 +36,9 @@ Local validation passed:
 - Targeted review/export density contracts: 9 passed.
 - Related narrow Review/Export guardrail tests: 40 passed.
 - git diff --check passed.
+
+
+App verification passed:
+- Verified at: 2026-07-05 22:42 Europe/Amsterdam
+- Evidence: coordinator live Hugging Face screenshot after PR #26 merge/deployment.
+- Live app verification passed by coordinator screenshot after PR #26 merge and Hugging Face deployment. Confirmed: one coherent input section remains; Review step remains visible; Basiscontrole/Expertcontrole, Markeringen tonen, side-by-side review, Gemiste waarde toevoegen, vervangtabel, replacement status, Export step, TXT/DOCX/PDF downloads, Scrub Key, audit/technical files and DOCX hygiene audit remain accessible. Primary document downloads are now shown in a compact row. No export filenames, MIME types, payloads, Scrub Key JSON or reinsert behavior were intentionally changed.
