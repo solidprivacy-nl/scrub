@@ -1,0 +1,356 @@
+name: Manual correction density operator
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+jobs:
+  implement-and-validate:
+    if: github.event.pull_request.number == 28
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out implementation branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-manual-correction-panel-density-implementation
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install test runner
+        run: python -m pip install --upgrade pytest
+
+      - name: Apply narrow UI implementation and documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          app_path = Path('presidio_streamlit.py')
+          text = app_path.read_text(encoding='utf-8')
+
+          old = '\n'.join([
+              '        with st.expander("Gemiste waarde toevoegen", expanded=False):',
+              '            st.markdown("**Gemiste waarde toevoegen**")',
+              '            st.caption("Voeg snel een waarde toe die Scrub heeft gemist.")',
+              '            with st.form("manual_mask_entry_form", clear_on_submit=True):',
+              '                manual_value = st.text_input("Waarde die alsnog gemaskeerd moet worden")',
+              '                manual_type_label = st.selectbox("Type gegeven", list(MANUAL_MASK_TYPE_OPTIONS))',
+              '                manual_placeholder = build_manual_placeholder(manual_type_label, replacement_editor_df)',
+              '                manual_replace_with = st.text_input("Vervangen door", value=manual_placeholder)',
+              '                manual_submit = st.form_submit_button("Toevoegen aan vervangtabel")',
+              '',
+          ])
+
+          new = '\n'.join([
+              '        with st.expander("Gemiste waarde toevoegen", expanded=False):',
+              '            st.caption("Voeg een gemiste waarde rechtstreeks toe aan de vervangtabel.")',
+              '',
+              '            with st.form("manual_mask_entry_form", clear_on_submit=True):',
+              '                value_col, type_col, replacement_col = st.columns([2.0, 1.1, 1.6])',
+              '',
+              '                with value_col:',
+              '                    manual_value = st.text_input(',
+              '                        "Waarde die alsnog gemaskeerd moet worden"',
+              '                    )',
+              '',
+              '                with type_col:',
+              '                    manual_type_label = st.selectbox(',
+              '                        "Type gegeven",',
+              '                        list(MANUAL_MASK_TYPE_OPTIONS),',
+              '                    )',
+              '',
+              '                manual_placeholder = build_manual_placeholder(',
+              '                    manual_type_label,',
+              '                    replacement_editor_df,',
+              '                )',
+              '',
+              '                with replacement_col:',
+              '                    manual_replace_with = st.text_input(',
+              '                        "Vervangen door",',
+              '                        value=manual_placeholder,',
+              '                    )',
+              '',
+              '                manual_submit = st.form_submit_button(',
+              '                    "Toevoegen aan vervangtabel",',
+              '                    use_container_width=True,',
+              '                )',
+              '',
+          ])
+
+          if text.count(old) != 1:
+              raise RuntimeError(f'Expected exactly one original manual panel; found {text.count(old)}')
+          app_path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          Path('tests/test_manual_correction_panel_density_implementation.py').write_text('''from __future__ import annotations
+
+import ast
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+APP_PATH = REPO_ROOT / "presidio_streamlit.py"
+THIS_TEST_PATH = REPO_ROOT / "tests" / "test_manual_correction_panel_density_implementation.py"
+
+
+def app_source() -> str:
+    return APP_PATH.read_text(encoding="utf-8")
+
+
+def test_manual_correction_expander_stays_collapsed_and_has_compact_copy() -> None:
+    source = app_source()
+    assert 'with st.expander("Gemiste waarde toevoegen", expanded=False):' in source
+    assert 'st.caption("Voeg een gemiste waarde rechtstreeks toe aan de vervangtabel.")' in source
+    assert 'st.markdown("**Gemiste waarde toevoegen**")' not in source
+
+
+def test_manual_correction_inputs_are_grouped_in_one_compact_row() -> None:
+    source = app_source()
+    assert "value_col, type_col, replacement_col = st.columns([2.0, 1.1, 1.6])" in source
+    for marker in ["with value_col:", "with type_col:", "with replacement_col:"]:
+        assert marker in source
+    for label in ["Waarde die alsnog gemaskeerd moet worden", "Type gegeven", "Vervangen door"]:
+        assert label in source
+
+
+def test_existing_form_identity_and_action_are_preserved() -> None:
+    source = app_source()
+    assert 'with st.form("manual_mask_entry_form", clear_on_submit=True):' in source
+    assert "manual_submit = st.form_submit_button(" in source
+    assert '"Toevoegen aan vervangtabel"' in source
+    assert "use_container_width=True" in source
+
+
+def test_existing_manual_mask_behavior_markers_are_preserved() -> None:
+    source = app_source()
+    for marker in [
+        "manual_value", "manual_type_label", "manual_placeholder", "manual_replace_with",
+        "manual_submit", "build_manual_placeholder(", "validate_manual_mask_input(",
+        "build_manual_mask_row(", "manual_mask_document_key(",
+        'st.session_state["manual_mask_rows"]', "st.rerun()",
+    ]:
+        assert marker in source
+
+
+def test_validation_block_stays_after_manual_submit() -> None:
+    source = app_source()
+    submit_index = source.index("if manual_submit:")
+    validation_index = source.index("validate_manual_mask_input(", submit_index)
+    row_index = source.index("build_manual_mask_row(", validation_index)
+    rerun_index = source.index("st.rerun()", row_index)
+    assert submit_index < validation_index < row_index < rerun_index
+
+
+def test_implementation_test_is_source_level_only() -> None:
+    tree = ast.parse(THIS_TEST_PATH.read_text(encoding="utf-8"))
+    imported_roots: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported_roots.update(alias.name.split(".")[0] for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imported_roots.add(node.module.split(".")[0])
+    assert "streamlit" not in imported_roots
+    assert "presidio_streamlit" not in imported_roots
+''', encoding='utf-8')
+
+          timestamp = '2026-07-16 20:40 Europe/Amsterdam'
+          handover_path = Path('handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md')
+
+          changelog_entry = '''## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented; local validation pending.
+
+Purpose:
+
+- Make the existing `Gemiste waarde toevoegen` panel materially shorter and less form-like.
+- Remove the duplicate internal heading and group value, type and replacement controls in one compact row.
+- Preserve the existing validation, session-state and replacement-table workflow.
+
+Files changed:
+
+- `presidio_streamlit.py`
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md`
+
+Files added:
+
+- `tests/test_manual_correction_panel_density_implementation.py`
+- `handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md`
+
+Validation status:
+
+- Local/worker validation pending.
+- GitHub Actions pending after PR.
+- Hugging Face sync pending after merge.
+- Live app verification required because visible UI behavior changed.
+
+Intentionally not changed:
+
+- validation rules or duplicate detection;
+- placeholder generation or entity types;
+- replacement-row structure or replacement semantics;
+- export payloads, filenames or MIME types;
+- Scrub Key JSON or warning behavior;
+- reinsert behavior;
+- recognizers, thresholds, document processing, runtime/startup or dependencies.
+
+Next recommended step:
+
+- Open PR, verify Actions, merge when green, verify Hugging Face sync and request live app verification.
+
+---
+
+'''
+          changelog = Path('CHANGELOG.md')
+          changelog.write_text(changelog_entry + changelog.read_text(encoding='utf-8'), encoding='utf-8')
+
+          workpackages_entry = f'''## {timestamp} — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented; local validation pending.
+
+Summary:
+- Converted the open manual correction form from a vertical stack to one compact three-column input row.
+- Removed the duplicate internal `Gemiste waarde toevoegen` heading.
+- Kept the expander collapsed by default and retained one full-width submit action.
+- Preserved validation, session state, replacement-table integration and all export/Scrub Key/reinsert semantics.
+
+Validation:
+- Worker validation pending.
+- GitHub Actions pending after PR.
+- Hugging Face sync pending after merge.
+- App verification required after sync.
+
+Next recommended step:
+- `SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY`.
+
+'''
+          workpackages = Path('WORKPACKAGES.md')
+          workpackages.write_text(workpackages_entry + workpackages.read_text(encoding='utf-8'), encoding='utf-8')
+
+          release_entry = '''## 2026-07-16 — Handmatige aanvulling compacter
+
+- `Gemiste waarde toevoegen` gebruikt bij openen een compactere invoerregel voor waarde, type en vervanging.
+- De dubbele interne kop is verwijderd; de functie en validatiemeldingen blijven ongewijzigd.
+- De vervangtabel, exports, Scrub Key en terugzetworkflow zijn niet gewijzigd.
+
+---
+
+'''
+          release_notes = Path('RELEASE_NOTES.md')
+          release_notes.write_text(release_entry + release_notes.read_text(encoding='utf-8'), encoding='utf-8')
+
+          claim_path = Path('workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md')
+          claim = claim_path.read_text(encoding='utf-8').replace('Status: in_progress', 'Status: completed / ready for app verification', 1)
+          claim += f'''\n\nImplementation update:\n- Implemented at: {timestamp}\n- Product change limited to compact manual correction panel layout.\n- Required worker validation passed.\n- Handover: `{handover_path}`\n'''
+          claim_path.write_text(claim, encoding='utf-8')
+
+          handover_path.parent.mkdir(parents=True, exist_ok=True)
+          handover_path.write_text(f'''# Handover — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+
+Repository worked in: solidprivacy-nl/scrub
+
+## Workpackage title
+
+SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+
+## Status
+
+Implemented; local validation passed.
+
+## Files added
+
+- `tests/test_manual_correction_panel_density_implementation.py`
+- `{handover_path}`
+
+## Files changed
+
+- `presidio_streamlit.py`
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md`
+
+## Tests
+
+- `python -m py_compile presidio_streamlit.py`
+- New source-level implementation tests.
+- Required Review/Export/UI guardrail suite.
+- Existing matching manual-mask tests.
+- `git diff --check`.
+
+## Validation status
+
+Required local/worker validation passed.
+
+## GitHub Actions status
+
+Pending PR validation.
+
+## Hugging Face sync status
+
+Pending after merge.
+
+## App verification status
+
+Required after Actions and sync because visible UI behavior changed.
+
+## Remaining risks
+
+- Live verification must confirm the three controls remain usable at the deployed app width.
+- Empty and valid synthetic submissions must retain existing warning/success behavior.
+- Replacement-table and export integration must remain unchanged.
+
+## Next recommended step
+
+`SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY` after Actions and Hugging Face sync are green.
+''', encoding='utf-8')
+          PY
+
+      - name: Run required validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile presidio_streamlit.py
+          python -m pytest -q tests/test_manual_correction_panel_density_implementation.py
+          python -m pytest -q \
+            tests/test_review_export_vertical_density_contracts.py \
+            tests/test_review_surface_simplification_implementation.py \
+            tests/test_basic_mode_declutter_implementation.py \
+            tests/test_execution_interface_simplification_ui.py \
+            tests/test_duplicate_input_surface_simplification_contracts.py
+          mapfile -t MANUAL_TESTS < <(find tests -maxdepth 1 -type f | grep -E 'manual.*mask|mask.*manual' | sort)
+          if ((${#MANUAL_TESTS[@]})); then
+            python -m pytest -q "${MANUAL_TESTS[@]}"
+          fi
+          git diff --check
+
+      - name: Commit implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf __pycache__ tests/__pycache__
+          git config user.name 'solidprivacy-workpackage-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            presidio_streamlit.py \
+            tests/test_manual_correction_panel_density_implementation.py \
+            CHANGELOG.md \
+            WORKPACKAGES.md \
+            RELEASE_NOTES.md \
+            workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md \
+            handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md
+          git commit -m 'Simplify manual correction panel density'
+          git push origin HEAD:scrub-manual-correction-panel-density-implementation
