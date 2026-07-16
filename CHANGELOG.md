@@ -15,6 +15,7 @@ Files added:
 - `tests/test_mvp_document_hygiene_fidelity_hardening.py`
 - `tests/test_mvp_document_fidelity_report.py`
 - `tests/test_mvp_document_fidelity_ui_copy.py`
+- `tests/test_mvp_document_fidelity_ui_copy.py`
 - `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
 - `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
 
@@ -35,6 +36,7 @@ Implementation result:
 
 - DOCX body paragraphs and tables remain supported.
 - `word/header*.xml` and `word/footer*.xml` text nodes are now restored deterministically.
+- The DOCX reinsert capability copy now matches the supported body/table/header/footer scope.
 - The DOCX reinsert capability copy now matches the supported body/table/header/footer scope.
 - The synthetic header/footer residual-placeholder finding is resolved: `true`.
 - Resolved findings: 1.

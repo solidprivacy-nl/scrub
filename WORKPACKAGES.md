@@ -6,6 +6,7 @@ Summary:
 - Extended deterministic DOCX reinsert from `word/document.xml` to existing `word/header*.xml` and `word/footer*.xml` text nodes.
 - Preserved body/table behavior and unrelated OOXML package parts.
 - Aligned the existing DOCX reinsert information copy with the supported body/table/header/footer scope without adding controls.
+- Aligned the existing DOCX reinsert information copy with the supported body/table/header/footer scope without adding controls.
 - Kept comments, tracked-change-only parts, footnotes/endnotes, text boxes, metadata and split placeholders explicitly unsupported.
 - Regenerated current Phase 6 evidence without overwriting the historical baseline/triage artifacts.
 - Resolved the DOCX header/footer finding and retained the PDF TXT-only/no-OCR boundary.
