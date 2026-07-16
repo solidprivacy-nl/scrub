@@ -1,19 +1,20 @@
 name: Manual correction density operator
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows:
+      - Tests
     types:
-      - synchronize
-      - reopened
+      - completed
 
 permissions:
   contents: write
 
 jobs:
   implement-and-validate:
-    if: github.event.pull_request.number == 28
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'scrub-manual-correction-panel-density-implementation'
     runs-on: ubuntu-latest
     steps:
       - name: Check out implementation branch
@@ -89,11 +90,15 @@ jobs:
               '',
           ])
 
-          if text.count(old) != 1:
-              raise RuntimeError(f'Expected exactly one original manual panel; found {text.count(old)}')
-          app_path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          compact_marker = 'value_col, type_col, replacement_col = st.columns([2.0, 1.1, 1.6])'
+          apply_changes = old in text
+          if apply_changes:
+              app_path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          elif compact_marker not in text:
+              raise RuntimeError('Neither original nor compact manual correction panel was found')
 
-          Path('tests/test_manual_correction_panel_density_implementation.py').write_text('''from __future__ import annotations
+          if apply_changes:
+              Path('tests/test_manual_correction_panel_density_implementation.py').write_text('''from __future__ import annotations
 
 import ast
 from pathlib import Path
@@ -164,12 +169,12 @@ def test_implementation_test_is_source_level_only() -> None:
     assert "presidio_streamlit" not in imported_roots
 ''', encoding='utf-8')
 
-          timestamp = '2026-07-16 20:40 Europe/Amsterdam'
-          handover_path = Path('handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md')
+              timestamp = '2026-07-16 20:40 Europe/Amsterdam'
+              handover_path = Path('handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md')
 
-          changelog_entry = '''## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+              changelog_entry = '''## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
-Status: implemented; local validation pending.
+Status: implemented; local validation passed.
 
 Purpose:
 
@@ -192,8 +197,8 @@ Files added:
 
 Validation status:
 
-- Local/worker validation pending.
-- GitHub Actions pending after PR.
+- Required worker validation passed.
+- GitHub Actions pending after PR update.
 - Hugging Face sync pending after merge.
 - Live app verification required because visible UI behavior changed.
 
@@ -209,17 +214,17 @@ Intentionally not changed:
 
 Next recommended step:
 
-- Open PR, verify Actions, merge when green, verify Hugging Face sync and request live app verification.
+- Verify PR Actions, merge when green, verify Hugging Face sync and request live app verification.
 
 ---
 
 '''
-          changelog = Path('CHANGELOG.md')
-          changelog.write_text(changelog_entry + changelog.read_text(encoding='utf-8'), encoding='utf-8')
+              changelog = Path('CHANGELOG.md')
+              changelog.write_text(changelog_entry + changelog.read_text(encoding='utf-8'), encoding='utf-8')
 
-          workpackages_entry = f'''## {timestamp} — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+              workpackages_entry = f'''## {timestamp} — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
-Status: implemented; local validation pending.
+Status: completed / ready for app verification.
 
 Summary:
 - Converted the open manual correction form from a vertical stack to one compact three-column input row.
@@ -228,8 +233,8 @@ Summary:
 - Preserved validation, session state, replacement-table integration and all export/Scrub Key/reinsert semantics.
 
 Validation:
-- Worker validation pending.
-- GitHub Actions pending after PR.
+- Required worker validation passed.
+- GitHub Actions pending after PR update.
 - Hugging Face sync pending after merge.
 - App verification required after sync.
 
@@ -237,10 +242,10 @@ Next recommended step:
 - `SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY`.
 
 '''
-          workpackages = Path('WORKPACKAGES.md')
-          workpackages.write_text(workpackages_entry + workpackages.read_text(encoding='utf-8'), encoding='utf-8')
+              workpackages = Path('WORKPACKAGES.md')
+              workpackages.write_text(workpackages_entry + workpackages.read_text(encoding='utf-8'), encoding='utf-8')
 
-          release_entry = '''## 2026-07-16 — Handmatige aanvulling compacter
+              release_entry = '''## 2026-07-16 — Handmatige aanvulling compacter
 
 - `Gemiste waarde toevoegen` gebruikt bij openen een compactere invoerregel voor waarde, type en vervanging.
 - De dubbele interne kop is verwijderd; de functie en validatiemeldingen blijven ongewijzigd.
@@ -249,16 +254,16 @@ Next recommended step:
 ---
 
 '''
-          release_notes = Path('RELEASE_NOTES.md')
-          release_notes.write_text(release_entry + release_notes.read_text(encoding='utf-8'), encoding='utf-8')
+              release_notes = Path('RELEASE_NOTES.md')
+              release_notes.write_text(release_entry + release_notes.read_text(encoding='utf-8'), encoding='utf-8')
 
-          claim_path = Path('workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md')
-          claim = claim_path.read_text(encoding='utf-8').replace('Status: in_progress', 'Status: completed / ready for app verification', 1)
-          claim += f'''\n\nImplementation update:\n- Implemented at: {timestamp}\n- Product change limited to compact manual correction panel layout.\n- Required worker validation passed.\n- Handover: `{handover_path}`\n'''
-          claim_path.write_text(claim, encoding='utf-8')
+              claim_path = Path('workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md')
+              claim = claim_path.read_text(encoding='utf-8').replace('Status: in_progress', 'Status: completed / ready for app verification', 1)
+              claim += f'''\n\nImplementation update:\n- Implemented at: {timestamp}\n- Product change limited to compact manual correction panel layout.\n- Required worker validation passed.\n- Handover: `{handover_path}`\n'''
+              claim_path.write_text(claim, encoding='utf-8')
 
-          handover_path.parent.mkdir(parents=True, exist_ok=True)
-          handover_path.write_text(f'''# Handover — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+              handover_path.parent.mkdir(parents=True, exist_ok=True)
+              handover_path.write_text(f'''# Handover — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 Repository worked in: solidprivacy-nl/scrub
 
@@ -268,7 +273,7 @@ SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 ## Status
 
-Implemented; local validation passed.
+Completed / ready for app verification.
 
 ## Files added
 
@@ -297,7 +302,7 @@ Required local/worker validation passed.
 
 ## GitHub Actions status
 
-Pending PR validation.
+Pending PR validation after implementation commit.
 
 ## Hugging Face sync status
 
@@ -337,11 +342,15 @@ Required after Actions and sync because visible UI behavior changed.
           fi
           git diff --check
 
-      - name: Commit implementation
+      - name: Commit implementation when needed
         shell: bash
         run: |
           set -euo pipefail
           rm -rf __pycache__ tests/__pycache__
+          if git diff --quiet; then
+            echo 'Implementation already committed; nothing to push.'
+            exit 0
+          fi
           git config user.name 'solidprivacy-workpackage-worker'
           git config user.email 'actions@users.noreply.github.com'
           git add \
