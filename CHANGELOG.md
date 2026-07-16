@@ -1,3 +1,51 @@
+## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
+
+Status: completed and app-verified.
+
+Purpose:
+
+- Record live Hugging Face app verification after PR #28 merged.
+- Close the manual correction panel density simplification line.
+- Confirm the compact layout preserves the existing manual correction workflow.
+
+Verification evidence:
+
+- Coordinator live app screenshot reviewed at 2026-07-16 23:43 Europe/Amsterdam.
+- `Gemiste waarde toevoegen` remains collapsed by default and opens without a duplicate internal heading.
+- The value, type and replacement controls appear in one compact row.
+- The full-width `Toevoegen aan vervangtabel` action remains visible.
+- Synthetic value `lantaarnbloem` was added successfully.
+- The replacement table shows `lantaarnbloem` with `[WAARDE_HANDMATIG_01]` and status `Handmatig toegevoegd`.
+- No Script execution error is visible.
+- The live screenshot confirms GitHub-to-Hugging-Face deployment of the merged UI.
+
+Files changed:
+
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md`
+- `handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md`
+
+Files added:
+
+- `workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_app_verify_closeout.md`
+- `handover/workpackages/20260716_2343_manual_correction_panel_density_app_verify_closeout.md`
+
+Intentionally not changed:
+
+- product code or tests;
+- recognizer or replacement semantics;
+- validation or session-state behavior;
+- export payloads, filenames or MIME types;
+- Scrub Key JSON or reinsert behavior;
+- document processing, startup/runtime or dependencies.
+
+Next recommended step:
+
+- Use the simplified MVP UI with representative synthetic legal documents before approving another UI package.
+
+---
+
 ## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented; local validation passed.

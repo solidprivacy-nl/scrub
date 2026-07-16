@@ -1,3 +1,26 @@
+## 2026-07-16 23:43 Europe/Amsterdam — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
+
+Status: completed and app-verified.
+
+Summary:
+- Live Hugging Face app verification passed after PR #28 merge.
+- The manual correction panel opens with one concise caption, a compact three-column input row and one full-width submit action.
+- The duplicate internal heading is absent.
+- Synthetic value `lantaarnbloem` was successfully added and is visible in the replacement table as `[WAARDE_HANDMATIG_01]` with status `Handmatig toegevoegd`.
+- The screenshot confirms the merged UI reached the Hugging Face Space and no Script execution error is visible.
+- No product code or behavioral semantics changed in this docs-only closeout.
+
+Validation:
+- PR #28 final GitHub Actions test run passed before merge.
+- Hugging Face sync confirmed by live deployed UI.
+- App verification passed.
+
+Related package status:
+- `SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION` — completed and app-verified.
+
+Next recommended step:
+- Use the simplified MVP UI with representative synthetic legal documents before approving another UI package.
+
 ## 2026-07-16 20:40 Europe/Amsterdam — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 Status: completed / ready for app verification.
