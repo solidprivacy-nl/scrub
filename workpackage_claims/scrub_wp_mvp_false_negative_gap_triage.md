@@ -27,5 +27,8 @@ Boundaries:
 - No production-readiness claim.
 - Human review remains required.
 
+Validation trigger:
+- The autonomous operator will run the focused triage/source-evidence tests after the next completed repository Tests run and finalize the governance evidence.
+
 Next step:
-- Add machine-readable and human-readable triage artifacts, validate them against the source report, update governance evidence and handover.
+- Complete automated validation, governance update and handover, then run final PR validation.
