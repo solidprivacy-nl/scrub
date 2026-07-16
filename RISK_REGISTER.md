@@ -19,7 +19,7 @@ Risk:
 Sensitive data remains in the scrubbed output and the user wrongly trusts the result.
 ```
 
-Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence. The first machine-readable matrix baseline is stored in `output/validation/mvp_phase6_synthetic_validation_report.json` with 3 synthetic cases and 3 recorded evidence gaps or known limitations.
+Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence. The first machine-readable matrix baseline is stored in `output/validation/mvp_phase6_synthetic_validation_report.json` with 3 synthetic cases and 2 recorded evidence gaps or known limitations.
 
 Remaining gaps:
 

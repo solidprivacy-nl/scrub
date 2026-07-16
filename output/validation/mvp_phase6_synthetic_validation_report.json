@@ -7,23 +7,21 @@
       "cloud_processing": false,
       "detection": {
         "ai_processing": false,
-        "analyzer_result_count": 12,
+        "analyzer_result_count": 13,
         "candidate_result_count": 0,
         "cloud_processing": false,
         "context_preservation_met": true,
-        "detection_expectations_met": false,
+        "detection_expectations_met": true,
         "expected_values": [
           "DOS-2026-778899",
           "ZK-WOON-55091",
           "CLNT-2026-0042",
-          "mila.testerveld@example.invalid",
+          "mila.testerveld@example.com",
           "0612345678",
           "NL91ABNA0417164300"
         ],
         "local_only": true,
-        "missing_expected_values": [
-          "mila.testerveld@example.invalid"
-        ],
+        "missing_expected_values": [],
         "preserved_terms": [
           "minderjarige",
           "arts",
@@ -32,11 +30,11 @@
         "removed_preserved_terms": [],
         "rows": [
           {
-            "end": 239,
+            "end": 235,
             "entity_type": "NL_PHONE_NUMBER",
             "score": 1.0,
             "source": "DutchPhoneRecognizer",
-            "start": 229,
+            "start": 225,
             "text": "0612345678"
           },
           {
@@ -48,11 +46,11 @@
             "text": "1234 AB"
           },
           {
-            "end": 265,
+            "end": 261,
             "entity_type": "NL_IBAN",
             "score": 0.9,
             "source": "PatternRecognizer",
-            "start": 247,
+            "start": 243,
             "text": "NL91ABNA0417164300"
           },
           {
@@ -110,6 +108,14 @@
             "source": "DutchContextualReferenceRecognizer",
             "start": 96,
             "text": "CLNT-2026-0042"
+          },
+          {
+            "end": 213,
+            "entity_type": "EMAIL_ADDRESS",
+            "score": 1.0,
+            "source": "EmailRecognizer",
+            "start": 186,
+            "text": "mila.testerveld@example.com"
           }
         ]
       },
@@ -218,13 +224,8 @@
     }
   ],
   "cloud_processing": false,
-  "evidence_gap_count": 3,
+  "evidence_gap_count": 2,
   "evidence_gaps": [
-    {
-      "case_id": "txt_legal_core_roundtrip",
-      "category": "false_negative_or_detection_gap",
-      "value": "mila.testerveld@example.invalid"
-    },
     {
       "case_id": "docx_mixed_structure_roundtrip",
       "category": "known_docx_reinsert_limitation",

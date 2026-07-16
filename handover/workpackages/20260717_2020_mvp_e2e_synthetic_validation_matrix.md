@@ -35,15 +35,15 @@ Completed / ready for PR verification.
 - New focused Phase 6 matrix tests.
 - Existing Dutch legal recall-gap tests.
 - Existing Scrub Key model, reinsert and document-reinsert tests.
-- Existing DOCX hygiene and document-tool guardrails selected by CI.
 - Python compilation and `git diff --check`.
 
 ## Validation status
 
 - Synthetic cases: 3.
 - Failing cases: 0.
-- Evidence gaps/known limitations: 3.
-- Categories: ['false_negative_or_detection_gap', 'known_docx_reinsert_limitation', 'known_pdf_reinsert_limitation'].
+- Evidence gaps/known limitations: 2.
+- Categories: ['known_docx_reinsert_limitation', 'known_pdf_reinsert_limitation'].
+- Standard deterministic email recognition is included alongside the Dutch pack.
 - Report schema is machine-readable and deterministic.
 - Human review remains required.
 - Production readiness is explicitly false.

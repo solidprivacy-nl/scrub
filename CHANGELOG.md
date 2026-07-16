@@ -1,3 +1,65 @@
+## 2026-07-17 — SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX
+
+Status: completed / ready for PR verification.
+
+Purpose:
+
+- Establish a repeatable synthetic evidence baseline for the supported MVP workflow.
+- Exercise TXT, DOCX and text-based PDF paths across import, review-row replacement, manual addition, Scrub Key creation/validation, deterministic reinsert, export representations and audit evidence.
+- Record known limitations and reproducible gaps without weakening tests or making production-readiness claims.
+
+Files added:
+
+- `test_cases/mvp_phase6/validation_manifest.json`
+- `mvp_phase6_validation_manifest.py`
+- `mvp_phase6_detection_matrix.py`
+- `mvp_phase6_workflow_core.py`
+- `mvp_phase6_document_cases.py`
+- `mvp_phase6_validation_report.py`
+- `scripts/run_mvp_phase6_validation_matrix.py`
+- `tests/test_mvp_phase6_e2e_synthetic_validation_matrix.py`
+- `output/validation/mvp_phase6_synthetic_validation_report.json`
+- `handover/workpackages/20260717_2020_mvp_e2e_synthetic_validation_matrix.md`
+
+Files changed:
+
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/scrub_wp_mvp_e2e_synthetic_validation_matrix.md`
+
+Validation result:
+
+- Synthetic cases: 3.
+- Failing cases: 0.
+- Evidence gaps/known limitations: 2.
+- Gap categories: known_docx_reinsert_limitation, known_pdf_reinsert_limitation.
+- Human review required: `true`.
+- Production ready: `false`.
+- Local-only validation: `true`.
+- External AI/cloud/OCR processing: none.
+
+Methodology correction:
+
+- Standard deterministic Presidio email recognition is included alongside the Dutch recognizer pack, preventing a standard e-mail value from being misclassified as a Dutch-pack false negative.
+
+Intentionally not changed:
+
+- Streamlit UI or review controls;
+- recognizers or detection thresholds in product code;
+- replacement semantics;
+- export payload, filename or MIME semantics;
+- Scrub Key schema or lifecycle behavior;
+- reinsert semantics;
+- document-processing implementation;
+- runtime/startup or dependencies.
+
+Next recommended step:
+
+- Start `SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE` and classify the report evidence before implementing any fix.
+
+---
+
 ## 2026-07-17 — SCRUB-WP_MVP_PHASE6_ROADMAP_REALIGNMENT
 
 Status: completed / ready for PR verification.
