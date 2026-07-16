@@ -1,0 +1,256 @@
+{
+  "ai_processing": false,
+  "case_count": 3,
+  "cases": [
+    {
+      "ai_processing": false,
+      "cloud_processing": false,
+      "detection": {
+        "ai_processing": false,
+        "analyzer_result_count": 12,
+        "candidate_result_count": 0,
+        "cloud_processing": false,
+        "context_preservation_met": true,
+        "detection_expectations_met": false,
+        "expected_values": [
+          "DOS-2026-778899",
+          "ZK-WOON-55091",
+          "CLNT-2026-0042",
+          "mila.testerveld@example.invalid",
+          "0612345678",
+          "NL91ABNA0417164300"
+        ],
+        "local_only": true,
+        "missing_expected_values": [
+          "mila.testerveld@example.invalid"
+        ],
+        "preserved_terms": [
+          "minderjarige",
+          "arts",
+          "getuige"
+        ],
+        "removed_preserved_terms": [],
+        "rows": [
+          {
+            "end": 239,
+            "entity_type": "NL_PHONE_NUMBER",
+            "score": 1.0,
+            "source": "DutchPhoneRecognizer",
+            "start": 229,
+            "text": "0612345678"
+          },
+          {
+            "end": 168,
+            "entity_type": "NL_POSTCODE",
+            "score": 0.8,
+            "source": "PatternRecognizer",
+            "start": 161,
+            "text": "1234 AB"
+          },
+          {
+            "end": 265,
+            "entity_type": "NL_IBAN",
+            "score": 0.9,
+            "source": "PatternRecognizer",
+            "start": 247,
+            "text": "NL91ABNA0417164300"
+          },
+          {
+            "end": 176,
+            "entity_type": "NL_ADDRESS",
+            "score": 0.66,
+            "source": "PatternRecognizer",
+            "start": 127,
+            "text": "Testerveld woont aan Testlaan 12, 1234 AB Testdam"
+          },
+          {
+            "end": 81,
+            "entity_type": "NL_LEGAL_CASE_NUMBER",
+            "score": 0.86,
+            "source": "NL_LEGAL_CASE_NUMBER_capture_recognizer",
+            "start": 68,
+            "text": "ZK-WOON-55091"
+          },
+          {
+            "end": 55,
+            "entity_type": "NL_DOSSIER_NUMBER",
+            "score": 0.83,
+            "source": "NL_DOSSIER_NUMBER_capture_recognizer",
+            "start": 40,
+            "text": "DOS-2026-778899"
+          },
+          {
+            "end": 105,
+            "entity_type": "NL_CLIENT_NUMBER",
+            "score": 0.86,
+            "source": "NL_CLIENT_NUMBER_capture_recognizer",
+            "start": 96,
+            "text": "CLNT-2026"
+          },
+          {
+            "end": 137,
+            "entity_type": "NL_LEGAL_PARTY_NAME",
+            "score": 0.79,
+            "source": "NL_LEGAL_PARTY_NAME_capture_recognizer",
+            "start": 122,
+            "text": "Mila Testerveld"
+          },
+          {
+            "end": 24,
+            "entity_type": "NL_COURT_OR_AUTHORITY",
+            "score": 0.7,
+            "source": "PatternRecognizer",
+            "start": 7,
+            "text": "Rechtbank Testdam"
+          },
+          {
+            "end": 110,
+            "entity_type": "NL_CLIENT_REFERENCE",
+            "score": 0.9,
+            "source": "DutchContextualReferenceRecognizer",
+            "start": 96,
+            "text": "CLNT-2026-0042"
+          }
+        ]
+      },
+      "document_type": "txt",
+      "export_import_types": [
+        "docx",
+        "pdf"
+      ],
+      "export_placeholders_visible": true,
+      "id": "txt_legal_core_roundtrip",
+      "known_limitations": [],
+      "local_only": true,
+      "manual_additions": [
+        {
+          "is_valid": true,
+          "manual_type": "Persoon",
+          "message": "",
+          "placeholder": "[PERSOON_HANDMATIG_01]",
+          "value": "Mila Testerveld"
+        },
+        {
+          "is_valid": true,
+          "manual_type": "Anders",
+          "message": "",
+          "placeholder": "[WAARDE_HANDMATIG_01]",
+          "value": "lantaarnbloem"
+        }
+      ],
+      "reinsert_replacement_count": 8,
+      "review_row_count": 8,
+      "roundtrip_exact": true,
+      "scrub_key_item_count": 8,
+      "scrub_key_validation_issues": [],
+      "scrub_report_requires_manual_review": true,
+      "scrubbed_text": "Aan de Rechtbank Testdam.\nDossiernummer [DOSSIERNUMMER_01].\nZaaknummer [ZAAKREFERENTIE_01].\nClientnummer [CLIENTNUMMER_01].\nVerzoeker [PERSOON_HANDMATIG_01] woont aan Testlaan 12, 1234 AB Testdam.\nE-mail: [EMAIL_01].\nTelefoon: [TELEFOON_01].\nIBAN: [IBAN_01].\nDe minderjarige sprak met de arts en de getuige.\nInterne testwaarde [WAARDE_HANDMATIG_01] bleef onopgemerkt.",
+      "source_import_type": "txt",
+      "status": "pass"
+    },
+    {
+      "ai_processing": false,
+      "audit_expectations_met": true,
+      "body_roundtrip_values_present": true,
+      "cloud_processing": false,
+      "document_type": "docx",
+      "expected_residual_placeholders": [
+        "[CLIENT_REFERENTIE_01]",
+        "[OVERIGE_REFERENTIE_01]"
+      ],
+      "hygiene_findings": [
+        "footers_detected",
+        "headers_detected"
+      ],
+      "hygiene_severity": "high",
+      "id": "docx_mixed_structure_roundtrip",
+      "known_limitations": [
+        "DOCX helper processes only word/document.xml text nodes in this foundation version.",
+        "Normal body paragraphs and tables in word/document.xml are supported.",
+        "Placeholders split across multiple Word runs/text nodes are not restored in this version.",
+        "Headers, footers, comments, tracked changes and metadata are not processed in this version."
+      ],
+      "limitation_expectations_met": true,
+      "local_only": true,
+      "reinsert_replacement_count": 4,
+      "residual_placeholders": [
+        "[CLIENT_REFERENTIE_01]",
+        "[OVERIGE_REFERENTIE_01]"
+      ],
+      "restored_import_type": "docx",
+      "restored_text": "Verzoeker Mila Testerveld behandelt zaak ZK-WOON-55091.\nDe minderjarige blijft als juridische rol leesbaar.\nDossier DOS-2026-778899\nClient CLNT-2026-0042\nVERTROUWELIJK [CLIENT_REFERENTIE_01]\nPagina [OVERIGE_REFERENTIE_01]",
+      "review_row_count": 6,
+      "roundtrip_complete": false,
+      "scrub_key_item_count": 6,
+      "scrub_key_validation_issues": [],
+      "scrubbed_import_type": "docx",
+      "scrubbed_text": "Verzoeker [PERSOON_01] behandelt zaak [ZAAKREFERENTIE_01].\nDe minderjarige blijft als juridische rol leesbaar.\nDossier [DOSSIERNUMMER_01]\nClient [CLIENTNUMMER_01]\nVERTROUWELIJK [CLIENT_REFERENTIE_01]\nPagina [OVERIGE_REFERENTIE_01]",
+      "source_import_type": "docx",
+      "source_text": "Verzoeker Mila Testerveld behandelt zaak ZK-WOON-55091.\nDe minderjarige blijft als juridische rol leesbaar.\nDossier DOS-2026-778899\nClient CLNT-2026-0042\nVERTROUWELIJK CL-FAM-55201\nPagina TEST-FOOTER-001",
+      "status": "pass_with_known_limitations"
+    },
+    {
+      "ai_processing": false,
+      "cloud_processing": false,
+      "document_type": "pdf",
+      "id": "pdf_text_based_to_txt_reinsert",
+      "known_limitations": [
+        "PDF reinsert produces restored TXT only.",
+        "No restored PDF output is supported.",
+        "OCR and scanned/image-only PDFs are unsupported."
+      ],
+      "limitation_contract_met": true,
+      "local_only": true,
+      "ocr_supported": false,
+      "reinsert_output_type": "txt",
+      "reinsert_replacement_count": 3,
+      "restored_pdf_supported": false,
+      "restored_text": "Zaak ZK-WOON-55091 betreft Mila Testerveld. Dossier DOS-2026-778899.",
+      "review_row_count": 3,
+      "roundtrip_text_equal": true,
+      "scrub_key_item_count": 3,
+      "scrub_key_validation_issues": [],
+      "scrubbed_import_type": "pdf",
+      "scrubbed_text": "Zaak [ZAAKREFERENTIE_01] betreft [PERSOON_01]. Dossier [DOSSIERNUMMER_01].",
+      "source_import_type": "pdf",
+      "source_text": "Zaak ZK-WOON-55091 betreft Mila Testerveld. Dossier DOS-2026-778899.",
+      "status": "pass_with_known_limitations"
+    }
+  ],
+  "cloud_processing": false,
+  "evidence_gap_count": 3,
+  "evidence_gaps": [
+    {
+      "case_id": "txt_legal_core_roundtrip",
+      "category": "false_negative_or_detection_gap",
+      "value": "mila.testerveld@example.invalid"
+    },
+    {
+      "case_id": "docx_mixed_structure_roundtrip",
+      "category": "known_docx_reinsert_limitation",
+      "value": [
+        "[CLIENT_REFERENTIE_01]",
+        "[OVERIGE_REFERENTIE_01]"
+      ]
+    },
+    {
+      "case_id": "pdf_text_based_to_txt_reinsert",
+      "category": "known_pdf_reinsert_limitation",
+      "value": "restored TXT only; no OCR or restored PDF"
+    }
+  ],
+  "failing_case_count": 0,
+  "failing_cases": [],
+  "generated_at": "2026-07-17T18:20:00Z",
+  "human_review_required": true,
+  "local_only": true,
+  "manifest_schema": "solidprivacy.mvp_phase6_validation_matrix",
+  "manifest_schema_version": "1.0",
+  "next_recommended_package": "SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE",
+  "ocr_processing": false,
+  "production_readiness_claim": false,
+  "production_ready": false,
+  "schema": "solidprivacy.mvp_phase6_validation_report",
+  "schema_version": "1.0",
+  "synthetic_data_only": true
+}

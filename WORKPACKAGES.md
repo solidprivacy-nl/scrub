@@ -1,3 +1,27 @@
+## 2026-07-17 20:20 Europe/Amsterdam — SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX
+
+Status: completed / ready for PR verification.
+
+Summary:
+- Added a versioned synthetic validation manifest with TXT, DOCX and text-based PDF cases.
+- Added pure helper-driven validation for import, review rows, manual additions, replacements, Scrub Key, reinsert, export representation and DOCX hygiene evidence.
+- Generated `output/validation/mvp_phase6_synthetic_validation_report.json` as the machine-readable Phase 6 baseline.
+- Recorded existing DOCX header/footer reinsert and PDF TXT-only limitations as evidence rather than silently accepting or changing them.
+- No UI, recognizer, export, Scrub Key, reinsert or document-processing semantics changed.
+
+Validation:
+- Cases: 3.
+- Failing cases: 0.
+- Evidence gaps: 3.
+- Categories: false_negative_or_detection_gap, known_docx_reinsert_limitation, known_pdf_reinsert_limitation.
+- Production-readiness claim: false.
+- Human review remains required.
+- GitHub Actions pending final PR validation.
+- App verification not applicable.
+
+Active next package:
+- `SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE`.
+
 ## 2026-07-17 20:12 Europe/Amsterdam — SCRUB-WP_MVP_PHASE6_ROADMAP_REALIGNMENT
 
 Status: completed / ready for PR verification.

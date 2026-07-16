@@ -19,7 +19,7 @@ Risk:
 Sensitive data remains in the scrubbed output and the user wrongly trusts the result.
 ```
 
-Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence.
+Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence. The first machine-readable matrix baseline is stored in `output/validation/mvp_phase6_synthetic_validation_report.json` with 3 synthetic cases and 3 recorded evidence gaps or known limitations.
 
 Remaining gaps:
 
@@ -73,7 +73,7 @@ Risk:
 DOCX metadata, comments, tracked changes, headers, footers or hidden content contain sensitive data that is not scrubbed or cleaned.
 ```
 
-DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee. The review debug collapse line explicitly keeps audit details available rather than removing them.
+DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee. The review debug collapse line explicitly keeps audit details available rather than removing them. The Phase 6 synthetic DOCX case now records header/footer findings and the existing main-document-only reinsert boundary as reproducible evidence for the document-hygiene hardening package.
 
 ---
 
@@ -134,7 +134,7 @@ Risk:
 Users may assume PDF support means complete restored PDF reinsert or OCR, while the approved scope is text-based extraction to restored TXT only.
 ```
 
-PDF limitations must remain clear in export/reinsert copy.
+PDF limitations must remain clear in export/reinsert copy. The Phase 6 text-based PDF case verifies the current restored-TXT-only path and explicitly records that restored PDF and OCR are unsupported.
 
 ---
 
@@ -176,7 +176,7 @@ Risk:
 Dutch legal matter references can be missed or misclassified, while generic legal/care role words can be masked in ways that damage meaning.
 ```
 
-Current mitigations include diagnostic benchmark work, preservation guidance, PERSON-name contract/helper work and a verified manual missed-value entry path. Benchmark follow-up is temporarily parked for UI/export work unless a concrete blocker appears.
+Current mitigations include diagnostic benchmark work, preservation guidance, PERSON-name contract/helper work and a verified manual missed-value entry path. The Phase 6 synthetic matrix is now the evidence source for `SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE`; only reproducible under-detection, misclassification or role-over-masking findings may open a subsequent fix package.
 
 ---
 
