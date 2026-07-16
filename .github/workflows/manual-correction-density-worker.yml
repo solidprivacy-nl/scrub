@@ -1,9 +1,13 @@
 name: Manual correction density worker
 
 on:
-  push:
+  pull_request:
     branches:
-      - scrub-manual-correction-panel-density-implementation
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 permissions:
   contents: write
@@ -12,7 +16,7 @@ jobs:
   implement-and-validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out branch
+      - name: Check out implementation branch
         uses: actions/checkout@v4
         with:
           ref: scrub-manual-correction-panel-density-implementation
@@ -85,12 +89,16 @@ jobs:
               '',
           ])
 
-          if text.count(old) != 1:
-              raise RuntimeError(f'Expected exactly one original manual panel; found {text.count(old)}')
-          app_path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          compact_marker = 'value_col, type_col, replacement_col = st.columns([2.0, 1.1, 1.6])'
+          apply_changes = old in text
+          if apply_changes:
+              app_path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          elif compact_marker not in text:
+              raise RuntimeError('Neither original nor compact manual correction panel was found')
 
           test_path = Path('tests/test_manual_correction_panel_density_implementation.py')
-          test_path.write_text('''from __future__ import annotations
+          if apply_changes:
+              test_path.write_text('''from __future__ import annotations
 
 import ast
 from pathlib import Path
@@ -161,10 +169,11 @@ def test_implementation_test_is_source_level_only() -> None:
     assert "presidio_streamlit" not in imported_roots
 ''', encoding='utf-8')
 
-          timestamp = '2026-07-16 20:40 Europe/Amsterdam'
-          handover_path = Path('handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md')
+          if apply_changes:
+              timestamp = '2026-07-16 20:40 Europe/Amsterdam'
+              handover_path = Path('handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md')
 
-          changelog_entry = '''## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+              changelog_entry = '''## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented; local validation pending.
 
@@ -211,10 +220,10 @@ Next recommended step:
 ---
 
 '''
-          changelog = Path('CHANGELOG.md')
-          changelog.write_text(changelog_entry + changelog.read_text(encoding='utf-8'), encoding='utf-8')
+              changelog = Path('CHANGELOG.md')
+              changelog.write_text(changelog_entry + changelog.read_text(encoding='utf-8'), encoding='utf-8')
 
-          workpackages_entry = f'''## {timestamp} — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+              workpackages_entry = f'''## {timestamp} — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented; local validation pending.
 
@@ -234,10 +243,10 @@ Next recommended step:
 - `SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY`.
 
 '''
-          workpackages = Path('WORKPACKAGES.md')
-          workpackages.write_text(workpackages_entry + workpackages.read_text(encoding='utf-8'), encoding='utf-8')
+              workpackages = Path('WORKPACKAGES.md')
+              workpackages.write_text(workpackages_entry + workpackages.read_text(encoding='utf-8'), encoding='utf-8')
 
-          release_entry = '''## 2026-07-16 — Handmatige aanvulling compacter
+              release_entry = '''## 2026-07-16 — Handmatige aanvulling compacter
 
 - `Gemiste waarde toevoegen` gebruikt bij openen een compactere invoerregel voor waarde, type en vervanging.
 - De dubbele interne kop is verwijderd; de functie en validatiemeldingen blijven ongewijzigd.
@@ -246,16 +255,16 @@ Next recommended step:
 ---
 
 '''
-          release_notes = Path('RELEASE_NOTES.md')
-          release_notes.write_text(release_entry + release_notes.read_text(encoding='utf-8'), encoding='utf-8')
+              release_notes = Path('RELEASE_NOTES.md')
+              release_notes.write_text(release_entry + release_notes.read_text(encoding='utf-8'), encoding='utf-8')
 
-          claim_path = Path('workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md')
-          claim = claim_path.read_text(encoding='utf-8').replace('Status: in_progress', 'Status: implemented / validation pending', 1)
-          claim += f'''\n\nImplementation update:\n- Implemented at: {timestamp}\n- Product change limited to compact manual correction panel layout.\n- Validation pending in worker workflow.\n- Handover: `{handover_path}`\n'''
-          claim_path.write_text(claim, encoding='utf-8')
+              claim_path = Path('workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md')
+              claim = claim_path.read_text(encoding='utf-8').replace('Status: in_progress', 'Status: implemented / validation pending', 1)
+              claim += f'''\n\nImplementation update:\n- Implemented at: {timestamp}\n- Product change limited to compact manual correction panel layout.\n- Validation pending in worker workflow.\n- Handover: `{handover_path}`\n'''
+              claim_path.write_text(claim, encoding='utf-8')
 
-          handover_path.parent.mkdir(parents=True, exist_ok=True)
-          handover_path.write_text(f'''# Handover — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+              handover_path.parent.mkdir(parents=True, exist_ok=True)
+              handover_path.write_text(f'''# Handover — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 Repository worked in: solidprivacy-nl/scrub
 
@@ -355,11 +364,15 @@ Required after Actions and sync because visible UI behavior changed.
               path.write_text(text, encoding='utf-8')
           PY
 
-      - name: Commit implementation
+      - name: Commit implementation when needed
         shell: bash
         run: |
           set -euo pipefail
           rm -rf __pycache__ tests/__pycache__
+          if git diff --quiet; then
+            echo 'Implementation already committed; nothing to push.'
+            exit 0
+          fi
           git config user.name 'solidprivacy-workpackage-worker'
           git config user.email 'actions@users.noreply.github.com'
           git add \
