@@ -695,14 +695,37 @@ try:
                 st.caption("Reviewstatus: " + " · ".join(status_parts))
 
         with st.expander("Gemiste waarde toevoegen", expanded=False):
-            st.markdown("**Gemiste waarde toevoegen**")
-            st.caption("Voeg snel een waarde toe die Scrub heeft gemist.")
+            st.caption("Voeg een gemiste waarde rechtstreeks toe aan de vervangtabel.")
+
             with st.form("manual_mask_entry_form", clear_on_submit=True):
-                manual_value = st.text_input("Waarde die alsnog gemaskeerd moet worden")
-                manual_type_label = st.selectbox("Type gegeven", list(MANUAL_MASK_TYPE_OPTIONS))
-                manual_placeholder = build_manual_placeholder(manual_type_label, replacement_editor_df)
-                manual_replace_with = st.text_input("Vervangen door", value=manual_placeholder)
-                manual_submit = st.form_submit_button("Toevoegen aan vervangtabel")
+                value_col, type_col, replacement_col = st.columns([2.0, 1.1, 1.6])
+
+                with value_col:
+                    manual_value = st.text_input(
+                        "Waarde die alsnog gemaskeerd moet worden"
+                    )
+
+                with type_col:
+                    manual_type_label = st.selectbox(
+                        "Type gegeven",
+                        list(MANUAL_MASK_TYPE_OPTIONS),
+                    )
+
+                manual_placeholder = build_manual_placeholder(
+                    manual_type_label,
+                    replacement_editor_df,
+                )
+
+                with replacement_col:
+                    manual_replace_with = st.text_input(
+                        "Vervangen door",
+                        value=manual_placeholder,
+                    )
+
+                manual_submit = st.form_submit_button(
+                    "Toevoegen aan vervangtabel",
+                    use_container_width=True,
+                )
 
         if manual_submit:
             existing_find_values = (

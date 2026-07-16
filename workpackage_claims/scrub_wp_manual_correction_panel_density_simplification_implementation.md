@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
-Status: in_progress
+Status: completed / ready for app verification
 
 Claimed by: ChatGPT GitHub worker
 
@@ -33,3 +33,10 @@ Explicit boundaries:
 
 Next step:
 - Implement the compact panel layout and run the required narrow guardrails.
+
+
+Implementation update:
+- Implemented at: 2026-07-16 20:40 Europe/Amsterdam
+- Product change limited to compact manual correction panel layout.
+- Required worker validation passed.
+- Handover: `handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md`

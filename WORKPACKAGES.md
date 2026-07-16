@@ -1,3 +1,22 @@
+## 2026-07-16 20:40 Europe/Amsterdam — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+
+Status: completed / ready for app verification.
+
+Summary:
+- Converted the open manual correction form from a vertical stack to one compact three-column input row.
+- Removed the duplicate internal `Gemiste waarde toevoegen` heading.
+- Kept the expander collapsed by default and retained one full-width submit action.
+- Preserved validation, session state, replacement-table integration and all export/Scrub Key/reinsert semantics.
+
+Validation:
+- Required worker validation passed.
+- GitHub Actions pending after PR update.
+- Hugging Face sync pending after merge.
+- App verification required after sync.
+
+Next recommended step:
+- `SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY`.
+
 ## 2026-07-05 22:42 Europe/Amsterdam — SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
 
 Status: completed and app-verified.

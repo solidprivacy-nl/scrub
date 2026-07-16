@@ -1,3 +1,49 @@
+## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented; local validation passed.
+
+Purpose:
+
+- Make the existing `Gemiste waarde toevoegen` panel materially shorter and less form-like.
+- Remove the duplicate internal heading and group value, type and replacement controls in one compact row.
+- Preserve the existing validation, session-state and replacement-table workflow.
+
+Files changed:
+
+- `presidio_streamlit.py`
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md`
+
+Files added:
+
+- `tests/test_manual_correction_panel_density_implementation.py`
+- `handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md`
+
+Validation status:
+
+- Required worker validation passed.
+- GitHub Actions pending after PR update.
+- Hugging Face sync pending after merge.
+- Live app verification required because visible UI behavior changed.
+
+Intentionally not changed:
+
+- validation rules or duplicate detection;
+- placeholder generation or entity types;
+- replacement-row structure or replacement semantics;
+- export payloads, filenames or MIME types;
+- Scrub Key JSON or warning behavior;
+- reinsert behavior;
+- recognizers, thresholds, document processing, runtime/startup or dependencies.
+
+Next recommended step:
+
+- Verify PR Actions, merge when green, verify Hugging Face sync and request live app verification.
+
+---
+
 ## 2026-07-05 — SCRUB-WP_REVIEW_EXPORT_VERTICAL_DENSITY_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
 
 Status: completed and app-verified.
