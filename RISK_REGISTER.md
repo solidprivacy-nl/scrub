@@ -73,7 +73,7 @@ Risk:
 DOCX metadata, comments, tracked changes, headers, footers or hidden content contain sensitive data that is not scrubbed or cleaned.
 ```
 
-DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee. The review debug collapse line explicitly keeps audit details available rather than removing them. The Phase 6 synthetic DOCX case now records header/footer findings and the existing main-document-only reinsert boundary as reproducible evidence for the document-hygiene hardening package. Gap triage classifies this as document fidelity and reinsert scope and routes it to `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`.
+DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee. The review debug collapse line explicitly keeps audit details available rather than removing them. The Phase 6 synthetic DOCX case now records header/footer findings and the existing main-document-only reinsert boundary as reproducible evidence for the document-hygiene hardening package. Gap triage classifies this as document fidelity and reinsert scope and routes it to `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`. The hardening package now restores placeholders in existing DOCX header and footer XML parts while retaining hygiene reporting and explicit unsupported-part warnings.
 
 ---
 
@@ -134,7 +134,7 @@ Risk:
 Users may assume PDF support means complete restored PDF reinsert or OCR, while the approved scope is text-based extraction to restored TXT only.
 ```
 
-PDF limitations must remain clear in export/reinsert copy. The Phase 6 text-based PDF case verifies the current restored-TXT-only path and explicitly records that restored PDF and OCR are unsupported. Gap triage retains this as an explicit product boundary and does not authorize OCR or restored-PDF work.
+PDF limitations must remain clear in export/reinsert copy. The Phase 6 text-based PDF case verifies the current restored-TXT-only path and explicitly records that restored PDF and OCR are unsupported. Gap triage retains this as an explicit product boundary and does not authorize OCR or restored-PDF work. Document-fidelity hardening preserves that boundary unchanged.
 
 ---
 

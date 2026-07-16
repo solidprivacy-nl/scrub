@@ -35,6 +35,7 @@ XML_NS = "http://www.w3.org/XML/1998/namespace"
 DOCX_LIMITATIONS = [
     "DOCX helper processes word/document.xml plus word/header*.xml and word/footer*.xml text nodes.",
     "Normal body paragraphs, body tables and header/footer text are supported.",
+    "Headers and footers are processed together with the main document body.",
     "Placeholders split across multiple Word runs/text nodes are not restored in this version.",
     "Comments, tracked-change-only parts, footnotes/endnotes, text boxes and metadata are not processed in this version.",
 ]

@@ -1,3 +1,59 @@
+## 2026-07-17 — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
+
+Status: completed / ready for PR verification.
+
+Purpose:
+
+- Resolve the reproducible DOCX header/footer reinsert fidelity gap from the Phase 6 matrix.
+- Preserve DOCX hygiene visibility and explicit unsupported-part boundaries.
+- Keep the PDF restored-TXT-only/no-OCR boundary unchanged.
+
+Files added:
+
+- `mvp_document_fidelity_report.py`
+- `scripts/run_mvp_document_hygiene_fidelity_report.py`
+- `tests/test_mvp_document_hygiene_fidelity_hardening.py`
+- `tests/test_mvp_document_fidelity_report.py`
+- `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
+- `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
+
+Files changed:
+
+- `scrub_key_document_reinsert.py`
+- `mvp_phase6_document_cases.py`
+- `tests/test_mvp_phase6_e2e_synthetic_validation_matrix.py`
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/scrub_wp_mvp_document_hygiene_fidelity_hardening.md`
+
+Implementation result:
+
+- DOCX body paragraphs and tables remain supported.
+- `word/header*.xml` and `word/footer*.xml` text nodes are now restored deterministically.
+- The synthetic header/footer residual-placeholder finding is resolved: `true`.
+- Resolved findings: 1.
+- Remaining findings: 1.
+- The remaining finding is the explicit PDF restored-TXT-only/no-OCR product boundary.
+
+Intentionally not changed:
+
+- recognizers, thresholds or replacement semantics;
+- Scrub Key schema or lifecycle;
+- DOCX comments, tracked-change-only parts, footnotes/endnotes, text boxes or metadata;
+- split-placeholder support across Word text nodes;
+- export filenames or MIME types;
+- restored PDF or OCR support;
+- Streamlit UI, runtime or dependencies.
+
+Next recommended step:
+
+- Start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
+---
+
 ## 2026-07-17 — SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
 
 Status: completed / ready for PR verification.

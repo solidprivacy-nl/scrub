@@ -1,3 +1,27 @@
+## 2026-07-17 22:30 Europe/Amsterdam — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
+
+Status: completed / ready for PR verification.
+
+Summary:
+- Extended deterministic DOCX reinsert from `word/document.xml` to existing `word/header*.xml` and `word/footer*.xml` text nodes.
+- Preserved body/table behavior and unrelated OOXML package parts.
+- Kept comments, tracked-change-only parts, footnotes/endnotes, text boxes, metadata and split placeholders explicitly unsupported.
+- Regenerated current Phase 6 evidence without overwriting the historical baseline/triage artifacts.
+- Resolved the DOCX header/footer finding and retained the PDF TXT-only/no-OCR boundary.
+
+Validation:
+- DOCX header/footer resolution: True.
+- Resolved findings: 1.
+- Remaining findings: 1.
+- Production readiness: false.
+- Human review remains required.
+- GitHub Actions pending final PR validation.
+- Hugging Face sync required after merge because reinsert behavior changed.
+- Live app verification required for the DOCX reinsert path after sync.
+
+Active next package after verification:
+- `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
 ## 2026-07-17 22:08 Europe/Amsterdam — SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
 
 Status: completed / ready for PR verification.

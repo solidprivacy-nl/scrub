@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 
-Status: in_progress
+Status: completed / ready for app verification
 
 Claimed by: ChatGPT GitHub worker
 
@@ -37,3 +37,13 @@ Boundaries:
 
 Next step:
 - Add failing contract tests, implement multi-part OOXML reinsert narrowly, rerun the synthetic matrix and related document/Scrub Key/hygiene suites, then update governance evidence and handover.
+
+
+Hardening result:
+- Completed at: 2026-07-17 22:30 Europe/Amsterdam
+- DOCX header/footer reinsert resolved: true
+- Resolved findings: 1
+- Remaining findings: 1
+- Report: `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
+- Handover: `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
+- App verification required after Actions and Hugging Face sync.
