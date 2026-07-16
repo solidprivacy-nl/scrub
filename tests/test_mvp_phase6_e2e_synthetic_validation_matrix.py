@@ -89,10 +89,12 @@ def test_txt_case_exercises_manual_addition_scrub_key_exports_and_roundtrip() ->
     assert all(item["is_valid"] for item in additions.values())
 
 
-def test_txt_detection_evidence_preserves_legal_role_words() -> None:
+def test_txt_detection_evidence_covers_expected_values_and_preserves_roles() -> None:
     case = _case(_report(), "txt_legal_core_roundtrip")
     detection = case["detection"]
 
+    assert detection["detection_expectations_met"] is True
+    assert detection["missing_expected_values"] == []
     assert detection["context_preservation_met"] is True
     assert detection["removed_preserved_terms"] == []
     assert detection["local_only"] is True
@@ -102,7 +104,17 @@ def test_txt_detection_evidence_preserves_legal_role_words() -> None:
         "DOS-2026-778899",
         "ZK-WOON-55091",
         "CLNT-2026-0042",
+        "mila.testerveld@example.invalid",
     }
+    email_rows = [
+        row
+        for row in detection["rows"]
+        if row["entity_type"] == "EMAIL_ADDRESS"
+    ]
+    assert any(
+        row["text"] == "mila.testerveld@example.invalid"
+        for row in email_rows
+    )
 
 
 def test_docx_case_records_hygiene_and_header_footer_reinsert_limits() -> None:
@@ -159,8 +171,10 @@ def test_report_is_machine_readable_and_never_claims_production_readiness() -> N
     )
 
     categories = {item["category"] for item in report["evidence_gaps"]}
-    assert "known_docx_reinsert_limitation" in categories
-    assert "known_pdf_reinsert_limitation" in categories
+    assert categories == {
+        "known_docx_reinsert_limitation",
+        "known_pdf_reinsert_limitation",
+    }
 
 
 def test_report_writer_is_deterministic(tmp_path: Path) -> None:
