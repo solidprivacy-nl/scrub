@@ -9,12 +9,12 @@
       "id": "txt_legal_core_roundtrip",
       "document_type": "txt",
       "document_label": "Synthetisch juridisch kerndossier",
-      "source_text": "Aan de Rechtbank Testdam.\nDossiernummer DOS-2026-778899.\nZaaknummer ZK-WOON-55091.\nClientnummer CLNT-2026-0042.\nVerzoeker Mila Testerveld woont aan Testlaan 12, 1234 AB Testdam.\nE-mail: mila.testerveld@example.invalid.\nTelefoon: 0612345678.\nIBAN: NL91ABNA0417164300.\nDe minderjarige sprak met de arts en de getuige.\nInterne testwaarde lantaarnbloem bleef onopgemerkt.",
+      "source_text": "Aan de Rechtbank Testdam.\nDossiernummer DOS-2026-778899.\nZaaknummer ZK-WOON-55091.\nClientnummer CLNT-2026-0042.\nVerzoeker Mila Testerveld woont aan Testlaan 12, 1234 AB Testdam.\nE-mail: mila.testerveld@example.com.\nTelefoon: 0612345678.\nIBAN: NL91ABNA0417164300.\nDe minderjarige sprak met de arts en de getuige.\nInterne testwaarde lantaarnbloem bleef onopgemerkt.",
       "expected_detected_values": [
         "DOS-2026-778899",
         "ZK-WOON-55091",
         "CLNT-2026-0042",
-        "mila.testerveld@example.invalid",
+        "mila.testerveld@example.com",
         "0612345678",
         "NL91ABNA0417164300"
       ],
@@ -56,7 +56,7 @@
         },
         {
           "include": true,
-          "find": "mila.testerveld@example.invalid",
+          "find": "mila.testerveld@example.com",
           "replace_with": "[EMAIL_01]",
           "entity_type": "EMAIL_ADDRESS",
           "type_label": "E-mailadres",
