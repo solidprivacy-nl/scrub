@@ -151,11 +151,14 @@ def test_comments_tracked_changes_metadata_and_split_nodes_remain_unsupported() 
 
 
 def test_unrelated_package_parts_are_preserved_byte_for_byte() -> None:
-    source = _source_docx()
     marker_path = "customXml/synthetic-marker.xml"
     marker_bytes = b"<synthetic>KEEP-ME</synthetic>"
+    scrubbed = anonymized_docx_from_original(
+        UploadedBytes("synthetic.docx", _source_docx()),
+        REPLACEMENTS,
+    )
     enriched = BytesIO()
-    with ZipFile(BytesIO(source), "r") as original, ZipFile(
+    with ZipFile(BytesIO(scrubbed), "r") as original, ZipFile(
         enriched,
         "w",
         ZIP_DEFLATED,
@@ -164,11 +167,7 @@ def test_unrelated_package_parts_are_preserved_byte_for_byte() -> None:
             output.writestr(entry, original.read(entry.filename))
         output.writestr(marker_path, marker_bytes)
 
-    scrubbed = anonymized_docx_from_original(
-        UploadedBytes("synthetic.docx", enriched.getvalue()),
-        REPLACEMENTS,
-    )
-    result = reinsert_docx_bytes(scrubbed, _scrub_key())
+    result = reinsert_docx_bytes(enriched.getvalue(), _scrub_key())
 
     with ZipFile(BytesIO(result["docx_bytes"]), "r") as restored:
         assert restored.read(marker_path) == marker_bytes
