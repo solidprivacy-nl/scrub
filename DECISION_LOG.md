@@ -4,6 +4,33 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-17 — D028 — Phase 6 workflow validation becomes the active development line
+
+Status: accepted product-direction decision
+
+Decision:
+
+```text
+Close the verified MVP UI simplification line as the default development focus and activate Phase 6 end-to-end workflow validation and trust hardening.
+```
+
+Reason:
+
+```text
+The current import, review, manual correction and export interface has been live-app verified and works as expected. The next material risk reduction comes from proving the supported workflow with synthetic evidence, then fixing only reproducible trust gaps.
+```
+
+Consequences:
+
+- Start with `SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX`.
+- Open recognizer, document-hygiene, Scrub Key/roundtrip or audit fixes only from reproducible evidence.
+- Do not start another broad UI package by default.
+- Phase 7 pilots remain parked until the Phase 6 quality gate is explicitly approved.
+- Local installer/packaging work remains deferred.
+- Human review remains mandatory; no production-readiness claim is created by this decision.
+
+---
+
 ## 2026-07-03 — D027 — Basiscontrole / Expertcontrole as review-mode direction
 
 Status: accepted planning recommendation, implementation pending contract tests

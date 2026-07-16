@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_PHASE6_ROADMAP_REALIGNMENT
 
-Status: in_progress
+Status: completed / ready for PR verification
 
 Claimed by: ChatGPT GitHub worker
 
@@ -32,3 +32,10 @@ Boundaries:
 
 Next step:
 - Apply the roadmap realignment, validate the diff, open PR and merge when GitHub Actions are green.
+
+
+Implementation result:
+- Completed at: 2026-07-17 20:12 Europe/Amsterdam
+- Phase 6 roadmap and execution queue realigned.
+- Product code/tests/UI unchanged.
+- Handover: `handover/workpackages/20260717_2012_mvp_phase6_roadmap_realignment.md`
