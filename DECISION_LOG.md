@@ -4,6 +4,37 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-17 — D029 — Current Phase 6 matrix does not justify a recognizer fix
+
+Status: accepted evidence-routing decision
+
+Decision:
+
+```text
+Do not open a recognizer or threshold implementation package from the first corrected Phase 6 synthetic matrix.
+```
+
+Reason:
+
+- The corrected matrix contains no reproducible detection false negative, misclassification or legal-role over-masking evidence.
+- The DOCX result concerns header/footer reinsert fidelity and helper scope.
+- The PDF result reflects the approved restored-TXT-only/no-OCR product boundary.
+- Treating either item as a recognizer problem would target the wrong layer and weaken evidence discipline.
+
+Consequences:
+
+- Route both findings to `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`.
+- Preserve current recognizer and threshold behavior.
+- Keep the PDF limitation explicit; do not infer OCR or restored-PDF authorization.
+- Preserve human review and the no-production-readiness-claim boundary.
+
+Evidence:
+
+- `output/validation/mvp_phase6_false_negative_gap_triage.json`
+- `output/validation/mvp_phase6_synthetic_validation_report.json`
+
+---
+
 ## 2026-07-17 — D028 — Phase 6 workflow validation becomes the active development line
 
 Status: accepted product-direction decision
