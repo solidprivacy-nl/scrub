@@ -1,11 +1,11 @@
 name: MVP false-negative gap triage operator
 
 on:
-  workflow_run:
-    workflows:
-      - Tests
-    types:
-      - completed
+  push:
+    branches:
+      - main
+    paths:
+      - operator_triggers/mvp_false_negative_gap_triage.txt
 
 permissions:
   contents: write
