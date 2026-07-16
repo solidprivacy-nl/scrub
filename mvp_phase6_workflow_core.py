@@ -95,6 +95,29 @@ def replacement_map(rows: Iterable[Mapping[str, Any]]) -> dict[str, str]:
     return replacements
 
 
+def scrub_key_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Adapt review-table rows to the existing public Scrub Key model aliases.
+
+    The app review table uses ``find`` while the pure Scrub Key model accepts
+    ``original_value``/``found_text``. This adapter is validation-only and does
+    not change either product contract.
+    """
+
+    adapted: list[dict[str, Any]] = []
+    for row in rows:
+        item = deepcopy(dict(row))
+        item.setdefault(
+            "original_value",
+            item.get("find") or item.get("found_text") or item.get("text") or "",
+        )
+        item.setdefault(
+            "placeholder",
+            item.get("replace_with") or item.get("replacement") or "",
+        )
+        adapted.append(item)
+    return adapted
+
+
 def _scrub_report_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
     return [
         {
@@ -118,7 +141,7 @@ def build_common_evidence(
     scrubbed_text = apply_replacements_to_text(source_text, replacements)
 
     scrub_key = build_scrub_key(
-        rows,
+        scrub_key_rows(rows),
         document_label=str(case.get("document_label") or case.get("id")),
     )
     scrub_key_json = scrub_key_to_json(scrub_key)
