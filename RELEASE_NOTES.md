@@ -1,3 +1,11 @@
+## 2026-07-16 — Handmatige aanvulling compacter
+
+- `Gemiste waarde toevoegen` gebruikt bij openen een compactere invoerregel voor waarde, type en vervanging.
+- De dubbele interne kop is verwijderd; de functie en validatiemeldingen blijven ongewijzigd.
+- De vervangtabel, exports, Scrub Key en terugzetworkflow zijn niet gewijzigd.
+
+---
+
 ## 2026-07-03 — Secondary review controls calmer
 
 - De extra controleopties onder `2. Controleer resultaat` krijgen een duidelijker verzamelpunt: `Meer controleopties`.
