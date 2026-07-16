@@ -28,7 +28,7 @@ Scope:
 - Update the Phase 6 matrix expectation and evidence after the helper change.
 
 Boundaries:
-- Helper-level document reinsert only; no Streamlit UI changes.
+- Helper-level document reinsert plus capability-copy alignment only; no new Streamlit controls or flow.
 - No recognizer, threshold or replacement changes.
 - No export filename, MIME or Scrub Key schema changes.
 - No comments/tracked changes/metadata cleaning guarantee.

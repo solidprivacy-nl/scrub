@@ -14,12 +14,14 @@ Files added:
 - `scripts/run_mvp_document_hygiene_fidelity_report.py`
 - `tests/test_mvp_document_hygiene_fidelity_hardening.py`
 - `tests/test_mvp_document_fidelity_report.py`
+- `tests/test_mvp_document_fidelity_ui_copy.py`
 - `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
 - `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
 
 Files changed:
 
 - `scrub_key_document_reinsert.py`
+- `reinsert_mode_ui.py`
 - `mvp_phase6_document_cases.py`
 - `tests/test_mvp_phase6_e2e_synthetic_validation_matrix.py`
 - `CHANGELOG.md`
@@ -33,6 +35,7 @@ Implementation result:
 
 - DOCX body paragraphs and tables remain supported.
 - `word/header*.xml` and `word/footer*.xml` text nodes are now restored deterministically.
+- The DOCX reinsert capability copy now matches the supported body/table/header/footer scope.
 - The synthetic header/footer residual-placeholder finding is resolved: `true`.
 - Resolved findings: 1.
 - Remaining findings: 1.
@@ -46,7 +49,7 @@ Intentionally not changed:
 - split-placeholder support across Word text nodes;
 - export filenames or MIME types;
 - restored PDF or OCR support;
-- Streamlit UI, runtime or dependencies.
+- Streamlit controls/flow, runtime or dependencies; only capability copy was aligned.
 
 Next recommended step:
 
