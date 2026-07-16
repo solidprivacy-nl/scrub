@@ -1,0 +1,35 @@
+name: MVP document fidelity copy patch
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - operator_triggers/mvp_document_fidelity_copy_patch.txt
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-document-hygiene-fidelity-hardening
+          fetch-depth: 0
+      - run: python scripts/apply_mvp_document_fidelity_ui_copy.py
+      - name: Commit patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-workpackage-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            reinsert_mode_ui.py \
+            CHANGELOG.md \
+            WORKPACKAGES.md \
+            workpackage_claims/scrub_wp_mvp_document_hygiene_fidelity_hardening.md \
+            handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md
+          git commit -m 'Align DOCX reinsert capability copy'
+          git push origin HEAD:scrub-mvp-document-hygiene-fidelity-hardening
