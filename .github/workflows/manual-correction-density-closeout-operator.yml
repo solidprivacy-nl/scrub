@@ -1,0 +1,51 @@
+name: Manual correction density closeout operator
+
+on:
+  workflow_run:
+    workflows:
+      - Tests
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  closeout:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out closeout branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-manual-correction-density-app-verify-closeout
+          fetch-depth: 0
+
+      - name: Apply closeout records
+        run: python scripts/manual_correction_density_closeout_worker.py
+
+      - name: Validate docs-only diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+
+      - name: Commit closeout records when needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Closeout already applied; nothing to push.'
+            exit 0
+          fi
+          git config user.name 'solidprivacy-workpackage-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            CHANGELOG.md \
+            WORKPACKAGES.md \
+            workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_implementation.md \
+            workpackage_claims/scrub_wp_manual_correction_panel_density_simplification_app_verify_closeout.md \
+            handover/workpackages/20260716_2040_manual_correction_panel_density_implementation.md \
+            handover/workpackages/20260716_2343_manual_correction_panel_density_app_verify_closeout.md
+          git commit -m 'Record manual correction panel app verification'
+          git push origin HEAD:scrub-manual-correction-density-app-verify-closeout
