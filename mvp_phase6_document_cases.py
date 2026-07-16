@@ -49,6 +49,21 @@ def build_docx_case(case: Mapping[str, Any]) -> bytes:
     return output.getvalue()
 
 
+def _expected_scope_is_supported(
+    term: str,
+    processed_parts: list[str],
+    limitation_copy: str,
+) -> bool:
+    normalized = str(term).lower()
+    if normalized in limitation_copy:
+        return True
+    if normalized in {"header", "headers"}:
+        return any(part.startswith("word/header") for part in processed_parts)
+    if normalized in {"footer", "footers"}:
+        return any(part.startswith("word/footer") for part in processed_parts)
+    return False
+
+
 def run_docx_case(case: Mapping[str, Any]) -> dict[str, Any]:
     source_docx = build_docx_case(case)
     source_upload = UploadedBytes(f"{case['id']}.docx", source_docx)
@@ -75,18 +90,31 @@ def run_docx_case(case: Mapping[str, Any]) -> dict[str, Any]:
         str(case.get("header_text") or ""),
         str(case.get("footer_text") or ""),
     ]
-    expected_residuals = sorted(
+    formerly_expected_residuals = sorted(
         placeholder
         for original, placeholder in common["replacement_map"].items()
         if any(original in container for container in header_footer_text)
     )
     residuals = detect_placeholders(restored_text)
+    resolved_header_footer_placeholders = sorted(
+        placeholder
+        for placeholder in formerly_expected_residuals
+        if placeholder not in residuals
+    )
     body_values = [
         original
         for original in common["replacement_map"]
         if not any(original in container for container in header_footer_text)
     ]
     body_values_present = all(value in restored_text for value in body_values)
+    header_footer_values = [
+        original
+        for original in common["replacement_map"]
+        if any(original in container for container in header_footer_text)
+    ]
+    header_footer_values_present = all(
+        value in restored_text for value in header_footer_values
+    )
 
     expected_findings = set(case.get("expected_hygiene_findings", []) or [])
     observed_findings = {
@@ -95,19 +123,21 @@ def run_docx_case(case: Mapping[str, Any]) -> dict[str, Any]:
         if finding.get("id")
     }
     audit_met = expected_findings.issubset(observed_findings)
-    residuals_documented = set(expected_residuals).issubset(set(residuals))
+    processed_parts = list(reinsert_result.get("processed_parts", []))
     limitation_copy = " ".join(reinsert_result.get("limitations", [])).lower()
     limitation_met = all(
-        str(term).lower() in limitation_copy
+        _expected_scope_is_supported(term, processed_parts, limitation_copy)
         for term in case.get("expected_reinsert_limitations", []) or []
     )
+    roundtrip_complete = not residuals
 
     status = (
         "pass_with_known_limitations"
         if body_values_present
+        and header_footer_values_present
         and audit_met
-        and residuals_documented
         and limitation_met
+        and roundtrip_complete
         and not common["scrub_key_validation_issues"]
         else "fail"
     )
@@ -127,14 +157,17 @@ def run_docx_case(case: Mapping[str, Any]) -> dict[str, Any]:
         "scrub_key_validation_issues": common["scrub_key_validation_issues"],
         "reinsert_replacement_count": reinsert_result.get("replacement_count"),
         "body_roundtrip_values_present": body_values_present,
-        "expected_residual_placeholders": expected_residuals,
+        "header_footer_roundtrip_values_present": header_footer_values_present,
+        "expected_residual_placeholders": formerly_expected_residuals,
+        "resolved_header_footer_placeholders": resolved_header_footer_placeholders,
         "residual_placeholders": residuals,
+        "processed_parts": processed_parts,
         "hygiene_severity": hygiene_report.get("summary", {}).get("severity"),
         "hygiene_findings": sorted(observed_findings),
         "audit_expectations_met": audit_met,
         "known_limitations": list(reinsert_result.get("limitations", [])),
         "limitation_expectations_met": limitation_met,
-        "roundtrip_complete": not residuals,
+        "roundtrip_complete": roundtrip_complete,
         "local_only": True,
         "ai_processing": False,
         "cloud_processing": False,
