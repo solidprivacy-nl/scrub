@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from typing import Any, Iterable, Mapping
 
+from presidio_analyzer.predefined_recognizers import EmailRecognizer
+
 from candidate_scanner import scan_unmasked_candidates
 from dutch_recognizers import get_dutch_entity_names, get_dutch_recognizers
 
@@ -43,6 +45,14 @@ def _result_to_row(text: str, result: Any, source: str) -> dict[str, Any]:
 
 
 def detect_dutch_values(text: str) -> dict[str, Any]:
+    """Run the Dutch pack plus deterministic standard structured recognizers.
+
+    The live analyzer also includes Presidio's standard recognizers. The matrix
+    uses the standard email recognizer explicitly so an email expectation is not
+    incorrectly classified as a Dutch-pack false negative. NLP-dependent PERSON
+    coverage remains outside this helper and is handled by reviewed/manual rows.
+    """
+
     entities = get_dutch_entity_names(include_legal=True)
     analyzer_results: list[Any] = []
     rows: list[dict[str, Any]] = []
@@ -56,6 +66,20 @@ def detect_dutch_values(text: str) -> dict[str, Any]:
             _result_to_row(text, result, recognizer.name)
             for result in recognizer_results
         )
+
+    email_recognizer = EmailRecognizer()
+    email_results = list(
+        email_recognizer.analyze(
+            text,
+            entities=["EMAIL_ADDRESS"],
+            nlp_artifacts=None,
+        )
+    )
+    analyzer_results.extend(email_results)
+    rows.extend(
+        _result_to_row(text, result, email_recognizer.name)
+        for result in email_results
+    )
 
     candidate_results = scan_unmasked_candidates(
         text,
