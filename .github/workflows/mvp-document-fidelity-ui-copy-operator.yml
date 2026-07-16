@@ -1,0 +1,61 @@
+name: MVP document fidelity UI copy operator
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - operator_triggers/mvp_document_fidelity_ui_copy.txt
+
+permissions:
+  contents: write
+
+jobs:
+  align-and-validate:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - name: Check out hardening branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-document-hygiene-fidelity-hardening
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf
+
+      - name: Align capability copy
+        run: python scripts/apply_mvp_document_fidelity_ui_copy.py
+
+      - name: Run copy and document fidelity tests
+        run: |
+          python -m py_compile reinsert_mode_ui.py scrub_key_document_reinsert.py
+          python -m pytest -q \
+            tests/test_mvp_document_fidelity_ui_copy.py \
+            tests/test_mvp_document_hygiene_fidelity_hardening.py \
+            tests/test_mvp_document_fidelity_report.py \
+            tests/test_scrub_key_document_reinsert.py
+          git diff --check
+
+      - name: Commit capability copy alignment
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-workpackage-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            reinsert_mode_ui.py \
+            CHANGELOG.md \
+            WORKPACKAGES.md \
+            workpackage_claims/scrub_wp_mvp_document_hygiene_fidelity_hardening.md \
+            handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md
+          git commit -m 'Align DOCX reinsert capability copy'
+          git push origin HEAD:scrub-mvp-document-hygiene-fidelity-hardening
