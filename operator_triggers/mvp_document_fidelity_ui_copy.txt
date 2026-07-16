@@ -1,3 +1,4 @@
-triggered_at=2026-07-17T22:58:00+02:00
+triggered_at=2026-07-17T23:02:00+02:00
 workpackage=SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 branch=scrub-mvp-document-hygiene-fidelity-hardening
+attempt=2
