@@ -1,4 +1,0 @@
-triggered_at=2026-07-17T22:22:00+02:00
-workpackage=SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
-branch=scrub-mvp-false-negative-gap-triage
-attempt=2
