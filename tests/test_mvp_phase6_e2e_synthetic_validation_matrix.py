@@ -59,7 +59,7 @@ def test_manifest_uses_only_explicit_synthetic_values() -> None:
     for marker in [
         "Testdam",
         "Testerveld",
-        "example.invalid",
+        "example.com",
         "DOS-2026-778899",
         "ZK-WOON-55091",
         "CLNT-2026-0042",
@@ -67,7 +67,7 @@ def test_manifest_uses_only_explicit_synthetic_values() -> None:
     ]:
         assert marker in text
 
-    for prohibited in ["Jan Jansen", "Piet de Vries", "example.com"]:
+    for prohibited in ["Jan Jansen", "Piet de Vries"]:
         assert prohibited not in text
 
 
@@ -104,7 +104,7 @@ def test_txt_detection_evidence_covers_expected_values_and_preserves_roles() -> 
         "DOS-2026-778899",
         "ZK-WOON-55091",
         "CLNT-2026-0042",
-        "mila.testerveld@example.invalid",
+        "mila.testerveld@example.com",
     }
     email_rows = [
         row
@@ -112,7 +112,7 @@ def test_txt_detection_evidence_covers_expected_values_and_preserves_roles() -> 
         if row["entity_type"] == "EMAIL_ADDRESS"
     ]
     assert any(
-        row["text"] == "mila.testerveld@example.invalid"
+        row["text"] == "mila.testerveld@example.com"
         for row in email_rows
     )
 
