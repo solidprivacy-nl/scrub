@@ -1,0 +1,233 @@
+{
+  "schema": "solidprivacy.mvp_phase6_validation_matrix",
+  "schema_version": "1.0",
+  "synthetic_data_only": true,
+  "human_review_required": true,
+  "production_readiness_claim": false,
+  "cases": [
+    {
+      "id": "txt_legal_core_roundtrip",
+      "document_type": "txt",
+      "document_label": "Synthetisch juridisch kerndossier",
+      "source_text": "Aan de Rechtbank Testdam.\nDossiernummer DOS-2026-778899.\nZaaknummer ZK-WOON-55091.\nClientnummer CLNT-2026-0042.\nVerzoeker Mila Testerveld woont aan Testlaan 12, 1234 AB Testdam.\nE-mail: mila.testerveld@example.com.\nTelefoon: 0612345678.\nIBAN: NL91ABNA0417164300.\nDe minderjarige sprak met de arts en de getuige.\nInterne testwaarde lantaarnbloem bleef onopgemerkt.",
+      "expected_detected_values": [
+        "DOS-2026-778899",
+        "ZK-WOON-55091",
+        "CLNT-2026-0042",
+        "mila.testerveld@example.com",
+        "0612345678",
+        "NL91ABNA0417164300"
+      ],
+      "expected_preserved_terms": [
+        "minderjarige",
+        "arts",
+        "getuige"
+      ],
+      "review_rows": [
+        {
+          "include": true,
+          "find": "DOS-2026-778899",
+          "replace_with": "[DOSSIERNUMMER_01]",
+          "entity_type": "NL_DOSSIER_NUMBER",
+          "type_label": "Dossiernummer",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:20:00Z"
+        },
+        {
+          "include": true,
+          "find": "ZK-WOON-55091",
+          "replace_with": "[ZAAKREFERENTIE_01]",
+          "entity_type": "NL_CASE_REFERENCE",
+          "type_label": "Zaakreferentie",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:20:01Z"
+        },
+        {
+          "include": true,
+          "find": "CLNT-2026-0042",
+          "replace_with": "[CLIENTNUMMER_01]",
+          "entity_type": "NL_CLIENT_NUMBER",
+          "type_label": "Clientnummer",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:20:02Z"
+        },
+        {
+          "include": true,
+          "find": "mila.testerveld@example.com",
+          "replace_with": "[EMAIL_01]",
+          "entity_type": "EMAIL_ADDRESS",
+          "type_label": "E-mailadres",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:20:03Z"
+        },
+        {
+          "include": true,
+          "find": "0612345678",
+          "replace_with": "[TELEFOON_01]",
+          "entity_type": "NL_PHONE_NUMBER",
+          "type_label": "Telefoonnummer",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:20:04Z"
+        },
+        {
+          "include": true,
+          "find": "NL91ABNA0417164300",
+          "replace_with": "[IBAN_01]",
+          "entity_type": "NL_IBAN",
+          "type_label": "IBAN",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:20:05Z"
+        }
+      ],
+      "manual_additions": [
+        {
+          "value": "Mila Testerveld",
+          "manual_type": "Persoon",
+          "timestamp": "2026-07-17T18:20:06Z"
+        },
+        {
+          "value": "lantaarnbloem",
+          "manual_type": "Anders",
+          "timestamp": "2026-07-17T18:20:07Z"
+        }
+      ]
+    },
+    {
+      "id": "docx_mixed_structure_roundtrip",
+      "document_type": "docx",
+      "document_label": "Synthetisch DOCX structuurdossier",
+      "body_paragraphs": [
+        "Verzoeker Mila Testerveld behandelt zaak ZK-WOON-55091.",
+        "De minderjarige blijft als juridische rol leesbaar."
+      ],
+      "table_rows": [
+        [
+          "Dossier DOS-2026-778899",
+          "Client CLNT-2026-0042"
+        ]
+      ],
+      "header_text": "VERTROUWELIJK CL-FAM-55201",
+      "footer_text": "Pagina TEST-FOOTER-001",
+      "expected_preserved_terms": [
+        "minderjarige"
+      ],
+      "review_rows": [
+        {
+          "include": true,
+          "find": "Mila Testerveld",
+          "replace_with": "[PERSOON_01]",
+          "entity_type": "PERSON",
+          "type_label": "Naam / persoon",
+          "source": "manual",
+          "review_status": "manual",
+          "timestamp": "2026-07-17T18:21:00Z"
+        },
+        {
+          "include": true,
+          "find": "ZK-WOON-55091",
+          "replace_with": "[ZAAKREFERENTIE_01]",
+          "entity_type": "NL_CASE_REFERENCE",
+          "type_label": "Zaakreferentie",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:21:01Z"
+        },
+        {
+          "include": true,
+          "find": "DOS-2026-778899",
+          "replace_with": "[DOSSIERNUMMER_01]",
+          "entity_type": "NL_DOSSIER_NUMBER",
+          "type_label": "Dossiernummer",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:21:02Z"
+        },
+        {
+          "include": true,
+          "find": "CLNT-2026-0042",
+          "replace_with": "[CLIENTNUMMER_01]",
+          "entity_type": "NL_CLIENT_NUMBER",
+          "type_label": "Clientnummer",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:21:03Z"
+        },
+        {
+          "include": true,
+          "find": "CL-FAM-55201",
+          "replace_with": "[CLIENT_REFERENTIE_01]",
+          "entity_type": "NL_CLIENT_REFERENCE",
+          "type_label": "Clientreferentie",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:21:04Z"
+        },
+        {
+          "include": true,
+          "find": "TEST-FOOTER-001",
+          "replace_with": "[OVERIGE_REFERENTIE_01]",
+          "entity_type": "NL_OTHER_REFERENCE",
+          "type_label": "Overige referentie",
+          "source": "manual",
+          "review_status": "manual",
+          "timestamp": "2026-07-17T18:21:05Z"
+        }
+      ],
+      "expected_hygiene_findings": [
+        "headers_detected",
+        "footers_detected"
+      ],
+      "expected_reinsert_limitations": [
+        "headers",
+        "footers"
+      ]
+    },
+    {
+      "id": "pdf_text_based_to_txt_reinsert",
+      "document_type": "pdf",
+      "document_label": "Synthetisch tekst-PDF dossier",
+      "source_text": "Zaak ZK-WOON-55091 betreft Mila Testerveld. Dossier DOS-2026-778899.",
+      "review_rows": [
+        {
+          "include": true,
+          "find": "Mila Testerveld",
+          "replace_with": "[PERSOON_01]",
+          "entity_type": "PERSON",
+          "type_label": "Naam / persoon",
+          "source": "manual",
+          "review_status": "manual",
+          "timestamp": "2026-07-17T18:22:00Z"
+        },
+        {
+          "include": true,
+          "find": "ZK-WOON-55091",
+          "replace_with": "[ZAAKREFERENTIE_01]",
+          "entity_type": "NL_CASE_REFERENCE",
+          "type_label": "Zaakreferentie",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:22:01Z"
+        },
+        {
+          "include": true,
+          "find": "DOS-2026-778899",
+          "replace_with": "[DOSSIERNUMMER_01]",
+          "entity_type": "NL_DOSSIER_NUMBER",
+          "type_label": "Dossiernummer",
+          "source": "detected",
+          "review_status": "auto_detected",
+          "timestamp": "2026-07-17T18:22:02Z"
+        }
+      ],
+      "expected_reinsert_output_type": "txt",
+      "restored_pdf_supported": false,
+      "ocr_supported": false
+    }
+  ]
+}
