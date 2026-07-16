@@ -1,0 +1,69 @@
+{
+  "schema": "solidprivacy.mvp_phase6_gap_triage",
+  "schema_version": "1.0",
+  "generated_at": "2026-07-17T20:08:00Z",
+  "source_report": "output/validation/mvp_phase6_synthetic_validation_report.json",
+  "source_report_schema": "solidprivacy.mvp_phase6_validation_report",
+  "source_report_schema_version": "1.0",
+  "synthetic_data_only": true,
+  "human_review_required": true,
+  "production_ready": false,
+  "production_readiness_claim": false,
+  "input_evidence_gap_count": 2,
+  "detection_false_negative_count": 0,
+  "misclassification_count": 0,
+  "role_over_masking_count": 0,
+  "recognizer_fix_required": false,
+  "product_code_change_required_in_this_package": false,
+  "classifications": [
+    {
+      "case_id": "docx_mixed_structure_roundtrip",
+      "source_category": "known_docx_reinsert_limitation",
+      "classification": "document_fidelity_and_reinsert_scope",
+      "severity": "high",
+      "false_negative": false,
+      "recognizer_fix_required": false,
+      "accepted_without_followup": false,
+      "observed_evidence": {
+        "residual_placeholders": [
+          "[CLIENT_REFERENTIE_01]",
+          "[OVERIGE_REFERENTIE_01]"
+        ],
+        "affected_parts": [
+          "header",
+          "footer"
+        ],
+        "main_document_body_roundtrip_passed": true,
+        "docx_hygiene_findings_visible": true
+      },
+      "decision": "Route to document hygiene and fidelity hardening; do not open a recognizer fix.",
+      "routed_workpackage": "SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING"
+    },
+    {
+      "case_id": "pdf_text_based_to_txt_reinsert",
+      "source_category": "known_pdf_reinsert_limitation",
+      "classification": "document_format_product_boundary",
+      "severity": "high",
+      "false_negative": false,
+      "recognizer_fix_required": false,
+      "accepted_without_followup": false,
+      "observed_evidence": {
+        "text_roundtrip_passed": true,
+        "reinsert_output_type": "txt",
+        "restored_pdf_supported": false,
+        "ocr_supported": false
+      },
+      "decision": "Keep the restored-TXT-only and no-OCR boundary explicit and verify it in document fidelity and residual-risk evidence; do not open a recognizer fix.",
+      "routed_workpackage": "SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING"
+    }
+  ],
+  "methodology_corrections": [
+    {
+      "issue": "The first draft used an .invalid e-mail fixture that Presidio's standard email recognizer intentionally did not accept.",
+      "correction": "The fixture was replaced with IANA-reserved example.com and the standard deterministic EmailRecognizer was included in the matrix.",
+      "result": "The corrected report contains no email false-negative evidence."
+    }
+  ],
+  "triage_decision": "No recognizer or detection implementation package is justified by the current synthetic matrix.",
+  "next_recommended_package": "SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING"
+}
