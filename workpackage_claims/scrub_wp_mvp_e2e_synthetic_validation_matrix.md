@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX
 
-Status: completed / ready for PR verification
+Status: in_progress
 
 Claimed by: ChatGPT GitHub worker
 
@@ -27,15 +27,9 @@ Boundaries:
 - No external AI, cloud processing, OCR or real personal data.
 - Known limitations must be reported, not hidden or converted into production-readiness claims.
 
+Methodology correction in progress:
+- The initial evidence run omitted Presidio's standard email recognizer and therefore incorrectly classified a standard e-mail value as a Dutch-pack false negative.
+- The validation helper is being corrected before merge; product recognizer code remains unchanged.
+
 Next step:
-- Implement manifest, helper, tests and baseline report; validate in GitHub Actions; update governance files and handover.
-
-
-Validation result:
-- Completed at: 2026-07-17 20:20 Europe/Amsterdam
-- Cases: 3
-- Failing cases: 0
-- Evidence gaps/known limitations: 3
-- Report: `output/validation/mvp_phase6_synthetic_validation_report.json`
-- Handover: `handover/workpackages/20260717_2020_mvp_e2e_synthetic_validation_matrix.md`
-- Next package: `SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE`
+- Rerun the corrected matrix, regenerate the report, reconcile governance evidence and complete final PR validation.
