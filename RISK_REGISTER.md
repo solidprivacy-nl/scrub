@@ -19,7 +19,7 @@ Risk:
 Sensitive data remains in the scrubbed output and the user wrongly trusts the result.
 ```
 
-Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table.
+Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence.
 
 Remaining gaps:
 
@@ -119,7 +119,7 @@ Gaps:
 
 Recommended workpackages:
 
-- Do not start a new feature automatically; consider `WP_MVP_UI_APP_VERIFICATION_CLOSEOUT` or a very small UI simplification package only with coordinator approval.
+- The current UI baseline is completed and app-verified. Do not start another UI feature automatically; open a narrowly scoped UI package only when Phase 6 validation exposes a concrete safety or workflow blocker.
 
 ---
 
@@ -161,7 +161,7 @@ Current mitigations:
 
 Gaps:
 
-- No generalized automated status artifact exists yet.
+- No generalized automated status artifact exists yet. `SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE` is scheduled after the synthetic validation, gap-triage and roundtrip packages.
 
 ---
 

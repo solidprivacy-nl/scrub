@@ -1,3 +1,56 @@
+## 2026-07-17 — SCRUB-WP_MVP_PHASE6_ROADMAP_REALIGNMENT
+
+Status: completed / ready for PR verification.
+
+Purpose:
+
+- Realign the central roadmap after completion and live verification of the MVP UI simplification line.
+- Make Phase 6 end-to-end workflow validation and trust hardening the active development line.
+- Define an ordered evidence-driven workpackage queue before pilot or packaging work resumes.
+
+Files changed:
+
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/scrub_wp_mvp_phase6_roadmap_realignment.md`
+
+Files added:
+
+- `MVP_PHASE6_EXECUTION_PLAN.md`
+- `handover/workpackages/20260717_2012_mvp_phase6_roadmap_realignment.md`
+
+Main changes:
+
+- The verified UI baseline is no longer the active development focus.
+- Phase 6 starts with a synthetic end-to-end validation matrix.
+- False-negative, document-hygiene, Scrub Key/roundtrip and audit work must be driven by reproducible evidence.
+- Phase 7 pilots and local packaging remain gated.
+
+Validation status:
+
+- Documentation-only package.
+- GitHub Actions pending after PR.
+- Hugging Face functional sync not applicable.
+- App verification not applicable.
+
+Intentionally not changed:
+
+- product code or tests;
+- UI behavior;
+- recognizers or replacement semantics;
+- export payloads, filenames or MIME types;
+- Scrub Key JSON or reinsert behavior;
+- document processing, runtime/startup or dependencies.
+
+Next recommended step:
+
+- Start `SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX` after this realignment is merged.
+
+---
+
 ## 2026-07-16 — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
 
 Status: completed and app-verified.

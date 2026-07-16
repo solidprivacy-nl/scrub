@@ -1,3 +1,22 @@
+## 2026-07-17 20:12 Europe/Amsterdam — SCRUB-WP_MVP_PHASE6_ROADMAP_REALIGNMENT
+
+Status: completed / ready for PR verification.
+
+Summary:
+- Closed the verified MVP UI simplification line as the default development focus.
+- Made Phase 6 end-to-end workflow validation and trust hardening the active execution line.
+- Added `MVP_PHASE6_EXECUTION_PLAN.md` with the ordered validation, triage, hardening, evidence and quality-gate packages.
+- Preserved the Phase 7 pilot, local packaging and production-readiness gates.
+- No product code, tests, UI, recognizers, replacement semantics, export, Scrub Key, reinsert, document processing, runtime or dependencies changed.
+
+Validation:
+- Documentation consistency checks required through PR review and GitHub Actions.
+- Hugging Face sync not functionally relevant because no app code changed.
+- App verification not applicable.
+
+Active next package:
+- `SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX`.
+
 ## 2026-07-16 23:43 Europe/Amsterdam — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
 
 Status: completed and app-verified.
@@ -286,11 +305,15 @@ Recall/benchmark follow-up packages are temporarily parked unless a concrete blo
 ## Active / next recommended execution queue
 
 ```text
-1. Complete PR validation for SCRUB-WP_REVIEW_SURFACE_SIMPLIFICATION_IMPLEMENTATION.
-2. If validation passes, merge and verify GitHub to Hugging Face sync.
-3. Ask coordinator for live app verification because visible UI copy changed.
-4. If app verification passes, close out. If it fails, create a narrow FIX package.
+1. SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX
+2. SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE — only for reproducible gaps found by the matrix
+3. SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
+4. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
+5. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
+6. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
 ```
+
+The UI simplification baseline is completed and app-verified. Do not start another UI package by default; use evidence from Phase 6 validation to justify any future UI change.
 
 ## Boundaries
 

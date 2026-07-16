@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-06-18 — active next direction refocused on MVP UI cleanup and export/download flow.
+Last roadmap strategy update: 2026-07-17 — verified MVP UI simplification line closed; Phase 6 workflow validation and trust hardening is now active.
 
 ---
 
@@ -107,6 +107,7 @@ WP_SIDE_BY_SIDE_REVIEW_ROADMAP_ANCHOR — unified side-by-side review UX directi
 WP45-WP49 — local runtime/packaging decision line; installer deferred.
 WP50-WP51 — pilot/ICP thinking artifacts; parked for now.
 WP_RECALL_PERSON_NAME_* — diagnostic, contract and helper-level PERSON-name work completed; benchmark follow-up temporarily parked unless a concrete blocker appears.
+SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_* through SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_* — the current MVP UI simplification line is completed, synchronized and live-app verified.
 ```
 
 Important UX status:
@@ -114,8 +115,8 @@ Important UX status:
 ```text
 The review table remains source of truth and fallback.
 The old replacement decision helper panel must not return as normal user-facing UI.
-The long-term review target is one unified side-by-side main review surface, not more separate helper panels.
-The export/download flow is functional but not yet product-finished.
+The unified side-by-side review, manual missed-value entry and compact export flow form the verified MVP UI baseline.
+Further UI work is not the default next line and requires a separately approved package tied to evidence from Phase 6 validation.
 ```
 
 ---
@@ -214,21 +215,33 @@ Phase 7 may reopen when the coordinator confirms the MVP product quality gate ha
 
 ## 7. Active next work direction
 
-Current active priorities:
+The verified MVP UI baseline is now stable enough to move the active line into Phase 6 validation and trust hardening.
+
+Current execution queue:
 
 ```text
-1. Clean up the MVP interface and export/download flow.
-2. Move debug/audit details out of the primary user path without removing safety controls.
-3. Then continue benchmark/recalibration work where it directly supports user-visible trust.
+1. SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX
+2. SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
+3. SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
+4. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
+5. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
+6. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
 ```
 
-Recall/benchmark follow-up packages are temporarily parked unless a concrete blocker appears.
+Execution principles:
 
-Do not implement UI directly from this roadmap step. Use the workpackage queue in `WORKPACKAGES.md`: first export/download UX contract tests, then implementation, then review debug/copy cleanup.
+- use synthetic data only;
+- validate the full supported workflow before adding new features;
+- create recognizer or document-processing fixes only from reproducible evidence;
+- preserve legal meaning and keep human review mandatory;
+- do not reopen broad UI work unless validation reveals a concrete usability or safety blocker;
+- do not make production-readiness claims from prototype evidence.
+
+Recall/benchmark work is reopened only where the synthetic validation matrix exposes a concrete false-negative, misclassification or over-masking gap.
 
 Do not start local packaging next steps such as `WP48B` or `WP49B` by default. They require explicit coordinator approval.
 
-Do not start pilot follow-up such as `WP52` by default. It requires the MVP quality gate to pass first.
+Do not start pilot follow-up such as `WP52` by default. It remains gated by `SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT` and explicit coordinator approval.
 
 ---
 
