@@ -1,3 +1,57 @@
+## 2026-07-17 — SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
+
+Status: completed / ready for PR verification.
+
+Purpose:
+
+- Classify every evidence gap from the first Phase 6 synthetic validation report.
+- Decide whether the evidence justifies recognizer or threshold changes.
+- Route document-fidelity and product-boundary findings to the correct next package.
+
+Files added:
+
+- `MVP_PHASE6_FALSE_NEGATIVE_GAP_TRIAGE.md`
+- `output/validation/mvp_phase6_false_negative_gap_triage.json`
+- `tests/test_mvp_phase6_false_negative_gap_triage.py`
+- `handover/workpackages/20260717_2208_mvp_false_negative_gap_triage.md`
+
+Files changed:
+
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/scrub_wp_mvp_false_negative_gap_triage.md`
+
+Triage result:
+
+- Input evidence gaps: 2.
+- Reproducible detection false negatives: 0.
+- Misclassifications: 0.
+- Legal-role over-masking findings: 0.
+- Recognizer fix required: `false`.
+- Next package: `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`.
+
+Decision:
+
+- The DOCX finding is a header/footer reinsert and fidelity-scope issue, not a detection failure.
+- The PDF finding is the approved restored-TXT-only/no-OCR product boundary, not a detection failure.
+- No recognizer implementation package is opened from this evidence.
+
+Intentionally not changed:
+
+- product recognizers or thresholds;
+- replacement semantics;
+- document processing or reinsert behavior;
+- export, Scrub Key or audit semantics;
+- UI, runtime or dependencies.
+
+Next recommended step:
+
+- Start `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`.
+
+---
+
 ## 2026-07-17 — SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX
 
 Status: completed / ready for PR verification.

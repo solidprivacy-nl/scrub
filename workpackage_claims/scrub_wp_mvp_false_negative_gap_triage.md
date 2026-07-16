@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
 
-Status: in_progress
+Status: completed / ready for PR verification
 
 Claimed by: ChatGPT GitHub worker
 
@@ -32,3 +32,13 @@ Validation trigger:
 
 Next step:
 - Complete automated validation, governance update and handover, then run final PR validation.
+
+
+Triage result:
+- Completed at: 2026-07-17 22:08 Europe/Amsterdam
+- Input evidence gaps: 2
+- Detection false negatives: 0
+- Recognizer fix required: false
+- Triage artifact: `output/validation/mvp_phase6_false_negative_gap_triage.json`
+- Handover: `handover/workpackages/20260717_2208_mvp_false_negative_gap_triage.md`
+- Next package: `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`

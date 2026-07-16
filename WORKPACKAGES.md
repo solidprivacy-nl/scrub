@@ -1,3 +1,25 @@
+## 2026-07-17 22:08 Europe/Amsterdam — SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
+
+Status: completed / ready for PR verification.
+
+Summary:
+- Classified all 2 evidence items from the Phase 6 synthetic matrix.
+- Confirmed that the corrected matrix contains no reproducible false negative, misclassification or role-over-masking result that justifies recognizer changes.
+- Routed the DOCX header/footer reinsert limitation and PDF restored-TXT-only boundary to `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`.
+- Recorded the `.invalid` fixture correction so it cannot reappear as a false product gap.
+- No product code or behavior changed.
+
+Validation:
+- Machine-readable triage must match every evidence gap in the source report.
+- Recognizer fix required: false.
+- Production readiness: false.
+- Human review remains required.
+- GitHub Actions pending final PR validation.
+- App verification not applicable.
+
+Active next package:
+- `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`.
+
 ## 2026-07-17 20:20 Europe/Amsterdam — SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX
 
 Status: completed / ready for PR verification.
