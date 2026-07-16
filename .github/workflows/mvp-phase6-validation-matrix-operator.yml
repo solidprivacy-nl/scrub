@@ -55,7 +55,7 @@ jobs:
             mvp_phase6_document_cases.py \
             mvp_phase6_validation_report.py \
             scripts/run_mvp_phase6_validation_matrix.py \
-            scripts/finalize_mvp_phase6_validation_matrix.py
+            scripts/reconcile_mvp_phase6_validation_evidence.py
 
       - name: Run focused and related validation tests
         if: steps.state.outputs.required == 'true'
@@ -67,13 +67,13 @@ jobs:
             tests/test_scrub_key_reinsert.py \
             tests/test_scrub_key_document_reinsert.py
 
-      - name: Generate machine-readable baseline
+      - name: Generate corrected machine-readable baseline
         if: steps.state.outputs.required == 'true'
         run: python scripts/run_mvp_phase6_validation_matrix.py
 
-      - name: Finalize governance evidence
+      - name: Reconcile corrected governance evidence
         if: steps.state.outputs.required == 'true'
-        run: python scripts/finalize_mvp_phase6_validation_matrix.py
+        run: python scripts/reconcile_mvp_phase6_validation_evidence.py
 
       - name: Validate final scope and report
         if: steps.state.outputs.required == 'true'
@@ -99,6 +99,15 @@ jobs:
           assert report['ai_processing'] is False
           assert report['cloud_processing'] is False
           assert report['ocr_processing'] is False
+          txt_case = next(item for item in report['cases'] if item['id'] == 'txt_legal_core_roundtrip')
+          assert txt_case['detection']['detection_expectations_met'] is True
+          assert txt_case['detection']['missing_expected_values'] == []
+          categories = {item['category'] for item in report['evidence_gaps']}
+          assert 'false_negative_or_detection_gap' not in categories
+          assert categories == {
+              'known_docx_reinsert_limitation',
+              'known_pdf_reinsert_limitation',
+          }
 
           allowed = {
               'CHANGELOG.md',
@@ -130,5 +139,5 @@ jobs:
             output/validation/mvp_phase6_synthetic_validation_report.json \
             workpackage_claims/scrub_wp_mvp_e2e_synthetic_validation_matrix.md \
             handover/workpackages/20260717_2020_mvp_e2e_synthetic_validation_matrix.md
-          git commit -m 'Record MVP Phase 6 synthetic validation baseline'
+          git commit -m 'Correct MVP Phase 6 synthetic validation evidence'
           git push origin HEAD:scrub-mvp-e2e-synthetic-validation-matrix
