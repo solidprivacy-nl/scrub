@@ -1,0 +1,111 @@
+name: MVP false-negative gap triage operator
+
+on:
+  workflow_run:
+    workflows:
+      - Tests
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-finalize:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - name: Check out triage branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-false-negative-gap-triage
+          fetch-depth: 0
+
+      - name: Check whether finalization is required
+        id: state
+        shell: bash
+        run: |
+          if grep -q '^Status: in_progress$' workpackage_claims/scrub_wp_mvp_false_negative_gap_triage.md; then
+            echo 'required=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'required=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Python
+        if: steps.state.outputs.required == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install pytest
+        if: steps.state.outputs.required == 'true'
+        run: python -m pip install --upgrade pytest
+
+      - name: Run triage and source-evidence tests
+        if: steps.state.outputs.required == 'true'
+        run: |
+          python -m pytest -q \
+            tests/test_mvp_phase6_false_negative_gap_triage.py \
+            tests/test_mvp_phase6_e2e_synthetic_validation_matrix.py
+
+      - name: Finalize governance evidence
+        if: steps.state.outputs.required == 'true'
+        run: python scripts/finalize_mvp_false_negative_gap_triage.py
+
+      - name: Validate docs-only scope
+        if: steps.state.outputs.required == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          python - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          triage = json.loads(
+              Path('output/validation/mvp_phase6_false_negative_gap_triage.json').read_text(encoding='utf-8')
+          )
+          assert triage['input_evidence_gap_count'] == 2
+          assert triage['detection_false_negative_count'] == 0
+          assert triage['misclassification_count'] == 0
+          assert triage['role_over_masking_count'] == 0
+          assert triage['recognizer_fix_required'] is False
+          assert triage['production_ready'] is False
+          assert triage['human_review_required'] is True
+          assert triage['next_recommended_package'] == 'SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING'
+
+          allowed = {
+              'CHANGELOG.md',
+              'DECISION_LOG.md',
+              'RISK_REGISTER.md',
+              'WORKPACKAGES.md',
+              'handover/workpackages/20260717_2208_mvp_false_negative_gap_triage.md',
+              'workpackage_claims/scrub_wp_mvp_false_negative_gap_triage.md',
+          }
+          changed = set(
+              subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines()
+          )
+          unexpected = changed - allowed
+          if unexpected:
+              raise SystemExit(f'Unexpected finalized files: {sorted(unexpected)}')
+          PY
+
+      - name: Commit finalized triage when needed
+        if: steps.state.outputs.required == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-workpackage-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            CHANGELOG.md \
+            DECISION_LOG.md \
+            RISK_REGISTER.md \
+            WORKPACKAGES.md \
+            workpackage_claims/scrub_wp_mvp_false_negative_gap_triage.md \
+            handover/workpackages/20260717_2208_mvp_false_negative_gap_triage.md
+          git commit -m 'Record MVP Phase 6 evidence gap triage'
+          git push origin HEAD:scrub-mvp-false-negative-gap-triage
