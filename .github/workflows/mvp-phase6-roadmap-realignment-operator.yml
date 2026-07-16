@@ -1,0 +1,93 @@
+name: MVP Phase 6 roadmap realignment operator
+
+on:
+  workflow_run:
+    workflows:
+      - Tests
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-validate:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out roadmap branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-phase6-roadmap-realignment
+          fetch-depth: 0
+
+      - name: Apply roadmap realignment once
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -q '^Status: in_progress$' workpackage_claims/scrub_wp_mvp_phase6_roadmap_realignment.md; then
+            python scripts/mvp_phase6_roadmap_realignment_worker.py
+          else
+            echo 'Roadmap realignment already applied.'
+          fi
+
+      - name: Validate docs-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          python - <<'PY'
+          from pathlib import Path
+
+          required = {
+              'MVP_PHASE6_EXECUTION_PLAN.md': 'SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX',
+              'ROADMAP.md': 'Phase 6 workflow validation and trust hardening is now active',
+              'WORKPACKAGES.md': 'SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT',
+              'DECISION_LOG.md': 'D028 — Phase 6 workflow validation becomes the active development line',
+              'RISK_REGISTER.md': 'synthetic end-to-end validation matrix',
+          }
+          for filename, marker in required.items():
+              text = Path(filename).read_text(encoding='utf-8')
+              if marker not in text:
+                  raise SystemExit(f'Missing marker in {filename}: {marker}')
+
+          allowed = {
+              'ROADMAP.md',
+              'WORKPACKAGES.md',
+              'CHANGELOG.md',
+              'DECISION_LOG.md',
+              'RISK_REGISTER.md',
+              'MVP_PHASE6_EXECUTION_PLAN.md',
+              'workpackage_claims/scrub_wp_mvp_phase6_roadmap_realignment.md',
+              'handover/workpackages/20260717_2012_mvp_phase6_roadmap_realignment.md',
+          }
+          import subprocess
+          changed = set(
+              subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines()
+          )
+          unexpected = changed - allowed
+          if unexpected:
+              raise SystemExit(f'Unexpected changed files: {sorted(unexpected)}')
+          PY
+
+      - name: Commit roadmap realignment when needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Nothing to commit.'
+            exit 0
+          fi
+          git config user.name 'solidprivacy-workpackage-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            ROADMAP.md \
+            WORKPACKAGES.md \
+            CHANGELOG.md \
+            DECISION_LOG.md \
+            RISK_REGISTER.md \
+            MVP_PHASE6_EXECUTION_PLAN.md \
+            workpackage_claims/scrub_wp_mvp_phase6_roadmap_realignment.md \
+            handover/workpackages/20260717_2012_mvp_phase6_roadmap_realignment.md
+          git commit -m 'Realign roadmap for MVP Phase 6 validation'
+          git push origin HEAD:scrub-mvp-phase6-roadmap-realignment
