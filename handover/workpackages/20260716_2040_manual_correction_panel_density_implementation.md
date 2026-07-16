@@ -8,7 +8,7 @@ SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
 ## Status
 
-Completed / ready for app verification.
+Completed and app-verified.
 
 ## Files added
 
@@ -37,15 +37,15 @@ Required local/worker validation passed.
 
 ## GitHub Actions status
 
-Pending PR validation after implementation commit.
+PR #28 final test run passed before merge.
 
 ## Hugging Face sync status
 
-Pending after merge.
+Passed; confirmed by the live deployed UI screenshot.
 
 ## App verification status
 
-Required after Actions and sync because visible UI behavior changed.
+Passed at 2026-07-16 23:43 Europe/Amsterdam.
 
 ## Remaining risks
 
@@ -56,3 +56,12 @@ Required after Actions and sync because visible UI behavior changed.
 ## Next recommended step
 
 `SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_APP_VERIFY` after Actions and Hugging Face sync are green.
+
+
+## App verification evidence
+
+- Live Hugging Face screenshot reviewed at 2026-07-16 23:43 Europe/Amsterdam.
+- Compact value/type/replacement row is visible.
+- Duplicate internal heading is absent.
+- `lantaarnbloem` was added as `[WAARDE_HANDMATIG_01]` with status `Handmatig toegevoegd`.
+- No Script execution error is visible.
