@@ -47,3 +47,6 @@ Hardening result:
 - Report: `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
 - Handover: `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
 - App verification required after Actions and Hugging Face sync.
+
+Final PR cleanup:
+- Temporary patch/finalizer scripts removed and duplicate governance lines normalized before the final Actions run.
