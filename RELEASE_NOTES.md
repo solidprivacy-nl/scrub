@@ -1,3 +1,12 @@
+## 2026-07-17 — DOCX-herstel omvat nu kop- en voetteksten
+
+- Bij het terugzetten van originele waarden in een DOCX worden nu ook bestaande kop- en voetteksten meegenomen.
+- Hoofdtekst en tabellen blijven ondersteund.
+- Opmerkingen, alleen-in-wijzigingen aanwezige tekst, voetnoten/eindnoten, tekstvakken, metadata en placeholders die over meerdere Word-tekstnodes zijn verdeeld, blijven buiten deze versie.
+- PDF-herstel blijft beperkt tot herstelde TXT; OCR en een hersteld PDF-bestand zijn niet toegevoegd.
+
+---
+
 ## 2026-07-16 — Handmatige aanvulling compacter
 
 - `Gemiste waarde toevoegen` gebruikt bij openen een compactere invoerregel voor waarde, type en vervanging.

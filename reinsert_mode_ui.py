@@ -209,9 +209,9 @@ def render_reinsert_mode() -> None:
         st.warning(CONFIDENTIAL_OUTPUT_WARNING)
         st.caption("Upload een DOCX-bestand met placeholders. Er wordt geen AI- of cloudverwerking gebruikt.")
         st.info(
-            "Let op: DOCX-terugzetten ondersteunt in deze versie normale documenttekst en tabellen. "
-            "Headers, footers, opmerkingen, bijgehouden wijzigingen en placeholders die door Word "
-            "over meerdere tekstfragmenten zijn gesplitst worden nog niet volledig ondersteund."
+            "DOCX-terugzetten ondersteunt normale documenttekst, tabellen en bestaande kop- en voetteksten. "
+            "Opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten, tekstvakken, metadata en placeholders "
+            "die door Word over meerdere tekstfragmenten zijn gesplitst worden nog niet volledig ondersteund."
         )
         docx_reinsert_file = st.file_uploader(
             "Upload een DOCX-bestand met placeholders",

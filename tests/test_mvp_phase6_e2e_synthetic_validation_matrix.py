@@ -117,7 +117,7 @@ def test_txt_detection_evidence_covers_expected_values_and_preserves_roles() -> 
     )
 
 
-def test_docx_case_records_hygiene_and_header_footer_reinsert_limits() -> None:
+def test_docx_case_restores_header_footer_and_retains_hygiene_evidence() -> None:
     case = _case(_report(), "docx_mixed_structure_roundtrip")
 
     assert case["status"] == "pass_with_known_limitations"
@@ -125,16 +125,20 @@ def test_docx_case_records_hygiene_and_header_footer_reinsert_limits() -> None:
     assert case["scrubbed_import_type"] == "docx"
     assert case["restored_import_type"] == "docx"
     assert case["body_roundtrip_values_present"] is True
+    assert case["header_footer_roundtrip_values_present"] is True
     assert case["hygiene_severity"] == "high"
     assert {"headers_detected", "footers_detected"}.issubset(
         set(case["hygiene_findings"])
     )
     assert case["audit_expectations_met"] is True
     assert case["limitation_expectations_met"] is True
-    assert case["roundtrip_complete"] is False
-    assert set(case["expected_residual_placeholders"]).issubset(
-        set(case["residual_placeholders"])
+    assert case["roundtrip_complete"] is True
+    assert case["residual_placeholders"] == []
+    assert set(case["expected_residual_placeholders"]) == set(
+        case["resolved_header_footer_placeholders"]
     )
+    assert any(part.startswith("word/header") for part in case["processed_parts"])
+    assert any(part.startswith("word/footer") for part in case["processed_parts"])
 
 
 def test_pdf_case_preserves_text_roundtrip_and_explicit_txt_only_boundary() -> None:
@@ -171,10 +175,7 @@ def test_report_is_machine_readable_and_never_claims_production_readiness() -> N
     )
 
     categories = {item["category"] for item in report["evidence_gaps"]}
-    assert categories == {
-        "known_docx_reinsert_limitation",
-        "known_pdf_reinsert_limitation",
-    }
+    assert categories == {"known_pdf_reinsert_limitation"}
 
 
 def test_report_writer_is_deterministic(tmp_path: Path) -> None:
