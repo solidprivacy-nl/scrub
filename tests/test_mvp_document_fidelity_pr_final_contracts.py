@@ -24,7 +24,7 @@ def test_document_fidelity_governance_evidence_has_no_duplicate_lines() -> None:
         "The DOCX reinsert capability copy matches the supported body/table/header/footer scope."
     ) == 1
     assert workpackages.count(
-        "Aligned the existing DOCX reinsert information copy with the supported body/table/header/footer scope without adding controls."
+        "Aligned existing DOCX reinsert copy with the supported body/table/header/footer scope without adding controls."
     ) == 1
     assert handover.count("- `tests/test_mvp_document_fidelity_ui_copy.py`") == 1
     assert handover.count("Source-level DOCX/PDF capability-copy contract tests.") == 1
