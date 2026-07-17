@@ -36,7 +36,7 @@ Boundaries:
 - Synthetic data only; local-only deterministic processing.
 
 Next step:
-- Add failing contract tests, implement multi-part OOXML reinsert narrowly, rerun the synthetic matrix and related document/Scrub Key/hygiene suites, then update governance evidence and handover.
+- Run final PR validation, merge after green Actions, verify Hugging Face sync and request live DOCX reinsert verification.
 
 
 Hardening result:

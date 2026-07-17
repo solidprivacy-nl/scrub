@@ -17,7 +17,6 @@ Completed / ready for app verification.
 - `tests/test_mvp_document_hygiene_fidelity_hardening.py`
 - `tests/test_mvp_document_fidelity_report.py`
 - `tests/test_mvp_document_fidelity_ui_copy.py`
-- `tests/test_mvp_document_fidelity_ui_copy.py`
 - `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
 - `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
 
@@ -40,7 +39,6 @@ Completed / ready for app verification.
 - New body/table/header/footer end-to-end DOCX tests.
 - OOXML package preservation and malformed-header fail-safe tests.
 - Current Phase 6 synthetic matrix tests.
-- Source-level DOCX/PDF capability-copy contract tests.
 - Source-level DOCX/PDF capability-copy contract tests.
 - Fidelity report and PDF-boundary tests.
 - Existing DOCX hygiene and document-tool tests.
