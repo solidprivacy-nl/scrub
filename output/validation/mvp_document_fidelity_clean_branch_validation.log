@@ -13,19 +13,22 @@ ______ test_document_fidelity_governance_evidence_has_no_duplicate_lines _______
         ).read_text(encoding="utf-8")
     
         assert changelog.count("- `tests/test_mvp_document_fidelity_ui_copy.py`") == 1
->       assert changelog.count(
-            "The DOCX reinsert capability copy now matches the supported body/table/header/footer scope."
+        assert changelog.count(
+            "The DOCX reinsert capability copy matches the supported body/table/header/footer scope."
+        ) == 1
+>       assert workpackages.count(
+            "Aligned the existing DOCX reinsert information copy with the supported body/table/header/footer scope without adding controls."
         ) == 1
 E       AssertionError: assert 0 == 1
-E        +  where 0 = <built-in method count of str object at 0x559eebe61220>('The DOCX reinsert capability copy now matches the supported body/table/header/footer scope.')
-E        +    where <built-in method count of str object at 0x559eebe61220> = '## 2026-07-17 — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING\n\nStatus: completed / ready for PR verification.\n\...ing behavior;\n- cloud processing;\n- local packaging;\n- Dockerfile startup behavior;\n- runtime mutation behavior;\n'.count
+E        +  where 0 = <built-in method count of str object at 0x5655577eb2f0>('Aligned the existing DOCX reinsert information copy with the supported body/table/header/footer scope without adding controls.')
+E        +    where <built-in method count of str object at 0x5655577eb2f0> = '## 2026-07-17 22:30 Europe/Amsterdam — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING\n\nStatus: completed / ready ...ning/design-only package; no product tests required.\n- No app verification required because no UI behavior changed.\n'.count
 
-tests/test_mvp_document_fidelity_pr_final_contracts.py:23: AssertionError
+tests/test_mvp_document_fidelity_pr_final_contracts.py:26: AssertionError
 =========================== short test summary info ============================
 FAILED tests/test_mvp_document_fidelity_pr_final_contracts.py::test_document_fidelity_governance_evidence_has_no_duplicate_lines - AssertionError: assert 0 == 1
- +  where 0 = <built-in method count of str object at 0x559eebe61220>('The DOCX reinsert capability copy now matches the supported body/table/header/footer scope.')
- +    where <built-in method count of str object at 0x559eebe61220> = '## 2026-07-17 — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING\n\nStatus: completed / ready for PR verification.\n\...ing behavior;\n- cloud processing;\n- local packaging;\n- Dockerfile startup behavior;\n- runtime mutation behavior;\n'.count
-1 failed, 53 passed in 4.21s
+ +  where 0 = <built-in method count of str object at 0x5655577eb2f0>('Aligned the existing DOCX reinsert information copy with the supported body/table/header/footer scope without adding controls.')
+ +    where <built-in method count of str object at 0x5655577eb2f0> = '## 2026-07-17 22:30 Europe/Amsterdam — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING\n\nStatus: completed / ready ...ning/design-only package; no product tests required.\n- No app verification required because no UI behavior changed.\n'.count
+1 failed, 53 passed in 4.95s
 compile_status=0
 pytest_status=1
 diff_status=0
