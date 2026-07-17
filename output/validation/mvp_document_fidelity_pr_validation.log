@@ -1,0 +1,8 @@
+main_synchronized=true
+......................................................                   [100%]
+54 passed in 5.56s
+
+compile_status=0
+pytest_status=0
+diff_status=0
+overall_status=0

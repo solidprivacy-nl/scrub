@@ -4,6 +4,37 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-17 — D030 — Restore existing DOCX header and footer text during deterministic reinsert
+
+Status: accepted implementation decision
+
+Decision:
+
+```text
+Extend the existing local deterministic DOCX reinsert helper to process WordprocessingML text nodes in word/header*.xml and word/footer*.xml in addition to word/document.xml.
+```
+
+Reason:
+
+- The scrubbed DOCX export already replaces reviewed values in body, table, header and footer paragraphs.
+- The Phase 6 matrix showed that reinsert restored body/table values but left header/footer placeholders behind.
+- The gap belongs to document fidelity and reinsert scope, not detection or recognizer behavior.
+
+Boundaries:
+
+- Process only existing body, header and footer WordprocessingML text nodes.
+- Preserve unrelated OOXML package parts byte-for-byte where they are not rewritten.
+- Do not claim support for comments, tracked-change-only parts, footnotes/endnotes, text boxes, metadata or placeholders split across text nodes.
+- Do not add OCR or restored-PDF behavior.
+- Keep processing local, deterministic and Scrub Key driven.
+
+Evidence:
+
+- `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
+- `output/validation/mvp_phase6_false_negative_gap_triage.json`
+
+---
+
 ## 2026-07-17 — D029 — Current Phase 6 matrix does not justify a recognizer fix
 
 Status: accepted evidence-routing decision

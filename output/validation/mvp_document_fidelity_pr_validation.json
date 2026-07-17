@@ -1,0 +1,28 @@
+{
+  "ai_processing": false,
+  "branch": "scrub-mvp-document-hygiene-fidelity-hardening",
+  "cloud_processing": false,
+  "compile_passed": true,
+  "diff_check_passed": true,
+  "generated_at": "2026-07-17T13:13:02.792165+00:00",
+  "head_sha": "4b07e520296f14b7bde2323cad8ce28bbb4d79c5",
+  "human_review_required": true,
+  "main_synchronized": true,
+  "ocr_processing": false,
+  "overall_passed": true,
+  "production_ready": false,
+  "pytest_passed": true,
+  "schema": "solidprivacy.mvp_document_fidelity_pr_validation",
+  "schema_version": "1.0",
+  "synthetic_data_only": true,
+  "tests": [
+    "tests/test_mvp_document_hygiene_fidelity_hardening.py",
+    "tests/test_mvp_document_fidelity_report.py",
+    "tests/test_mvp_document_fidelity_ui_copy.py",
+    "tests/test_mvp_document_fidelity_pr_final_contracts.py",
+    "tests/test_scrub_key_document_reinsert.py",
+    "tests/test_mvp_phase6_e2e_synthetic_validation_matrix.py",
+    "tests/test_mvp_phase6_false_negative_gap_triage.py",
+    "tests/test_docx_hygiene_audit.py"
+  ]
+}
