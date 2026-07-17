@@ -1,0 +1,4 @@
+main_merge_completed=true
+branch_parent=bee7cbb94b2c71c7ec60d7ae52305c6d6c115c0f
+main_parent=0d2efc39bf94794780446d09d2b799e3a9b713af
+resolved_conflicts=CHANGELOG.md,WORKPACKAGES.md

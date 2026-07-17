@@ -57,6 +57,38 @@ Next recommended step:
 
 ---
 
+## 2026-07-17 — Hugging Face Space runtime incident recovery and sync-churn guard
+
+Status: completed and app-verified.
+
+Purpose:
+
+- Restore the Hugging Face Space after it entered an error/rebuild state.
+- Diagnose the incident without exposing secrets or changing product behavior.
+- Prevent clearly non-runtime-only commits from repeatedly rebuilding the live Space.
+
+Result:
+
+- Sanitized runtime evidence observed the Space first at `BUILDING` and subsequently at `RUNNING`.
+- Streamlit started on port 7860 and the Flair model loaded.
+- The coordinator confirmed that the application opens again.
+- PR #35 added a conservative deployment `paths-ignore` guard while preserving runtime-relevant deployments and manual dispatch.
+- Temporary incident recovery/probe workflows and triggers were removed after verification.
+
+Intentionally not changed:
+
+- product code or UI;
+- recognizers, thresholds or replacement semantics;
+- export, Scrub Key or reinsert semantics;
+- dependencies, Dockerfile, hardware or Hugging Face configuration;
+- privacy and human-review controls.
+
+Next recommended step:
+
+- Resume PR #33 and the Phase 6 document-fidelity sequence.
+
+---
+
 ## 2026-07-17 — SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
 
 Status: completed / ready for PR verification.

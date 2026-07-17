@@ -23,6 +23,20 @@ Validation:
 Active next package after verification:
 - `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
 
+## 2026-07-17 11:45 Europe/Amsterdam — HF Space runtime incident closeout
+
+Status: completed and app-verified.
+
+Summary:
+- Restored the Hugging Face Space and confirmed runtime stage `RUNNING`.
+- Coordinator confirmed that the application opens again.
+- Merged a conservative sync-churn guard so clearly non-runtime-only commits no longer rebuild the Space.
+- Removed temporary recovery and probe workflows/triggers.
+- No product behavior or privacy controls changed.
+
+Active next package:
+- Resume `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING` in PR #33.
+
 ## 2026-07-17 22:08 Europe/Amsterdam — SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
 
 Status: completed / ready for PR verification.
