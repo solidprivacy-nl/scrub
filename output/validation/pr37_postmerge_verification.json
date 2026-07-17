@@ -1,0 +1,26 @@
+{
+  "schema": "solidprivacy.pr37_postmerge_verification",
+  "schema_version": "1.0",
+  "generated_at": "2026-07-17T16:44:18Z",
+  "expected_runtime_sha": "b2ee32b2b6ca2a088213239c05c7ee7a17177741",
+  "github_actions": {
+    "tests": {
+      "run_id": 29596598740,
+      "conclusion": "success"
+    },
+    "hugging_face_sync": {
+      "run_id": 29596598812,
+      "conclusion": "success"
+    }
+  },
+  "hugging_face": {
+    "remote_main_sha": "b2ee32b2b6ca2a088213239c05c7ee7a17177741",
+    "api_sha": "b2ee32b2b6ca2a088213239c05c7ee7a17177741",
+    "runtime_stage": "RUNNING",
+    "hardware": "cpu-basic"
+  },
+  "synthetic_data_only": true,
+  "secrets_recorded": false,
+  "app_functional_verification_required": true,
+  "overall_passed": true
+}
