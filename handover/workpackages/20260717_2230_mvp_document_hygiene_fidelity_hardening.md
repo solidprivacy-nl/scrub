@@ -8,7 +8,7 @@ SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 
 ## Status
 
-Completed / ready for app verification.
+Implemented; GitHub Actions and Hugging Face sync verified; awaiting live app verification.
 
 ## Files added
 
@@ -17,7 +17,10 @@ Completed / ready for app verification.
 - `tests/test_mvp_document_hygiene_fidelity_hardening.py`
 - `tests/test_mvp_document_fidelity_report.py`
 - `tests/test_mvp_document_fidelity_ui_copy.py`
+- `tests/test_mvp_document_fidelity_pr_final_contracts.py`
 - `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
+- `output/validation/mvp_document_fidelity_pr_validation.json`
+- `output/validation/mvp_document_fidelity_pr_validation.log`
 - `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
 
 ## Files changed
@@ -36,35 +39,41 @@ Completed / ready for app verification.
 ## Tests
 
 - Existing TXT/DOCX Scrub Key document-reinsert suite.
-- New body/table/header/footer end-to-end DOCX tests.
-- OOXML package preservation and malformed-header fail-safe tests.
-- Current Phase 6 synthetic matrix tests.
-- Source-level DOCX/PDF capability-copy contract tests.
-- Fidelity report and PDF-boundary tests.
-- Existing DOCX hygiene and document-tool tests.
+- Body, table, header and footer DOCX tests.
+- OOXML preservation and malformed-part fail-safe tests.
+- Phase 6 synthetic matrix tests.
+- Capability-copy contract tests.
+- Fidelity report and document hygiene tests.
 - Python compilation and `git diff --check`.
+- Focused final suite: 54 passed.
 
 ## Validation status
 
-- DOCX header/footer finding resolved: True.
+- DOCX header/footer finding resolved: true.
 - Resolved findings: 1.
 - Remaining findings: 1.
-- PDF TXT-only/no-OCR boundary preserved: True.
+- PDF TXT-only/no-OCR boundary preserved: true.
 - Local-only deterministic processing retained.
 - Human review remains required.
 - Production readiness remains false.
+- Clean implementation PR #37 merged.
+- Historical PR #33 closed as superseded.
 
 ## GitHub Actions status
 
-Pending final PR validation.
+Passed before and after merge.
 
 ## Hugging Face sync status
 
-Pending after merge.
+Passed. The deployed Hugging Face revision matches the PR #37 merge revision and the runtime is RUNNING on cpu-basic.
+
+Sanitized evidence is stored on branch `evidence/pr37-postmerge-verification` in `output/validation/pr37_postmerge_verification.json`.
 
 ## App verification status
 
-Required after sync because DOCX reinsert behavior changed.
+Pending because DOCX reinsert behavior and its visible capability copy changed.
+
+Use the supplied synthetic DOCX and Scrub Key fixture to confirm that values are restored in the document body, a table, the header and the footer. Also confirm that no Script execution error is shown and that the unsupported-part warning remains visible.
 
 ## Remaining risks
 
@@ -75,4 +84,4 @@ Required after sync because DOCX reinsert behavior changed.
 
 ## Next recommended step
 
-After app verification, start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+After successful app verification, close this package and start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
