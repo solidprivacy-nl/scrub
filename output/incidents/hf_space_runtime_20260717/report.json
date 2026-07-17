@@ -1,0 +1,65 @@
+{
+  "actions": [],
+  "after_build_logs": {
+    "line_count": 494,
+    "ok": true,
+    "path": "output/incidents/hf_space_runtime_20260717/build_after.log"
+  },
+  "after_run_logs": {
+    "line_count": 9,
+    "ok": true,
+    "path": "output/incidents/hf_space_runtime_20260717/run_after.log"
+  },
+  "before_build_logs": {
+    "line_count": 494,
+    "ok": true,
+    "path": "output/incidents/hf_space_runtime_20260717/build_before.log"
+  },
+  "before_run_logs": {
+    "line_count": 9,
+    "ok": true,
+    "path": "output/incidents/hf_space_runtime_20260717/run_before.log"
+  },
+  "final_stage": "RUNNING",
+  "finished_at": "2026-07-17T09:35:50.904834+00:00",
+  "http_probe": {
+    "ok": true,
+    "status": 200,
+    "url": "https://solidprivacy-scrub.hf.space/"
+  },
+  "observations": [
+    {
+      "captured_at": "2026-07-17T09:35:39.585310+00:00",
+      "hardware": "cpu-basic",
+      "label": "before_recovery",
+      "requested_hardware": "cpu-basic",
+      "sleep_time": 172800,
+      "stage": "RUNNING"
+    },
+    {
+      "captured_at": "2026-07-17T09:35:45.021711+00:00",
+      "hardware": "cpu-basic",
+      "label": "after_normal_restart_settled",
+      "requested_hardware": "cpu-basic",
+      "sleep_time": 172800,
+      "stage": "RUNNING"
+    },
+    {
+      "captured_at": "2026-07-17T09:35:45.123478+00:00",
+      "hardware": "cpu-basic",
+      "label": "final",
+      "requested_hardware": "cpu-basic",
+      "sleep_time": 172800,
+      "stage": "RUNNING"
+    }
+  ],
+  "product_code_changed": false,
+  "recovered": true,
+  "schema": "solidprivacy.hf_space_runtime_incident_recovery",
+  "schema_version": "1.0",
+  "secrets_recorded": false,
+  "space_id": "solidprivacy/scrub",
+  "space_sha": "9f72fed7ca6e628ed5160003e0874ffaa7a22c21",
+  "started_at": "2026-07-17T09:35:39.311220+00:00",
+  "subdomain": "solidprivacy-scrub"
+}
