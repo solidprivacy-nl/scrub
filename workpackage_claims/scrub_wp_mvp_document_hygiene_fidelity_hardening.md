@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 
-Status: completed / ready for PR verification
+Status: implemented; Actions/sync verified; awaiting app verification
 
 Claimed by: ChatGPT GitHub worker
 
@@ -17,8 +17,8 @@ Dependencies:
 - SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE — merged.
 
 Evidence:
-- DOCX body/table reinsert passes, while scrubbed header/footer placeholders remain after reinsert.
-- DOCX hygiene audit already reports header/footer presence.
+- DOCX body/table reinsert passed before hardening, while scrubbed header/footer placeholders remained after reinsert.
+- DOCX hygiene audit already reported header/footer presence.
 - PDF text roundtrip passes only to restored TXT; restored PDF and OCR remain unsupported product boundaries.
 
 Scope:
@@ -35,24 +35,33 @@ Boundaries:
 - No OCR or restored-PDF implementation.
 - Synthetic data only; local-only deterministic processing.
 
-Next step:
-- Run final PR validation, merge after green Actions, verify Hugging Face sync and request live DOCX reinsert verification.
+Implementation result:
+- DOCX header/footer reinsert resolved: true.
+- Resolved findings: 1.
+- Remaining findings: 1.
+- Report: `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`.
+- Handover: `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`.
+- Clean implementation PR: #37.
+- Merge commit: `b2ee32b2b6ca2a088213239c05c7ee7a17177741`.
 
-
-Hardening result:
-- Completed at: 2026-07-17 22:30 Europe/Amsterdam
-- DOCX header/footer reinsert resolved: true
-- Resolved findings: 1
-- Remaining findings: 1
-- Report: `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
-- Handover: `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
-- App verification required after Actions and Hugging Face sync.
+Validation result:
+- Focused document-fidelity validation: 54 passed.
+- Final cache-free PR head passed the standard repository `Tests` workflow.
+- Post-merge `Tests` run `29596598740`: success.
+- Post-merge `Sync to Hugging Face Space` run `29596598812`: success.
+- Hugging Face remote/API SHA: `b2ee32b2b6ca2a088213239c05c7ee7a17177741`.
+- Hugging Face runtime: `RUNNING` on `cpu-basic`.
+- Sanitized evidence: `evidence/pr37-postmerge-verification:output/validation/pr37_postmerge_verification.json`.
+- No secrets or personal data recorded.
 
 Final PR cleanup:
-- Temporary patch/finalizer scripts removed and duplicate governance lines normalized before the final Actions run.
+- Temporary patch/finalizer scripts removed and duplicate governance lines normalized before final validation.
+- Generated `__pycache__` and `.pyc` files removed before merge.
+- Historical temporary operator commits were excluded through the clean branch rebuild.
+- Obsolete PR #33 closed as superseded by PR #37.
+- Temporary post-merge verification probe and trigger removed after evidence collection.
 
-
-Clean branch rebuild:
-- Rebuilt from current `main` after the Hugging Face incident closeout.
-- Historical temporary operator commits are excluded.
-- Final clean-branch validation is required before merge.
+Next step:
+- Complete live app verification with the synthetic DOCX/Scrub Key fixture.
+- Confirm body, table, header and footer values are restored in the downloaded DOCX.
+- After app verification, close the package and start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
