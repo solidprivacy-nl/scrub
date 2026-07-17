@@ -1,0 +1,50 @@
+name: MVP document fidelity merge diagnostic
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - operator_triggers/mvp_document_fidelity_merge_diagnostic.txt
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out implementation branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-document-hygiene-fidelity-hardening
+          fetch-depth: 0
+
+      - name: Diagnose merge against current main
+        shell: bash
+        run: |
+          set +e
+          git fetch origin main
+          mkdir -p output/validation
+          {
+            echo "branch_head=$(git rev-parse HEAD)"
+            echo "main_head=$(git rev-parse origin/main)"
+            git merge-tree --write-tree HEAD origin/main
+            status=$?
+            echo "merge_tree_status=$status"
+            echo "conflicted_paths:"
+            git merge-tree $(git merge-base HEAD origin/main) HEAD origin/main | grep '^changed in both\|^added in both\|^removed in' -A4 || true
+          } > output/validation/mvp_document_fidelity_merge_diagnostic.log 2>&1
+
+          git config user.name 'solidprivacy-diagnostic-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git checkout -B mvp-document-fidelity-main-sync-evidence-20260717 origin/main
+          mkdir -p output/validation
+          git show scrub-mvp-document-hygiene-fidelity-hardening:output/validation/mvp_document_fidelity_merge_diagnostic.log > output/validation/mvp_document_fidelity_merge_diagnostic.log 2>/dev/null || true
+          if [ ! -s output/validation/mvp_document_fidelity_merge_diagnostic.log ]; then
+            cp /dev/null output/validation/mvp_document_fidelity_merge_diagnostic.log
+            git checkout scrub-mvp-document-hygiene-fidelity-hardening -- output/validation/mvp_document_fidelity_merge_diagnostic.log 2>/dev/null || true
+          fi
+          git add output/validation/mvp_document_fidelity_merge_diagnostic.log
+          git commit -m 'Record document fidelity merge diagnostic' || true
+          git push --force origin HEAD:mvp-document-fidelity-main-sync-evidence-20260717
