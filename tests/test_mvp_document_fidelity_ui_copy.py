@@ -13,7 +13,7 @@ def test_docx_reinsert_copy_matches_supported_parts() -> None:
     text = UI.read_text(encoding="utf-8")
 
     assert "normale documenttekst, tabellen en bestaande kop- en voetteksten" in text
-    assert "opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten, tekstvakken, metadata" in text
+    assert "Opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten, tekstvakken, metadata" in text
     assert "over meerdere tekstfragmenten zijn gesplitst" in text
     assert "Headers, footers" not in text
 
