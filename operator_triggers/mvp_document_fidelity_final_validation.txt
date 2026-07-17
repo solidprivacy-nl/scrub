@@ -1,3 +1,4 @@
-triggered_at=2026-07-17T14:53:00+02:00
+triggered_at=2026-07-17T14:55:00+02:00
 branch=scrub-mvp-document-hygiene-fidelity-hardening
-head_sha=9ec3e94e3e2a734f2aa1f297069b7e88cd021340
+head_sha=468f408b9af1e68f9b359949af170b60543c76eb
+attempt=2
