@@ -1,0 +1,23 @@
+{
+  "build.log": {
+    "line_count": 494,
+    "ok": true
+  },
+  "captured_at": "2026-07-17T09:37:20.052675+00:00",
+  "run.log": {
+    "line_count": 12,
+    "ok": true
+  },
+  "runtime": {
+    "hardware": "cpu-basic",
+    "requested_hardware": "cpu-basic",
+    "sleep_time": 172800,
+    "stage": "RUNNING"
+  },
+  "schema": "solidprivacy.hf_space_runtime_probe",
+  "schema_version": "1.0",
+  "secrets_recorded": false,
+  "space_id": "solidprivacy/scrub",
+  "space_sha": "9f72fed7ca6e628ed5160003e0874ffaa7a22c21",
+  "subdomain": "solidprivacy-scrub"
+}
