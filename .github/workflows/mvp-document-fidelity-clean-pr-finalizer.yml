@@ -25,8 +25,12 @@ jobs:
           ref: scrub-mvp-document-hygiene-fidelity-hardening-clean
           fetch-depth: 0
 
-      - name: Finalize central records
-        run: python scripts/finalize_clean_document_fidelity_branch.py
+      - name: Finalize central records when needed
+        shell: bash
+        run: |
+          if [ -f scripts/finalize_clean_document_fidelity_branch.py ]; then
+            python scripts/finalize_clean_document_fidelity_branch.py
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -38,15 +42,21 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf streamlit pandas
 
-      - name: Run clean-branch validation
+      - name: Run validation and capture evidence
         shell: bash
         run: |
-          set -euo pipefail
+          set +e
+          mkdir -p output/validation
+          : > output/validation/mvp_document_fidelity_clean_branch_validation.log
+
           python -m py_compile \
             scrub_key_document_reinsert.py \
             mvp_phase6_document_cases.py \
             mvp_document_fidelity_report.py \
-            reinsert_mode_ui.py
+            reinsert_mode_ui.py \
+            >> output/validation/mvp_document_fidelity_clean_branch_validation.log 2>&1
+          compile_status=$?
+
           python -m pytest -q \
             tests/test_mvp_document_hygiene_fidelity_hardening.py \
             tests/test_mvp_document_fidelity_report.py \
@@ -56,13 +66,41 @@ jobs:
             tests/test_mvp_phase6_e2e_synthetic_validation_matrix.py \
             tests/test_mvp_phase6_false_negative_gap_triage.py \
             tests/test_docx_hygiene_audit.py \
-            tests/test_hf_space_sync_churn_guard.py | tee /tmp/pytest.log
-          git diff --check
+            tests/test_hf_space_sync_churn_guard.py \
+            >> output/validation/mvp_document_fidelity_clean_branch_validation.log 2>&1
+          pytest_status=$?
+
+          git diff --check \
+            >> output/validation/mvp_document_fidelity_clean_branch_validation.log 2>&1
+          diff_status=$?
+
+          if [ "$compile_status" -eq 0 ] && [ "$pytest_status" -eq 0 ] && [ "$diff_status" -eq 0 ]; then
+            overall_status=0
+          else
+            overall_status=1
+          fi
+
+          {
+            echo "compile_status=$compile_status"
+            echo "pytest_status=$pytest_status"
+            echo "diff_status=$diff_status"
+            echo "overall_status=$overall_status"
+          } >> output/validation/mvp_document_fidelity_clean_branch_validation.log
+
           python - <<'PY'
           import json
           import subprocess
           from datetime import datetime, timezone
           from pathlib import Path
+
+          log_path = Path('output/validation/mvp_document_fidelity_clean_branch_validation.log')
+          log = log_path.read_text(encoding='utf-8')
+          statuses = {}
+          for key in ['compile_status', 'pytest_status', 'diff_status', 'overall_status']:
+              for line in reversed(log.splitlines()):
+                  if line.startswith(f'{key}='):
+                      statuses[key] = int(line.split('=', 1)[1])
+                      break
 
           report_path = Path('output/validation/mvp_document_fidelity_pr_validation.json')
           report = json.loads(report_path.read_text(encoding='utf-8'))
@@ -72,26 +110,31 @@ jobs:
               'branch': 'scrub-mvp-document-hygiene-fidelity-hardening-clean',
               'clean_branch_rebuild': True,
               'main_synchronized': True,
-              'compile_passed': True,
-              'pytest_passed': True,
-              'diff_check_passed': True,
-              'overall_passed': True,
+              'compile_passed': statuses.get('compile_status') == 0,
+              'pytest_passed': statuses.get('pytest_status') == 0,
+              'diff_check_passed': statuses.get('diff_status') == 0,
+              'overall_passed': statuses.get('overall_status') == 0,
           })
           report_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding='utf-8')
-          Path('output/validation/mvp_document_fidelity_pr_validation.log').write_text(
-              'clean_branch_rebuild=true\nmain_synchronized=true\n'
-              + Path('/tmp/pytest.log').read_text(encoding='utf-8')
-              + '\ncompile_status=0\npytest_status=0\ndiff_status=0\noverall_status=0\n',
-              encoding='utf-8',
-          )
           PY
 
-      - name: Commit final clean branch
+          echo "$overall_status" > /tmp/overall_status
+          exit 0
+
+      - name: Commit finalization and validation evidence
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'solidprivacy-validation-worker'
           git config user.email 'actions@users.noreply.github.com'
           git add -A
-          git commit -m 'Finalize clean document fidelity hardening branch'
-          git push origin HEAD:scrub-mvp-document-hygiene-fidelity-hardening-clean
+          if ! git diff --cached --quiet; then
+            git commit -m 'Finalize and validate clean document fidelity branch'
+            git push origin HEAD:scrub-mvp-document-hygiene-fidelity-hardening-clean
+          fi
+
+      - name: Enforce validation result
+        shell: bash
+        run: |
+          status=$(cat /tmp/overall_status)
+          exit "$status"
