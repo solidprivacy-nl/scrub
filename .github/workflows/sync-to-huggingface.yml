@@ -4,6 +4,24 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - ".github/**"
+      - "operator_triggers/**"
+      - "workpackage_claims/**"
+      - "handover/**"
+      - "tests/**"
+      - "output/**"
+      - "test_cases/**"
+      - "PROJECT_PROMPT.md"
+      - "PROJECT_PROMPT_SHORT.md"
+      - "ROADMAP.md"
+      - "WORKPACKAGES.md"
+      - "CHANGELOG.md"
+      - "DECISION_LOG.md"
+      - "RISK_REGISTER.md"
+      - "RELEASE_NOTES.md"
+      - "STATUS_MONITORING_RUNBOOK.md"
+      - "AGENTS.md"
   workflow_dispatch:
 
 concurrency:
