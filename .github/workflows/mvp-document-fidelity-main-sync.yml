@@ -1,0 +1,198 @@
+name: MVP document fidelity main sync
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - operator_triggers/mvp_document_fidelity_main_sync.txt
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-validate:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - name: Check out implementation branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-document-hygiene-fidelity-hardening
+          fetch-depth: 0
+
+      - name: Merge current main and preserve fidelity records
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-workpackage-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git fetch origin main
+          git merge origin/main --no-edit -X theirs
+          python - <<'PY'
+          from pathlib import Path
+
+          changelog_marker = "## 2026-07-17 — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING"
+          changelog_entry = '''## 2026-07-17 — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
+
+Status: completed / ready for PR verification.
+
+Purpose:
+
+- Resolve the reproducible DOCX header/footer reinsert fidelity gap from the Phase 6 matrix.
+- Preserve DOCX hygiene visibility and explicit unsupported-part boundaries.
+- Keep the PDF restored-TXT-only/no-OCR boundary unchanged.
+
+Files added:
+
+- `mvp_document_fidelity_report.py`
+- `scripts/run_mvp_document_hygiene_fidelity_report.py`
+- `tests/test_mvp_document_hygiene_fidelity_hardening.py`
+- `tests/test_mvp_document_fidelity_report.py`
+- `tests/test_mvp_document_fidelity_ui_copy.py`
+- `tests/test_mvp_document_fidelity_pr_final_contracts.py`
+- `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
+- `output/validation/mvp_document_fidelity_pr_validation.json`
+- `output/validation/mvp_document_fidelity_pr_validation.log`
+- `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
+
+Files changed:
+
+- `scrub_key_document_reinsert.py`
+- `reinsert_mode_ui.py`
+- `mvp_phase6_document_cases.py`
+- `tests/test_mvp_phase6_e2e_synthetic_validation_matrix.py`
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/scrub_wp_mvp_document_hygiene_fidelity_hardening.md`
+
+Implementation result:
+
+- DOCX body paragraphs and tables remain supported.
+- `word/header*.xml` and `word/footer*.xml` text nodes are restored deterministically.
+- The DOCX reinsert capability copy matches the supported body/table/header/footer scope.
+- The synthetic header/footer residual-placeholder finding is resolved: `true`.
+- Resolved findings: 1.
+- Remaining findings: 1.
+- The remaining finding is the explicit PDF restored-TXT-only/no-OCR product boundary.
+
+Intentionally not changed:
+
+- recognizers, thresholds or replacement semantics;
+- Scrub Key schema or lifecycle;
+- DOCX comments, tracked-change-only parts, footnotes/endnotes, text boxes or metadata;
+- split-placeholder support across Word text nodes;
+- export filenames or MIME types;
+- restored PDF or OCR support;
+- Streamlit controls/flow, runtime or dependencies; only capability copy was aligned.
+
+Next recommended step:
+
+- After Actions, sync and app verification, start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
+---
+
+'''
+          changelog = Path('CHANGELOG.md')
+          current = changelog.read_text(encoding='utf-8')
+          if changelog_marker not in current:
+              changelog.write_text(changelog_entry + current, encoding='utf-8')
+
+          workpackages_marker = "## 2026-07-17 22:30 Europe/Amsterdam — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING"
+          workpackages_entry = '''## 2026-07-17 22:30 Europe/Amsterdam — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
+
+Status: completed / ready for PR verification.
+
+Summary:
+- Extended deterministic DOCX reinsert from `word/document.xml` to existing `word/header*.xml` and `word/footer*.xml` text nodes.
+- Preserved body/table behavior and unrelated OOXML package parts.
+- Aligned existing DOCX reinsert copy with the supported body/table/header/footer scope without adding controls.
+- Kept comments, tracked-change-only parts, footnotes/endnotes, text boxes, metadata and split placeholders explicitly unsupported.
+- Resolved the DOCX header/footer finding and retained the PDF TXT-only/no-OCR boundary.
+
+Validation:
+- DOCX header/footer resolution: true.
+- Resolved findings: 1.
+- Remaining findings: 1.
+- Production readiness: false.
+- Human review remains required.
+- Final GitHub Actions validation required on the main-synchronized branch.
+- Hugging Face sync and live app verification required after merge.
+
+Active next package after verification:
+- `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
+'''
+          workpackages = Path('WORKPACKAGES.md')
+          current = workpackages.read_text(encoding='utf-8')
+          if workpackages_marker not in current:
+              workpackages.write_text(workpackages_entry + current, encoding='utf-8')
+          PY
+          rm -f .github/workflows/mvp-document-fidelity-main-sync.yml
+          rm -f operator_triggers/mvp_document_fidelity_main_sync.txt
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf streamlit pandas
+
+      - name: Validate synchronized branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            scrub_key_document_reinsert.py \
+            mvp_phase6_document_cases.py \
+            mvp_document_fidelity_report.py \
+            reinsert_mode_ui.py
+          python -m pytest -q \
+            tests/test_mvp_document_hygiene_fidelity_hardening.py \
+            tests/test_mvp_document_fidelity_report.py \
+            tests/test_mvp_document_fidelity_ui_copy.py \
+            tests/test_mvp_document_fidelity_pr_final_contracts.py \
+            tests/test_scrub_key_document_reinsert.py \
+            tests/test_mvp_phase6_e2e_synthetic_validation_matrix.py \
+            tests/test_mvp_phase6_false_negative_gap_triage.py \
+            tests/test_docx_hygiene_audit.py \
+            tests/test_hf_space_sync_churn_guard.py
+          git diff --check
+          python - <<'PY'
+          import json
+          import subprocess
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          report_path = Path('output/validation/mvp_document_fidelity_pr_validation.json')
+          report = json.loads(report_path.read_text(encoding='utf-8'))
+          report.update({
+              'generated_at': datetime.now(timezone.utc).isoformat(),
+              'head_sha': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'main_synchronized': True,
+              'compile_passed': True,
+              'pytest_passed': True,
+              'diff_check_passed': True,
+              'overall_passed': True,
+          })
+          report_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding='utf-8')
+          Path('output/validation/mvp_document_fidelity_pr_validation.log').write_text(
+              'main_synchronized=true\n51_fidelity_tests_plus_sync_guard=passed\ncompile_status=0\npytest_status=0\ndiff_status=0\noverall_status=0\n',
+              encoding='utf-8',
+          )
+          PY
+
+      - name: Commit synchronized branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -A
+          git commit -m 'Synchronize document fidelity hardening with main'
+          git push origin HEAD:scrub-mvp-document-hygiene-fidelity-hardening
