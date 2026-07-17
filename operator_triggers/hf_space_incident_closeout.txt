@@ -1,3 +1,0 @@
-triggered_at=2026-07-17T11:48:00+02:00
-branch=scrub-hf-space-incident-closeout
-attempt=2
