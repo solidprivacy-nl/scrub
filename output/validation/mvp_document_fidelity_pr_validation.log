@@ -1,19 +1,6 @@
-...........F.......................................                      [100%]
-=================================== FAILURES ===================================
-_______________ test_docx_reinsert_copy_matches_supported_parts ________________
-
-    def test_docx_reinsert_copy_matches_supported_parts() -> None:
-        text = UI.read_text(encoding="utf-8")
-    
-        assert "normale documenttekst, tabellen en bestaande kop- en voetteksten" in text
->       assert "opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten, tekstvakken, metadata" in text
-E       assert 'opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten, tekstvakken, metadata' in 'from __future__ import annotations\n\nimport streamlit as st\n\nfrom scrub_key_import import IMPORT_PRIVACY_WARNING, ...cy_herstelde_txt_uit_pdf.txt",\n                mime="text/plain",\n                disabled=not ack,\n            )\n'
-
-tests/test_mvp_document_fidelity_ui_copy.py:16: AssertionError
-=========================== short test summary info ============================
-FAILED tests/test_mvp_document_fidelity_ui_copy.py::test_docx_reinsert_copy_matches_supported_parts - assert 'opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten, tekstvakken, metadata' in 'from __future__ import annotations\n\nimport streamlit as st\n\nfrom scrub_key_import import IMPORT_PRIVACY_WARNING, ...cy_herstelde_txt_uit_pdf.txt",\n                mime="text/plain",\n                disabled=not ack,\n            )\n'
-1 failed, 50 passed in 4.02s
+...................................................                      [100%]
+51 passed in 5.12s
 compile_status=0
-pytest_status=1
+pytest_status=0
 diff_status=0
-overall_status=1
+overall_status=0
