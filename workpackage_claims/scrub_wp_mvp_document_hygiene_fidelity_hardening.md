@@ -4,13 +4,13 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 
-Status: completed / ready for app verification
+Status: completed / ready for PR verification
 
 Claimed by: ChatGPT GitHub worker
 
 Claimed at: 2026-07-17 22:30 Europe/Amsterdam
 
-Branch: scrub-mvp-document-hygiene-fidelity-hardening
+Branch: scrub-mvp-document-hygiene-fidelity-hardening-clean
 
 Dependencies:
 - SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX — merged.
@@ -50,3 +50,9 @@ Hardening result:
 
 Final PR cleanup:
 - Temporary patch/finalizer scripts removed and duplicate governance lines normalized before the final Actions run.
+
+
+Clean branch rebuild:
+- Rebuilt from current `main` after the Hugging Face incident closeout.
+- Historical temporary operator commits are excluded.
+- Final clean-branch validation is required before merge.

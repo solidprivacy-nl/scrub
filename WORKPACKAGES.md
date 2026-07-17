@@ -1,3 +1,26 @@
+## 2026-07-17 22:30 Europe/Amsterdam — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
+
+Status: completed / ready for PR verification.
+
+Summary:
+- Extended deterministic DOCX reinsert from `word/document.xml` to existing `word/header*.xml` and `word/footer*.xml` text nodes.
+- Preserved body/table behavior and unrelated OOXML package parts.
+- Aligned existing DOCX reinsert copy with the supported body/table/header/footer scope without adding controls.
+- Kept comments, tracked-change-only parts, footnotes/endnotes, text boxes, metadata and split placeholders explicitly unsupported.
+- Resolved the DOCX header/footer finding and retained the PDF TXT-only/no-OCR boundary.
+
+Validation:
+- DOCX header/footer resolution: true.
+- Resolved findings: 1.
+- Remaining findings: 1.
+- Production readiness: false.
+- Human review remains required.
+- Final clean-branch GitHub Actions validation required before merge.
+- Hugging Face sync and live app verification required after merge.
+
+Active next package after verification:
+- `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
 ## 2026-07-17 11:45 Europe/Amsterdam — HF Space runtime incident closeout
 
 Status: completed and app-verified.
