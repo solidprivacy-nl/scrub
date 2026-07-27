@@ -44,8 +44,9 @@ Boundaries:
 Validation note:
 - Full repository suite passed: 797 tests before governance finalisation.
 - Governance finalisation completed.
-- Read-only governance failure diagnostic triggered at 2026-07-27 17:17 Europe/Amsterdam.
-- Temporary workflow will be removed before the definitive PR run.
+- Governance-scoped regression fixed; standard suite passed on the finalised branch.
+- Temporary diagnostic and finalizer workflows removed from `main`.
+- Clean final standard PR validation triggered at 2026-07-27 17:25 Europe/Amsterdam.
 
 Implementation result:
 - Completed at: 2026-07-27 17:06 Europe/Amsterdam.
@@ -58,4 +59,4 @@ Implementation result:
 - Handover: `handover/workpackages/20260727_1706_mvp_reinsert_auto_flow_simplification_implementation.md`.
 
 Next step:
-- Resolve the first governance assertion, remove temporary diagnostics, rerun final standard Actions, merge, verify Hugging Face sync and request live app verification.
+- Verify clean final standard Actions, merge, verify Hugging Face sync and request live app verification.
