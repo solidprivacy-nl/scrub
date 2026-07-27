@@ -92,8 +92,9 @@ def test_scrub_key_warning_and_semantics_remain_available() -> None:
     assert "scrub_key_rows = edited_replacements_df.copy()" in text
     assert '"find": "original_value"' in text
     assert '"replace_with": "placeholder"' in text
-    assert "build_export_scrub_key(scrub_key_rows)" in text
-    assert "validate_export_scrub_key(scrub_key)" in text
+    assert "scrub_key = build_bound_scrub_key(" in text
+    assert "document_binding_id=document_binding_id" in text
+    assert "scrub_key_validation = validate_bound_scrub_key(scrub_key)" in text
     assert "export_key_json(scrub_key)" in text
     assert '"Download Scrub Key (.json)"' in text
     assert 'file_name="solidprivacy_scrub_key.json"' in text
