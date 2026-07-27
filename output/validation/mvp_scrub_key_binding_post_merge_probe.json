@@ -1,0 +1,34 @@
+{
+  "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY",
+  "probe_attempt": 6,
+  "target_github_sha": "4a21c2d93acf3c166534a4a0501e602954c5606d",
+  "github_runs": [
+    {
+      "id": 30312548735,
+      "name": "Sync to Hugging Face Space",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4a21c2d93acf3c166534a4a0501e602954c5606d",
+      "html_url": "https://github.com/solidprivacy-nl/scrub/actions/runs/30312548735"
+    },
+    {
+      "id": 30312548738,
+      "name": "Tests",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4a21c2d93acf3c166534a4a0501e602954c5606d",
+      "html_url": "https://github.com/solidprivacy-nl/scrub/actions/runs/30312548738"
+    }
+  ],
+  "tests_success": true,
+  "sync_success": true,
+  "hugging_face_space": "solidprivacy/scrub",
+  "hugging_face_sha": "4a21c2d93acf3c166534a4a0501e602954c5606d",
+  "hugging_face_sha_exact_match": true,
+  "hugging_face_runtime_stage": "RUNNING",
+  "hugging_face_runtime_running": true,
+  "technical_deployment_verified": true,
+  "app_verification_required": true
+}
