@@ -1,0 +1,21 @@
+{
+  "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION",
+  "status": "targeted_validation_passed",
+  "targeted_tests_passed": 103,
+  "document_binding_id_per_scope": true,
+  "automatic_placeholders_bound": true,
+  "candidate_placeholders_bound": true,
+  "manual_placeholders_bound_by_default": true,
+  "schema_version": "1.1",
+  "binding_version": "1",
+  "mapping_digest_algorithm": "sha256",
+  "custom_replacement_preserved": true,
+  "verified_key_export_blocked_for_unbound_mapping": true,
+  "reinsert_enforcement_integrated": false,
+  "document_export_filenames_changed": false,
+  "document_export_mime_types_changed": false,
+  "new_confirmation_gates_added": false,
+  "production_ready": false,
+  "human_review_required": true,
+  "next_workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION"
+}

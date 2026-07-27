@@ -11,6 +11,8 @@ from hashlib import sha256
 from typing import Any, Iterable
 import re
 
+from scrub_key_binding import build_bound_placeholder, parse_bound_placeholder
+
 
 MANUAL_MASK_TYPE_TO_ENTITY_TYPE = {
     "Persoon": "PERSON",
@@ -88,18 +90,37 @@ def _row_dicts(existing_rows: Iterable[dict[str, Any]] | Any | None) -> list[dic
     return [dict(row) for row in existing_rows]
 
 
-def build_manual_placeholder(manual_type: str | None, existing_rows: Iterable[dict[str, Any]] | Any | None = None) -> str:
-    """Build a stable placeholder such as ``[PERSOON_HANDMATIG_01]``."""
+def build_manual_placeholder(
+    manual_type: str | None,
+    existing_rows: Iterable[dict[str, Any]] | Any | None = None,
+    document_binding_id: str | None = None,
+) -> str:
+    """Build a stable legacy or document-bound manual placeholder."""
 
     entity_type = manual_type_to_entity_type(manual_type)
     prefix = _ENTITY_TYPE_TO_PLACEHOLDER_PREFIX.get(entity_type, "WAARDE")
-    pattern = re.compile(rf"^\[{re.escape(prefix)}_HANDMATIG_(\d+)\]$")
+    legacy_pattern = re.compile(rf"^\[{re.escape(prefix)}_HANDMATIG_(\d+)\]$")
     max_seen = 0
     for row in _row_dicts(existing_rows):
-        match = pattern.match(str(row.get("replace_with", "")).strip())
+        replacement = str(row.get("replace_with", "")).strip()
+        parsed = parse_bound_placeholder(replacement)
+        if (
+            document_binding_id
+            and parsed
+            and parsed["manual"] is True
+            and parsed["entity_label"] == prefix
+            and parsed["document_binding_id"] == document_binding_id
+        ):
+            max_seen = max(max_seen, int(parsed["index"]))
+            continue
+        match = legacy_pattern.match(replacement)
         if match:
             max_seen = max(max_seen, int(match.group(1)))
-    return f"[{prefix}_HANDMATIG_{max_seen + 1:02d}]"
+
+    next_index = max_seen + 1
+    if document_binding_id:
+        return build_bound_placeholder(prefix, next_index, document_binding_id, manual=True)
+    return f"[{prefix}_HANDMATIG_{next_index:02d}]"
 
 
 def validate_manual_mask_input(
@@ -130,6 +151,7 @@ def build_manual_mask_row(
     manual_type: str | None = None,
     replace_with: Any = None,
     existing_rows: Iterable[dict[str, Any]] | Any | None = None,
+    document_binding_id: str | None = None,
 ) -> dict[str, Any]:
     """Build a replacement-table row for a manually added value."""
 
@@ -138,7 +160,9 @@ def build_manual_mask_row(
         raise ValueError("Manual mask value cannot be empty")
 
     entity_type = manual_type_to_entity_type(manual_type)
-    replacement = normalise_manual_mask_value(replace_with) or build_manual_placeholder(manual_type, existing_rows)
+    replacement = normalise_manual_mask_value(replace_with) or build_manual_placeholder(
+        manual_type, existing_rows, document_binding_id
+    )
 
     return {
         "include": True,

@@ -1,3 +1,15 @@
+## 2026-07-27 21:45 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION
+
+Status: implemented; targeted validation pending.
+
+Summary:
+- Bound placeholder and schema-1.1 key creation is integrated into anonymization/export.
+- Custom replacement text is preserved and cannot be silently represented as a verified bound mapping.
+- Reinsert enforcement remains the active next package.
+
+Next recommended step:
+- `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`.
+
 ## 2026-07-27 20:05 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION
 
 Status: implemented; targeted validation passed; PR verification pending.

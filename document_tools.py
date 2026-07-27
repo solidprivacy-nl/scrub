@@ -3,6 +3,8 @@ from html import escape
 import csv
 import re
 
+from scrub_key_binding import build_bound_placeholder
+
 try:
     from legal_reference_taxonomy import REFERENCE_ENTITY_TYPES
 except Exception:
@@ -327,13 +329,27 @@ def should_skip_detection(original: str, entity_type: str, score: float) -> bool
     return False
 
 
-def placeholder_for_entity(entity_type: str, count: int) -> str:
+def placeholder_for_entity(
+    entity_type: str,
+    count: int,
+    document_binding_id: str | None = None,
+) -> str:
     label = PLACEHOLDER_LABELS.get(entity_type, entity_type)
+    if document_binding_id:
+        return build_bound_placeholder(label, count, document_binding_id)
     return f"[{label}_{count:02d}]"
 
 
-def build_placeholder_replacements(text, analyze_results):
-    """Build stable placeholder suggestions from Presidio results."""
+def build_placeholder_replacements(
+    text,
+    analyze_results,
+    document_binding_id: str | None = None,
+):
+    """Build stable placeholder suggestions from Presidio results.
+
+    ``document_binding_id`` is optional for backwards-compatible helper use. The
+    anonymization/export flow supplies it so newly exported artifacts are bound.
+    """
     counters = {}
     replacements = {}
     report_rows = []
@@ -350,7 +366,9 @@ def build_placeholder_replacements(text, analyze_results):
             continue
 
         counters[entity_type] = counters.get(entity_type, 0) + 1
-        placeholder = placeholder_for_entity(entity_type, counters[entity_type])
+        placeholder = placeholder_for_entity(
+            entity_type, counters[entity_type], document_binding_id
+        )
         replacements[original] = placeholder
         report_rows.append(
             {

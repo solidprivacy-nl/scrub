@@ -13,6 +13,7 @@ This candidate directly changes only the review-table presentation area:
 
 from __future__ import annotations
 
+from collections import Counter
 import ast
 import logging
 import os
@@ -39,6 +40,7 @@ from presidio_helpers import (
 from document_tools import (
     uploaded_file_to_text,
     build_placeholder_replacements,
+    placeholder_for_entity,
     apply_replacements_to_text,
     anonymized_docx_from_original,
     docx_from_text,
@@ -77,10 +79,12 @@ from review_guidance import (
 )
 from review_summary import build_review_summary, review_summary_markdown
 from export_sanity import build_export_sanity_checks, export_sanity_warnings
-from scrub_key import (
-    build_scrub_key as build_export_scrub_key,
-    scrub_key_to_json as export_key_json,
-    validate_scrub_key as validate_export_scrub_key,
+from scrub_key import scrub_key_to_json as export_key_json
+from scrub_key_binding import validate_bound_scrub_key
+from scrub_key_bound_export import (
+    bind_existing_placeholder,
+    build_bound_scrub_key,
+    document_binding_id_for_scope,
 )
 from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result
 from scrub_key_reinsert import reinsert_from_scrub_key
@@ -533,7 +537,15 @@ try:
     )
 
     if st_operator not in ("highlight", "synthesize"):
-        _, report_rows = build_placeholder_replacements(st_text, st_analyze_results)
+        document_scope_key = manual_mask_document_key(st_text)
+        document_binding_id = document_binding_id_for_scope(
+            st.session_state, document_scope_key
+        )
+        _, report_rows = build_placeholder_replacements(
+            st_text,
+            st_analyze_results,
+            document_binding_id=document_binding_id,
+        )
         candidate_rows = []
         if st_recognition_profile == "Dutch Legal Strict":
             candidate_rows = scan_unmasked_candidates(st_text, st_analyze_results, max_candidates=50)
@@ -545,6 +557,11 @@ try:
         for row in remembered_rows:
             find_text = str(row.get("find", "")).strip()
             replace_with = str(row.get("replace_with", "")).strip()
+            rebound_placeholder = bind_existing_placeholder(
+                replace_with, document_binding_id
+            )
+            if rebound_placeholder is not None:
+                replace_with = rebound_placeholder
             if not find_text or not replace_with:
                 continue
             entity_type = row.get("entity_type", "REMEMBERED")
@@ -598,19 +615,28 @@ try:
             )
             seen_find_values.add(find_text)
 
+        placeholder_counts = Counter(
+            row.get("entity_type", "") for row in report_rows
+        )
         for candidate in candidate_rows:
             find_text = str(candidate.get("text", "")).strip()
             if not find_text or find_text in seen_find_values:
                 continue
             entity_type = candidate.get("entity_type", "NL_SUSPICIOUS_REFERENCE_CANDIDATE")
             score = candidate.get("score", None)
+            placeholder_counts[entity_type] += 1
+            candidate_placeholder = placeholder_for_entity(
+                entity_type,
+                placeholder_counts[entity_type],
+                document_binding_id,
+            )
             review_status = review_status_for_source("candidate", entity_type, score)
             default_editor_rows.append(
                 {
                     "include": False,
                     "remember": False,
                     "find": find_text,
-                    "replace_with": candidate.get("placeholder", "<MOGELIJKE_REFERENTIE>"),
+                    "replace_with": candidate_placeholder,
                     "type_label": entity_label(entity_type),
                     "entity_type": entity_type,
                     "confidence": confidence_label(score),
@@ -648,11 +674,17 @@ try:
                 }
             ]
 
-        manual_mask_key = manual_mask_document_key(st_text)
+        manual_mask_key = document_scope_key
         manual_mask_rows = st.session_state.get("manual_mask_rows", {})
         if not isinstance(manual_mask_rows, dict):
             manual_mask_rows = {}
         for manual_row in manual_mask_rows.get(manual_mask_key, []):
+            manual_row = dict(manual_row)
+            manual_replacement = bind_existing_placeholder(
+                manual_row.get("replace_with", ""), document_binding_id
+            )
+            if manual_replacement is not None:
+                manual_row["replace_with"] = manual_replacement
             manual_find_text = str(manual_row.get("find", "")).strip()
             if manual_find_text and manual_find_text not in seen_find_values:
                 default_editor_rows.append(manual_row)
@@ -714,6 +746,7 @@ try:
                 manual_placeholder = build_manual_placeholder(
                     manual_type_label,
                     replacement_editor_df,
+                    document_binding_id,
                 )
 
                 with replacement_col:
@@ -746,6 +779,7 @@ try:
                     manual_type=manual_type_label,
                     replace_with=manual_replace_with,
                     existing_rows=replacement_editor_df,
+                    document_binding_id=document_binding_id,
                 )
                 manual_mask_rows = st.session_state.get("manual_mask_rows", {})
                 if not isinstance(manual_mask_rows, dict):
@@ -992,10 +1026,19 @@ try:
             else:
                 scrub_key_rows["timestamp"] = scrub_key_rows["timestamp"].fillna("").replace("", scrub_key_timestamp)
 
-            scrub_key = build_export_scrub_key(scrub_key_rows)
-            scrub_key_issues = validate_export_scrub_key(scrub_key)
+            scrub_key = build_bound_scrub_key(
+                scrub_key_rows,
+                document_binding_id=document_binding_id,
+            )
+            scrub_key_validation = validate_bound_scrub_key(scrub_key)
+            scrub_key_issues = scrub_key_validation.get("errors", [])
             if scrub_key_issues:
-                st.warning("Scrub Key kan nog niet betrouwbaar worden geëxporteerd: " + "; ".join(scrub_key_issues[:3]))
+                st.warning(
+                    "Scrub Key kan nog niet betrouwbaar worden geëxporteerd. "
+                    "Alle geselecteerde vervangingen moeten documentgebonden placeholders zijn; "
+                    "vrije aangepaste vervangtekst blijft wel in de documentexport staan. "
+                    + "; ".join(scrub_key_issues[:3])
+                )
             else:
                 if scrub_key.get("item_count", 0) == 0:
                     st.info("Er zijn geen geselecteerde vervangingen voor de Scrub Key. De JSON bevat dan geen mapping-items.")

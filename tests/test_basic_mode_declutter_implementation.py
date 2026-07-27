@@ -86,7 +86,7 @@ def test_export_scrub_key_reinsert_and_recognizer_paths_remain_present() -> None
         "analyze(",
         "build_placeholder_replacements",
         "apply_replacements_to_text",
-        "build_export_scrub_key",
+        "build_bound_scrub_key",
         "export_key_json",
         "reinsert_from_scrub_key",
         "reinsert_docx_bytes",

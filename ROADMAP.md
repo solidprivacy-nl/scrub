@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-07-27 — the pure binding model is implemented and isolated; bound placeholder and Scrub Key export integration is now active before reinsert enforcement.
+Last roadmap strategy update: 2026-07-27 — bound placeholder and Scrub Key export integration is implemented; fail-closed reinsert enforcement is now active next.
 
 ---
 
@@ -234,8 +234,8 @@ Current execution queue:
 6. SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed
 7. SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — completed
 8. SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — completed
-9. SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — active
-10. SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
+9. SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — implemented
+10. SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — active
 11. SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY
 12. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
 13. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
