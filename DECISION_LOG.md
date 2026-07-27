@@ -4,6 +4,42 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-27 — D034 — Freeze the bound-placeholder and mapping-digest contract before model implementation
+
+Status: accepted test/specification decision; model implementation may proceed
+
+Decision:
+
+```text
+Freeze binding IDs as B plus sixteen uppercase RFC 4648 base32 characters, automatic placeholders as [LABEL_BINDINGID_INDEX], manual placeholders as [LABEL_BINDINGID_HANDMATIG_INDEX], and the bound-key direction as schema version 1.1 with binding version 1 and a canonical SHA-256 mapping digest. Preserve explicit legacy-v1.0 unbound compatibility and require all bound mismatch, mixed-ID, missing-binding, invalid-digest and invalid-bound-key states to fail closed before replacement.
+```
+
+Reason:
+
+- Exact grammar and canonicalization are required before multiple shared placeholder, export and reinsert surfaces change.
+- A fixed synthetic digest fixture makes implementation independently testable.
+- Bound and legacy statuses must not be conflated.
+- UI simplification must survive the security change without new source/key execution gates.
+
+Boundaries:
+
+- Contract/tests only in this package; no product behavior change.
+- Mapping digest is not authenticity or a signature.
+- No automatic placeholder repair or legacy upgrade.
+- Preserve the three-step document-first reinsert flow and final confidential-download acknowledgement.
+- Model implementation remains pure and Streamlit-free.
+- Export and reinsert integration require later sequential packages.
+- Human review remains mandatory; no production-readiness claim.
+
+Evidence:
+
+- `SCRUB_KEY_BINDING_CONTRACT.md`
+- `test_cases/mvp_phase6/scrub_key_binding_contract.json`
+- `tests/test_mvp_scrub_key_binding_contracts.py`
+- `output/validation/mvp_scrub_key_binding_contract_validation.json`
+
+---
+
 ## 2026-07-27 — D033 — Bind new Scrub Keys through document-specific placeholder namespaces
 
 Status: accepted planning/architecture decision; implementation requires green contract tests

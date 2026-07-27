@@ -1,3 +1,28 @@
+## 2026-07-27 19:38 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS
+
+Status: completed; contract frozen; PR validation pending.
+
+Summary:
+- Added a versioned binding contract and synthetic fixture before any product implementation.
+- Locked binding ID grammar `B[A-Z2-7]{16}` with an 80-bit random payload.
+- Locked automatic placeholders as `[LABEL_BINDINGID_INDEX]` and manual placeholders as `[LABEL_BINDINGID_HANDMATIG_INDEX]`.
+- Locked bound Scrub Key metadata direction as schema version `1.1`, binding version `1`, a document binding ID and canonical SHA-256 mapping digest.
+- Locked eight binding statuses and six fail-closed statuses that must produce zero replacements.
+- Locked explicit legacy-v1.0 unbound compatibility without silent upgrading.
+- Preserved the existing three-step source → key → download UX and final confidential-download acknowledgement.
+- Defined the pure helper responsibilities for model implementation.
+- Changed no product helper, UI, placeholder generation, Scrub Key schema implementation, export or reinsert behavior.
+
+Validation boundaries:
+- Fixed synthetic digest: `516075e4970f0def6052aaac6885e12339e7cdbe012d4104aa7387c51a53faa3`.
+- Mapping digest is accidental-corruption evidence, not authenticity or a signature.
+- Malformed placeholders are never guessed or repaired.
+- Production readiness: false.
+- Human review remains required.
+
+Active next package:
+- `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`.
+
 ## 2026-07-27 19:18 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE
 
 Status: completed; targeted validation passed; PR verification pending.

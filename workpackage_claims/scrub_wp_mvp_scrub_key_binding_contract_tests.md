@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS
 
-Status: in_progress
+Status: completed; contract frozen; PR validation pending
 
 Claimed by: ChatGPT GitHub worker
 
@@ -37,4 +37,19 @@ Validation progress:
 - Targeted validation operator triggered.
 
 Next step:
-- Record green contract evidence, remove temporary tooling and hand over to `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`.
+- Merge after GitHub Actions pass, then start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`.
+
+
+Contract result:
+- Binding ID: `B[A-Z2-7]{16}` with an 80-bit random payload.
+- Bound automatic/manual placeholder grammar frozen.
+- Bound-key schema direction `1.1`, binding version `1` and canonical SHA-256 mapping digest frozen.
+- Eight binding statuses and six fail-closed states frozen.
+- Legacy v1.0 remains explicit unbound compatibility.
+- Three-step reinsert UX and final download acknowledgement preserved.
+- Canonical synthetic digest independently recomputed.
+- Implementation authorized in this package: false.
+- Product code changed: false.
+- Production ready: false; human review required: true.
+- Evidence: `output/validation/mvp_scrub_key_binding_contract_validation.json`.
+- Handover: `handover/workpackages/20260727_1938_mvp_scrub_key_binding_contract_tests.md`.

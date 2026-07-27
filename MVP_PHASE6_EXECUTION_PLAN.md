@@ -34,6 +34,8 @@ Classify the critical finding that a structurally valid wrong key can reuse the 
 
 Triage result: use a non-sensitive document binding ID in every placeholder and the corresponding key, complemented by a canonical mapping digest. Implement sequentially through contract tests, pure model helpers, export integration, reinsert integration and live verification. Legacy unbound keys remain explicit; malicious tampering remains outside the MVP without protected signing-key management.
 
+Contract status: frozen. Binding IDs use `B[A-Z2-7]{16}`; bound keys use an explicit new schema direction with canonical SHA-256 mapping digest, eight statuses and fail-closed mismatch rules. Pure model implementation is the active next package.
+
 ### 5. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
 
 Produce a consistent machine-readable and human-readable evidence summary covering automatic findings, manual additions, unresolved candidates, document-hygiene warnings, exports, reinsert completeness and known limitations.
