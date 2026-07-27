@@ -31,5 +31,10 @@ Boundaries:
 - Synthetic data only.
 - Human review remains required; no production-readiness claim.
 
+Validation progress:
+- Contract specification and versioned fixture added.
+- Binding grammar, canonical digest, legacy status, fail-closed status matrix and three-step UX contracts added.
+- Targeted validation operator triggered.
+
 Next step:
-- Add the versioned contract/specification and green source/fixture-level tests, then hand over to `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`.
+- Record green contract evidence, remove temporary tooling and hand over to `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`.
