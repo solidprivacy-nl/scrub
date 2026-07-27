@@ -1,0 +1,40 @@
+name: Reinsert auto-flow closeout finalizer
+
+on:
+  push:
+    branches:
+      - scrub-mvp-reinsert-auto-flow-app-verify-closeout
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.event.head_commit.message != 'Finalize reinsert auto-flow app verification closeout'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out closeout branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-reinsert-auto-flow-app-verify-closeout
+          fetch-depth: 0
+
+      - name: Apply closeout evidence
+        run: python scripts/finalize_reinsert_auto_flow_app_verify_closeout.py
+
+      - name: Remove one-time finalizer and generated cache
+        shell: bash
+        run: |
+          rm -f scripts/finalize_reinsert_auto_flow_app_verify_closeout.py
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+
+      - name: Commit closeout
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-closeout-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'Finalize reinsert auto-flow app verification closeout'
+          git push origin HEAD:scrub-mvp-reinsert-auto-flow-app-verify-closeout
