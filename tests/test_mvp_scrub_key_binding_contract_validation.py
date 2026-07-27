@@ -33,5 +33,7 @@ def test_binding_contract_validation_evidence_is_committed() -> None:
     assert evidence["next_workpackage"] == "SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION"
 
 
-def test_temporary_binding_contract_operator_is_absent() -> None:
+def test_temporary_binding_contract_files_are_absent() -> None:
     assert not (ROOT / ".github/workflows/mvp_scrub_key_binding_contract_operator.yml").exists()
+    assert not (ROOT / ".github/workflows/mvp_scrub_key_binding_contract_finalizer.yml").exists()
+    assert not (ROOT / "scripts/finalize_mvp_scrub_key_binding_contract_tests.py").exists()
