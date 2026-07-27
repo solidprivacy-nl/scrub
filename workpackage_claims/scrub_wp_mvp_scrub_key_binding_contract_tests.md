@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS
 
-Status: completed; contract frozen; full suite passed; final clean PR validation pending
+Status: completed; contract frozen; full suite and final clean PR validation passed; merge pending
 
 Claimed by: ChatGPT GitHub worker
 
@@ -38,6 +38,7 @@ Validation result:
 - Full repository suite: 845 passed.
 - GitHub Actions run #1703 passed before temporary diagnostic cleanup.
 - Temporary diagnostic workflow and log removed.
+- Final clean GitHub Actions run #1708 passed.
 - Binding ID: `B[A-Z2-7]{16}` with an 80-bit random payload.
 - Bound automatic/manual placeholder grammar frozen.
 - Bound-key schema direction `1.1`, binding version `1` and canonical SHA-256 mapping digest frozen.
@@ -51,4 +52,4 @@ Validation result:
 - Handover: `handover/workpackages/20260727_1938_mvp_scrub_key_binding_contract_tests.md`.
 
 Next step:
-- Verify the final clean PR run, merge PR #42 and start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`.
+- Merge PR #42 and start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`.
