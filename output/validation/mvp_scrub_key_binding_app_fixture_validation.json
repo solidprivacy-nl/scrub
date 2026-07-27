@@ -1,0 +1,18 @@
+{
+  "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY",
+  "status": "synthetic_fixture_validation_passed",
+  "deployed_product_commit": "4a21c2d93acf3c166534a4a0501e602954c5606d",
+  "binding_a": "BK7M4Q2XR5TD3W6YZ",
+  "binding_b": "BABCDEFGHIJKLMNOP",
+  "correct_mapping_digest": "c92e42f38fd523920e982ddaa4c01d7d52fe79b0389366f416ec1d576fc05cdc",
+  "correct_key_valid": true,
+  "wrong_key_structurally_valid": true,
+  "wrong_key_document_match_blocked": true,
+  "tampered_digest_rejected": true,
+  "legacy_key_import_valid": true,
+  "legacy_reinsert_unverified_warning_status": true,
+  "docx_correct_match_replacements": 4,
+  "docx_mismatch_original_bytes_preserved": true,
+  "synthetic_data_only": true,
+  "app_verification_required": true
+}
