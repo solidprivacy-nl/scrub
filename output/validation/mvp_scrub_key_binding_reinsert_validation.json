@@ -1,7 +1,8 @@
 {
   "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION",
-  "status": "implemented_full_actions_passed",
-  "github_actions_run_number": 1789,
+  "status": "final_pr_actions_passed",
+  "github_actions_run_number": 1797,
+  "github_actions_commit": "9f8eddda04b768e994184badbea3aefe39ce74cc",
   "github_actions_conclusion": "success",
   "dual_read_legacy_v1_0": true,
   "dual_read_bound_v1_1": true,
