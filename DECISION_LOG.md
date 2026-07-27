@@ -1,3 +1,22 @@
+## 2026-07-27 — D036 — Preserve custom replacement text and fail verified key export rather than silently rewriting it
+
+Status: accepted export-integration decision
+
+Decision:
+
+```text
+Generate document-bound placeholders by default. Rebind only recognised placeholder tokens. Never silently replace arbitrary user-chosen replacement text with a placeholder. When any included mapping remains unbound, keep the document export behavior but block schema-1.1 Scrub Key download with a visible validation warning.
+```
+
+Reason:
+
+- Review choices remain source of truth.
+- Silent rewriting would change legal/readability semantics and user intent.
+- A bound key must not claim verified document matching for an unbound mapping.
+- Fail-visible key export is safer than a false binding claim.
+
+---
+
 # SolidPrivacy Scrub — Decision Log
 
 This file records accepted strategic, product and architecture decisions.

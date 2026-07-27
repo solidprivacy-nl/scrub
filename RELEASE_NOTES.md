@@ -1,3 +1,12 @@
+## 2026-07-27 — Document en Scrub Key worden aan elkaar gekoppeld
+
+- Nieuwe standaardplaceholders bevatten een niet-gevoelige documentcode.
+- De bijbehorende Scrub Key bevat dezelfde code en een controlewaarde tegen onbedoelde wijzigingen.
+- Vrij aangepaste vervangtekst blijft ongewijzigd, maar kan niet als geverifieerde documentgebonden Scrub Key worden gedownload.
+- Bestandsnamen, documentformaten en de bestaande reviewstappen blijven gelijk.
+
+---
+
 ## 2026-07-27 — Terugzetten werkt nu in drie logische stappen
 
 - Begin met het TXT-, DOCX- of PDF-bestand dat je wilt herstellen; geplakte tekst blijft beschikbaar als alternatief.
