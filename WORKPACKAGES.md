@@ -1,3 +1,33 @@
+## 2026-07-27 18:55 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
+
+Status: completed; deterministic validation passed; PR verification pending.
+
+Summary:
+- Added a versioned synthetic adversarial matrix with 15 Scrub Key and placeholder roundtrip scenarios.
+- Verified intact, repeated, missing, unknown, translated, merged, malformed and changed placeholder behavior.
+- Verified duplicate, incomplete, malformed, tampered and wrong Scrub Key behavior.
+- Confirmed deterministic local execution with no AI or cloud processing.
+- Changed no product code, UI, Scrub Key schema, export or reinsert semantics.
+
+Validation result:
+- Cases: 15.
+- Failing cases: 0.
+- Findings: 2.
+- Critical findings: 1.
+- Medium findings: 1.
+- Production readiness: false.
+- Human review remains required.
+
+Critical evidence:
+- A structurally valid wrong or tampered Scrub Key that reuses the same placeholder namespace can restore incorrect original values without a detectable mismatch.
+- This requires separate triage because a safe solution may affect document/key binding, Scrub Key schema or export semantics.
+
+Secondary evidence:
+- Malformed tokens outside the strict placeholder grammar are reported indirectly through expected placeholders not found, rather than as explicit unknown malformed tokens.
+
+Active next package:
+- `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`.
+
 ## 2026-07-27 18:28 Europe/Amsterdam — SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
 
 Status: completed and app-verified.

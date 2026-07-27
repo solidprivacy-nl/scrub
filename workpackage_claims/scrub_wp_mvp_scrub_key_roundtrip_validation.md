@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
 
-Status: in_progress
+Status: completed; deterministic validation passed; PR verification pending
 
 Claimed by: ChatGPT GitHub worker
 
@@ -33,4 +33,16 @@ Boundaries:
 - Preserve deterministic local reinsert and human review.
 
 Next step:
-- Add pure matrix/report helpers, manifest, tests and machine-readable evidence; then route any reproducible gap through a separate triage package.
+- Merge after GitHub Actions pass, then start `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`.
+
+
+Validation result:
+- Cases: 15; failed cases: 0.
+- Findings: 2; critical: 1; medium: 1.
+- Critical finding: missing reliable document/key binding for a structurally valid wrong key reusing the same placeholder namespace.
+- Medium finding: malformed tokens outside the grammar are signalled indirectly.
+- Local-only: true; AI/cloud: false.
+- Product code changed: false.
+- Production ready: false; human review required: true.
+- Report: `output/validation/mvp_scrub_key_roundtrip_validation_report.json`.
+- Handover: `handover/workpackages/20260727_1855_mvp_scrub_key_roundtrip_validation.md`.
