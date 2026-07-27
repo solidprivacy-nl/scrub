@@ -1,28 +1,14 @@
 ........................................................................ [  8%]
 ........................................................................ [ 17%]
 ........................................................................ [ 25%]
-..........................................................F
-=================================== FAILURES ===================================
-______ test_three_step_reinsert_ux_remains_unchanged_by_contract_package _______
-
-    def test_three_step_reinsert_ux_remains_unchanged_by_contract_package() -> None:
-        contract = load_contract()["ux_contract"]
-        ui_text = REINSERT_UI_PATH.read_text(encoding="utf-8")
-    
-        assert contract["steps"] == [
-            "source_document_or_text",
-            "corresponding_scrub_key",
-            "restored_download",
-        ]
-        assert contract["new_source_or_key_buttons"] is False
-        assert contract["new_source_or_key_checkboxes"] is False
-        assert contract["final_confidential_download_acknowledgement"] is True
->       assert 'st.subheader("1. Voeg het bestand of de tekst toe die je wilt herstellen")' in ui_text
-E       assert 'st.subheader("1. Voeg het bestand of de tekst toe die je wilt herstellen")' in 'from __future__ import annotations\n\nimport hashlib\n\nimport streamlit as st\n\nfrom reinsert_auto_flow import (\n ...      key="ack_auto_reinsert_download_confidential",\n    )\n    _render_download(source_type, result, acknowledged)\n'
-
-tests/test_mvp_scrub_key_binding_contracts.py:254: AssertionError
-=========================== short test summary info ============================
-FAILED tests/test_mvp_scrub_key_binding_contracts.py::test_three_step_reinsert_ux_remains_unchanged_by_contract_package - assert 'st.subheader("1. Voeg het bestand of de tekst toe die je wilt herstellen")' in 'from __future__ import annotations\n\nimport hashlib\n\nimport streamlit as st\n\nfrom reinsert_auto_flow import (\n ...      key="ack_auto_reinsert_download_confidential",\n    )\n    _render_download(source_type, result, acknowledged)\n'
-!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 failed, 274 passed in 5.76s
-pytest_status=1
+........................................................................ [ 34%]
+........................................................................ [ 42%]
+........................................................................ [ 51%]
+........................................................................ [ 59%]
+........................................................................ [ 68%]
+........................................................................ [ 76%]
+........................................................................ [ 85%]
+........................................................................ [ 93%]
+.....................................................                    [100%]
+845 passed in 7.79s
+pytest_status=0
