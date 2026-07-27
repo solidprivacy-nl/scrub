@@ -62,7 +62,7 @@ def test_existing_app_processing_and_export_paths_are_not_changed_by_mode_select
         "analyze(",
         "build_placeholder_replacements",
         "apply_replacements_to_text",
-        "build_export_scrub_key",
+        "build_bound_scrub_key",
         "export_key_json",
         "reinsert_from_scrub_key",
         "Document downloaden",
