@@ -4,6 +4,39 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-27 — D032 — Roundtrip evidence requires document/key-binding triage before implementation
+
+Status: accepted evidence-routing decision
+
+Decision:
+
+```text
+Treat the missing document/Scrub-Key binding as a critical Phase 6 finding. Do not implement an implicit heuristic or silently change the Scrub Key schema, export or reinsert semantics inside the validation package. Open a separate triage package to define the binding contract and migration boundaries first.
+```
+
+Reason:
+
+- A wrong key with a disjoint placeholder namespace is visibly rejected through unknown/not-found audit evidence.
+- A structurally valid wrong or tampered key with the same placeholder names restores wrong original values with no validation issue, unknown placeholder or missing-placeholder signal.
+- Document labels are descriptive metadata and are not currently a verified binding mechanism.
+- A safe correction may affect key creation, scrubbed output metadata, import compatibility and export semantics.
+
+Boundaries:
+
+- Preserve current deterministic local behavior until the triage decision is approved.
+- Do not guess whether a key belongs to a document.
+- Do not auto-repair malformed placeholders.
+- Preserve existing audit evidence and human review.
+- Use synthetic data only; no production-readiness claim.
+
+Evidence:
+
+- `output/validation/mvp_scrub_key_roundtrip_validation_report.json`
+- `test_cases/mvp_phase6/scrub_key_roundtrip_manifest.json`
+- `tests/test_mvp_scrub_key_roundtrip_validation.py`
+
+---
+
 ## 2026-07-27 — D031 — Reinsert is document-first with automatic source/key processing
 
 Status: accepted evidence-driven UX and safety decision

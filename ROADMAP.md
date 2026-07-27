@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-07-27 — the document-first automatic reinsert flow is merged and app-verified; Scrub Key roundtrip validation is now active.
+Last roadmap strategy update: 2026-07-27 — Scrub Key roundtrip validation is complete and exposed a critical document/key-binding gap; evidence triage is now active before any schema or export change.
 
 ---
 
@@ -110,6 +110,7 @@ WP_RECALL_PERSON_NAME_* — diagnostic, contract and helper-level PERSON-name wo
 SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_* through SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_* — the current MVP UI simplification line is completed, synchronized and live-app verified.
 SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING — merged, synchronized and live-app verified for DOCX body, table, header and footer restoration.
 SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — completed, synchronized and live-app verified.
+SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — completed with 15/15 cases passing and a critical document/key-binding gap routed to triage.
 ```
 
 Important UX status:
@@ -226,9 +227,10 @@ Current execution queue:
 2. SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE — completed
 3. SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING — completed and app-verified
 4. SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — completed and app-verified
-5. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — active
-6. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
-7. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
+5. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — completed
+6. SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — active
+7. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
+8. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
 ```
 
 Execution principles:

@@ -28,6 +28,10 @@ Test and, through separately scoped fixes, harden headers, footers, tables, comm
 
 Test correct, missing, duplicate, altered, translated, merged and malformed placeholders; wrong or incomplete Scrub Keys; repeated values; partial restoration; and deterministic recovery reporting.
 
+### 4A. SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE
+
+Classify the critical finding that a structurally valid wrong key can reuse the same placeholder namespace and restore incorrect values without a detectable mismatch. Decide whether document/key binding requires a key identifier, content fingerprint, manifest binding or another explicit contract. Do not change schema, export or reinsert semantics in the triage package.
+
 ### 5. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
 
 Produce a consistent machine-readable and human-readable evidence summary covering automatic findings, manual additions, unresolved candidates, document-hygiene warnings, exports, reinsert completeness and known limitations.

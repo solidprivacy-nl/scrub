@@ -1,3 +1,50 @@
+## 2026-07-27 18:55 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
+
+Status: completed; deterministic validation passed; PR verification pending.
+
+Purpose:
+- Validate Scrub Key import/reinsert and placeholder roundtrip behavior against adversarial synthetic mutations.
+- Record evidence before authorizing any schema, export or reinsert changes.
+
+Files added:
+- `test_cases/mvp_phase6/scrub_key_roundtrip_manifest.json`
+- `mvp_scrub_key_roundtrip_validation.py`
+- `scripts/run_mvp_scrub_key_roundtrip_validation.py`
+- `tests/test_mvp_scrub_key_roundtrip_validation.py`
+- `tests/test_mvp_scrub_key_roundtrip_report_contract.py`
+- `output/validation/mvp_scrub_key_roundtrip_validation_report.json`
+- `handover/workpackages/20260727_1855_mvp_scrub_key_roundtrip_validation.md`
+
+Files changed:
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `ROADMAP.md`
+- `MVP_PHASE6_EXECUTION_PLAN.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+- `workpackage_claims/scrub_wp_mvp_scrub_key_roundtrip_validation.md`
+
+Validation result:
+- 15 synthetic cases; 0 failed cases.
+- 1 critical finding: no reliable document/key binding when a wrong valid key reuses the same placeholder namespace.
+- 1 medium finding: malformed placeholder mutations outside the grammar are signalled indirectly.
+- Existing duplicate, incomplete, invalid, unknown and translated cases fail closed or remain visibly auditable as expected.
+- Local-only: true; external AI: false; cloud processing: false.
+- Production ready: false; human review required: true.
+
+Intentionally not changed:
+- product code or UI;
+- Scrub Key schema, mappings, export, storage or lifecycle;
+- placeholder grammar or automatic repair;
+- reinsert helper semantics;
+- filenames, MIME types or audit fields;
+- cloud, AI, OCR or restored-PDF behavior.
+
+Next recommended step:
+- Start `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE` before implementing a fix.
+
+---
+
 ## 2026-07-27 18:28 Europe/Amsterdam — SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
 
 Status: completed and app-verified.
