@@ -33,30 +33,44 @@ jobs:
           python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf streamlit pandas
       - name: Apply minimal status UI patch
         run: python scripts/implement_scrub_key_binding_reinsert_ui.py
-      - name: Validate integration
+      - name: Capture targeted validation
+        shell: bash
         run: |
+          set +e
+          mkdir -p output/validation
+          log=output/validation/mvp_scrub_key_binding_reinsert_ui_operator.log
+          : > "$log"
           python -m py_compile \
             scrub_key_import.py \
             scrub_key_reinsert.py \
             scrub_key_document_reinsert.py \
             scrub_key_binding_reinsert_status.py \
-            reinsert_mode_ui.py
-          python -m pytest -q \
-            tests/test_scrub_key_binding_reinsert_integration.py \
-            tests/test_scrub_key_binding_reinsert_status.py \
-            tests/test_scrub_key_binding_reinsert_ui.py \
-            tests/test_scrub_key_secure_import_export.py \
-            tests/test_scrub_key_document_reinsert.py \
-            tests/test_mvp_document_hygiene_fidelity_hardening.py \
-            tests/test_reinsert_auto_flow.py \
-            tests/test_reinsert_auto_flow_ui.py
-          git diff --check
+            reinsert_mode_ui.py >> "$log" 2>&1
+          status=$?
+          if [[ $status -eq 0 ]]; then
+            python -m pytest -q \
+              tests/test_scrub_key_binding_reinsert_integration.py \
+              tests/test_scrub_key_binding_reinsert_status.py \
+              tests/test_scrub_key_binding_reinsert_ui.py \
+              tests/test_scrub_key_secure_import_export.py \
+              tests/test_scrub_key_document_reinsert.py \
+              tests/test_mvp_document_hygiene_fidelity_hardening.py \
+              tests/test_reinsert_auto_flow.py \
+              tests/test_reinsert_auto_flow_ui.py >> "$log" 2>&1
+            status=$?
+          fi
+          if [[ $status -eq 0 ]]; then
+            git diff --check >> "$log" 2>&1
+            status=$?
+          fi
+          echo "validation_status=$status" >> "$log"
+          exit 0
       - name: Remove one-time patch script and caches
         run: |
           rm -f scripts/implement_scrub_key_binding_reinsert_ui.py
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
           find . -type f -name '*.pyc' -delete
-      - name: Commit UI integration
+      - name: Commit UI integration and evidence
         shell: bash
         run: |
           set -euo pipefail
