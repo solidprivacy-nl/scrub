@@ -8,7 +8,7 @@ SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
 
 ## Status
 
-Completed; deterministic validation and full suite passed; final clean PR verification pending.
+Completed; deterministic validation, full suite and final clean PR validation passed; merge pending.
 
 ## Summary
 
@@ -53,8 +53,8 @@ A pure synthetic adversarial matrix now validates Scrub Key and placeholder roun
 - AI processing: false.
 - Cloud processing: false.
 - GitHub Actions run #1686: passed before temporary diagnostic cleanup.
-- Final clean GitHub Actions: pending after cleanup commit.
 - Temporary diagnostic workflow and log: removed.
+- Final clean GitHub Actions run #1691: passed.
 - Hugging Face sync: not functionally applicable; no runtime or app code changed.
 - App verification: not applicable; no visible UI behavior changed.
 
@@ -67,4 +67,4 @@ A pure synthetic adversarial matrix now validates Scrub Key and placeholder roun
 
 ## Next recommended step
 
-- Start `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE` before implementing a fix.
+- Merge PR #40 and start `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE` before implementing a fix.
