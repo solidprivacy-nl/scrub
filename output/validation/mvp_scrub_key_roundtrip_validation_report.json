@@ -1,0 +1,528 @@
+{
+  "case_count": 15,
+  "cases": [
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 2,
+        "text": "BETROKKENE-TEST-A hoort bij DOSSIER-TEST-2026-001.",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "baseline",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 2,
+        "text": "BETROKKENE-TEST-A hoort bij DOSSIER-TEST-2026-001.",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "pass",
+      "id": "intact_roundtrip",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[DOSSIER_1]"
+        ],
+        "replacement_count": 2,
+        "text": "BETROKKENE-TEST-A sprak opnieuw met BETROKKENE-TEST-A.",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "repeated_values",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[DOSSIER_1]"
+        ],
+        "replacement_count": 2,
+        "text": "BETROKKENE-TEST-A sprak opnieuw met BETROKKENE-TEST-A.",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "partial_with_audit",
+      "id": "repeated_placeholder_occurrences",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[DOSSIER_1]"
+        ],
+        "replacement_count": 1,
+        "text": "Bekend BETROKKENE-TEST-A, onbekend [ONBEKEND_1].",
+        "unknown_placeholders": [
+          "[ONBEKEND_1]"
+        ]
+      },
+      "ai_processing": false,
+      "category": "unknown_placeholder",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[DOSSIER_1]"
+        ],
+        "replacement_count": 1,
+        "text": "Bekend BETROKKENE-TEST-A, onbekend [ONBEKEND_1].",
+        "unknown_placeholders": [
+          "[ONBEKEND_1]"
+        ]
+      },
+      "expected_safety_class": "partial_with_audit",
+      "id": "unknown_placeholder_injected",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[DOSSIER_1]",
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 0,
+        "text": "[PERSON_1] hoort bij [CASE_1].",
+        "unknown_placeholders": [
+          "[CASE_1]",
+          "[PERSON_1]"
+        ]
+      },
+      "ai_processing": false,
+      "category": "translated_placeholder",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[DOSSIER_1]",
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 0,
+        "text": "[PERSON_1] hoort bij [CASE_1].",
+        "unknown_placeholders": [
+          "[CASE_1]",
+          "[PERSON_1]"
+        ]
+      },
+      "expected_safety_class": "fail_visible",
+      "id": "translated_placeholders",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 1,
+        "text": "[PERSOON_1 hoort bij DOSSIER-TEST-2026-001.",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "malformed_placeholder",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 1,
+        "text": "[PERSOON_1 hoort bij DOSSIER-TEST-2026-001.",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "indirect_corruption_signal",
+      "id": "malformed_missing_bracket",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 1,
+        "text": "[PERSOON-1] hoort bij DOSSIER-TEST-2026-001.",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "malformed_placeholder",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 1,
+        "text": "[PERSOON-1] hoort bij DOSSIER-TEST-2026-001.",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "indirect_corruption_signal",
+      "id": "underscore_removed",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 1,
+        "text": "[persoon_1] hoort bij DOSSIER-TEST-2026-001.",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "malformed_placeholder",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 1,
+        "text": "[persoon_1] hoort bij DOSSIER-TEST-2026-001.",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "indirect_corruption_signal",
+      "id": "lowercase_placeholder",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[DOSSIER_1]",
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 0,
+        "text": "Samengevoegd [PERSOON_DOSSIER_1].",
+        "unknown_placeholders": [
+          "[PERSOON_DOSSIER_1]"
+        ]
+      },
+      "ai_processing": false,
+      "category": "merged_placeholder",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[DOSSIER_1]",
+          "[PERSOON_1]"
+        ],
+        "replacement_count": 0,
+        "text": "Samengevoegd [PERSOON_DOSSIER_1].",
+        "unknown_placeholders": [
+          "[PERSOON_DOSSIER_1]"
+        ]
+      },
+      "expected_safety_class": "fail_visible",
+      "id": "merged_placeholder_token",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 2,
+        "text": "BETROKKENE-TEST-ADOSSIER-TEST-2026-001",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "merged_layout_but_intact_tokens",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 2,
+        "text": "BETROKKENE-TEST-ADOSSIER-TEST-2026-001",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "pass",
+      "id": "adjacent_intact_placeholders",
+      "key_variant": "canonical",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [
+          "[PERSOON_1]"
+        ],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 1,
+        "text": "[PERSOON_1] / DOSSIER-TEST-2026-001",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "duplicate_key_mapping",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [
+          "[PERSOON_1]"
+        ],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 1,
+        "text": "[PERSOON_1] / DOSSIER-TEST-2026-001",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "fail_closed_visible",
+      "id": "duplicate_placeholder_in_key",
+      "key_variant": "duplicate_person_placeholder",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 1,
+        "text": "BETROKKENE-TEST-A / [DOSSIER_1]",
+        "unknown_placeholders": [
+          "[DOSSIER_1]"
+        ]
+      },
+      "ai_processing": false,
+      "category": "incomplete_key",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 1,
+        "text": "BETROKKENE-TEST-A / [DOSSIER_1]",
+        "unknown_placeholders": [
+          "[DOSSIER_1]"
+        ]
+      },
+      "expected_safety_class": "partial_with_audit",
+      "id": "incomplete_key",
+      "key_variant": "person_only",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": true,
+        "placeholders_not_found": [],
+        "replacement_count": 0,
+        "text": "[PERSOON_1] / [DOSSIER_1]",
+        "unknown_placeholders": [
+          "[DOSSIER_1]",
+          "[PERSOON_1]"
+        ]
+      },
+      "ai_processing": false,
+      "category": "invalid_key",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": true,
+        "placeholders_not_found": [],
+        "replacement_count": 0,
+        "text": "[PERSOON_1] / [DOSSIER_1]",
+        "unknown_placeholders": [
+          "[DOSSIER_1]",
+          "[PERSOON_1]"
+        ]
+      },
+      "expected_safety_class": "fail_closed_visible",
+      "id": "tampered_item_count",
+      "key_variant": "tampered_item_count",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": [
+        "item_count does not match the number of items."
+      ]
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[CLIENT_1]",
+          "[ZAAK_1]"
+        ],
+        "replacement_count": 0,
+        "text": "[PERSOON_1] / [DOSSIER_1]",
+        "unknown_placeholders": [
+          "[DOSSIER_1]",
+          "[PERSOON_1]"
+        ]
+      },
+      "ai_processing": false,
+      "category": "wrong_key",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [
+          "[CLIENT_1]",
+          "[ZAAK_1]"
+        ],
+        "replacement_count": 0,
+        "text": "[PERSOON_1] / [DOSSIER_1]",
+        "unknown_placeholders": [
+          "[DOSSIER_1]",
+          "[PERSOON_1]"
+        ]
+      },
+      "expected_safety_class": "fail_visible",
+      "id": "wrong_key_disjoint_namespace",
+      "key_variant": "disjoint_wrong_key",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 2,
+        "text": "VERKEERDE-PERSOON / VERKEERD-DOSSIER",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "wrong_key",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 2,
+        "text": "VERKEERDE-PERSOON / VERKEERD-DOSSIER",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "critical_undetectable_mismatch",
+      "id": "wrong_key_same_placeholder_namespace",
+      "key_variant": "same_placeholders_wrong_originals",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    },
+    {
+      "actual": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 2,
+        "text": "BETROKKENE-TEST-A / BETROKKENE-TEST-A",
+        "unknown_placeholders": []
+      },
+      "ai_processing": false,
+      "category": "repeated_values",
+      "cloud_processing": false,
+      "expected": {
+        "duplicate_placeholders": [],
+        "has_validation_issue": false,
+        "placeholders_not_found": [],
+        "replacement_count": 2,
+        "text": "BETROKKENE-TEST-A / BETROKKENE-TEST-A",
+        "unknown_placeholders": []
+      },
+      "expected_safety_class": "pass",
+      "id": "duplicate_original_distinct_placeholders",
+      "key_variant": "same_original_distinct_placeholders",
+      "local_only": true,
+      "matches_expected": true,
+      "validation_issues": []
+    }
+  ],
+  "cloud_processing_used": false,
+  "critical_finding_count": 1,
+  "external_ai_used": false,
+  "failed_case_count": 0,
+  "failed_case_ids": [],
+  "finding_count": 2,
+  "findings": [
+    {
+      "description": "A structurally valid wrong or tampered Scrub Key that reuses the same placeholder namespace can restore incorrect original values without a detectable mismatch.",
+      "evidence_case_ids": [
+        "wrong_key_same_placeholder_namespace"
+      ],
+      "id": "scrub_key_document_binding_missing",
+      "requires_separate_triage": true,
+      "risk": "R2",
+      "schema_or_export_change_may_be_required": true,
+      "severity": "critical"
+    },
+    {
+      "description": "Malformed tokens outside the placeholder grammar are not identified as unknown tokens; the audit signals them indirectly because the expected Scrub Key placeholder is not found.",
+      "evidence_case_ids": [
+        "malformed_missing_bracket",
+        "underscore_removed",
+        "lowercase_placeholder"
+      ],
+      "id": "malformed_placeholder_detection_is_indirect",
+      "requires_separate_triage": true,
+      "risk": "R3",
+      "schema_or_export_change_may_be_required": false,
+      "severity": "medium"
+    }
+  ],
+  "generated_at": "2026-07-27T18:42:00+02:00",
+  "human_review_required": true,
+  "local_only": true,
+  "medium_finding_count": 1,
+  "next_workpackage": "SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE",
+  "product_code_changed": false,
+  "production_ready": false,
+  "schema": "solidprivacy.mvp_scrub_key_roundtrip_validation_report",
+  "schema_version": "1.0",
+  "synthetic_only": true,
+  "validation_complete": true,
+  "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION"
+}
