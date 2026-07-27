@@ -22,8 +22,7 @@ def test_automatic_candidate_remembered_and_manual_paths_are_binding_aware() -> 
     assert "placeholder_counts = Counter(" in APP
     assert "bind_existing_placeholder(" in APP
     assert "build_manual_placeholder(" in APP
-    assert "document_binding_id,
-                )" in APP
+    assert "document_binding_id," in APP
     assert "document_binding_id=document_binding_id" in APP
     assert "build_bound_placeholder" in DOCUMENT_TOOLS
     assert "build_bound_placeholder" in MANUAL
