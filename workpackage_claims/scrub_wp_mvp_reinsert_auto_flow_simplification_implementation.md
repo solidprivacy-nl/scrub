@@ -43,7 +43,7 @@ Boundaries:
 
 Validation note:
 - Full-suite regression diagnostics triggered at 2026-07-27 16:29 Europe/Amsterdam after initial contract alignment.
-- Self-reporting first-failure diagnostic retriggered at 2026-07-27 16:33 Europe/Amsterdam.
+- Pull-request artifact diagnostic triggered at 2026-07-27 16:38 Europe/Amsterdam.
 
 Next step:
 - Resolve only the first reproducible regression, rerun the standard suite, then complete governance evidence and PR validation.
