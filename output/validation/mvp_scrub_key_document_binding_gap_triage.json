@@ -1,0 +1,154 @@
+{
+  "schema": "solidprivacy.mvp_scrub_key_document_binding_gap_triage",
+  "schema_version": "1.0",
+  "generated_at": "2026-07-27T19:18:00+02:00",
+  "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE",
+  "status": "completed_triage",
+  "source_report": "output/validation/mvp_scrub_key_roundtrip_validation_report.json",
+  "source_finding": "scrub_key_document_binding_missing",
+  "severity": "critical",
+  "risk": "R2",
+  "threat_classes": [
+    {
+      "id": "accidental_wrong_document_pairing",
+      "priority": "mvp_primary",
+      "current_detection": "fails_only_when_placeholder_namespaces_differ"
+    },
+    {
+      "id": "accidental_key_corruption",
+      "priority": "mvp_secondary",
+      "current_detection": "structural_changes_often_detected_but_valid_value_edits_are_not"
+    },
+    {
+      "id": "malicious_tampering",
+      "priority": "deferred_security_layer",
+      "current_detection": "not_reliably_detectable_without_authenticity_key_management"
+    }
+  ],
+  "options": [
+    {
+      "id": "document_label_match",
+      "decision": "reject_as_security_control",
+      "cross_format": true,
+      "survives_ai_roundtrip": true,
+      "detects_same_namespace_wrong_key": false,
+      "reason": "Optional editable descriptive metadata can be duplicated or changed."
+    },
+    {
+      "id": "full_scrubbed_content_hash",
+      "decision": "reject_as_primary_binding",
+      "cross_format": true,
+      "survives_ai_roundtrip": false,
+      "detects_same_namespace_wrong_key": true,
+      "reason": "Legitimate AI edits, whitespace and format conversion change the content hash."
+    },
+    {
+      "id": "placeholder_set_or_order_hash",
+      "decision": "reject_as_sufficient_binding",
+      "cross_format": true,
+      "survives_ai_roundtrip": "partial",
+      "detects_same_namespace_wrong_key": false,
+      "reason": "The critical evidence already uses the same placeholder namespace."
+    },
+    {
+      "id": "filename_metadata_or_sidecar_only",
+      "decision": "reject_as_primary_binding",
+      "cross_format": false,
+      "survives_ai_roundtrip": false,
+      "detects_same_namespace_wrong_key": "conditional",
+      "reason": "Renaming, metadata stripping and a third sidecar file weaken reliability and UX."
+    },
+    {
+      "id": "binding_id_in_placeholder_namespace_and_key",
+      "decision": "recommend",
+      "cross_format": true,
+      "survives_ai_roundtrip": true,
+      "detects_same_namespace_wrong_key": true,
+      "reason": "A non-sensitive document-specific token travels with every preserved placeholder and requires no extra user step."
+    },
+    {
+      "id": "canonical_mapping_digest",
+      "decision": "recommend_as_complement",
+      "cross_format": true,
+      "survives_ai_roundtrip": true,
+      "detects_same_namespace_wrong_key": false,
+      "reason": "Detects accidental key edits but is not an authenticity signature."
+    },
+    {
+      "id": "signature_or_hmac",
+      "decision": "defer",
+      "cross_format": true,
+      "survives_ai_roundtrip": true,
+      "detects_same_namespace_wrong_key": "requires_document_binding_too",
+      "reason": "Requires protected local signing-key lifecycle that the current web prototype does not have."
+    }
+  ],
+  "recommended_contract": {
+    "binding_version": "1",
+    "schema_direction": "new_bound_version_with_explicit_legacy_dual_read",
+    "binding_id": {
+      "placement": [
+        "top_level_scrub_key_metadata",
+        "every_automatic_placeholder",
+        "every_manual_placeholder"
+      ],
+      "generation": "local_random_injected_helper",
+      "minimum_entropy_bits": 80,
+      "contains_personal_data": false,
+      "secret": false
+    },
+    "mapping_digest": {
+      "algorithm": "sha256",
+      "purpose": "accidental_key_corruption_detection",
+      "authenticity_claim": false
+    },
+    "reinsert_policy": {
+      "binding_mismatch": "fail_closed_zero_replacements",
+      "mixed_binding_ids": "fail_closed_zero_replacements",
+      "invalid_mapping_digest": "fail_closed_zero_replacements",
+      "legacy_unbound_key": "explicit_legacy_status_and_warning",
+      "unknown_duplicate_missing_placeholder_audit": "preserve"
+    },
+    "ux_policy": {
+      "flow": [
+        "source_document_or_text",
+        "corresponding_scrub_key",
+        "restored_download"
+      ],
+      "new_confirmation_buttons": false,
+      "new_confirmation_checkboxes": false,
+      "final_confidential_download_acknowledgement": true
+    }
+  },
+  "mitigation_boundaries": {
+    "accidental_wrong_document_pairing": "mitigated_by_binding_id",
+    "accidental_key_corruption": "mitigated_by_mapping_digest",
+    "malicious_key_edit_with_recomputed_unkeyed_digest": "not_mitigated",
+    "stolen_correct_key": "not_mitigated",
+    "lost_key_recovery": "not_mitigated",
+    "production_ready": false,
+    "human_review_required": true
+  },
+  "impacted_surfaces": [
+    "document_tools.placeholder_for_entity",
+    "document_tools.build_placeholder_replacements",
+    "manual_mask_entry.build_manual_placeholder",
+    "candidate_and_remembered_placeholder_paths",
+    "scrub_key.py",
+    "scrub_key_import.py",
+    "scrub_key_reinsert.py",
+    "Scrub_Key_export_integration",
+    "TXT_DOCX_PDF_to_TXT_reinsert_contracts",
+    "review_and_reinsert_status_copy"
+  ],
+  "approved_sequence": [
+    "SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS",
+    "SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION",
+    "SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION",
+    "SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION",
+    "SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY"
+  ],
+  "optional_follow_up": "SCRUB-WP_MVP_MALFORMED_PLACEHOLDER_DIAGNOSTIC_HARDENING",
+  "implementation_authorized_in_this_package": false,
+  "next_workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS"
+}
