@@ -3,33 +3,12 @@
 ........................................................................ [ 26%]
 ........................................................................ [ 35%]
 ........................................................................ [ 44%]
-.........F
-=================================== FAILURES ===================================
-_________________ test_reinsert_auto_flow_closeout_is_recorded _________________
-
-    def test_reinsert_auto_flow_closeout_is_recorded() -> None:
-        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
-        workpackages = (ROOT / "WORKPACKAGES.md").read_text(encoding="utf-8")
-        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-        claim = (
-            ROOT
-            / "workpackage_claims"
-            / "scrub_wp_mvp_reinsert_auto_flow_simplification_implementation.md"
-        ).read_text(encoding="utf-8")
-        handover = (
-            ROOT
-            / "handover"
-            / "workpackages"
-            / "20260727_1706_mvp_reinsert_auto_flow_simplification_implementation.md"
-        ).read_text(encoding="utf-8")
-    
-        assert "completed and app-verified" in roadmap
->       assert "SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — active" in roadmap
-E       AssertionError: assert 'SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — active' in '# SolidPrivacy Scrub — Risk-driven Product & Development Roadmap\n\nThis document is the central roadmap for SolidPri...roduce cloud document processing, or alter export/Scrub Key/reinsert semantics without a dedicated approved package.\n'
-
-tests/test_reinsert_auto_flow_app_verify_closeout.py:24: AssertionError
-=========================== short test summary info ============================
-FAILED tests/test_reinsert_auto_flow_app_verify_closeout.py::test_reinsert_auto_flow_closeout_is_recorded - AssertionError: assert 'SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — active' in '# SolidPrivacy Scrub — Risk-driven Product & Development Roadmap\n\nThis document is the central roadmap for SolidPri...roduce cloud document processing, or alter export/Scrub Key/reinsert semantics without a dedicated approved package.\n'
-!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 failed, 369 passed in 7.63s
-pytest_status=1
+........................................................................ [ 53%]
+........................................................................ [ 61%]
+........................................................................ [ 70%]
+........................................................................ [ 79%]
+........................................................................ [ 88%]
+........................................................................ [ 97%]
+.......................                                                  [100%]
+815 passed in 8.81s
+pytest_status=0
