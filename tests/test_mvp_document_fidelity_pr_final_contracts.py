@@ -39,4 +39,5 @@ def test_final_claim_preserves_verification_and_product_boundaries() -> None:
 
     assert "DOCX header/footer reinsert resolved: true" in claim
     assert "No OCR or restored-PDF implementation" in claim
-    assert "App verification required after Actions and Hugging Face sync" in claim
+    assert "Status: completed and app-verified" in claim
+    assert "App verification passed after Actions and Hugging Face sync" in claim
