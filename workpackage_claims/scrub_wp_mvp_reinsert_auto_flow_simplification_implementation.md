@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION
 
-Status: in_progress
+Status: implemented; full suite passed; final PR validation pending
 
 Claimed by: ChatGPT GitHub worker
 
@@ -47,3 +47,15 @@ Validation note:
 
 Next step:
 - Complete governance evidence, run final standard Actions, merge, verify Hugging Face sync and request live app verification.
+
+
+Implementation result:
+- Completed at: 2026-07-27 17:06 Europe/Amsterdam
+- Document/text is step 1; Scrub Key is step 2; download is step 3.
+- Source type recognition, key validation and local deterministic reinsert are automatic.
+- Redundant source/key checkboxes and action buttons are removed.
+- One final confidentiality acknowledgement remains before download.
+- Full repository suite: 797 passed.
+- Evidence: `output/validation/mvp_reinsert_auto_flow_validation.json`.
+- Handover: `handover/workpackages/20260727_1706_mvp_reinsert_auto_flow_simplification_implementation.md`.
+- Final Actions, merge, Hugging Face sync and app verification pending.

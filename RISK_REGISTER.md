@@ -41,9 +41,9 @@ Risk:
 The Scrub Key is shared, leaked, retained too long, tampered with or mishandled, allowing full re-identification of scrubbed content.
 ```
 
-Current mitigations include warnings and acknowledgements. Export/download UX grouping is now implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Live app verification confirmed the grouped export UI.
+Current mitigations include warnings and acknowledgements. Export/download UX grouping is implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Live app verification confirmed the grouped export UI. Reinsert now keeps the key-sensitivity warning visible, automatically applies the existing structural validation to a supplied key, and preserves one explicit confidentiality acknowledgement at the restored-output download boundary. Redundant pre-processing acknowledgements are removed because they obscured workflow state without adding key validation.
 
-The manual missed-value entry flows through the existing replacement table and existing Scrub Key/export paths without changing key semantics.
+The manual missed-value entry flows through the existing replacement table and existing Scrub Key/export paths without changing key semantics. No key storage, schema or lifecycle behavior is added by the automatic reinsert flow.
 
 ---
 
@@ -114,12 +114,13 @@ Current mitigations:
 
 Gaps:
 
+- Live reinsert verification exposed a concrete workflow-state problem: uploaded source and key files still required non-obvious follow-up checkboxes and buttons. `SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION` addresses this narrowly with document-first ordering and automatic validation/processing.
 - Additional copy polish may still be needed, but it should remain separate and small.
-- Implementation must avoid weakening review controls or hiding audit details.
+- Implementation must avoid weakening review controls or hiding audit details; one final confidentiality acknowledgement remains at download.
 
 Recommended workpackages:
 
-- The current UI baseline is completed and app-verified. Do not start another UI feature automatically; open a narrowly scoped UI package only when Phase 6 validation exposes a concrete safety or workflow blocker.
+- The general UI baseline is completed and app-verified. The automatic reinsert-flow package is permitted as a narrow exception because live Phase 6 validation exposed a concrete workflow blocker; broader UI work remains gated.
 
 ---
 

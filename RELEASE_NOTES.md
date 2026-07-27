@@ -1,3 +1,14 @@
+## 2026-07-27 — Terugzetten werkt nu in drie logische stappen
+
+- Begin met het TXT-, DOCX- of PDF-bestand dat je wilt herstellen; geplakte tekst blijft beschikbaar als alternatief.
+- Voeg daarna de bijbehorende Scrub Key toe. De sleutel wordt automatisch gelezen en gevalideerd.
+- Zodra bestand en sleutel geldig zijn, wordt het lokale herstel automatisch voorbereid en verschijnt de downloadstap.
+- De afzonderlijke vinkjes en knoppen voor het laden/valideren van de sleutel en het starten van het herstel zijn verwijderd.
+- Eén duidelijke bevestiging blijft staan vóór de download, omdat het herstelde resultaat opnieuw vertrouwelijke gegevens kan bevatten.
+- DOCX-, TXT- en PDF-naar-TXT-uitvoer, bestandsnamen en bekende beperkingen blijven ongewijzigd.
+
+---
+
 ## 2026-07-17 — DOCX-herstel omvat nu kop- en voetteksten
 
 - Bij het terugzetten van originele waarden in een DOCX worden nu ook bestaande kop- en voetteksten meegenomen.

@@ -1,3 +1,28 @@
+## 2026-07-27 17:06 Europe/Amsterdam — SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented; full suite passed; final PR validation pending.
+
+Evidence:
+- Live DOCX reinsert passed for body, table, header and footer.
+- The same verification exposed a concrete interface-clarity blocker: uploaded source/key files still required hidden follow-up checkboxes and action buttons.
+
+Summary:
+- Reordered reinsert to source first, Scrub Key second and restored download third.
+- Added pure helper orchestration for input normalisation, deterministic request signatures and dispatch to existing local helpers.
+- Automatically validates a supplied Scrub Key and automatically runs reinsert for one valid source/key pair.
+- Removed separate source/key processing acknowledgements and buttons.
+- Retained one final confidentiality acknowledgement at the restored-output download boundary.
+- Preserved TXT, DOCX, PDF-to-TXT and pasted-text paths, audit reporting, filenames, MIME types and safety boundaries.
+
+Validation:
+- Full repository suite: 797 passed.
+- Final GitHub Actions pending after governance finalisation.
+- Hugging Face sync and live app verification required after merge.
+- Human review remains required; production readiness remains false.
+
+Active next package after verification:
+- `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
 ## 2026-07-17 22:30 Europe/Amsterdam — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 
 Status: completed / ready for PR verification.
