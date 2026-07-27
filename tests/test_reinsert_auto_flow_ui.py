@@ -102,7 +102,7 @@ def test_pdf_and_docx_boundaries_remain_visible() -> None:
     source = ui_source()
 
     assert "geen herstelde PDF" in source
-    assert "OCR is niet beschikbaar" in source
+    assert "OCR niet beschikbaar" in source
     assert "kop- en voetteksten" in source
     assert "bijgehouden wijzigingen" in source
     assert "metadata" in source
