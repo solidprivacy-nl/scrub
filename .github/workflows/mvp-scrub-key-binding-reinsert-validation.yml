@@ -1,0 +1,63 @@
+name: MVP Scrub Key binding reinsert validation
+
+on:
+  push:
+    branches:
+      - scrub-mvp-scrub-key-binding-reinsert-integration
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    if: github.event.head_commit.message != 'Record binding reinsert full validation'
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - name: Check out reinsert branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-scrub-key-binding-reinsert-integration
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf streamlit pandas
+      - name: Capture full validation
+        shell: bash
+        run: |
+          set +e
+          mkdir -p output/validation
+          log=output/validation/mvp_scrub_key_binding_reinsert_full_validation.log
+          : > "$log"
+          python -m py_compile \
+            scrub_key_import.py \
+            scrub_key_reinsert.py \
+            scrub_key_document_reinsert.py \
+            scrub_key_binding_reinsert_status.py \
+            reinsert_mode_ui.py >> "$log" 2>&1
+          status=$?
+          if [[ $status -eq 0 ]]; then
+            python -m pytest -q tests >> "$log" 2>&1
+            status=$?
+          fi
+          if [[ $status -eq 0 ]]; then
+            git diff --check >> "$log" 2>&1
+            status=$?
+          fi
+          echo "validation_status=$status" >> "$log"
+          exit 0
+      - name: Commit validation log
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-binding-reinsert-validator'
+          git config user.email 'actions@users.noreply.github.com'
+          git add output/validation/mvp_scrub_key_binding_reinsert_full_validation.log
+          git commit -m 'Record binding reinsert full validation'
+          git push origin HEAD:scrub-mvp-scrub-key-binding-reinsert-integration
