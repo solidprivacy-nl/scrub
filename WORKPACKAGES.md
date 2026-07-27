@@ -1,3 +1,29 @@
+## 2026-07-27 19:18 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE
+
+Status: completed; targeted validation passed; PR verification pending.
+
+Summary:
+- Classified the critical same-placeholder wrong-key finding by accidental pairing, accidental corruption and malicious tampering.
+- Rejected document labels, complete-content hashes, placeholder-list hashes, filenames, hidden metadata and extra sidecars as sufficient primary binding controls.
+- Recommended a non-sensitive document binding ID carried in every automatic/manual placeholder and the corresponding Scrub Key.
+- Recommended a canonical SHA-256 mapping digest as a complementary accidental-corruption control, not as an authenticity signature.
+- Deferred signature/HMAC protection until a trusted local signing-key lifecycle exists.
+- Preserved the three-step document-first reinsert flow without new confirmation buttons or checkboxes.
+- Changed no product code, UI, schema, placeholders, export or reinsert semantics.
+
+Approved sequential implementation line:
+1. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS`
+2. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`
+3. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION`
+4. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`
+5. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY`
+
+Optional later package:
+- `SCRUB-WP_MVP_MALFORMED_PLACEHOLDER_DIAGNOSTIC_HARDENING`.
+
+Active next package:
+- `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS`.
+
 ## 2026-07-27 18:55 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
 
 Status: completed; deterministic validation passed; PR verification pending.

@@ -1,3 +1,51 @@
+## 2026-07-27 19:18 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE
+
+Status: completed; targeted validation passed; PR verification pending.
+
+Purpose:
+- Determine the smallest safe cross-format mitigation for the critical document/Scrub-Key binding gap before changing schema, placeholders, export or reinsert behavior.
+
+Files added:
+- `MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE.md`
+- `output/validation/mvp_scrub_key_document_binding_gap_triage.json`
+- `output/validation/mvp_scrub_key_document_binding_gap_triage_validation.json`
+- `tests/test_mvp_scrub_key_document_binding_gap_triage.py`
+- `tests/test_mvp_scrub_key_document_binding_gap_triage_validation.py`
+- `handover/workpackages/20260727_1918_mvp_scrub_key_document_binding_gap_triage.md`
+- `workpackage_claims/scrub_wp_mvp_scrub_key_document_binding_gap_triage.md`
+
+Files changed:
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `ROADMAP.md`
+- `MVP_PHASE6_EXECUTION_PLAN.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+
+Triage result:
+- Primary MVP threat: accidental wrong-document/key pairing.
+- Secondary MVP threat: accidental key corruption.
+- Deferred threat: malicious tampering requiring protected signing-key infrastructure.
+- Recommended primary control: document-specific non-sensitive binding ID in all placeholders and the key.
+- Recommended complementary control: canonical SHA-256 mapping digest.
+- Explicitly not sufficient: document labels, filenames, content hashes, placeholder-list hashes or metadata-only binding.
+- Legacy v1.0 keys require explicit unbound status and warning; they must not be silently treated as bound.
+- Bound-key mismatch, mixed IDs and digest mismatch must fail closed with zero replacements.
+- Human review remains required; production readiness remains false.
+
+Intentionally not changed:
+- product code or UI;
+- Scrub Key schema/version or serialization;
+- placeholder generation or grammar;
+- export/download or reinsert semantics;
+- document processing;
+- cloud, AI, OCR or secret storage.
+
+Next recommended step:
+- Start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS` before implementation.
+
+---
+
 ## 2026-07-27 18:55 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
 
 Status: completed; deterministic validation passed; PR verification pending.

@@ -4,6 +4,49 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-27 — D033 — Bind new Scrub Keys through document-specific placeholder namespaces
+
+Status: accepted planning/architecture decision; implementation requires green contract tests
+
+Decision:
+
+```text
+For new bound Scrub Keys, carry one locally generated, non-sensitive document binding ID in every automatic and manual placeholder and in the corresponding Scrub Key. Complement this with a canonical SHA-256 mapping digest for accidental key-corruption detection. Reinsert must fail closed before any replacement when a bound key mismatches the document, the document contains mixed binding IDs, or the mapping digest is invalid.
+```
+
+Reason:
+
+- Generic placeholder namespaces allow a wrong valid key to restore wrong originals without an audit mismatch.
+- A binding token inside placeholders survives pasted-text, TXT, DOCX and PDF-text roundtrips when the placeholders themselves survive.
+- Labels, filenames, metadata, content hashes and placeholder-list hashes are not reliable cross-format AI-roundtrip bindings.
+- A digest detects accidental edits but is not authenticity; malicious tampering requires later protected signing-key infrastructure.
+
+Compatibility and UX boundaries:
+
+- Introduce an explicit new bound-key contract; do not silently reinterpret legacy v1.0 keys.
+- Legacy unbound keys may remain dual-readable with a visible unbound warning.
+- Preserve the document-first three-step reinsert flow and the final confidential-download acknowledgement.
+- Add no repeated confirmation buttons or checkboxes.
+- Preserve unknown, duplicate and missing-placeholder audit reporting.
+- No cloud processing, server secret, OCR or restored-PDF behavior.
+- Human review remains mandatory; no production-readiness claim.
+
+Approved sequence:
+
+1. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS`
+2. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`
+3. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION`
+4. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`
+5. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY`
+
+Evidence:
+
+- `MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE.md`
+- `output/validation/mvp_scrub_key_document_binding_gap_triage.json`
+- `output/validation/mvp_scrub_key_roundtrip_validation_report.json`
+
+---
+
 ## 2026-07-27 — D032 — Roundtrip evidence requires document/key-binding triage before implementation
 
 Status: accepted evidence-routing decision
