@@ -6,16 +6,20 @@ on:
       - scrub-mvp-reinsert-auto-flow-simplification
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   diagnose:
+    if: github.event.head_commit.message != 'Record reinsert auto-flow diagnostic log'
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: ${{ github.workspace }}
     steps:
       - name: Check out branch
         uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-reinsert-auto-flow-simplification
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -31,14 +35,18 @@ jobs:
         shell: bash
         run: |
           set +e
-          python -m pytest -q -x tests > /tmp/reinsert_auto_flow_pytest.log 2>&1
+          mkdir -p output/validation
+          python -m pytest -q -x tests > output/validation/reinsert_auto_flow_diagnostic.log 2>&1
           status=$?
-          echo "pytest_status=${status}" >> /tmp/reinsert_auto_flow_pytest.log
+          echo "pytest_status=${status}" >> output/validation/reinsert_auto_flow_diagnostic.log
           exit 0
 
-      - name: Upload diagnostic log
-        uses: actions/upload-artifact@v4
-        with:
-          name: reinsert-auto-flow-diagnostic
-          path: /tmp/reinsert_auto_flow_pytest.log
-          retention-days: 1
+      - name: Commit diagnostic log
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-diagnostic-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add output/validation/reinsert_auto_flow_diagnostic.log
+          git commit -m 'Record reinsert auto-flow diagnostic log'
+          git push origin HEAD:scrub-mvp-reinsert-auto-flow-simplification
