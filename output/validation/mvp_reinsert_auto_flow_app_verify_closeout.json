@@ -1,0 +1,24 @@
+{
+  "workpackage": "SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_APP_VERIFY_CLOSEOUT",
+  "status": "completed_and_app_verified",
+  "implementation_pr": 38,
+  "merge_commit": "390f381c1464883f220716655c5067dadd0bb4c9",
+  "final_pr_actions_run": 1678,
+  "full_suite_passed": 797,
+  "hugging_face_sync_confirmed_by_live_behavior": true,
+  "app_verification": {
+    "date": "2026-07-27",
+    "result": "passed",
+    "coordinator_confirmation": "getest en werkend"
+  },
+  "verified_flow": [
+    "source_document_or_text",
+    "automatic_scrub_key_validation",
+    "automatic_local_deterministic_reinsert",
+    "final_confidential_download_acknowledgement",
+    "restored_download"
+  ],
+  "production_ready": false,
+  "human_review_required": true,
+  "next_workpackage": "SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION"
+}
