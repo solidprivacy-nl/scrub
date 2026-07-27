@@ -4,21 +4,12 @@
 ........................................................................ [ 32%]
 ........................................................................ [ 40%]
 ........................................................................ [ 49%]
-..................................................F
-=================================== FAILURES ===================================
-___________ test_copy_polish_does_not_touch_export_or_scrub_key_flow ___________
-
-    def test_copy_polish_does_not_touch_export_or_scrub_key_flow() -> None:
-        app_text = _text(APP)
-    
-        assert "export_text = apply_replacements_to_text(st_text, edited_replacements)" in app_text
-        assert "scrub_key_rows = edited_replacements_df.copy()" in app_text
->       assert "build_export_scrub_key(scrub_key_rows)" in app_text
-E       assert 'build_export_scrub_key(scrub_key_rows)' in '"""Candidate copy of the Streamlit app with a collapsible review table.\n\nManual test flow:\n- keep the active `pres...n.")\n\nexcept Exception as e:\n    print(e)\n    traceback.print_exc()\n    st.error(e)\n\ncomponents.html(""" """)\n'
-
-tests/test_review_copy_polish_ui.py:65: AssertionError
-=========================== short test summary info ============================
-FAILED tests/test_review_copy_polish_ui.py::test_copy_polish_does_not_touch_export_or_scrub_key_flow - assert 'build_export_scrub_key(scrub_key_rows)' in '"""Candidate copy of the Streamlit app with a collapsible review table.\n\nManual test flow:\n- keep the active `pres...n.")\n\nexcept Exception as e:\n    print(e)\n    traceback.print_exc()\n    st.error(e)\n\ncomponents.html(""" """)\n'
-!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 failed, 482 passed in 7.28s
-pytest_status=1
+........................................................................ [ 57%]
+........................................................................ [ 65%]
+........................................................................ [ 73%]
+........................................................................ [ 81%]
+........................................................................ [ 89%]
+........................................................................ [ 98%]
+.................                                                        [100%]
+881 passed in 7.86s
+pytest_status=0
