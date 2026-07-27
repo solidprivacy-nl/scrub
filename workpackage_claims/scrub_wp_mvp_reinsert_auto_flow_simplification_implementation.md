@@ -41,5 +41,8 @@ Boundaries:
 - Unsupported DOCX parts remain explicitly documented.
 - Human review and confidential-output warnings remain required.
 
+Validation note:
+- Full-suite regression diagnostics triggered at 2026-07-27 16:29 Europe/Amsterdam after initial contract alignment.
+
 Next step:
-- Add helper-first automatic request orchestration and contract tests, then simplify `reinsert_mode_ui.py` within the approved scope.
+- Resolve only the first reproducible regression, rerun the standard suite, then complete governance evidence and PR validation.
