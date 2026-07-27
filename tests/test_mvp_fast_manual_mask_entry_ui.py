@@ -81,7 +81,8 @@ def test_manual_mask_entry_keeps_export_scrub_key_and_reinsert_semantics_unchang
     app_text = _app_text()
 
     assert "scrub_key_rows = edited_replacements_df.copy()" in app_text
-    assert "build_export_scrub_key(scrub_key_rows)" in app_text
+    assert "scrub_key = build_bound_scrub_key(" in app_text
+    assert "document_binding_id=document_binding_id" in app_text
     assert "export_text = apply_replacements_to_text(st_text, edited_replacements)" in app_text
     assert "reinsert_from_scrub_key" in app_text
     assert "reinsert_docx_bytes" in app_text
