@@ -23,5 +23,7 @@ def test_binding_gap_triage_validation_evidence_is_committed() -> None:
     assert evidence["next_workpackage"] == "SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS"
 
 
-def test_temporary_binding_triage_operator_is_removed_before_merge() -> None:
+def test_temporary_binding_triage_files_are_removed_before_merge() -> None:
     assert not (ROOT / ".github/workflows/mvp_scrub_key_binding_triage_operator.yml").exists()
+    assert not (ROOT / ".github/workflows/mvp_scrub_key_binding_triage_finalizer.yml").exists()
+    assert not (ROOT / "scripts/finalize_mvp_scrub_key_document_binding_gap_triage.py").exists()
