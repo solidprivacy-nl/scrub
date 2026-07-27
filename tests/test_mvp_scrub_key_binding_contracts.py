@@ -251,9 +251,10 @@ def test_three_step_reinsert_ux_remains_unchanged_by_contract_package() -> None:
     assert contract["new_source_or_key_buttons"] is False
     assert contract["new_source_or_key_checkboxes"] is False
     assert contract["final_confidential_download_acknowledgement"] is True
-    assert 'st.subheader("1. Voeg het bestand of de tekst toe die je wilt herstellen")' in ui_text
+    assert 'st.subheader("1. Voeg het bestand toe dat je wilt herstellen")' in ui_text
     assert 'st.subheader("2. Voeg de bijbehorende Scrub Key toe")' in ui_text
     assert 'st.subheader("3. Download het herstelde resultaat")' in ui_text
+    assert "Of plak tekst in plaats van een bestand" in ui_text
     assert "Valideer en laad Scrub Key" not in ui_text
     assert "Zet DOCX-bestand lokaal terug" not in ui_text
 
