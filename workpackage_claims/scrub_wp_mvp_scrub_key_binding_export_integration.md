@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION
 
-Status: implemented; targeted validation pending
+Status: implemented; targeted validation passed; PR verification pending
 
 Claimed by: ChatGPT GitHub worker
 
@@ -31,8 +31,14 @@ Boundaries:
 - No recognizer or threshold changes.
 - Human review remains required; no production-readiness claim.
 
+Validation:
+- Targeted helper, model, contract, manual-entry, UI-contract and roundtrip suite: 103 passed.
+- Temporary operator and log removed before final PR validation.
+- Machine-readable evidence: `output/validation/mvp_scrub_key_binding_export_validation.json`.
+- Full repository GitHub Actions validation remains pending on the clean branch head.
+
 Next step:
-- Implement helper-first export integration and tests, then hand over to `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION` after merge.
+- Merge after the final normal GitHub Actions run passes, then start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`.
 
 Implementation result:
 - Bound placeholder defaults and schema-1.1 key export integrated.
