@@ -8,13 +8,14 @@ SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION
 
 ## Status
 
-Implemented; targeted validation pending.
+Implemented; targeted validation passed; final PR verification pending.
 
 ## Files added
 
 - `scrub_key_bound_export.py`
 - `tests/test_scrub_key_bound_export.py`
 - `tests/test_mvp_scrub_key_binding_export_integration.py`
+- `output/validation/mvp_scrub_key_binding_export_validation.json`
 - `workpackage_claims/scrub_wp_mvp_scrub_key_binding_export_integration.md`
 - `handover/workpackages/20260727_2145_mvp_scrub_key_binding_export_integration.md`
 
@@ -37,12 +38,14 @@ Implemented; targeted validation pending.
 - Schema-1.1 key and canonical digest validation.
 - Custom replacement preservation and verified-key blocking.
 - Stable document filenames/MIME types and no new confirmation gates.
-- Full repository regression pending PR validation.
+- Targeted helper/model/contract/manual/UI/roundtrip validation: 103 passed.
+- Full repository regression pending final normal GitHub Actions run.
 
 ## Validation
 
-- Targeted validation: pending.
-- GitHub Actions: pending PR validation.
+- Targeted validation: passed.
+- Temporary operator and diagnostic log: removed before final PR validation.
+- GitHub Actions: final clean-branch run pending.
 - Hugging Face sync: pending after merge.
 - App verification: required after export and reinsert integration are both deployed.
 
@@ -55,4 +58,4 @@ Implemented; targeted validation pending.
 
 ## Next recommended step
 
-- `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`.
+- Merge after the final normal GitHub Actions run passes, then start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`.
