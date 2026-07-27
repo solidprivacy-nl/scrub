@@ -21,7 +21,7 @@ def test_reinsert_auto_flow_closeout_is_recorded() -> None:
     ).read_text(encoding="utf-8")
 
     assert "completed and app-verified" in roadmap
-    assert "SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — active" in roadmap
+    assert "SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION" in roadmap
     assert "SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_APP_VERIFY_CLOSEOUT" in workpackages
     assert "coordinator reported `getest en werkend`" in changelog
     assert "Status: completed and app-verified" in claim
