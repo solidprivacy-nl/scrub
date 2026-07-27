@@ -245,13 +245,13 @@ def render_reinsert_mode() -> None:
             st.info(
                 "DOCX-terugzetten ondersteunt normale documenttekst, tabellen en bestaande "
                 "kop- en voetteksten. Opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten, "
-                "tekstvakken, metadata en over meerdere tekstfragmenten gesplitste placeholders "
-                "worden nog niet volledig ondersteund."
+                "tekstvakken, metadata en placeholders die over meerdere tekstfragmenten zijn "
+                "gesplitst worden nog niet volledig ondersteund."
             )
         elif source_type == "pdf":
             st.warning(
-                "PDF-tekstextractie is niet altijd volledig. De uitvoer is alleen herstelde TXT; "
-                "er wordt geen herstelde PDF gemaakt en OCR is niet beschikbaar."
+                "PDF-tekstextractie is niet altijd volledig. De uitvoer is alleen herstelde TXT. "
+                "Deze functie maakt geen herstelde PDF. OCR niet beschikbaar. PDF-output: Nee."
             )
 
     st.divider()
