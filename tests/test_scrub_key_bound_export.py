@@ -22,6 +22,8 @@ def reviewed_rows() -> list[dict]:
         {
             "find": "BETROKKENE-TEST-A",
             "replace_with": f"[PERSOON_{BINDING_ID}_01]",
+            "original_value": "BETROKKENE-TEST-A",
+            "placeholder": f"[PERSOON_{BINDING_ID}_01]",
             "entity_type": "PERSON",
             "type_label": "Naam / persoon",
             "source": "detected",
@@ -32,6 +34,8 @@ def reviewed_rows() -> list[dict]:
         {
             "find": "DOSSIER-TEST-2026-001",
             "replace_with": f"[DOSSIERNUMMER_{BINDING_ID}_HANDMATIG_01]",
+            "original_value": "DOSSIER-TEST-2026-001",
+            "placeholder": f"[DOSSIERNUMMER_{BINDING_ID}_HANDMATIG_01]",
             "entity_type": "NL_DOSSIER_NUMBER",
             "type_label": "Dossiernummer",
             "source": "manual",
@@ -116,6 +120,7 @@ def test_bound_scrub_key_export_matches_schema_and_digest_contract() -> None:
 def test_custom_replacement_remains_unchanged_and_blocks_verified_key() -> None:
     rows = reviewed_rows()
     rows[0]["replace_with"] = "Synthetisch pseudoniem"
+    rows[0]["placeholder"] = "Synthetisch pseudoniem"
     key = build_bound_scrub_key(rows, document_binding_id=BINDING_ID)
     validation = validate_bound_scrub_key(key)
     assert rows[0]["replace_with"] == "Synthetisch pseudoniem"
