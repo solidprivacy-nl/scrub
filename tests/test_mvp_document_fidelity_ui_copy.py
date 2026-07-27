@@ -12,9 +12,15 @@ THIS_TEST = ROOT / "tests" / "test_mvp_document_fidelity_ui_copy.py"
 def test_docx_reinsert_copy_matches_supported_parts() -> None:
     text = UI.read_text(encoding="utf-8")
 
-    assert "normale documenttekst, tabellen en bestaande kop- en voetteksten" in text
-    assert "Opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten, tekstvakken, metadata" in text
-    assert "over meerdere tekstfragmenten zijn gesplitst" in text
+    for marker in [
+        "normale documenttekst, tabellen en bestaande ",
+        "kop- en voetteksten",
+        "Opmerkingen, bijgehouden wijzigingen, voetnoten/eindnoten",
+        "tekstvakken, metadata",
+        "over meerdere tekstfragmenten zijn ",
+        "gesplitst worden nog niet volledig ondersteund",
+    ]:
+        assert marker in text
     assert "Headers, footers" not in text
 
 
