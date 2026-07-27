@@ -8,7 +8,7 @@ SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
 
 ## Status
 
-Implemented; full GitHub Actions passed; merge, sync and live app verification pending.
+Completed; final GitHub Actions passed; merge, sync and live app verification pending.
 
 ## Files added
 
@@ -50,8 +50,9 @@ Implemented; full GitHub Actions passed; merge, sync and live app verification p
 
 ## Validation
 
-- Normal full GitHub Actions run #1789: passed.
-- GitHub Actions final clean PR run: pending after governance finalisation.
+- Normal full GitHub Actions run #1789: passed during implementation.
+- Final clean PR GitHub Actions run #1797: passed on `9f8eddda04b768e994184badbea3aefe39ce74cc`.
+- Final metadata-only Actions run: pending before merge.
 - Hugging Face sync: pending after merge.
 - App verification: required for correct bound key, wrong key, tampered key and legacy compatibility.
 
@@ -64,4 +65,4 @@ Implemented; full GitHub Actions passed; merge, sync and live app verification p
 
 ## Next recommended step
 
-- Merge after final clean PR validation, verify sync, then run `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY`.
+- Merge after the metadata-only Actions run passes, verify sync, then run `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY`.
