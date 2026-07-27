@@ -1,3 +1,13 @@
+## 2026-07-28 — Verkeerde Scrub Key wordt vóór herstel geblokkeerd
+
+- Nieuwe documentgebonden Scrub Keys worden automatisch vergeleken met de documentcode in het aangeleverde bestand.
+- Een verkeerde sleutel, meerdere documentcodes of een ongeldige controlewaarde blokkeren het terugzetten voordat originele waarden worden hersteld.
+- Bij een geldige documentgebonden match toont de app dat document en sleutel aantoonbaar bij elkaar horen.
+- Oudere Scrub Keys blijven bruikbaar voor compatibiliteit, maar de app waarschuwt zichtbaar dat de documentmatch niet kan worden bewezen.
+- De bestaande drie stappen, downloadnamen en TXT/DOCX/PDF-naar-TXT-grenzen blijven gelijk.
+
+---
+
 ## 2026-07-27 — Document en Scrub Key worden aan elkaar gekoppeld
 
 - Nieuwe standaardplaceholders bevatten een niet-gevoelige documentcode.

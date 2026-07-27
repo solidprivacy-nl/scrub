@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-07-27 — bound placeholder and Scrub Key export integration is implemented; fail-closed reinsert enforcement is now active next.
+Last roadmap strategy update: 2026-07-28 — bound export and fail-closed reinsert enforcement are implemented; deployed binding app verification is now the active gate.
 
 ---
 
@@ -113,7 +113,9 @@ SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — completed, syn
 SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — completed with 15/15 cases passing and a critical document/key-binding gap routed to triage.
 SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed with a bound-placeholder plus mapping-digest recommendation and a test-first implementation sequence.
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — completed with frozen placeholder, digest, legacy and fail-closed model contracts.
-SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — implemented with pure binding-ID, placeholder, digest, bound-key and document/key validation helpers; not yet integrated into export or reinsert.
+SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — completed with pure binding-ID, placeholder, digest, bound-key and document/key validation helpers.
+SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — completed with bound placeholders and schema-1.1 key export.
+SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — implemented with dual-read import, fail-closed binding enforcement and explicit legacy compatibility; app verification pending.
 ```
 
 Important UX status:
@@ -234,9 +236,9 @@ Current execution queue:
 6. SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed
 7. SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — completed
 8. SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — completed
-9. SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — implemented
-10. SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — active
-11. SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY
+9. SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — completed
+10. SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — implemented
+11. SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY — active
 12. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
 13. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
 ```

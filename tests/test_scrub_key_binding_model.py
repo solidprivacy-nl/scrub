@@ -30,6 +30,7 @@ FIXTURE_PATH = ROOT / "test_cases/mvp_phase6/scrub_key_binding_contract.json"
 MODULE_PATH = ROOT / "scrub_key_binding.py"
 LEGACY_MODEL_PATH = ROOT / "scrub_key.py"
 UI_PATH = ROOT / "reinsert_mode_ui.py"
+REINSERT_PATH = ROOT / "scrub_key_reinsert.py"
 
 
 def load_fixture() -> dict:
@@ -342,11 +343,14 @@ def test_model_is_streamlit_free_and_has_no_network_or_file_side_effects() -> No
         assert forbidden_function not in function_names
 
 
-def test_model_package_does_not_integrate_current_export_or_reinsert_paths() -> None:
+def test_model_package_stays_pure_while_sequential_integrations_use_it() -> None:
     legacy_model = LEGACY_MODEL_PATH.read_text(encoding="utf-8")
     ui = UI_PATH.read_text(encoding="utf-8")
+    reinsert = REINSERT_PATH.read_text(encoding="utf-8")
 
     assert 'SCRUB_KEY_SCHEMA_VERSION = "1.0"' in legacy_model
     assert "from scrub_key_binding import" not in legacy_model
     assert "from scrub_key_binding import" not in ui
-    assert "document_binding_id" not in ui
+    assert "binding_status_notice" in ui
+    assert "validate_document_key_binding" in reinsert
+    assert "streamlit" not in reinsert

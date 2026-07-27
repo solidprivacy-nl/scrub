@@ -1,3 +1,16 @@
+## 2026-07-28 00:52 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
+
+Status: implemented; full GitHub Actions passed; app verification pending.
+
+Summary:
+- Binding validation now gates every text, TXT, DOCX and PDF-to-TXT reinsert before replacement.
+- Correct bound keys are verified; legacy v1.0 remains explicit unverified compatibility.
+- Wrong, mixed, missing or corrupted bindings restore zero values.
+- The existing three-step flow and final confidentiality acknowledgement remain unchanged.
+
+Next recommended step:
+- `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY` after merge and sync.
+
 ## 2026-07-27 21:45 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION
 
 Status: implemented; targeted validation pending.

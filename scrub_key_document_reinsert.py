@@ -1,19 +1,16 @@
 """Pure document-level Scrub Key reinsert helpers for SolidPrivacy Scrub.
 
-The helpers in this module wrap the existing deterministic text reinsert logic
-for TXT and DOCX inputs. They deliberately avoid Streamlit UI integration,
-PDF handling, AI calls, remote processing, file-system persistence and export
-semantic changes.
+The helpers wrap deterministic text reinsert for TXT and supported DOCX text
+parts. Document/key binding is validated against the complete supported DOCX
+text surface before any XML node is changed.
 
 DOCX support covers text nodes in:
 - ``word/document.xml``;
 - ``word/header*.xml``;
 - ``word/footer*.xml``.
 
-Normal body paragraphs, body tables and header/footer text are restored. The
-helper still does not restore placeholders split across multiple Word text
-nodes, comments, tracked-change-only parts, footnotes/endnotes, text boxes or
-metadata.
+Placeholders split across multiple Word text nodes, comments, tracked-change-only
+parts, footnotes/endnotes, text boxes and metadata remain unsupported.
 """
 
 from __future__ import annotations
@@ -45,7 +42,6 @@ ET.register_namespace("xml", XML_NS)
 
 
 def _with_document_metadata(result: dict[str, Any], document_type: str) -> dict[str, Any]:
-    """Return a copy of a text reinsert result with document-level metadata."""
     return {
         **dict(result),
         "document_type": document_type,
@@ -57,6 +53,7 @@ def _with_document_metadata(result: dict[str, Any], document_type: str) -> dict[
 
 def reinsert_text_document(text: str, scrub_key: dict[str, Any]) -> dict[str, Any]:
     """Reinsert placeholders in plain text and return restored text plus audit."""
+
     result = _with_document_metadata(reinsert_from_scrub_key(text, scrub_key), "txt")
     result["content"] = result.get("text", "")
     result["limitations"] = []
@@ -69,6 +66,7 @@ def reinsert_txt_bytes(
     encoding: str = "utf-8",
 ) -> dict[str, Any]:
     """Decode TXT bytes, reinsert placeholders and return restored text/bytes."""
+
     if not isinstance(content, (bytes, bytearray)):
         result = reinsert_text_document("", scrub_key)
         result["validation_issues"] = ["TXT content must be bytes."]
@@ -114,6 +112,14 @@ def _docx_validation_result(content: bytes, message: str) -> dict[str, Any]:
         "processed_parts": [],
         "processed_part_count": 0,
         "part_texts": {},
+        "binding_status": "invalid_document",
+        "replacement_allowed": False,
+        "verified_document_match": False,
+        "legacy_unbound": False,
+        "binding_warnings": [],
+        "document_binding_ids": [],
+        "key_binding_id": "",
+        "mapping_digest_valid": None,
     }
 
 
@@ -160,12 +166,8 @@ def _parse_supported_parts(
 
 
 def reinsert_docx_bytes(content: bytes, scrub_key: dict[str, Any]) -> dict[str, Any]:
-    """Reinsert placeholders in supported DOCX body/header/footer text nodes.
+    """Reinsert supported DOCX parts only after one combined binding check."""
 
-    The input bytes and Scrub Key are not mutated. All supported OOXML parts are
-    validated before any output package is produced. Audit counts and unresolved
-    placeholders cover the combined supported text surface.
-    """
     if not isinstance(content, (bytes, bytearray)):
         return _docx_validation_result(b"", "DOCX content must be bytes.")
 
@@ -207,11 +209,25 @@ def reinsert_docx_bytes(content: bytes, scrub_key: dict[str, Any]) -> dict[str, 
         "docx",
     )
 
-    if not audit_result.get("validation_issues"):
-        for nodes in part_nodes.values():
-            for node in nodes:
-                node_result = reinsert_from_scrub_key(node.text or "", scrub_key)
-                node.text = node_result.get("text", "")
+    if audit_result.get("validation_issues"):
+        audit_result["text"] = combined_original_text
+        audit_result["content"] = combined_original_text
+        audit_result["docx_bytes"] = original_content
+        audit_result["limitations"] = list(DOCX_LIMITATIONS)
+        audit_result["unsupported_parts"] = list(DOCX_LIMITATIONS)
+        audit_result["processed_parts"] = list(part_names)
+        audit_result["processed_part_count"] = len(part_names)
+        audit_result["part_texts"] = dict(original_part_texts)
+        return audit_result
+
+    for nodes in part_nodes.values():
+        for node in nodes:
+            node_result = reinsert_from_scrub_key(
+                node.text or "",
+                scrub_key,
+                binding_text=combined_original_text,
+            )
+            node.text = node_result.get("text", "")
 
     restored_part_texts = {
         part_name: "\n".join(node.text or "" for node in part_nodes[part_name])

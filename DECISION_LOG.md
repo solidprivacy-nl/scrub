@@ -1,3 +1,23 @@
+## 2026-07-28 — D037 — Validate document/key binding before every reinsert replacement
+
+Status: accepted reinsert-integration decision
+
+Decision:
+
+```text
+Validate the complete supported text surface against the supplied Scrub Key before any original value is restored. Permit verified bound matches and explicit legacy-v1.0 compatibility only. All mismatch, mixed-binding, missing-binding, invalid-digest and invalid-bound-key states fail closed with zero replacements and no partial DOCX output.
+```
+
+Reason:
+
+- Structural key validity alone cannot prove that a key belongs to a document.
+- Applying a wrong but valid key can silently restore incorrect confidential values.
+- Validation must happen before mutation so document-level helpers cannot produce partial output.
+- Legacy compatibility remains necessary, but it must never be presented as a verified document match.
+- The document-first three-step UX remains simpler and does not require new execution gates.
+
+---
+
 ## 2026-07-27 — D036 — Preserve custom replacement text and fail verified key export rather than silently rewriting it
 
 Status: accepted export-integration decision
