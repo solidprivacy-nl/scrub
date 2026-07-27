@@ -1,21 +1,4 @@
-....F................................................................... [ 69%]
+........................................................................ [ 69%]
 ...............................                                          [100%]
-=================================== FAILURES ===================================
-________ test_bound_scrub_key_export_matches_schema_and_digest_contract ________
-
-    def test_bound_scrub_key_export_matches_schema_and_digest_contract() -> None:
-        rows = reviewed_rows()
-        original = deepcopy(rows)
-        key = build_bound_scrub_key(rows, document_binding_id=BINDING_ID)
-        validation = validate_bound_scrub_key(key)
-        assert rows == original
->       assert validation["ok"] is True, validation
-E       AssertionError: {'ok': False, 'errors': ['Item 0 has empty required field: original_value.', 'Item 1 has empty required field: original_value.'], 'error_codes': ['invalid_bound_key'], 'warnings': [], ...}
-E       assert False is True
-
-tests/test_scrub_key_bound_export.py:108: AssertionError
-=========================== short test summary info ============================
-FAILED tests/test_scrub_key_bound_export.py::test_bound_scrub_key_export_matches_schema_and_digest_contract - AssertionError: {'ok': False, 'errors': ['Item 0 has empty required field: original_value.', 'Item 1 has empty required field: original_value.'], 'error_codes': ['invalid_bound_key'], 'warnings': [], ...}
-assert False is True
-1 failed, 102 passed in 0.65s
-validation_status=1
+103 passed in 0.66s
+validation_status=0
