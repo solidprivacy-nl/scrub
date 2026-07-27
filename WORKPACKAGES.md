@@ -1,3 +1,29 @@
+## 2026-07-27 20:05 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION
+
+Status: implemented; targeted validation passed; PR verification pending.
+
+Summary:
+- Added `scrub_key_binding.py` as a pure, Streamlit-free binding model.
+- Implemented local binding-ID generation using ten random bytes and uppercase base32.
+- Implemented strict binding-ID validation and automatic/manual bound placeholder build/parse helpers.
+- Implemented strict document binding-ID extraction from bound placeholders.
+- Implemented canonical mapping-digest payload and SHA-256 digest helpers matching the frozen fixture.
+- Implemented bound Scrub Key structural, policy, item-binding, duplicate and digest validation.
+- Implemented all eight frozen document/key statuses, including explicit legacy-v1.0 unbound compatibility.
+- Enforced six fail-closed statuses before any later replacement integration.
+- Preserved immutable inputs and stable result fields.
+- Integrated nothing into current placeholder generation, export, reinsert or UI paths.
+
+Validation boundaries:
+- Contract fixture digest matched exactly.
+- Targeted model, contract, legacy import/export and roundtrip tests passed.
+- No Streamlit, network, AI, cloud or file-write behavior exists in the model.
+- Production readiness: false.
+- Human review remains required.
+
+Active next package:
+- `SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION`.
+
 ## 2026-07-27 19:38 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS
 
 Status: completed; contract frozen; PR validation pending.

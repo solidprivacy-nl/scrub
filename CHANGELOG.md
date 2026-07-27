@@ -1,3 +1,49 @@
+## 2026-07-27 20:05 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION
+
+Status: implemented; targeted validation passed; PR verification pending.
+
+Purpose:
+- Implement the frozen document/Scrub-Key binding contract as pure helpers before changing shared placeholder generation, export or reinsert behavior.
+
+Files added:
+- `scrub_key_binding.py`
+- `tests/test_scrub_key_binding_model.py`
+- `tests/test_scrub_key_binding_model_validation.py`
+- `output/validation/mvp_scrub_key_binding_model_validation.json`
+- `handover/workpackages/20260727_2005_mvp_scrub_key_binding_model_implementation.md`
+- `workpackage_claims/scrub_wp_mvp_scrub_key_binding_model_implementation.md`
+
+Files changed:
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `ROADMAP.md`
+- `MVP_PHASE6_EXECUTION_PLAN.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+
+Implementation result:
+- Local document binding ID generation supports injected deterministic bytes and normal `secrets` randomness.
+- Bound automatic/manual placeholder creation and parsing match the frozen grammar.
+- Canonical digest output matches the fixed synthetic SHA-256 fixture.
+- Bound key validation checks schema, policies, items, item bindings, duplicates and digest.
+- Document/key validation implements `bound_match`, `legacy_unbound`, `binding_mismatch`, `mixed_document_bindings`, `missing_document_binding`, `invalid_mapping_digest`, `invalid_bound_key` and `legacy_key_for_bound_document`.
+- Bound failures prohibit replacement; legacy compatibility remains explicitly unverified.
+- Inputs remain unmodified.
+
+Intentionally not changed:
+- current generic automatic/manual placeholder generation;
+- current Scrub Key builder, serializer, export or import integration;
+- current reinsert execution helpers or UI;
+- filenames or MIME types;
+- legacy migration;
+- signing/HMAC or secret storage;
+- cloud, AI, OCR or restored-PDF behavior.
+
+Next recommended step:
+- Start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION` after PR validation and merge.
+
+---
+
 ## 2026-07-27 19:38 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS
 
 Status: completed; contract frozen; PR validation pending.

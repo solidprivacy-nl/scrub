@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-07-27 — the bound-placeholder and Scrub Key contract is frozen; pure binding-model implementation is now active before export or reinsert integration.
+Last roadmap strategy update: 2026-07-27 — the pure binding model is implemented and isolated; bound placeholder and Scrub Key export integration is now active before reinsert enforcement.
 
 ---
 
@@ -113,6 +113,7 @@ SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — completed, syn
 SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — completed with 15/15 cases passing and a critical document/key-binding gap routed to triage.
 SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed with a bound-placeholder plus mapping-digest recommendation and a test-first implementation sequence.
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — completed with frozen placeholder, digest, legacy and fail-closed model contracts.
+SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — implemented with pure binding-ID, placeholder, digest, bound-key and document/key validation helpers; not yet integrated into export or reinsert.
 ```
 
 Important UX status:
@@ -232,8 +233,8 @@ Current execution queue:
 5. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — completed
 6. SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed
 7. SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — completed
-8. SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — active
-9. SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION
+8. SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — completed
+9. SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — active
 10. SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
 11. SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY
 12. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
