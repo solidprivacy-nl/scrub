@@ -105,7 +105,7 @@ def test_bound_scrub_key_export_matches_schema_and_digest_contract() -> None:
     key = build_bound_scrub_key(rows, document_binding_id=BINDING_ID)
     validation = validate_bound_scrub_key(key)
     assert rows == original
-    assert validation["ok"] is True
+    assert validation["ok"] is True, validation
     assert key["schema_version"] == "1.1"
     assert key["binding_version"] == "1"
     assert key["document_binding_id"] == BINDING_ID
