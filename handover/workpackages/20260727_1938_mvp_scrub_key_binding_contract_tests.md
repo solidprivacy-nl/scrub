@@ -8,7 +8,7 @@ SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS
 
 ## Status
 
-Completed; contract frozen; PR validation pending.
+Completed; contract frozen; full suite passed; final clean PR validation pending.
 
 ## Summary
 
@@ -46,12 +46,14 @@ The document/Scrub-Key binding contract is frozen before model implementation. I
 - Frozen pure-helper responsibilities and result fields.
 - Current three-step UI/no-extra-gate contract.
 - Synthetic-only and security-claim boundaries.
+- Full repository suite: 845 passed.
 
 ## Validation
 
 - Canonical SHA-256 fixture independently recomputed: passed.
-- Targeted contract/source tests: pending GitHub Actions.
-- Full repository suite: pending PR validation.
+- GitHub Actions run #1703: passed before temporary diagnostic cleanup.
+- Temporary diagnostic workflow and log: removed.
+- Final clean GitHub Actions: pending after cleanup/status commits.
 - Hugging Face sync: not functionally applicable; no runtime/app code changed.
 - App verification: not applicable; no visible behavior changed.
 
@@ -64,4 +66,4 @@ The document/Scrub-Key binding contract is frozen before model implementation. I
 
 ## Next recommended step
 
-- Start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION` after merge.
+- Verify the final clean PR run, merge PR #42 and start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`.
