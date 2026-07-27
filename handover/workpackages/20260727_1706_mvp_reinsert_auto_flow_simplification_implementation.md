@@ -8,7 +8,7 @@ SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION
 
 ## Status
 
-Implemented; full suite passed; final PR validation pending.
+Completed and app-verified.
 
 ## Summary
 
@@ -47,9 +47,9 @@ The local reinsert interface now follows the user’s task order: provide the so
 
 ## Validation
 
-- GitHub Actions: final PR run pending after governance finalisation.
-- Hugging Face sync: pending after merge.
-- App verification: required after sync because the visible workflow changed.
+- GitHub Actions: final clean PR run #1678 passed.
+- Hugging Face sync: confirmed by live availability of the merged three-step workflow.
+- App verification: passed; coordinator confirmed the workflow is tested and working.
 - Prior DOCX fidelity app verification: passed for body, table, header and footer restoration.
 
 ## Notes / risks
@@ -63,5 +63,4 @@ The local reinsert interface now follows the user’s task order: provide the so
 
 ## Next recommended step
 
-- Verify PR Actions, merge, verify Hugging Face sync and live-test the three-step automatic flow.
-- Continue `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION` after app verification.
+- Start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.

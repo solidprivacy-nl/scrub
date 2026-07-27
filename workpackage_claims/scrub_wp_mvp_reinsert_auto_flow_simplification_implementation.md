@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION
 
-Status: implemented; full suite passed; final PR validation pending
+Status: completed and app-verified
 
 Claimed by: ChatGPT GitHub worker
 
@@ -59,4 +59,12 @@ Implementation result:
 - Handover: `handover/workpackages/20260727_1706_mvp_reinsert_auto_flow_simplification_implementation.md`.
 
 Next step:
-- Verify clean final standard Actions, merge, verify Hugging Face sync and request live app verification.
+- Start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
+
+App verification result:
+- Passed on 2026-07-27 after PR #38 merge.
+- Coordinator confirmed the deployed three-step reinsert workflow is tested and working.
+- GitHub Actions run #1678 passed before merge.
+- Live merged behavior confirms Hugging Face synchronization.
+- Merge commit: `390f381c1464883f220716655c5067dadd0bb4c9`.

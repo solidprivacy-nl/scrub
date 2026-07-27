@@ -1,3 +1,41 @@
+## 2026-07-27 18:28 Europe/Amsterdam — SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
+
+Status: completed and app-verified.
+
+Purpose:
+- Record successful live verification of the document-first automatic reinsert workflow.
+- Close the evidence-driven UI blocker before continuing Scrub Key roundtrip validation.
+
+Validation result:
+- PR #38 merge commit: `390f381c1464883f220716655c5067dadd0bb4c9`.
+- Final clean PR GitHub Actions run #1678: passed.
+- Full repository suite before merge: 797 passed.
+- Hugging Face deployment: confirmed by live testing of the merged three-step workflow.
+- App verification: passed; coordinator reported `getest en werkend`.
+
+Verified product boundaries:
+- Document/text remains step 1, Scrub Key step 2 and restored download step 3.
+- Automatic source recognition, key validation and local deterministic reinsert work as intended.
+- One final confidential-output acknowledgement remains at download.
+- No Scrub Key schema, helper semantics, export filenames/MIME types, cloud, AI, OCR or restored-PDF behavior changed.
+- Human review remains required; no production-readiness claim is made.
+
+Files added:
+- `workpackage_claims/scrub_wp_mvp_reinsert_auto_flow_simplification_app_verify_closeout.md`
+- `handover/workpackages/20260727_1828_mvp_reinsert_auto_flow_simplification_app_verify_closeout.md`
+
+Files changed:
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `ROADMAP.md`
+- `workpackage_claims/scrub_wp_mvp_reinsert_auto_flow_simplification_implementation.md`
+- `handover/workpackages/20260727_1706_mvp_reinsert_auto_flow_simplification_implementation.md`
+
+Next recommended step:
+- Start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
+---
+
 ## 2026-07-27 — SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented; full suite passed; final PR validation pending.
