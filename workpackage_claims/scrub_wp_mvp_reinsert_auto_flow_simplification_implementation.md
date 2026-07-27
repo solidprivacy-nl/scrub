@@ -42,10 +42,10 @@ Boundaries:
 - Human review and confidential-output warnings remain required.
 
 Validation note:
-- Full repository suite passed: 797 tests.
+- Full repository suite passed: 797 tests before governance finalisation.
 - Governance finalisation completed.
-- Temporary diagnostic and finalizer workflows removed from `main`.
-- Final standard PR validation triggered at 2026-07-27 17:12 Europe/Amsterdam.
+- Read-only governance failure diagnostic triggered at 2026-07-27 17:17 Europe/Amsterdam.
+- Temporary workflow will be removed before the definitive PR run.
 
 Implementation result:
 - Completed at: 2026-07-27 17:06 Europe/Amsterdam.
@@ -53,9 +53,9 @@ Implementation result:
 - Source type recognition, key validation and local deterministic reinsert are automatic.
 - Redundant source/key checkboxes and action buttons are removed.
 - One final confidentiality acknowledgement remains before download.
-- Full repository suite: 797 passed.
+- Full repository suite before governance finalisation: 797 passed.
 - Evidence: `output/validation/mvp_reinsert_auto_flow_validation.json`.
 - Handover: `handover/workpackages/20260727_1706_mvp_reinsert_auto_flow_simplification_implementation.md`.
 
 Next step:
-- Verify final standard Actions, merge, verify Hugging Face sync and request live app verification.
+- Resolve the first governance assertion, remove temporary diagnostics, rerun final standard Actions, merge, verify Hugging Face sync and request live app verification.
