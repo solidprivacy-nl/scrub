@@ -1,3 +1,53 @@
+## 2026-07-27 19:38 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS
+
+Status: completed; contract frozen; PR validation pending.
+
+Purpose:
+- Freeze the bound-placeholder, Scrub Key metadata, mapping-digest, legacy compatibility and fail-closed validation contracts before implementing the model.
+
+Files added:
+- `SCRUB_KEY_BINDING_CONTRACT.md`
+- `test_cases/mvp_phase6/scrub_key_binding_contract.json`
+- `tests/test_mvp_scrub_key_binding_contracts.py`
+- `tests/test_mvp_scrub_key_binding_contract_validation.py`
+- `output/validation/mvp_scrub_key_binding_contract_validation.json`
+- `handover/workpackages/20260727_1938_mvp_scrub_key_binding_contract_tests.md`
+- `workpackage_claims/scrub_wp_mvp_scrub_key_binding_contract_tests.md`
+
+Files changed:
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `ROADMAP.md`
+- `MVP_PHASE6_EXECUTION_PLAN.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+
+Contract result:
+- Binding ID grammar: `B[A-Z2-7]{16}`.
+- Automatic placeholder grammar: `[LABEL_BINDINGID_INDEX]`.
+- Manual placeholder grammar: `[LABEL_BINDINGID_HANDMATIG_INDEX]`.
+- Proposed bound key schema: `1.1`; binding version: `1`.
+- Canonical digest algorithm: SHA-256.
+- Eight binding statuses; six are fail-closed with zero replacements.
+- Legacy v1.0 remains explicit unbound compatibility and cannot be used for bound documents.
+- Current three-step reinsert UX remains unchanged; no new source/key buttons or checkboxes.
+- Product code changed: false.
+- Production ready: false; human review required: true.
+
+Intentionally not changed:
+- existing product helpers;
+- automatic/manual placeholder generation;
+- Scrub Key build, validation, serialization or import implementation;
+- export or reinsert semantics;
+- UI or download behavior;
+- signing/HMAC or secret storage;
+- cloud, AI, OCR or restored-PDF behavior.
+
+Next recommended step:
+- Start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION` after PR validation and merge.
+
+---
+
 ## 2026-07-27 19:18 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE
 
 Status: completed; targeted validation passed; PR verification pending.

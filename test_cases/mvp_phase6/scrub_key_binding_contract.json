@@ -1,0 +1,230 @@
+{
+  "schema": "solidprivacy.scrub_key_binding_contract",
+  "schema_version": "1.0",
+  "binding_id_pattern": "^B[A-Z2-7]{16}$",
+  "bound_placeholder_pattern": "^\\[(?P<label>[A-Z][A-Z0-9_]*?)_(?P<binding_id>B[A-Z2-7]{16})(?:_(?P<manual>HANDMATIG))?_(?P<index>\\d{2,})\\]$",
+  "binding_id": "BK7M4Q2XR5TD3W6YZ",
+  "other_binding_id": "BP6R3T5VW2XY4ZA7C",
+  "automatic_placeholders": [
+    "[PERSOON_BK7M4Q2XR5TD3W6YZ_01]",
+    "[DOSSIERNUMMER_BK7M4Q2XR5TD3W6YZ_01]",
+    "[IP_ADRES_BK7M4Q2XR5TD3W6YZ_02]"
+  ],
+  "manual_placeholders": [
+    "[PERSOON_BK7M4Q2XR5TD3W6YZ_HANDMATIG_01]",
+    "[WAARDE_BK7M4Q2XR5TD3W6YZ_HANDMATIG_02]"
+  ],
+  "invalid_binding_ids": [
+    "",
+    "K7M4Q2XR5TD3W6YZ",
+    "Bk7M4Q2XR5TD3W6YZ",
+    "BK7M4Q2XR5TD3W6Y0",
+    "BK7M4Q2XR5TD3W6Y1",
+    "BK7M4Q2XR5TD3W6Y8",
+    "BK7M4Q2XR5TD3W6Y9",
+    "BK7M4Q2XR5TD3W6Y-",
+    "BK7M4Q2XR5TD3W6Y",
+    "BK7M4Q2XR5TD3W6YZ2"
+  ],
+  "canonical_bound_key": {
+    "schema": "solidprivacy.scrub_key",
+    "schema_version": "1.1",
+    "workflow": "Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit",
+    "privacy_model": "pseudonymization_not_full_anonymization",
+    "reversible": true,
+    "storage_policy": "local_only_protect_key",
+    "external_ai_policy": "do_not_share_key_unless_explicitly_intended_and_allowed",
+    "excluded_rows_policy": "omitted",
+    "document_label": "Synthetisch bindingsdossier",
+    "binding_version": "1",
+    "document_binding_id": "BK7M4Q2XR5TD3W6YZ",
+    "mapping_digest_algorithm": "sha256",
+    "mapping_digest": "516075e4970f0def6052aaac6885e12339e7cdbe012d4104aa7387c51a53faa3",
+    "item_count": 2,
+    "items": [
+      {
+        "original_value": "BETROKKENE-TEST-A",
+        "placeholder": "[PERSOON_BK7M4Q2XR5TD3W6YZ_01]",
+        "entity_type": "PERSON",
+        "type_label": "Naam",
+        "source": "detected",
+        "review_status": "reviewed",
+        "include_state": "included",
+        "timestamp": "2026-07-27T19:27:00+02:00",
+        "document_label": "Synthetisch bindingsdossier"
+      },
+      {
+        "original_value": "DOSSIER-TEST-2026-001",
+        "placeholder": "[DOSSIERNUMMER_BK7M4Q2XR5TD3W6YZ_01]",
+        "entity_type": "NL_DOSSIER_NUMBER",
+        "type_label": "Dossiernummer",
+        "source": "manual",
+        "review_status": "reviewed",
+        "include_state": "included",
+        "timestamp": "2026-07-27T19:27:00+02:00",
+        "document_label": "Synthetisch bindingsdossier"
+      }
+    ]
+  },
+  "legacy_v1_key": {
+    "schema": "solidprivacy.scrub_key",
+    "schema_version": "1.0",
+    "workflow": "Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit",
+    "privacy_model": "pseudonymization_not_full_anonymization",
+    "reversible": true,
+    "storage_policy": "local_only_protect_key",
+    "external_ai_policy": "do_not_share_key_unless_explicitly_intended_and_allowed",
+    "excluded_rows_policy": "omitted",
+    "document_label": "Synthetisch legacydossier",
+    "item_count": 1,
+    "items": [
+      {
+        "original_value": "BETROKKENE-TEST-A",
+        "placeholder": "[PERSOON_01]",
+        "entity_type": "PERSON",
+        "type_label": "Naam",
+        "source": "detected",
+        "review_status": "reviewed",
+        "include_state": "included",
+        "timestamp": "2026-07-27T19:27:00+02:00",
+        "document_label": "Synthetisch legacydossier"
+      }
+    ]
+  },
+  "canonical_digest_payload": {
+    "binding_version": "1",
+    "document_binding_id": "BK7M4Q2XR5TD3W6YZ",
+    "excluded_rows_policy": "omitted",
+    "external_ai_policy": "do_not_share_key_unless_explicitly_intended_and_allowed",
+    "item_count": 2,
+    "items": [
+      {
+        "entity_type": "NL_DOSSIER_NUMBER",
+        "include_state": "included",
+        "original_value": "DOSSIER-TEST-2026-001",
+        "placeholder": "[DOSSIERNUMMER_BK7M4Q2XR5TD3W6YZ_01]"
+      },
+      {
+        "entity_type": "PERSON",
+        "include_state": "included",
+        "original_value": "BETROKKENE-TEST-A",
+        "placeholder": "[PERSOON_BK7M4Q2XR5TD3W6YZ_01]"
+      }
+    ],
+    "privacy_model": "pseudonymization_not_full_anonymization",
+    "reversible": true,
+    "schema": "solidprivacy.scrub_key",
+    "schema_version": "1.1",
+    "storage_policy": "local_only_protect_key"
+  },
+  "expected_mapping_digest": "516075e4970f0def6052aaac6885e12339e7cdbe012d4104aa7387c51a53faa3",
+  "binding_validation_cases": [
+    {
+      "id": "bound_match",
+      "document_text": "[PERSOON_BK7M4Q2XR5TD3W6YZ_01] / [DOSSIERNUMMER_BK7M4Q2XR5TD3W6YZ_01]",
+      "key_variant": "canonical_bound_key",
+      "expected_status": "bound_match",
+      "replacement_allowed": true,
+      "verified_document_match": true,
+      "legacy_unbound": false
+    },
+    {
+      "id": "binding_mismatch",
+      "document_text": "[PERSOON_BP6R3T5VW2XY4ZA7C_01]",
+      "key_variant": "canonical_bound_key",
+      "expected_status": "binding_mismatch",
+      "replacement_allowed": false,
+      "verified_document_match": false,
+      "legacy_unbound": false
+    },
+    {
+      "id": "mixed_document_bindings",
+      "document_text": "[PERSOON_BK7M4Q2XR5TD3W6YZ_01] / [DOSSIERNUMMER_BP6R3T5VW2XY4ZA7C_01]",
+      "key_variant": "canonical_bound_key",
+      "expected_status": "mixed_document_bindings",
+      "replacement_allowed": false,
+      "verified_document_match": false,
+      "legacy_unbound": false
+    },
+    {
+      "id": "missing_document_binding",
+      "document_text": "[PERSOON_01]",
+      "key_variant": "canonical_bound_key",
+      "expected_status": "missing_document_binding",
+      "replacement_allowed": false,
+      "verified_document_match": false,
+      "legacy_unbound": false
+    },
+    {
+      "id": "invalid_mapping_digest",
+      "document_text": "[PERSOON_BK7M4Q2XR5TD3W6YZ_01]",
+      "key_variant": "invalid_digest_key",
+      "expected_status": "invalid_mapping_digest",
+      "replacement_allowed": false,
+      "verified_document_match": false,
+      "legacy_unbound": false
+    },
+    {
+      "id": "invalid_bound_key_item_binding",
+      "document_text": "[PERSOON_BK7M4Q2XR5TD3W6YZ_01]",
+      "key_variant": "item_binding_mismatch_key",
+      "expected_status": "invalid_bound_key",
+      "replacement_allowed": false,
+      "verified_document_match": false,
+      "legacy_unbound": false
+    },
+    {
+      "id": "legacy_unbound",
+      "document_text": "[PERSOON_01]",
+      "key_variant": "legacy_v1_key",
+      "expected_status": "legacy_unbound",
+      "replacement_allowed": true,
+      "verified_document_match": false,
+      "legacy_unbound": true
+    },
+    {
+      "id": "legacy_key_for_bound_document",
+      "document_text": "[PERSOON_BK7M4Q2XR5TD3W6YZ_01]",
+      "key_variant": "legacy_v1_key",
+      "expected_status": "legacy_key_for_bound_document",
+      "replacement_allowed": false,
+      "verified_document_match": false,
+      "legacy_unbound": true
+    }
+  ],
+  "required_result_fields": [
+    "ok",
+    "binding_status",
+    "replacement_allowed",
+    "verified_document_match",
+    "legacy_unbound",
+    "errors",
+    "warnings",
+    "document_binding_ids",
+    "key_binding_id",
+    "mapping_digest_valid"
+  ],
+  "required_helper_responsibilities": [
+    "validate_document_binding_id",
+    "build_bound_placeholder",
+    "parse_bound_placeholder",
+    "canonical_mapping_digest_payload",
+    "compute_mapping_digest",
+    "validate_bound_scrub_key",
+    "validate_document_key_binding"
+  ],
+  "ux_contract": {
+    "steps": [
+      "source_document_or_text",
+      "corresponding_scrub_key",
+      "restored_download"
+    ],
+    "new_source_or_key_buttons": false,
+    "new_source_or_key_checkboxes": false,
+    "final_confidential_download_acknowledgement": true
+  },
+  "implementation_authorized": false,
+  "production_ready": false,
+  "human_review_required": true,
+  "next_workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION"
+}
