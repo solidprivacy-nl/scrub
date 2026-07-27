@@ -1,3 +1,24 @@
+## 2026-07-27 18:28 Europe/Amsterdam — SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
+
+Status: completed and app-verified.
+
+Evidence:
+- PR #38 merged as `390f381c1464883f220716655c5067dadd0bb4c9`.
+- Final clean PR GitHub Actions run #1678 passed.
+- The coordinator live-tested the deployed three-step workflow and confirmed it is working.
+- The live result proves that the merged UI reached the Hugging Face Space.
+
+Verified behavior:
+- Step 1 begins with the source document or pasted text.
+- Step 2 accepts and automatically validates the corresponding Scrub Key.
+- Local deterministic reinsert starts automatically for one valid source/key pair.
+- Redundant source/key acknowledgement checkboxes and execution buttons are absent.
+- One confidentiality acknowledgement remains immediately before download.
+- Existing output filenames, MIME types, audit reporting and DOCX/PDF boundaries remain intact.
+
+Active next package:
+- `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
 ## 2026-07-27 17:06 Europe/Amsterdam — SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION
 
 Status: implemented; full suite passed; final PR validation pending.

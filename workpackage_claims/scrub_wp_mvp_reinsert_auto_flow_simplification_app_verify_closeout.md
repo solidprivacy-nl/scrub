@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_APP_VERIFY_CLOSEOUT
 
-Status: in_progress
+Status: completed and app-verified
 
 Claimed by: ChatGPT GitHub worker
 
@@ -29,4 +29,12 @@ Boundaries:
 - Preserve the final restored-output confidentiality acknowledgement and all documented product boundaries.
 
 Next step:
-- Finalize closeout evidence, run standard GitHub Actions, merge, then start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+- Merge this documentation-only closeout after GitHub Actions pass, then start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+
+
+Validation result:
+- PR #38 final clean Actions run #1678 passed.
+- Merge commit: `390f381c1464883f220716655c5067dadd0bb4c9`.
+- Hugging Face sync: confirmed through live verification of merged behavior.
+- App verification: passed on 2026-07-27.
+- Handover: `handover/workpackages/20260727_1828_mvp_reinsert_auto_flow_simplification_app_verify_closeout.md`.
