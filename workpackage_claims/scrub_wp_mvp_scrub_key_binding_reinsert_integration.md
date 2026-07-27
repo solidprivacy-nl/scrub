@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
 
-Status: implemented; full GitHub Actions passed; app verification pending
+Status: completed; final GitHub Actions passed; ready to merge and app-verify
 
 Claimed by: ChatGPT GitHub worker
 
@@ -29,8 +29,9 @@ Implementation result:
 Validation:
 - Adversarial synthetic tests cover correct, wrong, mixed, missing, legacy and tampered key/document combinations.
 - TXT, DOCX body/header/footer and PDF-to-TXT paths are covered.
-- Normal full GitHub Actions run #1789 passed.
-- Temporary operator, diagnostic, validation and contract workflows, triggers, scripts and logs were removed.
+- Normal full GitHub Actions run #1789 passed during implementation.
+- Final clean PR GitHub Actions run #1797 passed on `9f8eddda04b768e994184badbea3aefe39ce74cc`.
+- Temporary operator, diagnostic, validation, finalizer and contract workflows, triggers, scripts and logs were removed.
 - Evidence: `output/validation/mvp_scrub_key_binding_reinsert_validation.json`.
 
 Boundaries:
@@ -40,4 +41,4 @@ Boundaries:
 - Human review remains required; production readiness remains false.
 
 Next step:
-- Merge after final clean PR validation, verify GitHub-to-Hugging-Face sync, then run `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY`.
+- Merge PR #45 after the final metadata-only Actions run, verify GitHub-to-Hugging-Face sync, then run `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY`.
