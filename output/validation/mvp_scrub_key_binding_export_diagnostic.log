@@ -1,8 +1,8 @@
-..............F
+....................................F
 =================================== FAILURES ===================================
-_ test_existing_app_processing_and_export_paths_are_not_changed_by_mode_selector _
+______ test_export_scrub_key_reinsert_and_recognizer_paths_remain_present ______
 
-    def test_existing_app_processing_and_export_paths_are_not_changed_by_mode_selector() -> None:
+    def test_export_scrub_key_reinsert_and_recognizer_paths_remain_present() -> None:
         for marker in [
             "analyze(",
             "build_placeholder_replacements",
@@ -10,16 +10,17 @@ _ test_existing_app_processing_and_export_paths_are_not_changed_by_mode_selector
             "build_export_scrub_key",
             "export_key_json",
             "reinsert_from_scrub_key",
-            "Document downloaden",
-            "Scrub Key downloaden",
-            "Audit en technische bestanden",
+            "reinsert_docx_bytes",
+            "reinsert_txt_bytes",
+            "replacement_report_csv",
+            "scrub_report_txt",
         ]:
 >           assert marker in APP_TEXT
 E           assert 'build_export_scrub_key' in '"""Candidate copy of the Streamlit app with a collapsible review table.\n\nManual test flow:\n- keep the active `pres...n.")\n\nexcept Exception as e:\n    print(e)\n    traceback.print_exc()\n    st.error(e)\n\ncomponents.html(""" """)\n'
 
-tests/test_basic_expert_review_mode_implementation.py:72: AssertionError
+tests/test_basic_mode_declutter_implementation.py:97: AssertionError
 =========================== short test summary info ============================
-FAILED tests/test_basic_expert_review_mode_implementation.py::test_existing_app_processing_and_export_paths_are_not_changed_by_mode_selector - assert 'build_export_scrub_key' in '"""Candidate copy of the Streamlit app with a collapsible review table.\n\nManual test flow:\n- keep the active `pres...n.")\n\nexcept Exception as e:\n    print(e)\n    traceback.print_exc()\n    st.error(e)\n\ncomponents.html(""" """)\n'
+FAILED tests/test_basic_mode_declutter_implementation.py::test_export_scrub_key_reinsert_and_recognizer_paths_remain_present - assert 'build_export_scrub_key' in '"""Candidate copy of the Streamlit app with a collapsible review table.\n\nManual test flow:\n- keep the active `pres...n.")\n\nexcept Exception as e:\n    print(e)\n    traceback.print_exc()\n    st.error(e)\n\ncomponents.html(""" """)\n'
 !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 failed, 14 passed in 3.83s
+1 failed, 36 passed in 3.20s
 pytest_status=1
