@@ -9,6 +9,7 @@ from reinsert_auto_flow import (
     build_reinsert_source,
     run_reinsert_request,
 )
+from scrub_key_binding_reinsert_status import binding_status_notice
 from scrub_key_import import IMPORT_PRIVACY_WARNING, build_scrub_key_import_result
 
 
@@ -68,6 +69,14 @@ def _render_result_report(title: str, result: dict, validation_issues: list) -> 
         st.markdown(f"- Niet gevonden placeholders: {result.get('placeholders_not_found', [])}")
         st.markdown(f"- Onbekende placeholders in tekst: {result.get('unknown_placeholders', [])}")
         st.markdown(f"- Dubbele placeholders in sleutel: {result.get('duplicate_placeholders', [])}")
+        binding_notice = binding_status_notice(result)
+        st.markdown(f"- Document-/sleutelstatus: {binding_notice.get('status_label')}")
+        st.markdown(f"- Documentmatch geverifieerd: {result.get('verified_document_match') is True}")
+        st.markdown(f"- Legacy sleutel zonder binding: {result.get('legacy_unbound') is True}")
+        st.markdown(f"- Documentcodes in document: {result.get('document_binding_ids', [])}")
+        st.markdown(f"- Documentcode in sleutel: {result.get('key_binding_id', '')}")
+        st.markdown(f"- Mapping-controlewaarde geldig: {result.get('mapping_digest_valid')}")
+        st.markdown(f"- Bindingwaarschuwingen: {result.get('binding_warnings', [])}")
         st.markdown(f"- Validatieproblemen: {validation_issues}")
         st.markdown(f"- Lokaal uitgevoerd: {result.get('local_only') is True}")
         st.markdown(f"- AI-verwerking: {result.get('ai_processing') is True}")
@@ -77,6 +86,14 @@ def _render_result_report(title: str, result: dict, validation_issues: list) -> 
 
 
 def _render_result_status(kind: str, result: dict, validation_issues: list) -> None:
+    binding_notice = binding_status_notice(result)
+    if binding_notice.get("level") == "success":
+        st.success(binding_notice.get("message"))
+    elif binding_notice.get("level") == "warning":
+        st.warning(binding_notice.get("message"))
+    elif binding_notice.get("level") == "error":
+        st.error(binding_notice.get("message"))
+
     if validation_issues:
         st.warning(
             f"{kind} kan niet betrouwbaar worden uitgevoerd: "

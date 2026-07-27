@@ -1,0 +1,18 @@
+.................F...................................................... [ 90%]
+........                                                                 [100%]
+=================================== FAILURES ===================================
+____________________ test_ui_uses_pure_binding_status_model ____________________
+
+    def test_ui_uses_pure_binding_status_model() -> None:
+        text = _ui_text()
+    
+        assert "from scrub_key_binding_reinsert_status import binding_status_notice" in text
+        assert "binding_notice = binding_status_notice(result)" in text
+>       assert 'binding_notice.get("status_label")' in text
+E       assert 'binding_notice.get("status_label")' in 'from __future__ import annotations\n\nimport hashlib\n\nimport streamlit as st\n\nfrom reinsert_auto_flow import (\n ...      key="ack_auto_reinsert_download_confidential",\n    )\n    _render_download(source_type, result, acknowledged)\n'
+
+tests/test_scrub_key_binding_reinsert_ui.py:20: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_scrub_key_binding_reinsert_ui.py::test_ui_uses_pure_binding_status_model - assert 'binding_notice.get("status_label")' in 'from __future__ import annotations\n\nimport hashlib\n\nimport streamlit as st\n\nfrom reinsert_auto_flow import (\n ...      key="ack_auto_reinsert_download_confidential",\n    )\n    _render_download(source_type, result, acknowledged)\n'
+1 failed, 79 passed in 1.11s
+validation_status=1
