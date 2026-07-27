@@ -42,8 +42,8 @@ Boundaries:
 - Human review and confidential-output warnings remain required.
 
 Validation note:
-- Full-suite regression diagnostics triggered at 2026-07-27 16:29 Europe/Amsterdam after initial contract alignment.
-- Pull-request artifact diagnostic triggered at 2026-07-27 16:38 Europe/Amsterdam.
+- Full repository suite passed: 797 tests.
+- One-time governance finalizer triggered at 2026-07-27 17:08 Europe/Amsterdam.
 
 Next step:
-- Resolve only the first reproducible regression, rerun the standard suite, then complete governance evidence and PR validation.
+- Complete governance evidence, run final standard Actions, merge, verify Hugging Face sync and request live app verification.
