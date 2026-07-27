@@ -8,7 +8,7 @@ SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION
 
 ## Status
 
-Implemented; targeted validation passed; final PR verification pending.
+Completed; final GitHub Actions passed; ready to merge.
 
 ## Files added
 
@@ -24,6 +24,11 @@ Implemented; targeted validation passed; final PR verification pending.
 - `document_tools.py`
 - `manual_mask_entry.py`
 - `presidio_streamlit.py`
+- `tests/test_basic_expert_review_mode_implementation.py`
+- `tests/test_basic_mode_declutter_implementation.py`
+- `tests/test_execution_interface_simplification_ui.py`
+- `tests/test_mvp_fast_manual_mask_entry_ui.py`
+- `tests/test_review_copy_polish_ui.py`
 - `CHANGELOG.md`
 - `WORKPACKAGES.md`
 - `RELEASE_NOTES.md`
@@ -39,13 +44,13 @@ Implemented; targeted validation passed; final PR verification pending.
 - Custom replacement preservation and verified-key blocking.
 - Stable document filenames/MIME types and no new confirmation gates.
 - Targeted helper/model/contract/manual/UI/roundtrip validation: 103 passed.
-- Full repository regression pending final normal GitHub Actions run.
+- Full repository regression: 881 passed.
 
 ## Validation
 
 - Targeted validation: passed.
-- Temporary operator and diagnostic log: removed before final PR validation.
-- GitHub Actions: final clean-branch run pending.
+- Final normal GitHub Actions run #1757: passed on `cae60425894c23c05dd5705b41304ed0c32ee274`.
+- Temporary operator, diagnostic workflow, trigger and logs: removed before final validation.
 - Hugging Face sync: pending after merge.
 - App verification: required after export and reinsert integration are both deployed.
 
@@ -58,4 +63,4 @@ Implemented; targeted validation passed; final PR verification pending.
 
 ## Next recommended step
 
-- Merge after the final normal GitHub Actions run passes, then start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`.
+- Merge PR #44, verify GitHub-to-Hugging-Face sync, then start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`.
