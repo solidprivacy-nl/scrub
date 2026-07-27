@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION
 
-Status: in_progress
+Status: implemented; targeted validation passed; PR verification pending
 
 Claimed by: ChatGPT GitHub worker
 
@@ -35,4 +35,18 @@ Boundaries:
 - Human review remains required; no production-readiness claim.
 
 Next step:
-- Add the pure binding model and implementation tests against the frozen contract, then hand over to `SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION` after green validation.
+- Merge after GitHub Actions pass, then start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION`.
+
+
+Implementation result:
+- Pure module: `scrub_key_binding.py`.
+- Frozen binding ID, placeholder, digest and status contracts implemented.
+- Eight statuses and six fail-closed paths implemented.
+- Explicit legacy-v1.0 unbound compatibility implemented.
+- Targeted model/contract/legacy/roundtrip validation passed.
+- Current export integrated: false.
+- Current reinsert integrated: false.
+- Product UI changed: false.
+- Production ready: false; human review required: true.
+- Evidence: `output/validation/mvp_scrub_key_binding_model_validation.json`.
+- Handover: `handover/workpackages/20260727_2005_mvp_scrub_key_binding_model_implementation.md`.

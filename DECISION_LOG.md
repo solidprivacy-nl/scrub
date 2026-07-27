@@ -4,6 +4,41 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-27 — D035 — Keep binding-model implementation pure until sequential export and reinsert integration
+
+Status: accepted implementation decision
+
+Decision:
+
+```text
+Implement document/Scrub-Key binding as a new pure helper module first. Do not alter current placeholder creation, Scrub Key export/import, deterministic replacement or Streamlit behavior in the model package. Export integration creates bound artifacts in the next package; reinsert integration enforces binding only after bound export is proven.
+```
+
+Reason:
+
+- Placeholder generation, key export and reinsert are shared safety-critical surfaces.
+- Pure helpers can be validated completely against the frozen contract without silently changing current output semantics.
+- Sequential integration preserves explicit migration and rollback boundaries.
+
+Implemented model boundaries:
+
+- local random/injected binding-ID generation;
+- strict bound placeholder build/parse and document-ID extraction;
+- canonical SHA-256 mapping digest;
+- bound key validation;
+- eight stable document/key statuses and six fail-closed statuses;
+- explicit legacy-v1.0 unbound compatibility;
+- no UI, export or reinsert integration;
+- no cloud, AI, file persistence, signing or secret storage.
+
+Evidence:
+
+- `scrub_key_binding.py`
+- `tests/test_scrub_key_binding_model.py`
+- `output/validation/mvp_scrub_key_binding_model_validation.json`
+
+---
+
 ## 2026-07-27 — D034 — Freeze the bound-placeholder and mapping-digest contract before model implementation
 
 Status: accepted test/specification decision; model implementation may proceed
