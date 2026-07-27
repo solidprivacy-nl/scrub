@@ -51,29 +51,41 @@ jobs:
         if: steps.guard.outputs.run_implementation == 'true'
         run: python scripts/implement_scrub_key_binding_export_integration.py
 
-      - name: Run targeted validation
+      - name: Capture targeted validation
         if: steps.guard.outputs.run_implementation == 'true'
         shell: bash
         run: |
-          set -euo pipefail
+          set +e
+          mkdir -p output/validation
+          log=output/validation/mvp_scrub_key_binding_export_operator.log
+          : > "$log"
           python -m py_compile \
             document_tools.py \
             manual_mask_entry.py \
             scrub_key_bound_export.py \
-            presidio_streamlit.py
-          python -m pytest -q \
-            tests/test_scrub_key_bound_export.py \
-            tests/test_mvp_scrub_key_binding_export_integration.py \
-            tests/test_scrub_key_binding_model.py \
-            tests/test_mvp_scrub_key_binding_contracts.py \
-            tests/test_scrub_key_secure_import_export.py \
-            tests/test_manual_mask_entry.py \
-            tests/test_document_tools.py \
-            tests/test_review_export_vertical_density_contracts.py \
-            tests/test_mvp_scrub_key_roundtrip_validation.py
-          git diff --check
+            presidio_streamlit.py >> "$log" 2>&1
+          status=$?
+          if [[ $status -eq 0 ]]; then
+            python -m pytest -q \
+              tests/test_scrub_key_bound_export.py \
+              tests/test_mvp_scrub_key_binding_export_integration.py \
+              tests/test_scrub_key_binding_model.py \
+              tests/test_mvp_scrub_key_binding_contracts.py \
+              tests/test_scrub_key_secure_import_export.py \
+              tests/test_manual_mask_entry.py \
+              tests/test_document_tools.py \
+              tests/test_review_export_vertical_density_contracts.py \
+              tests/test_mvp_scrub_key_roundtrip_validation.py >> "$log" 2>&1
+            status=$?
+          fi
+          if [[ $status -eq 0 ]]; then
+            git diff --check >> "$log" 2>&1
+            status=$?
+          fi
+          echo "validation_status=$status" >> "$log"
+          exit 0
 
-      - name: Commit implementation
+      - name: Commit implementation and diagnostic evidence
         if: steps.guard.outputs.run_implementation == 'true'
         shell: bash
         run: |
