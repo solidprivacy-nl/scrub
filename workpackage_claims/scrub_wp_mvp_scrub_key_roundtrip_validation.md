@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
 
-Status: completed; deterministic validation and full suite passed; final clean PR verification pending
+Status: completed; deterministic validation, full suite and final clean PR validation passed; merge pending
 
 Claimed by: ChatGPT GitHub worker
 
@@ -33,7 +33,7 @@ Boundaries:
 - Preserve deterministic local reinsert and human review.
 
 Next step:
-- Merge after the final clean GitHub Actions pass, then start `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`.
+- Merge PR #40, then start `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`.
 
 Validation result:
 - Cases: 15; failed cases: 0.
@@ -46,5 +46,6 @@ Validation result:
 - Full repository suite: 815 passed.
 - GitHub Actions run #1686 passed before temporary diagnostic cleanup.
 - Temporary diagnostic workflow and log removed.
+- Final clean GitHub Actions run #1691 passed.
 - Report: `output/validation/mvp_scrub_key_roundtrip_validation_report.json`.
 - Handover: `handover/workpackages/20260727_1855_mvp_scrub_key_roundtrip_validation.md`.
