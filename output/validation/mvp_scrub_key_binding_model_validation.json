@@ -1,0 +1,18 @@
+{
+  "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION",
+  "status": "targeted_validation_passed",
+  "pure_model_module": "scrub_key_binding.py",
+  "contract_fixture_digest": "516075e4970f0def6052aaac6885e12339e7cdbe012d4104aa7387c51a53faa3",
+  "bound_statuses_implemented": 8,
+  "fail_closed_statuses_implemented": 6,
+  "legacy_v1_explicit_unbound": true,
+  "streamlit_imported": false,
+  "network_access": false,
+  "file_writes": false,
+  "export_integrated": false,
+  "reinsert_integrated": false,
+  "product_ui_changed": false,
+  "production_ready": false,
+  "human_review_required": true,
+  "next_workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION"
+}
