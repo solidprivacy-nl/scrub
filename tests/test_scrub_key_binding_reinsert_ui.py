@@ -17,7 +17,7 @@ def test_ui_uses_pure_binding_status_model() -> None:
 
     assert "from scrub_key_binding_reinsert_status import binding_status_notice" in text
     assert "binding_notice = binding_status_notice(result)" in text
-    assert 'binding_notice.get("status_label")' in text
+    assert "binding_notice.get('status_label')" in text
     assert 'binding_notice.get("message")' in text
     assert 'binding_notice.get("level")' in text
 
