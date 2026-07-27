@@ -43,7 +43,7 @@ The Scrub Key is shared, leaked, retained too long, tampered with or mishandled,
 
 Current mitigations include warnings and acknowledgements. Export/download UX grouping is implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Live app verification confirmed the grouped export UI. Reinsert now keeps the key-sensitivity warning visible, automatically applies the existing structural validation to a supplied key, and preserves one explicit confidentiality acknowledgement at the restored-output download boundary. Redundant pre-processing acknowledgements are removed because they obscured workflow state without adding key validation.
 
-The manual missed-value entry flows through the existing replacement table and existing Scrub Key/export paths without changing key semantics. No key storage, schema or lifecycle behavior is added by the automatic reinsert flow. The Phase 6 adversarial roundtrip matrix exposes a critical unresolved gap: a structurally valid wrong or tampered key that reuses the same placeholder namespace can restore incorrect original values without a detectable mismatch. This is routed to `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`; no schema or export change is authorized by the validation package.
+The manual missed-value entry flows through the existing replacement table and existing Scrub Key/export paths without changing key semantics. No key storage, schema or lifecycle behavior is added by the automatic reinsert flow. The Phase 6 adversarial roundtrip matrix exposes a critical unresolved gap: a structurally valid wrong or tampered key that reuses the same placeholder namespace can restore incorrect original values without a detectable mismatch. This is routed to `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`; no schema or export change is authorized by the validation package. Triage recommends a non-sensitive document binding ID inside every automatic/manual placeholder and the corresponding key, plus a canonical mapping digest for accidental corruption. Contract tests must define legacy v1.0 behavior and fail-closed mismatch rules before implementation. Signatures/HMAC remain deferred until protected local signing-key management exists.
 
 ---
 
@@ -58,7 +58,7 @@ Risk:
 An AI system rewrites, translates, merges or deletes placeholders, causing deterministic reinsert to fail or restore incompletely.
 ```
 
-Current mitigations include placeholder robustness helper/test work and reinsert audit reporting. The Phase 6 roundtrip matrix validates translated, merged, unknown, repeated and malformed mutations. Unknown grammar-valid placeholders are visible, while malformed tokens outside the strict grammar are signalled indirectly through expected placeholders not found. This diagnostic limitation is included in the document-binding gap triage.
+Current mitigations include placeholder robustness helper/test work and reinsert audit reporting. The Phase 6 roundtrip matrix validates translated, merged, unknown, repeated and malformed mutations. Unknown grammar-valid placeholders are visible, while malformed tokens outside the strict grammar are signalled indirectly through expected placeholders not found. This diagnostic limitation is included in the document-binding gap triage. It is not part of the critical binding implementation line; an optional later diagnostic-hardening package may report malformed near-placeholders directly without guessing or repairing values.
 
 ---
 

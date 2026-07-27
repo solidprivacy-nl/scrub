@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-07-27 — Scrub Key roundtrip validation is complete and exposed a critical document/key-binding gap; evidence triage is now active before any schema or export change.
+Last roadmap strategy update: 2026-07-27 — document/key-binding triage is complete; test-first bound-placeholder and Scrub Key contract work is now active before implementation.
 
 ---
 
@@ -111,6 +111,7 @@ SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_* through SCRUB-WP_MANUAL_CORRECTION
 SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING — merged, synchronized and live-app verified for DOCX body, table, header and footer restoration.
 SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — completed, synchronized and live-app verified.
 SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — completed with 15/15 cases passing and a critical document/key-binding gap routed to triage.
+SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed with a bound-placeholder plus mapping-digest recommendation and a test-first implementation sequence.
 ```
 
 Important UX status:
@@ -228,9 +229,14 @@ Current execution queue:
 3. SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING — completed and app-verified
 4. SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — completed and app-verified
 5. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — completed
-6. SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — active
-7. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
-8. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
+6. SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed
+7. SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — active
+8. SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION
+9. SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION
+10. SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
+11. SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY
+12. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
+13. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
 ```
 
 Execution principles:
