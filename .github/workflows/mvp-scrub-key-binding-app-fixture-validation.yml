@@ -1,0 +1,199 @@
+name: MVP Scrub Key binding app fixture validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "operator_triggers/mvp_scrub_key_binding_app_fixture_validation.txt"
+
+permissions:
+  contents: write
+
+jobs:
+  validate-fixtures:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - name: Check out deployed main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install fixture dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install python-docx reportlab pymupdf
+      - name: Validate synthetic app-verification fixtures against product helpers
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output/validation
+          python - <<'PY'
+          import json
+          from copy import deepcopy
+          from io import BytesIO
+          from pathlib import Path
+
+          from docx import Document
+
+          from scrub_key import build_scrub_key, scrub_key_to_json
+          from scrub_key_binding import validate_bound_scrub_key
+          from scrub_key_bound_export import build_bound_scrub_key
+          from scrub_key_document_reinsert import reinsert_docx_bytes
+          from scrub_key_import import build_scrub_key_import_result
+          from scrub_key_reinsert import reinsert_from_scrub_key
+
+          binding_a = "BK7M4Q2XR5TD3W6YZ"
+          binding_b = "BABCDEFGHIJKLMNOP"
+          expected_digest = "c92e42f38fd523920e982ddaa4c01d7d52fe79b0389366f416ec1d576fc05cdc"
+
+          def placeholder(label, binding, index=1):
+              return f"[{label}_{binding}_{index:02d}]"
+
+          def rows(binding):
+              data = [
+                  ("PERSOON", "Mila Voorbeeld", "PERSON", "Persoon"),
+                  ("DOSSIERNUMMER", "SYN-2026-0042", "CASE_NUMBER", "Dossiernummer"),
+                  ("ORGANISATIE", "Stichting Proefdocument", "ORGANIZATION", "Organisatie"),
+                  ("EMAILADRES", "verificatie@example.com", "EMAIL_ADDRESS", "E-mailadres"),
+              ]
+              return [
+                  {
+                      "original_value": original,
+                      "placeholder": placeholder(label, binding),
+                      "entity_type": entity_type,
+                      "type_label": type_label,
+                      "source": "synthetic_app_verification",
+                      "review_status": "synthetic_verified",
+                      "include": True,
+                      "timestamp": f"2026-07-28T01:0{index}:00+02:00",
+                      "document_label": "Synthetische gebonden verificatie",
+                  }
+                  for index, (label, original, entity_type, type_label) in enumerate(data)
+              ]
+
+          correct = build_bound_scrub_key(
+              rows(binding_a),
+              document_binding_id=binding_a,
+              document_label="Synthetische gebonden verificatie",
+          )
+          wrong = build_bound_scrub_key(
+              rows(binding_b),
+              document_binding_id=binding_b,
+              document_label="Synthetische verkeerde sleutel",
+          )
+          tampered = deepcopy(correct)
+          tampered["mapping_digest"] = "0" * 64
+
+          legacy_rows = [
+              {
+                  "original_value": "Legacy Persoon",
+                  "placeholder": "[PERSOON_01]",
+                  "entity_type": "PERSON",
+                  "type_label": "Persoon",
+                  "source": "synthetic_app_verification",
+                  "review_status": "synthetic_verified",
+                  "include": True,
+                  "timestamp": "2026-07-28T01:10:00+02:00",
+                  "document_label": "Synthetische legacyverificatie",
+              },
+              {
+                  "original_value": "LEG-2026-0007",
+                  "placeholder": "[DOSSIERNUMMER_01]",
+                  "entity_type": "CASE_NUMBER",
+                  "type_label": "Dossiernummer",
+                  "source": "synthetic_app_verification",
+                  "review_status": "synthetic_verified",
+                  "include": True,
+                  "timestamp": "2026-07-28T01:11:00+02:00",
+                  "document_label": "Synthetische legacyverificatie",
+              },
+          ]
+          legacy = build_scrub_key(
+              legacy_rows,
+              document_label="Synthetische legacyverificatie",
+          )
+
+          assert correct["mapping_digest"] == expected_digest
+          assert validate_bound_scrub_key(correct)["ok"] is True
+          assert validate_bound_scrub_key(wrong)["ok"] is True
+          assert validate_bound_scrub_key(tampered)["ok"] is False
+          assert build_scrub_key_import_result(scrub_key_to_json(correct))["ok"] is True
+          assert build_scrub_key_import_result(scrub_key_to_json(tampered))["ok"] is False
+          assert build_scrub_key_import_result(scrub_key_to_json(legacy))["ok"] is True
+
+          bound_text = (
+              f"Cliënt {placeholder('PERSOON', binding_a)}; "
+              f"dossier {placeholder('DOSSIERNUMMER', binding_a)}."
+          )
+          match = reinsert_from_scrub_key(bound_text, correct)
+          mismatch = reinsert_from_scrub_key(bound_text, wrong)
+          legacy_result = reinsert_from_scrub_key(
+              "Cliënt [PERSOON_01]; dossier [DOSSIERNUMMER_01].",
+              legacy,
+          )
+          assert match["binding_status"] == "bound_match"
+          assert match["replacement_count"] == 2
+          assert mismatch["binding_status"] == "binding_mismatch"
+          assert mismatch["replacement_count"] == 0
+          assert mismatch["text"] == bound_text
+          assert legacy_result["binding_status"] == "legacy_unbound"
+          assert legacy_result["replacement_count"] == 2
+
+          document = Document()
+          document.add_paragraph(f"Cliënt: {placeholder('PERSOON', binding_a)}")
+          table = document.add_table(rows=1, cols=1)
+          table.cell(0, 0).text = placeholder("DOSSIERNUMMER", binding_a)
+          section = document.sections[0]
+          section.header.paragraphs[0].text = placeholder("ORGANISATIE", binding_a)
+          section.footer.paragraphs[0].text = placeholder("EMAILADRES", binding_a)
+          stream = BytesIO()
+          document.save(stream)
+          source_docx = stream.getvalue()
+          docx_match = reinsert_docx_bytes(source_docx, correct)
+          docx_mismatch = reinsert_docx_bytes(source_docx, wrong)
+          assert docx_match["binding_status"] == "bound_match"
+          assert docx_match["replacement_count"] == 4
+          assert docx_mismatch["binding_status"] == "binding_mismatch"
+          assert docx_mismatch["replacement_count"] == 0
+          assert docx_mismatch["docx_bytes"] == source_docx
+
+          report = {
+              "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY",
+              "status": "synthetic_fixture_validation_passed",
+              "deployed_product_commit": "4a21c2d93acf3c166534a4a0501e602954c5606d",
+              "binding_a": binding_a,
+              "binding_b": binding_b,
+              "correct_mapping_digest": correct["mapping_digest"],
+              "correct_key_valid": True,
+              "wrong_key_structurally_valid": True,
+              "wrong_key_document_match_blocked": True,
+              "tampered_digest_rejected": True,
+              "legacy_key_import_valid": True,
+              "legacy_reinsert_unverified_warning_status": True,
+              "docx_correct_match_replacements": docx_match["replacement_count"],
+              "docx_mismatch_original_bytes_preserved": True,
+              "synthetic_data_only": True,
+              "app_verification_required": True,
+          }
+          Path("output/validation/mvp_scrub_key_binding_app_fixture_validation.json").write_text(
+              json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          PY
+      - name: Commit fixture validation evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-fixture-validator'
+          git config user.email 'actions@users.noreply.github.com'
+          git add output/validation/mvp_scrub_key_binding_app_fixture_validation.json
+          git commit -m 'Record Scrub Key binding app fixture validation'
+          git push origin HEAD:main
