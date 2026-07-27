@@ -1,0 +1,40 @@
+name: MVP Scrub Key binding triage finalizer
+
+on:
+  push:
+    branches:
+      - scrub-mvp-scrub-key-document-binding-gap-triage
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.event.head_commit.message != 'Finalize Scrub Key document binding gap triage'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out triage branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-scrub-key-document-binding-gap-triage
+          fetch-depth: 0
+
+      - name: Apply governance finalisation
+        run: python scripts/finalize_mvp_scrub_key_document_binding_gap_triage.py
+
+      - name: Remove one-time finalizer and generated cache
+        shell: bash
+        run: |
+          rm -f scripts/finalize_mvp_scrub_key_document_binding_gap_triage.py
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f -name '*.pyc' -delete
+
+      - name: Commit finalised triage
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'solidprivacy-binding-triage-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'Finalize Scrub Key document binding gap triage'
+          git push origin HEAD:scrub-mvp-scrub-key-document-binding-gap-triage
