@@ -8,7 +8,7 @@ SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE
 
 ## Status
 
-Completed; targeted validation passed; PR verification pending.
+Completed; targeted and full PR validation passed; merge pending.
 
 ## Summary
 
@@ -50,7 +50,7 @@ The critical same-placeholder wrong-key finding was classified and routed to a t
 - Critical findings triaged: 1.
 - Medium findings triaged: 1.
 - Implementation authorized: false.
-- GitHub Actions: pending PR validation.
+- GitHub Actions run #1695: passed.
 - Hugging Face sync: not functionally applicable; no runtime/app code changed.
 - App verification: not applicable; no visible behavior changed.
 
@@ -64,4 +64,4 @@ The critical same-placeholder wrong-key finding was classified and routed to a t
 
 ## Next recommended step
 
-- Start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS`.
+- Merge PR #41 and start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS`.
