@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 
-Status: implemented; Actions/sync verified; awaiting app verification
+Status: completed and app-verified
 
 Claimed by: ChatGPT GitHub worker
 
@@ -54,7 +54,15 @@ Validation result:
 - Sanitized evidence: `evidence/pr37-postmerge-verification:output/validation/pr37_postmerge_verification.json`.
 - No secrets or personal data recorded.
 
-Final PR cleanup:
+Live app verification:
+- Passed on 2026-07-27 with the supplied synthetic DOCX and Scrub Key fixture.
+- Downloaded restored DOCX confirms body value `Mila Voorbeeld`.
+- Downloaded restored DOCX confirms table value `SYN-2026-0042`.
+- Downloaded restored DOCX confirms header value `Stichting Proefdocument`.
+- Downloaded restored DOCX confirms footer value `testpersoon@example.invalid`.
+- App verification passed after Actions and Hugging Face sync.
+
+Final cleanup:
 - Temporary patch/finalizer scripts removed and duplicate governance lines normalized before final validation.
 - Generated `__pycache__` and `.pyc` files removed before merge.
 - Historical temporary operator commits were excluded through the clean branch rebuild.
@@ -62,6 +70,5 @@ Final PR cleanup:
 - Temporary post-merge verification probe and trigger removed after evidence collection.
 
 Next step:
-- Complete live app verification with the synthetic DOCX/Scrub Key fixture.
-- Confirm body, table, header and footer values are restored in the downloaded DOCX.
-- After app verification, close the package and start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+- Address the concrete reinsert-flow UX evidence in `SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION`.
+- Continue with `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION` after that narrow UI blocker is resolved and app-verified.

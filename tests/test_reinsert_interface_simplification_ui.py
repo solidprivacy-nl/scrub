@@ -14,45 +14,66 @@ def test_reinsert_flow_is_direct_source():
     assert "st.stop()" in APP_TEXT
 
 
-def test_reinsert_flow_has_four_task_headings():
-    for marker in [
-        'st.subheader("1. Voeg Scrub Key toe")',
-        'st.subheader("2. Voeg tekst of document toe")',
-        'st.subheader("3. Controleer herstelrapport")',
-        'st.subheader("4. Download herstelde output")',
-    ]:
+def test_reinsert_flow_has_three_task_headings_in_user_order():
+    markers = [
+        'st.subheader("1. Voeg het bestand toe dat je wilt herstellen")',
+        'st.subheader("2. Voeg de bijbehorende Scrub Key toe")',
+        'st.subheader("3. Download het herstelde resultaat")',
+    ]
+    for marker in markers:
         assert marker in REINSERT_UI_TEXT
+    assert REINSERT_UI_TEXT.index(markers[0]) < REINSERT_UI_TEXT.index(markers[1])
+    assert REINSERT_UI_TEXT.index(markers[1]) < REINSERT_UI_TEXT.index(markers[2])
 
 
-def test_reinsert_inputs_remain_available():
+def test_reinsert_inputs_remain_available_in_compact_form():
     for marker in [
-        "Upload Scrub Key JSON (.json)",
+        "Upload het bestand met placeholders",
+        'type=["txt", "docx", "pdf"]',
+        "Of plak tekst in plaats van een bestand",
+        "Plak tekst met placeholders",
+        "Upload de Scrub Key (.json)",
         "Of plak Scrub Key JSON",
-        "Plak hier de tekst waarin u originele waarden lokaal wilt terugzetten",
-        "TXT-bestand terugzetten",
-        "Upload een TXT-bestand met placeholders",
-        "DOCX-bestand terugzetten",
-        "Upload een DOCX-bestand met placeholders",
-        "PDF-tekst terugzetten naar TXT",
-        "Upload een PDF-bestand met placeholders",
+        "Plak Scrub Key JSON",
     ]:
         assert marker in REINSERT_UI_TEXT
 
 
-def test_acknowledgement_gates_remain_present():
+def test_source_and_key_are_processed_automatically():
     for marker in [
-        "ack_scrub_key_import_risk",
-        "ack_reinsert_text_confidential",
-        "ack_reinsert_txt_confidential",
-        "ack_reinsert_docx_confidential",
-        "ack_reinsert_pdf_text_confidential",
-        "ack_download_restored_text_confidential",
-        "ack_download_restored_txt_confidential",
-        "ack_download_restored_docx_confidential",
-        "ack_download_restored_pdf_text_confidential",
-        "disabled=not",
+        "build_reinsert_source(",
+        "build_scrub_key_import_result(scrub_key_text)",
+        "build_reinsert_request_signature(source, active_key)",
+        "run_reinsert_request(source, active_key)",
+        "Scrub Key herkend en geldig",
     ]:
         assert marker in REINSERT_UI_TEXT
+
+    for removed_marker in [
+        "ack_scrub_key_import_risk",
+        "load_scrub_key_import",
+        "Valideer en laad Scrub Key",
+        "ack_reinsert_text_confidential",
+        "run_local_reinsert",
+        "ack_reinsert_txt_confidential",
+        "run_txt_file_reinsert",
+        "ack_reinsert_docx_confidential",
+        "run_docx_file_reinsert",
+        "ack_reinsert_pdf_text_confidential",
+        "run_pdf_text_file_reinsert",
+    ]:
+        assert removed_marker not in REINSERT_UI_TEXT
+
+
+def test_one_final_download_acknowledgement_remains_present():
+    assert "ack_auto_reinsert_download_confidential" in REINSERT_UI_TEXT
+    assert "disabled=not acknowledged" in REINSERT_UI_TEXT
+    assert "CONFIDENTIAL_OUTPUT_WARNING" in REINSERT_UI_TEXT
+    assert "RESTORED_DOWNLOAD_WARNING" in REINSERT_UI_TEXT
+    assert (
+        "Ik begrijp dat het herstelde resultaat weer vertrouwelijke originele waarden bevat"
+        in REINSERT_UI_TEXT
+    )
 
 
 def test_restored_download_semantics_are_preserved():
@@ -75,8 +96,6 @@ def test_no_ai_cloud_ocr_or_restored_pdf_added():
         "openai.chat",
         "anthropic",
         "download herstelde pdf",
-        "pdf-output: ja",
-        "ocr gebruikt: ja",
         "cloud processing call",
         "server-side key storage",
         "durable key vault",
@@ -84,11 +103,10 @@ def test_no_ai_cloud_ocr_or_restored_pdf_added():
         assert forbidden not in lower_text
 
     for required in [
-        "geen AI- of cloudverwerking",
-        "geen AI, geen cloudverwerking en geen OCR",
-        "OCR gebruikt: Nee",
-        "PDF-output: Nee",
-        "Deze functie maakt geen herstelde PDF",
+        "geen herstelde PDF",
+        "OCR niet beschikbaar",
+        "AI-verwerking",
+        "Cloudverwerking",
     ]:
         assert required in REINSERT_UI_TEXT
 

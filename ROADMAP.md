@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-07-17 — verified MVP UI simplification line closed; Phase 6 workflow validation and trust hardening is now active.
+Last roadmap strategy update: 2026-07-27 — DOCX fidelity is app-verified; a concrete Phase 6 reinsert-flow clarity blocker is being resolved before Scrub Key roundtrip validation continues.
 
 ---
 
@@ -108,6 +108,8 @@ WP45-WP49 — local runtime/packaging decision line; installer deferred.
 WP50-WP51 — pilot/ICP thinking artifacts; parked for now.
 WP_RECALL_PERSON_NAME_* — diagnostic, contract and helper-level PERSON-name work completed; benchmark follow-up temporarily parked unless a concrete blocker appears.
 SCRUB-WP_EXECUTION_INTERFACE_SIMPLIFICATION_* through SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_* — the current MVP UI simplification line is completed, synchronized and live-app verified.
+SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING — merged, synchronized and live-app verified for DOCX body, table, header and footer restoration.
+SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — active narrow evidence-driven UI blocker before the general Scrub Key roundtrip package.
 ```
 
 Important UX status:
@@ -220,12 +222,13 @@ The verified MVP UI baseline is now stable enough to move the active line into P
 Current execution queue:
 
 ```text
-1. SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX
-2. SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE
-3. SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
-4. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
-5. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
-6. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
+1. SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX — completed
+2. SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE — completed
+3. SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING — completed and app-verified
+4. SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — active evidence-driven blocker
+5. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION
+6. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
+7. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
 ```
 
 Execution principles:

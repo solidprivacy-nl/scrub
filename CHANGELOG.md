@@ -1,3 +1,73 @@
+## 2026-07-27 — SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION
+
+Status: implemented; full suite passed; final PR validation pending.
+
+Purpose:
+
+- Remove redundant source- and Scrub-Key confirmation steps from the local reinsert workflow after live Phase 6 evidence showed that uploaded inputs looked complete while hidden action gates remained.
+- Present the workflow in the user’s natural order: source document/text, corresponding Scrub Key, restored result.
+- Preserve a clear confidentiality decision at the final restored-output download boundary.
+
+Files added:
+
+- `reinsert_auto_flow.py`
+- `tests/test_reinsert_auto_flow.py`
+- `tests/test_reinsert_auto_flow_ui.py`
+- `handover/workpackages/20260727_1706_mvp_reinsert_auto_flow_simplification_implementation.md`
+- `output/validation/mvp_reinsert_auto_flow_validation.json`
+
+Files changed:
+
+- `reinsert_mode_ui.py`
+- `tests/test_reinsert_interface_simplification_ui.py`
+- `tests/test_mvp_document_fidelity_ui_copy.py`
+- `tests/test_mvp_document_fidelity_pr_final_contracts.py`
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `ROADMAP.md`
+- `RELEASE_NOTES.md`
+- `DECISION_LOG.md`
+- `RISK_REGISTER.md`
+- `workpackage_claims/scrub_wp_mvp_document_hygiene_fidelity_hardening.md`
+- `handover/workpackages/20260717_2230_mvp_document_hygiene_fidelity_hardening.md`
+- `workpackage_claims/scrub_wp_mvp_reinsert_auto_flow_simplification_implementation.md`
+
+Implementation result:
+
+- Step 1 is now the source document or pasted text.
+- One uploader recognises TXT, DOCX and text-based PDF by extension.
+- Step 2 automatically parses and validates the uploaded or pasted Scrub Key.
+- Local deterministic reinsert runs automatically once one valid source and one valid key are present.
+- Separate source/key acknowledgement checkboxes and execution buttons were removed.
+- One final confidentiality acknowledgement remains directly before restored-output download.
+- Existing output filenames, MIME types, reinsert helpers, audit fields and explicit DOCX/PDF boundaries are preserved.
+
+Validation:
+
+- Full repository suite: 797 passed.
+- Helper dispatch, deterministic request signatures and input precedence are covered.
+- Source-level UI contracts verify document-first order, automatic key validation, automatic local reinsert and removal of redundant gates.
+- Prior DOCX live verification passed for body, table, header and footer restoration.
+- Final GitHub Actions, merge, Hugging Face sync and live app verification remain pending.
+
+Intentionally not changed:
+
+- Scrub Key schema, mappings, lifecycle or storage;
+- document replacement or reinsert helper semantics;
+- recognizers or thresholds;
+- export filenames, MIME types or audit semantics;
+- cloud, AI or OCR processing;
+- restored-PDF support;
+- unsupported DOCX-part boundaries;
+- the requirement for human review and a final confidential-output warning.
+
+Next recommended step:
+
+- Complete final PR validation, merge and sync, then live-verify the three-step automatic flow.
+- Continue with `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION` after app verification.
+
+---
+
 ## 2026-07-17 — SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 
 Status: completed / ready for PR verification.

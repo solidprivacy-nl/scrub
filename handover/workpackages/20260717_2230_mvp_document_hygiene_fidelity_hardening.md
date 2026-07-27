@@ -8,7 +8,7 @@ SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING
 
 ## Status
 
-Implemented; GitHub Actions and Hugging Face sync verified; awaiting live app verification.
+Completed and app-verified.
 
 ## Files added
 
@@ -71,9 +71,16 @@ Sanitized evidence is stored on branch `evidence/pr37-postmerge-verification` in
 
 ## App verification status
 
-Pending because DOCX reinsert behavior and its visible capability copy changed.
+Passed on 2026-07-27 with the supplied synthetic DOCX and Scrub Key fixture.
 
-Use the supplied synthetic DOCX and Scrub Key fixture to confirm that values are restored in the document body, a table, the header and the footer. Also confirm that no Script execution error is shown and that the unsupported-part warning remains visible.
+The downloaded restored DOCX confirms:
+
+- body: `Mila Voorbeeld`;
+- table: `SYN-2026-0042`;
+- header: `Stichting Proefdocument`;
+- footer: `testpersoon@example.invalid`.
+
+The verification exposed a separate interface-clarity issue: the reinsert flow starts with the Scrub Key and requires redundant source/key acknowledgements and action buttons after upload. That evidence is routed to `SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION`.
 
 ## Remaining risks
 
@@ -81,7 +88,8 @@ Use the supplied synthetic DOCX and Scrub Key fixture to confirm that values are
 - Placeholders split across Word text nodes remain unsupported.
 - PDF remains restored TXT only; no OCR or restored PDF output.
 - DOCX hygiene audit remains report-only and does not guarantee a clean document.
+- The reinsert workflow requires a narrow evidence-driven interface simplification before continuing the general Scrub Key roundtrip line.
 
 ## Next recommended step
 
-After successful app verification, close this package and start `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.
+Complete and app-verify `SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION`, then continue with `SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION`.

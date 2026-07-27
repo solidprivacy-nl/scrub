@@ -4,6 +4,41 @@ This file records accepted strategic, product and architecture decisions.
 
 ---
 
+## 2026-07-27 — D031 — Reinsert is document-first with automatic source/key processing
+
+Status: accepted evidence-driven UX and safety decision
+
+Decision:
+
+```text
+Present local reinsert as source document/text → corresponding Scrub Key → restored download. Automatically recognise the source type, structurally validate the supplied Scrub Key and run deterministic local reinsert when both inputs are valid. Keep one explicit confidentiality acknowledgement at the restored-output download boundary instead of repeating acknowledgements and action buttons before processing.
+```
+
+Reason:
+
+- Live Phase 6 verification confirmed that DOCX restoration works, but users can reasonably interpret an uploaded and visibly listed file as already accepted.
+- Requiring a checkbox and action button after each upload creates hidden completion states and unnecessary form friction.
+- The highest-risk user action is obtaining and handling the restored confidential output, so the explicit acknowledgement remains at that boundary.
+- Automatic key validation does not weaken structural validation or change Scrub Key semantics.
+
+Boundaries:
+
+- Keep warnings about pseudonymisation, key sensitivity and local-only use visible.
+- Invalid or ambiguous keys must still fail clearly and must not be used.
+- Preserve result/audit warnings for unknown, duplicate and missing placeholders.
+- Preserve existing helpers, output bytes, filenames and MIME types.
+- Do not add cloud, AI, OCR, restored-PDF or key-storage behavior.
+- Human review remains required and no production-readiness claim is created.
+
+Evidence:
+
+- User-confirmed restored synthetic DOCX containing body, table, header and footer values.
+- `tests/test_reinsert_auto_flow.py`
+- `tests/test_reinsert_auto_flow_ui.py`
+- `output/validation/mvp_reinsert_auto_flow_validation.json`
+
+---
+
 ## 2026-07-17 — D030 — Restore existing DOCX header and footer text during deterministic reinsert
 
 Status: accepted implementation decision

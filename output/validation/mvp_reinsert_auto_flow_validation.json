@@ -1,0 +1,37 @@
+{
+  "ai_processing": false,
+  "app_verification_pending": true,
+  "cloud_processing": false,
+  "docx_fidelity_live_verification": {
+    "body_restored": true,
+    "footer_restored": true,
+    "header_restored": true,
+    "passed": true,
+    "table_restored": true
+  },
+  "final_download_acknowledgement_preserved": true,
+  "final_pr_actions_pending": true,
+  "generated_at": "2026-07-27T17:06:00+02:00",
+  "hugging_face_sync_pending": true,
+  "human_review_required": true,
+  "ocr_processing": false,
+  "output_filenames_or_mime_changed": false,
+  "production_ready": false,
+  "pytest_count": 797,
+  "pytest_passed": true,
+  "redundant_preprocessing_gates_removed": true,
+  "reinsert_semantics_changed": false,
+  "restored_pdf_supported": false,
+  "schema": "solidprivacy.mvp_reinsert_auto_flow_validation",
+  "schema_version": "1.0",
+  "scrub_key_schema_changed": false,
+  "synthetic_data_only": true,
+  "target_flow": [
+    "source_document_or_text",
+    "scrub_key_auto_validation",
+    "automatic_local_reinsert",
+    "final_confidentiality_acknowledgement",
+    "restored_download"
+  ],
+  "workpackage": "SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION"
+}
