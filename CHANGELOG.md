@@ -1,3 +1,57 @@
+## 2026-07-28 00:52 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
+
+Status: implemented; full GitHub Actions passed; final PR validation pending.
+
+Purpose:
+- Prevent a wrong, mixed or accidentally corrupted Scrub Key from restoring values before document/key binding is verified.
+
+Files added:
+- `scrub_key_binding_reinsert_status.py`
+- `tests/test_scrub_key_binding_reinsert_integration.py`
+- `tests/test_scrub_key_binding_reinsert_status.py`
+- `tests/test_scrub_key_binding_reinsert_ui.py`
+- `output/validation/mvp_scrub_key_binding_reinsert_validation.json`
+- `handover/workpackages/20260728_0052_mvp_scrub_key_binding_reinsert_integration.md`
+- `workpackage_claims/scrub_wp_mvp_scrub_key_binding_reinsert_integration.md`
+
+Files changed:
+- `scrub_key_import.py`
+- `scrub_key_reinsert.py`
+- `scrub_key_document_reinsert.py`
+- `reinsert_mode_ui.py`
+- `tests/test_scrub_key_binding_model.py`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `ROADMAP.md`
+- `MVP_PHASE6_EXECUTION_PLAN.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+
+Implementation result:
+- Dual-read import supports structurally valid legacy v1.0 and bound v1.1 keys.
+- Binding validation runs before any local deterministic replacement.
+- `bound_match` is verified; `legacy_unbound` remains compatible but explicitly unverified.
+- Six frozen mismatch/corruption states fail closed with zero replacements.
+- DOCX mismatch returns exact original bytes; no partial package is produced.
+- Binding status, IDs, digest state and warnings are shown in existing feedback/report surfaces.
+- No new source/key execution button or acknowledgement checkbox was added.
+
+Validation:
+- Normal full GitHub Actions run #1789 passed.
+- Synthetic adversarial coverage spans text, TXT, DOCX body/header/footer and PDF-to-TXT.
+- Human review remains required; production readiness remains false.
+
+Intentionally not changed:
+- Output filenames or MIME types.
+- Supported TXT, DOCX and PDF-to-TXT boundaries.
+- Legacy key migration.
+- Signing/HMAC, secret storage, cloud, AI, OCR or restored-PDF behavior.
+
+Next recommended step:
+- Complete final PR validation and merge, verify sync, then run `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY`.
+
+---
+
 ## 2026-07-27 20:05 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION
 
 Status: implemented; targeted validation passed; PR verification pending.

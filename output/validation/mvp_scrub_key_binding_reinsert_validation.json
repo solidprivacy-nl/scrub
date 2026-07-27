@@ -1,0 +1,37 @@
+{
+  "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION",
+  "status": "implemented_full_actions_passed",
+  "github_actions_run_number": 1789,
+  "github_actions_conclusion": "success",
+  "dual_read_legacy_v1_0": true,
+  "dual_read_bound_v1_1": true,
+  "bound_match_verified": true,
+  "legacy_unbound_compatibility": true,
+  "fail_closed_statuses": [
+    "binding_mismatch",
+    "mixed_document_bindings",
+    "missing_document_binding",
+    "invalid_mapping_digest",
+    "invalid_bound_key",
+    "legacy_key_for_bound_document"
+  ],
+  "zero_replacements_on_fail_closed": true,
+  "docx_original_bytes_preserved_on_binding_failure": true,
+  "supported_paths": [
+    "text",
+    "txt",
+    "docx",
+    "pdf_to_txt"
+  ],
+  "new_execution_buttons": false,
+  "new_acknowledgement_checkboxes": false,
+  "filenames_changed": false,
+  "mime_types_changed": false,
+  "cloud_processing": false,
+  "ai_processing": false,
+  "ocr_added": false,
+  "restored_pdf_added": false,
+  "production_ready": false,
+  "human_review_required": true,
+  "next_workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY"
+}
