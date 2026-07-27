@@ -1,2 +1,0 @@
-Validate synthetic app-verification fixture contract against deployed main.
-Target: 4a21c2d93acf3c166534a4a0501e602954c5606d
