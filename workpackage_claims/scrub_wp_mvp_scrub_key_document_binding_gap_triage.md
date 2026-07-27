@@ -4,7 +4,7 @@ Repository: solidprivacy-nl/scrub
 
 Workpackage title: SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE
 
-Status: completed; targeted validation passed; PR verification pending
+Status: completed; targeted and full PR validation passed; merge pending
 
 Claimed by: ChatGPT GitHub worker
 
@@ -31,8 +31,7 @@ Boundaries:
 - Human review remains required; no production-readiness claim.
 
 Next step:
-- Merge after GitHub Actions pass, then start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS`.
-
+- Merge PR #41, then start `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS`.
 
 Triage result:
 - Recommended primary control: non-sensitive document binding ID in every automatic/manual placeholder and the corresponding key.
@@ -41,6 +40,7 @@ Triage result:
 - Bound mismatch, mixed IDs and invalid digest must fail closed with zero replacements.
 - Signatures/HMAC deferred until protected local signing-key lifecycle exists.
 - Targeted triage/source-evidence tests passed.
+- GitHub Actions run #1695 passed.
 - Implementation authorized in this package: false.
 - Production ready: false; human review required: true.
 - Triage: `MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE.md`.
