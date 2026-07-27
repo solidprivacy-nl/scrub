@@ -104,7 +104,7 @@ def test_no_ai_cloud_ocr_or_restored_pdf_added():
 
     for required in [
         "geen herstelde PDF",
-        "OCR is niet beschikbaar",
+        "OCR niet beschikbaar",
         "AI-verwerking",
         "Cloudverwerking",
     ]:
