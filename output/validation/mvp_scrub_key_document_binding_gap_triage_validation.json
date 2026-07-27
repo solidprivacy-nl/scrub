@@ -1,0 +1,12 @@
+{
+  "workpackage": "SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE",
+  "targeted_tests_passed": true,
+  "source_roundtrip_cases": 15,
+  "source_roundtrip_failures": 0,
+  "critical_findings_triaged": 1,
+  "medium_findings_triaged": 1,
+  "implementation_authorized": false,
+  "production_ready": false,
+  "human_review_required": true,
+  "next_workpackage": "SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS"
+}
