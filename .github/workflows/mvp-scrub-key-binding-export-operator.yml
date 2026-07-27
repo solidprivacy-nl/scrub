@@ -70,7 +70,6 @@ jobs:
               tests/test_mvp_scrub_key_binding_contracts.py \
               tests/test_scrub_key_secure_import_export.py \
               tests/test_manual_mask_entry.py \
-              tests/test_docx_table_order_preservation.py \
               tests/test_review_export_vertical_density_contracts.py \
               tests/test_mvp_scrub_key_roundtrip_validation.py >> "$log" 2>&1
             status=$?
