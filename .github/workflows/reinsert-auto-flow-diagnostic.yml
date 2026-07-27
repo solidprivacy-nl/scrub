@@ -1,0 +1,50 @@
+name: Reinsert auto-flow diagnostic
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    if: github.event.pull_request.head.ref == 'scrub-mvp-reinsert-auto-flow-simplification'
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - name: Check out pull request branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-mvp-reinsert-auto-flow-simplification
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf streamlit pandas
+
+      - name: Capture first regression failure
+        shell: bash
+        run: |
+          set +e
+          python -m pytest -q -x tests > /tmp/reinsert_auto_flow_pytest.log 2>&1
+          status=$?
+          echo "pytest_status=${status}" >> /tmp/reinsert_auto_flow_pytest.log
+          exit 0
+
+      - name: Upload diagnostic log
+        uses: actions/upload-artifact@v4
+        with:
+          name: reinsert-auto-flow-governance-diagnostic
+          path: /tmp/reinsert_auto_flow_pytest.log
+          retention-days: 1
