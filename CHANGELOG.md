@@ -1,3 +1,39 @@
+## 2026-08-03 16:34 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS
+
+Status: completed; test/specification contract frozen.
+
+Purpose:
+- Define dedicated Zorgfilter recognizer behavior before writing implementation code.
+
+Files added:
+- `CARE_RECOGNIZER_CONTRACT_V1.md`
+- `care_recognizer_contracts.py`
+- `care_recognizer_contract_summary.py`
+- `tests/test_care_recognizer_contracts.py`
+- `scripts/generate_care_recognizer_contract_summary.py`
+- `output/validation/care_recognizer_contract_v1_summary.json`
+- `workpackage_claims/scrub_wp_care_profile_recognizer_contract_tests.md`
+- `handover/workpackages/20260803_1634_care_profile_recognizer_contract_tests.md`
+
+Implementation result:
+- froze sixteen dedicated care entities and the future pure helper API;
+- added 37 positive exact-span fixtures;
+- added 16 negative/collision/clinical-preservation fixtures;
+- froze replace/review-selected policy alignment;
+- froze care-event/date-of-birth and AGB/BSN precedence;
+- kept generic PERSON/e-mail outside the dedicated care module.
+
+Validation:
+- GitHub Actions pending final PR validation;
+- Hugging Face sync not functionally relevant;
+- app verification not applicable.
+
+Intentionally not changed:
+- recognizer implementation or registration;
+- current profile selector, thresholds or entity defaults;
+- review, export, Scrub Key and reinsert semantics;
+- runtime, dependencies or cloud processing.
+
 ## 2026-08-03 16:25 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_GAP_TRIAGE
 
 Status: completed; evidence-driven gap routing implemented.

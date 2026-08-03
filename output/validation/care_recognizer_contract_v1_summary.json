@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "module": "dutch_care_recognizers",
+  "public_api": [
+    "get_dutch_care_entity_names",
+    "get_dutch_care_recognizers"
+  ],
+  "supported_language": "en",
+  "entity_names": [
+    "NL_PATIENT_NUMBER",
+    "NL_CARE_CLIENT_NUMBER",
+    "NL_MEDICAL_RECORD_NUMBER",
+    "NL_EPD_ECD_NUMBER",
+    "NL_HEALTH_INSURANCE_NUMBER",
+    "NL_REFERRAL_NUMBER",
+    "NL_TREATMENT_REFERENCE",
+    "NL_LAB_SAMPLE_NUMBER",
+    "NL_CARE_INCIDENT_NUMBER",
+    "NL_CARE_INDICATION_REFERENCE",
+    "NL_AGB_CODE",
+    "NL_CARE_PROVIDER_NAME",
+    "NL_CARE_ORGANIZATION",
+    "NL_CARE_LOCATION_REFERENCE",
+    "NL_ROOM_OR_BED_REFERENCE",
+    "NL_CARE_EVENT_DATE"
+  ],
+  "entity_count": 16,
+  "reference_positive_case_count": 17,
+  "contextual_positive_case_count": 20,
+  "positive_case_count": 37,
+  "negative_case_count": 16,
+  "policy_counts": {
+    "replace": 16,
+    "review_selected": 21
+  },
+  "family_counts": {
+    "care_reference": 16,
+    "collision_guard": 1,
+    "contextual_review": 20
+  },
+  "entity_case_counts": {
+    "NL_AGB_CODE": 1,
+    "NL_CARE_CLIENT_NUMBER": 1,
+    "NL_CARE_EVENT_DATE": 5,
+    "NL_CARE_INCIDENT_NUMBER": 2,
+    "NL_CARE_INDICATION_REFERENCE": 2,
+    "NL_CARE_LOCATION_REFERENCE": 4,
+    "NL_CARE_ORGANIZATION": 4,
+    "NL_CARE_PROVIDER_NAME": 4,
+    "NL_EPD_ECD_NUMBER": 2,
+    "NL_HEALTH_INSURANCE_NUMBER": 1,
+    "NL_LAB_SAMPLE_NUMBER": 2,
+    "NL_MEDICAL_RECORD_NUMBER": 1,
+    "NL_PATIENT_NUMBER": 2,
+    "NL_REFERRAL_NUMBER": 1,
+    "NL_ROOM_OR_BED_REFERENCE": 3,
+    "NL_TREATMENT_REFERENCE": 2
+  },
+  "production_ready": false,
+  "human_review_required": true,
+  "next_workpackage": "SCRUB-WP_CARE_PROFILE_RECOGNIZER_IMPLEMENTATION"
+}
