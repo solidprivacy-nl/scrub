@@ -1,6 +1,6 @@
 # Processed-text selection masking contract
 
-Status: approved implementation contract  
+Status: approved contract; pure action model implemented and test-gated
 Workpackage: `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT`  
 Repository: `solidprivacy-nl/scrub`  
 Approved: 2026-08-04 00:09 Europe/Amsterdam
@@ -452,4 +452,4 @@ This contract authorizes only the next package:
 SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
 ```
 
-The action model must remain Streamlit-free and browser-free. A component spike starts only after the pure action model and its adversarial tests are green.
+The action model is implemented in `selection_mask_action.py` and passed the full adversarial regression. The next permitted package is the non-mutating component spike; table or Streamlit integration remains prohibited until that proof is green.

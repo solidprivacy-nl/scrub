@@ -1,3 +1,48 @@
+## 2026-08-04 00:30 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
+
+Status: implemented; final clean validation pending.
+
+Purpose:
+- Implement the server-authoritative selection action model before any browser or Streamlit integration.
+
+Files added:
+- `selection_mask_action.py`
+- `tests/test_selection_mask_action.py`
+- `PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL.md`
+- `workpackage_claims/scrub_wp_processed_text_selection_masking_action_model.md`
+- `handover/workpackages/20260804_0030_processed_text_selection_masking_action_model.md`
+
+Files changed:
+- `manual_mask_entry.py`
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `RISK_REGISTER.md`
+
+Implementation:
+- strict schema/action/event/scope/hash/payload parsing;
+- exact UTF-16-to-Python index conversion and surrogate-pair rejection;
+- quick-selection length, line, control, placeholder and marked-range checks;
+- exact occurrence and Unicode-aware embedded-token analysis;
+- duplicate and nested included-replacement collision guards;
+- ready, confirmation-required and blocked inspection results;
+- bounded replay state and opaque single-use inspections;
+- commit-time revalidation of document, binding, source, processed text, replacement table and impact;
+- existing document-bound manual-row construction for eight internal quick types;
+- stable manual action records and fail-closed undo.
+
+Validation:
+- initial run #1957 failed from one local event-ID assignment defect and one overly literal test; no safety boundary was weakened;
+- corrected run #1961: 1106 tests passed in 10.66s;
+- final clean standard regression pending.
+
+Intentionally not changed:
+- visible manual form options;
+- Streamlit, browser component or session state;
+- review-table and export/download flows;
+- Scrub Key, reinsert, recognizers, profiles or cloud processing;
+- occurrence-specific masking or dependencies.
+
 ## 2026-08-04 00:09 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT
 
 Status: implemented; validation pending.

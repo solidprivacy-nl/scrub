@@ -19,7 +19,7 @@ Risk:
 Sensitive data remains in the scrubbed output and the user wrongly trusts the result.
 ```
 
-Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. A selection-driven processed-text correction path is approved with an all-exact version-one boundary. Its frozen contract requires a two-stage server-authoritative inspect/commit protocol and may not bypass validation or the authoritative replacement table. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence. The first machine-readable matrix baseline is stored in `output/validation/mvp_phase6_synthetic_validation_report.json` with 3 synthetic cases and 2 recorded evidence gaps or known limitations. Triage confirms that neither remaining item is a detection false negative, so no recognizer fix is justified by this bounded baseline.
+Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. A selection-driven processed-text correction path is approved with an all-exact version-one boundary. Its frozen contract and pure action model require a two-stage server-authoritative inspect/commit protocol and may not bypass validation or the authoritative replacement table. The model now proves UTF-16 selection validation, exact impact bands, Unicode collision blocking, stale/replay rejection, bound manual-row construction and fail-closed undo without connecting to the UI. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence. The first machine-readable matrix baseline is stored in `output/validation/mvp_phase6_synthetic_validation_report.json` with 3 synthetic cases and 2 recorded evidence gaps or known limitations. Triage confirms that neither remaining item is a detection false negative, so no recognizer fix is justified by this bounded baseline.
 
 Remaining gaps:
 
@@ -111,13 +111,13 @@ Current mitigations:
 - `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` narrows review UI cleanup to a small interface pass, not a new review loop.
 - `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION` made the existing step-by-step review aid collapsed by default and removed debug/governance wording from the primary UI.
 - `WP_MVP_FAST_MANUAL_MASK_ENTRY` adds a verified simple user-facing path to add missed values to the existing replacement table.
-- `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT` freezes the approved select/right-click/type route into the same manual row path, with the table retained as source of truth and component/UI integration still sequentially gated.
+- `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT` freezes the approved route, and `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL` implements its pure server-authoritative validation and row-construction logic; the table remains source of truth and component/UI integration remains sequentially gated.
 
 Gaps:
 
 - Live reinsert verification exposed a concrete workflow-state problem: uploaded source and key files still required non-obvious follow-up checkboxes and buttons. `SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION` addresses this narrowly with document-first ordering and automatic validation/processing.
 - Additional copy polish may still be needed, but it should remain separate and small.
-- The approved in-text selection interaction now has frozen exact-occurrence bands, collision guards, replay/stale-event protection and rollback requirements; the pure action model and non-mutating component spike must prove these boundaries before promotion.
+- The pure action model now proves exact-occurrence bands, Unicode collision guards, replay/stale-event protection and safe undo. The remaining high-risk gate is a non-mutating component spike proving text-node offsets, accessible menu behavior and replay-safe bidirectional transport before promotion.
 - Implementation must avoid weakening review controls or hiding audit details; one final confidentiality acknowledgement remains at download.
 
 Recommended workpackages:

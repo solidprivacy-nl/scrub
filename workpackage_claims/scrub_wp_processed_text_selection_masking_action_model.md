@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-processed-text-selection-masking-action-model`  
 Claimed: 2026-08-04 00:30 Europe/Amsterdam  
-Status: in_progress
+Status: implemented; corrected GitHub Actions run green; final clean regression pending
 
 ## Dependency gate
 

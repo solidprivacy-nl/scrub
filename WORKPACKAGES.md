@@ -1,3 +1,58 @@
+## 2026-08-04 00:30 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
+
+Status: implemented; final clean GitHub Actions regression pending.
+
+Dependency:
+- contract package merged through PR #60 as `23cb5d667461f84a01e96ee007b2ef10bd2e6b40`.
+
+Goal:
+- Implement a pure Python, Streamlit-free and browser-free action model for the approved two-stage selection masking contract.
+
+Implementation result:
+
+```text
+Inspect/commit event parsing: implemented
+UTF-16 conversion and split-surrogate rejection: implemented
+Selection validity and placeholder blocking: implemented
+Exact non-overlapping occurrence count: implemented
+Unicode embedded-token collision guard: implemented
+Nested replacement conflict guard: implemented
+1–5 / 6–20 / >20 impact bands: implemented
+Replay history and single-use inspections: implemented
+Commit-time source/processed/binding/table revalidation: implemented
+Bound manual row adapter: implemented
+Stable action ID and one-step undo: implemented
+Streamlit/browser integration: not included
+```
+
+Files added:
+- `selection_mask_action.py`
+- `tests/test_selection_mask_action.py`
+- `PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL.md`
+- `workpackage_claims/scrub_wp_processed_text_selection_masking_action_model.md`
+- `handover/workpackages/20260804_0030_processed_text_selection_masking_action_model.md`
+
+Files changed:
+- `manual_mask_entry.py`
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Validation:
+- initial run #1957 exposed one missing local event-ID assignment and one overly literal source-text assertion;
+- corrected run #1961: 1106 tests passed in 10.66s;
+- final clean regression pending after governance updates.
+
+Next permitted package:
+- `SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE`
+
+Boundaries:
+- no Streamlit/session-state or browser component;
+- no `presidio_streamlit.py`, review-table, export, Scrub Key or reinsert change;
+- no occurrence-specific replacement or dependency upgrade.
+
 ## 2026-08-04 00:09 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT
 
 Status: implemented; GitHub Actions pending.

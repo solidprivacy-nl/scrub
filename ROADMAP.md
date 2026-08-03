@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-08-04 — direct selection-driven correction in the processed-text pane is approved with an all-exact version-one boundary; the interaction contract is frozen and implementation proceeds sequentially through a pure action model before any browser component or UI integration.
+Last roadmap strategy update: 2026-08-04 — the all-exact processed-text selection contract and pure server-authoritative action model are complete; the next gated step is a non-mutating browser-component spike before any review-table or Streamlit integration.
 
 ---
 
@@ -277,7 +277,7 @@ The proposed sequence is:
 6. SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY
 ```
 
-The coordinator approved the direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam. The contract package is completed as the first gate. The next permitted package is the Streamlit-free and browser-free action model; component and UI work remain sequentially gated and do not displace the active Phase 6 queue.
+The coordinator approved the direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam. The contract and Streamlit-free action-model packages are complete. The next permitted package is a non-mutating component spike that must prove rendering, UTF-16 offset transport, menu accessibility and replay-safe bidirectional events before any table or `presidio_streamlit.py` integration. This line remains sequential and does not displace the active Phase 6 queue.
 
 Recall/benchmark work is reopened only where the synthetic validation matrix exposes a concrete false-negative, misclassification or over-masking gap.
 
