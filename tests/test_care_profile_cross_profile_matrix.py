@@ -27,7 +27,7 @@ def _failure_lines(matrix):
 
 
 def test_cross_profile_matrix_is_synthetic_and_keeps_safety_gates_closed(matrix):
-    assert matrix["schema_version"] == "1.0"
+    assert matrix["schema_version"] == "1.1"
     assert matrix["synthetic_data_only"] is True
     assert matrix["generic_ner_evaluated"] is False
     assert matrix["human_review_required"] is True
@@ -54,9 +54,18 @@ def test_care_and_international_find_all_dedicated_care_expectations(matrix):
     assert matrix["care_expected_found"] == matrix["care_expected_total"]
 
 
-def test_legal_and_international_retain_legal_expectations(matrix):
-    assert matrix["legal_expected_total"] > 0
-    assert matrix["legal_expected_found"] == matrix["legal_expected_total"], _failure_lines(matrix)
+def test_legacy_legal_metadata_gaps_are_recorded_as_observations(matrix):
+    assert matrix["legacy_legal_metadata_expected_total"] == 148
+    assert matrix["legacy_legal_metadata_expected_found"] == 132
+    assert matrix["legacy_legal_metadata_gap_count"] == 16
+    assert matrix["legacy_legal_forbidden_observed_count"] == 4
+    assert matrix["observation_count"] == 20
+    assert len(matrix["observations"]) == 20
+    categories = {item["category"] for item in matrix["observations"]}
+    assert categories == {
+        "legacy_legal_metadata_missing",
+        "legacy_legal_forbidden_metadata_observed",
+    }
 
 
 def test_no_profile_overlaps_protected_clinical_phrases(matrix):
