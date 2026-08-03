@@ -1,0 +1,37 @@
+name: Apply Zorgfilter v1 governance
+
+on:
+  push:
+    branches:
+      - scrub-care-profile-v1-foundation
+    paths:
+      - ops/apply_care_profile_v1_governance.py
+      - .github/workflows/apply-care-profile-v1-governance.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-care-profile-v1-foundation
+          fetch-depth: 0
+
+      - name: Apply roadmap and governance changes
+        run: python ops/apply_care_profile_v1_governance.py
+
+      - name: Commit generated governance changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ROADMAP.md WORKPACKAGES.md CHANGELOG.md DECISION_LOG.md RISK_REGISTER.md ops/apply_care_profile_v1_governance.py .github/workflows/apply-care-profile-v1-governance.yml
+          if git diff --cached --quiet; then
+            echo "No governance changes to commit"
+          else
+            git commit -m "Record Zorgfilter v1 roadmap and workpackages"
+            git push origin HEAD:scrub-care-profile-v1-foundation
+          fi
