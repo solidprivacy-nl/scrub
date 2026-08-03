@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "module": "dutch_care_recognizers",
+  "synthetic_data_only": true,
+  "production_ready": false,
+  "human_review_required": true,
+  "entity_count": 16,
+  "positive_contract_count": 37,
+  "positive_contract_passed": 37,
+  "positive_contract_failures": [],
+  "forbidden_positive_failure_count": 0,
+  "forbidden_positive_failures": [],
+  "negative_contract_count": 16,
+  "negative_contract_passed": 16,
+  "negative_contract_failures": [],
+  "corpus_dedicated_expectation_count": 54,
+  "corpus_dedicated_found_count": 54,
+  "corpus_dedicated_failures": [],
+  "clinical_preserve_overlap_count": 0,
+  "clinical_preserve_overlaps": [],
+  "app_registered": false,
+  "next_workpackage": "SCRUB-WP_RECOGNITION_PROFILE_CONFIGURATION_REFACTOR"
+}
