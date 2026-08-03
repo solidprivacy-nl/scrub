@@ -473,6 +473,8 @@ Central profile configuration is now implemented without changing the live UI. T
 
 The current Streamlit integration is now implemented and regression-green. `Zorgcontrole — streng` is added without silently becoming the default; the existing Legal profile remains initially selected. Sixteen care recognizers, central entity composition, exact-span precedence, eight synthetic examples and conservative unchecked care candidates are wired into the current flow. Review-selected care detections remain selected but show `Controle nodig`. Export, Scrub Key and reinsert semantics are unchanged. The next gates are cross-profile regression, deployment sync and live app verification.
 
+The deterministic cross-profile regression matrix is now green. Across eight care document families and twelve legal examples, Care and International retain all 108 dedicated care expectations, Care/International and Legal/International dedicated-type parity hold, no dedicated Care or Legal entities leak into the wrong profiles, and no protected clinical phrase is overlapped. The historical legal metadata remains visible as 132/148 deterministic expectations, sixteen recorded gaps and four negative observations; these are existing benchmark observations, not hidden or reclassified as Zorg success. Generic NER remains outside this matrix. The next gate is deployed app verification after GitHub-to-Hugging-Face sync is confirmed.
+
 ### Current and final interface direction
 
 Current prototype after test-gated integration:

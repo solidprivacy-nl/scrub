@@ -1,3 +1,48 @@
+## 2026-08-03 18:58 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX
+
+Status: completed; deterministic cross-profile gates are green.
+
+Goal:
+- Verify that Zorgfilter adds care-specific recognition without contaminating Legal or General profiles or masking protected clinical meaning.
+
+Result:
+
+```text
+Profiles evaluated: 4
+Care document families: 8
+Legal examples: 12
+Dedicated Care expectations: 108/108
+Hard profile failures: 0
+Protected clinical overlaps: 0
+Care/International parity: passed
+Legal/International parity: passed
+Historical legal metadata: 132/148
+Recorded historical gaps: 16
+Recorded negative observations: 4
+Final validated run #1899: 995 tests passed
+Generic NER evaluated: false
+Production ready: false
+```
+
+Evidence:
+- `CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX.md`
+- `output/validation/care_profile_cross_profile_matrix.json`
+- `handover/workpackages/20260803_1858_care_profile_cross_profile_regression_matrix.md`
+
+Active next package:
+- `SCRUB-WP_CARE_PROFILE_APP_VERIFY`
+
+Gate status:
+- app verification is blocked until GitHub-to-Hugging-Face sync for the merged UI integration is independently confirmed.
+
+Boundaries:
+- pure helper/test/evidence package only;
+- no Streamlit, review, export, Scrub Key or reinsert change;
+- generic NER is model-dependent and deferred to deployed-app observation;
+- synthetic data only;
+- human review remains required;
+- no production-readiness claim.
+
 ## 2026-08-03 18:28 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION
 
 Status: implemented and regression-green; merge, sync and deployed app verification pending.

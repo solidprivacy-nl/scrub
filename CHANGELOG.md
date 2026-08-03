@@ -1,3 +1,43 @@
+## 2026-08-03 18:58 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX
+
+Status: completed and regression-green.
+
+Purpose:
+- Add deterministic evidence that the new Care profile remains isolated from Legal and General profiles and preserves clinical meaning.
+
+Files added:
+- `care_profile_cross_profile_matrix.py`
+- `CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX.md`
+- `tests/test_care_profile_cross_profile_matrix.py`
+- `output/validation/care_profile_cross_profile_matrix.json`
+- `workpackage_claims/scrub_wp_care_profile_cross_profile_regression_matrix.md`
+- `handover/workpackages/20260803_1858_care_profile_cross_profile_regression_matrix.md`
+
+Implementation result:
+- executed real deterministic Dutch custom recognizers across four configured profiles;
+- covered eight care-document families and twelve legal examples;
+- verified 108/108 dedicated Care expectations across Care and International;
+- verified Care/International and Legal/International dedicated-type parity;
+- verified no dedicated Care/Legal leakage into the wrong profiles;
+- verified zero overlap with protected clinical phrases;
+- separated hard profile gates from historical legal metadata observations;
+- preserved sixteen historical legal metadata gaps and four negative observations in the evidence snapshot;
+- added snapshot reproducibility checks for all twenty observations.
+
+Validation:
+- run #1887 exposed an invalid hard-contract assumption for historical legal metadata;
+- run #1888 made all twenty observations explicit;
+- run #1890 passed after correcting the methodology: 994 tests;
+- run #1897 exposed only an incorrect legal-example count in the snapshot;
+- run #1899 passed: 995 tests in 9.56s;
+- final clean run pending after governance finalization.
+
+Intentionally not changed:
+- current Streamlit UI or profile selector;
+- review table, export, Scrub Key or reinsert semantics;
+- runtime dependencies, cloud processing or production claims;
+- generic NER behavior.
+
 ## 2026-08-03 18:28 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION
 
 Status: implemented and regression-tested; deployment verification pending.
