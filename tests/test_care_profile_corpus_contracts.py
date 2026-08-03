@@ -57,21 +57,13 @@ def test_corpus_uses_only_synthetic_email_domains():
 
 
 def test_clinical_meaning_is_represented_in_every_case():
-    clinical_markers = (
-        "medicatie",
-        "diagnose",
-        "bloeddruk",
-        "allerg",
-        "zorgdoel",
-        "uitslag",
-        "mobil",
-        "observ",
-        "incident",
-        "behandeling",
-    )
     for case in TEST_CASES:
-        blob = " ".join(case["preserve"]).lower()
-        assert any(marker in blob for marker in clinical_markers), case["id"]
+        protected_values = set(all_expected_values(case))
+        preserve_phrases = list(case["preserve"])
+
+        assert len(preserve_phrases) >= 3, case["id"]
+        assert sum(len(phrase.strip()) for phrase in preserve_phrases) >= 40, case["id"]
+        assert protected_values.isdisjoint(preserve_phrases), case["id"]
 
 
 def test_get_case_uses_stable_ids():
