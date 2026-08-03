@@ -226,6 +226,13 @@ def _organization_recognizer(supported_language: str) -> CareRegexCaptureRecogni
             rf"(?=\s*,\s*(?:woonlocatie|locatie|afdeling|team|kamer|bed|appartement)\b)",
         ),
         (
+            "location_line_lowercase_care_organization",
+            r"\blocatie\s*:\s*(?P<value>(?:woonzorgcentrum|zorgcentrum|"
+            r"verpleeghuis|ziekenhuis|zorggroep)\s+"
+            r"(?-i:[A-ZÀ-ÖØ-Þ])[^,\.\r\n]{1,60}?)"
+            r"(?=\s*,\s*(?:woonlocatie|locatie|afdeling|team|kamer|bed|appartement)\b)",
+        ),
+        (
             "labelled_practice_phrase",
             rf"(?P<value>praktijk\s+(?-i:[A-ZÀ-ÖØ-Þ])[^,\.\r\n]{{1,60}}?)"
             rf"(?=\s*(?:,|\.|\r?$))",
@@ -327,7 +334,7 @@ def get_dutch_care_recognizers(
         ),
         _reference_recognizer(
             "NL_CARE_CLIENT_NUMBER",
-            r"cl[iië]ntnummer|clientnummer|cl[iië]ntnr\.?|clientnr\. ?",
+            r"cli[eë]ntnummer|clientnummer|cli[eë]ntnr\.?|clientnr\.?",
             0.90,
             supported_language,
         ),
@@ -357,7 +364,7 @@ def get_dutch_care_recognizers(
         ),
         _reference_recognizer(
             "NL_TREATMENT_REFERENCE",
-            r"behandelnummer|zorgtrajectnummer|behandelnr\.?|trajectnummer",
+            r"behandelnummer|zorgtrajectnummer|receptnummer|behandelnr\.?|trajectnummer",
             0.88,
             supported_language,
         ),
@@ -371,7 +378,7 @@ def get_dutch_care_recognizers(
         _reference_recognizer(
             "NL_CARE_INCIDENT_NUMBER",
             r"MIC[-\s]?nummer|MIM[-\s]?nummer|VIM[-\s]?nummer|"
-            r"zorgincidentnummer|medicatiefoutnummer",
+            r"zorgincidentnummer|incidentnummer|medicatiefoutnummer",
             0.91,
             supported_language,
         ),
