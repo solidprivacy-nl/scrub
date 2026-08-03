@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-care-profile-long-form-synthetic-corpus`  
 Claimed: 2026-08-03 22:17 Europe/Amsterdam  
-Status: implemented; GitHub Actions green; Hugging Face sync and app verification pending
+Status: completed and app-verified after GitHub Actions and Hugging Face synchronization verification
 
 ## Goal
 
@@ -22,8 +22,9 @@ Replace the short visible synthetic care examples with longer, structured varian
 
 - initial PR run #1923: 1001 passed, two new test-contract failures;
 - corrected PR run #1924: 1003 passed in 11.57s;
-- final clean PR run pending after governance status update;
-- Hugging Face sync and app verification required after merge.
+- final clean PR run #1926: 1003 passed in 11.51s;
+- deployment verification run #1931: both runtime files matched Hugging Face byte-for-byte, Streamlit health returned HTTP 200 / `ok`, and 1003 tests passed in 11.35s;
+- coordinator/user app verification confirmed at 2026-08-03 23:26 Europe/Amsterdam: `Alles werkt.`
 
 ## Boundaries
 
