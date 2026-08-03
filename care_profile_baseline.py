@@ -48,10 +48,21 @@ def detect_with_current_custom_recognizers(text: str) -> List[Dict[str, Any]]:
 
 
 def _matching_rows(value: str, rows: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Return only exact normalized span matches.
+
+    Substring matching would incorrectly count an eight-digit AGB code as found
+    when the recognizer actually returned a longer BIG number beginning with the
+    same digits. Punctuation and spacing differences remain ignored.
+    """
+
     needle = _normalize(value)
     if not needle:
         return []
-    return [row for row in rows if needle in _normalize(row.get("text", ""))]
+    return [
+        row
+        for row in rows
+        if needle == _normalize(row.get("text", ""))
+    ]
 
 
 def _phrase_spans(text: str, phrase: str) -> List[tuple[int, int]]:
