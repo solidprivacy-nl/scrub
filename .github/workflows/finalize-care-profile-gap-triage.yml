@@ -1,0 +1,28 @@
+name: Finalize Zorgfilter gap triage
+
+on:
+  push:
+    branches:
+      - scrub-care-profile-gap-triage
+    paths:
+      - ops/finalize_care_profile_gap_triage.py
+      - .github/workflows/finalize-care-profile-gap-triage.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: scrub-care-profile-gap-triage
+          fetch-depth: 0
+      - run: python ops/finalize_care_profile_gap_triage.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add WORKPACKAGES.md CHANGELOG.md RISK_REGISTER.md workpackage_claims/scrub_wp_care_profile_gap_triage.md ops/finalize_care_profile_gap_triage.py .github/workflows/finalize-care-profile-gap-triage.yml
+          git commit -m "Finalize Zorgfilter gap triage"
+          git push origin HEAD:scrub-care-profile-gap-triage
