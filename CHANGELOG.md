@@ -1,6 +1,6 @@
 ## 2026-08-03 15:31 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_V1_POLICY_AND_CORPUS_FOUNDATION
 
-Status: in progress; policy/corpus foundation implemented on a dedicated branch.
+Status: completed; policy/corpus foundation implemented and validated.
 
 Purpose:
 - Create the evidence base for an explicit Dutch Zorg profile without prematurely changing recognizers or the UI.
@@ -24,8 +24,8 @@ Main changes:
 - made no recognizer or product-UI behavior change.
 
 Validation:
-- GitHub Actions pending on the branch;
-- Hugging Face sync not functionally relevant;
+- full GitHub Actions run #1818 passed: 918 tests;
+- Hugging Face sync not functionally relevant because no runtime/UI file changed;
 - app verification not applicable.
 
 Intentionally not changed:

@@ -1,6 +1,6 @@
 ## 2026-08-03 15:31 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_V1_POLICY_AND_CORPUS_FOUNDATION
 
-Status: in_progress; helper/test-first implementation on dedicated branch.
+Status: completed; policy/corpus foundation implemented and validated.
 
 Goal:
 - Establish the approved Zorgfilter v1 policy and a fully synthetic, machine-readable care-document corpus before adding recognizers or UI.
@@ -18,7 +18,7 @@ Approved policy:
 - diagnosis, medication, dosage, lab results and observations: preserve;
 - rare-case re-identification: audit warning only.
 
-Sequential follow-up:
+Active next package:
 1. `SCRUB-WP_CARE_PROFILE_CURRENT_ENGINE_BASELINE`
 2. `SCRUB-WP_CARE_PROFILE_GAP_TRIAGE`
 3. `SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS`
