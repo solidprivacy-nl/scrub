@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "workpackage": "SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION",
+  "profile_count": 4,
+  "visible_profile_labels": [
+    "Zorgcontrole — streng",
+    "Juridische controle — streng",
+    "Algemene Nederlandse controle",
+    "Algemene internationale controle"
+  ],
+  "default_profile_label": "Juridische controle — streng",
+  "care_profile_internal_value": "Dutch Care Strict",
+  "care_threshold": 0.3,
+  "dedicated_care_entity_count": 16,
+  "synthetic_care_example_count": 8,
+  "care_candidates_selected_by_default": false,
+  "review_selected_detections_selected_by_default": true,
+  "review_selected_status_label": "Controle nodig",
+  "patient_identity_selected_for_replacement": true,
+  "clinical_meaning_preservation_required": true,
+  "export_semantics_changed": false,
+  "scrub_key_semantics_changed": false,
+  "reinsert_semantics_changed": false,
+  "cloud_document_processing_added": false,
+  "human_review_required": true,
+  "production_ready": false,
+  "github_actions_run": 1877,
+  "github_actions_tests_passed": 983,
+  "hugging_face_sync_status": "pending_merge",
+  "app_verification_status": "pending"
+}
