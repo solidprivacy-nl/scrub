@@ -2,13 +2,13 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Workpackage title: Zorgfilter v1 deployed app verification  
-Status: technical deployment and regression verified; coordinator/user app verification pending
+Status: technical deployment verified; coordinator/user app verification pending
 
 ## Summary
 
 Opened the verification-only package after the Zorgfilter UI integration and cross-profile matrix were merged. An independent GitHub Actions workflow compared twelve relevant files between GitHub `main` at merge commit `cca4a25aaff28a7ba647c961d8e50f0e076921e2` and Hugging Face Space `solidprivacy/scrub`, verified the correctly scoped Zorgfilter markers and checked the live Streamlit health endpoint.
 
-The technical deployment and verification-branch regression suite are green. No product code was changed. Functional closeout remains blocked on coordinator/user verification of the visible app behavior.
+The technical deployment is verified. No product code was changed. Functional closeout remains blocked on coordinator/user verification of the visible app behavior.
 
 ## Files added
 
@@ -20,10 +20,10 @@ The technical deployment and verification-branch regression suite are green. No 
 
 ## Files changed
 
-- `ROADMAP.md`
-- `WORKPACKAGES.md`
-- `CHANGELOG.md`
-- `RISK_REGISTER.md`
+- `ROADMAP.md` — pending verification-status finalizer
+- `WORKPACKAGES.md` — pending verification-status finalizer
+- `CHANGELOG.md` — pending verification-status finalizer
+- `RISK_REGISTER.md` — pending verification-status finalizer
 
 ## Tests
 
@@ -62,7 +62,7 @@ Functional app verification: false / pending user
 - PR #53 UI integration final clean run #1885: 986 tests passed.
 - PR #54 cross-profile matrix final clean run #1906: 995 tests passed.
 - Independent corrected Hugging Face verification passed its exact-file, marker and health assertions and wrote the committed evidence report.
-- PR #55 verification-only run #1908: **998 tests passed in 10.07s**.
+- Verification-branch normal regression run: pending after PR creation.
 
 ## Hugging Face sync status
 
