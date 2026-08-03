@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-care-profile-app-verify`  
 Claimed: 2026-08-03 19:05 Europe/Amsterdam  
-Status: in_progress
+Status: Actions/sync verified; awaiting coordinator/user app verification
 
 ## Scope
 

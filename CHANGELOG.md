@@ -1,3 +1,35 @@
+## 2026-08-03 19:12 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_APP_VERIFY
+
+Status: technical deployment verified; visible app verification pending.
+
+Purpose:
+- Independently verify that the merged Zorgfilter integration reached Hugging Face before requesting human app verification.
+
+Files added:
+- `CARE_PROFILE_APP_VERIFICATION.md`
+- `output/validation/care_profile_hf_sync_verification.json`
+- `tests/test_care_profile_hf_sync_verification.py`
+- `workpackage_claims/scrub_wp_care_profile_app_verify.md`
+- `handover/workpackages/20260803_1912_care_profile_app_verify.md`
+
+Verification result:
+- compared twelve relevant GitHub and Hugging Face files byte-for-byte;
+- verified equal SHA-256 values for all twelve files;
+- verified correctly scoped Zorgfilter markers;
+- verified Streamlit health `HTTP 200 / ok` and root HTTP 200;
+- corrected an initial verification false negative caused by two marker groups being checked in the wrong modules;
+- recorded functional app verification as pending rather than claiming success.
+
+Validation context:
+- UI integration final run #1885 passed: 986 tests;
+- cross-profile matrix final run #1906 passed: 995 tests;
+- verification-evidence tests and normal branch regression pending PR creation.
+
+Intentionally not changed:
+- product code, recognizers, profile behavior or UI;
+- review, export, Scrub Key or reinsert semantics;
+- runtime dependencies, cloud processing or production claims.
+
 ## 2026-08-03 18:58 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX
 
 Status: completed and regression-green.

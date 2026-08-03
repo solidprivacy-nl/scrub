@@ -1,3 +1,48 @@
+## 2026-08-03 19:12 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_APP_VERIFY
+
+Status: implemented; Actions/sync verified; awaiting coordinator/user app verification.
+
+Goal:
+- Verify the deployed Zorgfilter selector and review behavior after technical integration and cross-profile regression passed.
+
+Technical deployment result:
+
+```text
+GitHub main commit: cca4a25aaff28a7ba647c961d8e50f0e076921e2
+Hugging Face Space: solidprivacy/scrub
+Files compared: 12
+Exact byte matches: 12/12
+Correctly scoped markers: all passed
+Space health: HTTP 200 / ok
+Space root: HTTP 200
+Technical deployment verified: true
+Functional app verification: pending
+Production ready: false
+```
+
+Evidence:
+- `CARE_PROFILE_APP_VERIFICATION.md`
+- `output/validation/care_profile_hf_sync_verification.json`
+- `handover/workpackages/20260803_1912_care_profile_app_verify.md`
+
+Pending coordinator/user checks:
+- four profile choices and stable default;
+- eight synthetic care examples;
+- `Controle nodig` rendering for review-selected care rows while selected;
+- patient/client replacement defaults;
+- unchecked care candidates;
+- unchanged Legal/General/International, review, export, Scrub Key and reinsert flows;
+- no Script execution error.
+
+Gate status:
+- do not close or merge the verification-only package until the coordinator/user confirms the visible behavior.
+
+Boundaries:
+- verification-only; no product code or UI change;
+- synthetic examples only;
+- human review remains required;
+- no production-readiness claim.
+
 ## 2026-08-03 18:58 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX
 
 Status: completed; deterministic cross-profile gates are green.
