@@ -34,6 +34,15 @@ except Exception:  # pragma: no cover - keeps original demo usable if file is ab
     get_dutch_recognizers = None
     get_dutch_entity_names = None
 
+try:
+    from dutch_care_recognizers import (
+        get_dutch_care_recognizers,
+        get_dutch_care_entity_names,
+    )
+except Exception:  # pragma: no cover - keeps original demo usable if file is absent
+    get_dutch_care_recognizers = None
+    get_dutch_care_entity_names = None
+
 
 logger = logging.getLogger("presidio-streamlit")
 
@@ -65,6 +74,32 @@ def nlp_engine_and_registry(
     raise ValueError(f"Model family {model_family} not supported")
 
 
+def register_custom_recognizers(analyzer: AnalyzerEngine) -> None:
+    """Register Dutch general/legal and dedicated care recognizers."""
+
+    for factory in (get_dutch_recognizers, get_dutch_care_recognizers):
+        if factory is None:
+            continue
+        for recognizer in factory(supported_language="en"):
+            try:
+                analyzer.registry.add_recognizer(recognizer)
+            except Exception as exc:
+                logger.debug("Could not register %s: %s", recognizer, exc)
+
+
+def get_custom_entity_names() -> List[str]:
+    """Return stable, de-duplicated Dutch general/legal/care entity names."""
+
+    names: List[str] = []
+    for factory in (get_dutch_entity_names, get_dutch_care_entity_names):
+        if factory is None:
+            continue
+        for entity in factory():
+            if entity not in names:
+                names.append(entity)
+    return names
+
+
 @st.cache_resource
 def analyzer_engine(
     model_family: str,
@@ -80,16 +115,10 @@ def analyzer_engine(
 
     analyzer = AnalyzerEngine(nlp_engine=nlp_engine, registry=registry)
 
-    # Register Dutch/EU pattern recognizers. They are registered for language="en"
-    # because this demo currently calls analyzer.analyze(language="en") and uses
-    # English NER models. This makes Dutch identifiers available without requiring
-    # a separate Dutch NLP model.
-    if get_dutch_recognizers is not None:
-        for recognizer in get_dutch_recognizers(supported_language="en"):
-            try:
-                analyzer.registry.add_recognizer(recognizer)
-            except Exception as exc:  # avoid breaking the demo on duplicate/registry edge cases
-                logger.debug("Could not register %s: %s", recognizer, exc)
+    # Register all local Dutch general/legal and dedicated care recognizers.
+    # They use supported_language="en" because the current demo invokes Presidio
+    # with language="en" while using Dutch custom patterns.
+    register_custom_recognizers(analyzer)
 
     return analyzer
 
@@ -111,10 +140,9 @@ def get_supported_entities(
         model_family, model_path, ta_key, ta_endpoint
     ).get_supported_entities()
 
-    if get_dutch_entity_names is not None:
-        for entity in get_dutch_entity_names():
-            if entity not in entities:
-                entities.append(entity)
+    for entity in get_custom_entity_names():
+        if entity not in entities:
+            entities.append(entity)
 
     if "GENERIC_PII" not in entities:
         entities.append("GENERIC_PII")

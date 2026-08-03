@@ -1,3 +1,60 @@
+## 2026-08-03 18:28 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION
+
+Status: implemented and regression-tested; deployment verification pending.
+
+Purpose:
+- Promote the approved Zorgfilter profile into the current Streamlit/analyzer flow after policy, corpus, recognizer and profile-configuration gates passed.
+
+Files added:
+- `care_candidate_scanner.py`
+- `profile_ui_support.py`
+- `CARE_PROFILE_CURRENT_UI_INTEGRATION.md`
+- `output/validation/care_profile_current_ui_integration.json`
+- `tests/test_care_candidate_scanner.py`
+- `tests/test_profile_ui_support.py`
+- `tests/test_presidio_helpers_care_registration.py`
+- `tests/test_care_profile_current_ui_integration_snapshot.py`
+- `workpackage_claims/scrub_wp_care_profile_current_ui_integration.md`
+- `handover/workpackages/20260803_1828_care_profile_current_ui_integration.md`
+
+Files changed:
+- `presidio_helpers.py`
+- `presidio_streamlit.py`
+- `document_tools.py`
+- `display_labels_nl.py`
+- `ui_texts_nl.py`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RELEASE_NOTES.md`
+- `RISK_REGISTER.md`
+
+Implementation result:
+- registered sixteen dedicated care recognizers;
+- added `Zorgcontrole — streng` while preserving the existing three labels and Legal default;
+- centralized thresholds, profile descriptions and default entity composition;
+- applied profile-level exact-span collision resolution;
+- added eight synthetic care examples and a conservative unchecked candidate layer;
+- aligned review-selected care detections to `Controle nodig` while keeping them selected;
+- added care display labels and stable placeholders;
+- generalized app copy from Legal-only to professional Legal/Zorg use;
+- preserved review table, export, Scrub Key and reinsert semantics.
+
+Validation:
+- run #1876 failed only because the new registration test imported optional Streamlit dependencies absent from lean CI;
+- test isolation was corrected without changing runtime code or dependencies;
+- run #1877 passed: 983 tests in 9.69s;
+- final clean run pending after governance finalization;
+- Hugging Face sync pending merge;
+- app verification pending deployment.
+
+Intentionally not changed:
+- export filenames, MIME types and document formats;
+- Scrub Key schema, binding, warnings or lifecycle;
+- TXT/DOCX/PDF-to-TXT reinsert semantics;
+- cloud processing, runtime dependencies or production claims;
+- broad free-text medical scanning.
+
 ## 2026-08-03 17:12 Europe/Amsterdam — SCRUB-WP_RECOGNITION_PROFILE_CONFIGURATION_REFACTOR
 
 Status: completed; pure recognition-profile configuration implemented.

@@ -471,6 +471,8 @@ The dedicated pure recognizer implementation is now green but remains unregister
 
 Central profile configuration is now implemented without changing the live UI. The current three options remain exact, while future Streamlit and desktop four-profile orders, thresholds, entity groups, care policy actions and fifteen exact-span precedence winners are frozen. Care recognizer registration and visible UI integration remain the next gated package.
 
+The current Streamlit integration is now implemented and regression-green. `Zorgcontrole — streng` is added without silently becoming the default; the existing Legal profile remains initially selected. Sixteen care recognizers, central entity composition, exact-span precedence, eight synthetic examples and conservative unchecked care candidates are wired into the current flow. Review-selected care detections remain selected but show `Controle nodig`. Export, Scrub Key and reinsert semantics are unchanged. The next gates are cross-profile regression, deployment sync and live app verification.
+
 ### Current and final interface direction
 
 Current prototype after test-gated integration:

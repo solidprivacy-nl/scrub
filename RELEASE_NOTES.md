@@ -1,3 +1,17 @@
+## 2026-08-03 — Zorgcontrole toegevoegd aan het prototype
+
+- De controlemodus krijgt een vierde keuze: `Zorgcontrole — streng`.
+- De bestaande juridische controle blijft de standaardkeuze; Zorg wordt nooit stilzwijgend geactiveerd.
+- Zorgcontrole zoekt extra naar patiënt- en cliëntnummers, EPD/ECD- en dossiernummers, verzekerden- en verwijsnummers, laboratorium- en incidentreferenties, zorgverleners, zorgorganisaties, locaties en exacte zorgdata.
+- Acht volledig synthetische zorgvoorbeelden zijn beschikbaar om de werking te testen.
+- Zorgverlener-, organisatie-, locatie- en zorgdatumregels blijven standaard geselecteerd, maar krijgen zichtbaar de status `Controle nodig`.
+- Mogelijke gemiste administratieve zorgreferenties worden alleen als uitgevinkte controlekandidaat toegevoegd.
+- Diagnose, medicatie, doseringen, laboratoriumwaarden en observaties blijven een expliciet te behouden onderdeel van de tekst.
+- De vervangtabel, documentdownloads, Scrub Key, terugzetten en bestandsformaten zijn niet gewijzigd.
+- Menselijke controle blijft noodzakelijk; deze prototypefunctie is geen productiegarantie.
+
+---
+
 ## 2026-07-28 — Verkeerde Scrub Key wordt vóór herstel geblokkeerd
 
 - Nieuwe documentgebonden Scrub Keys worden automatisch vergeleken met de documentcode in het aangeleverde bestand.
