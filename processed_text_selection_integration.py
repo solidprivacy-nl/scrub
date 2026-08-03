@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, MutableMapping, Sequence
 from dataclasses import dataclass
+import math
 from typing import Any
 
 from selection_mask_action import (
@@ -50,6 +51,17 @@ def _mapping_bucket(
         value = {}
         session[key] = value
     return value
+
+
+def _row_dicts(rows: Any) -> list[dict[str, Any]]:
+    if rows is None:
+        return []
+    if hasattr(rows, "to_dict"):
+        try:
+            return [dict(row) for row in rows.to_dict("records")]
+        except TypeError:
+            pass
+    return [dict(row) for row in rows]
 
 
 def selection_action_state(
@@ -312,10 +324,46 @@ def latest_selection_action(
     return value if isinstance(value, ManualSelectionActionRecord) else None
 
 
+def _comparable_value(value: Any) -> Any:
+    if isinstance(value, float) and math.isnan(value):
+        return None
+    return value
+
+
+def _current_action_row_unchanged(
+    current_review_rows: Any,
+    action: ManualSelectionActionRecord,
+) -> bool:
+    rows = [
+        row
+        for row in _row_dicts(current_review_rows)
+        if str(row.get("manual_action_id", "")) == action.action_id
+    ]
+    if len(rows) != 1:
+        return False
+    current = rows[0]
+    original = dict(action.row)
+    protected_fields = (
+        "include",
+        "remember",
+        "find",
+        "replace_with",
+        "entity_type",
+        "type_label",
+        "source",
+        "manual_action_id",
+    )
+    return all(
+        _comparable_value(current.get(field)) == _comparable_value(original.get(field))
+        for field in protected_fields
+    )
+
+
 def undo_latest_selection_action(
     session: MutableMapping[str, Any],
     *,
     document_scope_key: str,
+    current_review_rows: Any = None,
 ) -> SelectionIntegrationOutcome:
     """Undo only the latest unchanged selection-created row for this document."""
 
@@ -328,6 +376,30 @@ def undo_latest_selection_action(
             status="blocked",
             message="Er is geen recente tekstselectiemaskering om ongedaan te maken.",
             issue_code="no_latest_action",
+        )
+
+    if current_review_rows is not None and not _current_action_row_unchanged(
+        current_review_rows,
+        action,
+    ):
+        message = (
+            "De handmatige rij is intussen gewijzigd en kan niet automatisch "
+            "ongedaan worden gemaakt. Pas de rij aan in de vervangtabel."
+        )
+        _store_feedback(
+            session,
+            document_scope_key,
+            level="warning",
+            message=message,
+            issue_code="action_row_changed",
+        )
+        return SelectionIntegrationOutcome(
+            handled=True,
+            rerun_required=False,
+            action="undo",
+            status="blocked",
+            message=message,
+            issue_code="action_row_changed",
         )
 
     manual_bucket, manual_rows = _manual_rows_for_scope(session, document_scope_key)
