@@ -88,10 +88,11 @@ def test_selection_of_existing_marked_content_is_protected_server_side():
     assert "highlight_spans = list(model[\"processed_pane\"][\"highlight_spans\"])" in side_source
     assert '"highlight_spans": highlight_spans' in side_source
     assert 'marked_ranges=side_by_side_review_state.get("highlight_spans", ())' in app_source
-    assert "selection_intersects_ranges" in action_source
-    assert "selection.intersects_marked_content" in action_source
-    assert "marked_selection" in action_source
-    assert "PLACEHOLDER_STRICT_RE" in action_source
+    assert "def ranges_overlap(" in action_source
+    assert "frontend_intersects_marked_content or any(" in action_source
+    assert "ranges_overlap((start_index, end_index), marked_range)" in action_source
+    assert "marked_content" in action_source
+    assert "STRICT_PLACEHOLDER_SEARCH_RE" in action_source
 
 
 def test_component_wrapper_remains_transport_only():
