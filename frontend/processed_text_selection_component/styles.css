@@ -7,7 +7,6 @@
   --sp-menu: #ffffff;
   --sp-highlight: #fef3c7;
   --sp-highlight-border: #f59e0b;
-  --sp-focus: #2563eb;
   --sp-button: #1f2937;
   --sp-button-text: #ffffff;
 }
@@ -81,7 +80,7 @@ button,
 .sp-pane:focus-visible,
 button:focus-visible,
 [role="menuitem"]:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--sp-focus) 45%, transparent);
+  outline: 3px solid rgba(37, 99, 235, 0.38);
   outline-offset: 2px;
 }
 
