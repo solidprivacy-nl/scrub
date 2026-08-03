@@ -1,4 +1,10 @@
+import json
+from pathlib import Path
+
 from care_profile_baseline_summary import build_current_care_baseline_summary
+
+
+BASELINE_PATH = Path("output/validation/care_profile_v1_current_engine_baseline.json")
 
 
 def test_current_care_baseline_summary_freezes_corrected_counts():
@@ -54,3 +60,8 @@ def test_current_care_baseline_summary_keeps_clinical_preservation_evidence():
     assert report["entity_summary"]["NL_CARE_PROVIDER_NAME"]["found"] == 0
     assert report["entity_summary"]["NL_CARE_ORGANIZATION"]["found"] == 0
     assert report["entity_summary"]["NL_CARE_EVENT_DATE"]["found"] == 0
+
+
+def test_committed_baseline_artifact_is_exactly_reproducible():
+    committed = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+    assert committed == build_current_care_baseline_summary()
