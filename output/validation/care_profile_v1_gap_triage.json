@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "source_profile": "current_custom_recognizers_before_care_profile",
+  "synthetic_data_only": true,
+  "production_ready": false,
+  "human_review_required": true,
+  "expectation_count": 81,
+  "classified_count": 81,
+  "unclassified_count": 0,
+  "status_counts": {
+    "correct_entity": 14,
+    "misclassified": 11,
+    "missed": 56
+  },
+  "route_counts": {
+    "care_collision_guard": 3,
+    "care_specific_reclassification": 10,
+    "contextual_care_review_recognizer": 36,
+    "dedicated_care_reference_recognizer": 5,
+    "generic_profile_dependency": 13,
+    "reuse_current_recognizer": 14
+  },
+  "entity_counts": {
+    "EMAIL_ADDRESS": 2,
+    "NL_ADDRESS": 2,
+    "NL_AGB_CODE": 3,
+    "NL_BIG_NUMBER": 3,
+    "NL_BSN": 2,
+    "NL_CARE_CLIENT_NUMBER": 2,
+    "NL_CARE_EVENT_DATE": 7,
+    "NL_CARE_INCIDENT_NUMBER": 1,
+    "NL_CARE_LOCATION_REFERENCE": 6,
+    "NL_CARE_ORGANIZATION": 9,
+    "NL_CARE_PROVIDER_NAME": 10,
+    "NL_DATE_OF_BIRTH": 4,
+    "NL_EPD_ECD_NUMBER": 2,
+    "NL_HEALTH_INSURANCE_NUMBER": 1,
+    "NL_LAB_SAMPLE_NUMBER": 1,
+    "NL_MEDICAL_RECORD_NUMBER": 2,
+    "NL_PATIENT_NUMBER": 3,
+    "NL_PHONE_NUMBER": 3,
+    "NL_REFERRAL_NUMBER": 1,
+    "NL_ROOM_OR_BED_REFERENCE": 4,
+    "NL_TREATMENT_REFERENCE": 2,
+    "PERSON": 11
+  },
+  "contract_families": [
+    {
+      "id": "generic_profile_dependencies",
+      "route": "generic_profile_dependency",
+      "entities": [
+        "EMAIL_ADDRESS",
+        "PERSON"
+      ],
+      "requirements": [
+        "Use the approved local generic NER/profile layer for unlabeled patient and relative names.",
+        "Keep exact generic e-mail recognition enabled in the Zorg profile.",
+        "Do not treat the custom-rule-only baseline as a full-app PERSON or e-mail result.",
+        "Require cross-profile regression before promotion."
+      ]
+    },
+    {
+      "id": "care_reference_identifiers",
+      "route": "dedicated_care_reference_recognizer",
+      "entities": [
+        "NL_CARE_CLIENT_NUMBER",
+        "NL_CARE_INCIDENT_NUMBER",
+        "NL_CARE_INDICATION_REFERENCE",
+        "NL_EPD_ECD_NUMBER",
+        "NL_HEALTH_INSURANCE_NUMBER",
+        "NL_LAB_SAMPLE_NUMBER",
+        "NL_MEDICAL_RECORD_NUMBER",
+        "NL_PATIENT_NUMBER",
+        "NL_REFERRAL_NUMBER",
+        "NL_TREATMENT_REFERENCE"
+      ],
+      "requirements": [
+        "Use strong care context and return only the sensitive value span.",
+        "Split the current broad NL_HEALTHCARE_REFERENCE behavior into policy-specific entities.",
+        "Preserve labels such as patientnummer, EPD-nummer, verwijsnummer and incidentnummer.",
+        "Reject dates, vital signs, dosages, laboratory values and clinical codes as reference values."
+      ]
+    },
+    {
+      "id": "care_contextual_review",
+      "route": "contextual_care_review_recognizer",
+      "entities": [
+        "NL_CARE_EVENT_DATE",
+        "NL_CARE_LOCATION_REFERENCE",
+        "NL_CARE_ORGANIZATION",
+        "NL_CARE_PROVIDER_NAME",
+        "NL_ROOM_OR_BED_REFERENCE"
+      ],
+      "requirements": [
+        "Detect care-provider names after professional role context while preserving the role word.",
+        "Detect organizations, departments, teams, locations and room/bed references only with bounded care context.",
+        "Distinguish date of birth from admission, discharge, appointment, treatment and report dates.",
+        "Route these values to review-selected policy rather than irreversible blind replacement."
+      ]
+    },
+    {
+      "id": "care_collision_prevention",
+      "route": "care_collision_guard",
+      "entities": [
+        "NL_AGB_CODE"
+      ],
+      "requirements": [
+        "Recognize AGB only with strong AGB/provider/practice context.",
+        "Prevent an eight-digit AGB value from being accepted as BSN in the same labeled span.",
+        "Prevent room numbers, dosages, times, vital signs and lab values from becoming care identifiers.",
+        "Make overlapping recognizer precedence deterministic and testable."
+      ]
+    },
+    {
+      "id": "clinical_preservation_guards",
+      "route": "care_collision_guard",
+      "entities": [],
+      "requirements": [
+        "Preserve diagnosis, symptoms, medication, dosage, administration schedules, lab values and units.",
+        "Preserve observations, vital signs, allergies, treatment, care goals and professional role words.",
+        "Keep rare-case indirect identifiability in audit evidence rather than blind pattern masking.",
+        "Run negative contracts across all eight synthetic document families."
+      ]
+    }
+  ],
+  "next_workpackage": "SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS"
+}
