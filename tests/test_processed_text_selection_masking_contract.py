@@ -18,11 +18,14 @@ def _fixture() -> dict:
     return json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
 
 
-def test_contract_is_approved_all_exact_and_action_model_gated():
+def test_contract_is_approved_all_exact_and_component_spike_gated():
     text = _contract_text()
     fixture = _fixture()
 
-    assert "Status: approved contract; pure action model implemented and test-gated" in text
+    assert (
+        "Status: approved contract; action model and non-mutating component spike "
+        "implemented and test-gated"
+    ) in text
     assert "all safe exact occurrences" in text
     assert fixture["scope"] == "all_exact"
     assert "occurrence-specific masking" in text
@@ -190,10 +193,13 @@ def test_security_contract_adds_no_external_or_browser_persistence_path():
         assert security[key] is False
 
 
-def test_contract_promotes_only_the_non_mutating_component_spike_next():
+def test_contract_promotes_only_sequential_table_integration_next():
     text = _contract_text()
 
-    assert "SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL" in text
     assert "The action model is implemented in `selection_mask_action.py`" in text
-    assert "next permitted package is the non-mutating component spike" in text
-    assert "table or Streamlit integration remains prohibited until that proof is green" in text
+    assert "isolated Streamlit v1 component spike proves UTF-16 selection transport" in text
+    assert "next permitted package is sequential table integration" in text
+    assert (
+        "review table, manual fallback and unchanged export/Scrub Key/reinsert "
+        "semantics remain mandatory"
+    ) in text
