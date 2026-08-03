@@ -17,16 +17,21 @@ The final local Windows desktop/offline installer phase now records an AI-first 
 ## Files changed
 
 - `ROADMAP.md`
+- `DESKTOP_PACKAGING_DECISION.md`
+- `DECISION_LOG.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
 
 ## Tests
 
 - Documentation content and Phase 9 gate reviewed against the existing local-runtime and desktop-packaging decisions.
+- Normal repository regression workflow completed successfully.
 - No product tests added or required; no product code changed.
 
 ## Validation
 
-- Validation status: roadmap and execution-model documents added on a dedicated branch.
-- GitHub Actions: pending PR validation.
+- Validation status: documentation consistency checks passed.
+- GitHub Actions: Tests run #1810 passed.
 - Hugging Face sync: not functionally relevant; no runtime files changed.
 - App verification: not applicable.
 
