@@ -118,10 +118,9 @@
   }
 
   function intersectsMarkedSpan(start, end, spans) {
-    return normalizeUtf16Spans(" ".repeat(Math.max(end, 0)), []).length === 0 &&
-      (Array.isArray(spans) ? spans : []).some(function (span) {
-        return rangesOverlap(start, end, Number(span[0]), Number(span[1]));
-      });
+    return (Array.isArray(spans) ? spans : []).some(function (span) {
+      return rangesOverlap(start, end, Number(span[0]), Number(span[1]));
+    });
   }
 
   function trimOuterWhitespace(text, start, end) {
@@ -190,9 +189,11 @@
       text: trimmed.text,
       start_utf16: trimmed.start_utf16,
       end_utf16: trimmed.end_utf16,
-      intersects_marked_content: normalizedSpans.some(function (span) {
-        return rangesOverlap(trimmed.start_utf16, trimmed.end_utf16, span[0], span[1]);
-      }),
+      intersects_marked_content: intersectsMarkedSpan(
+        trimmed.start_utf16,
+        trimmed.end_utf16,
+        normalizedSpans,
+      ),
     };
   }
 
