@@ -1,3 +1,4 @@
+# Execute through the existing pull-request test workflow.
 # Explicit second push after the closeout workflow exists.
 from __future__ import annotations
 
