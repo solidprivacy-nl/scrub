@@ -356,6 +356,11 @@ Omschrijving: de avonddosering apixaban 5 mg is om 20:00 uur niet toegediend. De
 ]
 
 
+from care_test_example_expansions import expand_case_texts as _expand_case_texts
+
+TEST_CASES = _expand_case_texts(TEST_CASES)
+
+
 def get_case(case_id: str) -> Dict[str, Any]:
     """Return one synthetic case by stable ID."""
 

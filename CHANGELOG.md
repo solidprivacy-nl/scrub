@@ -1,3 +1,43 @@
+## 2026-08-03 22:17 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS
+
+Status: implemented; validation pending.
+
+Purpose:
+- Give Zorgfilter testers realistic long-form care documents instead of examples that stop after one short clinical paragraph.
+
+Files added:
+- `care_test_example_expansions.py`
+- `tests/test_care_profile_long_form_corpus.py`
+- `CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS.md`
+- `workpackage_claims/scrub_wp_care_profile_long_form_synthetic_corpus.md`
+- `handover/workpackages/20260803_2217_care_profile_long_form_synthetic_corpus.md`
+
+Files changed:
+- `care_test_examples.py`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `RISK_REGISTER.md`
+
+Implementation result:
+- retained all eight stable care-document IDs, names, sectors and document types;
+- retained every replace, review-selected, preserve, audit-only and ambiguity-trap contract;
+- appended five document-specific sections and at least two hundred words of synthetic care context to every example;
+- kept the additions free of digits and new names, identifiers, dates, addresses, contact details, organizations and locations;
+- exposed the expanded texts through the existing Zorgfilter example selector without changing the selector or Streamlit flow;
+- added tests for length, structure, non-mutation, identity-marker absence, exact expected-value occurrence and UI-adapter parity.
+
+Validation:
+- targeted and full GitHub Actions pending;
+- Hugging Face sync pending after merge;
+- app verification required because visible example content changed.
+
+Intentionally not changed:
+- recognizers, thresholds, profile composition or collision precedence;
+- review selection or replacement-table behavior;
+- export filenames, MIME types or formats;
+- Scrub Key schema, binding, warnings or lifecycle;
+- reinsert behavior, dependencies, cloud processing or production claims.
+
 ## 2026-08-03 19:12 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_APP_VERIFY
 
 Status: completed and app-verified after technical deployment verification.

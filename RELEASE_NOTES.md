@@ -1,3 +1,15 @@
+## 2026-08-03 — Langere synthetische zorgvoorbeelden
+
+- De acht voorbeelden onder `Zorgcontrole — streng` bevatten nu langere, realistisch opgebouwde zorgteksten.
+- Elk voorbeeld krijgt vijf herkenbare inhoudssecties, bijvoorbeeld observaties, beoordeling, zorgacties en vervolgafspraken.
+- De bestaande synthetische namen, nummers en andere testwaarden blijven gelijk, zodat herkenningsresultaten vergelijkbaar blijven.
+- De extra tekst introduceert geen nieuwe persoonsnamen, identificatienummers, data, adressen of contactgegevens.
+- Diagnose, medicatie, observaties, laboratoriuminformatie en andere klinische betekenis blijven leesbare testcontext.
+- Herkenning, vervangtabel, export, Scrub Key en terugzetten zijn niet gewijzigd.
+- Menselijke controle blijft noodzakelijk; de voorbeelden zijn synthetische testdocumenten en geen productiebenchmark.
+
+---
+
 ## 2026-08-03 — Zorgcontrole toegevoegd aan het prototype
 
 - De controlemodus krijgt een vierde keuze: `Zorgcontrole — streng`.
