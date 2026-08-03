@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-08-03 — Phase 9 local desktop packaging remains gated, with an AI-first implementation model and explicit human signing, release, security-claim and UX-acceptance gates.
+Last roadmap strategy update: 2026-08-03 — Zorgfilter v1 is approved as an evidence-driven profile line; policy and synthetic corpus work may proceed while recognizer and UI integration remain sequential and test-gated.
 
 ---
 
@@ -411,3 +411,99 @@ When the phase is explicitly opened, use small sequential workpackages:
 ```
 
 Do not collapse signing, release and security acceptance into the same autonomous worker. Do not make a production/local-only claim from successful packaging alone.
+
+## 11. Zorgfilter v1 — evidence-driven care profile
+
+Approved: 2026-08-03 15:31 Europe/Amsterdam
+
+The first product wedge already identifies Legal and Zorg as the most relevant Dutch professional domains. Zorg now receives an explicit profile line rather than remaining an incidental subset of general and legal recognition.
+
+### Approved policy
+
+```text
+Geboortedatum: vervangen
+Overige exacte zorgdata: controleren en standaard geselecteerd
+Patiënt- en cliëntidentificatie: vervangen
+Zorgverleneridentificatie: controleren en standaard geselecteerd
+Diagnose, medicatie, dosering, labwaarden en observaties: behouden
+Zeldzame-casus-herleidbaarheid: auditwaarschuwing, niet blind maskeren
+```
+
+The core product rule is:
+
+```text
+Remove identity and patient-specific administrative references while preserving clinical meaning.
+```
+
+Zorgfilter v1 is not a generic medical-word filter. It must not make care records clinically unreadable.
+
+### Initial document scope
+
+- daily nursing/care reports;
+- care plans and evaluations;
+- nursing transfers;
+- medical specialist discharge letters;
+- GP referrals and consultation letters;
+- medication overviews or administration lists;
+- laboratory reports;
+- MIC/MIM/VIM care-incident reports.
+
+### Architecture and sequencing
+
+The first packages are pure helper, policy, corpus and evidence work. They may proceed without reopening the shared Streamlit review/export flow. The future current-UI integration is permitted by explicit coordinator approval, but only after the corpus baseline, gap triage, recognizer contracts and recognizer implementation are green and no parallel worker is editing the same UI surface.
+
+Preferred helper direction:
+
+```text
+care_profile_policy.py
+care_test_examples.py
+care_profile_baseline.py
+care_reference_taxonomy.py
+dutch_care_recognizers.py
+recognition_profiles.py
+```
+
+The existing broad `NL_HEALTHCARE_REFERENCE` category must be assessed and split. Patient numbers, referral references, insurance identifiers and DBC/clinical codes do not share one safe default action.
+
+### Current and final interface direction
+
+Current prototype after test-gated integration:
+
+```text
+Zorgcontrole — streng
+Juridische controle — streng
+Algemene Nederlandse controle
+Algemene internationale controle
+```
+
+Final desktop workspace:
+
+```text
+[ Algemeen NL ] [ Zorg ] [ Juridisch ] [ Internationaal ]
+```
+
+The active profile remains visible in the document toolbar and never changes silently.
+
+### Sequential workpackages
+
+```text
+1. SCRUB-WP_CARE_PROFILE_V1_POLICY_AND_CORPUS_FOUNDATION
+2. SCRUB-WP_CARE_PROFILE_CURRENT_ENGINE_BASELINE
+3. SCRUB-WP_CARE_PROFILE_GAP_TRIAGE
+4. SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS
+5. SCRUB-WP_CARE_PROFILE_RECOGNIZER_IMPLEMENTATION
+6. SCRUB-WP_RECOGNITION_PROFILE_CONFIGURATION_REFACTOR
+7. SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION
+8. SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX
+9. SCRUB-WP_CARE_PROFILE_APP_VERIFY
+10. SCRUB-WP_CARE_PROFILE_DESKTOP_UX_CONTRACT
+```
+
+Safety boundaries:
+
+- synthetic data only;
+- no blind masking of clinical meaning;
+- no change to Scrub Key, export or reinsert semantics without a separate package;
+- human review remains required;
+- corpus or benchmark success does not prove production readiness;
+- no cloud document processing is introduced.

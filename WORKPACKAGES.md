@@ -1,3 +1,41 @@
+## 2026-08-03 15:31 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_V1_POLICY_AND_CORPUS_FOUNDATION
+
+Status: completed; policy/corpus foundation implemented and validated.
+
+Goal:
+- Establish the approved Zorgfilter v1 policy and a fully synthetic, machine-readable care-document corpus before adding recognizers or UI.
+
+Current package scope:
+- roadmap, decision and risk alignment;
+- pure care-profile action contract;
+- eight synthetic care-document families;
+- corpus contract tests;
+- current custom-recognizer baseline helper and report generator.
+
+Approved policy:
+- date of birth and patient/client identity: replace;
+- other exact care dates and provider identity: review, selected by default;
+- diagnosis, medication, dosage, lab results and observations: preserve;
+- rare-case re-identification: audit warning only.
+
+Active next package:
+1. `SCRUB-WP_CARE_PROFILE_CURRENT_ENGINE_BASELINE`
+2. `SCRUB-WP_CARE_PROFILE_GAP_TRIAGE`
+3. `SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS`
+4. `SCRUB-WP_CARE_PROFILE_RECOGNIZER_IMPLEMENTATION`
+5. `SCRUB-WP_RECOGNITION_PROFILE_CONFIGURATION_REFACTOR`
+6. `SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION`
+7. `SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX`
+8. `SCRUB-WP_CARE_PROFILE_APP_VERIFY`
+9. `SCRUB-WP_CARE_PROFILE_DESKTOP_UX_CONTRACT`
+
+Boundaries:
+- no Streamlit change in this package;
+- no recognizer behavior change yet;
+- no export, Scrub Key, reinsert, cloud or dependency change;
+- synthetic data only;
+- current Phase 6 binding verification remains an independent active gate.
+
 ## 2026-08-03 14:47 Europe/Amsterdam — SCRUB-WP_AI_FIRST_DESKTOP_PACKAGING_ROADMAP_ALIGNMENT
 
 Status: completed; documentation/strategy alignment only.
