@@ -17,8 +17,9 @@ def test_plan_exists_and_is_planning_only():
 
 def test_plan_keeps_review_table_authoritative():
     text = _plan()
-    assert "review table remains the source of truth and fallback" in text.lower()
-    assert "existing manual replacement path" in text.lower()
+    lowered = text.lower()
+    assert "review table remains the source of truth and fallback" in lowered
+    assert "already verified manual-mask path" in lowered
 
 
 def test_first_version_is_all_exact_only():
@@ -39,7 +40,7 @@ def test_component_is_bounded_and_server_authoritative():
     text = _plan()
     assert "bidirectional Streamlit custom component" in text
     assert "Frontend values are untrusted input" in text
-    assert "The browser component may not" in text
+    assert "The component may not" in text
     assert "Python remains authoritative" in text
 
 
