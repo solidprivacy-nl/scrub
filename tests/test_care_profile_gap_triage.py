@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from care_profile_gap_triage import (
     ROUTE_CARE_RECLASSIFICATION,
     ROUTE_CARE_REFERENCE,
@@ -7,6 +10,10 @@ from care_profile_gap_triage import (
     ROUTE_REUSE_CURRENT,
     build_care_profile_gap_triage,
 )
+from care_profile_gap_triage_summary import build_care_profile_gap_triage_summary
+
+
+TRIAGE_PATH = Path("output/validation/care_profile_v1_gap_triage.json")
 
 
 def test_gap_triage_classifies_every_baseline_expectation():
@@ -112,3 +119,8 @@ def test_contract_families_include_clinical_preservation_guards():
         for requirement in families["clinical_preservation_guards"]["requirements"]
     )
     assert report["next_workpackage"] == "SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS"
+
+
+def test_committed_gap_triage_summary_is_reproducible():
+    committed = json.loads(TRIAGE_PATH.read_text(encoding="utf-8"))
+    assert committed == build_care_profile_gap_triage_summary()
