@@ -1,3 +1,56 @@
+## 2026-08-04 01:00 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE
+
+Status: completed; technical validation green.
+
+Purpose:
+- Prove the browser/component layer before connecting selection events to the production replacement table.
+
+Files added:
+- `processed_text_selection_component.py`
+- `processed_text_selection_component_spike_demo.py`
+- `frontend/processed_text_selection_component/index.html`
+- `frontend/processed_text_selection_component/styles.css`
+- `frontend/processed_text_selection_component/streamlit_bridge.js`
+- `frontend/processed_text_selection_component/component_core.js`
+- `frontend/processed_text_selection_component/component.js`
+- `frontend/processed_text_selection_component/NOTICE.md`
+- `tests/test_processed_text_selection_component_spike.py`
+- `tests/frontend/processed_text_selection_component_core.test.js`
+- `PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE.md`
+- `workpackage_claims/scrub_wp_processed_text_selection_component_spike.md`
+- `handover/workpackages/20260804_0100_processed_text_selection_component_spike.md`
+
+Files changed:
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `RISK_REGISTER.md`
+
+Implementation:
+- local lazy Streamlit Components v1 wrapper on pinned Streamlit 1.39;
+- Python code-point highlight validation and conversion to UTF-16 browser offsets;
+- safe text-node rendering and marked segments;
+- DOM selection offsets across plain and marked text nodes;
+- synchronized scrolling and scroll restoration;
+- right-click, keyboard and visible selection entry points;
+- accessible type/confirmation menu;
+- inspect event, server result and commit-intent transport;
+- standalone synthetic inspection-only demo;
+- no runtime build step, external assets, network, storage or telemetry.
+
+Validation:
+- run #1977: 1126 tests passed in 13.83s;
+- Streamlit 1.39 smoke run #1979: 1126 tests passed in 13.79s;
+- AppTest completed without script exceptions;
+- local server health `ok`, root HTML and startup log checks passed;
+- clean post-governance standard run #1989: 1126 tests passed in 10.87s.
+
+Intentionally not changed:
+- `presidio_streamlit.py` and production side-by-side renderer;
+- replacement table, exports, Scrub Key or reinsert;
+- recognizers, profiles, dependencies or cloud processing;
+- occurrence-specific masking.
+
 ## 2026-08-04 00:30 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
 
 Status: completed; validation green.
