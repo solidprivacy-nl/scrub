@@ -1,0 +1,58 @@
+name: Verify corrected Zorgfilter Hugging Face sync
+
+on:
+  push:
+    branches:
+      - scrub-care-profile-app-verify
+    paths:
+      - .github/workflows/verify-care-profile-hf-sync-v2.yml
+      - ops/verify_care_profile_hf_sync_v2.py
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout verification branch
+        uses: actions/checkout@v4
+        with:
+          ref: scrub-care-profile-app-verify
+          fetch-depth: 0
+
+      - name: Verify corrected Hugging Face synchronization
+        run: python ops/verify_care_profile_hf_sync_v2.py
+
+      - name: Commit verification evidence and self-cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No verification evidence to commit"
+            exit 1
+          fi
+          git commit -m "Correct Zorgfilter Hugging Face sync verification"
+          git push origin HEAD:scrub-care-profile-app-verify
+
+      - name: Enforce verified synchronization
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(
+              Path("output/validation/care_profile_hf_sync_verification.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          assert report["all_files_exact_match"] is True, report
+          assert report["all_markers_match"] is True, report
+          assert report["sync_verified"] is True, report
+          assert report["technical_deployment_verified"] is True, report
+          assert report["functional_app_verification"] is False
+          print(
+              f"Verified {report['verified_file_count']}/"
+              f"{report['checked_file_count']} files and Space health."
+          )
+          PY
