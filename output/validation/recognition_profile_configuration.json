@@ -1,0 +1,193 @@
+{
+  "schema_version": "1.0",
+  "profile_count": 4,
+  "current_visible_profile_ids": [
+    "dutch_legal_strict",
+    "dutch_general",
+    "general_international"
+  ],
+  "current_visible_options": [
+    {
+      "label_nl": "Juridische controle — streng",
+      "internal_value": "Dutch Legal Strict"
+    },
+    {
+      "label_nl": "Algemene Nederlandse controle",
+      "internal_value": "Dutch / EU"
+    },
+    {
+      "label_nl": "Algemene internationale controle",
+      "internal_value": "General / International"
+    }
+  ],
+  "target_streamlit_profile_ids": [
+    "dutch_care_strict",
+    "dutch_legal_strict",
+    "dutch_general",
+    "general_international"
+  ],
+  "target_streamlit_options": [
+    {
+      "label_nl": "Zorgcontrole — streng",
+      "internal_value": "Dutch Care Strict"
+    },
+    {
+      "label_nl": "Juridische controle — streng",
+      "internal_value": "Dutch Legal Strict"
+    },
+    {
+      "label_nl": "Algemene Nederlandse controle",
+      "internal_value": "Dutch / EU"
+    },
+    {
+      "label_nl": "Algemene internationale controle",
+      "internal_value": "General / International"
+    }
+  ],
+  "desktop_profile_ids": [
+    "dutch_general",
+    "dutch_care_strict",
+    "dutch_legal_strict",
+    "general_international"
+  ],
+  "desktop_short_options": [
+    {
+      "label_nl": "Algemeen NL",
+      "profile_id": "dutch_general"
+    },
+    {
+      "label_nl": "Zorg",
+      "profile_id": "dutch_care_strict"
+    },
+    {
+      "label_nl": "Juridisch",
+      "profile_id": "dutch_legal_strict"
+    },
+    {
+      "label_nl": "Internationaal",
+      "profile_id": "general_international"
+    }
+  ],
+  "exact_span_precedence_winner_count": 15,
+  "profiles": [
+    {
+      "profile_id": "dutch_care_strict",
+      "internal_value": "Dutch Care Strict",
+      "label_nl": "Zorgcontrole — streng",
+      "short_label_nl": "Zorg",
+      "threshold": 0.3,
+      "entity_groups": [
+        "base",
+        "dutch_general",
+        "dutch_care"
+      ],
+      "candidate_scanner": "care",
+      "example_collection": "care"
+    },
+    {
+      "profile_id": "dutch_legal_strict",
+      "internal_value": "Dutch Legal Strict",
+      "label_nl": "Juridische controle — streng",
+      "short_label_nl": "Juridisch",
+      "threshold": 0.3,
+      "entity_groups": [
+        "base",
+        "dutch_general",
+        "dutch_legal"
+      ],
+      "candidate_scanner": "legal",
+      "example_collection": "legal"
+    },
+    {
+      "profile_id": "dutch_general",
+      "internal_value": "Dutch / EU",
+      "label_nl": "Algemene Nederlandse controle",
+      "short_label_nl": "Algemeen NL",
+      "threshold": 0.35,
+      "entity_groups": [
+        "base",
+        "dutch_general"
+      ],
+      "candidate_scanner": null,
+      "example_collection": null
+    },
+    {
+      "profile_id": "general_international",
+      "internal_value": "General / International",
+      "label_nl": "Algemene internationale controle",
+      "short_label_nl": "Internationaal",
+      "threshold": 0.35,
+      "entity_groups": [
+        "all_supported"
+      ],
+      "candidate_scanner": null,
+      "example_collection": null
+    }
+  ],
+  "care_exact_span_supersedes": {
+    "NL_AGB_CODE": [
+      "NL_BSN"
+    ],
+    "NL_CARE_CLIENT_NUMBER": [
+      "NL_CLIENT_NUMBER",
+      "NL_CLIENT_REFERENCE",
+      "NL_HEALTHCARE_REFERENCE"
+    ],
+    "NL_CARE_EVENT_DATE": [
+      "DATE_TIME"
+    ],
+    "NL_CARE_INCIDENT_NUMBER": [
+      "NL_HEALTHCARE_REFERENCE",
+      "NL_INCIDENT_NUMBER",
+      "NL_OTHER_REFERENCE"
+    ],
+    "NL_CARE_INDICATION_REFERENCE": [
+      "NL_CHILD_PROTECTION_REFERENCE",
+      "NL_CONTEXTUAL_REFERENCE",
+      "NL_HEALTHCARE_REFERENCE"
+    ],
+    "NL_CARE_LOCATION_REFERENCE": [
+      "LOCATION"
+    ],
+    "NL_CARE_ORGANIZATION": [
+      "ORGANIZATION"
+    ],
+    "NL_CARE_PROVIDER_NAME": [
+      "PERSON"
+    ],
+    "NL_EPD_ECD_NUMBER": [
+      "NL_CONTEXTUAL_REFERENCE",
+      "NL_HEALTHCARE_REFERENCE"
+    ],
+    "NL_HEALTH_INSURANCE_NUMBER": [
+      "NL_HEALTHCARE_REFERENCE",
+      "NL_INSURANCE_REFERENCE"
+    ],
+    "NL_LAB_SAMPLE_NUMBER": [
+      "NL_CONTEXTUAL_REFERENCE",
+      "NL_HEALTHCARE_REFERENCE"
+    ],
+    "NL_MEDICAL_RECORD_NUMBER": [
+      "NL_DOSSIER_NUMBER",
+      "NL_HEALTHCARE_REFERENCE"
+    ],
+    "NL_PATIENT_NUMBER": [
+      "NL_CONTEXTUAL_REFERENCE",
+      "NL_DOSSIER_NUMBER",
+      "NL_HEALTHCARE_REFERENCE"
+    ],
+    "NL_REFERRAL_NUMBER": [
+      "NL_CONTEXTUAL_REFERENCE",
+      "NL_HEALTHCARE_REFERENCE"
+    ],
+    "NL_TREATMENT_REFERENCE": [
+      "NL_CONTEXTUAL_REFERENCE",
+      "NL_HEALTHCARE_REFERENCE"
+    ]
+  },
+  "live_ui_changed": false,
+  "care_recognizers_registered": false,
+  "production_ready": false,
+  "human_review_required": true,
+  "next_workpackage": "SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION"
+}
