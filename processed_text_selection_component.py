@@ -22,7 +22,7 @@ def normalize_highlight_spans(
     text: str,
     spans: Iterable[Sequence[int]] | None,
 ) -> tuple[tuple[int, int], ...]:
-    """Validate and normalize non-overlapping Python-codepoint highlight spans."""
+    """Validate sorted, non-overlapping Python-codepoint highlight spans."""
 
     normalized: list[tuple[int, int]] = []
     previous_end = 0
@@ -45,6 +45,31 @@ def normalize_highlight_spans(
     return tuple(normalized)
 
 
+def python_index_to_utf16_offset(text: str, index: int) -> int:
+    """Convert a Python code-point index to a browser UTF-16 code-unit offset."""
+
+    if isinstance(index, bool) or not isinstance(index, int):
+        raise ValueError("text index must be an integer")
+    if index < 0 or index > len(text):
+        raise ValueError("text index falls outside the text")
+    return len(text[:index].encode("utf-16-le")) // 2
+
+
+def highlight_spans_to_utf16(
+    text: str,
+    spans: Iterable[Sequence[int]] | None,
+) -> tuple[tuple[int, int], ...]:
+    """Validate Python spans and convert them to the browser coordinate system."""
+
+    return tuple(
+        (
+            python_index_to_utf16_offset(text, start),
+            python_index_to_utf16_offset(text, end),
+        )
+        for start, end in normalize_highlight_spans(text, spans)
+    )
+
+
 def build_component_args(
     *,
     source_text: str,
@@ -58,11 +83,11 @@ def build_component_args(
 ) -> dict[str, Any]:
     """Build the JSON-only argument object passed to the frontend component."""
 
-    normalized_spans = normalize_highlight_spans(processed_text, highlight_spans)
+    utf16_spans = highlight_spans_to_utf16(processed_text, highlight_spans)
     return {
         "source_text": str(source_text),
         "processed_text": str(processed_text),
-        "highlight_spans": [list(span) for span in normalized_spans],
+        "highlight_spans": [list(span) for span in utf16_spans],
         "document_scope_key": str(document_scope_key),
         "processed_text_hash": str(processed_text_hash),
         "inspection_result": dict(inspection_result or {}),
@@ -73,6 +98,7 @@ def build_component_args(
             "inspect_action": "inspect_selection",
             "commit_action": "commit_manual_mask",
             "requested_scope": "all_exact",
+            "highlight_offset_unit": "utf16_code_units",
             "non_mutating_spike": True,
         },
     }
@@ -135,6 +161,7 @@ def component_spike_contract() -> dict[str, Any]:
         "renders_source_and_processed": True,
         "synchronized_scroll": True,
         "selection_offset_unit": "utf16_code_units",
+        "highlight_offset_conversion": "python_codepoints_to_utf16",
         "context_menu": True,
         "visible_fallback": "Masker selectie",
         "keyboard_fallbacks": ["Shift+F10", "ContextMenu"],
