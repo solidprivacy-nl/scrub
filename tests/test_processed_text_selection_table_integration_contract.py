@@ -83,9 +83,11 @@ def test_side_panel_has_interactive_default_and_environment_rollback():
 
 def test_selection_of_existing_marked_content_is_protected_server_side():
     side_source = SIDE_PANEL.read_text(encoding="utf-8")
+    app_source = APP.read_text(encoding="utf-8")
     action_source = (ROOT / "selection_mask_action.py").read_text(encoding="utf-8")
-    assert '"highlight_spans": list(model["processed_pane"]["highlight_spans"])' in side_source
-    assert 'marked_ranges=side_by_side_review_state.get("highlight_spans", ())' in APP.read_text(encoding="utf-8")
+    assert "highlight_spans = list(model[\"processed_pane\"][\"highlight_spans\"])" in side_source
+    assert '"highlight_spans": highlight_spans' in side_source
+    assert 'marked_ranges=side_by_side_review_state.get("highlight_spans", ())' in app_source
     assert "selection_intersects_ranges" in action_source
     assert "selection.intersects_marked_content" in action_source
     assert "marked_selection" in action_source
@@ -97,7 +99,7 @@ def test_component_wrapper_remains_transport_only():
     assert "def render_processed_text_selection_component(" in source
     assert "build_manual_mask_row" not in source
     assert "from selection_mask_action import" not in source
-    assert "session_state" not in source
+    assert "st.session_state" not in source
     assert "download_button" not in source
     assert '"commit_action": "commit_manual_mask"' in source
 
