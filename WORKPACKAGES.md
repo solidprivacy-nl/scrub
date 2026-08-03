@@ -1,3 +1,65 @@
+## 2026-08-04 01:00 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE
+
+Status: completed; technical validation green.
+
+Dependency:
+- action model merged through PR #61 as `3e0e5be9457654d3dfb6e52e0e701a08b438a4d9`.
+
+Goal:
+- Prove a local bidirectional Streamlit v1 component can transport safe processed-text selections and server inspection results without mutating production state.
+
+Implementation result:
+
+```text
+Local Streamlit v1 wrapper: implemented
+Local dependency-free frontend assets: implemented
+Python-codepoint → UTF-16 highlight conversion: implemented
+Selection offsets across plain/marked nodes: implemented
+Synchronized scroll: implemented
+Right-click + Shift+F10 + ContextMenu + visible fallback: implemented
+Accessible menu and ARIA status: implemented
+inspect_selection event: implemented
+Server inspection result display: implemented
+commit_manual_mask intent: implemented
+Actual commit/table mutation: deliberately absent
+Production renderer integration: absent
+External assets/network/storage/telemetry: absent
+```
+
+Files added:
+- `processed_text_selection_component.py`
+- `processed_text_selection_component_spike_demo.py`
+- `frontend/processed_text_selection_component/`
+- `tests/test_processed_text_selection_component_spike.py`
+- `tests/frontend/processed_text_selection_component_core.test.js`
+- `PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE.md`
+- `workpackage_claims/scrub_wp_processed_text_selection_component_spike.md`
+- `handover/workpackages/20260804_0100_processed_text_selection_component_spike.md`
+
+Files changed:
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+
+Validation:
+- standard run #1977: 1126 tests passed in 13.83s;
+- dedicated Streamlit 1.39 smoke run #1979: 1126 tests passed in 13.79s;
+- AppTest: no script exceptions;
+- local server health: `ok`;
+- root HTML and startup log checks: passed;
+- final clean standard regression pending after governance/workflow restoration.
+
+Next permitted package:
+- `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`
+
+Boundaries:
+- no production UI or replacement-table mutation;
+- no export, Scrub Key, reinsert, recognizer or profile change;
+- no Streamlit upgrade, new runtime dependency or external asset;
+- no occurrence-specific masking.
+
 ## 2026-08-04 00:30 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
 
 Status: completed; GitHub Actions green.
