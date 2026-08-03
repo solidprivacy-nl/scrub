@@ -90,7 +90,7 @@ Dependency-free Node tests cover:
 
 ## GitHub Actions status
 
-Green. Standard run #1977 passed 1126 tests in 13.83s; dedicated Streamlit smoke run #1979 passed 1126 tests in 13.79s with AppTest and local health checks; clean post-governance run #1989 passed 1126 tests in 10.87s.
+Green. Standard run #1977 passed 1126 tests in 13.83s; dedicated Streamlit smoke run #1979 passed 1126 tests in 13.79s with AppTest and local health checks; clean post-governance run #1989 passed 1126 tests in 10.87s. This connector-authored closeout commit triggers one final standard regression on the exact merge candidate.
 
 ## Hugging Face sync status
 
