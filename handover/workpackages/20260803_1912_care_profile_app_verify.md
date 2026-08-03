@@ -2,13 +2,13 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Workpackage title: Zorgfilter v1 deployed app verification  
-Status: completed and app-verified after technical deployment verification
+Status: completed, merged and app-verified after technical deployment verification
 
 ## Summary
 
 Opened the verification-only package after the Zorgfilter UI integration and cross-profile matrix were merged. An independent GitHub Actions workflow compared twelve relevant files between GitHub `main` at merge commit `cca4a25aaff28a7ba647c961d8e50f0e076921e2` and Hugging Face Space `solidprivacy/scrub`, verified the correctly scoped Zorgfilter markers and checked the live Streamlit health endpoint.
 
-The technical deployment is verified. No product code was changed. The coordinator/user confirmed `alles groen` at 2026-08-03 20:35 Europe/Amsterdam, completing the functional closeout.
+The technical deployment is verified. No product code was changed. The coordinator/user confirmed `alles groen` at 2026-08-03 20:35 Europe/Amsterdam, completing the functional closeout. Verification-only PR #55 was merged to `main` as `bd89398ace9d12934ff0516999d5716a9dd72b88`.
 
 ## Files added
 
@@ -73,16 +73,19 @@ Human review required:        true
 - PR #55 pre-closeout run #1909: 998 tests passed in 10.45s.
 - PR #55 confirmed-evidence closeout run #1917: 998 tests passed in 9.87s.
 - PR #55 final clean run #1918: 998 tests passed in 10.02s.
+- PR #55 post-recording run #1919: 998 tests passed in 10.05s.
 
 ## Hugging Face sync status
 
-Verified independently:
+Verified independently for the underlying runtime integration:
 
 - GitHub `main` commit: `cca4a25aaff28a7ba647c961d8e50f0e076921e2`;
 - Hugging Face Space: `solidprivacy/scrub`;
 - twelve relevant source files are byte-for-byte equal;
 - all correctly scoped Zorgfilter markers are present;
 - the live Space health endpoint is healthy.
+
+PR #55 changed verification evidence, tests and governance only; it introduced no new runtime or UI behavior requiring renewed functional app verification.
 
 ## App verification status
 
@@ -98,4 +101,4 @@ Confirmed. The coordinator/user reported `alles groen` at 2026-08-03 20:35 Europ
 
 ## Next recommended step
 
-Merge verification-only PR #55. Do not automatically open desktop UX or installer work; continue with the active risk-driven Phase 6 queue and explicit coordinator approval gates.
+Continue with the active risk-driven Phase 6 queue defined in `WORKPACKAGES.md`. Do not automatically open desktop UX or installer work; those remain separately gated by Phase 9 and explicit coordinator approval.
