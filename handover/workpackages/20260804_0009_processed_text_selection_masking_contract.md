@@ -2,7 +2,7 @@
 
 Repository worked in: `solidprivacy-nl/scrub`  
 Workpackage title: Freeze the processed-text selection masking interaction and safety contract  
-Status: implemented; GitHub Actions pending
+Status: implemented; clean GitHub Actions regression pending
 
 ## Summary
 
@@ -56,13 +56,14 @@ Added contract tests for:
 
 ## Validation status
 
-- GitHub Actions: pending.
+- Governance operator: applied; standard workflow restored and temporary operator removed.
+- GitHub Actions: clean PR regression pending on the definitive branch.
 - Hugging Face sync: not functionally relevant; specification/tests only.
 - App verification: not applicable; no runtime or UI behavior changed.
 
 ## GitHub Actions status
 
-Pending. The branch workflow applies the governance updates, restores the standard workflow and then runs the complete regression suite.
+A connector-authored status commit now triggers the clean PR regression after the bot-authored governance commit, which correctly does not self-trigger another workflow.
 
 ## Hugging Face sync status
 
