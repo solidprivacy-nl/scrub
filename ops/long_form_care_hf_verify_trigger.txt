@@ -1,2 +1,2 @@
-Verification trigger after workflow registration.
+Verification trigger after existing workflow branch registration.
 Target main merge: 1244663d3e69a56d6efc825a6fc019ba72d3782a
