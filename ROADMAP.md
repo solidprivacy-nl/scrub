@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-08-03 — Zorgfilter v1 is approved as an evidence-driven profile line; policy and synthetic corpus work may proceed while recognizer and UI integration remain sequential and test-gated.
+Last roadmap strategy update: 2026-08-03 — Zorgfilter v1 is app-verified, and direct selection-driven correction in the processed-text pane is recorded as a candidate review-UX line; implementation remains sequential, test-gated and subject to explicit coordinator approval.
 
 ---
 
@@ -252,6 +252,32 @@ Execution principles:
 - preserve legal meaning and keep human review mandatory;
 - do not reopen broad UI work unless validation reveals a concrete usability or safety blocker;
 - do not make production-readiness claims from prototype evidence.
+
+### Candidate document-centric manual-correction line
+
+Direct usability evidence supports a future correction path in the main processed-text pane:
+
+```text
+select an unmasked value
+→ right-click
+→ choose a masking type
+→ add through the existing manual replacement path
+```
+
+The recommended first version is bounded to all exact occurrences of the selected value. It must create a normal document-scoped manual row, keep the replacement table authoritative and preserve current bound export, Scrub Key and reinsert semantics. Occurrence-specific replacement, a rich editor and a combined Streamlit upgrade are excluded.
+
+The proposed sequence is:
+
+```text
+1. SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT
+2. SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
+3. SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE
+4. SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION
+5. SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
+6. SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY
+```
+
+This candidate line does not displace the active Phase 6 queue. No implementation package starts until the coordinator explicitly approves the plan and contract scope.
 
 Recall/benchmark work is reopened only where the synthetic validation matrix exposes a concrete false-negative, misclassification or over-masking gap.
 

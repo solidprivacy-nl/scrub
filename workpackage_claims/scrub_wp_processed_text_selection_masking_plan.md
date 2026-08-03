@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-processed-text-selection-masking-plan`  
 Claimed: 2026-08-03 23:42 Europe/Amsterdam  
-Status: in_progress
+Status: completed as planning; GitHub Actions pending
 
 ## Goal
 
