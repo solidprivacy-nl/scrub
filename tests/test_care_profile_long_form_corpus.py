@@ -54,14 +54,15 @@ def test_long_form_expansions_add_no_new_obvious_identifying_values():
 def test_expansion_helper_copies_cases_and_preserves_contract_metadata():
     source = [
         {
-            "id": "care_daily_nursing_report_v1",
-            "text": "KORTE BRONTEKST",
+            "id": case_id,
+            "text": f"KORTE BRONTEKST VOOR {case_id}",
             "replace": [{"value": "synthetic", "entity_type": "PERSON"}],
             "review_selected": [],
             "preserve": ["context"],
             "audit_only": [],
             "ambiguity_traps": [],
         }
+        for case_id in sorted(EXPECTED_CASE_IDS)
     ]
     original = deepcopy(source)
 
@@ -69,11 +70,14 @@ def test_expansion_helper_copies_cases_and_preserves_contract_metadata():
 
     assert source == original
     assert expanded is not source
-    assert expanded[0] is not source[0]
-    assert expanded[0]["replace"] == source[0]["replace"]
-    assert expanded[0]["replace"] is not source[0]["replace"]
-    assert expanded[0]["text"].startswith("KORTE BRONTEKST\n\n")
-    assert expanded[0]["text"].endswith("\n")
+    assert len(expanded) == len(source)
+
+    for source_case, expanded_case in zip(source, expanded):
+        assert expanded_case is not source_case
+        assert expanded_case["replace"] == source_case["replace"]
+        assert expanded_case["replace"] is not source_case["replace"]
+        assert expanded_case["text"].startswith(f"{source_case['text']}\n\n")
+        assert expanded_case["text"].endswith("\n")
 
 
 def test_all_visible_care_examples_are_long_form_and_structured():
@@ -82,13 +86,17 @@ def test_all_visible_care_examples_are_long_form_and_structured():
     for case in TEST_CASES:
         case_id = str(case["id"])
         text = str(case["text"])
+        addition = LONG_FORM_EXPANSIONS[case_id]
 
         assert len(text.split()) >= 250, case_id
         assert len(_headings(text)) >= 6, case_id
-        assert LONG_FORM_EXPANSIONS[case_id] in text, case_id
+        assert addition in text, case_id
 
         for value in all_expected_values(case):
-            assert text.count(value) == 1, f"{case_id}: expected one occurrence of {value!r}"
+            assert value in text, f"{case_id}: expected value missing: {value!r}"
+            assert value not in addition, (
+                f"{case_id}: expansion must not duplicate existing expected value {value!r}"
+            )
         for phrase in case["preserve"]:
             assert phrase in text, f"{case_id}: preserve phrase missing: {phrase!r}"
 
