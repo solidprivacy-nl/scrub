@@ -1,6 +1,69 @@
-from types import SimpleNamespace
+from __future__ import annotations
 
-import presidio_helpers
+import importlib.util
+import sys
+from pathlib import Path
+from types import ModuleType
+
+
+def _identity_cache_decorator(func=None, **_kwargs):
+    if func is None:
+        return lambda wrapped: wrapped
+    return func
+
+
+def _load_presidio_helpers_with_optional_dependency_stubs():
+    streamlit = ModuleType("streamlit")
+    streamlit.cache_resource = _identity_cache_decorator
+    streamlit.cache_data = _identity_cache_decorator
+
+    anonymizer = ModuleType("presidio_anonymizer")
+    anonymizer.AnonymizerEngine = type("AnonymizerEngine", (), {})
+    anonymizer_entities = ModuleType("presidio_anonymizer.entities")
+    anonymizer_entities.OperatorConfig = type("OperatorConfig", (), {})
+
+    fake_data = ModuleType("openai_fake_data_generator")
+    fake_data.call_completion_model = lambda *_args, **_kwargs: ""
+    fake_data.OpenAIParams = object
+    fake_data.create_prompt = lambda text: text
+
+    nlp_config = ModuleType("presidio_nlp_engine_config")
+    for name in (
+        "create_nlp_engine_with_spacy",
+        "create_nlp_engine_with_flair",
+        "create_nlp_engine_with_transformers",
+        "create_nlp_engine_with_azure_ai_language",
+        "create_nlp_engine_with_stanza",
+    ):
+        setattr(nlp_config, name, lambda *_args, **_kwargs: None)
+
+    stubs = {
+        "streamlit": streamlit,
+        "presidio_anonymizer": anonymizer,
+        "presidio_anonymizer.entities": anonymizer_entities,
+        "openai_fake_data_generator": fake_data,
+        "presidio_nlp_engine_config": nlp_config,
+    }
+    previous = {name: sys.modules.get(name) for name in stubs}
+    sys.modules.update(stubs)
+    try:
+        module_path = Path(__file__).resolve().parents[1] / "presidio_helpers.py"
+        spec = importlib.util.spec_from_file_location(
+            "presidio_helpers_care_registration_test_module", module_path
+        )
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    finally:
+        for name, original in previous.items():
+            if original is None:
+                sys.modules.pop(name, None)
+            else:
+                sys.modules[name] = original
+
+
+presidio_helpers = _load_presidio_helpers_with_optional_dependency_stubs()
 
 
 class Registry:
@@ -41,7 +104,7 @@ def test_custom_recognizer_registration_includes_care_without_network_behavior()
     assert "NL_AGB_CODE" in supported
 
 
-def test_registration_tolerates_one_duplicate_or_registry_failure(monkeypatch):
+def test_registration_tolerates_one_duplicate_or_registry_failure():
     analyzer = Analyzer()
     calls = []
 
