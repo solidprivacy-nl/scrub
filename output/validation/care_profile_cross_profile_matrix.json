@@ -49,7 +49,7 @@
   "generic_ner_evaluated": false,
   "human_review_required": true,
   "production_ready": false,
-  "github_actions_run": 1890,
-  "github_actions_tests_passed": 994,
+  "github_actions_run": 1899,
+  "github_actions_tests_passed": 995,
   "next_workpackage": "SCRUB-WP_CARE_PROFILE_APP_VERIFY"
 }
