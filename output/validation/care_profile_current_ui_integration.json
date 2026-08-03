@@ -24,6 +24,7 @@
   "cloud_document_processing_added": false,
   "human_review_required": true,
   "production_ready": false,
+  "governance_finalized": true,
   "github_actions_run": 1877,
   "github_actions_tests_passed": 983,
   "hugging_face_sync_status": "pending_merge",
