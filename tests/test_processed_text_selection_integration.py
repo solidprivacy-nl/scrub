@@ -18,7 +18,7 @@ from processed_text_selection_integration import (
 
 
 SCOPE = "0123456789abcdef"
-BINDING = "ABCDEFGHIJKLMNOP"
+BINDING = "BABCDEFGHIJKLMNOP"
 SOURCE = "Mevrouw Noor werkt bij Stichting Zorgpunt. Stichting Zorgpunt helpt Noor."
 PROCESSED = SOURCE
 
@@ -174,7 +174,7 @@ def test_duplicate_component_value_is_ignored_without_feedback_overwrite():
 
 def test_blocked_inspection_is_returned_to_component_and_fails_closed():
     session = {}
-    event = inspect_event(text="Noor")
+    event = inspect_event(text="Zorg")
     outcome = handle_selection_component_event(
         session,
         event,
