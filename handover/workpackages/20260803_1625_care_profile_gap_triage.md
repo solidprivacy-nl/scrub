@@ -2,7 +2,7 @@
 
 Repository: solidprivacy-nl/scrub  
 Workpackage title: Zorgfilter v1 gap triage  
-Status: implemented; validation pending
+Status: completed; ready for merge
 
 ## Summary
 
@@ -37,7 +37,8 @@ Classified all 81 current-engine care-corpus expectations into explicit follow-u
 
 ## Validation
 
-- GitHub Actions: pending.
+- GitHub Actions run #1843: 932 tests passed.
+- Final metadata-only GitHub Actions run: pending on this handover commit.
 - Hugging Face sync: not functionally relevant; no runtime/UI behavior changed.
 - App verification: not applicable.
 
