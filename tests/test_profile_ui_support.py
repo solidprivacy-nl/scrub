@@ -9,11 +9,13 @@ from profile_ui_support import (
     configured_threshold,
     current_profile_options_with_care,
     detected_reason,
+    detected_review_status,
     profile_id_for_internal_value,
     resolve_configured_analysis_results,
     scan_configured_candidates,
 )
 from recognition_profiles import PROFILE_DUTCH_CARE_STRICT
+from review_status import AUTO_DETECTED, NEEDS_REVIEW
 
 
 @dataclass
@@ -92,16 +94,27 @@ def test_profile_candidate_dispatch_is_care_specific_and_review_only():
     assert general == []
 
 
-def test_care_review_selected_entities_get_explicit_reason():
+def test_care_review_selected_entities_get_explicit_reason_and_status():
     assert detected_reason(
         "Dutch Care Strict", "NL_CARE_PROVIDER_NAME"
     ) == "Automatisch herkend — controleren"
+    assert detected_review_status(
+        "Dutch Care Strict", "NL_CARE_PROVIDER_NAME"
+    ) == NEEDS_REVIEW
+
     assert detected_reason(
         "Dutch Care Strict", "NL_PATIENT_NUMBER"
     ) == "Automatisch herkend"
+    assert detected_review_status(
+        "Dutch Care Strict", "NL_PATIENT_NUMBER"
+    ) == AUTO_DETECTED
+
     assert detected_reason(
         "Dutch Legal Strict", "NL_CARE_PROVIDER_NAME"
     ) == "Automatisch herkend"
+    assert detected_review_status(
+        "Dutch Legal Strict", "NL_CARE_PROVIDER_NAME"
+    ) == AUTO_DETECTED
 
 
 def test_synthetic_care_examples_are_available_by_stable_name():
