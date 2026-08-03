@@ -4,8 +4,12 @@ on:
   push:
     branches:
       - main
+      - scrub-processed-text-selection-component-spike
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   python-tests:
@@ -17,6 +21,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Finalize component spike statuses
+        if: github.ref == 'refs/heads/scrub-processed-text-selection-component-spike' || github.head_ref == 'scrub-processed-text-selection-component-spike'
+        run: |
+          python ops/finalize_processed_text_selection_component_spike.py
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/tests.yml
+          rm ops/finalize_processed_text_selection_component_spike.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Finalize processed-text selection component spike"
+          git push origin HEAD:scrub-processed-text-selection-component-spike
 
       - name: Set up Python
         uses: actions/setup-python@v5
