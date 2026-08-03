@@ -16,6 +16,16 @@ def matrix():
     return build_cross_profile_matrix()
 
 
+def _failure_lines(matrix):
+    return "\n".join(
+        (
+            f"{item['category']} | {item['profile_id']} | "
+            f"{item['case_id']} | {item['detail']}"
+        )
+        for item in matrix["hard_failures"]
+    )
+
+
 def test_cross_profile_matrix_is_synthetic_and_keeps_safety_gates_closed(matrix):
     assert matrix["schema_version"] == "1.0"
     assert matrix["synthetic_data_only"] is True
@@ -46,7 +56,7 @@ def test_care_and_international_find_all_dedicated_care_expectations(matrix):
 
 def test_legal_and_international_retain_legal_expectations(matrix):
     assert matrix["legal_expected_total"] > 0
-    assert matrix["legal_expected_found"] == matrix["legal_expected_total"]
+    assert matrix["legal_expected_found"] == matrix["legal_expected_total"], _failure_lines(matrix)
 
 
 def test_no_profile_overlaps_protected_clinical_phrases(matrix):
@@ -54,7 +64,7 @@ def test_no_profile_overlaps_protected_clinical_phrases(matrix):
 
 
 def test_cross_profile_matrix_has_no_hard_failures(matrix):
-    assert matrix["hard_failure_count"] == 0, matrix["hard_failures"]
+    assert matrix["hard_failure_count"] == 0, _failure_lines(matrix)
     assert matrix["hard_failures"] == []
 
 
