@@ -59,7 +59,7 @@ Added documentation/architecture contracts covering:
 
 ## GitHub Actions status
 
-Green on PR #59 run #1937 — 1015 tests passed in 11.64s. One final clean run follows this status-only update.
+Green on PR #59 run #1937 — 1015 tests passed in 11.64s. This connector-authored status commit triggers the final clean PR regression.
 
 ## Hugging Face sync status
 
