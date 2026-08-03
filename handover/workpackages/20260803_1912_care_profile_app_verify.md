@@ -37,7 +37,8 @@ The technical deployment is verified. No product code was changed. The coordinat
 - Space health endpoint `HTTP 200 / ok`.
 - Space root `HTTP 200`.
 - Technical sync and deployment flags.
-- Functional app verification intentionally remains false.
+- Functional app verification and all nine documented visible checks are true.
+- Human-review and non-production-readiness boundaries remain true.
 - No token, credential or real personal data in the evidence report.
 - Full repository regression suite.
 
@@ -48,7 +49,7 @@ Initial verification report:
 - Space health was green;
 - two marker groups were assigned to the wrong source modules, producing a false negative.
 
-Corrected verification report:
+Corrected and completed verification report:
 
 ```text
 Files checked:                 12
@@ -58,7 +59,9 @@ Space health:            200 / ok
 Space root:                    200
 Sync verified:                true
 Technical deployment:        true
-Functional app verification: false / pending user
+Functional app verification: true / confirmed_all_green
+Production ready:             false
+Human review required:        true
 ```
 
 ## GitHub Actions status
@@ -66,8 +69,9 @@ Functional app verification: false / pending user
 - PR #53 UI integration final clean run #1885: 986 tests passed.
 - PR #54 cross-profile matrix final clean run #1906: 995 tests passed.
 - Independent corrected Hugging Face verification passed its exact-file, marker and health assertions and wrote the committed evidence report.
-- Verification-only run #1908 passed: 998 tests in 10.07s.
-- Final closeout run #1909 passed: 998 tests in 10.45s.
+- PR #55 verification-only run #1908: 998 tests passed in 10.07s.
+- PR #55 pre-closeout run #1909: 998 tests passed in 10.45s.
+- Final closeout regression on the confirmed evidence commit is required before merge.
 
 ## Hugging Face sync status
 
@@ -85,12 +89,12 @@ Confirmed. The coordinator/user reported `alles groen` at 2026-08-03 20:35 Europ
 
 ## Remaining risks
 
-- Generic NER is model-dependent and still requires observation in the running app.
-- Visible profile selection, example count and review-status rendering require human verification.
+- Generic NER remains model-dependent; bounded synthetic and app evidence does not establish full production recall or precision.
 - Historical legal benchmark observations remain recorded separately.
+- Rare-case clinical re-identification and over-masking risk are not eliminated by this closeout.
 - Synthetic and technical deployment evidence does not establish production readiness.
 - Human review remains mandatory.
 
 ## Next recommended step
 
-Merge verification-only PR #55. Do not automatically open desktop UX or installer work; continue with the active risk-driven Phase 6 queue and explicit coordinator approval gates.
+Merge verification-only PR #55 after the final clean regression is green. Do not automatically open desktop UX or installer work; continue with the active risk-driven Phase 6 queue and explicit coordinator approval gates.
