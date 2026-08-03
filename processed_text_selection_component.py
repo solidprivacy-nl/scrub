@@ -79,7 +79,7 @@ def build_component_args(
     inspection_result: Mapping[str, Any] | None = None,
     restore_source_scroll_ratio: float | None = None,
     restore_processed_scroll_ratio: float | None = None,
-    non_mutating_spike: bool = False,
+    non_mutating_spike: bool = True,
 ) -> dict[str, Any]:
     """Build the JSON-only argument object passed to the frontend component."""
 
