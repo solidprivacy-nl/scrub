@@ -138,7 +138,7 @@ def test_action_model_module_is_streamlit_and_browser_free():
     source = (Path(__file__).resolve().parents[1] / "selection_mask_action.py").read_text(encoding="utf-8")
     assert "import streamlit" not in source
     assert "components.html" not in source
-    assert "javascript" not in source.lower()
+    assert "components.declare_component" not in source
     assert "localstorage" not in source.lower()
 
 

@@ -444,6 +444,7 @@ def _validate_common_envelope(event: Any, expected_action: str) -> Mapping[str, 
 
 def parse_inspect_event(event: Any) -> InspectSelectionEvent:
     mapping = _validate_common_envelope(event, INSPECT_ACTION)
+    event_id = str(mapping["event_id"])
 
     document_scope_key = _require_string(
         mapping.get("document_scope_key"),
