@@ -1,6 +1,6 @@
 ## 2026-08-03 23:42 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_PLAN
 
-Status: completed as planning; GitHub Actions pending.
+Status: completed as planning; GitHub Actions green.
 
 Goal:
 - Determine whether an unmasked value can be selected in `Verwerkte tekst`, classified through a right-click menu and safely added through the existing manual replacement path.
@@ -17,6 +17,7 @@ Review table source of truth: preserved
 Existing manual form fallback: preserved
 Export/Scrub Key/reinsert semantics: unchanged
 Implementation authorized: no
+GitHub Actions: PR #59 run #1937 — 1015 passed in 11.64s
 ```
 
 Files added:

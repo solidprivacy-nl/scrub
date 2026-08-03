@@ -2,7 +2,7 @@
 
 Repository worked in: `solidprivacy-nl/scrub`  
 Workpackage title: Processed-text selection masking feasibility and implementation plan  
-Status: completed as planning; GitHub Actions pending
+Status: completed as planning; GitHub Actions green
 
 ## Summary
 
@@ -53,13 +53,13 @@ Added documentation/architecture contracts covering:
 
 ## Validation status
 
-- GitHub Actions: pending planning PR.
+- GitHub Actions: green on PR #59 run #1937 — 1015 tests passed in 11.64s.
 - Hugging Face sync: not functionally relevant; documentation/tests only.
 - App verification: not applicable; no UI or runtime behavior changed.
 
 ## GitHub Actions status
 
-Pending.
+Green on PR #59 run #1937 — 1015 tests passed in 11.64s. One final clean run follows this status-only update.
 
 ## Hugging Face sync status
 

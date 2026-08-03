@@ -1,6 +1,6 @@
 ## 2026-08-03 23:42 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_PLAN
 
-Status: completed as planning; validation pending.
+Status: completed as planning; validation green.
 
 Purpose:
 - Assess a document-centric path for correcting missed sensitive values directly from the processed-text pane.
@@ -28,7 +28,8 @@ Planning result:
 
 Validation:
 - documentation/architecture contract tests added;
-- full GitHub Actions pending;
+- PR #59 run #1937: 1015 tests passed in 11.64s;
+- one final clean regression follows the status-only update;
 - Hugging Face sync not functionally relevant;
 - app verification not applicable because no product behavior changed.
 
