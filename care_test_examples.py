@@ -181,7 +181,7 @@ Reden opname: dehydratie bij gastro-enteritis. Hoofddiagnose: acute nierinsuffic
         ],
         "preserve": [
             "dehydratie bij gastro-enteritis",
-            "acute nierinsufficiëntie",
+            "Hoofddiagnose: acute nierinsufficiëntie",
             "intraveneuze vochttoediening",
             "creatinine 88 µmol/L",
             "natrium 139 mmol/L",
