@@ -71,7 +71,8 @@ Human review required:        true
 - Independent corrected Hugging Face verification passed its exact-file, marker and health assertions and wrote the committed evidence report.
 - PR #55 verification-only run #1908: 998 tests passed in 10.07s.
 - PR #55 pre-closeout run #1909: 998 tests passed in 10.45s.
-- Final closeout regression on the confirmed evidence commit is required before merge.
+- PR #55 confirmed-evidence closeout run #1917: 998 tests passed in 9.87s.
+- One final clean regression on this handover-only commit is required before merge.
 
 ## Hugging Face sync status
 
