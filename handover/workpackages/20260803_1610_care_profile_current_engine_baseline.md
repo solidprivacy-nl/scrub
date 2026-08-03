@@ -2,7 +2,7 @@
 
 Repository: solidprivacy-nl/scrub  
 Workpackage title: Current-engine Zorgfilter baseline  
-Status: completed; final clean PR validation initiated
+Status: completed; ready for merge
 
 ## Summary
 
@@ -40,7 +40,8 @@ Measured the unchanged deterministic Dutch custom recognizers against the approv
 - Initial substring result was rejected because it incorrectly counted an AGB prefix inside a BIG number.
 - Corrected baseline result: 25/81 spans, 14/81 correct entities, 11 misclassified, 56 missed, 0 protected clinical overlaps.
 - All temporary workflow and diagnostic files are removed.
-- Final clean GitHub Actions status: initiated on the cleaned branch head.
+- Final clean GitHub Actions run #1840: passed.
+- Final metadata-only GitHub Actions run: pending on this handover commit.
 - Hugging Face sync: not functionally relevant; no runtime or UI behavior changed.
 - App verification: not applicable.
 
