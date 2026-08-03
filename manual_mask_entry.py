@@ -21,9 +21,27 @@ MANUAL_MASK_TYPE_TO_ENTITY_TYPE = {
     "Dossiernummer": "NL_DOSSIER_NUMBER",
     "Datum": "DATE_TIME",
     "Anders": "MANUAL",
+    # Internal labels for the processed-text selection action model. These are
+    # intentionally not added to MANUAL_MASK_TYPE_OPTIONS yet; the existing
+    # Streamlit form remains unchanged until the later integration package.
+    "Adres of locatie": "LOCATION",
+    "E-mailadres": "EMAIL_ADDRESS",
+    "Telefoonnummer": "NL_PHONE_NUMBER",
+    "Datum of tijd": "DATE_TIME",
+    "Nummer of referentie": "NL_OTHER_REFERENCE",
+    "Overige waarde": "MANUAL",
 }
 
-MANUAL_MASK_TYPE_OPTIONS = tuple(MANUAL_MASK_TYPE_TO_ENTITY_TYPE.keys())
+# Preserve the current user-facing manual form exactly. The selection component
+# will use stable machine keys and the internal labels above in a later package.
+MANUAL_MASK_TYPE_OPTIONS = (
+    "Persoon",
+    "Organisatie",
+    "Zaaknummer",
+    "Dossiernummer",
+    "Datum",
+    "Anders",
+)
 
 _ENTITY_TYPE_TO_TYPE_LABEL = {
     "PERSON": "Naam / persoon",
@@ -31,6 +49,10 @@ _ENTITY_TYPE_TO_TYPE_LABEL = {
     "NL_LEGAL_CASE_NUMBER": "Zaaknummer",
     "NL_DOSSIER_NUMBER": "Dossiernummer",
     "DATE_TIME": "Datum/tijd",
+    "LOCATION": "Adres / locatie",
+    "EMAIL_ADDRESS": "E-mailadres",
+    "NL_PHONE_NUMBER": "Telefoonnummer",
+    "NL_OTHER_REFERENCE": "Nummer / referentie",
     "MANUAL": "Handmatige vervanging",
 }
 
@@ -40,6 +62,10 @@ _ENTITY_TYPE_TO_PLACEHOLDER_PREFIX = {
     "NL_LEGAL_CASE_NUMBER": "ZAAKNUMMER",
     "NL_DOSSIER_NUMBER": "DOSSIERNUMMER",
     "DATE_TIME": "DATUM",
+    "LOCATION": "LOCATIE",
+    "EMAIL_ADDRESS": "EMAIL",
+    "NL_PHONE_NUMBER": "TELEFOON",
+    "NL_OTHER_REFERENCE": "OVERIGE_REFERENTIE",
     "MANUAL": "WAARDE",
 }
 
