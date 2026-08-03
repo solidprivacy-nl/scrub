@@ -72,7 +72,7 @@ Human review required:        true
 - PR #55 verification-only run #1908: 998 tests passed in 10.07s.
 - PR #55 pre-closeout run #1909: 998 tests passed in 10.45s.
 - PR #55 confirmed-evidence closeout run #1917: 998 tests passed in 9.87s.
-- One final clean regression on this handover-only commit is required before merge.
+- PR #55 final clean run #1918: 998 tests passed in 10.02s.
 
 ## Hugging Face sync status
 
@@ -98,4 +98,4 @@ Confirmed. The coordinator/user reported `alles groen` at 2026-08-03 20:35 Europ
 
 ## Next recommended step
 
-Merge verification-only PR #55 after the final clean regression is green. Do not automatically open desktop UX or installer work; continue with the active risk-driven Phase 6 queue and explicit coordinator approval gates.
+Merge verification-only PR #55. Do not automatically open desktop UX or installer work; continue with the active risk-driven Phase 6 queue and explicit coordinator approval gates.
