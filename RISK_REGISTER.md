@@ -227,6 +227,8 @@ Generic NER was excluded, so the PERSON and e-mail findings do not represent com
 
 Gap triage classified all 81 expectations. The largest unresolved family is contextual review recognition (36 values), followed by generic profile dependencies (13), care-specific reclassification (10), dedicated care references (5) and AGB/numeric collision guards (3). The recognizer contract package must freeze these routes before any care pattern implementation.
 
+The recognizer contract is now frozen with sixteen dedicated entities, 37 positive exact-span cases and 16 negative/collision/preservation cases. Implementation must pass these fixtures before any app registration or UI promotion.
+
 ---
 
 ## Product-claim boundary

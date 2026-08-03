@@ -1,3 +1,39 @@
+## 2026-08-03 16:34 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS
+
+Status: completed; recognizer contract frozen before implementation.
+
+Goal:
+- Freeze exact positive, value-only, policy, collision and clinical-preservation behavior for the dedicated Zorgfilter recognizer module.
+
+Contract result:
+
+```text
+Dedicated care entities: 16
+Positive exact-span cases: 37
+- care-reference/collision cases: 17
+- contextual review cases: 20
+Negative/collision/preservation cases: 16
+Future module: dutch_care_recognizers.py
+Public API: get_dutch_care_entity_names, get_dutch_care_recognizers
+```
+
+Frozen boundaries:
+- generic PERSON and e-mail stay in the generic profile layer;
+- care providers, organizations, locations, room/bed and care-event dates use context-bound review recognition;
+- AGB requires strong context and must not become BSN;
+- labels and professional roles remain readable;
+- vital signs, medication, dosages, administration times, lab values, DBC/ICD codes and clinical meaning remain preserved;
+- no app registration or UI integration in this package.
+
+Evidence:
+- `CARE_RECOGNIZER_CONTRACT_V1.md`
+- `output/validation/care_recognizer_contract_v1_summary.json`
+
+Active next package:
+- `SCRUB-WP_CARE_PROFILE_RECOGNIZER_IMPLEMENTATION`
+
+Production readiness: false. Human review remains required.
+
 ## 2026-08-03 16:25 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_GAP_TRIAGE
 
 Status: completed; all current care-corpus expectations classified.
