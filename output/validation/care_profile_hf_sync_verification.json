@@ -1,22 +1,25 @@
 {
-  "all_files_exact_match": false,
-  "checked_file_count": 10,
+  "all_files_exact_match": true,
+  "all_markers_match": true,
+  "checked_file_count": 12,
+  "exact_matching_file_count": 12,
   "files": [
     {
       "error": null,
       "exact_match": true,
       "expected_markers": {
-        "Zorgcontrole — streng": false,
+        "PROFILE_OPTIONS = current_profile_options_with_care()": true,
         "care_example_names": true,
         "detected_review_status": true,
         "resolve_configured_analysis_results": true
       },
       "http_status": 200,
       "local_sha256": "37b69acd0ffaad78384100286000e29f2964615c5de2612cf563fb6261b49a53",
+      "markers_match": true,
       "path": "presidio_streamlit.py",
       "remote_sha256": "37b69acd0ffaad78384100286000e29f2964615c5de2612cf563fb6261b49a53",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/presidio_streamlit.py",
-      "verified": false
+      "verified": true
     },
     {
       "error": null,
@@ -27,6 +30,7 @@
       },
       "http_status": 200,
       "local_sha256": "60cca25abd51bf9c20c354c60119d53693a40e765e332b75aca66b80a3b33e35",
+      "markers_match": true,
       "path": "presidio_helpers.py",
       "remote_sha256": "60cca25abd51bf9c20c354c60119d53693a40e765e332b75aca66b80a3b33e35",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/presidio_helpers.py",
@@ -38,6 +42,7 @@
       "expected_markers": {},
       "http_status": 200,
       "local_sha256": "4f5e7976c34dc0d768be7be7d334f121a0651535593588a5f61d6cb5c4a4101d",
+      "markers_match": true,
       "path": "care_candidate_scanner.py",
       "remote_sha256": "4f5e7976c34dc0d768be7be7d334f121a0651535593588a5f61d6cb5c4a4101d",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/care_candidate_scanner.py",
@@ -47,15 +52,17 @@
       "error": null,
       "exact_match": true,
       "expected_markers": {
-        "Controle nodig": false,
-        "Dutch Care Strict": false
+        "PROFILE_DUTCH_CARE_STRICT": true,
+        "def detected_review_status": true,
+        "scan_unmasked_care_candidates": true
       },
       "http_status": 200,
       "local_sha256": "b8e94f2efe2f54cd015c324c57b8d984a768701c605e49e77d681010e80942ad",
+      "markers_match": true,
       "path": "profile_ui_support.py",
       "remote_sha256": "b8e94f2efe2f54cd015c324c57b8d984a768701c605e49e77d681010e80942ad",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/profile_ui_support.py",
-      "verified": false
+      "verified": true
     },
     {
       "error": null,
@@ -63,6 +70,7 @@
       "expected_markers": {},
       "http_status": 200,
       "local_sha256": "f0f9533ec354bfe2a0362b16affd763ab98d4f2eef646ad379fd30e68f3e1b31",
+      "markers_match": true,
       "path": "dutch_care_recognizers.py",
       "remote_sha256": "f0f9533ec354bfe2a0362b16affd763ab98d4f2eef646ad379fd30e68f3e1b31",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/dutch_care_recognizers.py",
@@ -71,9 +79,13 @@
     {
       "error": null,
       "exact_match": true,
-      "expected_markers": {},
+      "expected_markers": {
+        "internal_value=\"Dutch Care Strict\"": true,
+        "label_nl=\"Zorgcontrole — streng\"": true
+      },
       "http_status": 200,
       "local_sha256": "802e25f4695cb67fac01e832f23ff6f56f2c336b99ce3c2a6090d0a1b664da71",
+      "markers_match": true,
       "path": "recognition_profiles.py",
       "remote_sha256": "802e25f4695cb67fac01e832f23ff6f56f2c336b99ce3c2a6090d0a1b664da71",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/recognition_profiles.py",
@@ -85,6 +97,7 @@
       "expected_markers": {},
       "http_status": 200,
       "local_sha256": "dc18a7cbaa823be12791df4c85808f3f0fdaa7c304ec25edaa9c152d3bf884b9",
+      "markers_match": true,
       "path": "care_test_examples.py",
       "remote_sha256": "dc18a7cbaa823be12791df4c85808f3f0fdaa7c304ec25edaa9c152d3bf884b9",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/care_test_examples.py",
@@ -93,9 +106,24 @@
     {
       "error": null,
       "exact_match": true,
+      "expected_markers": {
+        "NEEDS_REVIEW: \"Controle nodig\"": true
+      },
+      "http_status": 200,
+      "local_sha256": "0bf7e6f0aa1032024b2ba69d9cb6dd51a2485f06069f7aa98fda8319811cb855",
+      "markers_match": true,
+      "path": "review_status.py",
+      "remote_sha256": "0bf7e6f0aa1032024b2ba69d9cb6dd51a2485f06069f7aa98fda8319811cb855",
+      "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/review_status.py",
+      "verified": true
+    },
+    {
+      "error": null,
+      "exact_match": true,
       "expected_markers": {},
       "http_status": 200,
       "local_sha256": "48add98053460e45fcfb348480fcff7a0aa3194a103e3cb0741090bf8afeae64",
+      "markers_match": true,
       "path": "ui_texts_nl.py",
       "remote_sha256": "48add98053460e45fcfb348480fcff7a0aa3194a103e3cb0741090bf8afeae64",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/ui_texts_nl.py",
@@ -107,6 +135,7 @@
       "expected_markers": {},
       "http_status": 200,
       "local_sha256": "c071df6cb7e3f88b0ea3ee66f319aaac77778dbd25beaa14cfc7d08a1d838993",
+      "markers_match": true,
       "path": "display_labels_nl.py",
       "remote_sha256": "c071df6cb7e3f88b0ea3ee66f319aaac77778dbd25beaa14cfc7d08a1d838993",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/display_labels_nl.py",
@@ -118,9 +147,25 @@
       "expected_markers": {},
       "http_status": 200,
       "local_sha256": "0307f82ada1b9f3ed65779eec4154e855783873ba9391bd41c7e5fbad9bd89f9",
+      "markers_match": true,
       "path": "document_tools.py",
       "remote_sha256": "0307f82ada1b9f3ed65779eec4154e855783873ba9391bd41c7e5fbad9bd89f9",
       "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/document_tools.py",
+      "verified": true
+    },
+    {
+      "error": null,
+      "exact_match": true,
+      "expected_markers": {
+        "\"generic_ner_evaluated\"": true,
+        "\"hard_failure_count\"": true
+      },
+      "http_status": 200,
+      "local_sha256": "34c3087cdc1339a48085fbe922071200cfd5d22e8cb3b1c78bbadcb12f7c47e7",
+      "markers_match": true,
+      "path": "care_profile_cross_profile_matrix.py",
+      "remote_sha256": "34c3087cdc1339a48085fbe922071200cfd5d22e8cb3b1c78bbadcb12f7c47e7",
+      "remote_url": "https://huggingface.co/spaces/solidprivacy/scrub/resolve/main/care_profile_cross_profile_matrix.py",
       "verified": true
     }
   ],
@@ -130,9 +175,9 @@
   "github_ref": "main",
   "hugging_face_space": "solidprivacy/scrub",
   "human_review_required": true,
-  "matching_file_count": 8,
+  "previous_verification_false_negative_corrected": true,
   "production_ready": false,
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "space_health": {
     "attempts": [
       {
@@ -149,8 +194,10 @@
     "root_http_status": 200,
     "root_url": "https://solidprivacy-scrub.hf.space/"
   },
-  "sync_verified": false,
-  "technical_deployment_verified": false,
-  "verified_at": "2026-08-03T17:07:17+00:00",
+  "sync_verified": true,
+  "technical_deployment_verified": true,
+  "verification_method": "exact byte comparison of GitHub checkout and Hugging Face Space files, plus correctly scoped markers and live Space health",
+  "verified_at": "2026-08-03T17:09:32+00:00",
+  "verified_file_count": 12,
   "workpackage": "SCRUB-WP_CARE_PROFILE_APP_VERIFY"
 }
