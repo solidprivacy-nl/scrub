@@ -147,7 +147,7 @@ def test_component_args_are_json_serializable_and_non_mutating():
     }
 
 
-def test_component_contract_keeps_production_and_mutation_disabled():
+def test_component_contract_keeps_spike_mutation_disabled():
     contract = component_spike_contract()
     assert contract["api"] == "streamlit_components_v1"
     assert contract["local_assets_only"] is True
@@ -164,11 +164,13 @@ def test_component_contract_keeps_production_and_mutation_disabled():
     assert contract["reinsert_change"] is False
 
 
-def test_production_ui_does_not_import_or_call_the_spike():
-    for path in (ROOT / "presidio_streamlit.py", ROOT / "side_by_side_review_panel_ui.py"):
-        source = path.read_text(encoding="utf-8")
-        assert "processed_text_selection_component" not in source
-        assert "render_processed_text_selection_component_spike" not in source
+def test_production_ui_uses_production_entry_point_and_not_spike_alias():
+    side_source = (ROOT / "side_by_side_review_panel_ui.py").read_text(encoding="utf-8")
+    app_source = (ROOT / "presidio_streamlit.py").read_text(encoding="utf-8")
+    assert "render_processed_text_selection_component" in side_source
+    assert "render_processed_text_selection_component_spike" not in side_source
+    assert "render_processed_text_selection_component_spike" not in app_source
+    assert "handle_selection_component_event" in app_source
 
 
 def test_demo_calls_inspection_only_and_never_calls_commit_model():
