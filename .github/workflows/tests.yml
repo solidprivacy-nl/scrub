@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - scrub-processed-text-selection-component-spike
   pull_request:
   workflow_dispatch:
 
@@ -23,11 +24,61 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install test dependencies
+      - name: Install test and spike dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf
+          python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf streamlit==1.39.0
 
       - name: Run regression tests
         run: |
           python -m pytest -q tests
+
+      - name: Run Streamlit script smoke test
+        run: |
+          python - <<'PY'
+          from streamlit.testing.v1 import AppTest
+
+          app = AppTest.from_file(
+              "processed_text_selection_component_spike_demo.py",
+              default_timeout=30,
+          )
+          app.run()
+          if app.exception:
+              raise RuntimeError(f"Streamlit demo exceptions: {app.exception}")
+          print("Streamlit AppTest completed without script exceptions")
+          PY
+
+      - name: Run local Streamlit server health smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          streamlit run processed_text_selection_component_spike_demo.py \
+            --server.headless true \
+            --server.address 127.0.0.1 \
+            --server.port 8765 \
+            > /tmp/processed-text-selection-component-spike.log 2>&1 &
+          server_pid=$!
+          cleanup() {
+            kill "$server_pid" 2>/dev/null || true
+            wait "$server_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          healthy=false
+          for _attempt in $(seq 1 40); do
+            if curl --fail --silent --show-error http://127.0.0.1:8765/_stcore/health | grep -q '^ok$'; then
+              healthy=true
+              break
+            fi
+            sleep 0.5
+          done
+
+          if [ "$healthy" != true ]; then
+            cat /tmp/processed-text-selection-component-spike.log
+            exit 1
+          fi
+
+          curl --fail --silent --show-error http://127.0.0.1:8765/ > /tmp/processed-text-selection-component-root.html
+          grep -q 'Streamlit' /tmp/processed-text-selection-component-root.html
+          grep -q 'You can now view your Streamlit app' /tmp/processed-text-selection-component-spike.log
+          echo 'Streamlit 1.39 component spike server smoke passed'
