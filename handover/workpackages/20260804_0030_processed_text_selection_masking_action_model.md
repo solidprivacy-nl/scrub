@@ -2,7 +2,7 @@
 
 Repository worked in: `solidprivacy-nl/scrub`  
 Workpackage title: Implement the pure processed-text selection masking action model  
-Status: implemented; clean GitHub Actions regression pending
+Status: completed; GitHub Actions green
 
 ## Summary
 
@@ -68,13 +68,13 @@ The new tests cover:
 - Initial PR run #1957: failed because one validated `event_id` was not assigned locally and one test rejected an explanatory use of the word `JavaScript`; the remaining failures cascaded from the missing ID.
 - Corrected run #1961: **1106 tests passed in 10.66s**.
 - Governance updates are applied, the standard workflow is restored and temporary operators are removed.
-- Clean standard PR regression: pending on this status-only commit.
+- Clean standard PR run #1970: **1106 tests passed in 10.71s**.
 - Hugging Face sync: not functionally relevant; the helper is not connected to runtime/UI yet.
 - App verification: not applicable; no UI behavior changed.
 
 ## GitHub Actions status
 
-Corrected implementation green on run #1961. This connector-authored status commit triggers the clean standard PR regression.
+Green. Corrected implementation run #1961 passed 1106 tests in 10.66s; clean standard PR run #1970 passed 1106 tests in 10.71s. One final status-only regression follows this closeout update.
 
 ## Hugging Face sync status
 

@@ -1,6 +1,6 @@
 ## 2026-08-04 00:30 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
 
-Status: implemented; final clean validation pending.
+Status: completed; validation green.
 
 Purpose:
 - Implement the server-authoritative selection action model before any browser or Streamlit integration.
@@ -34,7 +34,7 @@ Implementation:
 Validation:
 - initial run #1957 failed from one local event-ID assignment defect and one overly literal test; no safety boundary was weakened;
 - corrected run #1961: 1106 tests passed in 10.66s;
-- final clean standard regression pending.
+- clean standard run #1970: 1106 tests passed in 10.71s.
 
 Intentionally not changed:
 - visible manual form options;
@@ -45,7 +45,7 @@ Intentionally not changed:
 
 ## 2026-08-04 00:09 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT
 
-Status: implemented; validation pending.
+Status: completed; validation green.
 
 Purpose:
 - Convert the approved processed-text selection direction into an exact implementation contract before product code changes.
@@ -77,7 +77,7 @@ Contract result:
 
 Validation:
 - machine-readable contract fixture and contract tests added;
-- full GitHub Actions pending;
+- clean contract run #1954: 1027 tests passed in 11.48s;
 - Hugging Face sync not functionally relevant;
 - app verification not applicable because no runtime behavior changed.
 

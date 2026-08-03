@@ -1,6 +1,6 @@
 ## 2026-08-04 00:30 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
 
-Status: implemented; final clean GitHub Actions regression pending.
+Status: completed; GitHub Actions green.
 
 Dependency:
 - contract package merged through PR #60 as `23cb5d667461f84a01e96ee007b2ef10bd2e6b40`.
@@ -43,7 +43,7 @@ Files changed:
 Validation:
 - initial run #1957 exposed one missing local event-ID assignment and one overly literal source-text assertion;
 - corrected run #1961: 1106 tests passed in 10.66s;
-- final clean regression pending after governance updates.
+- clean standard run #1970: 1106 tests passed in 10.71s.
 
 Next permitted package:
 - `SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE`
@@ -55,7 +55,7 @@ Boundaries:
 
 ## 2026-08-04 00:09 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT
 
-Status: implemented; GitHub Actions pending.
+Status: completed; GitHub Actions green.
 
 Approval evidence:
 - coordinator/user approved the proposed direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam.

@@ -182,7 +182,8 @@ Initial PR run #1957 exposed:
 
 Neither issue required weakening the action contract. After correction:
 
-- PR run #1961: **1106 tests passed in 10.66s**.
+- PR run #1961: **1106 tests passed in 10.66s**;
+- clean standard PR run #1970: **1106 tests passed in 10.71s**.
 
 ## Boundaries preserved
 
