@@ -1,3 +1,40 @@
+## 2026-08-03 16:25 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_GAP_TRIAGE
+
+Status: completed; evidence-driven gap routing implemented.
+
+Purpose:
+- Convert the current-engine care baseline into explicit recognizer, profile and collision-prevention contract routes.
+
+Files added:
+- `CARE_PROFILE_GAP_TRIAGE.md`
+- `care_profile_gap_triage.py`
+- `care_profile_gap_triage_summary.py`
+- `tests/test_care_profile_gap_triage.py`
+- `scripts/generate_care_profile_gap_triage.py`
+- `output/validation/care_profile_v1_gap_triage.json`
+- `workpackage_claims/scrub_wp_care_profile_gap_triage.md`
+- `handover/workpackages/20260803_1625_care_profile_gap_triage.md`
+
+Implementation result:
+- classified all 81 expectations with zero unclassified values;
+- froze six implementation routes and five contract families;
+- separated generic NER dependencies from care-specific rule work;
+- routed ten broad-entity matches to care-specific reclassification;
+- routed 36 context-dependent values to review-selected recognition;
+- made AGB/BSN and medical-number collision guards mandatory;
+- preserved clinical-content negative contracts as a first-class requirement.
+
+Validation:
+- GitHub Actions pending final PR validation;
+- Hugging Face sync not functionally relevant;
+- app verification not applicable.
+
+Intentionally not changed:
+- recognizer implementation or registration;
+- profile selector, thresholds or entity defaults;
+- review, export, Scrub Key or reinsert semantics;
+- runtime, dependencies or cloud processing.
+
 ## 2026-08-03 16:10 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_ENGINE_BASELINE
 
 Status: completed; evidence baseline implemented and validated.

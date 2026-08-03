@@ -1,3 +1,45 @@
+## 2026-08-03 16:25 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_GAP_TRIAGE
+
+Status: completed; all current care-corpus expectations classified.
+
+Goal:
+- Route every correct, missed or misclassified baseline value to a concrete follow-up mechanism before recognizer implementation.
+
+Result:
+
+```text
+Expectations classified: 81/81
+Reuse current recognizer: 14
+Generic profile dependency: 13
+Contextual care review recognizer: 36
+Care-specific reclassification: 10
+Dedicated care reference recognizer: 5
+Care collision guard: 3
+Unclassified: 0
+```
+
+Key decisions:
+- keep address, BIG, BSN, date-of-birth and Dutch-phone recognizers;
+- keep generic PERSON and e-mail in the generic local profile layer;
+- split broad healthcare/legal references into care-specific policy entities;
+- build a context-bound review layer for providers, organizations, locations, room/bed and care-event dates;
+- require explicit AGB/BSN precedence and negative medical-number contracts;
+- keep diagnosis, medication, dosages, lab values, observations and roles under preservation guards.
+
+Evidence:
+- `CARE_PROFILE_GAP_TRIAGE.md`
+- `output/validation/care_profile_v1_gap_triage.json`
+
+Active next package:
+- `SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS`
+
+Boundaries:
+- no recognizer or UI implementation;
+- no threshold, export, Scrub Key or reinsert change;
+- synthetic data only;
+- human review remains required;
+- production readiness remains false.
+
 ## 2026-08-03 16:10 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_ENGINE_BASELINE
 
 Status: completed; corrected current-engine evidence baseline implemented and validated.
