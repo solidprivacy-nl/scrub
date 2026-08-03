@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-care-profile-long-form-synthetic-corpus`  
 Claimed: 2026-08-03 22:17 Europe/Amsterdam  
-Status: in_progress
+Status: implemented; GitHub Actions, Hugging Face sync and app verification pending
 
 ## Goal
 

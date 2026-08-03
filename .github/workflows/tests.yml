@@ -4,12 +4,8 @@ on:
   push:
     branches:
       - main
-      - scrub-care-profile-long-form-synthetic-corpus
   pull_request:
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   python-tests:
@@ -21,22 +17,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Apply long-form care corpus integration
-        if: github.ref == 'refs/heads/scrub-care-profile-long-form-synthetic-corpus'
-        run: |
-          python ops/apply_long_form_care_corpus.py
-          git fetch origin main
-          git checkout origin/main -- .github/workflows/tests.yml
-          rm ops/apply_long_form_care_corpus.py
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --check
-          git commit -m "Integrate long-form synthetic care corpus"
-          git push origin HEAD:scrub-care-profile-long-form-synthetic-corpus
 
       - name: Set up Python
         uses: actions/setup-python@v5

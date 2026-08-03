@@ -1,3 +1,49 @@
+## 2026-08-03 22:17 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS
+
+Status: implemented; GitHub Actions, Hugging Face sync and app verification pending.
+
+Goal:
+- Replace the short tester-facing care examples with longer, structured synthetic documents while preserving every existing recognition and policy contract.
+
+Implementation result:
+
+```text
+Stable care-document families: 8
+Added document-specific sections per example: 5
+Minimum added narrative per example: 200 words
+Minimum total visible length per example: 250 words
+New identifying values in additions: 0
+Digits in additions: 0
+Recognizer/profile policy changed: false
+Export/Scrub Key/reinsert semantics changed: false
+```
+
+Files added:
+- `care_test_example_expansions.py`
+- `tests/test_care_profile_long_form_corpus.py`
+- `CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS.md`
+- `workpackage_claims/scrub_wp_care_profile_long_form_synthetic_corpus.md`
+- `handover/workpackages/20260803_2217_care_profile_long_form_synthetic_corpus.md`
+
+Files changed:
+- `care_test_examples.py`
+- `CHANGELOG.md`
+- `RELEASE_NOTES.md`
+- `RISK_REGISTER.md`
+
+Verification gates:
+- long-form corpus and existing care regression tests;
+- full GitHub Actions suite;
+- GitHub-to-Hugging-Face synchronization;
+- coordinator/user verification that all eight Zorgfilter examples are materially longer, structured and readable.
+
+Boundaries:
+- synthetic data only;
+- no recognizer, threshold, collision or profile-policy change;
+- no review-table, export, Scrub Key or reinsert change;
+- no dependency or cloud-processing change;
+- human review and non-production boundaries remain unchanged.
+
 ## 2026-08-03 19:12 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_APP_VERIFY
 
 Status: completed and app-verified after Actions/sync verification.

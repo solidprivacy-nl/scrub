@@ -239,6 +239,8 @@ The deterministic cross-profile matrix now passes all hard gates: 108/108 dedica
 
 Deployment sync is now independently verified: twelve relevant GitHub/Hugging Face files match byte-for-byte, all correctly scoped markers pass and the Space is healthy. Risk R10 remains mitigating only for the remaining human-visible app verification, generic-NER observation and the broader limitation that synthetic evidence does not prove production recall or precision.
 
+The tester-facing care corpus now uses long-form structured variants across all eight approved document families. Each addition supplies substantial clinical and workflow context without adding new names, identifiers, dates, addresses, contact details, organizations, locations or digits. This improves usability and preservation testing but does not change recognizer behavior or establish production recall, precision or rare-case safety.
+
 ---
 
 ## Product-claim boundary
