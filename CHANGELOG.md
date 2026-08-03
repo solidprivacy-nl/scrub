@@ -43,7 +43,7 @@ Validation:
 - Streamlit 1.39 smoke run #1979: 1126 tests passed in 13.79s;
 - AppTest completed without script exceptions;
 - local server health `ok`, root HTML and startup log checks passed;
-- final clean standard regression pending.
+- clean post-governance standard run #1989: 1126 tests passed in 10.87s.
 
 Intentionally not changed:
 - `presidio_streamlit.py` and production side-by-side renderer;

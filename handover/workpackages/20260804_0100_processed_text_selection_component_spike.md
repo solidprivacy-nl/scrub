@@ -2,7 +2,7 @@
 
 Repository worked in: `solidprivacy-nl/scrub`  
 Workpackage title: Prove the non-mutating processed-text selection component  
-Status: implemented; governance closeout and final clean regression pending
+Status: completed; GitHub Actions and Streamlit smoke validation green
 
 ## Summary
 
@@ -84,13 +84,13 @@ Dependency-free Node tests cover:
   - local headless server started successfully;
   - `_stcore/health` returned `ok`;
   - root application HTML and startup log checks passed.
-- Governance closeout and final standard regression: pending.
+- Governance closeout applied and clean standard run #1989: **1126 tests passed in 10.87s**.
 - Hugging Face sync: not functionally relevant because the production app does not import the spike.
 - App verification: not applicable because the production UI is unchanged.
 
 ## GitHub Actions status
 
-Green on standard run #1977 and dedicated Streamlit smoke run #1979. Final clean standard run pending after workflow restoration and governance closeout.
+Green. Standard run #1977 passed 1126 tests in 13.83s; dedicated Streamlit smoke run #1979 passed 1126 tests in 13.79s with AppTest and local health checks; clean post-governance run #1989 passed 1126 tests in 10.87s.
 
 ## Hugging Face sync status
 

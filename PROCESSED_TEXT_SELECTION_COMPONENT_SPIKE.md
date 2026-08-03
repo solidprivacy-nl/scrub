@@ -183,7 +183,7 @@ Dependency-free Node tests verify:
 - inspect and commit-intent envelopes;
 - scroll ratios and menu viewport clamping.
 
-Initial standard PR run #1977 passed **1126 tests in 13.83s**.
+Initial standard PR run #1977 passed **1126 tests in 13.83s**. Clean post-governance run #1989 passed **1126 tests in 10.87s**.
 
 A dedicated Streamlit 1.39 smoke run additionally validates:
 

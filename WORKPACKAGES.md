@@ -49,7 +49,7 @@ Validation:
 - AppTest: no script exceptions;
 - local server health: `ok`;
 - root HTML and startup log checks: passed;
-- final clean standard regression pending after governance/workflow restoration.
+- clean post-governance standard run #1989: 1126 tests passed in 10.87s.
 
 Next permitted package:
 - `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`

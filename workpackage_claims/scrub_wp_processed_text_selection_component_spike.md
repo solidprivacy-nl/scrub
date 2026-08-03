@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-processed-text-selection-component-spike`  
 Claimed: 2026-08-04 01:00 Europe/Amsterdam  
-Status: completed; standard and Streamlit smoke validation green; final clean regression pending
+Status: completed; GitHub Actions and Streamlit smoke validation green
 
 ## Dependency gate
 
