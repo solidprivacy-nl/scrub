@@ -108,6 +108,7 @@ from profile_ui_support import (
     configured_threshold,
     current_profile_options_with_care,
     detected_reason,
+    detected_review_status,
     resolve_configured_analysis_results,
     scan_configured_candidates,
 )
@@ -272,7 +273,7 @@ with st.sidebar.expander("Geavanceerde instellingen", expanded=False):
     st.caption(ADVANCED_SETTINGS_HELP)
     model_help_text = (
         "Kies het NER-model dat naast regelherkenning wordt gebruikt. "
-        "De Nederlandse juridische herkenners zijn regelgebaseerd."
+        "De Nederlandse profielherkenners voor zorg en juridisch zijn regelgebaseerd."
     )
     st_ta_key = st_ta_endpoint = ""
     model_list = [
@@ -612,7 +613,9 @@ try:
                 continue
             entity_type = row.get("entity_type", "")
             score = row.get("score", None)
-            review_status = review_status_for_source("detected", entity_type, score)
+            review_status = detected_review_status(
+                st_recognition_profile, entity_type
+            )
             default_editor_rows.append(
                 {
                     "include": True,
