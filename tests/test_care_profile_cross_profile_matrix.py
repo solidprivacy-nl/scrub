@@ -53,7 +53,7 @@ def test_cross_profile_matrix_covers_all_four_profiles_and_document_families(mat
         PROFILE_GENERAL_INTERNATIONAL,
     ]
     assert matrix["care_case_count"] == 8
-    assert matrix["legal_case_count"] == 10
+    assert matrix["legal_case_count"] == 12
     assert matrix["dedicated_care_entity_count"] == 16
     assert matrix["dedicated_legal_entity_count"] > 0
     assert matrix["general_entity_count"] > 0
