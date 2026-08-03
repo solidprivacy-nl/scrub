@@ -233,9 +233,11 @@ The pure recognizer implementation now passes all frozen fixtures and all 54 ded
 
 The central profile model now freezes Care composition and exact-span precedence without changing the live application. Risk R10 remains open until the current app registers the care recognizers, uses the profile policy, runs cross-profile regression and passes deployed app verification.
 
-The current Streamlit integration now registers the sixteen care recognizers and applies the central profile policy. Review-selected care detections are selected by default but visibly marked `Controle nodig`; unresolved strongly labelled references remain unchecked candidates. Regression run #1877 passed 983 tests and existing export, Scrub Key and reinsert behavior remains unchanged. Risk R10 remains mitigating because cross-profile regression, deployment sync, generic-NER observation and live app verification are still pending.
+The current Streamlit integration registers the sixteen care recognizers and applies the central profile policy. Review-selected care detections are selected by default but visibly marked `Controle nodig`; unresolved strongly labelled references remain unchecked candidates. Cross-profile regression, byte-for-byte deployment verification and live app verification are green, including confirmation that clinical meaning remains readable and existing review, export, Scrub Key and reinsert flows remain present. Risk R10 remains mitigating because synthetic and bounded app evidence does not establish production recall, precision or rare-case safety; human review remains mandatory.
 
 The deterministic cross-profile matrix now passes all hard gates: 108/108 dedicated Care expectations are retained across Care and International, no dedicated Care or Legal entities leak into the wrong profiles, dedicated-type parity holds, and no protected clinical phrase is overlapped. Historical legal metadata remains explicitly recorded as 132/148 deterministic expectations, sixteen gaps and four negative observations. Risk R10 remains mitigating because GitHub-to-Hugging-Face deployment sync, generic-NER behavior and live app verification are still unconfirmed.
+
+Deployment sync is now independently verified: twelve relevant GitHub/Hugging Face files match byte-for-byte, all correctly scoped markers pass and the Space is healthy. Risk R10 remains mitigating only for the remaining human-visible app verification, generic-NER observation and the broader limitation that synthetic evidence does not prove production recall or precision.
 
 ---
 

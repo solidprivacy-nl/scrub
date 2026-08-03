@@ -1,3 +1,36 @@
+## 2026-08-03 19:12 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_APP_VERIFY
+
+Status: completed and app-verified after technical deployment verification.
+
+Purpose:
+- Independently verify that the merged Zorgfilter integration reached Hugging Face before requesting human app verification.
+
+Files added:
+- `CARE_PROFILE_APP_VERIFICATION.md`
+- `output/validation/care_profile_hf_sync_verification.json`
+- `tests/test_care_profile_hf_sync_verification.py`
+- `workpackage_claims/scrub_wp_care_profile_app_verify.md`
+- `handover/workpackages/20260803_1912_care_profile_app_verify.md`
+
+Verification result:
+- compared twelve relevant GitHub and Hugging Face files byte-for-byte;
+- verified equal SHA-256 values for all twelve files;
+- verified correctly scoped Zorgfilter markers;
+- verified Streamlit health `HTTP 200 / ok` and root HTTP 200;
+- corrected an initial verification false negative caused by two marker groups being checked in the wrong modules;
+- recorded coordinator/user confirmation `alles groen` at 2026-08-03 20:35 Europe/Amsterdam;
+- confirmed all nine visible verification checks and retained the non-production/human-review boundary.
+
+Validation context:
+- UI integration final run #1885 passed: 986 tests;
+- cross-profile matrix final run #1906 passed: 995 tests;
+- verification-only run #1908 passed 998 tests; final closeout run #1909 passed 998 tests in 10.45s.
+
+Intentionally not changed:
+- product code, recognizers, profile behavior or UI;
+- review, export, Scrub Key or reinsert semantics;
+- runtime dependencies, cloud processing or production claims.
+
 ## 2026-08-03 18:58 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX
 
 Status: completed and regression-green.
@@ -30,7 +63,7 @@ Validation:
 - run #1890 passed after correcting the methodology: 994 tests;
 - run #1897 exposed only an incorrect legal-example count in the snapshot;
 - run #1899 passed: 995 tests in 9.56s;
-- final clean run pending after governance finalization.
+- final clean run #1906 passed: 995 tests in 9.96s.
 
 Intentionally not changed:
 - current Streamlit UI or profile selector;
@@ -40,7 +73,7 @@ Intentionally not changed:
 
 ## 2026-08-03 18:28 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION
 
-Status: implemented and regression-tested; deployment verification pending.
+Status: completed, deployed and app-verified.
 
 Purpose:
 - Promote the approved Zorgfilter profile into the current Streamlit/analyzer flow after policy, corpus, recognizer and profile-configuration gates passed.
@@ -84,9 +117,9 @@ Validation:
 - run #1876 failed only because the new registration test imported optional Streamlit dependencies absent from lean CI;
 - test isolation was corrected without changing runtime code or dependencies;
 - run #1877 passed: 983 tests in 9.69s;
-- final clean run pending after governance finalization;
-- Hugging Face sync pending merge;
-- app verification pending deployment.
+- final clean integration run #1885 passed: 986 tests;
+- Hugging Face synchronization verified byte-for-byte for 12/12 relevant files;
+- deployed app verification confirmed `alles groen` by the coordinator/user.
 
 Intentionally not changed:
 - export filenames, MIME types and document formats;

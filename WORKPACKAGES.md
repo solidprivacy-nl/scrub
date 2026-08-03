@@ -1,3 +1,48 @@
+## 2026-08-03 19:12 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_APP_VERIFY
+
+Status: completed and app-verified after Actions/sync verification.
+
+Goal:
+- Verify the deployed Zorgfilter selector and review behavior after technical integration and cross-profile regression passed.
+
+Technical deployment result:
+
+```text
+GitHub main commit: cca4a25aaff28a7ba647c961d8e50f0e076921e2
+Hugging Face Space: solidprivacy/scrub
+Files compared: 12
+Exact byte matches: 12/12
+Correctly scoped markers: all passed
+Space health: HTTP 200 / ok
+Space root: HTTP 200
+Technical deployment verified: true
+Functional app verification: confirmed — alles groen
+Production ready: false
+```
+
+Evidence:
+- `CARE_PROFILE_APP_VERIFICATION.md`
+- `output/validation/care_profile_hf_sync_verification.json`
+- `handover/workpackages/20260803_1912_care_profile_app_verify.md`
+
+Confirmed coordinator/user checks:
+- four profile choices and stable default;
+- eight synthetic care examples;
+- `Controle nodig` rendering for review-selected care rows while selected;
+- patient/client replacement defaults;
+- unchecked care candidates;
+- unchanged Legal/General/International, review, export, Scrub Key and reinsert flows;
+- no Script execution error.
+
+Gate status:
+- completed: coordinator/user confirmed `alles groen` at 2026-08-03 20:35 Europe/Amsterdam; final verification-only CI run #1909 passed 998 tests.
+
+Boundaries:
+- verification-only; no product code or UI change;
+- synthetic examples only;
+- human review remains required;
+- no production-readiness claim.
+
 ## 2026-08-03 18:58 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX
 
 Status: completed; deterministic cross-profile gates are green.
@@ -33,7 +78,7 @@ Active next package:
 - `SCRUB-WP_CARE_PROFILE_APP_VERIFY`
 
 Gate status:
-- app verification is blocked until GitHub-to-Hugging-Face sync for the merged UI integration is independently confirmed.
+- completed downstream: synchronization, deployed app behavior and verification-only regression are green.
 
 Boundaries:
 - pure helper/test/evidence package only;
@@ -45,7 +90,7 @@ Boundaries:
 
 ## 2026-08-03 18:28 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION
 
-Status: implemented and regression-green; merge, sync and deployed app verification pending.
+Status: completed, merged, synchronized and app-verified.
 
 Goal:
 - Register and expose the approved Zorgfilter v1 profile in the current Streamlit flow without changing export, Scrub Key or reinsert semantics.
@@ -83,7 +128,7 @@ Active next package:
 - `SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX`
 
 Required later gate:
-- `SCRUB-WP_CARE_PROFILE_APP_VERIFY` after merge and deployment sync.
+- `SCRUB-WP_CARE_PROFILE_APP_VERIFY` completed after deployment sync and coordinator/user confirmation.
 
 Boundaries:
 - human review remains required;
