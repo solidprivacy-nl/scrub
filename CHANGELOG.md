@@ -1,3 +1,40 @@
+## 2026-08-03 17:12 Europe/Amsterdam — SCRUB-WP_RECOGNITION_PROFILE_CONFIGURATION_REFACTOR
+
+Status: completed; pure recognition-profile configuration implemented.
+
+Purpose:
+- Replace scattered future profile branching with one tested source of truth before exposing Zorg in the current UI.
+
+Files added:
+- `recognition_profiles.py`
+- `recognition_profile_validation.py`
+- `RECOGNITION_PROFILE_CONFIGURATION.md`
+- `tests/test_recognition_profiles.py`
+- `tests/test_recognition_profile_validation.py`
+- `output/validation/recognition_profile_configuration.json`
+- `workpackage_claims/scrub_wp_recognition_profile_configuration_refactor.md`
+- `handover/workpackages/20260803_1712_recognition_profile_configuration_refactor.md`
+
+Implementation result:
+- preserved the exact current three-profile order and labels;
+- defined the future Streamlit and desktop four-profile orders;
+- centralized thresholds, entity groups, candidate/example direction and Care policy actions;
+- added deterministic exact-span precedence for fifteen care-specific winners;
+- kept partial overlaps and all non-Care profile results unchanged;
+- kept live UI and care recognizer registration explicitly false.
+
+Validation:
+- initial GitHub Actions run #1865 passed: 965 tests;
+- final clean validation pending after governance finalization;
+- Hugging Face sync not functionally relevant;
+- app verification not applicable.
+
+Intentionally not changed:
+- `presidio_streamlit.py`, `presidio_helpers.py` or current analyzer registration;
+- visible profile selector, thresholds or entity defaults;
+- review, export, Scrub Key or reinsert semantics;
+- runtime, dependencies or cloud processing.
+
 ## 2026-08-03 16:52 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_RECOGNIZER_IMPLEMENTATION
 
 Status: completed; pure recognizer implementation validated.

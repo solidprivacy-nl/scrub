@@ -231,6 +231,8 @@ The recognizer contract is now frozen with sixteen dedicated entities, 37 positi
 
 The pure recognizer implementation now passes all frozen fixtures and all 54 dedicated corpus expectations with zero protected-clinical overlaps. Risk R10 remains open because generic NER composition, AGB/BSN cross-recognizer precedence, visible profile policy, cross-profile regression and live app verification are not yet complete.
 
+The central profile model now freezes Care composition and exact-span precedence without changing the live application. Risk R10 remains open until the current app registers the care recognizers, uses the profile policy, runs cross-profile regression and passes deployed app verification.
+
 ---
 
 ## Product-claim boundary

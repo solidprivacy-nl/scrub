@@ -469,6 +469,8 @@ Current-engine baseline evidence is now recorded: 25 of 81 expected replace/revi
 
 The dedicated pure recognizer implementation is now green but remains unregistered: sixteen care entities pass 37/37 positive contracts, 16/16 negative/collision contracts and all 54 dedicated expectations in the eight-document corpus, with zero protected-clinical overlaps. The next gate is central profile composition and AGB/BSN precedence before any visible Zorg profile is added.
 
+Central profile configuration is now implemented without changing the live UI. The current three options remain exact, while future Streamlit and desktop four-profile orders, thresholds, entity groups, care policy actions and fifteen exact-span precedence winners are frozen. Care recognizer registration and visible UI integration remain the next gated package.
+
 ### Current and final interface direction
 
 Current prototype after test-gated integration:
