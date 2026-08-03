@@ -1,3 +1,51 @@
+## 2026-08-03 18:28 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION
+
+Status: implemented and regression-green; merge, sync and deployed app verification pending.
+
+Goal:
+- Register and expose the approved Zorgfilter v1 profile in the current Streamlit flow without changing export, Scrub Key or reinsert semantics.
+
+Result:
+
+```text
+Visible profiles: 4
+Default profile: Juridische controle — streng
+Dedicated care recognizers registered: 16
+Synthetic care examples: 8
+Care candidates: review-only and unchecked
+Review-selected detections: selected by default, status Controle nodig
+GitHub Actions run #1877: 983 tests passed
+Export semantics changed: false
+Scrub Key semantics changed: false
+Reinsert semantics changed: false
+Production ready: false
+```
+
+Implementation:
+- central profile configuration drives labels, thresholds and entity composition;
+- exact-span care/legacy and AGB/BSN collision resolution runs before the replacement table;
+- conservative strongly-labelled care candidate scanner added;
+- user-facing care labels, placeholders and generalized product copy added;
+- Legal remains the initial default and no profile changes silently;
+- clinical meaning remains a preservation target.
+
+Evidence:
+- `CARE_PROFILE_CURRENT_UI_INTEGRATION.md`
+- `output/validation/care_profile_current_ui_integration.json`
+- `handover/workpackages/20260803_1828_care_profile_current_ui_integration.md`
+
+Active next package:
+- `SCRUB-WP_CARE_PROFILE_CROSS_PROFILE_REGRESSION_MATRIX`
+
+Required later gate:
+- `SCRUB-WP_CARE_PROFILE_APP_VERIFY` after merge and deployment sync.
+
+Boundaries:
+- human review remains required;
+- synthetic evidence does not prove production recall or precision;
+- no cloud document processing or new dependency;
+- no export filename, MIME type, Scrub Key schema/binding or reinsert behavior change.
+
 ## 2026-08-03 17:12 Europe/Amsterdam — SCRUB-WP_RECOGNITION_PROFILE_CONFIGURATION_REFACTOR
 
 Status: completed; pure four-profile configuration implemented, live integration still closed.

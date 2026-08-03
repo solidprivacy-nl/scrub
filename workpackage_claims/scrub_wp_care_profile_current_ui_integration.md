@@ -2,7 +2,7 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Claimed at: 2026-08-03 17:18 Europe/Amsterdam  
-Status: in_progress
+Status: implemented; merge, sync and app verification pending
 
 ## Scope
 
