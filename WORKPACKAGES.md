@@ -1,3 +1,53 @@
+## 2026-08-03 23:42 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_PLAN
+
+Status: completed as planning; GitHub Actions green.
+
+Goal:
+- Determine whether an unmasked value can be selected in `Verwerkte tekst`, classified through a right-click menu and safely added through the existing manual replacement path.
+
+Planning result:
+
+```text
+Technically feasible: yes
+Recommended component: bidirectional Streamlit v1 custom component
+Current static components.html mutation-capable: no
+First scope: all exact occurrences only
+Only selected occurrence: deferred; requires span-aware architecture
+Review table source of truth: preserved
+Existing manual form fallback: preserved
+Export/Scrub Key/reinsert semantics: unchanged
+Implementation authorized: no
+GitHub Actions: PR #59 run #1937 — 1015 passed in 11.64s
+```
+
+Files added:
+- `PROCESSED_TEXT_SELECTION_MASKING_PLAN.md`
+- `tests/test_processed_text_selection_masking_plan.py`
+- `workpackage_claims/scrub_wp_processed_text_selection_masking_plan.md`
+- `handover/workpackages/20260803_2342_processed_text_selection_masking_plan.md`
+
+Files changed:
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md`
+
+Proposed implementation sequence:
+1. `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT`
+2. `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL`
+3. `SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE`
+4. `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`
+5. `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION`
+6. `SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY`
+
+Boundaries:
+- planning and documentation only;
+- no Streamlit UI, component, helper, dependency or runtime change;
+- no occurrence-specific replacement;
+- no recognizer, export, Scrub Key, reinsert or cloud-processing change;
+- implementation requires explicit coordinator approval after discussion.
+
 ## 2026-08-03 23:26 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS_APP_VERIFY_CLOSEOUT
 
 Status: completed; final documentation-only GitHub Actions confirmation pending.

@@ -253,3 +253,29 @@ Before implementation, contract tests should verify:
 10. no click-to-mark, advanced editor or full-document marking;
 11. no Scrub Key/export/reinsert behavior change;
 12. source text escaping is required for any HTML-based rendering.
+
+## 14. 2026-08-03 planning clarification — selection-driven manual correction
+
+The earlier `no click-to-mark` boundary applied to the completed first side-by-side review phase. It prevented a fragile mutation mechanism from being added before the read-only comparison surface and manual correction path were stable.
+
+Direct user evidence now supports evaluating a separate bounded interaction:
+
+```text
+select an unmasked value in Verwerkte tekst
+→ right-click
+→ choose a masking type
+→ add a normal manual row
+```
+
+The companion `PROCESSED_TEXT_SELECTION_MASKING_PLAN.md` specifies the only recommended first-version direction:
+
+- bidirectional component event, not parent-DOM or query-parameter hacks;
+- server-authoritative validation;
+- all exact occurrences only;
+- existing document-scoped manual row and bound placeholder path;
+- replacement table remains source of truth and fallback;
+- manual form remains available;
+- no occurrence-specific model, rich editor, Streamlit upgrade, export, Scrub Key or reinsert change;
+- implementation requires explicit coordinator approval and sequential contract/action-model/component/integration packages.
+
+This clarification records a candidate next direction. It does not authorize UI implementation and does not retroactively change the safety boundaries of the completed side-by-side package.

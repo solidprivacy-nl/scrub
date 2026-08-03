@@ -1,3 +1,44 @@
+## 2026-08-03 23:42 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_PLAN
+
+Status: completed as planning; validation green.
+
+Purpose:
+- Assess a document-centric path for correcting missed sensitive values directly from the processed-text pane.
+
+Files added:
+- `PROCESSED_TEXT_SELECTION_MASKING_PLAN.md`
+- `tests/test_processed_text_selection_masking_plan.py`
+- `workpackage_claims/scrub_wp_processed_text_selection_masking_plan.md`
+- `handover/workpackages/20260803_2342_processed_text_selection_masking_plan.md`
+
+Files changed:
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `RISK_REGISTER.md`
+- `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md`
+
+Planning result:
+- confirmed that the current static `components.html` pane cannot return a supported mutation event;
+- recommended a bounded bidirectional Streamlit v1 custom component on the current Streamlit 1.39 stack;
+- routed accepted actions through server-side validation and the existing `build_manual_mask_row` path;
+- kept the review table authoritative and the manual form available as fallback;
+- limited version one to all exact occurrences and deferred occurrence-specific masking to a separate span-aware architecture line;
+- defined quick type choices, occurrence-impact warnings, collision blocking, event replay/stale-view protection, scroll restoration, undo, accessibility, XSS and no-external-network requirements;
+- defined six sequential test-first implementation workpackages.
+
+Validation:
+- documentation/architecture contract tests added;
+- PR #59 run #1937: 1015 tests passed in 11.64s;
+- one final clean regression follows the status-only update;
+- Hugging Face sync not functionally relevant;
+- app verification not applicable because no product behavior changed.
+
+Intentionally not changed:
+- `presidio_streamlit.py`, side-by-side renderer or manual mask helper;
+- Streamlit/dependency versions or Docker runtime;
+- replacement table, export, Scrub Key or reinsert semantics;
+- recognizers, profiles, cloud processing or product claims.
+
 ## 2026-08-03 23:26 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS_APP_VERIFY_CLOSEOUT
 
 Status: completed; final documentation-only regression pending.
