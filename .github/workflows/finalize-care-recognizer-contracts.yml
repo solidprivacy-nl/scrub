@@ -1,0 +1,28 @@
+name: Finalize Zorgfilter recognizer contracts
+
+on:
+  push:
+    branches:
+      - scrub-care-profile-recognizer-contract-tests
+    paths:
+      - ops/finalize_care_recognizer_contracts.py
+      - .github/workflows/finalize-care-recognizer-contracts.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: scrub-care-profile-recognizer-contract-tests
+          fetch-depth: 0
+      - run: python ops/finalize_care_recognizer_contracts.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add WORKPACKAGES.md CHANGELOG.md RISK_REGISTER.md workpackage_claims/scrub_wp_care_profile_recognizer_contract_tests.md ops/finalize_care_recognizer_contracts.py .github/workflows/finalize-care-recognizer-contracts.yml
+          git commit -m "Finalize Zorgfilter recognizer contracts"
+          git push origin HEAD:scrub-care-profile-recognizer-contract-tests
