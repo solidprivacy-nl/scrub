@@ -1,3 +1,39 @@
+## 2026-08-03 15:31 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_V1_POLICY_AND_CORPUS_FOUNDATION
+
+Status: in progress; policy/corpus foundation implemented on a dedicated branch.
+
+Purpose:
+- Create the evidence base for an explicit Dutch Zorg profile without prematurely changing recognizers or the UI.
+
+Files added:
+- `CARE_PROFILE_V1_PLAN.md`
+- `care_profile_policy.py`
+- `care_test_examples.py`
+- `care_profile_baseline.py`
+- `scripts/generate_care_profile_baseline.py`
+- `tests/test_care_profile_policy_contract.py`
+- `tests/test_care_profile_corpus_contracts.py`
+- `tests/test_care_profile_current_engine_baseline.py`
+- `workpackage_claims/scrub_wp_care_profile_v1_policy_and_corpus_foundation.md`
+
+Main changes:
+- froze replace/review/preserve/audit-only care policy actions;
+- added eight fully synthetic document families;
+- separated patient identifiers from provider/location review and clinical content preservation;
+- added a deterministic baseline helper for current Dutch custom recognizers;
+- made no recognizer or product-UI behavior change.
+
+Validation:
+- GitHub Actions pending on the branch;
+- Hugging Face sync not functionally relevant;
+- app verification not applicable.
+
+Intentionally not changed:
+- current three profile choices;
+- recognizer registration or thresholds;
+- review table, export, Scrub Key and reinsert semantics;
+- runtime, dependencies or cloud processing.
+
 ## 2026-08-03 14:47 Europe/Amsterdam — SCRUB-WP_AI_FIRST_DESKTOP_PACKAGING_ROADMAP_ALIGNMENT
 
 Status: completed; roadmap/decision documentation only.

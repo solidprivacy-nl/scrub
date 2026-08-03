@@ -181,6 +181,41 @@ Current mitigations include diagnostic benchmark work, preservation guidance, PE
 
 ---
 
+## R10 — Care-profile under-detection and clinical over-masking
+
+Status: mitigating  
+Impact: critical
+
+Risk:
+
+```text
+A care document retains patient or trajectory identifiers, or Scrub removes diagnosis, medication, laboratory values, observations or care context and makes the document misleading or unusable.
+```
+
+Mitigation direction:
+
+- explicit Zorgfilter v1 policy contract;
+- fully synthetic corpus across eight care-document families;
+- exact replace, review and preserve expectations;
+- current-engine baseline before recognizer changes;
+- separate care taxonomy and recognizers;
+- negative tests for medical numbers, dosages, times, vital signs and laboratory values;
+- cross-profile regression before UI promotion;
+- human review and residual-risk evidence remain mandatory.
+
+Approved policy boundary:
+
+```text
+Patient identity and date of birth: replace.
+Other exact care dates and provider identity: review, selected by default.
+Clinical meaning: preserve.
+Rare-case indirect identification: audit warning, not blind masking.
+```
+
+The current broad `NL_HEALTHCARE_REFERENCE` category is insufficient because it combines patient numbers, referral references, insurance identifiers and DBC/clinical codes under one behavior.
+
+---
+
 ## Product-claim boundary
 
 Disallowed claims:

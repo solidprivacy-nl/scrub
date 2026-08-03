@@ -1,3 +1,34 @@
+## 2026-08-03 — D039 — Add Zorgfilter v1 with clinical-context preservation
+
+Status: accepted product and implementation-sequence decision
+
+Decision:
+
+```text
+Add an explicit Dutch Zorg profile. Replace date of birth and patient/client identity by default. Show other exact care dates, provider identity, BIG/AGB, organizations and locations for review and select them by default. Preserve diagnosis, medication, dosage, laboratory results and observations. Surface rare-case indirect re-identification as residual-risk evidence rather than blindly masking clinical meaning.
+```
+
+Implementation sequence:
+- policy and fully synthetic corpus first;
+- current-engine baseline and gap triage second;
+- recognizer contracts and pure recognizer implementation before UI;
+- central profile configuration before adding the fourth Streamlit profile;
+- cross-profile regression and live app verification before closeout.
+
+Reason:
+- Care documents contain both direct identifiers and essential clinical meaning.
+- A broad medical-word filter would destroy usability and potentially clinical/legal context.
+- The current `NL_HEALTHCARE_REFERENCE` category combines values with different privacy policies and must be split through evidence-driven work.
+- A fourth UI label without dedicated detection evidence would be cosmetic and unsafe.
+
+Boundaries:
+- synthetic data only;
+- human review remains required;
+- no production-readiness claim from corpus or benchmark results;
+- no silent profile switching;
+- no cloud document processing;
+- no export, Scrub Key or reinsert semantic change in the foundation package.
+
 ## 2026-08-03 — D038 — Use AI-first execution with human-controlled signing, security and release gates for Phase 9 desktop packaging
 
 Status: accepted roadmap and execution-model decision; implementation remains gated
