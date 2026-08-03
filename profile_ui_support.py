@@ -18,6 +18,7 @@ from recognition_profiles import (
     profile_options,
     resolve_profile_result_collisions,
 )
+from review_status import AUTO_DETECTED, NEEDS_REVIEW
 
 
 CARE_EXAMPLE_BY_NAME = {
@@ -96,6 +97,16 @@ def detected_reason(internal_value: str, entity_type: str) -> str:
     if profile_id == PROFILE_DUTCH_CARE_STRICT and action == ACTION_REVIEW_SELECTED:
         return "Automatisch herkend — controleren"
     return "Automatisch herkend"
+
+
+def detected_review_status(internal_value: str, entity_type: str) -> str:
+    """Return profile-aware status while leaving detected rows selected by default."""
+
+    profile_id = profile_id_for_internal_value(internal_value)
+    action = policy_action_for_profile_entity(profile_id, entity_type)
+    if profile_id == PROFILE_DUTCH_CARE_STRICT and action == ACTION_REVIEW_SELECTED:
+        return NEEDS_REVIEW
+    return AUTO_DETECTED
 
 
 def care_example_names() -> list[str]:
