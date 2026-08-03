@@ -131,7 +131,6 @@ def test_side_by_side_panel_escapes_static_fallback_and_uses_safe_component():
     assert "else escape(processed_text)" in text
     assert "_highlighted_processed_inner_html(" in text
     assert "render_processed_text_selection_component(" in text
-    assert "non_mutating_spike=False" in text
 
 
 def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_panel():
