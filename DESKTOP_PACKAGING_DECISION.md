@@ -3,6 +3,25 @@
 Status: completed decision/documentation-only  
 Repository: `solidprivacy-nl/scrub`
 
+## 1A. AI-first execution refinement — 2026-08-03
+
+The phase-order decision remains unchanged: installer work stays at the end of the roadmap and requires explicit approval. When that line opens, the intended end-user target is refined to:
+
+```text
+signed Tauri Windows shell
++ bundled PyInstaller onedir Python/Presidio sidecar
++ one setup.exe for low-friction installation
++ one MSI for managed deployment
++ local/offline model assets
++ loopback-only same-PC communication
+```
+
+The portable Python folder remains an internal technical validation route rather than the premium end-user product.
+
+Implementation should be AI-first for deterministic build, packaging, CI and evidence work. Approximately 60–70% of first-cycle development/integration labor and 75–90% of later repetitive release work may be agent-executed. Human authority remains mandatory for publisher identity, signing approval, public release, security claims, real Windows UX acceptance and changes to safety-critical product semantics.
+
+No single agent may hold unrestricted repository-write, signing and public-release authority at the same time. This refinement changes no current runtime, product behavior or active phase gate.
+
 ## 1. Decision update after roadmap adjustment
 
 The packaging decision remains valid, but the roadmap sequence is now stricter:

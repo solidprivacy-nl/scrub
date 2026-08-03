@@ -1,3 +1,18 @@
+## 2026-08-03 14:47 Europe/Amsterdam — SCRUB-WP_AI_FIRST_DESKTOP_PACKAGING_ROADMAP_ALIGNMENT
+
+Status: completed; documentation/strategy alignment only.
+
+Summary:
+- Added an AI-first execution model for the final local Windows desktop/offline packaging phase.
+- Preserved the existing gate: installer implementation remains deferred until Phase 6 quality closeout and explicit coordinator approval.
+- Refined the eventual target to a signed Tauri shell, bundled PyInstaller onedir Python/Presidio sidecar, setup.exe and MSI.
+- Recorded planning assumptions that 60–70% of first-cycle development/integration labor and 75–90% of later repetitive release work may be agent-executed.
+- Kept publisher identity, signing, public release, security claims, real-user acceptance and safety-critical semantic changes under human control.
+- Added no product code, installer, runtime, dependency or UI change.
+
+Next recommended step:
+- Continue the active Phase 6 queue. Open the Phase 9 desktop distribution contract only after quality-gate closeout and explicit approval.
+
 ## 2026-07-28 00:52 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
 
 Status: implemented; full GitHub Actions passed; app verification pending.

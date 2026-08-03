@@ -1,3 +1,41 @@
+## 2026-08-03 14:47 Europe/Amsterdam — SCRUB-WP_AI_FIRST_DESKTOP_PACKAGING_ROADMAP_ALIGNMENT
+
+Status: completed; roadmap/decision documentation only.
+
+Purpose:
+- Incorporate an AI-first cost and authority model into the final local EXE/MSI roadmap while preserving security and release accountability.
+
+Files added:
+- `AI_FIRST_DESKTOP_PACKAGING_EXECUTION_MODEL.md`
+- `handover/workpackages/20260803_1447_ai_first_desktop_packaging_roadmap_alignment.md`
+- `workpackage_claims/scrub_wp_ai_first_desktop_packaging_roadmap_alignment.md`
+
+Files changed:
+- `ROADMAP.md`
+- `DESKTOP_PACKAGING_DECISION.md`
+- `DECISION_LOG.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Main changes:
+- Phase 9 target refined to signed setup.exe/MSI distribution around a Tauri shell and bundled PyInstaller onedir local engine.
+- AI-agent planning assumption recorded: 60–70% first-cycle labor substitution and 75–90% later repetitive release automation.
+- Indicative post-agent development/integration budget recorded as EUR 8,000–24,000, excluding retained independent security review and authority costs.
+- Human gates retained for signing, release, security claims, UX acceptance and safety-critical semantics.
+
+Validation:
+- Documentation markers and phase gates checked by the branch governance operator.
+- No product tests required because no product code or runtime changed.
+- GitHub Actions: pending PR validation.
+- Hugging Face sync: not functionally relevant.
+- App verification: not applicable.
+
+Intentionally not changed:
+- active Phase 6 execution order;
+- installer implementation authorization;
+- runtime, UI, dependencies, recognizers, export, Scrub Key or reinsert behavior;
+- cloud processing or telemetry behavior.
+
 ## 2026-07-28 00:52 Europe/Amsterdam — SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION
 
 Status: implemented; full GitHub Actions passed; final PR validation pending.
