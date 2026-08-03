@@ -74,7 +74,7 @@ The new tests cover:
 
 ## GitHub Actions status
 
-Green. Corrected implementation run #1961 passed 1106 tests in 10.66s; clean standard PR run #1970 passed 1106 tests in 10.71s. One final status-only regression follows this closeout update.
+Green. Corrected implementation run #1961 passed 1106 tests in 10.66s; clean standard PR run #1970 passed 1106 tests in 10.71s. This connector-authored closeout commit triggers the final standard regression.
 
 ## Hugging Face sync status
 
