@@ -1,3 +1,46 @@
+## 2026-08-03 16:10 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_ENGINE_BASELINE
+
+Status: completed; evidence baseline implemented and validated.
+
+Purpose:
+- Establish a corrected, reproducible pre-Zorgfilter measurement for the current deterministic Dutch custom recognizers.
+
+Files added:
+- `CARE_PROFILE_CURRENT_ENGINE_BASELINE.md`
+- `care_profile_baseline_summary.py`
+- `tests/test_care_profile_baseline_summary.py`
+- `output/validation/care_profile_v1_current_engine_baseline.json`
+- `workpackage_claims/scrub_wp_care_profile_current_engine_baseline.md`
+- `handover/workpackages/20260803_1610_care_profile_current_engine_baseline.md`
+
+Files changed:
+- `care_profile_baseline.py`
+- `scripts/generate_care_profile_baseline.py`
+- `tests/test_care_profile_current_engine_baseline.py`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `RISK_REGISTER.md`
+
+Implementation result:
+- changed baseline matching from substring containment to exact normalized span equality;
+- prevented false AGB coverage from an eight-digit prefix inside a longer BIG number;
+- added compact policy/entity/case summaries;
+- committed a reproducible JSON evidence artifact;
+- documented 25/81 span recall, 14/81 correct-entity recall, 11 misclassifications, 56 misses and zero protected-clinical overlaps.
+
+Validation:
+- diagnostic run #1825 produced the evidence while 918 non-diagnostic tests passed;
+- final clean GitHub Actions validation required after temporary diagnostics were removed;
+- Hugging Face sync not functionally relevant;
+- app verification not applicable.
+
+Intentionally not changed:
+- recognizer registration or behavior;
+- current profile selector or UI;
+- thresholds or entity defaults;
+- review, export, Scrub Key and reinsert semantics;
+- dependencies, runtime or cloud processing.
+
 ## 2026-08-03 15:31 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_V1_POLICY_AND_CORPUS_FOUNDATION
 
 Status: completed; policy/corpus foundation implemented and validated.
