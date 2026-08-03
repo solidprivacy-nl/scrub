@@ -23,9 +23,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Apply processed-text selection masking contract governance
-        if: github.ref == 'refs/heads/scrub-processed-text-selection-masking-contract'
+        if: github.ref == 'refs/heads/scrub-processed-text-selection-masking-contract' || github.head_ref == 'scrub-processed-text-selection-masking-contract'
         run: |
           python ops/apply_processed_text_selection_masking_contract.py
           git fetch origin main
