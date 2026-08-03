@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SolidPrivacy processed-text selection spike</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="componentRoot" class="sp-component" aria-label="Niet-muterende selectiecomponent">
+    <div class="sp-review-grid" aria-label="side-by-side review panes">
+      <section class="sp-pane-section" aria-labelledby="sourceTitle">
+        <div class="sp-pane-title">
+          <strong id="sourceTitle">Brontekst</strong>
+          <span>Originele tekst</span>
+        </div>
+        <div id="sourcePane" class="sp-pane" tabindex="0" aria-label="Brontekst"></div>
+      </section>
+      <section class="sp-pane-section" aria-labelledby="processedTitle">
+        <div class="sp-pane-title">
+          <strong id="processedTitle">Verwerkte tekst</strong>
+          <span id="processedLegend">Verwerkte tekst</span>
+        </div>
+        <div id="processedPane" class="sp-pane" tabindex="0" aria-label="Verwerkte tekst"></div>
+        <div class="sp-selection-actions">
+          <button id="maskSelectionButton" type="button" disabled>Masker selectie</button>
+          <span id="selectionHint">Selecteer een gemiste waarde en klik met rechts om die toe te voegen.</span>
+        </div>
+      </section>
+    </div>
+
+    <div id="contextMenu" class="sp-context-menu" role="menu" aria-label="Maskeringstype kiezen" hidden></div>
+    <div id="statusRegion" class="sp-status" role="status" aria-live="polite"></div>
+    <div class="sp-footer">De panelen scrollen samen. Deze componentproef wijzigt geen vervangtabel of document.</div>
+  </main>
+
+  <script src="streamlit_bridge.js"></script>
+  <script src="component_core.js"></script>
+  <script src="component.js"></script>
+</body>
+</html>
