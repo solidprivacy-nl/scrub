@@ -2,7 +2,7 @@
 
 Repository worked in: `solidprivacy-nl/scrub`  
 Workpackage title: Freeze the processed-text selection masking interaction and safety contract  
-Status: implemented; clean GitHub Actions regression pending
+Status: completed; GitHub Actions green
 
 ## Summary
 
@@ -36,6 +36,7 @@ Version one remains `all_exact` only. One to five safe occurrences can be commit
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
 - `DECISION_LOG.md`
+- `tests/test_processed_text_selection_masking_plan.py`
 
 ## Tests
 
@@ -54,16 +55,19 @@ Added contract tests for:
 - no external network, browser persistence or frontend mutation authority;
 - sequential gate to the pure action model only.
 
+Aligned the earlier planning test with the approved contract state after the governance transition.
+
 ## Validation status
 
-- Governance operator: applied; standard workflow restored and temporary operator removed.
-- GitHub Actions: clean PR regression pending on the definitive branch.
+- Governance operator applied; standard workflow restored and temporary operator removed.
+- Clean PR run #1954: **1027 tests passed in 11.48s**.
+- The prior clean run #1953 had one stale planning-status assertion while 1026 tests passed; no runtime defect was involved.
 - Hugging Face sync: not functionally relevant; specification/tests only.
 - App verification: not applicable; no runtime or UI behavior changed.
 
 ## GitHub Actions status
 
-A connector-authored status commit now triggers the clean PR regression after the bot-authored governance commit, which correctly does not self-trigger another workflow.
+Green on run #1954 — 1027 passed in 11.48s. A final status-only PR regression follows this handover update.
 
 ## Hugging Face sync status
 
@@ -83,7 +87,7 @@ Not applicable.
 
 ## Next recommended step
 
-After a green contract regression and merge, claim and implement only:
+After merge, claim and implement only:
 
 ```text
 SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
