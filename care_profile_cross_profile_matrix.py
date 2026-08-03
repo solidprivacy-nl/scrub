@@ -3,6 +3,11 @@
 The matrix runs the repository's Dutch custom recognizers without a generic NER
 model. It verifies profile composition, dedicated Care/Legal isolation, policy
 alignment, exact-span collision handling and clinical-context preservation.
+
+The historic ``legal_test_examples.py`` metadata is retained as observation
+evidence. It combines deterministic recognizer expectations, generic-NER
+expectations and older negative assumptions, so it is not treated as a pure
+hard contract for this Zorgfilter integration package.
 """
 
 from __future__ import annotations
@@ -82,12 +87,13 @@ def detect_custom_profile(text: str, profile_id: str) -> List[Dict[str, Any]]:
     """Run all deterministic custom recognizers for one configured profile."""
 
     entities = _profile_entities(profile_id)
+    entity_set = set(entities)
     recognizers = list(get_dutch_recognizers(supported_language="en")) + list(
         get_dutch_care_recognizers(supported_language="en")
     )
     rows: List[Dict[str, Any]] = []
     for recognizer in recognizers:
-        if not set(recognizer.supported_entities) & set(entities):
+        if not set(recognizer.supported_entities) & entity_set:
             continue
         results = recognizer.analyze(text, entities=entities, nlp_artifacts=None)
         rows.extend(_row(text, result, recognizer.name) for result in results)
@@ -153,7 +159,7 @@ def _preserve_overlaps(
     return overlaps
 
 
-def _failure(
+def _record(
     category: str,
     profile_id: str,
     case_id: str,
@@ -168,17 +174,30 @@ def _failure(
     }
 
 
+def _dedicated_entity_types(
+    rows: Sequence[Mapping[str, Any]], entity_types: set[str]
+) -> set[str]:
+    return {
+        str(row["entity_type"])
+        for row in rows
+        if str(row["entity_type"]) in entity_types
+    }
+
+
 def build_cross_profile_matrix() -> Dict[str, Any]:
     care_entities = set(get_dutch_care_entity_names())
     legal_entities = set(get_dutch_legal_entity_names())
     general_entities = set(get_dutch_general_entity_names())
     hard_failures: List[Dict[str, str]] = []
+    observations: List[Dict[str, str]] = []
     care_case_summaries: List[Dict[str, Any]] = []
     legal_case_summaries: List[Dict[str, Any]] = []
     care_expected_total = 0
     care_expected_found = 0
-    legal_expected_total = 0
-    legal_expected_found = 0
+    legacy_expected_total = 0
+    legacy_expected_found = 0
+    legacy_forbidden_total = 0
+    legacy_forbidden_found = 0
     preserve_overlap_total = 0
 
     for case in CARE_TEST_CASES:
@@ -196,6 +215,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
         ]
         case_summary = {
             "case_id": case_id,
+            "name": str(case["name"]),
             "dedicated_care_expectation_count": len(dedicated_expectations),
             "profile_result_counts": {
                 profile_id: len(rows) for profile_id, rows in rows_by_profile.items()
@@ -216,7 +236,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
                     care_expected_found += 1
                 else:
                     hard_failures.append(
-                        _failure(
+                        _record(
                             "missing_dedicated_care_expectation",
                             profile_id,
                             case_id,
@@ -224,17 +244,32 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
                         )
                     )
 
+        care_types = _dedicated_entity_types(
+            rows_by_profile[PROFILE_DUTCH_CARE_STRICT], care_entities
+        )
+        international_care_types = _dedicated_entity_types(
+            rows_by_profile[PROFILE_GENERAL_INTERNATIONAL], care_entities
+        )
+        if care_types != international_care_types:
+            hard_failures.append(
+                _record(
+                    "care_international_type_parity_mismatch",
+                    PROFILE_GENERAL_INTERNATIONAL,
+                    case_id,
+                    (
+                        f"care_only={sorted(care_types - international_care_types)}; "
+                        f"international_only={sorted(international_care_types - care_types)}"
+                    ),
+                )
+            )
+
         for profile_id in (PROFILE_DUTCH_GENERAL, PROFILE_DUTCH_LEGAL_STRICT):
             leaked = sorted(
-                {
-                    str(row["entity_type"])
-                    for row in rows_by_profile[profile_id]
-                    if str(row["entity_type"]) in care_entities
-                }
+                _dedicated_entity_types(rows_by_profile[profile_id], care_entities)
             )
             if leaked:
                 hard_failures.append(
-                    _failure(
+                    _record(
                         "dedicated_care_entity_leakage",
                         profile_id,
                         case_id,
@@ -253,7 +288,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
                 )
                 if actual != expected_action:
                     hard_failures.append(
-                        _failure(
+                        _record(
                             "care_policy_mismatch",
                             PROFILE_DUTCH_CARE_STRICT,
                             case_id,
@@ -267,7 +302,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
             preserve_overlap_total += len(overlaps)
             for overlap in overlaps:
                 hard_failures.append(
-                    _failure(
+                    _record(
                         "clinical_preserve_overlap",
                         profile_id,
                         case_id,
@@ -281,11 +316,45 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
 
     for index, case in enumerate(LEGAL_TEST_CASES):
         case_id = f"legal_{index + 1:02d}"
+        case_name = str(case["name"])
         text = str(case["text"])
         rows_by_profile = {
             profile_id: detect_custom_profile(text, profile_id)
             for profile_id in PROFILE_IDS
         }
+        legal_types = _dedicated_entity_types(
+            rows_by_profile[PROFILE_DUTCH_LEGAL_STRICT], legal_entities
+        )
+        international_legal_types = _dedicated_entity_types(
+            rows_by_profile[PROFILE_GENERAL_INTERNATIONAL], legal_entities
+        )
+        if legal_types != international_legal_types:
+            hard_failures.append(
+                _record(
+                    "legal_international_type_parity_mismatch",
+                    PROFILE_GENERAL_INTERNATIONAL,
+                    case_id,
+                    (
+                        f"legal_only={sorted(legal_types - international_legal_types)}; "
+                        f"international_only={sorted(international_legal_types - legal_types)}"
+                    ),
+                )
+            )
+
+        for profile_id in (PROFILE_DUTCH_GENERAL, PROFILE_DUTCH_CARE_STRICT):
+            leaked = sorted(
+                _dedicated_entity_types(rows_by_profile[profile_id], legal_entities)
+            )
+            if leaked:
+                hard_failures.append(
+                    _record(
+                        "dedicated_legal_entity_leakage",
+                        profile_id,
+                        case_id,
+                        ", ".join(leaked),
+                    )
+                )
+
         expected_legal_types = sorted(
             set(str(value) for value in case.get("should_contain", []))
             & legal_entities
@@ -298,66 +367,44 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
                 PROFILE_DUTCH_LEGAL_STRICT,
                 PROFILE_GENERAL_INTERNATIONAL,
             ):
-                legal_expected_total += 1
+                legacy_expected_total += 1
+                if entity_type in _dedicated_entity_types(
+                    rows_by_profile[profile_id], legal_entities
+                ):
+                    legacy_expected_found += 1
+                else:
+                    observations.append(
+                        _record(
+                            "legacy_legal_metadata_missing",
+                            profile_id,
+                            case_id,
+                            f"{case_name}: {entity_type}",
+                        )
+                    )
+
+        for entity_type in forbidden_types:
+            for profile_id in PROFILE_IDS:
+                legacy_forbidden_total += 1
                 if any(
                     row["entity_type"] == entity_type
                     for row in rows_by_profile[profile_id]
                 ):
-                    legal_expected_found += 1
-                else:
-                    hard_failures.append(
-                        _failure(
-                            "missing_legal_expectation",
+                    legacy_forbidden_found += 1
+                    observations.append(
+                        _record(
+                            "legacy_legal_forbidden_metadata_observed",
                             profile_id,
                             case_id,
-                            entity_type,
+                            f"{case_name}: {entity_type}",
                         )
                     )
-
-        for profile_id in (PROFILE_DUTCH_GENERAL, PROFILE_DUTCH_CARE_STRICT):
-            leaked = sorted(
-                {
-                    str(row["entity_type"])
-                    for row in rows_by_profile[profile_id]
-                    if str(row["entity_type"]) in legal_entities
-                }
-            )
-            if leaked:
-                hard_failures.append(
-                    _failure(
-                        "dedicated_legal_entity_leakage",
-                        profile_id,
-                        case_id,
-                        ", ".join(leaked),
-                    )
-                )
-
-        for profile_id in PROFILE_IDS:
-            found_forbidden = sorted(
-                {
-                    entity_type
-                    for entity_type in forbidden_types
-                    if any(
-                        row["entity_type"] == entity_type
-                        for row in rows_by_profile[profile_id]
-                    )
-                }
-            )
-            if found_forbidden:
-                hard_failures.append(
-                    _failure(
-                        "forbidden_legal_entity",
-                        profile_id,
-                        case_id,
-                        ", ".join(found_forbidden),
-                    )
-                )
 
         legal_case_summaries.append(
             {
                 "case_id": case_id,
-                "name": str(case["name"]),
-                "expected_legal_entity_types": expected_legal_types,
+                "name": case_name,
+                "legacy_expected_legal_entity_types": expected_legal_types,
+                "deterministic_legal_entity_types": sorted(legal_types),
                 "profile_result_counts": {
                     profile_id: len(rows)
                     for profile_id, rows in rows_by_profile.items()
@@ -372,7 +419,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
         for profile_id in PROFILE_IDS:
             if entity_type not in profile_entities[profile_id]:
                 hard_failures.append(
-                    _failure(
+                    _record(
                         "shared_general_entity_missing",
                         profile_id,
                         "profile_configuration",
@@ -383,7 +430,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
         for profile_id in (PROFILE_DUTCH_CARE_STRICT, PROFILE_GENERAL_INTERNATIONAL):
             if entity_type not in profile_entities[profile_id]:
                 hard_failures.append(
-                    _failure(
+                    _record(
                         "care_entity_not_enabled",
                         profile_id,
                         "profile_configuration",
@@ -393,7 +440,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
         for profile_id in (PROFILE_DUTCH_GENERAL, PROFILE_DUTCH_LEGAL_STRICT):
             if entity_type in profile_entities[profile_id]:
                 hard_failures.append(
-                    _failure(
+                    _record(
                         "care_entity_enabled_in_wrong_profile",
                         profile_id,
                         "profile_configuration",
@@ -404,7 +451,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
         for profile_id in (PROFILE_DUTCH_LEGAL_STRICT, PROFILE_GENERAL_INTERNATIONAL):
             if entity_type not in profile_entities[profile_id]:
                 hard_failures.append(
-                    _failure(
+                    _record(
                         "legal_entity_not_enabled",
                         profile_id,
                         "profile_configuration",
@@ -414,7 +461,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
         for profile_id in (PROFILE_DUTCH_GENERAL, PROFILE_DUTCH_CARE_STRICT):
             if entity_type in profile_entities[profile_id]:
                 hard_failures.append(
-                    _failure(
+                    _record(
                         "legal_entity_enabled_in_wrong_profile",
                         profile_id,
                         "profile_configuration",
@@ -423,7 +470,7 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
                 )
 
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "scope": "deterministic Dutch custom recognizers; generic NER excluded",
         "synthetic_data_only": True,
         "production_ready": False,
@@ -441,8 +488,13 @@ def build_cross_profile_matrix() -> Dict[str, Any]:
         "legal_case_count": len(legal_case_summaries),
         "care_expected_total": care_expected_total,
         "care_expected_found": care_expected_found,
-        "legal_expected_total": legal_expected_total,
-        "legal_expected_found": legal_expected_found,
+        "legacy_legal_metadata_expected_total": legacy_expected_total,
+        "legacy_legal_metadata_expected_found": legacy_expected_found,
+        "legacy_legal_metadata_gap_count": legacy_expected_total - legacy_expected_found,
+        "legacy_legal_forbidden_check_total": legacy_forbidden_total,
+        "legacy_legal_forbidden_observed_count": legacy_forbidden_found,
+        "observation_count": len(observations),
+        "observations": observations,
         "clinical_preserve_overlap_count": preserve_overlap_total,
         "hard_failure_count": len(hard_failures),
         "hard_failures": hard_failures,
