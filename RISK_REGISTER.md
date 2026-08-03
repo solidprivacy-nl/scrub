@@ -235,6 +235,8 @@ The central profile model now freezes Care composition and exact-span precedence
 
 The current Streamlit integration now registers the sixteen care recognizers and applies the central profile policy. Review-selected care detections are selected by default but visibly marked `Controle nodig`; unresolved strongly labelled references remain unchecked candidates. Regression run #1877 passed 983 tests and existing export, Scrub Key and reinsert behavior remains unchanged. Risk R10 remains mitigating because cross-profile regression, deployment sync, generic-NER observation and live app verification are still pending.
 
+The deterministic cross-profile matrix now passes all hard gates: 108/108 dedicated Care expectations are retained across Care and International, no dedicated Care or Legal entities leak into the wrong profiles, dedicated-type parity holds, and no protected clinical phrase is overlapped. Historical legal metadata remains explicitly recorded as 132/148 deterministic expectations, sixteen gaps and four negative observations. Risk R10 remains mitigating because GitHub-to-Hugging-Face deployment sync, generic-NER behavior and live app verification are still unconfirmed.
+
 ---
 
 ## Product-claim boundary

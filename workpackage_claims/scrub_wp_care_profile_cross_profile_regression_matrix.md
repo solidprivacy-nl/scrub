@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-care-profile-cross-profile-regression-matrix`  
 Claimed: 2026-08-03 18:34 Europe/Amsterdam  
-Status: in_progress
+Status: completed
 
 ## Scope
 
