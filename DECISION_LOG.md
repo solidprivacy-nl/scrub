@@ -1,3 +1,53 @@
+## 2026-08-04 — D040 — Use a two-stage server-authoritative protocol for direct masking from processed text
+
+Status: accepted product, UX and implementation-sequence decision
+
+Decision:
+
+```text
+Allow a user to select an unmasked value in Verwerkte tekst, invoke a right-click or visible/keyboard masking action, inspect the server-validated exact-occurrence impact, choose a broad type and create one normal manual replacement row. Version one masks all safe exact occurrences only.
+```
+
+Protocol:
+
+```text
+inspect_selection
+→ server validates UTF-16 offsets, text, document scope, processed hash, collisions and occurrence count
+→ ready / confirmation_required / blocked inspection result
+→ commit_manual_mask with a current single-use inspection ID
+→ server revalidates and creates the bound manual row
+```
+
+Safety boundaries:
+- one to five safe exact occurrences are ready;
+- six to twenty require explicit confirmation;
+- more than twenty are blocked from the quick path;
+- embedded substrings, nested included replacement terms, marked-range intersections, duplicates, stale views and replays fail closed;
+- the review table remains source of truth and `Gemiste waarde toevoegen` remains fallback;
+- browser code never creates placeholders, mutates the table, writes a Scrub Key or builds an export;
+- no external assets, telemetry, browser persistence or cloud processing;
+- no occurrence-specific replacement, rich editor or Streamlit upgrade in this line.
+
+Reason:
+- direct correction where a false negative is noticed reduces navigation friction and copying mistakes;
+- a server-derived impact step is required because browser-supplied counts and types are untrusted;
+- all-exact behavior matches current replacement/export/Scrub Key/reinsert semantics;
+- occurrence-specific behavior would require a separate span-aware architecture.
+
+Approved sequence:
+1. `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT`
+2. `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL`
+3. `SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE`
+4. `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`
+5. `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION`
+6. `SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY`
+
+Evidence:
+- coordinator/user approval at 2026-08-04 00:09 Europe/Amsterdam;
+- `PROCESSED_TEXT_SELECTION_MASKING_PLAN.md`;
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`;
+- `test_cases/processed_text_selection_masking/contract.json`.
+
 ## 2026-08-03 — D039 — Add Zorgfilter v1 with clinical-context preservation
 
 Status: accepted product and implementation-sequence decision

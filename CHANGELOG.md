@@ -1,3 +1,47 @@
+## 2026-08-04 00:09 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT
+
+Status: implemented; validation pending.
+
+Purpose:
+- Convert the approved processed-text selection direction into an exact implementation contract before product code changes.
+
+Files added:
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
+- `test_cases/processed_text_selection_masking/contract.json`
+- `tests/test_processed_text_selection_masking_contract.py`
+- `workpackage_claims/scrub_wp_processed_text_selection_masking_contract.md`
+- `handover/workpackages/20260804_0009_processed_text_selection_masking_contract.md`
+
+Files changed:
+- `PROCESSED_TEXT_SELECTION_MASKING_PLAN.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+
+Contract result:
+- froze a two-stage `inspect_selection` / `commit_manual_mask` protocol so occurrence impact is server-derived before commitment;
+- froze all-exact scope, UTF-16 offset semantics and strict stale/replay handling;
+- froze 1–5 ready, 6–20 confirmation-required and >20 blocked impact bands;
+- froze 160-code-point single-line selections and an 8192-byte payload cap;
+- froze eight broad quick types with server-owned entity and placeholder mappings;
+- froze embedded-substring, nested replacement and marked-range collision blocking;
+- froze visible, right-click and keyboard access plus one-step undo behavior;
+- froze no-network, no-browser-persistence, escaped-rendering and fail-closed boundaries;
+- authorized only the pure action-model package next.
+
+Validation:
+- machine-readable contract fixture and contract tests added;
+- full GitHub Actions pending;
+- Hugging Face sync not functionally relevant;
+- app verification not applicable because no runtime behavior changed.
+
+Intentionally not changed:
+- `manual_mask_entry.py`, `presidio_streamlit.py` or side-by-side renderer;
+- Streamlit/dependency versions or Docker runtime;
+- review table, export, Scrub Key or reinsert semantics;
+- recognizers, profiles, cloud processing or product claims.
+
 ## 2026-08-03 23:42 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_PLAN
 
 Status: completed as planning; validation green.
