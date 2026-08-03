@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SolidPrivacy processed-text selection spike</title>
+  <title>SolidPrivacy tekstselectie</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main id="componentRoot" class="sp-component" aria-label="Niet-muterende selectiecomponent">
+  <main id="componentRoot" class="sp-component" aria-label="Tekstselectie voor handmatige maskering">
     <div class="sp-review-grid" aria-label="side-by-side review panes">
       <section class="sp-pane-section" aria-labelledby="sourceTitle">
         <div class="sp-pane-title">
@@ -31,7 +31,7 @@
 
     <div id="contextMenu" class="sp-context-menu" role="menu" aria-label="Maskeringstype kiezen" hidden></div>
     <div id="statusRegion" class="sp-status" role="status" aria-live="polite"></div>
-    <div class="sp-footer">De panelen scrollen samen. Deze componentproef wijzigt geen vervangtabel of document.</div>
+    <div id="componentFooter" class="sp-footer">De panelen scrollen samen. Maskeringen worden pas na servercontrole toegevoegd.</div>
   </main>
 
   <script src="streamlit_bridge.js"></script>
