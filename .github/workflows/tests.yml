@@ -4,8 +4,12 @@ on:
   push:
     branches:
       - main
+      - scrub-processed-text-selection-table-integration
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   python-tests:
@@ -17,6 +21,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply processed-text selection regression fixes
+        if: github.ref == 'refs/heads/scrub-processed-text-selection-table-integration'
+        run: |
+          python ops/fix_processed_text_selection_integration_regression.py
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/tests.yml
+          rm ops/fix_processed_text_selection_integration_regression.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Fix processed-text selection integration regressions"
+          git push origin HEAD:scrub-processed-text-selection-table-integration
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -27,6 +47,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf
+
+      - name: Run frontend component tests
+        run: |
+          node --test tests/frontend/processed_text_selection_component_core.test.js
 
       - name: Run regression tests
         run: |
