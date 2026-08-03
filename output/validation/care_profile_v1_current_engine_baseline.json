@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.1",
+  "profile": "current_custom_recognizers_before_care_profile",
+  "scope": "deterministic Dutch custom recognizers only; generic NER excluded",
+  "synthetic_data_only": true,
+  "production_ready": false,
+  "human_review_required": true,
+  "case_count": 8,
+  "expected_value_count": 81,
+  "found_value_count": 25,
+  "correct_entity_count": 14,
+  "misclassified_value_count": 11,
+  "missed_value_count": 56,
+  "indicative_span_recall": 0.308642,
+  "indicative_correct_entity_recall": 0.17284,
+  "preserve_overlap_count": 0,
+  "policy_summary": {
+    "replace": {
+      "expected": 39,
+      "found": 21,
+      "correct_entity": 11,
+      "misclassified": 10,
+      "missed": 18,
+      "span_recall": 0.538462,
+      "correct_entity_recall": 0.282051
+    },
+    "review_selected": {
+      "expected": 42,
+      "found": 4,
+      "correct_entity": 3,
+      "misclassified": 1,
+      "missed": 38,
+      "span_recall": 0.095238,
+      "correct_entity_recall": 0.071429
+    }
+  },
+  "entity_summary": {
+    "EMAIL_ADDRESS": {"expected": 2, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 2, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_ADDRESS": {"expected": 2, "found": 2, "correct_entity": 2, "misclassified": 0, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 1.0},
+    "NL_AGB_CODE": {"expected": 3, "found": 1, "correct_entity": 0, "misclassified": 1, "missed": 2, "span_recall": 0.333333, "correct_entity_recall": 0.0},
+    "NL_BIG_NUMBER": {"expected": 3, "found": 3, "correct_entity": 3, "misclassified": 0, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 1.0},
+    "NL_BSN": {"expected": 2, "found": 2, "correct_entity": 2, "misclassified": 0, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 1.0},
+    "NL_CARE_CLIENT_NUMBER": {"expected": 2, "found": 2, "correct_entity": 0, "misclassified": 2, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 0.0},
+    "NL_CARE_EVENT_DATE": {"expected": 7, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 7, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_CARE_INCIDENT_NUMBER": {"expected": 1, "found": 1, "correct_entity": 0, "misclassified": 1, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 0.0},
+    "NL_CARE_LOCATION_REFERENCE": {"expected": 6, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 6, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_CARE_ORGANIZATION": {"expected": 9, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 9, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_CARE_PROVIDER_NAME": {"expected": 10, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 10, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_DATE_OF_BIRTH": {"expected": 4, "found": 4, "correct_entity": 4, "misclassified": 0, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 1.0},
+    "NL_EPD_ECD_NUMBER": {"expected": 2, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 2, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_HEALTH_INSURANCE_NUMBER": {"expected": 1, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 1, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_LAB_SAMPLE_NUMBER": {"expected": 1, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 1, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_MEDICAL_RECORD_NUMBER": {"expected": 2, "found": 2, "correct_entity": 0, "misclassified": 2, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 0.0},
+    "NL_PATIENT_NUMBER": {"expected": 3, "found": 3, "correct_entity": 0, "misclassified": 3, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 0.0},
+    "NL_PHONE_NUMBER": {"expected": 3, "found": 3, "correct_entity": 3, "misclassified": 0, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 1.0},
+    "NL_REFERRAL_NUMBER": {"expected": 1, "found": 1, "correct_entity": 0, "misclassified": 1, "missed": 0, "span_recall": 1.0, "correct_entity_recall": 0.0},
+    "NL_ROOM_OR_BED_REFERENCE": {"expected": 4, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 4, "span_recall": 0.0, "correct_entity_recall": 0.0},
+    "NL_TREATMENT_REFERENCE": {"expected": 2, "found": 1, "correct_entity": 0, "misclassified": 1, "missed": 1, "span_recall": 0.5, "correct_entity_recall": 0.0},
+    "PERSON": {"expected": 11, "found": 0, "correct_entity": 0, "misclassified": 0, "missed": 11, "span_recall": 0.0, "correct_entity_recall": 0.0}
+  },
+  "cases": [
+    {"id": "care_daily_nursing_report_v1", "name": "VVT - dagelijkse verpleegkundige rapportage", "sector": "verpleging_verzorging_thuiszorg", "document_type": "dagrapportage", "expected": 13, "found": 5, "correct_entity": 4, "misclassified": 1, "missed": 8, "span_recall": 0.384615, "preserve_overlap_count": 0},
+    {"id": "care_plan_evaluation_v1", "name": "Gehandicaptenzorg - zorgplan en evaluatie", "sector": "gehandicaptenzorg", "document_type": "zorgplan_evaluatie", "expected": 10, "found": 2, "correct_entity": 0, "misclassified": 2, "missed": 8, "span_recall": 0.2, "preserve_overlap_count": 0},
+    {"id": "care_nursing_transfer_v1", "name": "Ziekenhuis naar wijkverpleging - verpleegkundige overdracht", "sector": "ziekenhuis_en_wijkverpleging", "document_type": "verpleegkundige_overdracht", "expected": 13, "found": 4, "correct_entity": 4, "misclassified": 0, "missed": 9, "span_recall": 0.307692, "preserve_overlap_count": 0},
+    {"id": "care_discharge_letter_v1", "name": "Medisch-specialistische ontslagbrief", "sector": "medisch_specialistische_zorg", "document_type": "ontslagbrief", "expected": 11, "found": 3, "correct_entity": 1, "misclassified": 2, "missed": 8, "span_recall": 0.272727, "preserve_overlap_count": 0},
+    {"id": "care_gp_referral_v1", "name": "Huisartsverwijzing cardiologie", "sector": "huisartsenzorg", "document_type": "verwijsbrief", "expected": 9, "found": 4, "correct_entity": 2, "misclassified": 2, "missed": 5, "span_recall": 0.444444, "preserve_overlap_count": 0},
+    {"id": "care_medication_overview_v1", "name": "Apotheek - medicatieoverzicht", "sector": "farmaceutische_zorg", "document_type": "medicatieoverzicht", "expected": 8, "found": 3, "correct_entity": 2, "misclassified": 1, "missed": 5, "span_recall": 0.375, "preserve_overlap_count": 0},
+    {"id": "care_laboratory_report_v1", "name": "Laboratorium - klinisch chemisch rapport", "sector": "laboratoriumzorg", "document_type": "laboratoriumrapport", "expected": 6, "found": 1, "correct_entity": 0, "misclassified": 1, "missed": 5, "span_recall": 0.166667, "preserve_overlap_count": 0},
+    {"id": "care_incident_report_v1", "name": "VVT - MIC medicatie-incident", "sector": "verpleging_verzorging_thuiszorg", "document_type": "mic_mim_vim_rapport", "expected": 11, "found": 3, "correct_entity": 1, "misclassified": 2, "missed": 8, "span_recall": 0.272727, "preserve_overlap_count": 0}
+  ]
+}

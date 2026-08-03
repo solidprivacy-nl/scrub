@@ -214,6 +214,17 @@ Rare-case indirect identification: audit warning, not blind masking.
 
 The current broad `NL_HEALTHCARE_REFERENCE` category is insufficient because it combines patient numbers, referral references, insurance identifiers and DBC/clinical codes under one behavior.
 
+Current bounded baseline evidence:
+
+- 25/81 expected replace/review values were found as exact spans;
+- 14/81 were found under the intended entity type;
+- 11 were misclassified and 56 missed;
+- only 4/42 review-selected values were found;
+- one AGB value collided with BSN recognition;
+- no designated clinical preserve phrase was overlapped by the current custom rules.
+
+Generic NER was excluded, so the PERSON and e-mail findings do not represent complete live-app behavior. This evidence increases confidence that dedicated care patterns and review policy are necessary, but does not establish production quality.
+
 ---
 
 ## Product-claim boundary

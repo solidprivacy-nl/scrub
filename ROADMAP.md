@@ -465,6 +465,8 @@ recognition_profiles.py
 
 The existing broad `NL_HEALTHCARE_REFERENCE` category must be assessed and split. Patient numbers, referral references, insurance identifiers and DBC/clinical codes do not share one safe default action.
 
+Current-engine baseline evidence is now recorded: 25 of 81 expected replace/review values were found as exact normalized spans, only 14 under the intended entity type, 11 were misclassified and 56 were missed. The bounded custom-rule baseline produced zero overlaps with the designated clinical preserve passages. Generic NER was excluded, so PERSON and e-mail results are not full-app measurements.
+
 ### Current and final interface direction
 
 Current prototype after test-gated integration:

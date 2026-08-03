@@ -1,3 +1,42 @@
+## 2026-08-03 16:10 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_CURRENT_ENGINE_BASELINE
+
+Status: completed; corrected current-engine evidence baseline implemented and validated.
+
+Goal:
+- Measure the unchanged deterministic Dutch custom recognizers against the eight-document synthetic care corpus before dedicated Zorgfilter recognizers are added.
+
+Result:
+
+```text
+Expected replace/review values: 81
+Exact normalized spans found: 25 (30.86%)
+Correct intended entity type: 14 (17.28%)
+Misclassified values: 11
+Missed values: 56
+Protected clinical phrase overlaps: 0
+```
+
+Key evidence:
+- strong bounded coverage for addresses, BIG numbers, BSN, dates of birth and Dutch telephone numbers;
+- no bounded custom-rule coverage for generic PERSON names, care-provider names, care organizations, exact care-event dates, care locations or room/bed references;
+- review-selected layer: 4/42 spans found and 3/42 correctly classified;
+- one AGB code collided with BSN recognition;
+- broad existing healthcare/legal references find several values but do not express the approved care policy;
+- generic NER was excluded and the baseline is not a full-app or production-readiness measurement.
+
+Evidence:
+- `CARE_PROFILE_CURRENT_ENGINE_BASELINE.md`
+- `output/validation/care_profile_v1_current_engine_baseline.json`
+
+Active next package:
+- `SCRUB-WP_CARE_PROFILE_GAP_TRIAGE`
+
+Boundaries:
+- synthetic data only;
+- no recognizer behavior, UI, threshold, export, Scrub Key or reinsert change;
+- human review remains required;
+- production readiness remains false.
+
 ## 2026-08-03 15:31 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_V1_POLICY_AND_CORPUS_FOUNDATION
 
 Status: completed; policy/corpus foundation implemented and validated.
