@@ -38,6 +38,8 @@ jobs:
                   '    "## 2026-08-04 00:09 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT",\n    f\'\'\'## {TIMESTAMP} — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT',
               '    "D040 — Use a two-stage server-authoritative protocol for direct masking from processed text",\n    \'\'\'## 2026-08-04 — D040 — Use a two-stage server-authoritative protocol for direct masking from processed text':
                   '    "## 2026-08-04 — D040 — Use a two-stage server-authoritative protocol for direct masking from processed text",\n    \'\'\'## 2026-08-04 — D040 — Use a two-stage server-authoritative protocol for direct masking from processed text',
+              '    "Status: approved product direction; implementation contract frozen  ",':
+                  '    "Status: approved product direction; implementation contract frozen",',
           }
           for old, new in replacements.items():
               if old not in text:
