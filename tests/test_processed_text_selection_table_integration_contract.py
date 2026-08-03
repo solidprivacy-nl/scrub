@@ -26,41 +26,39 @@ def test_main_app_imports_server_authoritative_selection_adapter():
 
 def test_component_render_receives_document_scope_inspection_and_scroll_restore():
     source = APP.read_text(encoding="utf-8")
-    render_call = source.index("side_by_side_state = render_side_by_side_review_panel(")
-    render_end = source.index(")\n", render_call)
-    fragment = source[render_call : render_end + 2]
+    render_call = source.index("side_by_side_review_state = render_side_by_side_review_panel(")
+    handler_call = source.index("selection_outcome = handle_selection_component_event(")
+    fragment = source[render_call:handler_call]
     assert "document_scope_key=document_scope_key" in fragment
     assert "inspection_result=selection_inspection" in fragment
     assert "restore_source_scroll_ratio=restore_source_scroll" in fragment
     assert "restore_processed_scroll_ratio=restore_processed_scroll" in fragment
 
 
-def test_events_are_processed_after_editable_table_and_before_serial_review_and_exports():
+def test_component_event_is_server_validated_and_rerun_before_exports():
     source = APP.read_text(encoding="utf-8")
-    editor_index = source.index("edited_replacements_df = st.data_editor(")
-    save_index = source.index("save_remembered_replacements(edited_replacements_df)")
     handler_index = source.index("selection_outcome = handle_selection_component_event(")
-    serial_index = source.index("serial_review_state = render_serial_review_panel(")
     first_download_index = source.index("st.download_button", handler_index)
+    fragment = source[handler_index:first_download_index]
 
-    assert editor_index < save_index < handler_index < serial_index < first_download_index
-    handler_fragment = source[handler_index:serial_index]
-    assert "existing_rows=edited_replacements_df" in handler_fragment
-    assert 'processed_text=side_by_side_state["processed_text"]' in handler_fragment
-    assert '"protected_highlight_spans"' in handler_fragment
-    assert "if selection_outcome.rerun_required:" in handler_fragment
-    assert "st.rerun()" in handler_fragment
-
-
-def test_undo_runs_against_current_visible_review_rows_before_component_event():
-    source = APP.read_text(encoding="utf-8")
-    undo_index = source.index("undo_outcome = undo_latest_selection_action(")
-    event_index = source.index("selection_outcome = handle_selection_component_event(")
-    fragment = source[undo_index:event_index]
-    assert undo_index < event_index
-    assert "current_review_rows=edited_replacements_df" in fragment
-    assert "if undo_outcome.rerun_required:" in fragment
+    assert "source_text=st_text" in fragment
+    assert 'processed_text=side_by_side_review_state.get("processed_text", "")' in fragment
+    assert "document_scope_key=document_scope_key" in fragment
+    assert "document_binding_id=document_binding_id" in fragment
+    assert "existing_rows=replacement_editor_df" in fragment
+    assert 'marked_ranges=side_by_side_review_state.get("highlight_spans", ())' in fragment
+    assert "if selection_outcome.rerun_required:" in fragment
     assert "st.rerun()" in fragment
+    assert handler_index < first_download_index
+
+
+def test_undo_is_document_scoped_and_requires_latest_action():
+    source = APP.read_text(encoding="utf-8")
+    assert "latest_selection_action(st.session_state, document_scope_key)" in source
+    assert "undo_latest_selection_action(" in source
+    assert "document_scope_key=document_scope_key" in source
+    assert "if undo_outcome.rerun_required:" in source
+    assert "st.rerun()" in source
 
 
 def test_existing_manual_form_and_authoritative_review_table_remain_present():
@@ -68,7 +66,8 @@ def test_existing_manual_form_and_authoritative_review_table_remain_present():
     assert "Gemiste waarde toevoegen" in source
     assert "build_manual_mask_row(" in source
     assert "edited_replacements_df = st.data_editor(" in source
-    assert "save_remembered_replacements(edited_replacements_df)" in source
+    assert "De vervangtabel blijft leidend" in source
+    assert "apply_replacements_to_text(st_text, edited_replacements)" in source
 
 
 def test_side_panel_has_interactive_default_and_environment_rollback():
@@ -82,22 +81,25 @@ def test_side_panel_has_interactive_default_and_environment_rollback():
     assert '"component_environment_switch": INTERACTIVE_COMPONENT_ENV' in source
 
 
-def test_server_protected_spans_exist_even_when_visual_markers_are_hidden():
-    source = SIDE_PANEL.read_text(encoding="utf-8")
-    assert "protected_model = (" in source
-    assert "if show_markers" in source
-    assert "highlights_enabled=True" in source
-    assert "protected_highlight_spans = list(" in source
-    assert '"protected_highlight_spans": protected_highlight_spans' in source
+def test_selection_of_existing_marked_content_is_protected_server_side():
+    side_source = SIDE_PANEL.read_text(encoding="utf-8")
+    action_source = (ROOT / "selection_mask_action.py").read_text(encoding="utf-8")
+    assert '"highlight_spans": list(model["processed_pane"]["highlight_spans"])' in side_source
+    assert 'marked_ranges=side_by_side_review_state.get("highlight_spans", ())' in APP.read_text(encoding="utf-8")
+    assert "selection_intersects_ranges" in action_source
+    assert "selection.intersects_marked_content" in action_source
+    assert "marked_selection" in action_source
+    assert "PLACEHOLDER_STRICT_RE" in action_source
 
 
 def test_component_wrapper_remains_transport_only():
     source = COMPONENT.read_text(encoding="utf-8")
     assert "def render_processed_text_selection_component(" in source
     assert "build_manual_mask_row" not in source
-    assert "commit_manual_mask" not in source
+    assert "from selection_mask_action import" not in source
     assert "session_state" not in source
     assert "download_button" not in source
+    assert '"commit_action": "commit_manual_mask"' in source
 
 
 def test_integration_adapter_is_the_only_layer_appending_document_scoped_manual_rows():
