@@ -60,7 +60,6 @@ from ui_texts_nl import (
     APP_INTRO,
     LOCAL_PROCESSING_NOTE,
     PROFILE_HELP,
-    PROFILE_DESCRIPTIONS,
     OPERATOR_LABELS,
     OPERATOR_HELP,
     ADVANCED_SETTINGS_HELP,
@@ -101,11 +100,17 @@ from manual_mask_entry import (
     validate_manual_mask_input,
 )
 
-try:
-    from candidate_scanner import scan_unmasked_candidates
-except Exception:
-    def scan_unmasked_candidates(text, analyzer_results=None, max_candidates=50):
-        return []
+from profile_ui_support import (
+    care_example_names,
+    care_example_text,
+    configured_description,
+    configured_entity_names,
+    configured_threshold,
+    current_profile_options_with_care,
+    detected_reason,
+    resolve_configured_analysis_results,
+    scan_configured_candidates,
+)
 
 try:
     from dutch_recognizers import (
@@ -121,6 +126,12 @@ except Exception:
         return []
 
     def get_dutch_legal_entity_names():
+        return []
+
+try:
+    from dutch_care_recognizers import get_dutch_care_entity_names
+except Exception:
+    def get_dutch_care_entity_names():
         return []
 
 
@@ -148,11 +159,7 @@ Verweerder Peter Bakker woont aan Laan van Meerdervoort 55, 2517 AM Den Haag.
 """,
 }
 
-PROFILE_OPTIONS = {
-    "Juridische controle — streng": "Dutch Legal Strict",
-    "Algemene Nederlandse controle": "Dutch / EU",
-    "Algemene internationale controle": "General / International",
-}
+PROFILE_OPTIONS = current_profile_options_with_care()
 INTERNAL_PROFILE_TO_LABEL = {value: key for key, value in PROFILE_OPTIONS.items()}
 OPERATOR_LABEL_TO_VALUE = {label: value for value, label in OPERATOR_LABELS.items()}
 
@@ -231,7 +238,7 @@ st.set_page_config(
     page_title=APP_TITLE,
     layout="wide",
     initial_sidebar_state="expanded",
-    menu_items={"About": "SolidPrivacy Scrub Legal"},
+    menu_items={"About": "SolidPrivacy Scrub"},
 )
 
 dotenv.load_dotenv()
@@ -244,12 +251,12 @@ st.sidebar.caption(APP_SUBTITLE)
 profile_label = st.sidebar.selectbox(
     "Controlemodus",
     list(PROFILE_OPTIONS.keys()),
-    index=0,
+    index=1,
     help=PROFILE_HELP,
 )
 st_recognition_profile = PROFILE_OPTIONS[profile_label]
 with st.sidebar.expander("Wat doet deze controlemodus?", expanded=False):
-    st.info(PROFILE_DESCRIPTIONS.get(profile_label, ""))
+    st.info(configured_description(st_recognition_profile))
 
 operator_label = st.sidebar.selectbox(
     "Manier van vervangen",
@@ -259,7 +266,7 @@ operator_label = st.sidebar.selectbox(
 )
 st_operator = OPERATOR_LABEL_TO_VALUE[operator_label]
 
-st_threshold_default = 0.30 if st_recognition_profile == "Dutch Legal Strict" else 0.35
+st_threshold_default = configured_threshold(st_recognition_profile)
 
 with st.sidebar.expander("Geavanceerde instellingen", expanded=False):
     st.caption(ADVANCED_SETTINGS_HELP)
@@ -405,9 +412,9 @@ if solidprivacy_work_mode == "Originele waarden terugzetten":
 
 with st.expander("Over deze app", expanded=False):
     st.write(
-        "Scrub Legal helpt bij het controleerbaar opschonen van juridische tekst. "
-        "De herkenning combineert algemene patroonherkenning, Nederlandse herkenners, "
-        "juridische referentietaxonomie en een auditlaag voor mogelijke gemiste waarden."
+        "SolidPrivacy Scrub helpt bij het controleerbaar opschonen van vertrouwelijke "
+        "Nederlandse documenten. De herkenning combineert algemene patroonherkenning "
+        "met expliciete profielen voor zorg en juridische documenten."
     )
     st.write(
         "De technische detectie-engine blijft onder de motorkap. De gebruiker beoordeelt "
@@ -415,7 +422,14 @@ with st.expander("Over deze app", expanded=False):
     )
 
 with st.expander("Controle-instellingen en herkenning", expanded=False):
-    if st_recognition_profile == "Dutch Legal Strict":
+    if st_recognition_profile == "Dutch Care Strict":
+        st.info(
+            "Zorgcontrole is actief. Scrub zoekt extra naar patiënt- en cliëntnummers, "
+            "EPD/ECD- en dossiernummers, verwijzingen, laboratorium- en incidentreferenties, "
+            "zorgverleners, organisaties, locaties en exacte zorgdata. Diagnose, medicatie, "
+            "dosering, labwaarden en observaties blijven zo veel mogelijk leesbaar."
+        )
+    elif st_recognition_profile == "Dutch Legal Strict":
         st.info(
             "Juridische controle is actief. Scrub zoekt extra naar zaaknummers, rolnummers, "
             "rekestnummers, parketnummers, dossiernummers, clientnummers, CJIB, ECLI, "
@@ -448,7 +462,18 @@ with st.container(border=True):
     uploaded_file_type = None
     input_text = "".join(demo_text)
 
-    if st_recognition_profile == "Dutch Legal Strict":
+    if st_recognition_profile == "Dutch Care Strict":
+        with st.expander("Gebruik een synthetisch zorgvoorbeeld", expanded=False):
+            sample_name = st.selectbox(
+                "Laad synthetisch zorgvoorbeeld",
+                ["Geen testvoorbeeld laden"] + care_example_names(),
+                index=0,
+            )
+            if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:
+                input_text = care_example_text(sample_name)
+                st.caption("Synthetische voorbeeldtekst geladen. Er staan geen echte persoonsgegevens in.")
+
+    elif st_recognition_profile == "Dutch Legal Strict":
         with st.expander("Gebruik een synthetisch juridisch testvoorbeeld", expanded=False):
             example_names = get_example_names()
             if LEGAL_EXAMPLES_IMPORT_ERROR is not None:
@@ -489,29 +514,16 @@ with st.container(border=True):
 try:
     all_supported_entities = list(get_supported_entities(*analyzer_params))
     general_dutch_entities = set(get_dutch_general_entity_names())
-    all_dutch_entities = set(get_dutch_entity_names(include_legal=True))
+    legal_dutch_entities = set(get_dutch_legal_entity_names())
+    care_dutch_entities = set(get_dutch_care_entity_names())
 
-    base_preferred_entities = {
-        "PERSON",
-        "LOCATION",
-        "ORGANIZATION",
-        "EMAIL_ADDRESS",
-        "PHONE_NUMBER",
-        "IBAN_CODE",
-        "URL",
-        "IP_ADDRESS",
-        "GENERIC_PII",
-        "DATE_TIME",
-    }
-
-    if st_recognition_profile == "Dutch Legal Strict":
-        preferred_entities = base_preferred_entities | all_dutch_entities
-    elif st_recognition_profile == "Dutch / EU":
-        preferred_entities = base_preferred_entities | general_dutch_entities
-    else:
-        preferred_entities = set(all_supported_entities)
-
-    default_entities = [entity for entity in all_supported_entities if entity in preferred_entities]
+    default_entities = configured_entity_names(
+        st_recognition_profile,
+        all_supported_entities,
+        dutch_general_entities=general_dutch_entities,
+        dutch_legal_entities=legal_dutch_entities,
+        dutch_care_entities=care_dutch_entities,
+    )
 
     with st.sidebar.expander("Te herkennen gegevenstypen", expanded=False):
         st_entities = st.multiselect(
@@ -535,6 +547,10 @@ try:
         allow_list=st_allow_list,
         deny_list=st_deny_list,
     )
+    st_analyze_results = resolve_configured_analysis_results(
+        st_recognition_profile,
+        st_analyze_results,
+    )
 
     if st_operator not in ("highlight", "synthesize"):
         document_scope_key = manual_mask_document_key(st_text)
@@ -546,9 +562,12 @@ try:
             st_analyze_results,
             document_binding_id=document_binding_id,
         )
-        candidate_rows = []
-        if st_recognition_profile == "Dutch Legal Strict":
-            candidate_rows = scan_unmasked_candidates(st_text, st_analyze_results, max_candidates=50)
+        candidate_rows = scan_configured_candidates(
+            st_recognition_profile,
+            st_text,
+            st_analyze_results,
+            max_candidates=50,
+        )
 
         remembered_rows = load_remembered_replacements()
         default_editor_rows = []
@@ -609,7 +628,7 @@ try:
                     "review_status": review_status,
                     "review_status_label": review_status_label(review_status),
                     "review_order": review_status_order(review_status),
-                    "reason": "Automatisch herkend",
+                    "reason": detected_reason(st_recognition_profile, entity_type),
                     "context": "",
                 }
             )
