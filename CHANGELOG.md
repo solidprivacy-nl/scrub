@@ -1,3 +1,42 @@
+## 2026-08-03 16:52 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_RECOGNIZER_IMPLEMENTATION
+
+Status: completed; pure recognizer implementation validated.
+
+Purpose:
+- Implement the frozen Zorgfilter recognizer contract without registering it in the current app.
+
+Files added:
+- `dutch_care_recognizers.py`
+- `care_recognizer_validation.py`
+- `CARE_RECOGNIZER_IMPLEMENTATION_V1.md`
+- `scripts/generate_care_recognizer_validation.py`
+- `tests/test_dutch_care_recognizers.py`
+- `tests/test_care_recognizer_validation.py`
+- `output/validation/care_recognizer_implementation_validation.json`
+- `workpackage_claims/scrub_wp_care_profile_recognizer_implementation.md`
+- `handover/workpackages/20260803_1652_care_profile_recognizer_implementation.md`
+
+Implementation result:
+- implemented sixteen dedicated, context-bound care entities;
+- returned exact value-only Presidio spans with explanations and metadata;
+- corrected bounded variants for Dutch client labels, prescription numbers, generic incident labels and lowercase residential-care organization labels;
+- passed all frozen positive and negative contracts;
+- covered all 54 dedicated corpus expectations with zero protected-clinical overlaps;
+- kept app registration explicitly false.
+
+Validation:
+- initial run #1850 exposed five bounded missing context variants and no clinical-overmasking failure;
+- corrected GitHub Actions run #1854 passed: 953 tests;
+- final clean validation pending after governance finalization;
+- Hugging Face sync not functionally relevant;
+- app verification not applicable.
+
+Intentionally not changed:
+- `presidio_helpers.py`, `presidio_streamlit.py` or current profile behavior;
+- thresholds, entity defaults or generic NER;
+- review, export, Scrub Key or reinsert semantics;
+- runtime, dependencies or cloud processing.
+
 ## 2026-08-03 16:34 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS
 
 Status: completed; test/specification contract frozen.

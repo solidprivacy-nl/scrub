@@ -229,6 +229,8 @@ Gap triage classified all 81 expectations. The largest unresolved family is cont
 
 The recognizer contract is now frozen with sixteen dedicated entities, 37 positive exact-span cases and 16 negative/collision/preservation cases. Implementation must pass these fixtures before any app registration or UI promotion.
 
+The pure recognizer implementation now passes all frozen fixtures and all 54 dedicated corpus expectations with zero protected-clinical overlaps. Risk R10 remains open because generic NER composition, AGB/BSN cross-recognizer precedence, visible profile policy, cross-profile regression and live app verification are not yet complete.
+
 ---
 
 ## Product-claim boundary

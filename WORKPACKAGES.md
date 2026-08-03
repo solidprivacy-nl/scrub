@@ -1,3 +1,47 @@
+## 2026-08-03 16:52 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_RECOGNIZER_IMPLEMENTATION
+
+Status: completed; pure recognizers implemented and contract-validated, app registration still closed.
+
+Goal:
+- Implement the frozen sixteen-entity Zorgfilter recognizer module without changing current app behavior.
+
+Result:
+
+```text
+Dedicated entities: 16
+Positive contracts: 37/37 passed
+Forbidden positive collisions: 0
+Negative/collision contracts: 16/16 passed
+Dedicated corpus expectations: 54/54 passed
+Protected clinical phrase overlaps: 0
+Full regression run #1854: 953 tests passed
+App registration: false
+```
+
+Implementation:
+- `dutch_care_recognizers.py` with value-only Presidio capture results;
+- strong-context administrative references and AGB;
+- provider-name recognition preserving professional roles;
+- labeled organizations and bounded locations;
+- room/bed/apartment references;
+- care-event dates separated from date of birth;
+- no Streamlit, network, AI, cloud or file-write behavior.
+
+Evidence:
+- `CARE_RECOGNIZER_IMPLEMENTATION_V1.md`
+- `output/validation/care_recognizer_implementation_validation.json`
+
+Active next package:
+- `SCRUB-WP_RECOGNITION_PROFILE_CONFIGURATION_REFACTOR`
+
+Boundaries:
+- recognizers are not registered in `presidio_helpers.py` or the UI;
+- generic PERSON/e-mail remain generic-profile dependencies;
+- AGB/BSN profile-level precedence remains to be validated;
+- no export, Scrub Key or reinsert change;
+- human review remains required;
+- production readiness remains false.
+
 ## 2026-08-03 16:34 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_RECOGNIZER_CONTRACT_TESTS
 
 Status: completed; recognizer contract frozen before implementation.
