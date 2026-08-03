@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -11,9 +12,18 @@ from recognition_profiles import (
 )
 
 
+ROOT = Path(__file__).resolve().parents[1]
+SNAPSHOT_PATH = ROOT / "output" / "validation" / "care_profile_cross_profile_matrix.json"
+
+
 @pytest.fixture(scope="module")
 def matrix():
     return build_cross_profile_matrix()
+
+
+@pytest.fixture(scope="module")
+def snapshot():
+    return json.loads(SNAPSHOT_PATH.read_text(encoding="utf-8"))
 
 
 def _failure_lines(matrix):
@@ -43,14 +53,14 @@ def test_cross_profile_matrix_covers_all_four_profiles_and_document_families(mat
         PROFILE_GENERAL_INTERNATIONAL,
     ]
     assert matrix["care_case_count"] == 8
-    assert matrix["legal_case_count"] > 0
+    assert matrix["legal_case_count"] == 10
     assert matrix["dedicated_care_entity_count"] == 16
     assert matrix["dedicated_legal_entity_count"] > 0
     assert matrix["general_entity_count"] > 0
 
 
 def test_care_and_international_find_all_dedicated_care_expectations(matrix):
-    assert matrix["care_expected_total"] > 0
+    assert matrix["care_expected_total"] == 108
     assert matrix["care_expected_found"] == matrix["care_expected_total"]
 
 
@@ -86,11 +96,55 @@ def test_international_keeps_explicit_all_supported_scope(matrix):
     assert counts[PROFILE_DUTCH_LEGAL_STRICT] != counts[PROFILE_DUTCH_GENERAL]
 
 
+def test_committed_snapshot_reproduces_matrix_summary(matrix, snapshot):
+    keys = (
+        "schema_version",
+        "care_case_count",
+        "legal_case_count",
+        "dedicated_care_entity_count",
+        "care_expected_total",
+        "care_expected_found",
+        "clinical_preserve_overlap_count",
+        "hard_failure_count",
+        "legacy_legal_metadata_expected_total",
+        "legacy_legal_metadata_expected_found",
+        "legacy_legal_metadata_gap_count",
+        "legacy_legal_forbidden_observed_count",
+        "observation_count",
+        "synthetic_data_only",
+        "generic_ner_evaluated",
+        "human_review_required",
+        "production_ready",
+        "next_workpackage",
+    )
+    for key in keys:
+        assert snapshot[key] == matrix[key], key
+
+    matrix_observations = {
+        (
+            item["category"],
+            item["profile_id"],
+            item["case_id"],
+            item["detail"].rsplit(": ", 1)[-1],
+        )
+        for item in matrix["observations"]
+    }
+    snapshot_observations = {
+        (
+            item["category"],
+            item["profile_id"],
+            item["case_id"],
+            item["entity_type"],
+        )
+        for item in snapshot["observations"]
+    }
+    assert snapshot_observations == matrix_observations
+
+
 def test_matrix_helper_remains_pure_and_ui_independent():
-    source = (
-        Path(__file__).resolve().parents[1]
-        / "care_profile_cross_profile_matrix.py"
-    ).read_text(encoding="utf-8")
+    source = (ROOT / "care_profile_cross_profile_matrix.py").read_text(
+        encoding="utf-8"
+    )
 
     forbidden = (
         "import streamlit",
