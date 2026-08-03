@@ -1,6 +1,29 @@
+## 2026-08-03 23:26 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS_APP_VERIFY_CLOSEOUT
+
+Status: completed; final documentation-only GitHub Actions confirmation pending.
+
+Goal:
+- Record the coordinator/user confirmation that the deployed long-form synthetic Zorgfilter examples work and close the package without changing product behavior.
+
+Evidence:
+```text
+PR #56 merge: 1244663d3e69a56d6efc825a6fc019ba72d3782a
+Final clean PR run #1926: 1003 passed in 11.51s
+Deployment verification run #1931: 1003 passed in 11.35s
+Runtime files exact on Hugging Face: 2/2
+Space health: HTTP 200 / ok
+App verification: confirmed — Alles werkt
+```
+
+Boundaries:
+- closeout-only;
+- no product code, UI, corpus, recognizer, profile, export, Scrub Key or reinsert change;
+- no production-readiness claim;
+- human review remains mandatory.
+
 ## 2026-08-03 22:17 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS
 
-Status: implemented; GitHub Actions, Hugging Face sync and app verification pending.
+Status: completed and app-verified after GitHub Actions and Hugging Face synchronization verification.
 
 Goal:
 - Replace the short tester-facing care examples with longer, structured synthetic documents while preserving every existing recognition and policy contract.
@@ -31,11 +54,10 @@ Files changed:
 - `RELEASE_NOTES.md`
 - `RISK_REGISTER.md`
 
-Verification gates:
-- long-form corpus and existing care regression tests;
-- full GitHub Actions suite;
-- GitHub-to-Hugging-Face synchronization;
-- coordinator/user verification that all eight Zorgfilter examples are materially longer, structured and readable.
+Verification result:
+- final clean PR run #1926: 1003 tests passed in 11.51s;
+- deployment verification run #1931: both runtime files matched Hugging Face byte-for-byte, Space health HTTP 200 / `ok`, and 1003 tests passed in 11.35s;
+- coordinator/user app verification at 2026-08-03 23:26 Europe/Amsterdam: `Alles werkt.`
 
 Boundaries:
 - synthetic data only;

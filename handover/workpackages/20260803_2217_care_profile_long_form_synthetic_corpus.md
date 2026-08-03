@@ -2,7 +2,7 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Workpackage title: Long-form synthetic Zorgfilter corpus  
-Status: implemented; GitHub Actions green; Hugging Face sync and app verification pending
+Status: completed and app-verified after GitHub Actions and Hugging Face synchronization verification
 
 ## Summary
 
@@ -49,26 +49,21 @@ Existing corpus, recognizer, profile-isolation and clinical-preservation tests r
 - Failure two: an existing AGB code is a textual prefix of an existing BIG number, so raw substring counting was not a valid uniqueness test.
 - Both issues were corrected in the new test file only; corpus content and recognizer behavior were unchanged.
 - Corrected PR run #1924: **1003 tests passed in 11.57s**.
-- Hugging Face sync: pending merge.
-- App verification: pending after sync because visible example content changed.
+- Final clean PR run #1926: **1003 tests passed in 11.51s**.
+- Deployment verification run #1931 confirmed both changed runtime files matched Hugging Face byte-for-byte on the first attempt, Streamlit health returned HTTP 200 / `ok`, and **1003 tests passed in 11.35s**.
+- App verification confirmed by the coordinator/user at 2026-08-03 23:26 Europe/Amsterdam: `Alles werkt.`
 
 ## GitHub Actions status
 
-Green on PR #56 run #1924. One final clean regression is required after this handover/claim status update.
+Green. Final clean PR #56 run #1926 passed 1003 tests in 11.51s; deployment verification run #1931 passed 1003 tests in 11.35s.
 
 ## Hugging Face sync status
 
-Pending merge. Runtime-relevant files are `care_test_examples.py` and the new `care_test_example_expansions.py`.
+Green. `care_test_examples.py` and `care_test_example_expansions.py` matched the Hugging Face Space byte-for-byte; health returned HTTP 200 / `ok`.
 
 ## App verification status
 
-Pending after Actions and Hugging Face synchronization are green. Required visible checks:
-
-- all eight Zorgfilter examples remain selectable;
-- each selected example is materially longer than the previous version;
-- the added document sections are visible and readable;
-- existing synthetic identifiers remain present for recognition testing;
-- no Script execution error is visible.
+Confirmed by the coordinator/user at 2026-08-03 23:26 Europe/Amsterdam with `Alles werkt.` The longer examples and existing review flow work in the deployed app; no further app verification is required for this package.
 
 ## Remaining risks
 
@@ -80,4 +75,4 @@ Pending after Actions and Hugging Face synchronization are green. Required visib
 
 ## Next recommended step
 
-Run the final clean PR regression, merge PR #56 when green, verify GitHub-to-Hugging-Face synchronization and request focused live app verification of the eight longer care examples.
+Package closed. Treat future document-centric review interactions as separate planning and implementation workpackages.

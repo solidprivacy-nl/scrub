@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-care-long-form-app-verify-closeout`  
 Claimed: 2026-08-03 23:26 Europe/Amsterdam  
-Status: in_progress
+Status: completed; final documentation-only GitHub Actions confirmation pending
 
 ## Goal
 

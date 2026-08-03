@@ -1,6 +1,33 @@
+## 2026-08-03 23:26 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS_APP_VERIFY_CLOSEOUT
+
+Status: completed; final documentation-only regression pending.
+
+Purpose:
+- Close the long-form synthetic Zorgfilter corpus after technical deployment verification and coordinator/user app confirmation.
+
+Files added:
+- `workpackage_claims/scrub_wp_care_profile_long_form_synthetic_corpus_app_verify_closeout.md`
+- `handover/workpackages/20260803_2326_care_profile_long_form_synthetic_corpus_app_verify_closeout.md`
+
+Files changed:
+- `workpackage_claims/scrub_wp_care_profile_long_form_synthetic_corpus.md`
+- `handover/workpackages/20260803_2217_care_profile_long_form_synthetic_corpus.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+
+Validation evidence:
+- final clean PR #56 run #1926: 1003 tests passed in 11.51s;
+- deployment verification run #1931: exact GitHub/Hugging Face matches for both runtime files, health HTTP 200 / `ok`, and 1003 tests passed in 11.35s;
+- coordinator/user confirmation at 2026-08-03 23:26 Europe/Amsterdam: `Alles werkt.`
+
+Intentionally not changed:
+- product code, synthetic corpus content, UI, recognizers or profile behavior;
+- replacement table, export, Scrub Key or reinsert semantics;
+- dependencies, cloud processing or product claims.
+
 ## 2026-08-03 22:17 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_LONG_FORM_SYNTHETIC_CORPUS
 
-Status: implemented; validation pending.
+Status: completed, synchronized and app-verified.
 
 Purpose:
 - Give Zorgfilter testers realistic long-form care documents instead of examples that stop after one short clinical paragraph.
@@ -27,9 +54,9 @@ Implementation result:
 - added tests for length, structure, non-mutation, identity-marker absence, exact expected-value occurrence and UI-adapter parity.
 
 Validation:
-- targeted and full GitHub Actions pending;
-- Hugging Face sync pending after merge;
-- app verification required because visible example content changed.
+- final clean PR run #1926: 1003 tests passed in 11.51s;
+- deployment verification run #1931: both runtime files matched Hugging Face byte-for-byte, Space health returned HTTP 200 / `ok`, and 1003 tests passed in 11.35s;
+- coordinator/user app verification confirmed at 2026-08-03 23:26 Europe/Amsterdam: `Alles werkt.`
 
 Intentionally not changed:
 - recognizers, thresholds, profile composition or collision precedence;
