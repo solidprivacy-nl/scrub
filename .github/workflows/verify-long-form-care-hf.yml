@@ -1,0 +1,25 @@
+name: Verify long-form care Hugging Face sync
+
+on:
+  push:
+    branches:
+      - scrub-care-profile-long-form-hf-verify
+  workflow_dispatch:
+
+jobs:
+  verify-sync:
+    name: Verify exact runtime files and Space health
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout verification branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Compare GitHub main runtime with Hugging Face Space
+        run: python ops/verify_long_form_care_hf_sync.py
