@@ -225,6 +225,8 @@ Current bounded baseline evidence:
 
 Generic NER was excluded, so the PERSON and e-mail findings do not represent complete live-app behavior. This evidence increases confidence that dedicated care patterns and review policy are necessary, but does not establish production quality.
 
+Gap triage classified all 81 expectations. The largest unresolved family is contextual review recognition (36 values), followed by generic profile dependencies (13), care-specific reclassification (10), dedicated care references (5) and AGB/numeric collision guards (3). The recognizer contract package must freeze these routes before any care pattern implementation.
+
 ---
 
 ## Product-claim boundary
