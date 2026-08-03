@@ -1,3 +1,26 @@
+## 2026-08-03 — D038 — Use AI-first execution with human-controlled signing, security and release gates for Phase 9 desktop packaging
+
+Status: accepted roadmap and execution-model decision; implementation remains gated
+
+Decision:
+
+```text
+When the final local desktop/offline installer phase is explicitly opened, use scoped AI agents for deterministic packaging, CI, synthetic testing and release-candidate preparation. Target a signed Tauri Windows shell with a bundled PyInstaller onedir Python/Presidio sidecar, a low-friction setup.exe and a managed-deployment MSI. Retain human control over publisher identity, production signing, public release, security claims, real-user acceptance and safety-critical semantic changes.
+```
+
+Planning assumptions:
+- 60–70% of first-cycle development/integration labor may be agent-executed;
+- 75–90% of repetitive later release work may be automated;
+- post-agent development/integration planning range: approximately EUR 8,000–24,000;
+- independent security review, test hardware, signing and human release oversight remain retained costs.
+
+Boundaries:
+- Phase 9 remains gated by Phase 6 quality closeout and explicit coordinator approval.
+- No installer, runtime, UI, dependency, export, Scrub Key, reinsert or cloud behavior changes in this decision package.
+- Synthetic data only.
+- No single agent receives unrestricted repository-write, signing-identity and public-release authority.
+- Successful packaging alone does not justify a production-readiness or local-only security claim.
+
 ## 2026-07-28 — D037 — Validate document/key binding before every reinsert replacement
 
 Status: accepted reinsert-integration decision

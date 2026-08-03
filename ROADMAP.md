@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-07-28 — bound export and fail-closed reinsert enforcement are implemented; deployed binding app verification is now the active gate.
+Last roadmap strategy update: 2026-08-03 — Phase 9 local desktop packaging remains gated, with an AI-first implementation model and explicit human signing, release, security-claim and UX-acceptance gates.
 
 ---
 
@@ -116,6 +116,7 @@ SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — completed with frozen placehol
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — completed with pure binding-ID, placeholder, digest, bound-key and document/key validation helpers.
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — completed with bound placeholders and schema-1.1 key export.
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — implemented with dual-read import, fail-closed binding enforcement and explicit legacy compatibility; app verification pending.
+SCRUB-WP_AI_FIRST_DESKTOP_PACKAGING_ROADMAP_ALIGNMENT — completed as a documentation-only Phase 9 execution-model refinement; installer implementation remains gated.
 ```
 
 Important UX status:
@@ -305,3 +306,108 @@ Thin Streamlit UI, helper-driven behavior, tested safety boundaries, local-first
 ```
 
 Do not migrate frontend, add a full document editor, introduce cloud document processing, or alter export/Scrub Key/reinsert semantics without a dedicated approved package.
+
+---
+
+## 10. Phase 9 — AI-first local desktop/offline packaging execution model
+
+The final trust environment remains a local Windows desktop installation for confidential documents. Hosting migration and local desktop distribution are separate concerns:
+
+```text
+Hugging Face / web prototype = synthetic and approved non-confidential validation
+Local signed desktop runtime = confidential production-oriented trust environment
+```
+
+Phase 9 remains gated by Phase 6 quality closeout and explicit coordinator approval. This roadmap update authorizes no installer implementation by itself.
+
+### Target end-user distribution
+
+The preferred end-user direction is:
+
+```text
+one signed setup.exe for low-friction installation
++ one signed MSI for managed organizational deployment
++ Tauri Windows shell
++ bundled local Python/Presidio engine as a PyInstaller onedir sidecar
++ all required models and assets available locally
++ loopback-only communication on the same PC
++ no required cloud calls, runtime downloads or document telemetry
+```
+
+A portable Python folder remains an internal technical validation path, not the intended premium end-user product. A PyInstaller onefile runtime is not the default because extraction to temporary executable directories increases startup, antivirus, cleanup and diagnostic risk. The user may receive one installer file even when the installed application contains multiple controlled runtime files.
+
+### AI-first execution assumption
+
+Phase 9 should be implemented AI-first where the work is deterministic, testable and reversible. Planning assumptions:
+
+```text
+First installer implementation:
+- 60–70% of development and integration labor may be agent-executed.
+- expected development/integration budget after agent substitution: approximately EUR 8,000–24,000.
+- agent/build-compute allowance: approximately EUR 1,000–4,000.
+
+Subsequent release cycles:
+- 75–90% of repetitive build, test, packaging and release-candidate preparation may be automated.
+```
+
+These are budgeting assumptions, not supplier quotations or production-readiness claims. Independent security review, code-signing identity, final release approval and real user acceptance remain separate costs and responsibilities.
+
+### Agent-autonomous scope
+
+Within isolated workstations or disposable Windows test VMs, scoped agents may autonomously:
+
+- install approved build SDKs and packaging dependencies;
+- inventory and pin Python packages, native libraries and model assets;
+- build and debug PyInstaller onedir bundles;
+- build the Tauri shell and local sidecar lifecycle;
+- create setup.exe and MSI release candidates;
+- implement loopback binding, health checks and shutdown cleanup;
+- run offline, install, upgrade, uninstall, Defender and synthetic document tests;
+- inspect network, process, filesystem, logging and temporary-file evidence;
+- maintain CI, checksums, SBOMs, release notes and handovers;
+- open pull requests and prepare unsigned release candidates.
+
+All test documents and Scrub Keys must remain synthetic. Agents must not weaken review, Scrub Key, export or privacy controls to make packaging easier.
+
+### Human-controlled gates
+
+The following responsibilities must not be delegated as an unreviewed autonomous chain:
+
+- legal publisher identity and long-lived code-signing authority;
+- final production signing and public release;
+- acceptance of privacy and security claims;
+- approval of export, Scrub Key or document-processing semantic changes;
+- acceptance testing by non-technical users on real managed Windows environments;
+- independent security validation where a strong local-only product claim is made.
+
+No single agent should simultaneously hold unrestricted repository-write, signing-identity and public-release authority. Use protected environments, least-privilege identities and an explicit human release gate.
+
+### Indicative external and retained costs
+
+Costs that remain materially external or human-controlled include:
+
+```text
+- managed Windows code signing: approximately EUR 120–300 per year;
+- build/CI/test infrastructure: usually limited, depending on runner and artifact use;
+- physical or managed Windows test devices: approximately EUR 0–1,500 initially;
+- targeted independent desktop/privacy security review: approximately EUR 5,000–15,000;
+- broader penetration testing and retest, if required: approximately EUR 15,000–30,000;
+- human packaging/security/release oversight: retained even with extensive agent autonomy.
+```
+
+### Phase 9 execution sequence
+
+When the phase is explicitly opened, use small sequential workpackages:
+
+```text
+1. Desktop distribution and local-only security contract
+2. Offline dependency, native-library and model inventory
+3. PyInstaller onedir engine-sidecar packaging spike
+4. Tauri shell and sidecar lifecycle proof
+5. Network, temp-file, logging, crash and endpoint-security validation
+6. Signed setup.exe and MSI release candidate
+7. Managed Windows pilot, upgrade, rollback and uninstall validation
+8. Independent security review and quality-gate closeout
+```
+
+Do not collapse signing, release and security acceptance into the same autonomous worker. Do not make a production/local-only claim from successful packaging alone.
