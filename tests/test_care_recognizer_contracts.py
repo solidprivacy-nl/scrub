@@ -1,4 +1,8 @@
+import json
+from pathlib import Path
+
 from care_profile_policy import ACTION_REPLACE, ACTION_REVIEW_SELECTED, policy_for_entity
+from care_recognizer_contract_summary import build_care_recognizer_contract_summary
 from care_recognizer_contracts import (
     ALL_POSITIVE_CASES,
     CARE_RECOGNIZER_CONTRACT_SCHEMA_VERSION,
@@ -11,6 +15,9 @@ from care_recognizer_contracts import (
     REFERENCE_POSITIVE_CASES,
     contract_snapshot,
 )
+
+
+CONTRACT_SUMMARY_PATH = Path("output/validation/care_recognizer_contract_v1_summary.json")
 
 
 def test_contract_schema_and_future_public_api_are_frozen():
@@ -145,3 +152,8 @@ def test_contract_snapshot_is_serializable_and_not_a_readiness_claim():
     assert len(snapshot["negative_cases"]) == 16
     assert snapshot["production_ready"] is False
     assert snapshot["human_review_required"] is True
+
+
+def test_committed_contract_summary_is_reproducible():
+    committed = json.loads(CONTRACT_SUMMARY_PATH.read_text(encoding="utf-8"))
+    assert committed == build_care_recognizer_contract_summary()
