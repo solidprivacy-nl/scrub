@@ -2,13 +2,13 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Workpackage title: Zorgfilter v1 deployed app verification  
-Status: technical deployment verified; coordinator/user app verification pending
+Status: completed and app-verified after technical deployment verification
 
 ## Summary
 
 Opened the verification-only package after the Zorgfilter UI integration and cross-profile matrix were merged. An independent GitHub Actions workflow compared twelve relevant files between GitHub `main` at merge commit `cca4a25aaff28a7ba647c961d8e50f0e076921e2` and Hugging Face Space `solidprivacy/scrub`, verified the correctly scoped Zorgfilter markers and checked the live Streamlit health endpoint.
 
-The technical deployment is verified. No product code was changed. Functional closeout remains blocked on coordinator/user verification of the visible app behavior.
+The technical deployment is verified. No product code was changed. The coordinator/user confirmed `alles groen` at 2026-08-03 20:35 Europe/Amsterdam, completing the functional closeout.
 
 ## Files added
 
@@ -20,10 +20,14 @@ The technical deployment is verified. No product code was changed. Functional cl
 
 ## Files changed
 
-- `ROADMAP.md` — pending verification-status finalizer
-- `WORKPACKAGES.md` — pending verification-status finalizer
-- `CHANGELOG.md` — pending verification-status finalizer
-- `RISK_REGISTER.md` — pending verification-status finalizer
+- `ROADMAP.md` — current-web Zorgfilter line marked completed and app-verified
+- `WORKPACKAGES.md` — package and downstream gates closed
+- `CHANGELOG.md` — final CI and user verification recorded
+- `RISK_REGISTER.md` — R10 mitigation evidence updated without closing production risk
+- `CARE_PROFILE_APP_VERIFICATION.md` — visible verification result recorded
+- `output/validation/care_profile_hf_sync_verification.json` — functional verification fields completed
+- `tests/test_care_profile_hf_sync_verification.py` — closeout evidence assertions updated
+- `workpackage_claims/scrub_wp_care_profile_app_verify.md` — claim marked completed
 
 ## Tests
 
@@ -62,7 +66,8 @@ Functional app verification: false / pending user
 - PR #53 UI integration final clean run #1885: 986 tests passed.
 - PR #54 cross-profile matrix final clean run #1906: 995 tests passed.
 - Independent corrected Hugging Face verification passed its exact-file, marker and health assertions and wrote the committed evidence report.
-- Verification-branch normal regression run: pending after PR creation.
+- Verification-only run #1908 passed: 998 tests in 10.07s.
+- Final closeout run #1909 passed: 998 tests in 10.45s.
 
 ## Hugging Face sync status
 
@@ -76,7 +81,7 @@ Verified independently:
 
 ## App verification status
 
-Pending coordinator/user confirmation. Required visible checks are documented in `CARE_PROFILE_APP_VERIFICATION.md`.
+Confirmed. The coordinator/user reported `alles groen` at 2026-08-03 20:35 Europe/Amsterdam; all documented visible checks passed.
 
 ## Remaining risks
 
@@ -88,4 +93,4 @@ Pending coordinator/user confirmation. Required visible checks are documented in
 
 ## Next recommended step
 
-Coordinator/user opens the deployed Space and follows `CARE_PROFILE_APP_VERIFICATION.md`. After confirmation, update the evidence status, complete governance closeout and merge the verification-only PR.
+Merge verification-only PR #55. Do not automatically open desktop UX or installer work; continue with the active risk-driven Phase 6 queue and explicit coordinator approval gates.

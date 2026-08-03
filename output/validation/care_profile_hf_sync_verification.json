@@ -1,6 +1,20 @@
 {
   "all_files_exact_match": true,
   "all_markers_match": true,
+  "app_verification_checks": {
+    "care_description_and_eight_synthetic_examples_visible": true,
+    "clinical_meaning_remains_readable": true,
+    "existing_profiles_review_export_scrub_key_and_reinsert_present": true,
+    "four_profile_choices_visible_in_approved_order": true,
+    "legal_profile_remains_initial_default": true,
+    "no_script_execution_error": true,
+    "patient_and_client_identifiers_selected_for_replacement": true,
+    "review_selected_care_context_selected_and_shows_controle_nodig": true,
+    "unresolved_care_reference_candidates_unchecked": true
+  },
+  "app_verification_confirmation": "alles groen",
+  "app_verification_source": "coordinator_user_confirmation",
+  "app_verified_at": "2026-08-03T20:35:00+02:00",
   "checked_file_count": 12,
   "exact_matching_file_count": 12,
   "files": [
@@ -169,15 +183,15 @@
       "verified": true
     }
   ],
-  "functional_app_verification": false,
-  "functional_app_verification_status": "pending_coordinator_user_confirmation",
+  "functional_app_verification": true,
+  "functional_app_verification_status": "confirmed_all_green",
   "github_commit": "cca4a25aaff28a7ba647c961d8e50f0e076921e2",
   "github_ref": "main",
   "hugging_face_space": "solidprivacy/scrub",
   "human_review_required": true,
   "previous_verification_false_negative_corrected": true,
   "production_ready": false,
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "space_health": {
     "attempts": [
       {

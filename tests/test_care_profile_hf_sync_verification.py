@@ -13,7 +13,7 @@ def _report():
 def test_hugging_face_sync_evidence_is_complete_and_green():
     report = _report()
 
-    assert report["schema_version"] == "1.1"
+    assert report["schema_version"] == "1.2"
     assert report["github_ref"] == "main"
     assert report["github_commit"] == "cca4a25aaff28a7ba647c961d8e50f0e076921e2"
     assert report["hugging_face_space"] == "solidprivacy/scrub"
@@ -30,14 +30,15 @@ def test_hugging_face_sync_evidence_is_complete_and_green():
     assert report["technical_deployment_verified"] is True
 
 
-def test_app_verification_remains_open_until_user_confirmation():
+def test_app_verification_is_confirmed_by_user():
     report = _report()
 
-    assert report["functional_app_verification"] is False
-    assert (
-        report["functional_app_verification_status"]
-        == "pending_coordinator_user_confirmation"
-    )
+    assert report["functional_app_verification"] is True
+    assert report["functional_app_verification_status"] == "confirmed_all_green"
+    assert report["app_verified_at"] == "2026-08-03T20:35:00+02:00"
+    assert report["app_verification_source"] == "coordinator_user_confirmation"
+    assert report["app_verification_confirmation"] == "alles groen"
+    assert all(report["app_verification_checks"].values())
     assert report["human_review_required"] is True
     assert report["production_ready"] is False
 

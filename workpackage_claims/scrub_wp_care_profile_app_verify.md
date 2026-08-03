@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-care-profile-app-verify`  
 Claimed: 2026-08-03 19:05 Europe/Amsterdam  
-Status: Actions/sync verified; awaiting coordinator/user app verification
+Status: completed and app-verified after Actions/sync verification
 
 ## Scope
 
@@ -51,4 +51,4 @@ Completed:
 
 ## Closeout gate
 
-Do not mark completed until technical sync/health evidence is green and the coordinator/user confirms the visible app behavior.
+Closeout gate passed: technical sync/health evidence is green and the coordinator/user confirmed `alles groen` at 2026-08-03 20:35 Europe/Amsterdam.

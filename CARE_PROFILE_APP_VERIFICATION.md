@@ -1,6 +1,6 @@
 # Zorgfilter v1 — deployed app verification
 
-Status: technical deployment verified; visible app verification pending coordinator/user confirmation.
+Status: completed and app-verified after technical deployment verification.
 
 ## Technical evidence
 
@@ -76,6 +76,26 @@ Confirm:
 - `Originele waarden terugzetten` remains available;
 - no Script execution error is visible.
 
+## Verification result
+
+Coordinator/user confirmation received at `2026-08-03 20:35 Europe/Amsterdam`:
+
+```text
+alles groen
+```
+
+Confirmed visible behavior:
+
+- four profiles are visible in the approved order;
+- Legal remains the initial default;
+- the Care description and eight synthetic examples are present;
+- patient/client identifiers are selected for replacement;
+- review-selected care context remains selected and shows `Controle nodig`;
+- unresolved care-reference candidates remain unchecked;
+- clinical meaning remains readable;
+- Legal, General, International, review, export, Scrub Key and reinsert remain present;
+- no Script execution error is visible.
+
 ## Closeout rule
 
-The package may be marked completed only after the coordinator/user confirms the visible behavior above. Technical deployment evidence alone does not establish functional or production readiness.
+The coordinator/user confirmed all visible checks. The package is completed and app-verified. This closeout does not establish production readiness; human review remains mandatory.
