@@ -62,7 +62,7 @@ Added contract tests for:
 
 ## GitHub Actions status
 
-Pending.
+Pending. The branch workflow applies the governance updates, restores the standard workflow and then runs the complete regression suite.
 
 ## Hugging Face sync status
 
