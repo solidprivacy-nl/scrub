@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "approved_at": "2026-08-04T00:09:00+02:00",
+  "actions": {
+    "inspect": "inspect_selection",
+    "commit": "commit_manual_mask"
+  },
+  "scope": "all_exact",
+  "limits": {
+    "max_payload_utf8_bytes": 8192,
+    "max_selection_codepoints": 160,
+    "max_selection_lines": 1,
+    "replay_event_history": 128,
+    "ready_max_occurrences": 5,
+    "confirmation_max_occurrences": 20
+  },
+  "formats": {
+    "event_id_regex": "^[A-Za-z0-9_-]{16,80}$",
+    "document_scope_key_regex": "^[0-9a-f]{16}$",
+    "processed_text_hash_regex": "^[0-9a-f]{64}$",
+    "offset_unit": "utf16_code_units"
+  },
+  "inspection_statuses": [
+    "ready",
+    "confirmation_required",
+    "blocked"
+  ],
+  "quick_types": [
+    {
+      "key": "person",
+      "user_label": "Persoon",
+      "manual_label": "Persoon",
+      "entity_type": "PERSON",
+      "placeholder_prefix": "PERSOON"
+    },
+    {
+      "key": "organization",
+      "user_label": "Organisatie",
+      "manual_label": "Organisatie",
+      "entity_type": "ORGANIZATION",
+      "placeholder_prefix": "ORGANISATIE"
+    },
+    {
+      "key": "location",
+      "user_label": "Adres of locatie",
+      "manual_label": "Adres of locatie",
+      "entity_type": "LOCATION",
+      "placeholder_prefix": "LOCATIE"
+    },
+    {
+      "key": "email",
+      "user_label": "E-mailadres",
+      "manual_label": "E-mailadres",
+      "entity_type": "EMAIL_ADDRESS",
+      "placeholder_prefix": "EMAIL"
+    },
+    {
+      "key": "phone",
+      "user_label": "Telefoonnummer",
+      "manual_label": "Telefoonnummer",
+      "entity_type": "NL_PHONE_NUMBER",
+      "placeholder_prefix": "TELEFOON"
+    },
+    {
+      "key": "date_time",
+      "user_label": "Datum of tijd",
+      "manual_label": "Datum of tijd",
+      "entity_type": "DATE_TIME",
+      "placeholder_prefix": "DATUM"
+    },
+    {
+      "key": "reference",
+      "user_label": "Nummer of referentie",
+      "manual_label": "Nummer of referentie",
+      "entity_type": "NL_OTHER_REFERENCE",
+      "placeholder_prefix": "OVERIGE_REFERENTIE"
+    },
+    {
+      "key": "other",
+      "user_label": "Overige waarde",
+      "manual_label": "Overige waarde",
+      "entity_type": "MANUAL",
+      "placeholder_prefix": "WAARDE"
+    }
+  ],
+  "row_contract": {
+    "include": true,
+    "remember": false,
+    "source": "manual_selection",
+    "source_label": "Handmatig uit tekst",
+    "review_status": "manual"
+  },
+  "collision_policy": {
+    "block_embedded_substrings": true,
+    "block_exact_duplicate_rows": true,
+    "block_nested_included_find_values": true,
+    "block_marked_range_intersection": true,
+    "token_continuation_categories": [
+      "unicode_letter",
+      "unicode_number",
+      "unicode_combining_mark",
+      "underscore",
+      "hyphen_or_dash",
+      "apostrophe"
+    ]
+  },
+  "confirmation_policy": {
+    "ready": "1_to_5",
+    "confirmation_required": "6_to_20",
+    "blocked": "more_than_20"
+  },
+  "fallbacks": {
+    "manual_form": "Gemiste waarde toevoegen",
+    "visible_action": "Masker selectie",
+    "undo": "Ongedaan maken"
+  },
+  "security": {
+    "server_authoritative": true,
+    "external_network_calls": false,
+    "browser_persistence": false,
+    "external_assets": false,
+    "frontend_placeholder_creation": false,
+    "frontend_table_mutation": false,
+    "scrub_key_semantics_changed": false,
+    "export_semantics_changed": false,
+    "reinsert_semantics_changed": false
+  }
+}

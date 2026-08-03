@@ -1,6 +1,6 @@
 # Processed-text selection masking — feasibility, UX and safety plan
 
-Status: planning and discussion only  
+Status: approved product direction; implementation contract frozen
 Workpackage: `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_PLAN`  
 Repository: `solidprivacy-nl/scrub`  
 Date: 2026-08-03 23:42 Europe/Amsterdam
@@ -79,7 +79,7 @@ This proposal is a separately scoped next step because:
 - the user has supplied direct usability evidence for the desired interaction;
 - the proposal can preserve the existing table and export semantics.
 
-This plan does not authorize implementation. It creates a bounded workpackage sequence for discussion and explicit approval.
+The coordinator approved this direction at 2026-08-04 00:09 Europe/Amsterdam, including the all-exact version-one boundary. `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md` now freezes the two-stage inspect/commit protocol and authorizes only the pure action-model package next.
 
 ## 4. Current architecture and consequences
 

@@ -9,10 +9,12 @@ def _plan() -> str:
     return PLAN.read_text(encoding="utf-8")
 
 
-def test_plan_exists_and_is_planning_only():
+def test_plan_exists_and_records_approved_contract_gate():
     text = _plan()
-    assert "Status: planning and discussion only" in text
-    assert "This plan does not authorize implementation" in text
+    assert "Status: approved product direction; implementation contract frozen" in text
+    assert "The coordinator approved this direction" in text
+    assert "PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md" in text
+    assert "authorizes only the pure action-model package next" in text
 
 
 def test_plan_keeps_review_table_authoritative():

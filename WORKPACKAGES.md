@@ -1,3 +1,56 @@
+## 2026-08-04 00:09 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT
+
+Status: implemented; GitHub Actions pending.
+
+Approval evidence:
+- coordinator/user approved the proposed direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam.
+
+Goal:
+- Freeze the exact interaction, event, safety, privacy and sequencing contract before action-model or component implementation.
+
+Contract result:
+
+```text
+Protocol: inspect_selection → server impact result → commit_manual_mask
+Scope: all exact occurrences only
+1–5 safe occurrences: ready
+6–20 safe occurrences: explicit confirmation required
+>20 occurrences: blocked from quick path
+Selection maximum: 160 Unicode code points, one line
+Offset unit: UTF-16 code units
+Payload maximum: 8192 UTF-8 bytes
+Replay history: 128 event IDs per document
+Quick types: 8 stable machine keys
+Embedded/nested/marked collisions: fail closed
+Review table source of truth: preserved
+Manual form fallback: preserved
+Export/Scrub Key/reinsert semantics: unchanged
+```
+
+Files added:
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
+- `test_cases/processed_text_selection_masking/contract.json`
+- `tests/test_processed_text_selection_masking_contract.py`
+- `workpackage_claims/scrub_wp_processed_text_selection_masking_contract.md`
+- `handover/workpackages/20260804_0009_processed_text_selection_masking_contract.md`
+
+Files changed:
+- `PROCESSED_TEXT_SELECTION_MASKING_PLAN.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RISK_REGISTER.md`
+- `DECISION_LOG.md`
+
+Next permitted package:
+- `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL`
+
+Boundaries:
+- specification and contract tests only;
+- no runtime, Streamlit, browser component, review-table or export-flow change;
+- no occurrence-specific replacement or Streamlit upgrade;
+- no Scrub Key, reinsert, recognizer, profile or cloud-processing change.
+
 ## 2026-08-03 23:42 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_PLAN
 
 Status: completed as planning; GitHub Actions green.
