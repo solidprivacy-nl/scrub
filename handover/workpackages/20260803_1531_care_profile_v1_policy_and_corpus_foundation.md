@@ -2,7 +2,7 @@
 
 Repository: solidprivacy-nl/scrub  
 Workpackage title: Zorgfilter v1 policy and corpus foundation  
-Status: implemented on branch; validation pending
+Status: implemented on branch; final validation running
 
 ## Summary
 
@@ -37,8 +37,9 @@ Recorded the approved Zorgfilter v1 policy and workpackage sequence. Added a pur
 
 ## Validation
 
-- Validation status: pending GitHub Actions.
-- GitHub Actions status: pending.
+- Initial GitHub Actions run: 917 passed, 1 new corpus-contract test failed because a valid discharge-letter preserve phrase lacked one of the test's clinical marker words.
+- Corrective action: preserved the exact phrase `Hoofddiagnose: acute nierinsufficiëntie`; no policy or product behavior changed.
+- Final GitHub Actions status: running on the corrected head.
 - Hugging Face sync status: not functionally relevant; no runtime/UI change.
 - App verification status: not applicable.
 
