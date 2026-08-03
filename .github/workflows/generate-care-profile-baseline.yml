@@ -34,3 +34,5 @@ jobs:
           git add output/validation/care_profile_v1_current_engine_baseline.json .github/workflows/generate-care-profile-baseline.yml
           git commit -m "Generate current-engine Zorgfilter baseline"
           git push origin HEAD:scrub-care-profile-current-engine-baseline
+
+# Triggered explicitly after the foundation merge.
