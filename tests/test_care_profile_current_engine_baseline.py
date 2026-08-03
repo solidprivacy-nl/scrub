@@ -1,4 +1,4 @@
-from care_profile_baseline import build_current_care_baseline
+from care_profile_baseline import _matching_rows, build_current_care_baseline
 
 
 def test_current_care_baseline_is_complete_evidence_not_a_readiness_claim():
@@ -36,3 +36,20 @@ def test_baseline_scope_excludes_generic_ner_and_cloud_processing():
 
     assert "generic NER excluded" in report["scope"]
     assert report["profile"] == "current_custom_recognizers_before_care_profile"
+
+
+def test_matching_requires_exact_normalized_span_not_numeric_prefix():
+    rows = [
+        {
+            "text": "11223344556",
+            "entity_type": "NL_BIG_NUMBER",
+            "start": 0,
+            "end": 11,
+            "score": 0.88,
+            "recognizer": "test",
+        }
+    ]
+
+    assert _matching_rows("11223344", rows) == []
+    assert _matching_rows("11223344556", rows) == rows
+    assert _matching_rows("11223 344556", rows) == rows
