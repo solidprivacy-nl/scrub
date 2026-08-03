@@ -2,7 +2,7 @@
 
 Repository: solidprivacy-nl/scrub  
 Workpackage title: Zorgfilter v1 recognizer implementation  
-Status: implemented; final governance and clean validation pending
+Status: completed; final clean PR validation initiated
 
 ## Summary
 
@@ -22,6 +22,7 @@ Implemented the pure `dutch_care_recognizers.py` module against the frozen contr
 
 ## Files changed
 
+- `ROADMAP.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
 - `RISK_REGISTER.md`
@@ -41,8 +42,9 @@ Implemented the pure `dutch_care_recognizers.py` module against the frozen contr
 
 - Initial run #1850 identified five bounded missing context variants; no clinical-overmasking failure.
 - Corrected variants: Dutch `cliëntnummer`, `receptnummer`, generic `incidentnummer`, and lowercase `woonzorgcentrum` after a labeled location field.
-- GitHub Actions run #1854: 953 tests passed.
-- Final clean GitHub Actions: pending after governance finalization.
+- Corrected GitHub Actions run #1854: 953 tests passed.
+- All temporary operator and workflow files are removed.
+- Final clean GitHub Actions: initiated on this handover commit.
 - Hugging Face sync: not functionally relevant; no current runtime/UI registration changed.
 - App verification: not applicable.
 
