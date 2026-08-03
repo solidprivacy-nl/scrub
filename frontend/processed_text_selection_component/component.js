@@ -7,7 +7,6 @@
     throw new Error("SolidPrivacy component support files are missing");
   }
 
-  const root = document.getElementById("componentRoot");
   const sourcePane = document.getElementById("sourcePane");
   const processedPane = document.getElementById("processedPane");
   const processedLegend = document.getElementById("processedLegend");
@@ -20,6 +19,7 @@
   let highlightSpans = [];
   let currentSelection = null;
   let lastMenuPosition = { x: 16, y: 16 };
+  let lastRenderedInspectionToken = "";
   let isSyncing = false;
 
   function clearElement(element) {
@@ -75,7 +75,8 @@
     if (!rootElement || !node) {
       return false;
     }
-    return node === rootElement || rootElement.contains(node.nodeType === Node.TEXT_NODE ? node.parentNode : node);
+    const candidate = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+    return node === rootElement || rootElement.contains(candidate);
   }
 
   function domUtf16Offset(rootElement, container, offset) {
@@ -193,6 +194,23 @@
     contextMenu.appendChild(warning);
   }
 
+  function inspectionToken(inspectionResult) {
+    const result = inspectionResult || {};
+    return String(result.inspection_id || result.event_id || "");
+  }
+
+  function inspectionMatchesSelection(inspectionResult) {
+    const resultText = String((inspectionResult && inspectionResult.selection_text) || "");
+    return !currentSelection || !resultText || resultText === currentSelection.text;
+  }
+
+  function isInspectableResult(inspectionResult) {
+    const status = String((inspectionResult && inspectionResult.status) || "");
+    return Boolean(inspectionToken(inspectionResult)) &&
+      ["ready", "confirmation_required", "blocked"].includes(status) &&
+      inspectionMatchesSelection(inspectionResult);
+  }
+
   function emitInspectEvent() {
     if (!currentSelection || currentSelection.intersects_marked_content) {
       statusRegion.textContent = "Selecteer een ongemaskeerde waarde in de verwerkte tekst.";
@@ -264,7 +282,9 @@
     clearElement(contextMenu);
     const status = String(inspectionResult.status || "blocked");
     const count = Number(inspectionResult.occurrence_count || 0);
-    const selectionText = String(inspectionResult.selection_text || (currentSelection && currentSelection.text) || "selectie");
+    const selectionText = String(
+      inspectionResult.selection_text || (currentSelection && currentSelection.text) || "selectie",
+    );
     addSummary(`“${selectionText}” — ${inspectionResult.message || `${count} exacte voorkomens`}`);
 
     if (status === "blocked") {
@@ -302,11 +322,7 @@
 
   function openMenuForCurrentState(x, y) {
     const inspectionResult = currentArgs.inspection_result || {};
-    if (
-      inspectionResult &&
-      inspectionResult.inspection_id &&
-      ["ready", "confirmation_required", "blocked"].includes(String(inspectionResult.status))
-    ) {
+    if (isInspectableResult(inspectionResult)) {
       renderInspectionResultMenu(inspectionResult, x, y);
     } else {
       renderInspectMenu(x, y);
@@ -343,6 +359,17 @@
     const inspectionResult = currentArgs.inspection_result || {};
     if (inspectionResult.message) {
       statusRegion.textContent = String(inspectionResult.message);
+    }
+    const token = inspectionToken(inspectionResult);
+    if (token && token !== lastRenderedInspectionToken && isInspectableResult(inspectionResult)) {
+      lastRenderedInspectionToken = token;
+      global.requestAnimationFrame(function () {
+        renderInspectionResultMenu(
+          inspectionResult,
+          lastMenuPosition.x,
+          lastMenuPosition.y,
+        );
+      });
     }
     Bridge.setFrameHeight(500);
   }
