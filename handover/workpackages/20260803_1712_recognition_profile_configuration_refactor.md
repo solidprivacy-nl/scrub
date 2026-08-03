@@ -2,7 +2,7 @@
 
 Repository: solidprivacy-nl/scrub  
 Workpackage title: Recognition profile configuration refactor  
-Status: implemented; final governance and validation pending
+Status: completed; final clean PR validation initiated
 
 ## Summary
 
@@ -41,7 +41,8 @@ Added a pure central profile model for General Dutch, Care, Legal and Internatio
 ## Validation
 
 - Initial profile-configuration run #1865: 965 tests passed before documentation/artifact finalization.
-- Final clean GitHub Actions: pending.
+- All temporary governance operator and workflow files are removed.
+- Final clean GitHub Actions: initiated on this handover commit.
 - Hugging Face sync: not functionally relevant; no live runtime/UI integration changed.
 - App verification: not applicable.
 
