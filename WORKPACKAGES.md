@@ -1,3 +1,45 @@
+## 2026-08-03 17:12 Europe/Amsterdam — SCRUB-WP_RECOGNITION_PROFILE_CONFIGURATION_REFACTOR
+
+Status: completed; pure four-profile configuration implemented, live integration still closed.
+
+Goal:
+- Centralize General Dutch, Care, Legal and International recognition behavior before changing the visible Streamlit selector.
+
+Result:
+
+```text
+Profiles defined: 4
+Current visible options preserved: 3
+Future Streamlit order: Care, Legal, General Dutch, International
+Desktop order: General Dutch, Care, Legal, International
+Exact-span precedence winners: 15
+Initial regression run #1865: 965 tests passed
+Live UI changed: false
+Care recognizers registered: false
+```
+
+Configuration includes:
+- stable labels, internal values and thresholds;
+- profile-specific entity groups;
+- legal/care candidate and example direction;
+- approved Care replace versus review-selected policy;
+- exact-span AGB-over-BSN and care-specific-over-broad-legacy precedence;
+- preservation of partial overlaps and non-Care profile behavior.
+
+Evidence:
+- `RECOGNITION_PROFILE_CONFIGURATION.md`
+- `output/validation/recognition_profile_configuration.json`
+
+Active next package:
+- `SCRUB-WP_CARE_PROFILE_CURRENT_UI_INTEGRATION`
+
+Boundaries:
+- no `presidio_streamlit.py` or `presidio_helpers.py` change;
+- no live selector, threshold or entity behavior change;
+- no export, Scrub Key or reinsert change;
+- human review remains required;
+- production readiness remains false.
+
 ## 2026-08-03 16:52 Europe/Amsterdam — SCRUB-WP_CARE_PROFILE_RECOGNIZER_IMPLEMENTATION
 
 Status: completed; pure recognizers implemented and contract-validated, app registration still closed.
