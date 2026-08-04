@@ -7,6 +7,7 @@ remain server-authoritative and export/reinsert can keep the complete token.
 
 from __future__ import annotations
 
+from html import escape
 import re
 from collections.abc import Iterable, Sequence
 from typing import Any
@@ -135,3 +136,39 @@ def build_bound_placeholder_display_segments(
             }
         )
     return segments
+
+
+def render_bound_placeholder_display_html(
+    text: Any,
+    highlight_spans: Iterable[Sequence[int]] | None = None,
+) -> str:
+    """Render escaped compact aliases while retaining full tokens as metadata."""
+
+    parts: list[str] = []
+    for segment in build_bound_placeholder_display_segments(text, highlight_spans):
+        display_text = escape(str(segment["display_text"]))
+        if not segment["compacted"] and not segment["highlighted"]:
+            parts.append(display_text)
+            continue
+
+        full_placeholder = str(segment["full_placeholder"])
+        compact_attributes = ""
+        compact_class = ""
+        if segment["compacted"]:
+            compact_class = " sp-compact-placeholder"
+            compact_attributes = (
+                f' title="Volledige gebonden placeholder: {escape(full_placeholder)}"'
+                f' aria-label="Gebonden placeholder, compact weergegeven als {display_text}"'
+            )
+
+        if segment["highlighted"]:
+            parts.append(
+                f'<mark class="sp-side-by-side-highlight-token{compact_class}"'
+                f'{compact_attributes}>{display_text}</mark>'
+            )
+        else:
+            parts.append(
+                f'<span class="sp-compact-placeholder"{compact_attributes}>'
+                f'{display_text}</span>'
+            )
+    return "".join(parts)
