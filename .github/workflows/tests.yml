@@ -1,15 +1,12 @@
 name: Tests
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
   workflow_dispatch:
 
 jobs:
   python-tests:
-    name: Python regression tests
+    name: Deployment and regression verification
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: ${{ github.workspace }}
@@ -17,6 +14,66 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Verify Hugging Face runtime synchronization
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            presidio_streamlit.py
+            side_by_side_review_panel_ui.py
+            processed_text_selection_component.py
+            processed_text_selection_integration.py
+            selection_mask_action.py
+            manual_mask_entry.py
+            frontend/processed_text_selection_component/index.html
+            frontend/processed_text_selection_component/styles.css
+            frontend/processed_text_selection_component/component_core.js
+            frontend/processed_text_selection_component/component.js
+            frontend/processed_text_selection_component/streamlit_bridge.js
+          )
+          base_url="https://huggingface.co/spaces/solidprivacy/scrub/resolve/main"
+          health_url="https://solidprivacy-scrub.hf.space/_stcore/health"
+          root_url="https://solidprivacy-scrub.hf.space/"
+          mkdir -p /tmp/hf-sync
+          success=0
+          for attempt in $(seq 1 30); do
+            echo "Synchronization attempt ${attempt}/30"
+            all_match=1
+            for file in "${files[@]}"; do
+              target="/tmp/hf-sync/$(echo "$file" | tr '/' '_')"
+              if ! curl -fL --silent --show-error --max-time 45 "${base_url}/${file}" -o "$target"; then
+                echo "FETCH_PENDING $file"
+                all_match=0
+                continue
+              fi
+              if cmp -s "$file" "$target"; then
+                echo "MATCH $file $(sha256sum "$file" | cut -d' ' -f1)"
+              else
+                echo "MISMATCH $file"
+                echo "github=$(sha256sum "$file" | cut -d' ' -f1)"
+                echo "hf=$(sha256sum "$target" | cut -d' ' -f1)"
+                all_match=0
+              fi
+            done
+            health="$(curl -fL --silent --show-error --max-time 30 "$health_url" || true)"
+            root_status="$(curl -L --silent --output /dev/null --write-out '%{http_code}' --max-time 30 "$root_url" || true)"
+            echo "HEALTH=${health:-unavailable} ROOT_HTTP=${root_status:-unavailable}"
+            if [[ "$all_match" -eq 1 && "$health" == "ok" && "$root_status" == "200" ]]; then
+              success=1
+              break
+            fi
+            sleep 10
+          done
+          if [[ "$success" -ne 1 ]]; then
+            echo "Hugging Face synchronization or health verification did not become green."
+            exit 1
+          fi
+          echo "SYNC_VERIFIED files=${#files[@]} health=ok root=200"
+
+      - name: Run frontend component tests
+        run: |
+          node --test tests/frontend/processed_text_selection_component_core.test.js
 
       - name: Set up Python
         uses: actions/setup-python@v5
