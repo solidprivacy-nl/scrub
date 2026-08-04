@@ -8,6 +8,7 @@ APP = REPO_ROOT / "presidio_streamlit.py"
 SERIAL_PANEL = REPO_ROOT / "serial_review_panel_ui.py"
 SIDE_BY_SIDE_PANEL = REPO_ROOT / "side_by_side_review_panel_ui.py"
 SIDE_BY_SIDE_HELPER = REPO_ROOT / "side_by_side_review.py"
+BOUND_PLACEHOLDER_DISPLAY = REPO_ROOT / "bound_placeholder_display.py"
 HIGHLIGHT_PANEL = REPO_ROOT / "review_highlight_toggle_panel_ui.py"
 
 
@@ -125,12 +126,15 @@ def test_marker_toggle_defaults_on_and_renderer_never_mutates_rows():
 
 
 def test_side_by_side_panel_escapes_static_fallback_and_uses_safe_component():
-    text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+    panel_text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
+    display_text = BOUND_PLACEHOLDER_DISPLAY.read_text(encoding="utf-8")
 
-    assert "source_html = escape(source_text)" in text
-    assert "else escape(processed_text)" in text
-    assert "_highlighted_processed_inner_html(" in text
-    assert "render_processed_text_selection_component(" in text
+    assert "source_html = escape(source_text)" in panel_text
+    assert "processed_html = _highlighted_processed_inner_html(" in panel_text
+    assert "display_text = escape(str(segment[\"display_text\"]))" in panel_text
+    assert "display_text = escape(str(segment[\"display_text\"]))" in display_text
+    assert "_highlighted_processed_inner_html(" in panel_text
+    assert "render_processed_text_selection_component(" in panel_text
 
 
 def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_panel():
