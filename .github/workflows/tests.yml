@@ -29,6 +29,7 @@ jobs:
         run: |
           git checkout -B scrub-processed-text-selection-table-integration origin/scrub-processed-text-selection-table-integration
           python ops/finalize_processed_text_selection_table_integration.py
+          sed -i 's/[[:space:]]\+$//' PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION.md
           git fetch origin main
           git checkout origin/main -- .github/workflows/tests.yml
           rm -f \
