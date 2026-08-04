@@ -24,18 +24,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Apply processed-text selection regression fixes
+      - name: Finalize processed-text selection table integration
         if: github.ref == 'refs/heads/scrub-processed-text-selection-table-integration'
         run: |
-          python ops/fix_processed_text_selection_integration_regression.py
+          python ops/finalize_processed_text_selection_table_integration.py
           git fetch origin main
           git checkout origin/main -- .github/workflows/tests.yml
-          rm ops/fix_processed_text_selection_integration_regression.py
+          rm -f \
+            ops/apply_processed_text_selection_table_integration.py \
+            ops/finalize_processed_text_selection_table_integration.py \
+            ops/fix_processed_text_selection_integration_regression.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --check
-          git commit -m "Fix processed-text selection integration regressions"
+          git commit -m "Finalize processed-text selection table integration"
           git push origin HEAD:scrub-processed-text-selection-table-integration
 
       - name: Set up Python
