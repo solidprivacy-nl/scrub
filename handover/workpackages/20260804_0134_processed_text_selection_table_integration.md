@@ -55,12 +55,13 @@ New tests cover:
 - Cleanup run #2044: frontend component tests passed; two obsolete phase-status assertions failed in Python only.
 - Final clean PR run #2047: 1146 Python tests passed in 11.97s.
 - Evidence-finalization run #2049: 1146 Python tests passed in 11.74s.
+- Final standard merge-candidate run #2051: 1146 Python tests passed in 11.59s.
 - Hugging Face sync pending merge.
 - App verification pending merge and synchronization.
 
 ## GitHub Actions status
 
-Green. Frontend component tests passed in cleanup run #2044. Final clean PR run #2047 passed 1146 Python tests in 11.97s, and evidence-finalization run #2049 passed 1146 tests in 11.74s. The direct handover commit triggers the final standard merge-candidate run.
+Green. Frontend component tests passed in cleanup run #2044. Final clean PR run #2047 passed 1146 Python tests in 11.97s, evidence-finalization run #2049 passed 1146 tests in 11.74s, and final standard run #2051 passed 1146 tests in 11.59s.
 
 ## Hugging Face sync status
 
@@ -82,4 +83,4 @@ Pending. Required because this is a user-visible production review-flow change.
 
 ## Next recommended step
 
-Merge after the final standard PR run is green. Then verify GitHub-to-Hugging-Face synchronization and request focused live app verification before starting cross-flow regression.
+Merge PR #63. Then verify GitHub-to-Hugging-Face synchronization and request focused live app verification before starting cross-flow regression.
