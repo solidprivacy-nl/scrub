@@ -90,11 +90,12 @@ Files changed:
 - `ROADMAP.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
+- `RELEASE_NOTES.md`
 - `RISK_REGISTER.md`
 
 Validation:
 - exact finalized tree validated in GitHub Actions run #{RUN_NUMBER};
-- full Python regression and integration/source contracts required green before automated merge;
+- frontend component tests and full Python regression required green before merge;
 - Hugging Face sync and app verification pending after merge.
 
 Next gate:
@@ -128,6 +129,7 @@ Files changed:
 - `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
 - `ROADMAP.md`
 - `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
 - `RISK_REGISTER.md`
 
 Implementation:
@@ -142,7 +144,7 @@ Implementation:
 
 Validation:
 - exact finalized tree validated in GitHub Actions run #{RUN_NUMBER};
-- automated merge is permitted only after the full regression succeeds;
+- automated merge is permitted only after frontend and full Python regressions succeed;
 - Hugging Face sync and live app verification pending.
 
 Intentionally not changed:
@@ -153,6 +155,25 @@ Intentionally not changed:
 - recognizers, profiles, thresholds or dependencies;
 - external network, telemetry, browser persistence or cloud processing.
 ''',
+)
+
+prepend_once(
+    "RELEASE_NOTES.md",
+    "## 2026-08-04 — Gemiste waarden direct vanuit de tekst maskeren",
+    '''## 2026-08-04 — Gemiste waarden direct vanuit de tekst maskeren
+
+- In `Verwerkte tekst` kan een gebruiker een nog zichtbare gevoelige waarde selecteren en via rechtermuisknop, toetsenbord of `Masker selectie` toevoegen.
+- Scrub controleert de selectie eerst op de server en toont hoeveel exacte voorkomens in het document worden geraakt.
+- De gebruiker kiest zelf een algemeen type, zoals persoon, organisatie, locatie, e-mailadres, telefoonnummer, datum/tijd of referentie.
+- De eerste versie maskeert alle veilige exacte voorkomens van de gekozen waarde; alleen één specifieke tekstpositie maskeren is nog niet ondersteund.
+- Korte of botsende selecties die onderdeel zijn van een langere waarde worden geblokkeerd en verwezen naar de bestaande gedetailleerde invoer.
+- Een bevestigde selectie wordt als normale handmatige rij zichtbaar in de bestaande vervangtabel.
+- De meest recente ongewijzigde selectieactie kan één stap ongedaan worden gemaakt.
+- `Gemiste waarde toevoegen`, de volledige vervangtabel en de statische reviewweergave blijven als fallback beschikbaar.
+- Exportformaten, Scrub Key, terugzetten, herkenningsprofielen en documentverwerking zijn niet gewijzigd.
+- Menselijke controle blijft verplicht; de functie versnelt correctie maar geeft geen garantie dat alle gevoelige gegevens zijn gevonden.
+
+---''',
 )
 
 replace_once(
@@ -189,10 +210,10 @@ replace_once(
 replace_once(
     "handover/workpackages/20260804_0134_processed_text_selection_table_integration.md",
     "- Controlled production patch applied through GitHub Actions.\n- Exact final governance and regression validation pending.\n- Hugging Face sync pending merge.\n- App verification pending merge and synchronization.",
-    f"- Controlled production patch and exact final governance validated in GitHub Actions run #{RUN_NUMBER}.\n- Automated merge follows only after the complete regression succeeds.\n- Hugging Face sync pending merge.\n- App verification pending merge and synchronization.",
+    f"- Controlled production patch and exact final governance validated in GitHub Actions run #{RUN_NUMBER}.\n- Frontend component tests and the complete Python regression must succeed before merge.\n- Hugging Face sync pending merge.\n- App verification pending merge and synchronization.",
 )
 replace_once(
     "handover/workpackages/20260804_0134_processed_text_selection_table_integration.md",
     "Pending exact merge-candidate validation.",
-    f"Green exact-tree validation required in run #{RUN_NUMBER}; automated merge is conditional on success.",
+    f"Exact finalized tree is validated in run #{RUN_NUMBER}; merge remains conditional on frontend and full Python regression success.",
 )
