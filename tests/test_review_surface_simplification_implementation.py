@@ -19,7 +19,8 @@ def test_primary_flow_copy_is_present_and_calmer() -> None:
     assert "3. Exporteer resultaat" in APP_TEXT
     assert "Download veilig" in combined
     assert "Controleer links de brontekst en rechts de verwerkte tekst." in SIDE_BY_SIDE_TEXT
-    assert "Deze vergelijking wijzigt zelf niets." in SIDE_BY_SIDE_TEXT
+    assert "Selecteer rechts een gemiste waarde" in SIDE_BY_SIDE_TEXT
+    assert '"mutation_allowed": False' in SIDE_BY_SIDE_TEXT
 
 
 def test_side_by_side_review_remains_visible_and_primary() -> None:
@@ -51,6 +52,16 @@ def test_manual_missed_value_entry_remains_reachable() -> None:
     ]:
         assert marker in APP_TEXT
     assert "build_manual_mask_row" in MANUAL_MASK_TEXT
+
+
+def test_direct_selection_uses_server_adapter_and_immediate_rerun() -> None:
+    assert "handle_selection_component_event" in APP_TEXT
+    assert "selection_inspection_result" in APP_TEXT
+    assert "selection_scroll_restore" in APP_TEXT
+    assert "if selection_outcome.rerun_required:" in APP_TEXT
+    assert "st.rerun()" in APP_TEXT
+    assert "render_processed_text_selection_component" in SIDE_BY_SIDE_TEXT
+    assert '"review_table_mutation": False' in SIDE_BY_SIDE_TEXT
 
 
 def test_serial_review_remains_secondary_and_reachable() -> None:
@@ -118,4 +129,3 @@ def test_old_replacement_decision_helper_panel_stays_out() -> None:
     combined = APP_TEXT + "\n" + SIDE_BY_SIDE_TEXT + "\n" + SERIAL_REVIEW_TEXT
 
     assert "replacement decision helper" not in combined.lower()
-    assert "Vervangbeslissing" not in combined

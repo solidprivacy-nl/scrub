@@ -19,7 +19,7 @@ Risk:
 Sensitive data remains in the scrubbed output and the user wrongly trusts the result.
 ```
 
-Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. A selection-driven processed-text correction path is approved with an all-exact version-one boundary. Its frozen contract, pure action model and isolated component spike require a two-stage server-authoritative inspect/commit protocol and may not bypass validation or the authoritative replacement table. The model proves UTF-16 selection validation, impact bands, collision/replay/stale protection and safe row construction; the spike proves local bidirectional event transport, accessible menu behavior and correct offsets around marked nodes without product mutation. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence. The first machine-readable matrix baseline is stored in `output/validation/mvp_phase6_synthetic_validation_report.json` with 3 synthetic cases and 2 recorded evidence gaps or known limitations. Triage confirms that neither remaining item is a detection false negative, so no recognizer fix is justified by this bounded baseline.
+Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. A selection-driven processed-text correction path is approved with an all-exact version-one boundary. Its frozen contract, action model, local component and production integration enforce a two-stage server-authoritative inspect/commit protocol. Accepted commits append one normal document-scoped row, rerun before export and remain visible in the authoritative review table. The static renderer and manual form remain fallbacks until deployment and live verification are green. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence. The first machine-readable matrix baseline is stored in `output/validation/mvp_phase6_synthetic_validation_report.json` with 3 synthetic cases and 2 recorded evidence gaps or known limitations. Triage confirms that neither remaining item is a detection false negative, so no recognizer fix is justified by this bounded baseline.
 
 Remaining gaps:
 
@@ -111,13 +111,13 @@ Current mitigations:
 - `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` narrows review UI cleanup to a small interface pass, not a new review loop.
 - `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION` made the existing step-by-step review aid collapsed by default and removed debug/governance wording from the primary UI.
 - `WP_MVP_FAST_MANUAL_MASK_ENTRY` adds a verified simple user-facing path to add missed values to the existing replacement table.
-- The contract freezes the route, the action model implements server-authoritative validation/row construction, and `SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE` proves the isolated browser transport. The review table remains source of truth and production integration remains sequentially gated.
+- The contract, action model and component spike are now connected through `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`. The review table remains source of truth; the component is only an input route into normal bound manual rows.
 
 Gaps:
 
 - Live reinsert verification exposed a concrete workflow-state problem: uploaded source and key files still required non-obvious follow-up checkboxes and buttons. `SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION` addresses this narrowly with document-first ordering and automatic validation/processing.
 - Additional copy polish may still be needed, but it should remain separate and small.
-- The action model and component spike now prove exact-occurrence bands, Unicode collision guards, replay/stale protection, safe undo, text-node offsets and accessible bidirectional transport. The remaining high-risk gate is production table integration with rollback plus cross-flow and live app verification.
+- Production table integration now preserves collision/replay/stale guards, hidden-marker protection, immediate rerun and edit-aware undo. The remaining high-risk gates are deployment synchronization, live browser/app verification and full export/Scrub Key/reinsert cross-flow regression.
 - Implementation must avoid weakening review controls or hiding audit details; one final confidentiality acknowledgement remains at download.
 
 Recommended workpackages:

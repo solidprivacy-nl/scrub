@@ -1,6 +1,6 @@
 # Processed-text selection masking contract
 
-Status: approved contract; action model and non-mutating component spike implemented and test-gated
+Status: approved contract; action model, component and authoritative table integration implemented and test-gated
 Workpackage: `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT`  
 Repository: `solidprivacy-nl/scrub`  
 Approved: 2026-08-04 00:09 Europe/Amsterdam
@@ -452,4 +452,4 @@ This contract authorizes only the next package:
 SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL
 ```
 
-The action model is implemented in `selection_mask_action.py`, and the isolated Streamlit v1 component spike proves UTF-16 selection transport, accessible menu behavior and bidirectional inspect/commit intents without product mutation. The next permitted package is sequential table integration; the review table, manual fallback and unchanged export/Scrub Key/reinsert semantics remain mandatory.
+The action model, local Streamlit v1 component and production integration now implement the approved all-exact route through the existing document-scoped manual rows and authoritative review table. The static renderer and manual form remain fallbacks, while export, Scrub Key and reinsert semantics remain unchanged. Deployment synchronization and live app verification are required before cross-flow promotion.

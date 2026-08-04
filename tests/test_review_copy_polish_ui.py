@@ -13,14 +13,14 @@ def _text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_side_by_side_copy_is_clearer_and_still_says_table_is_leading() -> None:
+def test_side_by_side_copy_is_clear_and_table_remains_leading() -> None:
     rendered = _text(SIDE_BY_SIDE_UI)
 
     assert "Controleer links de brontekst en rechts de verwerkte tekst." in rendered
-    assert "Download veilig" in rendered
+    assert "Selecteer rechts een gemiste waarde" in rendered
     assert "Twijfel je over een waarde?" in rendered
-    assert "Open de vervangtabel of Meer controleopties hieronder." in rendered
-    assert "Deze vergelijking wijzigt zelf niets." in rendered
+    assert "Elke toevoeging blijft zichtbaar en aanpasbaar in de vervangtabel." in rendered
+    assert '"mutation_allowed": False' in rendered
     assert "Visuele hulp bij het controleren" in rendered
     assert "De panelen scrollen samen." in rendered
 
@@ -75,8 +75,8 @@ def test_copy_polish_does_not_add_blocked_features() -> None:
     for forbidden in [
         "cloud document processing",
         "custom document editor",
-        "contextmenu",
-        "right click",
+        "cloud telemetry",
+        "external component asset",
         "click-to-mark",
         "full-document marking",
         "export gate",

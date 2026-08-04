@@ -13,6 +13,8 @@
   const maskSelectionButton = document.getElementById("maskSelectionButton");
   const contextMenu = document.getElementById("contextMenu");
   const statusRegion = document.getElementById("statusRegion");
+  const componentRoot = document.getElementById("componentRoot");
+  const componentFooter = document.getElementById("componentFooter");
 
   let currentArgs = {};
   let processedText = "";
@@ -237,7 +239,10 @@
       typeKey,
       Core.makeEventId("commit", global.crypto),
     );
-    statusRegion.textContent = "Maskeringskeuze is als niet-muterend intent-event verstuurd.";
+    const contract = currentArgs.component_contract || {};
+    statusRegion.textContent = contract.non_mutating_spike
+      ? "Maskeringskeuze is als niet-muterend intent-event verstuurd."
+      : "Maskering wordt veilig toegevoegd…";
     closeMenu();
     Bridge.setComponentValue(event);
   }
@@ -333,6 +338,21 @@
     const sourceScroll = getScrollRatio(sourcePane);
     const processedScroll = getScrollRatio(processedPane);
     currentArgs = args || {};
+    const contract = currentArgs.component_contract || {};
+    const nonMutatingSpike = Boolean(contract.non_mutating_spike);
+    if (componentRoot) {
+      componentRoot.setAttribute(
+        "aria-label",
+        nonMutatingSpike
+          ? "Niet-muterende selectiecomponent"
+          : "Tekstselectie voor handmatige maskering",
+      );
+    }
+    if (componentFooter) {
+      componentFooter.textContent = nonMutatingSpike
+        ? "De panelen scrollen samen. Deze componentproef wijzigt geen vervangtabel of document."
+        : "De panelen scrollen samen. Maskeringen worden pas na servercontrole toegevoegd.";
+    }
     processedText = Core.asText(currentArgs.processed_text);
     highlightSpans = Core.normalizeUtf16Spans(processedText, currentArgs.highlight_spans);
 

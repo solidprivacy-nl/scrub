@@ -1,20 +1,25 @@
-"""Streamlit renderer for the bounded side-by-side review surface.
+"""Streamlit renderer for the side-by-side review surface.
 
-The side-by-side review surface shows source text on the left and processed text
-on the right. Highlights are visual-only. Scrolling is synchronized by default.
-The returned model is report-only and is not used to change review-table,
-replacement, export, Scrub Key or reinsert behavior.
+The source remains read-only. The processed pane can emit bounded selection
+inspect/commit-intent events through the local component. Server-side callers
+remain authoritative for validation and row mutation. The previous static HTML
+renderer remains available as an environment-controlled and exception fallback.
 """
 
 from __future__ import annotations
 
 from html import escape
-from typing import Any
+import os
+from typing import Any, Mapping
 
 import streamlit as st
 import streamlit.components.v1 as components
 
+from processed_text_selection_component import (
+    render_processed_text_selection_component,
+)
 from review_highlight_toggle_panel_ui import build_preview_text
+from selection_mask_action import processed_text_hash
 from side_by_side_review import build_side_by_side_review_model
 
 
@@ -23,6 +28,7 @@ SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT = 410
 BASIC_REVIEW_MODE = "Basiscontrole"
 EXPERT_REVIEW_MODE = "Expertcontrole"
 REVIEW_MODE_OPTIONS = [BASIC_REVIEW_MODE, EXPERT_REVIEW_MODE]
+INTERACTIVE_COMPONENT_ENV = "PROCESSED_TEXT_SELECTION_COMPONENT_ENABLED"
 
 _SYNC_SCROLL_COMPONENT_CSS = f"""
 <style>
@@ -79,8 +85,18 @@ _SYNC_SCROLL_COMPONENT_CSS = f"""
 """.strip()
 
 
-def _highlighted_processed_inner_html(processed_text: str, highlight_spans: list[tuple[int, int]]) -> str:
-    """Return escaped inner HTML for the processed pane only."""
+def interactive_selection_component_enabled() -> bool:
+    """Return the deploy-time rollback switch for the interactive component."""
+
+    value = os.environ.get(INTERACTIVE_COMPONENT_ENV, "true").strip().lower()
+    return value not in {"0", "false", "no", "off", "disabled"}
+
+
+def _highlighted_processed_inner_html(
+    processed_text: str,
+    highlight_spans: list[tuple[int, int]],
+) -> str:
+    """Return escaped inner HTML for the static fallback processed pane."""
 
     parts: list[str] = []
     cursor = 0
@@ -96,8 +112,14 @@ def _highlighted_processed_inner_html(processed_text: str, highlight_spans: list
     return "".join(parts)
 
 
-def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, processed_html: str, show_markers: bool) -> str:
-    """Build escaped HTML for synchronized side-by-side scrolling."""
+def _side_by_side_sync_scroll_html(
+    *,
+    source_text: str,
+    processed_text: str,
+    processed_html: str,
+    show_markers: bool,
+) -> str:
+    """Build escaped HTML for the synchronized static fallback."""
 
     source_html = escape(source_text)
     processed_legend = "Geel = vervangen of gemaskeerde waarde" if show_markers else "Verwerkte tekst"
@@ -166,12 +188,32 @@ def _side_by_side_sync_scroll_html(*, source_text: str, processed_text: str, pro
 """.strip()
 
 
-def render_review_mode_selector() -> str:
-    """Render the Basiscontrole / Expertcontrole visibility selector.
+def _render_static_fallback(
+    *,
+    source_text: str,
+    processed_text: str,
+    highlight_spans: list[tuple[int, int]],
+    show_markers: bool,
+) -> None:
+    processed_html = (
+        _highlighted_processed_inner_html(processed_text, highlight_spans)
+        if show_markers and highlight_spans
+        else escape(processed_text)
+    )
+    components.html(
+        _side_by_side_sync_scroll_html(
+            source_text=source_text,
+            processed_text=processed_text,
+            processed_html=processed_html,
+            show_markers=bool(show_markers and highlight_spans),
+        ),
+        height=SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT,
+        scrolling=False,
+    )
 
-    The selector controls UI density only. Processing, replacement, export,
-    Scrub Key, reinsert and audit semantics remain unchanged.
-    """
+
+def render_review_mode_selector() -> str:
+    """Render the Basiscontrole / Expertcontrole visibility selector."""
 
     review_mode = st.radio(
         "Controleweergave",
@@ -197,15 +239,23 @@ def render_review_mode_selector() -> str:
     return str(review_mode)
 
 
-def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df: Any) -> dict[str, Any]:
-    """Render a small source/processed comparison surface."""
+def render_side_by_side_review_panel(
+    *,
+    source_text: str,
+    edited_replacements_df: Any,
+    document_scope_key: str = "",
+    inspection_result: Mapping[str, Any] | None = None,
+    restore_source_scroll_ratio: float | None = None,
+    restore_processed_scroll_ratio: float | None = None,
+) -> dict[str, Any]:
+    """Render source/processed review and return any bounded component event."""
 
     review_mode = render_review_mode_selector()
     processed_text = build_preview_text(source_text, edited_replacements_df)
 
     st.caption(
         "Controleer links de brontekst en rechts de verwerkte tekst. "
-        "Daarna kun je veilig downloaden via de stap Download veilig."
+        "Selecteer rechts een gemiste waarde en gebruik de rechtermuisknop of ‘Masker selectie’."
     )
 
     show_markers = st.checkbox(
@@ -222,29 +272,49 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         highlights_enabled=show_markers,
     )
     compact_legend = model["compact_legend"]
-    processed_html = (
-        _highlighted_processed_inner_html(
-            model["processed_pane"]["text"],
-            model["processed_pane"]["highlight_spans"],
-        )
-        if show_markers and model["processed_pane"]["highlight_spans"]
-        else escape(model["processed_pane"]["text"])
-    )
+    highlight_spans = list(model["processed_pane"]["highlight_spans"])
+    component_event: dict[str, Any] | None = None
+    interactive_enabled = bool(document_scope_key and interactive_selection_component_enabled())
+    static_fallback_used = not interactive_enabled
+    component_error = ""
 
-    components.html(
-        _side_by_side_sync_scroll_html(
+    if interactive_enabled:
+        try:
+            component_event = render_processed_text_selection_component(
+                source_text=model["source_pane"]["text"],
+                processed_text=model["processed_pane"]["text"],
+                highlight_spans=highlight_spans,
+                document_scope_key=document_scope_key,
+                processed_text_hash=processed_text_hash(model["processed_pane"]["text"]),
+                inspection_result=inspection_result,
+                restore_source_scroll_ratio=restore_source_scroll_ratio,
+                restore_processed_scroll_ratio=restore_processed_scroll_ratio,
+                key=f"processed_text_selection_{document_scope_key}",
+            )
+        except Exception as exc:
+            component_error = str(exc)
+            static_fallback_used = True
+            st.warning(
+                "Direct selecteren kon niet worden geladen. De eenvoudige reviewweergave en "
+                "‘Gemiste waarde toevoegen’ blijven beschikbaar."
+            )
+            _render_static_fallback(
+                source_text=model["source_pane"]["text"],
+                processed_text=model["processed_pane"]["text"],
+                highlight_spans=highlight_spans,
+                show_markers=show_markers,
+            )
+    else:
+        _render_static_fallback(
             source_text=model["source_pane"]["text"],
             processed_text=model["processed_pane"]["text"],
-            processed_html=processed_html,
-            show_markers=bool(show_markers and model["processed_pane"]["highlight_spans"]),
-        ),
-        height=SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT,
-        scrolling=False,
-    )
+            highlight_spans=highlight_spans,
+            show_markers=show_markers,
+        )
 
     st.caption(
-        "Twijfel je over een waarde? Open de vervangtabel of Meer controleopties hieronder. "
-        "Deze vergelijking wijzigt zelf niets."
+        "Twijfel je over een waarde? Selecteer die rechts of gebruik ‘Gemiste waarde toevoegen’. "
+        "Elke toevoeging blijft zichtbaar en aanpasbaar in de vervangtabel."
     )
     st.caption(model["review_table"]["copy"])
     st.markdown("#### Meer controleopties")
@@ -254,9 +324,13 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
     )
 
     return {
-        "report_only": True,
-        "visual_only": True,
+        "report_only": False,
+        "visual_only": False,
         "mutation_allowed": False,
+        "component_event": component_event,
+        "processed_text": model["processed_pane"]["text"],
+        "processed_text_hash": processed_text_hash(model["processed_pane"]["text"]),
+        "highlight_spans": highlight_spans,
         "review_mode": review_mode,
         "basic_review_mode_default": BASIC_REVIEW_MODE,
         "expert_review_mode": EXPERT_REVIEW_MODE,
@@ -271,8 +345,13 @@ def render_side_by_side_review_panel(*, source_text: str, edited_replacements_df
         "sync_scroll_percentage_based": True,
         "sync_scroll_always_on": True,
         "sync_scroll_visible_checkbox": False,
-        "custom_component_rendering": False,
-        "uses_streamlit_components_html": True,
+        "custom_component_rendering": interactive_enabled and not static_fallback_used,
+        "uses_streamlit_components_html": static_fallback_used,
+        "interactive_selection_enabled": interactive_enabled,
+        "static_fallback_available": True,
+        "static_fallback_used": static_fallback_used,
+        "component_error": component_error,
+        "component_environment_switch": INTERACTIVE_COMPONENT_ENV,
         "pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
         "compact_legend": compact_legend,
         "model": model,

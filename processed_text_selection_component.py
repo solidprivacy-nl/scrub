@@ -1,9 +1,8 @@
-"""Standalone wrapper for the non-mutating processed-text selection component spike.
+"""Local bidirectional processed-text selection component wrapper.
 
-This module is not imported by the production Streamlit application. It proves
-that the existing Streamlit 1.39 v1 component API can transport bounded inspect
-and commit-intent events without changing replacement-table, export, Scrub Key
-or reinsert state.
+The frontend transports bounded inspect and commit-intent events. It never
+creates placeholders, mutates review rows or touches export, Scrub Key or
+reinsert state; server-side callers remain authoritative.
 """
 
 from __future__ import annotations
@@ -80,6 +79,7 @@ def build_component_args(
     inspection_result: Mapping[str, Any] | None = None,
     restore_source_scroll_ratio: float | None = None,
     restore_processed_scroll_ratio: float | None = None,
+    non_mutating_spike: bool = True,
 ) -> dict[str, Any]:
     """Build the JSON-only argument object passed to the frontend component."""
 
@@ -99,7 +99,7 @@ def build_component_args(
             "commit_action": "commit_manual_mask",
             "requested_scope": "all_exact",
             "highlight_offset_unit": "utf16_code_units",
-            "non_mutating_spike": True,
+            "non_mutating_spike": bool(non_mutating_spike),
         },
     }
 
@@ -115,7 +115,7 @@ def _declare_component():
     return components.declare_component(COMPONENT_NAME, path=str(FRONTEND_DIR))
 
 
-def render_processed_text_selection_component_spike(
+def render_processed_text_selection_component(
     *,
     source_text: str,
     processed_text: str,
@@ -126,12 +126,9 @@ def render_processed_text_selection_component_spike(
     restore_source_scroll_ratio: float | None = None,
     restore_processed_scroll_ratio: float | None = None,
     key: str | None = None,
+    non_mutating_spike: bool = False,
 ) -> dict[str, Any] | None:
-    """Render the spike and return its raw inspect or commit-intent event.
-
-    The wrapper does not call the action model and does not mutate any table or
-    session state. The standalone demo decides how to display returned events.
-    """
+    """Render the component and return its raw inspect or commit-intent event."""
 
     component = _declare_component()
     args = build_component_args(
@@ -143,13 +140,21 @@ def render_processed_text_selection_component_spike(
         inspection_result=inspection_result,
         restore_source_scroll_ratio=restore_source_scroll_ratio,
         restore_processed_scroll_ratio=restore_processed_scroll_ratio,
+        non_mutating_spike=non_mutating_spike,
     )
     value = component(**args, key=key, default=None)
     return dict(value) if isinstance(value, Mapping) else None
 
 
+def render_processed_text_selection_component_spike(**kwargs: Any) -> dict[str, Any] | None:
+    """Backward-compatible isolated spike entry point."""
+
+    kwargs["non_mutating_spike"] = True
+    return render_processed_text_selection_component(**kwargs)
+
+
 def component_spike_contract() -> dict[str, Any]:
-    """Return machine-readable proof boundaries for tests and handover."""
+    """Return machine-readable proof boundaries retained for spike tests."""
 
     return {
         "component_name": COMPONENT_NAME,

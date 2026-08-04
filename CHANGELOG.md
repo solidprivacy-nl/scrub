@@ -1,3 +1,51 @@
+## 2026-08-04 01:34 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION
+
+Status: completed in GitHub; deployment and app verification pending.
+
+Purpose:
+- Make direct selection in `Verwerkte tekst` a safe input route into the existing manual replacement-table path.
+
+Files added:
+- `processed_text_selection_integration.py`
+- `tests/test_processed_text_selection_integration.py`
+- `tests/test_processed_text_selection_table_integration_contract.py`
+- `PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION.md`
+- `workpackage_claims/scrub_wp_processed_text_selection_table_integration.md`
+- `handover/workpackages/20260804_0134_processed_text_selection_table_integration.md`
+
+Files changed:
+- `processed_text_selection_component.py`
+- `side_by_side_review_panel_ui.py`
+- `presidio_streamlit.py`
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- `RISK_REGISTER.md`
+
+Implementation:
+- promoted the local component wrapper while retaining the isolated spike alias;
+- added interactive review with environment-controlled and exception-safe static fallback;
+- added server-protected spans independent of marker visibility;
+- processed inspect/commit only after the editable table and before serial review/export;
+- appended one bound normal manual row through document-scoped `manual_mask_rows`;
+- added immediate reruns, feedback and safe one-step undo;
+- blocked undo when the visible table row was subsequently edited;
+- retained the full review table and existing manual form.
+
+Validation:
+- cleanup run #2044: frontend component tests passed; two obsolete phase-status assertions failed in Python only;
+- final clean PR run #2047: 1146 Python tests passed in 11.97s;
+- Hugging Face sync and live app verification pending.
+
+Intentionally not changed:
+- all-exact version-one scope;
+- export formats, filenames, MIME or download behavior;
+- Scrub Key schema, binding, digest, warning or lifecycle;
+- reinsert semantics;
+- recognizers, profiles, thresholds or dependencies;
+- external network, telemetry, browser persistence or cloud processing.
+
 ## 2026-08-04 01:00 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE
 
 Status: completed; technical validation green.

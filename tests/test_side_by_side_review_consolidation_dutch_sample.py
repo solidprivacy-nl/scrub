@@ -69,7 +69,7 @@ def test_sync_scroll_and_highlight_toggle_remain_available_but_sync_control_is_h
     assert 'id="syncToggle"' not in text
 
 
-def test_side_by_side_primary_ui_does_not_show_debug_governance_caption():
+def test_side_by_side_primary_ui_stays_user_facing_and_table_authoritative():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     assert "table-first baseline" not in text
@@ -78,8 +78,10 @@ def test_side_by_side_primary_ui_does_not_show_debug_governance_caption():
     assert "no export/download changes" not in text
     assert "no reinsert behavior change" not in text
     assert "Must not change source text" not in text
-    assert "Twijfel je over een waarde? Open de vervangtabel of Meer controleopties hieronder." in text
-    assert "Deze vergelijking wijzigt zelf niets." in text
+    assert "Twijfel je over een waarde? Selecteer die rechts" in text
+    assert "Elke toevoeging blijft zichtbaar en aanpasbaar in de vervangtabel." in text
+    assert '"mutation_allowed": False' in text
+    assert '"review_table_mutation": False' in text
 
 
 def test_review_table_and_download_labels_are_preserved():

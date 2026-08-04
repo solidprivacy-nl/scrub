@@ -54,14 +54,14 @@ def test_user_facing_side_by_side_copy_exists_and_controls_are_simplified():
 
     for phrase in [
         "Controleer links de brontekst en rechts de verwerkte tekst",
-        "Download veilig",
+        "Selecteer rechts een gemiste waarde",
         "Brontekst",
         "Verwerkte tekst",
         "Markeringen tonen",
         "Geel = vervangen of gemaskeerde waarde",
         "Twijfel je over een waarde?",
-        "Open de vervangtabel of Meer controleopties hieronder",
-        "Deze vergelijking wijzigt zelf niets",
+        "Elke toevoeging blijft zichtbaar en aanpasbaar in de vervangtabel",
+        "Masker selectie",
         "De panelen scrollen samen. Bij grote tekstverschillen kan de uitlijning iets afwijken.",
     ]:
         assert phrase in text
@@ -72,7 +72,7 @@ def test_user_facing_side_by_side_copy_exists_and_controls_are_simplified():
     assert "Must not change source text" not in text
 
 
-def test_side_by_side_panes_have_equal_height_and_sync_scroll_component():
+def test_side_by_side_panes_have_equal_height_and_static_fallback():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     assert "SIDE_BY_SIDE_REVIEW_PANE_HEIGHT = 320" in text
@@ -84,6 +84,7 @@ def test_side_by_side_panes_have_equal_height_and_sync_scroll_component():
     assert "components.html(" in text
     assert "height=SIDE_BY_SIDE_REVIEW_COMPONENT_HEIGHT" in text
     assert '"pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT' in text
+    assert '"static_fallback_available": True' in text
 
 
 def test_side_by_side_panel_keeps_bidirectional_sync_scroll_without_visible_toggle():
@@ -104,7 +105,7 @@ def test_side_by_side_panel_keeps_bidirectional_sync_scroll_without_visible_togg
         '"sync_scroll_percentage_based": True',
         '"sync_scroll_always_on": True',
         '"sync_scroll_visible_checkbox": False',
-        '"uses_streamlit_components_html": True',
+        '"uses_streamlit_components_html": static_fallback_used',
     ]:
         assert required in text
 
@@ -112,22 +113,24 @@ def test_side_by_side_panel_keeps_bidirectional_sync_scroll_without_visible_togg
     assert "syncToggle.addEventListener" not in text
 
 
-def test_marker_toggle_defaults_on_and_stays_report_only():
+def test_marker_toggle_defaults_on_and_renderer_never_mutates_rows():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     assert "side_by_side_review_show_markers" in text
     assert "value=True" in text
-    assert '"report_only": True' in text
-    assert '"visual_only": True' in text
+    assert '"report_only": False' in text
+    assert '"visual_only": False' in text
     assert '"mutation_allowed": False' in text
+    assert '"review_table_mutation": False' in text
 
 
-def test_side_by_side_panel_escapes_document_text_before_component_rendering():
+def test_side_by_side_panel_escapes_static_fallback_and_uses_safe_component():
     text = SIDE_BY_SIDE_PANEL.read_text(encoding="utf-8")
 
     assert "source_html = escape(source_text)" in text
-    assert "else escape(model[\"processed_pane\"][\"text\"])" in text
+    assert "else escape(processed_text)" in text
     assert "_highlighted_processed_inner_html(" in text
+    assert "render_processed_text_selection_component(" in text
 
 
 def test_highlights_are_integrated_in_side_by_side_right_pane_not_old_duplicate_panel():
