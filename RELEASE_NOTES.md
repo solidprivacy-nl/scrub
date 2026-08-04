@@ -1,3 +1,9 @@
+## 2026-08-04 22:22 Europe/Amsterdam — Direct maskeren vanuit de verwerkte tekst geverifieerd
+
+De nieuwe correctieroute is live gecontroleerd: een gemiste waarde kan direct in de verwerkte tekst worden geselecteerd, veilig worden geïnspecteerd, als type worden toegevoegd en daarna weer ongedaan worden gemaakt. De vervangtabel, handmatige invoer, downloads, Scrub Key en herstelroute blijven beschikbaar.
+
+De lange documentbinding in placeholders blijft technisch intact. Een afzonderlijke verbetering gaat de weergave compacter maken zonder de beveiliging te verkorten.
+
 ## 2026-08-04 — Gemiste waarden direct vanuit de tekst maskeren
 
 - In `Verwerkte tekst` kan een gebruiker een nog zichtbare gevoelige waarde selecteren en via rechtermuisknop, toetsenbord of `Masker selectie` toevoegen.

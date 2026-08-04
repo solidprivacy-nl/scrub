@@ -1,3 +1,26 @@
+## 2026-08-04 22:22 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY_CLOSEOUT
+
+Status: completed; deployment and live app verification green.
+
+Purpose:
+- Close the processed-text selection integration after independent deployment checks and coordinator/user browser verification.
+
+Validation:
+- PR #63 merged as `53fad202ae88a97b1ea476a9c3ba787932cd62ae`;
+- final merge-candidate run #2051: 1146 tests passed in 11.59s;
+- independent deployment run #2064: 11/11 runtime/component files matched Hugging Face, Space health was `ok`, root returned HTTP 200, frontend tests passed, and 1146 Python tests passed in 11.47s;
+- coordinator/user confirmed `Het werkt.` with a deployed-app screenshot.
+
+Observed follow-up:
+- bound placeholders remain safe but visually noisy because the same 80-bit binding ID is repeated;
+- four-character binding IDs are rejected as an unsafe weakening;
+- display-only compaction is routed to `SCRUB-WP_BOUND_PLACEHOLDER_DISPLAY_COMPACTION`.
+
+Intentionally not changed:
+- product code, placeholder grammar and binding entropy;
+- export, Scrub Key, reinsert, recognizers, profiles or dependencies;
+- production-readiness and human-review boundaries.
+
 ## 2026-08-04 01:34 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION
 
 Status: completed in GitHub; deployment and app verification pending.

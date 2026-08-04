@@ -1,3 +1,40 @@
+## 2026-08-04 22:22 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY_CLOSEOUT
+
+Status: completed; deployment and live app verification green.
+
+Goal:
+- Record the coordinator/user confirmation that direct masking from `Verwerkte tekst` works in the deployed app.
+
+Verification evidence:
+```text
+Integration PR: #63
+Merge commit: 53fad202ae88a97b1ea476a9c3ba787932cd62ae
+Final merge-candidate run: #2051 — 1146 passed in 11.59s
+Independent deployment run: #2064
+Runtime/component files exact on Hugging Face: 11/11
+Space health: HTTP 200 / ok
+Frontend component tests: passed
+Post-deployment Python regression: 1146 passed in 11.47s
+App verification: confirmed — "Het werkt."
+```
+
+Confirmed behavior:
+- selection, safe inspection, type choice and exact-occurrence masking work;
+- one normal `Handmatig uit tekst` row is created;
+- one-step undo works;
+- review table, manual fallback, export, Scrub Key and reinsert remain available;
+- no Script execution error was reported.
+
+New evidence finding:
+- the repeated 80-bit document-binding segment makes bound placeholders visually long;
+- shortening the underlying binding to four characters is not authorized because it would weaken wrong-key protection;
+- next narrow package: `SCRUB-WP_BOUND_PLACEHOLDER_DISPLAY_COMPACTION`.
+
+Boundaries:
+- closeout-only; no product code or placeholder grammar changed;
+- human review remains mandatory;
+- no production-readiness claim.
+
 ## 2026-08-04 01:34 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION
 
 Status: completed in GitHub; deployment synchronization and app verification pending.

@@ -2,7 +2,7 @@
 
 Repository worked in: `solidprivacy-nl/scrub`  
 Workpackage title: Integrate direct processed-text masking with the authoritative review table  
-Status: completed in GitHub; deployment synchronization and app verification pending
+Status: completed, synchronized and live-app verified
 
 ## Summary
 
@@ -56,8 +56,8 @@ New tests cover:
 - Final clean PR run #2047: 1146 Python tests passed in 11.97s.
 - Evidence-finalization run #2049: 1146 Python tests passed in 11.74s.
 - Final standard merge-candidate run #2051: 1146 Python tests passed in 11.59s.
-- Hugging Face sync pending merge.
-- App verification pending merge and synchronization.
+- Independent deployment run #2064 matched 11/11 runtime/component files, returned Space health `ok` and HTTP 200, passed frontend tests, and passed 1146 Python tests in 11.47s.
+- Coordinator/user live app verification confirmed `Het werkt.` at 2026-08-04 22:22 Europe/Amsterdam.
 
 ## GitHub Actions status
 
@@ -65,11 +65,11 @@ Green. Frontend component tests passed in cleanup run #2044. Final clean PR run 
 
 ## Hugging Face sync status
 
-Pending.
+Green through independent run #2064: 11/11 files exact, health `ok`, root HTTP 200.
 
 ## App verification status
 
-Pending. Required because this is a user-visible production review-flow change.
+Confirmed by the coordinator/user: selection masking and undo work in the deployed app; existing review/export/Scrub Key/reinsert surfaces remain present.
 
 ## Remaining risks
 
@@ -83,4 +83,4 @@ Pending. Required because this is a user-visible production review-flow change.
 
 ## Next recommended step
 
-Merge PR #63. Then verify GitHub-to-Hugging-Face synchronization and request focused live app verification before starting cross-flow regression.
+Implement the separately scoped display-only bound-placeholder compaction without changing binding entropy or export/Scrub Key/reinsert semantics, then continue with cross-flow regression.

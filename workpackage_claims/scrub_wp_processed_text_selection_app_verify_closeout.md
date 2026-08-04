@@ -1,7 +1,7 @@
 # Workpackage claim — SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY_CLOSEOUT
 
-Repository: `solidprivacy-nl/scrub`  
-Status: in_progress  
+Repository: `solidprivacy-nl/scrub`
+Status: completed
 Claimed at: 2026-08-04 22:22 Europe/Amsterdam
 
 ## Scope
