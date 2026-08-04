@@ -1,3 +1,13 @@
+## 2026-08-04 23:15 Europe/Amsterdam — Kortere placeholders in de controleweergave
+
+- Lange documentgebonden placeholders worden in de controleweergave compacter getoond. Zo wordt bijvoorbeeld `[LOCATIE_BSK732WYQ424ZIEQ6_02]` zichtbaar als `[LOCATIE_02]`.
+- Handmatig toegevoegde waarden krijgen in de weergave een korte `H`, bijvoorbeeld `[EMAIL_H_03]`.
+- Dit is uitsluitend een leesbaarheidsverbetering: de volledige beveiligde placeholder blijft intern en in gedownloade documenten intact.
+- Scrub Key, documentbinding, controlewaarde en originele waarden terugzetten zijn niet gewijzigd.
+- Vrij aangepaste vervangtekst en oudere of afwijkende placeholders worden niet stilzwijgend herschreven.
+- Direct selecteren van een gemiste waarde blijft op de volledige onderliggende tekst werken, ook na een compact weergegeven placeholder.
+- Menselijke controle blijft noodzakelijk.
+
 ## 2026-08-04 22:22 Europe/Amsterdam — Direct maskeren vanuit de verwerkte tekst geverifieerd
 
 De nieuwe correctieroute is live gecontroleerd: een gemiste waarde kan direct in de verwerkte tekst worden geselecteerd, veilig worden geïnspecteerd, als type worden toegevoegd en daarna weer ongedaan worden gemaakt. De vervangtabel, handmatige invoer, downloads, Scrub Key en herstelroute blijven beschikbaar.

@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-08-04 — processed-text selection masking is merged, synchronized and live-app verified; a narrow display-compaction package now addresses placeholder readability without changing the 80-bit document binding, before cross-flow regression continues.
+Last roadmap strategy update: 2026-08-04 — processed-text selection masking is live verified and display-only placeholder compaction is implemented without changing the 80-bit binding; deployment and app verification of the compact view gate the subsequent cross-flow regression.
 
 ---
 

@@ -1,7 +1,7 @@
 # Workpackage claim — SCRUB-WP_BOUND_PLACEHOLDER_DISPLAY_COMPACTION
 
 Repository: `solidprivacy-nl/scrub`
-Status: in_progress
+Status: completed in GitHub; deployment synchronization and app verification pending
 Claimed at: 2026-08-04 22:44 Europe/Amsterdam
 
 ## Goal

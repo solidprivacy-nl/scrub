@@ -10,7 +10,7 @@ Impact values: `critical`, `high`, `medium`, `low`.
 
 ## R1 — False negatives / missed sensitive data
 
-Status: mitigating  
+Status: mitigating
 Impact: critical
 
 Risk:
@@ -32,7 +32,7 @@ Remaining gaps:
 
 ## R2 — Scrub Key leakage or accidental sharing
 
-Status: mitigating  
+Status: mitigating
 Impact: critical
 
 Risk:
@@ -43,13 +43,13 @@ The Scrub Key is shared, leaked, retained too long, tampered with or mishandled,
 
 Current mitigations include warnings and acknowledgements. Export/download UX grouping is implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Live app verification confirmed the grouped export UI. Reinsert now keeps the key-sensitivity warning visible, automatically applies the existing structural validation to a supplied key, and preserves one explicit confidentiality acknowledgement at the restored-output download boundary. Redundant pre-processing acknowledgements are removed because they obscured workflow state without adding key validation.
 
-The manual missed-value entry flows through the existing replacement table and existing Scrub Key/export paths without changing key semantics. No key storage, schema or lifecycle behavior is added by the automatic reinsert flow. The Phase 6 adversarial roundtrip matrix exposes a critical unresolved gap: a structurally valid wrong or tampered key that reuses the same placeholder namespace can restore incorrect original values without a detectable mismatch. This is routed to `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`; no schema or export change is authorized by the validation package. Triage recommends a non-sensitive document binding ID inside every automatic/manual placeholder and the corresponding key, plus a canonical mapping digest for accidental corruption. Contract tests now freeze legacy v1.0 unbound behavior, a document-specific base32 binding ID, canonical SHA-256 mapping digest and fail-closed mismatch/mixed-ID/digest-error statuses before model implementation. The pure model implements those contracts, and anonymization/export now creates bound placeholders plus schema-1.1 keys when all selected mappings are bound. Arbitrary custom replacement text is preserved but visibly blocks verified key export. Reinsert now validates the complete supported document text surface before replacement. Correct bound matches are verified; wrong, mixed, missing or digest-invalid bindings fail closed with zero replacements, and DOCX failures return the exact original package bytes. Legacy v1.0 compatibility remains explicitly unverified. The accidental pairing/corruption path is technically mitigated but the risk remains open until deployed app verification passes. Signatures/HMAC remain deferred until protected local signing-key management exists.
+The manual missed-value entry flows through the existing replacement table and existing Scrub Key/export paths without changing key semantics. No key storage, schema or lifecycle behavior is added by the automatic reinsert flow. The Phase 6 adversarial roundtrip matrix exposes a critical unresolved gap: a structurally valid wrong or tampered key that reuses the same placeholder namespace can restore incorrect original values without a detectable mismatch. This is routed to `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`; no schema or export change is authorized by the validation package. Triage recommends a non-sensitive document binding ID inside every automatic/manual placeholder and the corresponding key, plus a canonical mapping digest for accidental corruption. Contract tests now freeze legacy v1.0 unbound behavior, a document-specific base32 binding ID, canonical SHA-256 mapping digest and fail-closed mismatch/mixed-ID/digest-error statuses before model implementation. The pure model implements those contracts, and anonymization/export now creates bound placeholders plus schema-1.1 keys when all selected mappings are bound. Arbitrary custom replacement text is preserved but visibly blocks verified key export. Reinsert now validates the complete supported document text surface before replacement. Correct bound matches are verified; wrong, mixed, missing or digest-invalid bindings fail closed with zero replacements, and DOCX failures return the exact original package bytes. Legacy v1.0 compatibility remains explicitly unverified. The accidental pairing/corruption path is technically mitigated but the risk remains open until deployed app verification passes. Signatures/HMAC remain deferred until protected local signing-key management exists. Display-only placeholder compaction does not shorten the binding ID, alter the mapping digest or change any key/export/reinsert token; full-token roundtrip verification remains required after deployment.
 
 ---
 
 ## R3 — Placeholder corruption during AI roundtrip
 
-Status: mitigating  
+Status: mitigating
 Impact: high
 
 Risk:
@@ -64,7 +64,7 @@ Current mitigations include placeholder robustness helper/test work and reinsert
 
 ## R4 — Hidden document content and metadata leakage
 
-Status: mitigating  
+Status: mitigating
 Impact: high
 
 Risk:
@@ -79,7 +79,7 @@ DOCX hygiene audit remains report-only. Export grouping keeps audit details avai
 
 ## R5 — Cloud-demo trust gap and deferred installer risk
 
-Status: mitigating  
+Status: mitigating
 Impact: high
 
 Risk:
@@ -94,7 +94,7 @@ Local/offline installer work remains later. The current focus is making the web 
 
 ## R6 — Review UX and interface clarity risk
 
-Status: mitigating  
+Status: mitigating
 Impact: high
 
 Risk:
@@ -117,7 +117,7 @@ Gaps:
 
 - Live reinsert verification exposed a concrete workflow-state problem: uploaded source and key files still required non-obvious follow-up checkboxes and buttons. `SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION` addresses this narrowly with document-first ordering and automatic validation/processing.
 - Additional copy polish may still be needed, but it should remain separate and small.
-- Production table integration preserves collision/replay/stale guards, hidden-marker protection, immediate rerun and edit-aware undo. Deployment synchronization and live browser/app verification are green. The remaining high-risk gate is full export/Scrub Key/reinsert cross-flow regression. A narrow display-only placeholder compaction may proceed first because app evidence showed readability noise; the underlying 80-bit binding must not be shortened.
+- Production table integration preserves collision/replay/stale guards, hidden-marker protection, immediate rerun and edit-aware undo. Deployment synchronization and live browser/app verification are green. Display-only placeholder compaction is implemented with lossless source tokens, exact UTF-16 mapping and protected compact spans; the underlying 80-bit binding remains unchanged. Focused deployment/app verification of the compact view is required before the remaining high-risk export/Scrub Key/reinsert cross-flow regression.
 - Implementation must avoid weakening review controls or hiding audit details; one final confidentiality acknowledgement remains at download.
 
 Recommended workpackages:
@@ -128,7 +128,7 @@ Recommended workpackages:
 
 ## R7 — PDF limitations misunderstood by users
 
-Status: mitigating  
+Status: mitigating
 Impact: high
 
 Risk:
@@ -143,7 +143,7 @@ PDF limitations must remain clear in export/reinsert copy. The Phase 6 text-base
 
 ## R8 — Workflow status, audit visibility and evidence clarity
 
-Status: mitigating  
+Status: mitigating
 Impact: medium
 
 Risk:
@@ -171,7 +171,7 @@ Gaps:
 
 ## R9 — Dutch legal reference under-detection and role over-masking
 
-Status: mitigating  
+Status: mitigating
 Impact: high
 
 Risk:
@@ -186,7 +186,7 @@ Current mitigations include diagnostic benchmark work, preservation guidance, PE
 
 ## R10 — Care-profile under-detection and clinical over-masking
 
-Status: mitigating  
+Status: mitigating
 Impact: critical
 
 Risk:
