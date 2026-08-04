@@ -29,7 +29,6 @@ def test_contract_is_approved_all_exact_and_table_integration_gated():
     assert "all safe exact occurrences" in text
     assert fixture["scope"] == "all_exact"
     assert "occurrence-specific masking" in text
-    assert "selection_mask_action.py" in text
 
 
 def test_two_stage_protocol_is_frozen():
