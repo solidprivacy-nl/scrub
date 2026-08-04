@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from bound_placeholder_display import render_bound_placeholder_display_html
 from processed_text_selection_component import build_component_args
 from selection_mask_action import processed_text_hash
-from side_by_side_review_panel_ui import _highlighted_processed_inner_html
 
 
 TOKEN = "[LOCATIE_BSK732WYQ424ZIEQ6_02]"
@@ -27,7 +27,7 @@ def test_component_receives_complete_token_and_hash_not_compact_alias() -> None:
 
 def test_static_fallback_compacts_visible_text_but_keeps_full_token_as_metadata() -> None:
     processed = f"A {TOKEN} Z"
-    html = _highlighted_processed_inner_html(
+    html = render_bound_placeholder_display_html(
         processed,
         [(2, 2 + len(TOKEN))],
     )
@@ -39,7 +39,7 @@ def test_static_fallback_compacts_visible_text_but_keeps_full_token_as_metadata(
 
 def test_static_fallback_compacts_even_when_visual_highlights_are_hidden() -> None:
     processed = f"A {TOKEN} Z"
-    html = _highlighted_processed_inner_html(processed, [])
+    html = render_bound_placeholder_display_html(processed, [])
 
     assert ">[LOCATIE_02]</span>" in html
     assert f"Volledige gebonden placeholder: {TOKEN}" in html
