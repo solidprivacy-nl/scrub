@@ -25,8 +25,9 @@ jobs:
           fetch-depth: 0
 
       - name: Finalize processed-text selection table integration
-        if: github.ref == 'refs/heads/scrub-processed-text-selection-table-integration'
+        if: github.event_name == 'pull_request' && github.head_ref == 'scrub-processed-text-selection-table-integration'
         run: |
+          git checkout -B scrub-processed-text-selection-table-integration origin/scrub-processed-text-selection-table-integration
           python ops/finalize_processed_text_selection_table_integration.py
           git fetch origin main
           git checkout origin/main -- .github/workflows/tests.yml
