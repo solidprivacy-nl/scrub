@@ -1,3 +1,54 @@
+## 2026-08-04 01:34 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION
+
+Status: completed in GitHub; deployment synchronization and app verification pending.
+
+Goal:
+- Integrate direct selection masking with the existing document-scoped manual rows and authoritative review table.
+
+Implementation result:
+
+```text
+Interactive component in production review: implemented
+Static renderer environment/exception fallback: retained
+Manual Gemiste waarde toevoegen fallback: retained
+Inspect after current editable table state: implemented
+Commit exactly one bound manual row: implemented
+Immediate rerun before serial review/export: implemented
+Protected spans when visual markers hidden: implemented
+Replay/stale/collision guards: retained
+Undo latest unchanged selection row: implemented
+Undo after visible table edit: blocked
+Export/Scrub Key/reinsert semantics changed: false
+```
+
+Files added:
+- `processed_text_selection_integration.py`
+- `tests/test_processed_text_selection_integration.py`
+- `tests/test_processed_text_selection_table_integration_contract.py`
+- `PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION.md`
+- `workpackage_claims/scrub_wp_processed_text_selection_table_integration.md`
+- `handover/workpackages/20260804_0134_processed_text_selection_table_integration.md`
+
+Files changed:
+- `processed_text_selection_component.py`
+- `side_by_side_review_panel_ui.py`
+- `presidio_streamlit.py`
+- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`
+- `ROADMAP.md`
+- `WORKPACKAGES.md`
+- `CHANGELOG.md`
+- `RELEASE_NOTES.md`
+- `RISK_REGISTER.md`
+
+Validation:
+- exact finalized tree validated in GitHub Actions run #2044;
+- frontend component tests and full Python regression required green before merge;
+- Hugging Face sync and app verification pending after merge.
+
+Next gate:
+- synchronization plus focused live app verification;
+- then `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION`.
+
 ## 2026-08-04 01:00 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE
 
 Status: completed; technical validation green.

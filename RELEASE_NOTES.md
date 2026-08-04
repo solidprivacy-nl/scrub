@@ -1,3 +1,18 @@
+## 2026-08-04 — Gemiste waarden direct vanuit de tekst maskeren
+
+- In `Verwerkte tekst` kan een gebruiker een nog zichtbare gevoelige waarde selecteren en via rechtermuisknop, toetsenbord of `Masker selectie` toevoegen.
+- Scrub controleert de selectie eerst op de server en toont hoeveel exacte voorkomens in het document worden geraakt.
+- De gebruiker kiest zelf een algemeen type, zoals persoon, organisatie, locatie, e-mailadres, telefoonnummer, datum/tijd of referentie.
+- De eerste versie maskeert alle veilige exacte voorkomens van de gekozen waarde; alleen één specifieke tekstpositie maskeren is nog niet ondersteund.
+- Korte of botsende selecties die onderdeel zijn van een langere waarde worden geblokkeerd en verwezen naar de bestaande gedetailleerde invoer.
+- Een bevestigde selectie wordt als normale handmatige rij zichtbaar in de bestaande vervangtabel.
+- De meest recente ongewijzigde selectieactie kan één stap ongedaan worden gemaakt.
+- `Gemiste waarde toevoegen`, de volledige vervangtabel en de statische reviewweergave blijven als fallback beschikbaar.
+- Exportformaten, Scrub Key, terugzetten, herkenningsprofielen en documentverwerking zijn niet gewijzigd.
+- Menselijke controle blijft verplicht; de functie versnelt correctie maar geeft geen garantie dat alle gevoelige gegevens zijn gevonden.
+
+---
+
 ## 2026-08-03 — Langere synthetische zorgvoorbeelden
 
 - De acht voorbeelden onder `Zorgcontrole — streng` bevatten nu langere, realistisch opgebouwde zorgteksten.

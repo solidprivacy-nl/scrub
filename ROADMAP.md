@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-08-04 — the all-exact contract, pure action model and isolated non-mutating Streamlit component spike are complete; the next gated step is sequential production table integration with rollback, synchronization and live app verification requirements.
+Last roadmap strategy update: 2026-08-04 — the all-exact contract, action model, local component and production review-table integration are complete; the active gate is GitHub-to-Hugging-Face synchronization and live app verification before cross-flow regression.
 
 ---
 
@@ -277,7 +277,7 @@ The proposed sequence is:
 6. SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY
 ```
 
-The coordinator approved the direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam. The contract, Streamlit-free action model and isolated non-mutating component spike are complete. The next permitted package is sequential production integration with the existing document-scoped manual-row state and authoritative review table. It must preserve the static/manual rollback path, export/Scrub Key/reinsert semantics, and require GitHub Actions, Hugging Face synchronization and live app verification. This line remains sequential and does not displace the active Phase 6 queue.
+The coordinator approved the direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam. The contract, action model, component and production table integration are complete. The integration adds one normal bound manual row, reruns before exports, keeps the review table authoritative, retains the manual/static rollback path and changes no export/Scrub Key/reinsert semantics. The next gate is synchronization and live app verification; only then may the cross-flow regression package start. This line remains sequential and does not displace the active Phase 6 queue.
 
 Recall/benchmark work is reopened only where the synthetic validation matrix exposes a concrete false-negative, misclassification or over-masking gap.
 

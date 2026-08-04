@@ -3,7 +3,7 @@
 Repository: `solidprivacy-nl/scrub`  
 Branch: `scrub-processed-text-selection-table-integration`  
 Claimed: 2026-08-04 01:34 Europe/Amsterdam  
-Status: in_progress
+Status: completed in GitHub; deployment synchronization and app verification pending
 
 ## Dependency gate
 

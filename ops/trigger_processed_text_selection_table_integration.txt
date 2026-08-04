@@ -1,2 +1,0 @@
-Trigger the branch finalizer after the workflow definition exists.
-Created: 2026-08-04 21:44 Europe/Amsterdam

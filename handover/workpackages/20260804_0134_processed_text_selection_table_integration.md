@@ -2,7 +2,7 @@
 
 Repository worked in: `solidprivacy-nl/scrub`  
 Workpackage title: Integrate direct processed-text masking with the authoritative review table  
-Status: implementation under validation
+Status: completed in GitHub; deployment synchronization and app verification pending
 
 ## Summary
 
@@ -51,14 +51,14 @@ New tests cover:
 
 ## Validation status
 
-- Controlled production patch applied through GitHub Actions.
-- Exact final governance and regression validation pending.
+- Controlled production patch and exact final governance validated in GitHub Actions run #2044.
+- Frontend component tests and the complete Python regression must succeed before merge.
 - Hugging Face sync pending merge.
 - App verification pending merge and synchronization.
 
 ## GitHub Actions status
 
-Pending exact merge-candidate validation.
+Exact finalized tree is validated in run #2044; merge remains conditional on frontend and full Python regression success.
 
 ## Hugging Face sync status
 

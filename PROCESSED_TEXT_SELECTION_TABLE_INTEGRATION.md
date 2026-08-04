@@ -1,8 +1,8 @@
 # Processed-text selection table integration
 
-Status: implementation under validation  
-Workpackage: `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`  
-Repository: `solidprivacy-nl/scrub`  
+Status: implemented and GitHub test-gated; deployment verification pending
+Workpackage: `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`
+Repository: `solidprivacy-nl/scrub`
 Date: 2026-08-04 Europe/Amsterdam
 
 ## User flow

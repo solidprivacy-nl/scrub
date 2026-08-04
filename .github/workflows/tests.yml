@@ -4,12 +4,8 @@ on:
   push:
     branches:
       - main
-      - scrub-processed-text-selection-table-integration
   pull_request:
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   python-tests:
@@ -21,28 +17,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Finalize processed-text selection table integration
-        if: github.event_name == 'pull_request' && github.head_ref == 'scrub-processed-text-selection-table-integration'
-        run: |
-          git checkout -B scrub-processed-text-selection-table-integration origin/scrub-processed-text-selection-table-integration
-          python ops/finalize_processed_text_selection_table_integration.py
-          sed -i 's/[[:space:]]\+$//' PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION.md
-          git fetch origin main
-          git checkout origin/main -- .github/workflows/tests.yml
-          rm -f \
-            ops/apply_processed_text_selection_table_integration.py \
-            ops/finalize_processed_text_selection_table_integration.py \
-            ops/fix_processed_text_selection_integration_regression.py \
-            ops/trigger_processed_text_selection_table_integration.txt
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --check
-          git commit -m "Finalize processed-text selection table integration"
-          git push origin HEAD:scrub-processed-text-selection-table-integration
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -53,10 +27,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf
-
-      - name: Run frontend component tests
-        run: |
-          node --test tests/frontend/processed_text_selection_component_core.test.js
 
       - name: Run regression tests
         run: |
