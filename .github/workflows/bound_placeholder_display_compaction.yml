@@ -25,6 +25,18 @@ jobs:
         run: |
           set -euo pipefail
           git checkout -B scrub-bound-placeholder-display-compaction origin/scrub-bound-placeholder-display-compaction
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("ops/implement_bound_placeholder_display_compaction.py")
+          text = path.read_text(encoding="utf-8")
+          start_marker = '''patch(\n    "side_by_side_review_panel_ui.py",\n    """.sp-side-by-side-highlight-token'''
+          end_marker = '''\n\npatch(\n    "side_by_side_review_panel_ui.py",\n    \'\'\'def _highlighted_processed_inner_html'''
+          start = text.find(start_marker)
+          end = text.find(end_marker, start)
+          if start < 0 or end < 0:
+              raise SystemExit("CSS patch block anchors not found")
+          path.write_text(text[:start] + text[end + 2 :], encoding="utf-8")
+          PY
           python ops/implement_bound_placeholder_display_compaction.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
