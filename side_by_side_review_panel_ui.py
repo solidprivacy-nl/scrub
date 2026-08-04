@@ -15,6 +15,7 @@ from typing import Any, Mapping
 import streamlit as st
 import streamlit.components.v1 as components
 
+from bound_placeholder_display import build_bound_placeholder_display_segments
 from processed_text_selection_component import (
     render_processed_text_selection_component,
 )
@@ -96,19 +97,32 @@ def _highlighted_processed_inner_html(
     processed_text: str,
     highlight_spans: list[tuple[int, int]],
 ) -> str:
-    """Return escaped inner HTML for the static fallback processed pane."""
+    """Return lossless compact display HTML for the static fallback pane."""
 
     parts: list[str] = []
-    cursor = 0
-    for start, end in highlight_spans:
-        parts.append(escape(processed_text[cursor:start]))
-        parts.append(
-            '<mark class="sp-side-by-side-highlight-token" aria-label="gemarkeerde vervanging">'
-            f"{escape(processed_text[start:end])}"
-            "</mark>"
-        )
-        cursor = end
-    parts.append(escape(processed_text[cursor:]))
+    for segment in build_bound_placeholder_display_segments(processed_text, highlight_spans):
+        display_text = escape(str(segment["display_text"]))
+        full_placeholder = str(segment["full_placeholder"])
+        compact_attributes = ""
+        compact_class = ""
+        if segment["compacted"]:
+            compact_class = " sp-compact-placeholder"
+            compact_attributes = (
+                f' title="Volledige gebonden placeholder: {escape(full_placeholder)}"'
+                f' aria-label="Gebonden placeholder, compact weergegeven als {display_text}"'
+            )
+        if segment["highlighted"]:
+            parts.append(
+                f'<mark class="sp-side-by-side-highlight-token{compact_class}"'
+                f'{compact_attributes}>{display_text}</mark>'
+            )
+        elif segment["compacted"]:
+            parts.append(
+                f'<span class="sp-compact-placeholder"{compact_attributes}>'
+                f'{display_text}</span>'
+            )
+        else:
+            parts.append(display_text)
     return "".join(parts)
 
 
@@ -122,7 +136,18 @@ def _side_by_side_sync_scroll_html(
     """Build escaped HTML for the synchronized static fallback."""
 
     source_html = escape(source_text)
-    processed_legend = "Geel = vervangen of gemaskeerde waarde" if show_markers else "Verwerkte tekst"
+    compacted = any(
+        segment["compacted"]
+        for segment in build_bound_placeholder_display_segments(processed_text, [])
+    )
+    if show_markers and compacted:
+        processed_legend = "Geel = vervangen; documentcode compact weergegeven"
+    elif show_markers:
+        processed_legend = "Geel = vervangen of gemaskeerde waarde"
+    elif compacted:
+        processed_legend = "Documentcode compact weergegeven"
+    else:
+        processed_legend = "Verwerkte tekst"
     return f"""
 {_SYNC_SCROLL_COMPONENT_CSS}
 <div class="sp-sync-scroll-wrapper">
@@ -195,10 +220,9 @@ def _render_static_fallback(
     highlight_spans: list[tuple[int, int]],
     show_markers: bool,
 ) -> None:
-    processed_html = (
-        _highlighted_processed_inner_html(processed_text, highlight_spans)
-        if show_markers and highlight_spans
-        else escape(processed_text)
+    processed_html = _highlighted_processed_inner_html(
+        processed_text,
+        highlight_spans if show_markers else [],
     )
     components.html(
         _side_by_side_sync_scroll_html(
@@ -352,6 +376,9 @@ def render_side_by_side_review_panel(
         "static_fallback_used": static_fallback_used,
         "component_error": component_error,
         "component_environment_switch": INTERACTIVE_COMPONENT_ENV,
+        "bound_placeholder_display_compaction": True,
+        "bound_placeholder_source_tokens_unchanged": True,
+        "bound_placeholder_binding_entropy_changed": False,
         "pane_height": SIDE_BY_SIDE_REVIEW_PANE_HEIGHT,
         "compact_legend": compact_legend,
         "model": model,
