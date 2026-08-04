@@ -27,18 +27,19 @@ The screenshot also exposed a concrete readability issue: the same 80-bit docume
 ## Tests
 
 - No product-code tests added; this is verification/closeout-only.
-- Final repository regression is required on the closeout PR.
+- Closeout workflow regression: 1146 tests passed in 11.98s.
 
 ## Validation status
 
 - Merge commit: `53fad202ae88a97b1ea476a9c3ba787932cd62ae`.
 - Final merge-candidate run #2051: 1146 passed in 11.59s.
 - Independent deployment run #2064: 11/11 files exact, health `ok`, root HTTP 200, frontend tests passed, 1146 Python tests passed in 11.47s.
+- Closeout workflow run #3: 1146 tests passed in 11.98s on the finalized branch tree.
 - Coordinator/user app verification: confirmed — `Het werkt.`
 
 ## GitHub Actions status
 
-Pending the closeout-only PR run.
+Green in closeout workflow run #3; one final standard PR run follows this evidence-only update.
 
 ## Hugging Face sync status
 
