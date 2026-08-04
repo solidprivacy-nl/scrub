@@ -19,6 +19,8 @@
   let currentArgs = {};
   let processedText = "";
   let highlightSpans = [];
+  let renderedProcessedSegments = [];
+  let selectionProtectedSpans = [];
   let currentSelection = null;
   let lastMenuPosition = { x: 16, y: 16 };
   let lastRenderedInspectionToken = "";
@@ -39,18 +41,28 @@
 
   function renderProcessedText(text, spans) {
     clearElement(processedPane);
-    Core.buildTextSegments(text, spans).forEach(function (segment) {
-      if (segment.marked) {
-        const marker = document.createElement("mark");
-        marker.className = "sp-highlight";
-        marker.setAttribute("aria-label", "gemarkeerde vervanging");
-        marker.dataset.startUtf16 = String(segment.start_utf16);
-        marker.dataset.endUtf16 = String(segment.end_utf16);
-        appendSafeText(marker, segment.text);
-        processedPane.appendChild(marker);
-      } else {
-        appendSafeText(processedPane, segment.text);
+    renderedProcessedSegments = Core.buildDisplayTextSegments(text, spans);
+    selectionProtectedSpans = Core.protectedSpansFromDisplaySegments(renderedProcessedSegments);
+    renderedProcessedSegments.forEach(function (segment, index) {
+      const element = document.createElement(segment.marked ? "mark" : "span");
+      element.className = segment.marked
+        ? "sp-highlight sp-processed-segment"
+        : "sp-processed-segment";
+      if (segment.compacted) {
+        element.classList.add("sp-compact-placeholder");
+        element.title = `Volledige gebonden placeholder: ${segment.full_placeholder}`;
+        element.setAttribute(
+          "aria-label",
+          `Gebonden placeholder, compact weergegeven als ${segment.display_text}`,
+        );
+      } else if (segment.marked) {
+        element.setAttribute("aria-label", "gemarkeerde vervanging");
       }
+      element.dataset.segmentIndex = String(index);
+      element.dataset.startUtf16 = String(segment.start_utf16);
+      element.dataset.endUtf16 = String(segment.end_utf16);
+      appendSafeText(element, segment.display_text);
+      processedPane.appendChild(element);
     });
   }
 
@@ -85,10 +97,34 @@
     if (!nodeWithin(rootElement, container)) {
       throw new Error("selection endpoint is outside processed text");
     }
+    if (container === rootElement) {
+      if (!Number.isInteger(offset) || offset < 0 || offset > rootElement.childNodes.length) {
+        throw new Error("selection endpoint is outside processed text");
+      }
+      if (offset === 0) {
+        return 0;
+      }
+      if (offset >= renderedProcessedSegments.length) {
+        return processedText.length;
+      }
+      return renderedProcessedSegments[offset - 1].end_utf16;
+    }
+    const candidate = container.nodeType === Node.TEXT_NODE ? container.parentElement : container;
+    const segmentElement = candidate && candidate.closest
+      ? candidate.closest("[data-segment-index]")
+      : null;
+    if (!segmentElement || !rootElement.contains(segmentElement)) {
+      throw new Error("selection endpoint has no source segment");
+    }
+    const segmentIndex = Number(segmentElement.dataset.segmentIndex);
     const range = document.createRange();
-    range.selectNodeContents(rootElement);
+    range.selectNodeContents(segmentElement);
     range.setEnd(container, offset);
-    return range.toString().length;
+    return Core.utf16OffsetFromDisplaySegments(
+      renderedProcessedSegments,
+      segmentIndex,
+      range.toString().length,
+    );
   }
 
   function readProcessedSelection() {
@@ -108,7 +144,7 @@
     } catch (_error) {
       return null;
     }
-    return Core.selectionFromOffsets(processedText, highlightSpans, start, end);
+    return Core.selectionFromOffsets(processedText, selectionProtectedSpans, start, end);
   }
 
   function updateSelectionState() {
@@ -358,9 +394,18 @@
 
     renderPlainText(sourcePane, currentArgs.source_text);
     renderProcessedText(processedText, highlightSpans);
-    processedLegend.textContent = highlightSpans.length
-      ? "Geel = vervangen of gemaskeerde waarde"
-      : "Verwerkte tekst";
+    const compactedCount = renderedProcessedSegments.filter(function (segment) {
+      return segment.compacted;
+    }).length;
+    if (highlightSpans.length && compactedCount) {
+      processedLegend.textContent = "Geel = vervangen; documentcode compact weergegeven";
+    } else if (highlightSpans.length) {
+      processedLegend.textContent = "Geel = vervangen of gemaskeerde waarde";
+    } else if (compactedCount) {
+      processedLegend.textContent = "Documentcode compact weergegeven";
+    } else {
+      processedLegend.textContent = "Verwerkte tekst";
+    }
 
     const restoreSource = currentArgs.restore_source_scroll_ratio;
     const restoreProcessed = currentArgs.restore_processed_scroll_ratio;
