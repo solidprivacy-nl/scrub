@@ -51,11 +51,12 @@ New and updated tests cover:
 - Dedicated frontend display tests passed.
 - Existing processed-text component frontend tests passed.
 - Standard PR run #2076: 1155 Python tests passed in 11.62s.
-- Final exact-tree frontend and Python regression pending this governance-only finalization.
+- Finalization workflow run #1: both frontend suites passed and 1155 Python tests passed in 10.73s on finalized commit `61cc00c`.
+- One final standard PR run follows this evidence-only handover update.
 
 ## GitHub Actions status
 
-Green through run #2076; final merge-candidate run pending.
+Green through standard run #2076 and finalization workflow run #1; final standard merge-candidate run pending.
 
 ## Hugging Face sync status
 
@@ -76,4 +77,4 @@ Pending. Required because the visible review representation and browser offset m
 
 ## Next recommended step
 
-Merge only after the finalized frontend and Python regressions are green. Then verify GitHub-to-Hugging-Face synchronization and perform focused app verification of compact aliases, marker-off behavior, direct selection after a compact token, full-token export and successful reinsert. Continue cross-flow regression only after that gate is green.
+Merge only after the final standard PR regression is green. Then verify GitHub-to-Hugging-Face synchronization and perform focused app verification of compact aliases, marker-off behavior, direct selection after a compact token, full-token export and successful reinsert. Continue cross-flow regression only after that gate is green.
