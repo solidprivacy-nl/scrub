@@ -10,6 +10,8 @@
   "use strict";
 
   const EVENT_ID_PATTERN = /^[A-Za-z0-9_-]{16,80}$/;
+  const BOUND_PLACEHOLDER_PATTERN = /^\[([A-Z][A-Z0-9_]*?)_(B[A-Z2-7]{16})(?:_(HANDMATIG))?_(\d{2,})\]$/;
+  const BOUND_PLACEHOLDER_GLOBAL_PATTERN = /\[([A-Z][A-Z0-9_]*?)_(B[A-Z2-7]{16})(?:_(HANDMATIG))?_(\d{2,})\]/g;
   const QUICK_TYPE_LABELS = Object.freeze({
     person: "Persoon",
     organization: "Organisatie",
@@ -113,8 +115,147 @@
     return segments;
   }
 
+  function compactBoundPlaceholderDisplay(value) {
+    const text = asText(value);
+    const match = text.match(BOUND_PLACEHOLDER_PATTERN);
+    if (!match) {
+      return text;
+    }
+    const manual = match[3] ? "_H" : "";
+    return `[${match[1]}${manual}_${match[4]}]`;
+  }
+
+  function findBoundPlaceholderSpans(text) {
+    const value = asText(text);
+    const spans = [];
+    const pattern = new RegExp(BOUND_PLACEHOLDER_GLOBAL_PATTERN.source, "g");
+    let match = pattern.exec(value);
+    while (match) {
+      spans.push({
+        start_utf16: match.index,
+        end_utf16: match.index + match[0].length,
+        text: match[0],
+        display_text: compactBoundPlaceholderDisplay(match[0]),
+      });
+      match = pattern.exec(value);
+    }
+    return spans;
+  }
+
   function rangesOverlap(firstStart, firstEnd, secondStart, secondEnd) {
     return firstStart < secondEnd && secondStart < firstEnd;
+  }
+
+  function buildDisplayTextSegments(text, spans) {
+    const value = asText(text);
+    const highlights = normalizeUtf16Spans(value, spans);
+    const placeholders = findBoundPlaceholderSpans(value);
+    const boundaries = new Set([0, value.length]);
+    highlights.forEach(function (span) {
+      boundaries.add(span[0]);
+      boundaries.add(span[1]);
+    });
+    placeholders.forEach(function (placeholder) {
+      boundaries.add(placeholder.start_utf16);
+      boundaries.add(placeholder.end_utf16);
+    });
+    const ordered = Array.from(boundaries).sort(function (first, second) {
+      return first - second;
+    });
+    const segments = [];
+    for (let index = 0; index < ordered.length - 1; index += 1) {
+      const start = ordered[index];
+      const end = ordered[index + 1];
+      if (end <= start) {
+        continue;
+      }
+      const sourceText = value.slice(start, end);
+      const placeholder = placeholders.find(function (candidate) {
+        return candidate.start_utf16 === start && candidate.end_utf16 === end;
+      });
+      const highlighted = highlights.some(function (highlight) {
+        return rangesOverlap(start, end, highlight[0], highlight[1]);
+      });
+      const displayText = placeholder ? placeholder.display_text : sourceText;
+      segments.push({
+        text: sourceText,
+        display_text: displayText,
+        marked: highlighted,
+        protected: highlighted || Boolean(placeholder),
+        compacted: Boolean(placeholder) && displayText !== sourceText,
+        full_placeholder: placeholder ? placeholder.text : "",
+        start_utf16: start,
+        end_utf16: end,
+      });
+    }
+    if (!segments.length) {
+      segments.push({
+        text: "",
+        display_text: "",
+        marked: false,
+        protected: false,
+        compacted: false,
+        full_placeholder: "",
+        start_utf16: 0,
+        end_utf16: 0,
+      });
+    }
+    return segments;
+  }
+
+  function protectedSpansFromDisplaySegments(segments) {
+    const merged = [];
+    (Array.isArray(segments) ? segments : []).forEach(function (segment) {
+      if (!segment || !segment.protected) {
+        return;
+      }
+      const start = Number(segment.start_utf16);
+      const end = Number(segment.end_utf16);
+      if (!Number.isInteger(start) || !Number.isInteger(end) || end <= start) {
+        throw new Error("protected display segment has invalid source offsets");
+      }
+      const previous = merged[merged.length - 1];
+      if (previous && start <= previous[1]) {
+        previous[1] = Math.max(previous[1], end);
+      } else {
+        merged.push([start, end]);
+      }
+    });
+    return merged;
+  }
+
+  function utf16OffsetFromDisplaySegments(segments, targetSegmentIndex, localOffset) {
+    if (!Array.isArray(segments) || !Number.isInteger(targetSegmentIndex)) {
+      throw new Error("invalid display segment target");
+    }
+    if (targetSegmentIndex < 0 || targetSegmentIndex >= segments.length) {
+      throw new Error("display segment target is outside the component");
+    }
+    const segment = segments[targetSegmentIndex] || {};
+    const displayText = asText(segment.display_text);
+    if (!Number.isInteger(localOffset) || localOffset < 0 || localOffset > displayText.length) {
+      throw new Error("local display offset is invalid");
+    }
+    if (!isUtf16Boundary(displayText, localOffset)) {
+      throw new Error("local display offset splits a surrogate pair");
+    }
+    const start = Number(segment.start_utf16);
+    const end = Number(segment.end_utf16);
+    if (!Number.isInteger(start) || !Number.isInteger(end) || end < start) {
+      throw new Error("display segment has invalid source offsets");
+    }
+    if (!segment.compacted) {
+      return start + localOffset;
+    }
+    if (localOffset === 0 || displayText.length === 0) {
+      return start;
+    }
+    if (localOffset === displayText.length) {
+      return end;
+    }
+    const sourceLength = end - start;
+    const proportional = Math.floor((localOffset / displayText.length) * sourceLength);
+    return Math.min(end - 1, Math.max(start + 1, start + proportional));
   }
 
   function intersectsMarkedSpan(start, end, spans) {
@@ -290,11 +431,17 @@
 
   return Object.freeze({
     EVENT_ID_PATTERN: EVENT_ID_PATTERN,
+    BOUND_PLACEHOLDER_PATTERN: BOUND_PLACEHOLDER_PATTERN,
     QUICK_TYPE_LABELS: QUICK_TYPE_LABELS,
     asText: asText,
     isUtf16Boundary: isUtf16Boundary,
     normalizeUtf16Spans: normalizeUtf16Spans,
     buildTextSegments: buildTextSegments,
+    compactBoundPlaceholderDisplay: compactBoundPlaceholderDisplay,
+    findBoundPlaceholderSpans: findBoundPlaceholderSpans,
+    buildDisplayTextSegments: buildDisplayTextSegments,
+    protectedSpansFromDisplaySegments: protectedSpansFromDisplaySegments,
+    utf16OffsetFromDisplaySegments: utf16OffsetFromDisplaySegments,
     rangesOverlap: rangesOverlap,
     intersectsMarkedSpan: intersectsMarkedSpan,
     trimOuterWhitespace: trimOuterWhitespace,
