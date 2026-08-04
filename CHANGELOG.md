@@ -34,8 +34,8 @@ Implementation:
 - retained the full review table and existing manual form.
 
 Validation:
-- exact finalized tree validated in GitHub Actions run #2044;
-- automated merge is permitted only after frontend and full Python regressions succeed;
+- cleanup run #2044: frontend component tests passed; two obsolete phase-status assertions failed in Python only;
+- final clean PR run #2047: 1146 Python tests passed in 11.97s;
 - Hugging Face sync and live app verification pending.
 
 Intentionally not changed:

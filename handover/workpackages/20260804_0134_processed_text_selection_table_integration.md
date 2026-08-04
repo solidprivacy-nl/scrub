@@ -28,6 +28,7 @@ The component emits bounded inspect/commit-intent events. After the editable rev
 - `ROADMAP.md`
 - `WORKPACKAGES.md`
 - `CHANGELOG.md`
+- `RELEASE_NOTES.md`
 - `RISK_REGISTER.md`
 
 ## Tests
@@ -51,14 +52,14 @@ New tests cover:
 
 ## Validation status
 
-- Controlled production patch and exact final governance validated in GitHub Actions run #2044.
-- Frontend component tests and the complete Python regression must succeed before merge.
+- Cleanup run #2044: frontend component tests passed; two obsolete phase-status assertions failed in Python only.
+- Final clean PR run #2047: 1146 Python tests passed in 11.97s.
 - Hugging Face sync pending merge.
 - App verification pending merge and synchronization.
 
 ## GitHub Actions status
 
-Exact finalized tree is validated in run #2044; merge remains conditional on frontend and full Python regression success.
+Green. Frontend component tests passed in cleanup run #2044; final clean PR run #2047 passed 1146 Python tests in 11.97s. One final documentation-only PR run follows this evidence correction.
 
 ## Hugging Face sync status
 
@@ -80,4 +81,4 @@ Pending. Required because this is a user-visible production review-flow change.
 
 ## Next recommended step
 
-Merge only after the exact final branch passes the complete regression. Then verify GitHub-to-Hugging-Face synchronization and request focused live app verification before starting cross-flow regression.
+Merge after the final documentation-only PR run is green. Then verify GitHub-to-Hugging-Face synchronization and request focused live app verification before starting cross-flow regression.

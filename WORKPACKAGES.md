@@ -41,8 +41,8 @@ Files changed:
 - `RISK_REGISTER.md`
 
 Validation:
-- exact finalized tree validated in GitHub Actions run #2044;
-- frontend component tests and full Python regression required green before merge;
+- cleanup run #2044: frontend component tests passed; two obsolete phase-status assertions failed in Python only;
+- final clean PR run #2047: 1146 Python tests passed in 11.97s;
 - Hugging Face sync and app verification pending after merge.
 
 Next gate:
