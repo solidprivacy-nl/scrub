@@ -6,6 +6,7 @@ on:
       - scrub-premium-core-flow-ui-realignment-plan
     paths:
       - .github/workflows/finalize_premium_core_flow_ui_realignment.yml
+      - ops/finalize_premium_core_flow_ui_realignment.py
   workflow_dispatch:
 
 permissions:
