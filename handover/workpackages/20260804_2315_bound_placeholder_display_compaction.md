@@ -55,7 +55,7 @@ New and updated tests cover:
 
 ## GitHub Actions status
 
-Green through standard run #2076 and finalization workflow run #1; final standard merge-candidate run pending.
+Green through run #2076; final merge-candidate run pending.
 
 ## Hugging Face sync status
 
