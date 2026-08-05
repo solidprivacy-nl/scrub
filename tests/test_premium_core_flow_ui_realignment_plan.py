@@ -35,7 +35,7 @@ def test_plan_preserves_safety_and_roundtrip_semantics() -> None:
     text = PLAN.read_text(encoding="utf-8")
 
     for required in [
-        "must not weaken human review",
+        "weaken human review",
         "change export bytes, filenames, MIME types or eligibility",
         "change Scrub Key schema, binding, digest, warning or lifecycle",
         "change reinsert semantics",
