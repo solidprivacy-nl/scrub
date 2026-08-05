@@ -51,8 +51,7 @@ New and updated tests cover:
 - Dedicated frontend display tests passed.
 - Existing processed-text component frontend tests passed.
 - Standard PR run #2076: 1155 Python tests passed in 11.62s.
-- Finalization workflow run #1: both frontend suites passed and 1155 Python tests passed in 10.73s on finalized commit `61cc00c`.
-- One final standard PR run follows this evidence-only handover update.
+- Final exact-tree frontend and Python regression pending this governance-only finalization.
 
 ## GitHub Actions status
 
