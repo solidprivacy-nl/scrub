@@ -24,6 +24,7 @@ Reviewed the current roadmap, the implemented Basiscontrole/Expertcontrole split
 - `CHANGELOG.md`
 - `DECISION_LOG.md`
 - `RISK_REGISTER.md`
+- the compact-placeholder implementation claim and handover, to record successful live app verification.
 
 ## Tests
 
@@ -39,18 +40,19 @@ Added source-level planning contract tests for:
 
 ## Validation status
 
-- Documentation and contract-test implementation prepared.
-- Full GitHub Actions regression pending the planning PR.
-- Hugging Face sync not functionally relevant because no runtime files change.
-- App verification not applicable because this package changes no UI.
+- The self-cleaning finalization workflow updated the definitive governance tree and removed its temporary workflow, script and trigger.
+- Finalization workflow run #6: 1160 tests passed in 11.55s on commit `1132fce8fa0767c044caf5b4b81c7e1fc42c191c`.
+- A normal PR run is triggered by this evidence-only handover update and remains the merge gate.
+- Hugging Face sync is not functionally relevant because no runtime files change.
+- App verification is not applicable because this package changes no UI.
 
 ## GitHub Actions status
 
-Pending.
+Finalization workflow green; final normal PR merge-candidate run pending.
 
 ## Hugging Face sync status
 
-Not functionally applicable.
+Not functionally applicable; no runtime product files changed.
 
 ## App verification status
 
