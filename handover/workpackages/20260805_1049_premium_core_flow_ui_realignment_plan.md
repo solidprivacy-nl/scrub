@@ -43,13 +43,13 @@ Added source-level planning contract tests for:
 - The self-cleaning finalization workflow updated the definitive governance tree and removed its temporary workflow, script and trigger.
 - Finalization workflow run #6: 1160 tests passed in 11.55s on commit `1132fce8fa0767c044caf5b4b81c7e1fc42c191c`.
 - Standard PR merge-candidate run #2093: 1160 tests passed in 11.90s on commit `9994804feeb7219b1d75d9abbc0551d8d76e3655`.
-- This final evidence-only handover commit receives one last standard regression before merge.
+- Final evidence-only standard run #2094: 1160 tests passed in 11.78s on commit `7c8f84b72acbb1c81cef3304163478a192a0e4f4`.
 - Hugging Face sync is not functionally relevant because no runtime files change.
 - App verification is not applicable because this package changes no UI.
 
 ## GitHub Actions status
 
-Green through finalization run #6 and standard PR run #2093; final evidence-only regression pending.
+Green through finalization run #6 and standard PR runs #2093 and #2094.
 
 ## Hugging Face sync status
 
