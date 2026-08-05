@@ -1,3 +1,59 @@
+## 2026-08-05 10:49 Europe/Amsterdam — SCRUB-WP_PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN
+
+Status: completed planning/design-only; implementation not started.
+
+Goal:
+- Reassess the current interface after direct live-app evidence and replace incremental form decluttering with a coherent premium single-task app-shell direction.
+
+Decision result:
+```text
+Top-level workflows: Anonimiseren | Terugzetten
+Global presentation: Standaard | Expert
+Standard stages: Toevoegen → Controleren → Downloaden
+Only one active stage expanded
+One primary action per stage
+No permanent configuration sidebar in Standard
+One recommended document download; other formats, Scrub Key and audit remain secondary
+```
+
+Safety boundary:
+- visibility and grouping only unless a later package explicitly freezes state behavior;
+- no recognizer, replacement, export, Scrub Key, reinsert, audit, runtime or dependency semantic change;
+- human review remains mandatory.
+
+Execution gate:
+```text
+1. SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
+2. SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT
+3. SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL
+4. SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION
+5. SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION
+6. SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION
+7. SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION
+8. SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION
+9. SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT
+```
+
+Parallelization:
+- do not run the shared Streamlit UI packages in parallel;
+- contract and pure state helpers precede UI integration;
+- input, review and export are separate sequential patches.
+
+## 2026-08-05 10:49 Europe/Amsterdam — SCRUB-WP_BOUND_PLACEHOLDER_DISPLAY_COMPACTION_APP_VERIFY_CLOSEOUT
+
+Status: completed; deployment and live app verification green.
+
+Evidence:
+- PR #66 merged as `74b7a15ee74f6330f7fc37892b65246c1a61afaf`;
+- final run #2080: 1155 tests passed in 12.44s;
+- independent deployment run #2082: 4/4 runtime files exact, health `ok`, root HTTP 200, frontend tests passed, 1155 tests passed in 11.49s;
+- coordinator/user confirmation: `Aanpassing is geslaagd. Ik zie nu inderdaad kortere vervangingscodes.`
+
+Confirmed boundary:
+- compact aliases are display-only;
+- full 80-bit-bound tokens remain internal and in exports;
+- export, Scrub Key and reinsert semantics remain unchanged.
+
 ## 2026-08-04 22:22 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY_CLOSEOUT
 
 Status: completed; deployment and live app verification green.

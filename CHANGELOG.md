@@ -1,3 +1,45 @@
+## 2026-08-05 10:49 Europe/Amsterdam — SCRUB-WP_PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN
+
+Status: completed planning/design-only.
+
+Purpose:
+- Convert new live-app UX evidence into a structural interface strategy rather than another isolated decluttering patch.
+
+Result:
+- added `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`;
+- documented the gap between the implemented review-local Basic/Expert split and an application-wide presentation model;
+- defined top-level Anonymize/Reinsert workflows;
+- defined global Standard/Expert visibility and grouping;
+- defined one-active-stage `Toevoegen → Controleren → Downloaden` behavior;
+- defined no permanent settings sidebar in Standard;
+- defined one recommended document download with other formats, Scrub Key and audit evidence secondary;
+- sequenced contract, pure state model, app shell, input, review, export, Expert parity and app verification packages;
+- added planning contract tests;
+- changed no runtime product behavior.
+
+Intentionally not changed:
+- Streamlit product code;
+- recognizers, profiles, replacement logic or review decisions;
+- export payloads, filenames or MIME types;
+- Scrub Key or reinsert semantics;
+- runtime, dependencies or cloud-processing boundaries.
+
+## 2026-08-05 10:49 Europe/Amsterdam — SCRUB-WP_BOUND_PLACEHOLDER_DISPLAY_COMPACTION_APP_VERIFY_CLOSEOUT
+
+Status: completed; deployment and live app verification green.
+
+Validation:
+- PR #66 merged as `74b7a15ee74f6330f7fc37892b65246c1a61afaf`;
+- final run #2080: 1155 tests passed in 12.44s;
+- deployment run #2082: 4/4 files exact, Space health `ok`, root HTTP 200, frontend tests passed and 1155 tests passed in 11.49s;
+- coordinator/user confirmed shorter replacement codes are visible and working.
+
+Intentionally not changed:
+- full bound tokens in exports;
+- 80-bit binding entropy;
+- Scrub Key, reinsert or export semantics;
+- human-review and production-readiness boundaries.
+
 ## 2026-08-04 22:22 Europe/Amsterdam — SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY_CLOSEOUT
 
 Status: completed; deployment and live app verification green.

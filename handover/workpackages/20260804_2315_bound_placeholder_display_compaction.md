@@ -2,7 +2,7 @@
 
 Repository worked in: `solidprivacy-nl/scrub`
 Workpackage title: Compact document-bound placeholders in review display
-Status: completed in GitHub; deployment synchronization and app verification pending
+Status: completed; deployment synchronization and live app verification green
 
 ## Summary
 
@@ -51,20 +51,22 @@ New and updated tests cover:
 - Dedicated frontend display tests passed.
 - Existing processed-text component frontend tests passed.
 - Standard PR run #2076: 1155 Python tests passed in 11.62s.
-- Finalization workflow run #1: both frontend suites passed and 1155 Python tests passed in 10.73s on finalized commit `61cc00c`.
-- One final standard PR run follows this evidence-only handover update.
+- Finalization workflow: both frontend suites passed and 1155 tests passed in 10.73s.
+- Final standard merge-candidate run #2080: 1155 tests passed in 12.44s.
+- Independent deployment run #2082: 4/4 runtime files exact, health `ok`, root HTTP 200, frontend tests passed and 1155 tests passed in 11.49s.
+- Coordinator/user app verification confirmed shorter replacement codes are visible and working.
 
 ## GitHub Actions status
 
-Green through standard run #2076 and finalization workflow run #1; final standard merge-candidate run pending.
+Green through final merge-candidate run #2080 and independent deployment run #2082.
 
 ## Hugging Face sync status
 
-Pending merge.
+Green; 4/4 changed runtime files matched Hugging Face byte-for-byte in run #2082.
 
 ## App verification status
 
-Pending. Required because the visible review representation and browser offset mapping changed.
+Confirmed by coordinator/user at 2026-08-05 10:49 Europe/Amsterdam.
 
 ## Remaining risks
 

@@ -1,3 +1,55 @@
+## 2026-08-05 — D041 — Move from review-local decluttering to an application-wide premium core-flow shell
+
+Status: accepted product, UX and implementation-sequence decision
+
+Decision:
+
+```text
+Adopt an application-wide Standard/Expert presentation model and a one-active-stage document workspace. Separate Anonymize and Reinsert as top-level workflows. In Standard, present Toevoegen → Controleren → Downloaden with one primary action per stage and progressive disclosure of settings, alternative formats, Scrub Key and audit evidence.
+```
+
+Reason:
+
+- live app evidence confirms that earlier Basic/Expert and decluttering work improved individual sections but left the whole product as a long form;
+- premium and enterprise credibility require a coherent task hierarchy, not merely fewer open expanders;
+- input alternatives, profile settings, review machinery, normal downloads, restore material and audit evidence serve different user goals and should not have equal visual weight;
+- one active stage at a time reduces cognitive load and makes the current task explicit.
+
+Presentation boundary:
+
+- recommended global labels are `Standaard` and `Expert`, subject to contract freeze;
+- Standard has no permanent configuration sidebar;
+- Expert preserves full inspection, tuning, audit and troubleshooting;
+- switching presentation changes visibility and grouping only and must preserve input, replacement decisions and session state.
+
+Safety boundary:
+
+- human review remains mandatory;
+- the review table remains source of truth and fallback;
+- no silent profile or recognizer changes;
+- no export-byte, filename, MIME, Scrub Key, reinsert or audit semantic changes;
+- no cloud document processing, telemetry or browser persistence;
+- an explicit processing action requires a pure stale-state and transition model before UI integration.
+
+Approved sequence:
+
+1. `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION`
+2. `SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT`
+3. `SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL`
+4. `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION`
+5. `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION`
+6. `SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION`
+7. `SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION`
+8. `SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION`
+9. `SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT`
+
+Evidence:
+
+- coordinator/user feedback at 2026-08-05 10:49 Europe/Amsterdam;
+- `BASIC_EXPERT_REVIEW_MODE_PLAN.md`;
+- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md`;
+- `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`.
+
 ## 2026-08-04 — D040 — Use a two-stage server-authoritative protocol for direct masking from processed text
 
 Status: accepted product, UX and implementation-sequence decision

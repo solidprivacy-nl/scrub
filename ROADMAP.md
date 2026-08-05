@@ -11,7 +11,7 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-08-04 — processed-text selection masking is live verified and display-only placeholder compaction is implemented without changing the 80-bit binding; deployment and app verification of the compact view gate the subsequent cross-flow regression.
+Last roadmap strategy update: 2026-08-05 — compact bound-placeholder display is deployed and live verified; direct user evidence confirms that local decluttering has not yet removed the long-form, form-like application structure, so a premium single-task app-shell line is now sequenced after the existing cross-flow safety regression.
 
 ---
 
@@ -124,8 +124,9 @@ Important UX status:
 ```text
 The review table remains source of truth and fallback.
 The old replacement decision helper panel must not return as normal user-facing UI.
-The unified side-by-side review, manual missed-value entry and compact export flow form the verified MVP UI baseline.
-Further UI work is not the default next line and requires a separately approved package tied to evidence from Phase 6 validation.
+The unified side-by-side review, manual missed-value entry, compact placeholder display and grouped export flow form the verified functional baseline.
+Direct live-app evidence now confirms that this baseline still presents too much of the workflow as one long form.
+The next approved UI direction is a global Standard/Expert presentation model and a one-active-stage document workspace, not another isolated expander-cleanup pass.
 ```
 
 ---
@@ -180,7 +181,8 @@ This is governed by:
 - `DECISION_LOG.md` D021;
 - `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md`;
 - `REPLACE_LOGIC_UI_REDESIGN_PLAN.md`;
-- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md`.
+- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md`;
+- `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`.
 
 UX principles:
 
@@ -192,6 +194,46 @@ UX principles:
 - no click-to-mark, advanced editor or full-document marking in this phase;
 - no Scrub Key/export/reinsert behavior changes from review UX work without separate approval;
 - technical/debug-like details should move to secondary audit/advanced layers, not disappear.
+
+
+### Premium core-flow UI realignment
+
+Direct coordinator/user evidence on 2026-08-05 establishes that the remaining interface problem is structural:
+
+```text
+The app still behaves visually as one long Streamlit form.
+Input, settings, review, corrections, downloads, Scrub Key and audit controls compete on the same page.
+```
+
+The approved target is:
+
+```text
+Top-level workflow: Anonimiseren | Terugzetten
+Global presentation: Standaard | Expert
+One active stage: Toevoegen → Controleren → Downloaden
+One primary action per active stage
+Progressive and conditional disclosure for settings, other formats, Scrub Key and audit evidence
+```
+
+`Standaard` is lower cognitive load, not lower safety. `Expert` preserves full inspection, tuning, audit and troubleshooting. The current permanent settings sidebar is not part of the Standard target. Completed stages collapse into compact summaries rather than remaining open above the current task.
+
+The implementation remains within Streamlit first, but must approximate a single-task application shell. It must not change recognizers, replacement decisions, export bytes, filenames, MIME types, Scrub Key semantics, reinsert behavior, audit evidence or the human-review requirement.
+
+Sequential execution:
+
+```text
+0. SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
+1. SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT
+2. SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL
+3. SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION
+4. SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION
+5. SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION
+6. SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION
+7. SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION
+8. SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT
+```
+
+Do not combine the input, review and export restructuring into one patch. Do not run shared Streamlit UI packages in parallel.
 
 ### Phase 6 — MVP workflow validation and trust hardening
 
@@ -250,7 +292,7 @@ Execution principles:
 - validate the full supported workflow before adding new features;
 - create recognizer or document-processing fixes only from reproducible evidence;
 - preserve legal meaning and keep human review mandatory;
-- do not reopen broad UI work unless validation reveals a concrete usability or safety blocker;
+- direct live-app evidence on 2026-08-05 establishes a concrete usability blocker: the functional baseline remains a long, form-like page; reopen UI work only through the approved premium core-flow sequence;
 - do not make production-readiness claims from prototype evidence.
 
 ### Candidate document-centric manual-correction line
@@ -277,7 +319,7 @@ The proposed sequence is:
 6. SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY
 ```
 
-The coordinator approved the direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam. The contract, action model, component and production table integration are complete. The integration adds one normal bound manual row, reruns before exports, keeps the review table authoritative, retains the manual/static rollback path and changes no export/Scrub Key/reinsert semantics. GitHub-to-Hugging-Face synchronization and live app verification are green. App evidence also exposed placeholder readability noise from the repeated 80-bit binding segment. A narrow display-only compaction package is permitted before cross-flow regression; the binding grammar, entropy, export, Scrub Key and reinsert semantics remain frozen. This line remains sequential and does not displace the active Phase 6 queue.
+The coordinator approved the direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam. The contract, action model, component and production table integration are complete. The integration adds one normal bound manual row, reruns before exports, keeps the review table authoritative, retains the manual/static rollback path and changes no export/Scrub Key/reinsert semantics. GitHub-to-Hugging-Face synchronization and live app verification are green. The display-only placeholder compaction is also deployed and app-verified without changing binding grammar, entropy, export, Scrub Key or reinsert semantics. `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION` is now the final safety baseline before the premium core-flow UI contract line starts.
 
 Recall/benchmark work is reopened only where the synthetic validation matrix exposes a concrete false-negative, misclassification or over-masking gap.
 
@@ -328,7 +370,7 @@ Streamlit app + helper modules + GitHub Actions + Hugging Face Space demo.
 MVP architecture target:
 
 ```text
-Thin Streamlit UI, helper-driven behavior, tested safety boundaries, local-first direction, and clear export/audit workflow.
+Thin helper-driven Streamlit application shell; one active document stage at a time; global Standard/Expert presentation; tested safety boundaries; local-first direction; and a clear primary export with secondary restore/audit layers.
 ```
 
 Do not migrate frontend, add a full document editor, introduce cloud document processing, or alter export/Scrub Key/reinsert semantics without a dedicated approved package.
