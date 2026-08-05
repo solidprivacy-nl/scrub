@@ -112,6 +112,7 @@ Current mitigations:
 - `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION` made the existing step-by-step review aid collapsed by default and removed debug/governance wording from the primary UI.
 - `WP_MVP_FAST_MANUAL_MASK_ENTRY` adds a verified simple user-facing path to add missed values to the existing replacement table.
 - The contract, action model and component spike are now connected through `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`. The review table remains source of truth; the component is only an input route into normal bound manual rows.
+- Live app evidence on 2026-08-05 confirms that local decluttering is not sufficient: the application still exposes input, settings, review, downloads, Scrub Key and audit as one long form. `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md` mitigates this through a global Standard/Expert model, top-level workflow navigation, one active stage and progressive disclosure.
 
 Gaps:
 
