@@ -1,11 +1,14 @@
 # Workpackage claim — SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION
 
-Status: in_progress
+Status: completed  
+Implementation status: `RELEASE_CANDIDATE_READY`  
+Governance status: pending independent assurance
 
 Claimed: 2026-08-06 11:37 Europe/Amsterdam  
-Repository: solidprivacy-nl/scrub  
-Branch: wp/processed-text-selection-cross-flow-regression  
-Role: implementation_operations
+Implementation completed: 2026-08-06 11:59 Europe/Amsterdam  
+Repository: `solidprivacy-nl/scrub`  
+Branch: `wp/processed-text-selection-cross-flow-regression`  
+Role: `implementation_operations`
 
 ## Scope
 
@@ -20,10 +23,21 @@ The assurance worker must independently reconstruct the candidate from source, a
 - no implementation worker may issue the governance PASS for its own candidate;
 - governance may not silently repair the candidate it reviews.
 
-## Planned evidence
+## Candidate evidence
 
-- project-local governance bootstrap;
-- Scrub-specific assurance contract;
-- worker/project-prompt invocation rule;
-- roadmap, decision-log, workpackage and changelog records;
-- separate independent verification workpackage.
+- `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`
+- `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`
+- updated project prompts, roadmap, workpackages, changelog and decision log
+- `handover/workpackages/20260806_1156_two_role_governance_adoption.md`
+
+## Validation status
+
+- Candidate PR: pending creation
+- GitHub Actions: pending candidate PR
+- Hugging Face sync: not applicable; no runtime files changed
+- App verification: not applicable; no UI behavior changed
+- Independent governance decision: pending and deliberately not issued by implementation
+
+## Next step
+
+A separate `governance_release_assurance` worker/session must claim `SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY`, record its initial `PASS`, `FAIL` or `INDETERMINATE` before opening the implementation handover, and must not modify the candidate under review.
