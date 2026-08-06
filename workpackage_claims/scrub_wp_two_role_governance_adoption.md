@@ -25,6 +25,7 @@ The assurance worker must independently reconstruct the candidate from source, a
 
 ## Candidate evidence
 
+- PR #69, draft and not merged
 - `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`
 - `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`
 - updated project prompts, roadmap, workpackages, changelog and decision log
@@ -32,8 +33,8 @@ The assurance worker must independently reconstruct the candidate from source, a
 
 ## Validation status
 
-- Candidate PR: pending creation
-- GitHub Actions: pending candidate PR
+- GitHub Actions run #2097 on the pre-closeout PR candidate: `1165 passed in 9.62s`
+- Final exact-head GitHub Actions run: pending after administrative closeout commits
 - Hugging Face sync: not applicable; no runtime files changed
 - App verification: not applicable; no UI behavior changed
 - Independent governance decision: pending and deliberately not issued by implementation
