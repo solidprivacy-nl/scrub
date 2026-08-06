@@ -1,6 +1,6 @@
 ## 2026-08-06 11:37 Europe/Amsterdam — SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION / SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
 
-Status: implementation `RELEASE_CANDIDATE_READY`; GitHub Actions and independent governance assurance pending.
+Status: implementation `RELEASE_CANDIDATE_READY`; GitHub Actions PR #69 run #2097 green (`1165 passed in 9.62s`); independent governance assurance pending.
 
 Purpose:
 - adopt the Weekly ETF donor's canonical implementation-versus-release-assurance model for Scrub;
@@ -33,7 +33,7 @@ Regression coverage:
 
 Validation:
 - local execution unavailable in this connector-only session;
-- GitHub Actions pending on the candidate PR;
+- GitHub Actions PR #69 run #2097: `1165 passed in 9.62s`;
 - independent governance decisions deliberately not issued by implementation.
 
 Intentionally not changed:

@@ -20,7 +20,7 @@ Verification gate:
 
 ### SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
 
-Status: `RELEASE_CANDIDATE_READY`; GitHub Actions and independent governance verification pending.
+Status: `RELEASE_CANDIDATE_READY`; GitHub Actions PR #69 run #2097 green (`1165 passed in 9.62s`); independent governance verification pending.
 
 Goal:
 - Prove with synthetic chain tests that a processed-text selection row remains one normal authoritative review-table row across document export, Scrub Key, TXT/DOCX reinsert and audit evidence.
