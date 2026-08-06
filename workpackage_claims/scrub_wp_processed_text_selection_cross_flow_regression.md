@@ -1,11 +1,14 @@
 # Workpackage claim — SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
 
-Status: in_progress
+Status: completed  
+Implementation status: `RELEASE_CANDIDATE_READY`  
+Governance status: pending independent assurance
 
 Claimed: 2026-08-06 11:38 Europe/Amsterdam  
-Repository: solidprivacy-nl/scrub  
-Branch: wp/processed-text-selection-cross-flow-regression  
-Role: implementation_operations
+Implementation completed: 2026-08-06 12:00 Europe/Amsterdam  
+Repository: `solidprivacy-nl/scrub`  
+Branch: `wp/processed-text-selection-cross-flow-regression`  
+Role: `implementation_operations`
 
 ## Scope
 
@@ -25,6 +28,22 @@ Add regression evidence proving that a row created through processed-text select
 - synthetic data only;
 - human review remains mandatory.
 
-## Separation of duties
+## Candidate evidence
 
-Implementation may prepare only a release candidate. The separate `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION_VERIFY` workpackage must be executed by `governance_release_assurance` from source and machine evidence without reading implementation conclusions first.
+- `tests/test_processed_text_selection_cross_flow_regression.py`
+- `PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION.md`
+- `handover/workpackages/20260806_1157_processed_text_selection_cross_flow_regression.md`
+
+## Validation status
+
+- Focused tests added: 5
+- Local test execution: unavailable in connector-only implementation session
+- Candidate PR: pending creation
+- GitHub Actions: pending candidate PR
+- Hugging Face sync: not applicable; no runtime files changed
+- App verification: not applicable; no UI behavior changed
+- Independent governance decision: pending and deliberately not issued by implementation
+
+## Next step
+
+The separate `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION_VERIFY` package must be claimed by `governance_release_assurance`. That worker/session must reconstruct the candidate from source, acceptance criteria and raw machine evidence, record its initial decision before reading the implementation handover, and must not repair the candidate under review.
