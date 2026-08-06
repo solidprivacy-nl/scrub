@@ -28,13 +28,15 @@ Before its initial `PASS`, `FAIL` or `INDETERMINATE`, the assurance worker may i
 
 ## Tests
 
-- No product test added specifically for the governance text.
-- Existing repository tests must run on the exact PR head.
+- No product test was added specifically for the governance text.
+- The full repository suite was executed on PR #69 before this administrative closeout update: run #2097, `1165 passed in 9.62s`.
+- A final exact-head PR run is required after the handover/claim closeout commits; the PR checks are the authoritative live evidence.
 - Independent governance must inspect control-file consistency without relying on this implementation handover before its initial decision.
 
 ## Validation
 
-- GitHub Actions: pending on candidate PR
+- Candidate PR: #69, open as draft and not merged
+- GitHub Actions: run #2097 green on the pre-closeout candidate; final exact-head run pending after administrative closeout
 - Hugging Face sync: not applicable; no runtime or deployment files changed
 - App verification: not applicable; no UI behavior changed
 - Independent governance status: pending; implementation deliberately issued no PASS
@@ -47,4 +49,5 @@ Before its initial `PASS`, `FAIL` or `INDETERMINATE`, the assurance worker may i
 
 ## Next recommended step
 
+- Confirm the final exact-head PR test run.
 - A separate `governance_release_assurance` worker/session claims `SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY`, reconstructs the candidate from source and raw evidence, records its initial decision before opening this handover, and does not modify the candidate under review.
