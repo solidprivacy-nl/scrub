@@ -52,6 +52,26 @@ Do not invent a new direction if it conflicts with these files. If the roadmap i
 
 ---
 
+## Implementation-versus-assurance separation
+
+Consequential work uses the canonical two-role model linked from `control/PROJECT_GOVERNANCE_BOOTSTRAP.md` and the project contract in `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`.
+
+```text
+implementation_operations
+governance_release_assurance
+```
+
+The user gives one instruction and receives one consolidated status. Implementation prepares an identifiable release candidate but may not certify its own completion. Governance independently reconstructs the candidate and issues `PASS`, `FAIL` or `INDETERMINATE`; it may not silently repair what it reviews.
+
+Before its initial decision, the assurance worker must not read the implementation handover, self-assessment or conclusions. It works from the requested outcome, authoritative project files, candidate source/diff, acceptance criteria and raw machine/deployment evidence. Only after recording the initial decision may it open the implementation handover for disclosure and administrative closeout checks.
+
+A candidate requiring repair returns to implementation and receives a fresh assurance pass. Consequential implementation and verification must be separate workpackages and separate workers/sessions.
+
+For consequential work, read after the mandatory start sequence:
+
+1. `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`
+2. `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`
+
 ## Current way of working
 
 Work in small, testable workpackages.

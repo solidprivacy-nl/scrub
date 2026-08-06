@@ -1,3 +1,46 @@
+## 2026-08-06 11:37 Europe/Amsterdam — Two-role governance adoption and processed-text cross-flow regression
+
+### SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION
+
+Status: `RELEASE_CANDIDATE_READY`; independent governance verification pending.
+
+Goal:
+- Adopt the canonical cross-project implementation-versus-release-assurance model used by Weekly ETF, strengthened for Scrub with a blind-review boundary.
+
+Candidate files:
+- `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`;
+- `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`;
+- project prompt, roadmap and decision-log invocation records;
+- separate implementation and verification workpackages.
+
+Verification gate:
+- `SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY` must be claimed by `governance_release_assurance` in a separate worker/session;
+- before its initial decision, that worker must not read implementation handovers or implementation conclusions;
+- governance may issue only `PASS`, `FAIL` or `INDETERMINATE` and may not silently repair the candidate.
+
+### SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
+
+Status: `RELEASE_CANDIDATE_READY`; GitHub Actions PR #69 run #2097 green (`1165 passed in 9.62s`); independent governance verification pending.
+
+Goal:
+- Prove with synthetic chain tests that a processed-text selection row remains one normal authoritative review-table row across document export, Scrub Key, TXT/DOCX reinsert and audit evidence.
+
+Candidate evidence:
+- `tests/test_processed_text_selection_cross_flow_regression.py`;
+- `PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION.md`;
+- no production product-code or UI changes.
+
+Required independent follow-up:
+1. `SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY`;
+2. `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION_VERIFY`;
+3. only after both governance passes may `SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT` start.
+
+Safety boundary:
+- synthetic data only;
+- no recognizer, replacement, export, filename, MIME, Scrub Key, reinsert, audit, runtime or UI semantic changes;
+- review-table include state and human review remain authoritative;
+- custom replacement text remains document-exportable but verified bound-key generation must fail closed.
+
 ## 2026-08-05 10:49 Europe/Amsterdam — SCRUB-WP_PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN
 
 Status: completed planning/design-only; implementation not started.

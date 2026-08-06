@@ -11,9 +11,31 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-08-05 — compact bound-placeholder display is deployed and live verified; direct user evidence confirms that local decluttering has not yet removed the long-form, form-like application structure, so a premium single-task app-shell line is now sequenced after the existing cross-flow safety regression.
+Last roadmap strategy update: 2026-08-06 — the Weekly ETF donor's canonical implementation-versus-release-assurance model is adopted for consequential Scrub work, strengthened with blind review before the initial assurance decision; the premium single-task app-shell line remains gated by independent governance passes after the cross-flow safety regression.
 
 ---
+
+## Operational governance — implementation and blind release assurance
+
+Consequential Scrub work now follows the canonical cross-project two-role standard used by the Weekly ETF donor architecture:
+
+```text
+implementation_operations
+→ identifiable release candidate
+→ governance_release_assurance blind reconstruction
+→ PASS / FAIL / INDETERMINATE
+→ authorized action
+→ independent post-action confirmation
+```
+
+The user remains the single coordinator-facing principal. Implementation cannot certify its own candidate, and governance cannot silently repair it. Scrub adds a blind-review boundary: before its initial decision, governance may inspect source, criteria and raw machine evidence but not implementation handovers, self-assessments or conclusions.
+
+The current maturity is `LEVEL_1_CHECKLIST`, with a later target of `LEVEL_2_MACHINE_EVIDENCE`. This adoption does not claim a hard CI gate. The next premium UI package remains blocked until independent assurance passes both the governance-adoption candidate and the processed-text cross-flow regression candidate.
+
+Governed by:
+- `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`;
+- `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`;
+- `DECISION_LOG.md` D042.
 
 ## 1. Product vision
 
