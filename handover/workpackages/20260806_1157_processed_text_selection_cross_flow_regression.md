@@ -2,7 +2,7 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Role: `implementation_operations`  
-Status: `RELEASE_CANDIDATE_READY`; GitHub Actions and independent assurance pending
+Status: `RELEASE_CANDIDATE_READY`; independent assurance pending
 
 ## Summary
 
@@ -39,19 +39,20 @@ The tests also assert selection provenance, all-exact occurrence count, document
 ## Validation
 
 - Local tests: unavailable in the connector-only implementation session
-- GitHub Actions: pending on candidate PR
+- Candidate PR: #69, open as draft and not merged
+- GitHub Actions: run #2097 green on the pre-closeout candidate, `1165 passed in 9.62s`; final exact-head run pending after administrative closeout
 - Hugging Face sync: not applicable; no runtime files changed
 - App verification: not applicable; no UI behavior changed
 - Independent governance status: pending; implementation deliberately issued no PASS
 
 ## Remaining risks
 
-- The new tests still require execution on the exact PR head.
+- The final exact-head PR run must remain green after the administrative closeout commits.
 - The regression proves current supported TXT/DOCX surfaces; it does not expand known DOCX reinsert limitations such as split placeholders, comments, tracked-change-only parts, footnotes/endnotes, text boxes or metadata.
 - No production behavior was changed; a test failure must return to implementation rather than be repaired by the assurance worker.
 
 ## Next recommended step
 
-- Open the candidate PR and obtain raw GitHub Actions evidence.
+- Confirm the final exact-head PR test run.
 - A separate `governance_release_assurance` worker/session claims `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION_VERIFY`, independently reconstructs the tests and candidate diff, and records `PASS`, `FAIL` or `INDETERMINATE` before opening this handover.
 - Do not start `SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT` until both the governance-adoption and cross-flow verification packages pass.
