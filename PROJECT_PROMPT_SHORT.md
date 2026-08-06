@@ -19,6 +19,13 @@ GitHub is the source of truth. At the start of every work session, read:
 3. `WORKPACKAGES.md`
 4. `CHANGELOG.md`
 
+Apply the project's implementation-versus-release-assurance separation and blind-review boundary for consequential work. Read:
+
+1. `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`
+2. `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`
+
+Implementation may only prepare a release candidate. A separate `governance_release_assurance` worker/session independently reconstructs and verifies it without reading the implementation handover or conclusions before its initial `PASS`, `FAIL` or `INDETERMINATE`. Governance may not silently repair the candidate it reviews.
+
 Follow the current workpackage plan in `WORKPACKAGES.md`. Do not invent a new direction if it conflicts with the roadmap.
 
 Use small, testable workpackages. Prefer helper modules and tests before UI changes. Avoid parallel edits to the same UI flow, especially:

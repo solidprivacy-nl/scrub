@@ -1,3 +1,48 @@
+## 2026-08-06 11:37 Europe/Amsterdam — SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION / SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
+
+Status: implementation `RELEASE_CANDIDATE_READY`; GitHub Actions and independent governance assurance pending.
+
+Purpose:
+- adopt the Weekly ETF donor's canonical implementation-versus-release-assurance model for Scrub;
+- strengthen it with a blind-review boundary so the assurance worker does not read implementation conclusions before its initial decision;
+- add end-to-end synthetic regression evidence from processed-text selection commit through exports, bound Scrub Key, TXT/DOCX reinsert and audit outputs.
+
+Files added:
+- `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`;
+- `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`;
+- `PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION.md`;
+- `tests/test_processed_text_selection_cross_flow_regression.py`;
+- implementation claim and handover files.
+
+Files changed:
+- `PROJECT_PROMPT.md`;
+- `PROJECT_PROMPT_SHORT.md`;
+- `ROADMAP.md`;
+- `WORKPACKAGES.md`;
+- `DECISION_LOG.md`;
+- `CHANGELOG.md`.
+
+Regression coverage:
+- selection-created row provenance, binding, all-exact occurrence count and authoritative include state;
+- processed text/TXT export;
+- original-DOCX replacement path;
+- schema-1.1 bound Scrub Key generation and fail-closed custom-text behavior;
+- verified TXT and DOCX reinsert;
+- replacement CSV and scrub-report audit evidence;
+- local-only/no-AI/no-cloud metadata.
+
+Validation:
+- local execution unavailable in this connector-only session;
+- GitHub Actions pending on the candidate PR;
+- independent governance decisions deliberately not issued by implementation.
+
+Intentionally not changed:
+- production Python/Streamlit behavior;
+- recognizers, profiles, thresholds or review decisions;
+- export bytes, filenames or MIME types;
+- Scrub Key schema/binding or reinsert semantics;
+- audit semantics, dependencies, runtime or Hugging Face app behavior.
+
 ## 2026-08-05 10:49 Europe/Amsterdam — SCRUB-WP_PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN
 
 Status: completed planning/design-only.

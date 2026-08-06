@@ -1,3 +1,43 @@
+## 2026-08-06 — D042 — Separate implementation from blind independent release assurance
+
+Status: accepted project-governance and release-control decision
+
+Decision:
+
+```text
+Adopt CROSS_PROJECT_TWO_ROLE_GOVERNANCE_V1 for consequential Scrub work. Use one coordinator and two separated roles: implementation_operations and governance_release_assurance. Implementation prepares an identifiable candidate but cannot certify it. Governance reconstructs it independently and cannot silently repair it.
+```
+
+Scrub-specific strengthening:
+
+```text
+Before its initial PASS / FAIL / INDETERMINATE, governance may inspect the requested outcome, authoritative control files, candidate source/diff, acceptance criteria and raw machine/deployment evidence, but may not read the implementation handover, implementation self-assessment or implementation conclusions.
+```
+
+Reason:
+- Scrub processes privacy-sensitive professional documents and creates re-identification-sensitive Scrub Keys;
+- builder self-certification creates avoidable confirmation bias and weakens release confidence;
+- the Weekly ETF donor architecture already establishes a mature coordinator/implementation/assurance split;
+- the user's explicit requirement is stronger than ordinary review and requires conclusion isolation before the initial assurance decision.
+
+Operating consequences:
+- consequential implementation and verification are separate workpackages and separate workers/sessions;
+- the user continues to give one instruction and receives one consolidated status;
+- a failed or indeterminate candidate returns to implementation and requires a fresh assurance pass;
+- implementation statuses are limited to `IMPLEMENTATION_IN_PROGRESS`, `IMPLEMENTATION_BLOCKED` and `RELEASE_CANDIDATE_READY`;
+- assurance decisions are `PASS`, `FAIL` or `INDETERMINATE`;
+- merge/deployment execution and independently confirmed outcome remain distinct statuses.
+
+Initial maturity:
+- `LEVEL_1_CHECKLIST`;
+- target `LEVEL_2_MACHINE_EVIDENCE` through a later structured assurance-record package;
+- no claim that documentation alone provides hard CI or post-action enforcement.
+
+Authority:
+- canonical standard: `market-predictions/control-plane/control/CROSS_PROJECT_TWO_ROLE_GOVERNANCE_STANDARD_V1.md`;
+- project bootstrap: `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`;
+- project contract: `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`.
+
 ## 2026-08-05 — D041 — Move from review-local decluttering to an application-wide premium core-flow shell
 
 Status: accepted product, UX and implementation-sequence decision
