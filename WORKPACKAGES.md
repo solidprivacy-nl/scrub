@@ -1,3 +1,46 @@
+## 2026-08-06 21:30 Europe/Amsterdam — Independent assurance and merge closeout for PR #69
+
+### SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY
+
+Initial assurance decision: `PASS`.  
+Closeout status: `ACTION_EXECUTED_UNVERIFIED`.
+
+Evidence and action:
+- the initial decision was recorded on issue #70 before implementation handovers, claims or implementation conclusions were opened;
+- no repair was performed in the candidate;
+- implementation claim and handover were checked only after PASS and were administratively complete;
+- PR #69 was merged unchanged as `07cf12d0cfa57dd81bd2c964cb081e5f8f8c4f71`;
+- actual and tested merge candidates have identical parents and tree `4c993cbed86eade252cec6799f7dae5919b84085`;
+- raw run #2105 passed all 1165 tests in 12.41s on tested merge candidate `13d55b6d74ad6f31446e16bcad0794abea32f9e7`.
+
+### SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION_VERIFY
+
+Initial assurance decision: `PASS`.  
+Closeout status: `ACTION_EXECUTED_UNVERIFIED`.
+
+Evidence and action:
+- independent source/test reconstruction covered selection commit, all-exact TXT/processed-text replacement, original-DOCX replacement, bound Scrub Key, TXT/DOCX reinsert, CSV/scrub-report audit, include=false, fail-closed custom replacement and local-only/no-AI/no-cloud evidence;
+- no production Python, Streamlit, frontend, runtime, dependency, workflow or deployment file changed;
+- implementation claim and handover were checked only after PASS and were administratively complete;
+- PR #69 was merged without candidate repair.
+
+Post-action boundary:
+- no distinct GitHub Actions push run on actual merged SHA `07cf12d0cfa57dd81bd2c964cb081e5f8f8c4f71` was observable at closeout-writing time;
+- `OUTCOME_CONFIRMED` is therefore deliberately not claimed yet;
+- Hugging Face sync is not applicable because no runtime file changed and all changed paths are ignored by the sync workflow;
+- app verification is not applicable because no UI behavior changed.
+
+Verification records:
+- `workpackage_claims/scrub_wp_two_role_governance_adoption_verify.md`;
+- `workpackage_claims/scrub_wp_processed_text_selection_cross_flow_regression_verify.md`;
+- `handover/workpackages/20260806_2130_two_role_governance_adoption_verify.md`;
+- `handover/workpackages/20260806_2130_processed_text_selection_cross_flow_regression_verify.md`.
+
+Next gate:
+- complete the documentation-only closeout PR;
+- promote both packages to `OUTCOME_CONFIRMED` only after the contract-required post-action evidence is available;
+- do not start `SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT` before that closeout confirmation.
+
 ## 2026-08-06 11:37 Europe/Amsterdam — Two-role governance adoption and processed-text cross-flow regression
 
 ### SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION
@@ -1032,7 +1075,7 @@ Summary:
 - Reordered reinsert to source first, Scrub Key second and restored download third.
 - Added pure helper orchestration for input normalisation, deterministic request signatures and dispatch to existing local helpers.
 - Automatically validates a supplied Scrub Key and automatically runs reinsert for one valid source/key pair.
-- Removed separate source/key processing acknowledgements and buttons.
+- Removed separate source/key acknowledgement checkboxes and execution buttons.
 - Retained one final confidentiality acknowledgement at the restored-output download boundary.
 - Preserved TXT, DOCX, PDF-to-TXT and pasted-text paths, audit reporting, filenames, MIME types and safety boundaries.
 
@@ -1172,7 +1215,7 @@ Next recommended step:
 
 ## 2026-07-16 20:40 Europe/Amsterdam — SCRUB-WP_MANUAL_CORRECTION_PANEL_DENSITY_SIMPLIFICATION_IMPLEMENTATION
 
-Status: completed / ready for app verification.
+Status: implemented / local validation passed.
 
 Summary:
 - Converted the open manual correction form from a vertical stack to one compact three-column input row.
