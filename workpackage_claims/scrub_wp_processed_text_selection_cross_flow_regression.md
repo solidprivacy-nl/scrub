@@ -30,6 +30,7 @@ Add regression evidence proving that a row created through processed-text select
 
 ## Candidate evidence
 
+- PR #69, draft and not merged
 - `tests/test_processed_text_selection_cross_flow_regression.py`
 - `PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION.md`
 - `handover/workpackages/20260806_1157_processed_text_selection_cross_flow_regression.md`
@@ -38,8 +39,8 @@ Add regression evidence proving that a row created through processed-text select
 
 - Focused tests added: 5
 - Local test execution: unavailable in connector-only implementation session
-- Candidate PR: pending creation
-- GitHub Actions: pending candidate PR
+- GitHub Actions run #2097 on the pre-closeout PR candidate: `1165 passed in 9.62s`
+- Final exact-head GitHub Actions run: pending after administrative closeout commits
 - Hugging Face sync: not applicable; no runtime files changed
 - App verification: not applicable; no UI behavior changed
 - Independent governance decision: pending and deliberately not issued by implementation
