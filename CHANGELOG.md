@@ -1,3 +1,47 @@
+## 2026-08-06 21:30 Europe/Amsterdam — SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY / SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION_VERIFY
+
+Status: both initial assurance decisions `PASS`; PR #69 merged unchanged; post-action closeout remains `ACTION_EXECUTED_UNVERIFIED` because no distinct Actions push run on the actual merged SHA was observable.
+
+Purpose:
+- independently reconstruct and decide the two verification packages under issue #70;
+- preserve the blind-review boundary before reading implementation handovers, claims or conclusions;
+- merge the passing candidate without assurance-side repair;
+- record separate verification claims and handovers.
+
+Assurance decisions:
+- `SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY`: `PASS`;
+- `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION_VERIFY`: `PASS`.
+
+Action and evidence:
+- candidate head: `41bf09abe3966ae40a51c526d162c57a824557e8`;
+- tested merge candidate: `13d55b6d74ad6f31446e16bcad0794abea32f9e7`;
+- raw run #2105 / ID `31091265208`: `1165 passed in 12.41s`;
+- actual merge commit: `07cf12d0cfa57dd81bd2c964cb081e5f8f8c4f71`;
+- actual and tested merge candidates have identical parents and identical tree `4c993cbed86eade252cec6799f7dae5919b84085`;
+- candidate repairs: none.
+
+Files added:
+- `workpackage_claims/scrub_wp_two_role_governance_adoption_verify.md`;
+- `workpackage_claims/scrub_wp_processed_text_selection_cross_flow_regression_verify.md`;
+- `handover/workpackages/20260806_2130_two_role_governance_adoption_verify.md`;
+- `handover/workpackages/20260806_2130_processed_text_selection_cross_flow_regression_verify.md`.
+
+Files changed:
+- `WORKPACKAGES.md`;
+- `CHANGELOG.md`.
+
+Validation:
+- implementation handovers and claims were opened only after the two initial decisions and were administratively complete;
+- no distinct GitHub Actions push run on merged SHA `07cf12d0cfa57dd81bd2c964cb081e5f8f8c4f71` was observable at closeout-writing time, so `OUTCOME_CONFIRMED` is not claimed;
+- Hugging Face sync: not applicable because no runtime file changed and all changed paths are ignored by the sync workflow;
+- app verification: not applicable because no UI behavior changed.
+
+Intentionally not changed:
+- candidate source, tests or candidate head;
+- production Python, Streamlit, frontend, runtime, dependency or deployment behavior;
+- recognizers, review semantics, exports, Scrub Key, reinsert or audit semantics;
+- human-review and local-processing boundaries.
+
 ## 2026-08-06 11:37 Europe/Amsterdam — SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION / SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
 
 Status: implementation `RELEASE_CANDIDATE_READY`; GitHub Actions PR #69 run #2097 green (`1165 passed in 9.62s`); independent governance assurance pending.
