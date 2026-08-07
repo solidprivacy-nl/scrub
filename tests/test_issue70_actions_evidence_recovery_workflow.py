@@ -20,23 +20,30 @@ def test_tests_workflow_keeps_standard_and_manual_triggers() -> None:
     assert "paths-ignore:" not in workflow
 
 
-def test_issue70_fallback_is_narrow_and_default_branch_scoped() -> None:
+def test_issue70_rerun_carrier_is_narrow_and_default_branch_scoped() -> None:
     workflow = _workflow_text()
 
-    assert "  issue_comment:\n    types:\n      - created" in workflow
-    assert "github.event.issue.number == 70" in workflow
-    assert "github.event.comment.body == '/run-tests-main'" in workflow
-    assert "github.actor == 'market-predictions'" in workflow
+    assert "  workflow_run:\n    workflows:\n      - Diagnostic recall benchmark report" in workflow
+    assert "    types:\n      - completed" in workflow
+    assert "github.event.workflow_run.run_attempt > 1" in workflow
+    assert "github.event.workflow_run.conclusion == 'success'" in workflow
     assert "permissions:\n  contents: read" in workflow
 
-    # No ref is supplied to checkout: issue_comment workflows therefore test
-    # the exact default-branch commit associated with the workflow run.
+    # workflow_run uses the last commit on the default branch as GITHUB_SHA.
+    # No ref override is allowed: checkout must test that exact main commit.
     assert "uses: actions/checkout@v4" in workflow
     assert "ref:" not in workflow
 
 
-def test_issue70_fallback_runs_the_unchanged_full_regression_command() -> None:
+def test_issue70_rerun_carrier_runs_the_unchanged_full_regression_command() -> None:
     workflow = _workflow_text()
 
     assert "python -m pytest -q tests" in workflow
     assert workflow.count("python -m pytest -q tests") == 1
+
+
+def test_issue70_recovery_does_not_add_schedule_or_comment_triggers() -> None:
+    workflow = _workflow_text()
+
+    assert "schedule:" not in workflow
+    assert "issue_comment:" not in workflow
