@@ -1,1 +1,0 @@
-trigger issue70 repaired candidate central administration v2
