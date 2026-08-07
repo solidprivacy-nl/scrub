@@ -1,3 +1,14 @@
+## 2026-08-07 Europe/Amsterdam — Issue #70 Actions evidence recovery repair
+
+Status: `RELEASE_CANDIDATE_READY`; independent exact-head assurance pending.
+
+- Replaced PR #73's expired 2026-06-17 carrier dependency with a purpose-built read-only no-op carrier workflow.
+- Demonstrated current connector executability: carrier run `31216068355` was rerun successfully as attempt 2; latest rerun job `92989859101` concluded `success`.
+- Full PR regression run `31216068325` / #2115 passed all `1170` tests in `11.00s` using the unchanged `python -m pytest -q tests` command.
+- Strengthened the workflow contract tests to freeze carrier safety, rerun gating, default-branch checkout semantics and unchanged full-suite behavior.
+- No recognizer, review, replacement, export, Scrub Key, reinsert, UI, document-processing, dependency or Hugging Face product behavior changed.
+- Fresh blind `governance_release_assurance` remains mandatory for the final exact PR head before merge; issue #70 stays open until independent exact-main post-merge evidence is confirmed.
+
 ## 2026-08-06 21:30 Europe/Amsterdam — SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY / SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION_VERIFY
 
 Status: both initial assurance decisions `PASS`; PR #69 merged unchanged; post-action closeout remains `ACTION_EXECUTED_UNVERIFIED` because no distinct Actions push run on the actual merged SHA was observable.

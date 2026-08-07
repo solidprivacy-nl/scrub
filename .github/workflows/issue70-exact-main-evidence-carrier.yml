@@ -1,0 +1,27 @@
+name: Issue70 exact-main evidence carrier
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/issue70-exact-main-evidence-carrier.yml
+      - .github/workflows/tests.yml
+      - tests/test_issue70_actions_evidence_recovery_workflow.py
+      - ISSUE70_ACTIONS_EVIDENCE_RECOVERY.md
+      - WORKPACKAGES.md
+      - CHANGELOG.md
+
+permissions:
+  contents: read
+
+jobs:
+  carrier:
+    name: Safe no-op carrier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Emit carrier evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "issue70_evidence_carrier=true"
+          echo "repository_mutation=false"
+          echo "deployment_mutation=false"

@@ -1,3 +1,29 @@
+## 2026-08-07 Europe/Amsterdam — SCRUB-WP_ISSUE70_POST_MERGE_ACTIONS_EVIDENCE_RECOVERY — repaired candidate
+
+Status: `RELEASE_CANDIDATE_READY`; fresh exact-head blind assurance required before merge.
+
+Purpose:
+- recover issue #70 exact-current-main GitHub Actions evidence without coordinator/manual GitHub actions;
+- repair the first PR #73 candidate after independent assurance correctly rejected its expired June carrier handle.
+
+Repaired execution mechanism:
+- added purpose-built `Issue70 exact-main evidence carrier` workflow;
+- carrier is read-only/no-op: no checkout, secrets, repository write, artifact write, deployment or product side effect;
+- `Tests` retains push-main, pull-request, workflow-dispatch, no path filter, read-only checkout and full `python -m pytest -q tests` command;
+- recovery `workflow_run` runs only for a successful carrier rerun with `run_attempt > 1`.
+
+Raw implementation evidence:
+- carrier run `31216068355` / run #3 initially succeeded;
+- connector rerun invocation succeeded and produced attempt 2, job `92989859101`, conclusion `success`;
+- PR Tests run `31216068325` / #2115 completed `1170 passed in 11.00s`;
+- no coordinator/manual GitHub step was used.
+
+Governance boundary:
+- rejected assurance decision on old head remains valid only for that old identity;
+- final PR #73 head must be frozen and reviewed afresh as `governance_release_assurance`;
+- implementation cannot self-certify/self-merge, close #70 or start Premium Core Flow UI;
+- after PASS and merge, implementation reruns the approved fresh carrier and assurance independently verifies exact-current-main Tests evidence before #70 closeout.
+
 ## 2026-08-06 21:30 Europe/Amsterdam — Independent assurance and merge closeout for PR #69
 
 ### SCRUB-WP_TWO_ROLE_GOVERNANCE_ADOPTION_VERIFY

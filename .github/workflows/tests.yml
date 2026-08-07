@@ -6,10 +6,24 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Issue70 exact-main evidence carrier
+    types:
+      - completed
+
+permissions:
+  contents: read
 
 jobs:
   python-tests:
     name: Python regression tests
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (
+        github.event.workflow_run.run_attempt > 1 &&
+        github.event.workflow_run.conclusion == 'success'
+      )
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: ${{ github.workspace }}
