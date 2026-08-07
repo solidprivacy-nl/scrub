@@ -3,8 +3,9 @@
 Repository: `solidprivacy-nl/scrub`  
 Workpackage: `SCRUB-WP_ISSUE70_POST_MERGE_ACTIONS_EVIDENCE_RECOVERY`  
 Role: `implementation_operations`  
-Status: `IMPLEMENTATION_REPAIR_ACTIVE`  
+Status: `RELEASE_CANDIDATE_READY`  
 Parent assurance: `#74`  
+Technical PASS / admin follow-up: `#76`  
 Repair issue: `#75`  
 Issue to close after post-action confirmation: `#70`
 
@@ -12,8 +13,10 @@ Issue to close after post-action confirmation: `#70`
 
 - base/main used by PR #73: `a3c7dfe7fe172af5827c3819833bd0c7c43546d0`;
 - candidate branch: `wp/issue70-post-merge-actions-evidence-recovery`;
-- rejected assurance head: `087379f83d8731692c96a472e5f9782fc7dabb4f`;
-- repaired implementation head is moving while administration is completed; assurance must freeze and re-read the final PR head before review.
+- rejected original assurance head: `087379f83d8731692c96a472e5f9782fc7dabb4f`;
+- technically assured PASS head before final disclosure corrections: `c75ea000de938f3a8589e36b0b94795dd7b49c5f`;
+- this handover correction follows claim correction commit `c3dc0bb1f3c0e6628f1c68f0d660d8c735fa3bb3`;
+- the PR head produced by this handover commit is the new candidate identity and must be re-read exactly by fresh blind assurance before merge.
 
 ## Independent FAIL addressed
 
@@ -28,12 +31,12 @@ Added a purpose-built workflow:
 name: Issue70 exact-main evidence carrier
 ```
 
-Safety properties:
-- triggers only on PR and push to `main`;
+Exact carrier safety properties:
+- trigger: `pull_request` only, path-scoped to the carrier/Tests/contract/specification files;
 - `contents: read` only;
 - no checkout;
 - no secrets;
-- one inert `printf` step;
+- one inert evidence-output step;
 - no repository, artifact, deployment, product or external-state mutation.
 
 `.github/workflows/tests.yml` retains:
@@ -45,7 +48,7 @@ Safety properties:
 - `actions/checkout@v4` without `ref` override;
 - exact command `python -m pytest -q tests`.
 
-It adds one `workflow_run` source, `Issue70 exact-main evidence carrier`, and the recovery path executes only when the carrier rerun completed successfully with `run_attempt > 1`.
+It adds one `workflow_run` source, `Issue70 exact-main evidence carrier`, and the recovery path executes only when the carrier rerun completed successfully with `run_attempt > 1` and `conclusion == success`.
 
 ## Live executable evidence
 
@@ -62,19 +65,17 @@ rerun carrier job: 92989859101
 rerun conclusion: success
 ```
 
-This closes the implementation defect identified by #74/#75: the selected carrier mechanism is demonstrably rerunnable now, rather than merely encoded in YAML.
-
-Full PR regression evidence on that repaired candidate merge context:
+Fresh raw CI on the technically assured head:
 
 ```text
-Tests run: 31216068325 / run #2115
-job: 92989771650
+technical PASS head: c75ea000de938f3a8589e36b0b94795dd7b49c5f
+carrier run: 31218707774 / run #13 / success
+Tests run: 31218707788 / run #2125 / success
 command: python -m pytest -q tests
-result: 1170 passed in 11.00s
-conclusion: success
+result: 1170 passed in 13.06s
 ```
 
-Because subsequent documentation/admin commits move the PR head, fresh assurance must use the final exact head and its corresponding current PR checks; the evidence above establishes the live rerun capability and full-suite behavior of the repaired mechanism.
+Issue #76 independently returned `PASS` on that exact technical head. Its post-decision administration check then blocked merge solely because the implementation claim and this handover were stale and this handover incorrectly said the carrier also triggered on push to `main`. No product/workflow repair was requested. This disclosure-only correction resolves those findings; because it moves the PR head, fresh exact-head blind assurance remains mandatory.
 
 ## Files added or changed
 
@@ -87,23 +88,25 @@ Workflow/contract scope:
 Administration:
 - changed: `workpackage_claims/scrub_wp_issue70_post_merge_actions_evidence_recovery.md`;
 - changed: this handover;
-- required before assurance dispatch: central `WORKPACKAGES.md` and `CHANGELOG.md` candidate-status entries.
+- changed earlier in candidate: central `WORKPACKAGES.md` and `CHANGELOG.md` repaired-candidate entries.
 
-`ROADMAP.md` remains unchanged because no strategy or phase-order decision changed.
+Temporary administration patch tooling used to add the central records was removed from the candidate after successful use. `ROADMAP.md` remains unchanged because no strategy or phase-order decision changed.
 
 ## Validation contract
 
-The focused contract test now freezes not only the Tests YAML shape but the no-op/read-only carrier properties and unchanged full regression command. Raw GitHub evidence above proves current connector rerun eligibility/execution.
+The focused contract test freezes the Tests YAML shape, no-op/read-only carrier properties, rerun gating, default-branch checkout semantics and unchanged full regression command. Raw GitHub evidence establishes current connector rerun eligibility/execution.
+
+The final disclosure-only head must have fresh PR Tests evidence before assurance. The carrier workflow itself is unchanged by these disclosure corrections; the fresh reviewer must independently compare the final head to the technically passed head and decide the exact candidate rather than inheriting the prior PASS automatically.
 
 ## Post-merge execution contract
 
 Only after fresh blind `governance_release_assurance` PASS for the final exact head:
 
-1. merge the exact approved candidate;
-2. identify the carrier run/job associated with the approved main state;
+1. merge the exact approved candidate using the expected head identity;
+2. identify the approved fresh carrier run/job;
 3. `implementation_operations` invokes the connected job-rerun operation; no coordinator click/manual test is permitted;
 4. successful attempt >1 emits `workflow_run`;
-5. `governance_release_assurance` independently verifies the resulting `Tests` run is on exact then-current `main`, has `conclusion=success`, and raw logs contain the complete `python -m pytest -q tests` result;
+5. a fresh `governance_release_assurance` session independently verifies the resulting `Tests` run is on exact then-current `main`, has `conclusion=success`, and raw logs contain the complete `python -m pytest -q tests` result;
 6. only then promote issue #70 to `OUTCOME_CONFIRMED` and close it;
 7. only then release `SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT`.
 
@@ -117,4 +120,4 @@ Implementation does not self-certify, self-merge, close #70 or start Premium Cor
 
 ## Exact next step
 
-Complete the central `WORKPACKAGES.md` and `CHANGELOG.md` candidate-status records, freeze the resulting PR #73 head, then dispatch a fresh blind `governance_release_assurance` review under the #74/#75 boundary using the repaired live evidence above.
+Treat the PR head created by this handover commit as the frozen candidate only after its PR Tests complete successfully. Then dispatch a fresh blind `governance_release_assurance` review for that exact head. No further implementation change is authorized unless that reviewer returns `FAIL` or `INDETERMINATE` with a concrete finding.
