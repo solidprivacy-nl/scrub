@@ -3,142 +3,118 @@
 Repository: `solidprivacy-nl/scrub`  
 Workpackage: `SCRUB-WP_ISSUE70_POST_MERGE_ACTIONS_EVIDENCE_RECOVERY`  
 Role: `implementation_operations`  
-Status: `RELEASE_CANDIDATE_READY`  
-Issue: `#70`
+Status: `IMPLEMENTATION_REPAIR_ACTIVE`  
+Parent assurance: `#74`  
+Repair issue: `#75`  
+Issue to close after post-action confirmation: `#70`
 
-## Current-main identity
+## Candidate identity
 
-- assignment-start main: `aa8a383554645bae0d14bad528d1e56729bea0c3`;
-- main after the required implementation claim commit: `a3c7dfe7fe172af5827c3819833bd0c7c43546d0`;
-- no later main change was observed before candidate closeout;
+- base/main used by PR #73: `a3c7dfe7fe172af5827c3819833bd0c7c43546d0`;
 - candidate branch: `wp/issue70-post-merge-actions-evidence-recovery`;
-- implementation head before this administrative handover commit: `e3f6e102dc5e5e296862986bc0d27813794a26d8`.
+- rejected assurance head: `087379f83d8731692c96a472e5f9782fc7dabb4f`;
+- repaired implementation head is moving while administration is completed; assurance must freeze and re-read the final PR head before review.
 
-The pull-request head is authoritative after this handover commit and must be re-read by assurance.
+## Independent FAIL addressed
 
-## Problem diagnosis
+Assurance rejected the earlier candidate because its designated carrier run/job dated 2026-06-17 had exceeded GitHub's supported 30-day rerun window. The repaired design removes that historical dependency entirely.
 
-The existing `Tests` workflow was already active and declared:
+## Structural repair
 
+Added a purpose-built workflow:
+
+```text
+.github/workflows/issue70-exact-main-evidence-carrier.yml
+name: Issue70 exact-main evidence carrier
+```
+
+Safety properties:
+- triggers only on PR and push to `main`;
+- `contents: read` only;
+- no checkout;
+- no secrets;
+- one inert `printf` step;
+- no repository, artifact, deployment, product or external-state mutation.
+
+`.github/workflows/tests.yml` retains:
 - `push` on `main`;
 - `pull_request`;
 - `workflow_dispatch`;
-- full test command `python -m pytest -q tests`.
+- no `paths` / `paths-ignore` filter;
+- `contents: read`;
+- `actions/checkout@v4` without `ref` override;
+- exact command `python -m pytest -q tests`.
 
-Direct dispatch could not be executed because:
+It adds one `workflow_run` source, `Issue70 exact-main evidence carrier`, and the recovery path executes only when the carrier rerun completed successfully with `run_attempt > 1`.
 
-- the connected GitHub connector exposes no workflow-dispatch operation;
-- local `gh` is unavailable;
-- no local GitHub token is available;
-- the local execution container cannot resolve `github.com` for a full checkout.
+## Live executable evidence
 
-A connector-authenticated write to `main` created commit `a3c7dfe7fe172af5827c3819833bd0c7c43546d0`, but querying `tests.yml` runs for that exact SHA returned zero runs. This reproduces the evidence gap without requiring coordinator action.
-
-## Repair method
-
-Added a narrow `workflow_run` trigger to `.github/workflows/tests.yml` using the existing safe carrier workflow:
+The repaired mechanism was exercised through the connected GitHub Actions write surface, without a coordinator/manual GitHub step:
 
 ```text
-Diagnostic recall benchmark report
+candidate head exercised: 5a415059d879f556fddc5618ed5cf2f9ea4766cd
+carrier run: 31216068355 / run #3
+initial carrier job: 92989771464
+initial conclusion: success
+connector job-rerun invocation: success
+rerun attempt: 2
+rerun carrier job: 92989859101
+rerun conclusion: success
 ```
 
-The Tests job accepts that trigger only when:
+This closes the implementation defect identified by #74/#75: the selected carrier mechanism is demonstrably rerunnable now, rather than merely encoded in YAML.
+
+Full PR regression evidence on that repaired candidate merge context:
 
 ```text
-workflow_run.run_attempt > 1
-workflow_run.conclusion == success
+Tests run: 31216068325 / run #2115
+job: 92989771650
+command: python -m pytest -q tests
+result: 1170 passed in 11.00s
+conclusion: success
 ```
 
-Normal push, pull-request and workflow-dispatch behavior remains unchanged.
-
-The carrier is artifact-only: it checks out the repository, runs diagnostic corpus/report tests, generates a report and uploads an artifact. It does not modify repository state, product behavior or Hugging Face.
-
-Known carrier execution handle:
-
-- prior successful carrier run ID: `27715364089` (carrier run #6);
-- carrier event: `push`;
-- carrier head SHA: `732652e66c999d69486c377b1ea2e61707f49b13`;
-- carrier job ID: `81986778399`;
-- carrier job: `Generate diagnostic recall benchmark report`;
-- prior carrier conclusion: `success`.
-
-After this candidate is independently approved and merged, rerunning job `81986778399` through the connected GitHub Actions write operation creates carrier attempt 2. On completion, the new `workflow_run` trigger launches `.github/workflows/tests.yml`. GitHub defines `GITHUB_SHA` for `workflow_run` as the last commit on the default branch, and the Tests checkout has no ref override, so that run targets the exact then-current `main` SHA.
+Because subsequent documentation/admin commits move the PR head, fresh assurance must use the final exact head and its corresponding current PR checks; the evidence above establishes the live rerun capability and full-suite behavior of the repaired mechanism.
 
 ## Files added or changed
 
-Candidate product/workflow scope:
-
+Workflow/contract scope:
+- added: `.github/workflows/issue70-exact-main-evidence-carrier.yml`;
 - changed: `.github/workflows/tests.yml`;
-- added: `tests/test_issue70_actions_evidence_recovery_workflow.py`.
+- changed: `tests/test_issue70_actions_evidence_recovery_workflow.py`;
+- changed: `ISSUE70_ACTIONS_EVIDENCE_RECOVERY.md`.
 
 Administration:
+- changed: `workpackage_claims/scrub_wp_issue70_post_merge_actions_evidence_recovery.md`;
+- changed: this handover;
+- required before assurance dispatch: central `WORKPACKAGES.md` and `CHANGELOG.md` candidate-status entries.
 
-- updated: `workpackage_claims/scrub_wp_issue70_post_merge_actions_evidence_recovery.md`;
-- added: `handover/workpackages/20260807_1121_issue70_post_merge_actions_evidence_recovery.md`.
+`ROADMAP.md` remains unchanged because no strategy or phase-order decision changed.
 
-Central `WORKPACKAGES.md` and `CHANGELOG.md` still require the candidate status entry before merge; no strategy/phase-order change exists, so `ROADMAP.md` must remain unchanged.
+## Validation contract
 
-## Tests
+The focused contract test now freezes not only the Tests YAML shape but the no-op/read-only carrier properties and unchanged full regression command. Raw GitHub evidence above proves current connector rerun eligibility/execution.
 
-Focused contract validation executed in the available local runtime:
+## Post-merge execution contract
 
-```text
-python -m pytest -q tests/test_issue70_actions_evidence_recovery_workflow.py
-4 passed in 0.03s
-```
+Only after fresh blind `governance_release_assurance` PASS for the final exact head:
 
-Full checkout/full-suite validation could not be executed locally because the execution container has no GitHub network resolution. This is an environment limitation, not hidden as a pass.
+1. merge the exact approved candidate;
+2. identify the carrier run/job associated with the approved main state;
+3. `implementation_operations` invokes the connected job-rerun operation; no coordinator click/manual test is permitted;
+4. successful attempt >1 emits `workflow_run`;
+5. `governance_release_assurance` independently verifies the resulting `Tests` run is on exact then-current `main`, has `conclusion=success`, and raw logs contain the complete `python -m pytest -q tests` result;
+6. only then promote issue #70 to `OUTCOME_CONFIRMED` and close it;
+7. only then release `SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT`.
 
-The candidate preserves the exact full-suite command:
+## Hugging Face / app verification
 
-```text
-python -m pytest -q tests
-```
+`NOT_APPLICABLE`. No runtime/application, dependency, UI, recognizer, review, export, Scrub Key, reinsert, document-processing or Hugging Face behavior changes.
 
-## GitHub Actions status
+## Governance boundary
 
-- exact-current-main Tests run: not yet produced; candidate must first receive independent assurance and be merged;
-- direct `workflow_dispatch`: unavailable in this connector surface;
-- connector-authenticated main push reproduction: no Tests run for `a3c7dfe7fe172af5827c3819833bd0c7c43546d0`;
-- recovery mechanism after authorized merge: rerun carrier job `81986778399`, then inspect the resulting `workflow_run`-triggered Tests run;
-- required final evidence remains: workflow `.github/workflows/tests.yml`, ref `main`, exact current-main `head_sha`, conclusion `success`, command `python -m pytest -q tests`.
+Implementation does not self-certify, self-merge, close #70 or start Premium Core Flow UI. Any candidate-head change invalidates a frozen assurance dispatch and requires a fresh exact-head decision.
 
-## Hugging Face sync status
+## Exact next step
 
-`NOT_APPLICABLE` for this candidate. No runtime/application path, dependency, Dockerfile or deployment semantics are changed.
-
-## App verification status
-
-`NOT_APPLICABLE`. No visible UI or runtime Scrub behavior is changed.
-
-## Explicit exclusions
-
-No changes to:
-
-- recognizers;
-- replacement logic;
-- review semantics;
-- export bytes, filenames or MIME types;
-- Scrub Key behavior;
-- reinsert behavior;
-- Streamlit UI;
-- runtime document processing;
-- Hugging Face application behavior.
-
-## Remaining risks
-
-1. The workflow repair itself has not yet been independently assured; implementation must not self-certify it.
-2. The exact-current-main Tests run can only be generated after authorized merge because `workflow_run` workflows must exist on the default branch.
-3. Central `WORKPACKAGES.md` and `CHANGELOG.md` candidate-status entries remain to be added before final assurance/merge.
-4. `OUTCOME_CONFIRMED` remains prohibited until the separate assurance worker verifies the resulting exact-main run.
-
-## Exact next step for `governance_release_assurance`
-
-1. Re-read the final PR base SHA, head SHA and changed files.
-2. Independently inspect the `workflow_run` recovery trigger, its `run_attempt > 1` and `success` gates, the no-ref checkout, and the contract test.
-3. Confirm that the carrier workflow is artifact-only and that rerunning job `81986778399` is a safe trigger action.
-4. Issue a fresh decision for this repair candidate without changing it.
-5. Only on independent PASS may the authorized merge occur.
-6. After merge, `implementation_operations` reruns job `81986778399` through the connector; no coordinator click is required.
-7. Independently verify the resulting Tests run has exact current-main `head_sha`, ref `main`, conclusion `success`, and raw `python -m pytest -q tests` result.
-8. Only then may issue #70 be closed and the premium UI contract gate be released.
+Complete the central `WORKPACKAGES.md` and `CHANGELOG.md` candidate-status records, freeze the resulting PR #73 head, then dispatch a fresh blind `governance_release_assurance` review under the #74/#75 boundary using the repaired live evidence above.
