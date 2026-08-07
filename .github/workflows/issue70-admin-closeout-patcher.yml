@@ -1,0 +1,86 @@
+name: Issue70 admin closeout patcher
+
+on:
+  push:
+    branches:
+      - wp/issue70-post-merge-actions-evidence-recovery
+    paths:
+      - operator_triggers/issue70_admin_closeout.txt
+
+permissions:
+  contents: write
+
+jobs:
+  patch-central-records:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: wp/issue70-post-merge-actions-evidence-recovery
+          fetch-depth: 0
+
+      - name: Add central candidate-status records
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          marker = "SCRUB-WP_ISSUE70_POST_MERGE_ACTIONS_EVIDENCE_RECOVERY — repaired candidate"
+          workpackages_entry = """## 2026-08-07 Europe/Amsterdam — SCRUB-WP_ISSUE70_POST_MERGE_ACTIONS_EVIDENCE_RECOVERY — repaired candidate
+
+Status: `RELEASE_CANDIDATE_READY`; fresh exact-head blind assurance required before merge.
+
+Purpose:
+- recover issue #70 exact-current-main GitHub Actions evidence without coordinator/manual GitHub actions;
+- repair the first PR #73 candidate after independent assurance correctly rejected its expired June carrier handle.
+
+Repaired execution mechanism:
+- added purpose-built `Issue70 exact-main evidence carrier` workflow;
+- carrier is read-only/no-op: no checkout, secrets, repository write, artifact write, deployment or product side effect;
+- `Tests` retains push-main, pull-request, workflow-dispatch, no path filter, read-only checkout and full `python -m pytest -q tests` command;
+- recovery `workflow_run` runs only for a successful carrier rerun with `run_attempt > 1`.
+
+Raw implementation evidence:
+- carrier run `31216068355` / run #3 initially succeeded;
+- connector rerun invocation succeeded and produced attempt 2, job `92989859101`, conclusion `success`;
+- PR Tests run `31216068325` / #2115 completed `1170 passed in 11.00s`;
+- no coordinator/manual GitHub step was used.
+
+Governance boundary:
+- rejected assurance decision on old head remains valid only for that old identity;
+- final PR #73 head must be frozen and reviewed afresh as `governance_release_assurance`;
+- implementation cannot self-certify/self-merge, close #70 or start Premium Core Flow UI;
+- after PASS and merge, implementation reruns the approved fresh carrier and assurance independently verifies exact-current-main Tests evidence before #70 closeout.
+"""
+
+          changelog_entry = """## 2026-08-07 Europe/Amsterdam — Issue #70 Actions evidence recovery repair
+
+Status: `RELEASE_CANDIDATE_READY`; independent exact-head assurance pending.
+
+- Replaced PR #73's expired 2026-06-17 carrier dependency with a purpose-built read-only no-op carrier workflow.
+- Demonstrated current connector executability: carrier run `31216068355` was rerun successfully as attempt 2; latest rerun job `92989859101` concluded `success`.
+- Full PR regression run `31216068325` / #2115 passed all `1170` tests in `11.00s` using the unchanged `python -m pytest -q tests` command.
+- Strengthened the workflow contract tests to freeze carrier safety, rerun gating, default-branch checkout semantics and unchanged full-suite behavior.
+- No recognizer, review, replacement, export, Scrub Key, reinsert, UI, document-processing, dependency or Hugging Face product behavior changed.
+- Fresh blind `governance_release_assurance` remains mandatory for the final exact PR head before merge; issue #70 stays open until independent exact-main post-merge evidence is confirmed.
+"""
+
+          for filename, entry in (("WORKPACKAGES.md", workpackages_entry), ("CHANGELOG.md", changelog_entry)):
+              path = Path(filename)
+              text = path.read_text(encoding="utf-8")
+              if marker in text or (filename == "CHANGELOG.md" and "Issue #70 Actions evidence recovery repair" in text):
+                  continue
+              path.write_text(entry.rstrip() + "\n\n" + text, encoding="utf-8")
+          PY
+
+          git config user.name 'solidprivacy-control-worker'
+          git config user.email 'actions@users.noreply.github.com'
+          git add WORKPACKAGES.md CHANGELOG.md
+          if git diff --cached --quiet; then
+            echo 'Central records already contain the repaired candidate status.'
+            exit 0
+          fi
+          git commit -m 'docs(governance): record issue70 repaired candidate centrally'
+          git push origin HEAD:wp/issue70-post-merge-actions-evidence-recovery
