@@ -1,1 +1,0 @@
-Temporary navigation note for issue #70 recovery candidate. Authoritative handover: `handover/workpackages/20260807_1121_issue70_post_merge_actions_evidence_recovery.md`.
