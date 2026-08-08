@@ -112,9 +112,11 @@ class CoreFlowState:
 
 
 def recommended_download(source_kind: str, eligible_outputs: Sequence[str]) -> Optional[str]:
-    """Choose visual priority only from already-eligible outputs.
+    """Choose visual priority only from already-eligible cleaned outputs.
 
     Values are logical existing-output identities, not new output formats.
+    Sensitive/secondary outputs such as the Scrub Key never become the dominant
+    recommended download merely because no cleaned document is eligible.
     """
     eligible = tuple(eligible_outputs)
     preference = {
@@ -126,4 +128,4 @@ def recommended_download(source_kind: str, eligible_outputs: Sequence[str]) -> O
     for candidate in preference:
         if candidate in eligible:
             return candidate
-    return eligible[0] if eligible else None
+    return None
