@@ -11,13 +11,13 @@ Use it together with:
 - `DECISION_LOG.md` for accepted strategic and architecture decisions;
 - `PROJECT_PROMPT.md` for worker rules and project governance.
 
-Last roadmap strategy update: 2026-08-06 — the Weekly ETF donor's canonical implementation-versus-release-assurance model is adopted for consequential Scrub work, strengthened with blind review before the initial assurance decision; the premium single-task app-shell line remains gated by independent governance passes after the cross-flow safety regression.
+Last roadmap strategy update: 2026-08-08 — the Premium UI direction is now explicitly frozen as a **single-page staged document workspace**: `Toevoegen → Controleren → Downloaden` remain persistently represented in one workspace, exactly one stage is expanded at a time, completed stages collapse to compact summaries, future stages remain passive, and successful completion auto-advances. Three separate routed pages for these core stages are rejected for Standard. This urgent decision intervenes before production Streamlit integration in PR #85 and preserves its reusable pure helper work.
 
 ---
 
 ## Operational governance — implementation and blind release assurance
 
-Consequential Scrub work now follows the canonical cross-project two-role standard used by the Weekly ETF donor architecture:
+Consequential Scrub work follows the canonical cross-project two-role standard used by the Weekly ETF donor architecture:
 
 ```text
 implementation_operations
@@ -30,7 +30,9 @@ implementation_operations
 
 The user remains the single coordinator-facing principal. Implementation cannot certify its own candidate, and governance cannot silently repair it. Scrub adds a blind-review boundary: before its initial decision, governance may inspect source, criteria and raw machine evidence but not implementation handovers, self-assessments or conclusions.
 
-The current maturity is `LEVEL_1_CHECKLIST`, with a later target of `LEVEL_2_MACHINE_EVIDENCE`. This adoption does not claim a hard CI gate. The next premium UI package remains blocked until independent assurance passes both the governance-adoption candidate and the processed-text cross-flow regression candidate.
+The current maturity is `LEVEL_1_CHECKLIST`, with a later target of `LEVEL_2_MACHINE_EVIDENCE`.
+
+The governance/cross-flow gate that previously blocked the Premium UI line is closed. Issue #70 is closed, PR #73 is merged, the Premium UI contract is merged through PR #80, and the pure Premium core-flow state model is merged through PR #82. The active line is therefore Premium UI implementation, subject to independent assurance for each consequential candidate.
 
 Governed by:
 - `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`;
@@ -139,6 +141,11 @@ SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — completed with pure bind
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — completed with bound placeholders and schema-1.1 key export.
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — implemented with dual-read import, fail-closed binding enforcement and explicit legacy compatibility; app verification pending.
 SCRUB-WP_AI_FIRST_DESKTOP_PACKAGING_ROADMAP_ALIGNMENT — completed as a documentation-only Phase 9 execution-model refinement; installer implementation remains gated.
+SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION — independently assured and governance gate closed through issue #70/#73 recovery.
+SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT — merged through PR #80; contract only, no production UI behavior.
+SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL — merged through PR #82; pure state model only, no production UI behavior.
+SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — active in draft PR #85; current candidate contains reusable presentation primitives/tests but production `presidio_streamlit.py` integration has not started.
+SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — urgent architecture/queue intervention approved by the coordinator on 2026-08-08; must be incorporated before PR #85 proceeds to production UI integration.
 ```
 
 Important UX status:
@@ -147,8 +154,8 @@ Important UX status:
 The review table remains source of truth and fallback.
 The old replacement decision helper panel must not return as normal user-facing UI.
 The unified side-by-side review, manual missed-value entry, compact placeholder display and grouped export flow form the verified functional baseline.
-Direct live-app evidence now confirms that this baseline still presents too much of the workflow as one long form.
-The next approved UI direction is a global Standard/Expert presentation model and a one-active-stage document workspace, not another isolated expander-cleanup pass.
+Direct live-app evidence confirms that this baseline still presents too much of the workflow as one long form.
+The Premium Standard target is one document workspace with three persistent stages and one active task, not another isolated expander-cleanup pass and not three routed core-flow pages.
 ```
 
 ---
@@ -204,7 +211,8 @@ This is governed by:
 - `SIDE_BY_SIDE_REVIEW_UX_DIRECTION.md`;
 - `REPLACE_LOGIC_UI_REDESIGN_PLAN.md`;
 - `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md`;
-- `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`.
+- `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`;
+- `PREMIUM_STAGED_WORKSPACE_DECISION.md`.
 
 UX principles:
 
@@ -217,45 +225,103 @@ UX principles:
 - no Scrub Key/export/reinsert behavior changes from review UX work without separate approval;
 - technical/debug-like details should move to secondary audit/advanced layers, not disappear.
 
+### Premium core-flow UI realignment — binding staged-workspace decision
 
-### Premium core-flow UI realignment
-
-Direct coordinator/user evidence on 2026-08-05 establishes that the remaining interface problem is structural:
+Direct coordinator/user evidence on 2026-08-05 established that the remaining interface problem is structural:
 
 ```text
 The app still behaves visually as one long Streamlit form.
 Input, settings, review, corrections, downloads, Scrub Key and audit controls compete on the same page.
 ```
 
-The approved target is:
+The approved target remains:
 
 ```text
 Top-level workflow: Anonimiseren | Terugzetten
 Global presentation: Standaard | Expert
-One active stage: Toevoegen → Controleren → Downloaden
+Core stages: Toevoegen → Controleren → Downloaden
 One primary action per active stage
 Progressive and conditional disclosure for settings, other formats, Scrub Key and audit evidence
 ```
 
-`Standaard` is lower cognitive load, not lower safety. `Expert` preserves full inspection, tuning, audit and troubleshooting. The current permanent settings sidebar is not part of the Standard target. Completed stages collapse into compact summaries rather than remaining open above the current task.
+On 2026-08-08 the coordinator explicitly chose how those three core stages must be presented. The Standard anonymization flow is a **single-page staged document workspace**, not three separate routed screens.
+
+Binding interaction model:
+
+```text
+One document
+→ one persistent workspace
+→ three persistent stage headers
+→ exactly one expanded/active stage
+→ completed stages collapse to compact summaries
+→ future stages remain visible but passive
+→ successful completion auto-opens the next stage
+→ explicit return to an earlier stage is allowed
+→ processing-affecting earlier changes invalidate downstream state fail-closed
+```
+
+The first-principles reason is that Scrub is an iterative document-review workflow rather than a strictly linear checkout wizard. The interface should represent the **state of one document** rather than force the user to navigate separate pages. A staged workspace keeps the cognitive benefit of one task at a time while preserving context, progress, confidence and easy return from review to input.
+
+The rejected Standard pattern is:
+
+```text
+Toevoegen page → Controleren page → Downloaden page
+```
+
+The rejected implementation shortcut is also:
+
+```text
+classic long Streamlit form
++ multiple independent/nested expanders
+```
+
+Stage sections must read as application panels, not as a FAQ/settings accordion. There must be no default nested core-flow expander hierarchy in Standard.
+
+`Standaard` is lower cognitive load, not lower safety. `Expert` preserves full inspection, tuning, audit and troubleshooting. The permanent settings sidebar is not part of the Standard target. Completed stages show only compact orientation/trust summaries rather than full controls.
+
+Target progression example:
+
+```text
+Initial:
+▼ 1 Toevoegen
+  2 Controleren — beschikbaar na verwerking
+  3 Downloaden — beschikbaar na controle
+
+After processing:
+✓ 1 Toevoegen — contract.docx · Juridisch
+▼ 2 Controleren
+  3 Downloaden — beschikbaar na controle
+
+After review:
+✓ 1 Toevoegen — contract.docx · Juridisch
+✓ 2 Controleren — 14 gecontroleerd · 1 handmatig toegevoegd
+▼ 3 Downloaden
+```
 
 The implementation remains within Streamlit first, but must approximate a single-task application shell. It must not change recognizers, replacement decisions, export bytes, filenames, MIME types, Scrub Key semantics, reinsert behavior, audit evidence or the human-review requirement.
 
-Sequential execution:
+The detailed decision, alternative comparison, interaction rules, safety invariants and acceptance criteria are frozen in `PREMIUM_STAGED_WORKSPACE_DECISION.md`.
+
+### Premium execution sequence — urgent realignment
+
+The previous Premium sequence is amended before production UI integration in PR #85:
 
 ```text
-0. SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION
-1. SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT
-2. SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL
-3. SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION
-4. SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION
-5. SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION
-6. SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION
-7. SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION
-8. SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT
+0. SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION — completed / gate closed
+1. SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT — completed / PR #80 merged
+2. SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL — completed / PR #82 merged
+3. SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — URGENT CURRENT PACKAGE
+4. SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — active draft PR #85; production integration paused until package 3 is incorporated
+5. SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION
+6. SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION
+7. SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION
+8. SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION
+9. SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT
 ```
 
-Do not combine the input, review and export restructuring into one patch. Do not run shared Streamlit UI packages in parallel.
+PR #85 is **amended, not discarded**. Its current pure `premium_app_shell.py` helpers/tests are consistent with the one-active-stage direction and may be retained. Before production `presidio_streamlit.py` integration, the candidate must additionally freeze/test active/completed/future stage presentation, compact completed summaries, passive future stages, explicit return/edit affordances, auto-progression hooks and the no-three-page-routing rule.
+
+Do not combine input, review and export restructuring into one patch. Do not run shared Streamlit UI packages in parallel. Each consequential production UI candidate receives separate `governance_release_assurance` under the enforced contract.
 
 ### Phase 6 — MVP workflow validation and trust hardening
 
@@ -288,38 +354,37 @@ Phase 7 may reopen when the coordinator confirms the MVP product quality gate ha
 
 ## 7. Active next work direction
 
-The verified MVP UI baseline is now stable enough to move the active line into Phase 6 validation and trust hardening.
+The coordinator has explicitly prioritized the Premium interface. The Premium staged-workspace line is therefore the dominant execution queue until its live closeout, unless a privacy/safety blocker requires interruption.
 
-Current execution queue:
+Current dominant queue:
 
 ```text
-1. SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX — completed
-2. SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE — completed
-3. SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING — completed and app-verified
-4. SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION — completed and app-verified
-5. SCRUB-WP_MVP_SCRUB_KEY_ROUNDTRIP_VALIDATION — completed
-6. SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed
-7. SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — completed
-8. SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — completed
-9. SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — completed
-10. SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — implemented
-11. SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY — active
-12. SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE
-13. SCRUB-WP_MVP_PHASE6_QUALITY_GATE_CLOSEOUT
+1. SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — current; architecture/roadmap/workpackage binding
+2. SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — draft PR #85; resume production integration only after #1 is incorporated
+3. SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION
+4. SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION
+5. SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION
+6. SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION
+7. SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT
 ```
+
+The earlier Phase 6 trust-hardening packages remain part of project history and may be reopened when required by evidence, but they are not allowed to dilute the current Premium UI focus by default.
 
 Execution principles:
 
 - use synthetic data only;
-- validate the full supported workflow before adding new features;
-- create recognizer or document-processing fixes only from reproducible evidence;
 - preserve legal meaning and keep human review mandatory;
-- direct live-app evidence on 2026-08-05 establishes a concrete usability blocker: the functional baseline remains a long, form-like page; reopen UI work only through the approved premium core-flow sequence;
+- the Premium shell is presentation/state orchestration, not a license to change recognition or export semantics;
+- one document, one workspace, three persistent stages, one active task;
+- no three routed pages for `Toevoegen → Controleren → Downloaden` in Standard;
+- no nested-expander recreation of the current long form;
+- create recognizer or document-processing fixes only from reproducible safety evidence;
+- live UI work must be sequential where it touches shared Streamlit/review/export surfaces;
 - do not make production-readiness claims from prototype evidence.
 
 ### Candidate document-centric manual-correction line
 
-Direct usability evidence supports a future correction path in the main processed-text pane:
+Direct usability evidence supports correction in the main processed-text pane:
 
 ```text
 select an unmasked value
@@ -328,9 +393,9 @@ select an unmasked value
 → add through the existing manual replacement path
 ```
 
-The recommended first version is bounded to all exact occurrences of the selected value. It must create a normal document-scoped manual row, keep the replacement table authoritative and preserve current bound export, Scrub Key and reinsert semantics. Occurrence-specific replacement, a rich editor and a combined Streamlit upgrade are excluded.
+The first version is bounded to all exact occurrences of the selected value. It creates a normal document-scoped manual row, keeps the replacement table authoritative and preserves current bound export, Scrub Key and reinsert semantics. Occurrence-specific replacement, a rich editor and a combined Streamlit upgrade are excluded.
 
-The proposed sequence is:
+The sequence was:
 
 ```text
 1. SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT
@@ -341,9 +406,9 @@ The proposed sequence is:
 6. SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY
 ```
 
-The coordinator approved the direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam. The contract, action model, component and production table integration are complete. The integration adds one normal bound manual row, reruns before exports, keeps the review table authoritative, retains the manual/static rollback path and changes no export/Scrub Key/reinsert semantics. GitHub-to-Hugging-Face synchronization and live app verification are green. The display-only placeholder compaction is also deployed and app-verified without changing binding grammar, entropy, export, Scrub Key or reinsert semantics. `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION` is now the final safety baseline before the premium core-flow UI contract line starts.
+The coordinator approved the direction and all-exact version-one boundary at 2026-08-04 00:09 Europe/Amsterdam. The contract, action model, component and production table integration are complete. GitHub-to-Hugging-Face synchronization and live app verification are green. Display-only placeholder compaction is deployed and app-verified without changing binding grammar, entropy, export, Scrub Key or reinsert semantics. The cross-flow safety/governance gate is now closed and no longer blocks Premium UI work.
 
-Recall/benchmark work is reopened only where the synthetic validation matrix exposes a concrete false-negative, misclassification or over-masking gap.
+Recall/benchmark work is reopened only where reproducible safety evidence requires it.
 
 Do not start local packaging next steps such as `WP48B` or `WP49B` by default. They require explicit coordinator approval.
 
@@ -392,7 +457,13 @@ Streamlit app + helper modules + GitHub Actions + Hugging Face Space demo.
 MVP architecture target:
 
 ```text
-Thin helper-driven Streamlit application shell; one active document stage at a time; global Standard/Expert presentation; tested safety boundaries; local-first direction; and a clear primary export with secondary restore/audit layers.
+Thin helper-driven Streamlit application shell;
+one persistent document workspace;
+three core Standard stages with exactly one active at a time;
+global Standard/Expert presentation;
+tested safety/state boundaries;
+local-first direction;
+and a clear primary export with secondary restore/audit layers.
 ```
 
 Do not migrate frontend, add a full document editor, introduce cloud document processing, or alter export/Scrub Key/reinsert semantics without a dedicated approved package.
