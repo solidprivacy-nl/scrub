@@ -1,3 +1,13 @@
+## 2026-08-08 20:35 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR
+
+Status: `IMPLEMENTATION_IN_PROGRESS`; issue #98 / PR #99 repairs the reproduced issue #92 cross-mode source, analysis-cache and review-state defects. Standard and Expert now share authoritative source context, current-generation analysis and generation-bound review rows. Real source/processing/review changes continue to invalidate downstream state fail-closed.
+
+Pre-administration evidence: Tests #2247 / run `31272188513`, job `93139919879`, head `69fde971783aa20d5cbcb2c13cd8a8538fa1ebe4`, merge candidate `65ca1ab73f03a2513a2004d49f190c2a233d261e`, `1240 passed in 9.65s`.
+
+Fresh exact-head CI and independent assurance remain mandatory. Issue #96 and Premium Input Stage remain blocked.
+
+---
+
 ## 2026-08-08 16:55 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — repair after blind-assurance FAIL
 
 Status: `RELEASE_CANDIDATE_READY` only after a fresh exact-head full-suite run; fresh independent assurance remains mandatory.

@@ -1,3 +1,9 @@
+## Unreleased — Premium App Shell cross-mode state integrity repair
+
+Pending PR #99 keeps document source, current-generation analysis and reviewed replacement state stable across Standard/Expert presentation switches. Genuine user changes still invalidate stale downstream state fail-closed. This is not release-confirmed until independent assurance, merge, deployment evidence and live-app verification complete.
+
+---
+
 ## 2026-08-08 — Standaard en Expert behouden dezelfde verwerkingskeuzes
 
 - Wisselen tussen `Standaard` en `Expert` verandert niet langer ongemerkt de gekozen controlemodus of andere verwerkingsinstellingen.

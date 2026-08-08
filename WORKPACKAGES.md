@@ -1,5 +1,20 @@
 # SolidPrivacy Scrub — Current execution status override
 
+> **2026-08-08 20:35 Europe/Amsterdam**  
+> This block supersedes lower current-status fields until issue #96 is closed.
+
+1. `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION` — **MERGED BUT OUTCOME NOT CONFIRMED**; contradictory #93 PASS / #92 FAIL is tracked in #96.
+2. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_ASSURANCE_CONFLICT` — **OPEN / BLOCKING**, issue #96; concrete #92 findings reproduced.
+3. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR` — **IMPLEMENTATION_IN_PROGRESS**, issue #98 / PR #99; exact-head CI and fresh independent assurance required.
+4. `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION` — **BLOCKED** until repair PASS/merge, exact-main + Hugging Face/runtime evidence, and independent #96/App Shell outcome closeout.
+5. Later Premium Review, Export, Expert parity and live closeout packages remain queued sequentially.
+
+Invariant: `Standaard ↔ Expert` alone must preserve authoritative source, processing generation, current-generation analysis and reviewed working set. Real source, processing-setting or review-decision changes invalidate downstream state fail-closed.
+
+---
+
+# SolidPrivacy Scrub — Current execution status override
+
 > **2026-08-08 15:28 Europe/Amsterdam**  
 > This block supersedes lower current-status fields until the next Premium package transition. Historical package descriptions remain retained below.
 
