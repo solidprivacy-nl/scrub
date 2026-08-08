@@ -111,13 +111,23 @@ from processed_text_selection_integration import (
 from premium_app_shell import stage_is_active, standard_operator_is_supported
 from premium_core_flow_state import PresentationMode, Stage, Workflow
 from premium_streamlit_state import (
+    ALLOW_LIST_KEY,
+    DENY_LIST_KEY,
+    analyzer_model_label,
     cache_analysis_results,
     get_cached_analysis_results,
     get_core_flow_state,
     mark_processing_complete,
     mark_review_complete,
+    persist_processing_settings,
     processing_generation,
     set_stage_summary,
+    stored_analyzer_params,
+    stored_entities,
+    stored_operator_value,
+    stored_profile_label,
+    stored_string_list,
+    stored_threshold,
     synchronize_processing_generation,
     synchronize_shell_choices,
 )
@@ -294,6 +304,8 @@ with presentation_col:
 
 premium_workflow = Workflow.ANONYMIZE if workflow_choice == "Anonimiseren" else Workflow.REINSERT
 premium_presentation = PresentationMode.STANDARD if presentation_choice == "Standaard" else PresentationMode.EXPERT
+previous_premium_state = get_core_flow_state(st.session_state)
+presentation_mode_changed = previous_premium_state.presentation_mode is not premium_presentation
 premium_state = synchronize_shell_choices(
     st.session_state,
     workflow=premium_workflow,
@@ -301,6 +313,8 @@ premium_state = synchronize_shell_choices(
 )
 is_premium_standard = premium_presentation is PresentationMode.STANDARD
 is_premium_expert = premium_presentation is PresentationMode.EXPERT
+entering_expert = presentation_mode_changed and is_premium_expert
+entering_standard = presentation_mode_changed and is_premium_standard
 
 if premium_workflow is Workflow.REINSERT:
     render_reinsert_mode()
@@ -310,25 +324,39 @@ if is_premium_expert:
     st.sidebar.header(APP_TITLE)
     st.sidebar.caption(APP_SUBTITLE)
 
+    profile_options = list(PROFILE_OPTIONS.keys())
+    profile_label = stored_profile_label(st.session_state, profile_options)
+    stored_operator = stored_operator_value(st.session_state, OPERATOR_LABELS.keys())
+    if entering_expert:
+        st.session_state["premium_profile_expert_widget"] = profile_label
+        st.session_state["premium_operator_expert_widget"] = OPERATOR_LABELS[stored_operator]
+
     profile_label = st.sidebar.selectbox(
         "Controlemodus",
-        list(PROFILE_OPTIONS.keys()),
-        index=1,
+        profile_options,
+        index=profile_options.index(profile_label),
         help=PROFILE_HELP,
+        key="premium_profile_expert_widget",
     )
     st_recognition_profile = PROFILE_OPTIONS[profile_label]
     with st.sidebar.expander("Wat doet deze controlemodus?", expanded=False):
         st.info(configured_description(st_recognition_profile))
 
+    stored_operator_label = OPERATOR_LABELS[stored_operator]
+    operator_values = list(OPERATOR_LABELS.values())
     operator_label = st.sidebar.selectbox(
         "Manier van vervangen",
-        list(OPERATOR_LABELS.values()),
-        index=list(OPERATOR_LABELS.keys()).index("replace"),
+        operator_values,
+        index=operator_values.index(stored_operator_label),
         help=OPERATOR_HELP,
+        key="premium_operator_expert_widget",
     )
     st_operator = OPERATOR_LABEL_TO_VALUE[operator_label]
 
     st_threshold_default = configured_threshold(st_recognition_profile)
+    threshold_value = stored_threshold(st.session_state, st_threshold_default)
+    if entering_expert:
+        st.session_state["premium_threshold_expert_widget"] = threshold_value
 
     with st.sidebar.expander("Geavanceerde instellingen", expanded=False):
         st.caption(ADVANCED_SETTINGS_HELP)
@@ -348,60 +376,121 @@ if is_premium_expert:
         ]
         if not allow_other_models:
             model_list.pop()
-        st_model = st.selectbox(
+
+        saved_analyzer_params = stored_analyzer_params(
+            st.session_state,
+            ("flair", "flair/ner-english-large", "", ""),
+        )
+        saved_model_label = analyzer_model_label(saved_analyzer_params, model_list)
+        if entering_expert:
+            st.session_state["premium_model_expert_widget"] = saved_model_label
+        selected_model_label = st.selectbox(
             "Technisch NER-model",
             model_list,
-            index=1,
+            index=model_list.index(saved_model_label),
             help=model_help_text,
+            key="premium_model_expert_widget",
         )
 
-        st_model_package = st_model.split("/")[0]
+        st_model_package = selected_model_label.split("/")[0]
         st_model = (
-            st_model
+            selected_model_label
             if st_model_package.lower() not in ("spacy", "stanza", "huggingface")
-            else "/".join(st_model.split("/")[1:])
+            else "/".join(selected_model_label.split("/")[1:])
         )
 
-        if st_model == "Other":
+        if selected_model_label == "Other":
+            custom_packages = ["spaCy", "stanza", "Flair", "HuggingFace"]
+            saved_package = str(saved_analyzer_params[0])
+            custom_package_default = saved_package if saved_package in custom_packages else custom_packages[0]
+            custom_model_default = str(saved_analyzer_params[1])
+            if entering_expert:
+                st.session_state["premium_custom_model_package_widget"] = custom_package_default
+                st.session_state["premium_custom_model_name_widget"] = custom_model_default
             st_model_package = st.selectbox(
-                "NER-modelpakket", options=["spaCy", "stanza", "Flair", "HuggingFace"]
+                "NER-modelpakket",
+                options=custom_packages,
+                index=custom_packages.index(custom_package_default),
+                key="premium_custom_model_package_widget",
             )
-            st_model = st.text_input("NER-modelnaam", value="")
+            st_model = st.text_input(
+                "NER-modelnaam",
+                value=custom_model_default,
+                key="premium_custom_model_name_widget",
+            )
 
-        if st_model == "Azure AI Language":
+        if selected_model_label == "Azure AI Language":
+            saved_is_azure = analyzer_model_label(saved_analyzer_params, ["Azure AI Language", "Other"]) == "Azure AI Language"
+            saved_ta_key = str(saved_analyzer_params[2]) if saved_is_azure else os.getenv("TA_KEY", "")
+            saved_ta_endpoint = str(saved_analyzer_params[3]) if saved_is_azure else os.getenv("TA_ENDPOINT", default="")
+            if entering_expert:
+                st.session_state["premium_ta_key_widget"] = saved_ta_key
+                st.session_state["premium_ta_endpoint_widget"] = saved_ta_endpoint
             st_ta_key = st.text_input(
-                "Azure AI Language key", value=os.getenv("TA_KEY", ""), type="password"
+                "Azure AI Language key",
+                value=saved_ta_key,
+                type="password",
+                key="premium_ta_key_widget",
             )
             st_ta_endpoint = st.text_input(
                 "Azure AI Language endpoint",
-                value=os.getenv("TA_ENDPOINT", default=""),
+                value=saved_ta_endpoint,
+                key="premium_ta_endpoint_widget",
             )
 
         st_threshold = st.slider(
             label="Gevoeligheid van herkenning",
             min_value=0.0,
             max_value=1.0,
-            value=st_threshold_default,
+            value=threshold_value,
             help="Lagere waarde = meer gevonden gegevens, maar ook meer kans op fout-positieven.",
+            key="premium_threshold_expert_widget",
         )
+        stored_return_decision = bool(st.session_state.get("_premium_return_decision_process", False))
+        stored_mask_char = str(st.session_state.get("_premium_mask_char", "*"))
+        stored_number_of_chars = int(st.session_state.get("_premium_number_of_chars", 15))
+        stored_encrypt_key = str(st.session_state.get("_premium_encrypt_key", "WmZq4t7w!z%C&F)J"))
+        if entering_expert:
+            st.session_state["premium_return_decision_widget"] = stored_return_decision
+            st.session_state["premium_mask_char_widget"] = stored_mask_char
+            st.session_state["premium_number_chars_widget"] = stored_number_of_chars
+            st.session_state["premium_encrypt_key_widget"] = stored_encrypt_key
         st_return_decision_process = st.checkbox(
             "Toon technische beslisinformatie",
-            value=False,
+            value=stored_return_decision,
             help="Voegt technische uitlegvelden toe aan de resultatentabel.",
+            key="premium_return_decision_widget",
         )
-        st_mask_char = st.text_input("Maskeringsteken", value="*", max_chars=1)
-        st_number_of_chars = st.number_input("Aantal te maskeren tekens", value=15, min_value=0, max_value=100)
-        st_encrypt_key = st.text_input("AES-sleutel", value="WmZq4t7w!z%C&F)J")
+        st_mask_char = st.text_input(
+            "Maskeringsteken", value=stored_mask_char, max_chars=1, key="premium_mask_char_widget"
+        )
+        st_number_of_chars = st.number_input(
+            "Aantal te maskeren tekens",
+            value=stored_number_of_chars,
+            min_value=0,
+            max_value=100,
+            key="premium_number_chars_widget",
+        )
+        st_encrypt_key = st.text_input(
+            "AES-sleutel", value=stored_encrypt_key, key="premium_encrypt_key_widget"
+        )
 
         st.markdown("**Woordenlijsten**")
-        st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
+        st_allow_list = st_tags(
+            label="Niet vervangen",
+            text="Voer woord in en druk op Enter.",
+            value=stored_string_list(st.session_state, ALLOW_LIST_KEY),
+        )
         st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
-        st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
+        st_deny_list = st_tags(
+            label="Extra controleren",
+            text="Voer woord in en druk op Enter.",
+            value=stored_string_list(st.session_state, DENY_LIST_KEY),
+        )
         st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
 
     analyzer_params = (st_model_package, st_model, st_ta_key, st_ta_endpoint)
     open_ai_params = None
-
 
     def set_up_openai_synthesis():
         if os.getenv("OPENAI_TYPE", default="openai") == "Azure":
@@ -436,7 +525,6 @@ if is_premium_expert:
             st_openai_model,
         )
 
-
     if st_operator == "synthesize":
         (
             openai_api_type,
@@ -454,26 +542,12 @@ if is_premium_expert:
             api_version=st_openai_version,
             api_type=openai_api_type,
         )
-    st.session_state["_premium_profile_label"] = profile_label
-    st.session_state["_premium_operator_value"] = st_operator
-    st.session_state["_premium_threshold"] = float(st_threshold)
-    st.session_state["_premium_return_decision_process"] = bool(st_return_decision_process)
-    st.session_state["_premium_mask_char"] = st_mask_char
-    st.session_state["_premium_number_of_chars"] = int(st_number_of_chars)
-    st.session_state["_premium_encrypt_key"] = st_encrypt_key
-    st.session_state["_premium_allow_list"] = list(st_allow_list or [])
-    st.session_state["_premium_deny_list"] = list(st_deny_list or [])
-    st.session_state["_premium_analyzer_params"] = tuple(analyzer_params)
 else:
     profile_options = list(PROFILE_OPTIONS.keys())
-    profile_label = st.session_state.get("_premium_profile_label", profile_options[1])
-    if profile_label not in profile_options:
-        profile_label = profile_options[1]
+    profile_label = stored_profile_label(st.session_state, profile_options)
     st_recognition_profile = PROFILE_OPTIONS[profile_label]
 
-    st_operator = st.session_state.get("_premium_operator_value", "replace")
-    if st_operator not in OPERATOR_LABELS:
-        st_operator = "replace"
+    st_operator = stored_operator_value(st.session_state, OPERATOR_LABELS.keys())
     if not standard_operator_is_supported(st_operator):
         st.warning(
             "Deze geavanceerde manier van vervangen is alleen beschikbaar in Expert. "
@@ -483,18 +557,16 @@ else:
         st.stop()
 
     st_threshold_default = configured_threshold(st_recognition_profile)
-    st_threshold = float(st.session_state.get("_premium_threshold", st_threshold_default))
+    st_threshold = stored_threshold(st.session_state, st_threshold_default)
     st_return_decision_process = bool(st.session_state.get("_premium_return_decision_process", False))
     st_mask_char = str(st.session_state.get("_premium_mask_char", "*"))
     st_number_of_chars = int(st.session_state.get("_premium_number_of_chars", 15))
     st_encrypt_key = str(st.session_state.get("_premium_encrypt_key", "WmZq4t7w!z%C&F)J"))
-    st_allow_list = list(st.session_state.get("_premium_allow_list", []))
-    st_deny_list = list(st.session_state.get("_premium_deny_list", []))
-    analyzer_params = tuple(
-        st.session_state.get(
-            "_premium_analyzer_params",
-            ("flair", "flair/ner-english-large", "", ""),
-        )
+    st_allow_list = stored_string_list(st.session_state, ALLOW_LIST_KEY)
+    st_deny_list = stored_string_list(st.session_state, DENY_LIST_KEY)
+    analyzer_params = stored_analyzer_params(
+        st.session_state,
+        ("flair", "flair/ner-english-large", "", ""),
     )
     open_ai_params = None
 
@@ -518,6 +590,20 @@ else:
             api_version=st_openai_version,
             api_type=openai_api_type,
         )
+
+persist_processing_settings(
+    st.session_state,
+    profile_label=profile_label,
+    operator=st_operator,
+    threshold=st_threshold,
+    allow_list=st_allow_list,
+    deny_list=st_deny_list,
+    analyzer_params=analyzer_params,
+)
+st.session_state["_premium_return_decision_process"] = bool(st_return_decision_process)
+st.session_state["_premium_mask_char"] = st_mask_char
+st.session_state["_premium_number_of_chars"] = int(st_number_of_chars)
+st.session_state["_premium_encrypt_key"] = st_encrypt_key
 
 if is_premium_expert:
     with st.expander("Over deze app", expanded=False):
@@ -566,6 +652,8 @@ show_add_workspace = is_premium_expert or stage_is_active(premium_state, Stage.A
 if show_add_workspace:
     with st.container(border=True):
         if is_premium_standard:
+            if entering_standard:
+                st.session_state["premium_profile_standard_widget"] = profile_label
             selected_profile_label = st.selectbox(
                 "Controlemodus",
                 profile_options,
@@ -677,14 +765,15 @@ try:
         dutch_care_entities=care_dutch_entities,
     )
 
+    entity_defaults = stored_entities(
+        st.session_state,
+        all_supported_entities,
+        default_entities,
+    )
     if is_premium_expert:
         with st.sidebar.expander("Te herkennen gegevenstypen", expanded=False):
-            stored_entities = st.session_state.get("_premium_entities")
-            entity_defaults = (
-                [entity for entity in stored_entities if entity in all_supported_entities]
-                if isinstance(stored_entities, list)
-                else default_entities
-            )
+            if entering_expert:
+                st.session_state["premium_entities_expert_widget"] = list(entity_defaults)
             st_entities = st.multiselect(
                 label="Welke typen gegevens moet Scrub zoeken?",
                 options=all_supported_entities,
@@ -692,14 +781,19 @@ try:
                 help="Laat dit standaard staan, tenzij je gericht wilt testen of tunen.",
                 key="premium_entities_expert_widget",
             )
-            st.session_state["_premium_entities"] = list(st_entities)
     else:
-        stored_entities = st.session_state.get("_premium_entities")
-        st_entities = (
-            [entity for entity in stored_entities if entity in all_supported_entities]
-            if isinstance(stored_entities, list)
-            else list(default_entities)
-        )
+        st_entities = list(entity_defaults)
+
+    persist_processing_settings(
+        st.session_state,
+        profile_label=profile_label,
+        operator=st_operator,
+        threshold=st_threshold,
+        entities=st_entities,
+        allow_list=st_allow_list,
+        deny_list=st_deny_list,
+        analyzer_params=analyzer_params,
+    )
 
     current_processing_generation = processing_generation(
         text=st_text,
@@ -711,12 +805,13 @@ try:
         deny_list=st_deny_list,
         analyzer_params=analyzer_params,
     )
+    premium_state, processing_inputs_changed = synchronize_processing_generation(
+        st.session_state, current_processing_generation
+    )
+    if processing_inputs_changed:
+        st.session_state.pop("_premium_cached_review_rows", None)
+
     if is_premium_standard and st_operator not in ("highlight", "synthesize"):
-        premium_state, processing_inputs_changed = synchronize_processing_generation(
-            st.session_state, current_processing_generation
-        )
-        if processing_inputs_changed:
-            st.session_state.pop("_premium_cached_review_rows", None)
         if stage_is_active(premium_state, Stage.ADD):
             process_clicked = st.button(
                 "Document verwerken",
