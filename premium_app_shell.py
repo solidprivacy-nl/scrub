@@ -30,6 +30,8 @@ STAGE_LABELS = {
     Stage.DOWNLOAD: "Downloaden",
 }
 
+ADVANCED_ONLY_OPERATORS = frozenset({"highlight", "synthesize"})
+
 
 class StagePanelStatus(str, Enum):
     ACTIVE = "active"
@@ -58,6 +60,11 @@ class AppShellView:
     active_stage_label: str
     show_configuration_sidebar: bool
     stage_panels: tuple[StagePanelView, StagePanelView, StagePanelView]
+
+
+def standard_operator_is_supported(operator: str) -> bool:
+    """Standard never silently changes an Expert-only transformation choice."""
+    return operator not in ADVANCED_ONLY_OPERATORS
 
 
 def _processed_is_current(state: CoreFlowState) -> bool:
