@@ -1,14 +1,15 @@
 """Small session-state adapter for the Premium staged workspace.
 
 The adapter stores only the pure ``CoreFlowState``, compact presentation
-summaries and current-generation analysis output. It never invokes recognition,
-replacement, export, Scrub Key, reinsert or audit behavior itself.
+summaries, current-generation analysis output and processing-setting values
+needed to keep Standard/Expert a presentation-only choice. It never invokes
+recognition, replacement, export, Scrub Key, reinsert or audit behavior itself.
 """
 from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any, Mapping, MutableMapping, Optional, Sequence
+from typing import Any, Iterable, Mapping, MutableMapping, Optional, Sequence
 
 from premium_app_shell import open_stage
 from premium_core_flow_state import CoreFlowState, PresentationMode, Stage, Workflow
@@ -18,6 +19,13 @@ CORE_STATE_KEY = "_premium_core_flow_state"
 STAGE_SUMMARIES_KEY = "_premium_stage_summaries"
 ANALYSIS_GENERATION_KEY = "_premium_analysis_generation"
 ANALYSIS_RESULTS_KEY = "_premium_analysis_results"
+PROFILE_LABEL_KEY = "_premium_profile_label"
+OPERATOR_VALUE_KEY = "_premium_operator_value"
+THRESHOLD_KEY = "_premium_threshold"
+ENTITIES_KEY = "_premium_entities"
+ALLOW_LIST_KEY = "_premium_allow_list"
+DENY_LIST_KEY = "_premium_deny_list"
+ANALYZER_PARAMS_KEY = "_premium_analyzer_params"
 
 
 def get_core_flow_state(session_state: MutableMapping[str, Any]) -> CoreFlowState:
@@ -52,6 +60,128 @@ def synchronize_shell_choices(
         session_state.pop(ANALYSIS_RESULTS_KEY, None)
         session_state.pop(STAGE_SUMMARIES_KEY, None)
     return set_core_flow_state(session_state, state)
+
+
+def stored_profile_label(
+    session_state: Mapping[str, Any],
+    options: Sequence[str],
+    *,
+    default_index: int = 1,
+) -> str:
+    """Return the persisted profile label or a deterministic valid default."""
+    option_list = [str(option) for option in options]
+    if not option_list:
+        raise ValueError("profile options must not be empty")
+    safe_default_index = min(max(int(default_index), 0), len(option_list) - 1)
+    stored = session_state.get(PROFILE_LABEL_KEY)
+    if isinstance(stored, str) and stored in option_list:
+        return stored
+    return option_list[safe_default_index]
+
+
+def stored_operator_value(
+    session_state: Mapping[str, Any],
+    valid_operators: Iterable[str],
+    *,
+    default: str = "replace",
+) -> str:
+    """Return a persisted operator without silently coercing a valid Expert choice."""
+    valid = tuple(str(value) for value in valid_operators)
+    if not valid:
+        raise ValueError("valid operators must not be empty")
+    fallback = default if default in valid else valid[0]
+    stored = session_state.get(OPERATOR_VALUE_KEY)
+    if isinstance(stored, str) and stored in valid:
+        return stored
+    return fallback
+
+
+def stored_threshold(session_state: Mapping[str, Any], default: float) -> float:
+    """Return the persisted recognition threshold when it is a valid slider value."""
+    try:
+        value = float(session_state.get(THRESHOLD_KEY, default))
+    except (TypeError, ValueError):
+        return float(default)
+    if 0.0 <= value <= 1.0:
+        return value
+    return float(default)
+
+
+def stored_entities(
+    session_state: Mapping[str, Any],
+    available_entities: Sequence[str],
+    default_entities: Sequence[str],
+) -> list[str]:
+    """Return persisted entity selection, preserving an intentional empty selection."""
+    available = set(str(entity) for entity in available_entities)
+    stored = session_state.get(ENTITIES_KEY)
+    source = stored if isinstance(stored, list) else list(default_entities)
+    return [str(entity) for entity in source if str(entity) in available]
+
+
+def stored_string_list(
+    session_state: Mapping[str, Any], key: str, default: Sequence[str] = ()
+) -> list[str]:
+    """Return a defensive copy of one persisted string-list setting."""
+    stored = session_state.get(key)
+    source = stored if isinstance(stored, list) else list(default)
+    return [str(value) for value in source]
+
+
+def stored_analyzer_params(
+    session_state: Mapping[str, Any], default: Sequence[Any]
+) -> tuple[Any, Any, Any, Any]:
+    """Return the persisted four-part analyzer configuration or a safe default."""
+    stored = session_state.get(ANALYZER_PARAMS_KEY)
+    source = stored if isinstance(stored, (list, tuple)) and len(stored) == 4 else default
+    values = tuple(source)
+    if len(values) != 4:
+        raise ValueError("analyzer params must contain exactly four values")
+    return values  # type: ignore[return-value]
+
+
+def analyzer_model_label(
+    analyzer_params: Sequence[Any], model_options: Sequence[str]
+) -> str:
+    """Map persisted analyzer params back to the matching Expert model selector value."""
+    if not model_options:
+        raise ValueError("model options must not be empty")
+    package = str(analyzer_params[0]) if len(analyzer_params) > 0 else ""
+    model = str(analyzer_params[1]) if len(analyzer_params) > 1 else ""
+    candidates = (model, f"{package}/{model}" if package and model else "", package)
+    for candidate in candidates:
+        if candidate in model_options:
+            return candidate
+    if "Other" in model_options:
+        return "Other"
+    return model_options[min(1, len(model_options) - 1)]
+
+
+def persist_processing_settings(
+    session_state: MutableMapping[str, Any],
+    *,
+    profile_label: str,
+    operator: str,
+    threshold: float,
+    entities: Optional[Sequence[str]] = None,
+    allow_list: Optional[Sequence[str]] = None,
+    deny_list: Optional[Sequence[str]] = None,
+    analyzer_params: Optional[Sequence[Any]] = None,
+) -> None:
+    """Persist processing-affecting choices independently of presentation mode."""
+    session_state[PROFILE_LABEL_KEY] = str(profile_label)
+    session_state[OPERATOR_VALUE_KEY] = str(operator)
+    session_state[THRESHOLD_KEY] = float(threshold)
+    if entities is not None:
+        session_state[ENTITIES_KEY] = [str(entity) for entity in entities]
+    if allow_list is not None:
+        session_state[ALLOW_LIST_KEY] = [str(value) for value in allow_list]
+    if deny_list is not None:
+        session_state[DENY_LIST_KEY] = [str(value) for value in deny_list]
+    if analyzer_params is not None:
+        if len(analyzer_params) != 4:
+            raise ValueError("analyzer params must contain exactly four values")
+        session_state[ANALYZER_PARAMS_KEY] = tuple(analyzer_params)
 
 
 def processing_generation(
