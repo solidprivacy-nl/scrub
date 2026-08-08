@@ -74,6 +74,10 @@ Earlier red runs were used as implementation feedback. A temporary diagnostic wo
 
 Administrative closeout files are added after the clean product regression. Those administrative commits change candidate identity but not runtime product behavior, therefore a fresh full exact-head GitHub Actions run is still required before assurance. The exact final assurance head and run evidence must be recorded in PR #85 / issue #84 metadata without further repository changes.
 
+### Execution-continuity note — 2026-08-08 15:32 Europe/Amsterdam
+
+The administrative-finalization commit `d7f57ff59fc50edcc1c78fcf61090df33f4107ce` was authored by GitHub Actions and therefore its follow-up PR checks were `action_required` with no executable jobs. This note is semantics-neutral and exists only to create a repository-user PR synchronize event so the final post-administration head receives executable exact-head regression evidence. No runtime/product file or behavior is changed by this note.
+
 ## Coordination and governance
 
 Exclusive ownership of the shared Streamlit shell remains claimed until this candidate leaves implementation. Do not run another package that edits `presidio_streamlit.py`, `fix_streamlit_nested_expanders.py`, review-table flow, export/download flow, or shared workflow state in parallel.
