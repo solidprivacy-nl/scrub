@@ -1,0 +1,140 @@
+from premium_core_flow_state import PresentationMode, Stage, Workflow
+from premium_streamlit_state import (
+    CORE_STATE_KEY,
+    STAGE_SUMMARIES_KEY,
+    get_core_flow_state,
+    get_stage_summaries,
+    mark_processing_complete,
+    mark_review_complete,
+    processing_generation,
+    select_stage,
+    set_stage_summary,
+    synchronize_processing_generation,
+    synchronize_shell_choices,
+)
+
+
+def generation(text="Contract A", profile="Dutch Legal Strict"):
+    return processing_generation(
+        text=text,
+        profile=profile,
+        operator="replace",
+        threshold=0.5,
+        entities=["PERSON", "EMAIL_ADDRESS"],
+        allow_list=[],
+        deny_list=[],
+        analyzer_params=["flair", "ner-english-large", "", ""],
+    )
+
+
+def test_adapter_initializes_standard_anonymize_state():
+    session = {}
+    state = get_core_flow_state(session)
+    assert session[CORE_STATE_KEY] is state
+    assert state.workflow is Workflow.ANONYMIZE
+    assert state.presentation_mode is PresentationMode.STANDARD
+    assert state.stage is Stage.ADD
+
+
+def test_presentation_switch_preserves_processing_lineage():
+    session = {}
+    g = generation()
+    synchronize_processing_generation(session, g)
+    mark_processing_complete(session, g)
+    before = get_core_flow_state(session)
+    after = synchronize_shell_choices(
+        session,
+        workflow=Workflow.ANONYMIZE,
+        presentation_mode=PresentationMode.EXPERT,
+    )
+    assert after.source_generation == before.source_generation
+    assert after.processed_generation == before.processed_generation
+    assert after.stage is Stage.REVIEW
+
+
+def test_workflow_switch_fails_closed_and_keeps_presentation_choice():
+    session = {}
+    g = generation()
+    synchronize_processing_generation(session, g)
+    mark_processing_complete(session, g)
+    state = synchronize_shell_choices(
+        session,
+        workflow=Workflow.REINSERT,
+        presentation_mode=PresentationMode.EXPERT,
+    )
+    assert state.workflow is Workflow.REINSERT
+    assert state.presentation_mode is PresentationMode.EXPERT
+    assert state.stage is Stage.ADD
+    assert state.source_generation is None
+    assert state.processed_generation is None
+
+
+def test_processing_generation_is_deterministic_and_changes_with_inputs():
+    assert generation() == generation()
+    assert generation(text="Contract B") != generation(text="Contract A")
+    assert generation(profile="Dutch Care Strict") != generation(profile="Dutch Legal Strict")
+
+
+def test_changed_processing_generation_invalidates_downstream_and_summaries():
+    session = {}
+    first = generation()
+    synchronize_processing_generation(session, first)
+    mark_processing_complete(session, first)
+    mark_review_complete(session)
+    set_stage_summary(session, Stage.ADD, "contract.docx · Juridisch")
+    set_stage_summary(session, Stage.REVIEW, "14 gecontroleerd")
+
+    changed_state, changed = synchronize_processing_generation(
+        session, generation(text="Gewijzigd contract")
+    )
+    assert changed is True
+    assert changed_state.stage is Stage.ADD
+    assert changed_state.processed_generation is None
+    assert changed_state.reviewed_generation is None
+    assert changed_state.export_generation is None
+    assert STAGE_SUMMARIES_KEY not in session
+
+
+def test_same_generation_is_noop():
+    session = {}
+    g = generation()
+    first, changed = synchronize_processing_generation(session, g)
+    assert changed is True
+    second, changed = synchronize_processing_generation(session, g)
+    assert changed is False
+    assert second == first
+
+
+def test_processing_and_review_completion_auto_advance_state():
+    session = {}
+    g = generation()
+    synchronize_processing_generation(session, g)
+    assert mark_processing_complete(session, g).stage is Stage.REVIEW
+    completed = mark_review_complete(session)
+    assert completed.stage is Stage.DOWNLOAD
+    assert completed.export_is_current is True
+
+
+def test_explicit_return_stage_preserves_current_lineage():
+    session = {}
+    g = generation()
+    synchronize_processing_generation(session, g)
+    mark_processing_complete(session, g)
+    mark_review_complete(session)
+    before = get_core_flow_state(session)
+    after = select_stage(session, Stage.ADD)
+    assert after.stage is Stage.ADD
+    assert after.source_generation == before.source_generation
+    assert after.processed_generation == before.processed_generation
+    assert after.reviewed_generation == before.reviewed_generation
+    assert after.export_generation == before.export_generation
+
+
+def test_stage_summaries_are_compact_session_metadata_only():
+    session = {}
+    set_stage_summary(session, Stage.ADD, "contract.docx · Juridisch")
+    set_stage_summary(session, Stage.REVIEW, "14 gecontroleerd · 1 handmatig toegevoegd")
+    assert get_stage_summaries(session) == {
+        Stage.ADD: "contract.docx · Juridisch",
+        Stage.REVIEW: "14 gecontroleerd · 1 handmatig toegevoegd",
+    }
