@@ -37,7 +37,8 @@ def test_streamlit_source_exposes_care_without_silent_default_switch():
     source = (ROOT / "presidio_streamlit.py").read_text(encoding="utf-8")
 
     assert "PROFILE_OPTIONS = current_profile_options_with_care()" in source
-    assert 'index=1,\n    help=PROFILE_HELP' in source
+    assert 'profile_label = st.session_state.get("_premium_profile_label", profile_options[1])' in source
+    assert 'profile_label = profile_options[1]' in source
     assert 'if st_recognition_profile == "Dutch Care Strict":' in source
     assert "care_example_names()" in source
     assert "resolve_configured_analysis_results(" in source
