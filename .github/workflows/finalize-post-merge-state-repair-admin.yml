@@ -1,0 +1,188 @@
+name: Finalize App Shell state repair administration
+
+on:
+  push:
+    branches:
+      - wp/premium-app-shell-post-merge-state-repair
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wp/premium-app-shell-post-merge-state-repair
+          fetch-depth: 0
+      - name: Update project administration
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          changelog = Path('CHANGELOG.md')
+          old = changelog.read_text(encoding='utf-8')
+          entry = '''## 2026-08-08 20:35 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR — conflict findings reproduced and repaired
+
+Status: `IMPLEMENTATION_IN_PROGRESS` until final post-administration exact-head CI and fresh independent assurance.
+
+Post-merge governance issue #96 exposed contradictory assurance for the merged Premium App Shell. `implementation_operations` independently reproduced the concrete issue #92 findings on current main: Expert could derive source text from the demo fallback instead of the current Standard source, and Expert did not reliably reuse the current-generation analysis/review working set.
+
+Repair in issue #98 / PR #99:
+- Standard and Expert now hydrate one authoritative cached source text/file context;
+- current-generation analysis is reused in both presentation modes;
+- review rows are bound to processing generation and restored in both modes;
+- edits in either mode update the same authoritative review working set;
+- a changed reviewed working set invalidates completed Review/Download lineage fail-closed while preserving current source/processed lineage;
+- real source or processing-setting changes clear stale analysis/review caches and downstream lineage;
+- obsolete Standard-only source-snapshot tests were replaced by cross-mode invariants.
+
+Functional pre-administration evidence:
+- Tests run #2247 / ID `31272188513`, job `93139919879`;
+- branch head `69fde971783aa20d5cbcb2c13cd8a8538fa1ebe4`;
+- PR merge candidate `65ca1ab73f03a2513a2004d49f190c2a233d261e` against main `4130976b7d9489de148dd17234faff4a18fad2f0`;
+- `python -m pytest -q tests` → `1240 passed in 9.65s`.
+
+Protected semantics remain outside scope: recognizers/profile rules, threshold meaning, review include authority, direct masking, export bytes/names/MIME, Scrub Key, reinsert, audit, dependencies, local/cloud boundary and mandatory human review.
+
+Final exact-head CI is mandatory after administration. Implementation does not self-certify or self-merge. Parent conflict #96 and Premium Input Stage remain blocked pending fresh assurance and post-merge outcome confirmation.
+
+---
+
+'''
+          changelog.write_text(entry + old, encoding='utf-8')
+
+          workpackages = Path('WORKPACKAGES.md')
+          old = workpackages.read_text(encoding='utf-8')
+          override = '''# SolidPrivacy Scrub — Current execution status override
+
+> **2026-08-08 20:35 Europe/Amsterdam**  
+> This block supersedes all lower current-status fields until the App Shell post-merge assurance conflict is closed. Historical package descriptions remain retained below.
+
+## Premium UI execution queue
+
+1. `SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE` — **COMPLETED / independently PASSed / PR #87 merged**.
+2. `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION` — **MERGED BUT OUTCOME NOT CONFIRMED**. PR #85 runtime was deployed, but issue #96 records contradictory assurance (#93 PASS versus #92 FAIL). Do not treat the App Shell as governance-closed.
+3. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_ASSURANCE_CONFLICT` — **OPEN / BLOCKING**, issue #96. Concrete #92 source/analysis/review-state findings were reproduced by implementation and therefore route to repair rather than silent PASS reconciliation.
+4. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR` — **IMPLEMENTATION_IN_PROGRESS**, issue #98 / PR #99. Repair preserves authoritative source, current-generation analysis and generation-bound review state across `Standaard ↔ Expert`; final exact-head CI and fresh independent assurance are required.
+5. `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION` — **BLOCKED**, may not start until #98/#99 independently PASS, merge, exact-main/Hugging Face/runtime evidence is green and #96/App Shell outcome is independently closed.
+6. `SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION` — queued after Input Stage.
+7. `SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION` — queued after Review Stage.
+8. `SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION` — queued after the three stage packages.
+9. `SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT` — final live Premium gate.
+
+### Current repair invariant
+
+A `Standaard ↔ Expert` presentation switch must preserve the same authoritative source, processing generation, current-generation analysis and reviewed working set unless the user actually changes source, processing settings or review decisions. Real changes invalidate downstream state fail-closed.
+
+### Governance gate
+
+Do **not** start downstream shared Streamlit work and do not call the App Shell `OUTCOME_CONFIRMED` while issue #96 remains open. PR #99 requires a new exact-head `governance_release_assurance` decision. Implementation does not self-certify or self-merge.
+
+---
+
+'''
+          workpackages.write_text(override + old, encoding='utf-8')
+
+          release_notes = Path('RELEASE_NOTES.md')
+          old = release_notes.read_text(encoding='utf-8') if release_notes.exists() else ''
+          note = '''## Unreleased — Premium App Shell cross-mode state integrity repair
+
+A pending correction for the Premium App Shell keeps the same document source, current-generation analysis and reviewed replacement working set when switching between Standard and Expert. Presentation-only switching must not silently reprocess a different source or reconstruct review decisions. Genuine source, processing-setting or review changes continue to invalidate downstream state fail-closed.
+
+This correction is not released/confirmed until fresh independent assurance, merge, exact-main deployment evidence and required live-app verification are complete.
+
+---
+
+'''
+          release_notes.write_text(note + old, encoding='utf-8')
+
+          handover = Path('handover/workpackages/20260808_2035_premium_app_shell_post_merge_state_repair.md')
+          handover.parent.mkdir(parents=True, exist_ok=True)
+          handover.write_text('''# Handover — SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR
+
+- Repository worked in: `solidprivacy-nl/scrub`
+- Workpackage title: `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR — preserve source, analysis and review state across Standard↔Expert`
+- Role: `implementation_operations`
+- Parent governance gate: issue #96
+- Implementation issue: #98
+- PR: #99
+- Status: `IMPLEMENTATION_IN_PROGRESS` pending final exact-head CI and fresh independent assurance
+
+## Files added/changed
+
+Runtime/state:
+- `premium_streamlit_state.py`
+- `presidio_streamlit.py`
+
+Tests:
+- `tests/test_premium_cross_mode_runtime_state.py`
+- `tests/test_duplicate_input_surface_simplification_contracts.py`
+- `tests/test_premium_app_shell_streamlit_integration.py`
+
+Administration:
+- `CHANGELOG.md`
+- `WORKPACKAGES.md`
+- `RELEASE_NOTES.md`
+- this handover
+- final implementation claim will be added as the last repository commit before exact-head CI
+
+## Repair summary
+
+The concrete issue #92 post-merge findings were reproduced on current main. The repair makes source text/file context presentation-neutral, reuses current-generation analysis in both modes, generation-binds authoritative review rows, restores/persists those rows in Standard and Expert, and invalidates completed Review/Download lineage when a real reviewed working-set change occurs. Real source/processing-generation changes clear stale caches fail-closed.
+
+## Tests
+
+Pre-administration full suite:
+- GitHub Actions Tests #2247 / run `31272188513`
+- job `93139919879`
+- branch head under test: `69fde971783aa20d5cbcb2c13cd8a8538fa1ebe4`
+- merge candidate: `65ca1ab73f03a2513a2004d49f190c2a233d261e`
+- base: `4130976b7d9489de148dd17234faff4a18fad2f0`
+- command: `python -m pytest -q tests`
+- result: `1240 passed in 9.65s`
+
+Final post-administration exact-head CI: pending at handover-write time; must be recorded in PR #99 / issue #98 metadata without further repository mutation.
+
+## Validation status
+
+- Source hydration defect: reproduced and repaired in candidate.
+- Analysis cache bypass: reproduced and repaired in candidate.
+- Review working-set reconstruction gap: reproduced and repaired in candidate.
+- Real-change fail-closed invalidation: covered by new state/integration tests.
+- Protected export/Scrub Key/reinsert semantics: intentionally unchanged.
+
+## GitHub Actions status
+
+Pre-administration candidate green. Final exact-head full-suite run required after the implementation claim is added.
+
+## Hugging Face sync status
+
+Not applicable before merge. PR #99 is not authorized for deployment. If independently PASSed and merged, exact runtime merge must be synchronized and verified on Hugging Face.
+
+## App verification status
+
+Pending/blocked. Do not ask the coordinator to test until repaired runtime is independently PASSed, merged and synchronized.
+
+## Remaining risks
+
+- The prior merged App Shell remains governance-unconfirmed while issue #96 is open.
+- Fresh independent assurance must reconstruct PR #99 without relying on this implementation narrative.
+- Any head movement after final assurance evidence invalidates that assurance identity.
+
+## Next recommended step
+
+Add the implementation claim as final repository administration, run full exact-head GitHub Actions, freeze the head, then route PR #99 to a new blind `governance_release_assurance` reviewer. Do not start Premium Input Stage.
+''', encoding='utf-8')
+          PY
+      - name: Self-clean and commit administration
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm .github/workflows/finalize-post-merge-state-repair-admin.yml
+          git add CHANGELOG.md WORKPACKAGES.md RELEASE_NOTES.md handover/workpackages/20260808_2035_premium_app_shell_post_merge_state_repair.md .github/workflows/finalize-post-merge-state-repair-admin.yml
+          git commit -m "docs(ui): record post-merge state repair handover"
+          git push origin HEAD:wp/premium-app-shell-post-merge-state-repair
