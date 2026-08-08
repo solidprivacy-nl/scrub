@@ -26,6 +26,9 @@ ENTITIES_KEY = "_premium_entities"
 ALLOW_LIST_KEY = "_premium_allow_list"
 DENY_LIST_KEY = "_premium_deny_list"
 ANALYZER_PARAMS_KEY = "_premium_analyzer_params"
+SOURCE_TEXT_KEY = "_premium_cached_text"
+REVIEW_ROWS_KEY = "_premium_cached_review_rows"
+REVIEW_ROWS_GENERATION_KEY = "_premium_review_rows_generation"
 
 
 def get_core_flow_state(session_state: MutableMapping[str, Any]) -> CoreFlowState:
@@ -58,6 +61,8 @@ def synchronize_shell_choices(
     if workflow is not previous_workflow:
         session_state.pop(ANALYSIS_GENERATION_KEY, None)
         session_state.pop(ANALYSIS_RESULTS_KEY, None)
+        session_state.pop(REVIEW_ROWS_KEY, None)
+        session_state.pop(REVIEW_ROWS_GENERATION_KEY, None)
         session_state.pop(STAGE_SUMMARIES_KEY, None)
     return set_core_flow_state(session_state, state)
 
@@ -183,6 +188,67 @@ def persist_processing_settings(
             raise ValueError("analyzer params must contain exactly four values")
         session_state[ANALYZER_PARAMS_KEY] = tuple(analyzer_params)
 
+def stored_source_text(session_state: Mapping[str, Any], default: str = "") -> str:
+    """Return the current authoritative source text in either presentation mode."""
+    value = session_state.get(SOURCE_TEXT_KEY, default)
+    return str(value) if value is not None else str(default)
+
+
+def _stable_review_value(value: Any) -> Any:
+    """Normalize dataframe scalar values only for deterministic row comparison."""
+    if value is None:
+        return None
+    try:
+        if value != value:
+            return None
+    except Exception:
+        pass
+    if isinstance(value, (str, int, float, bool)):
+        return value
+    return str(value)
+
+
+def review_rows_signature(rows: Sequence[Mapping[str, Any]]) -> str:
+    """Return a deterministic signature without changing the cached row payload."""
+    normalized = []
+    for row in rows:
+        normalized.append({
+            str(key): _stable_review_value(value)
+            for key, value in sorted(row.items(), key=lambda item: str(item[0]))
+        })
+    return json.dumps(normalized, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def review_rows_changed(
+    previous_rows: Sequence[Mapping[str, Any]], current_rows: Sequence[Mapping[str, Any]]
+) -> bool:
+    """Detect a real review decision/edit change while tolerating NaN-like values."""
+    return review_rows_signature(previous_rows) != review_rows_signature(current_rows)
+
+
+def cache_review_rows(
+    session_state: MutableMapping[str, Any],
+    generation: str,
+    rows: Sequence[Mapping[str, Any]],
+) -> None:
+    """Persist the authoritative review working set for exactly one generation."""
+    session_state[REVIEW_ROWS_GENERATION_KEY] = str(generation)
+    session_state[REVIEW_ROWS_KEY] = [dict(row) for row in rows]
+
+
+def get_cached_review_rows(
+    session_state: Mapping[str, Any], generation: str
+) -> Optional[list[dict[str, Any]]]:
+    """Return defensive review-row copies only when their generation is current."""
+    if session_state.get(REVIEW_ROWS_GENERATION_KEY) != generation:
+        return None
+    rows = session_state.get(REVIEW_ROWS_KEY)
+    if not isinstance(rows, list):
+        return None
+    if not all(isinstance(row, Mapping) for row in rows):
+        return None
+    return [dict(row) for row in rows]
+
 
 def processing_generation(
     *,
@@ -226,6 +292,8 @@ def synchronize_processing_generation(
     session_state.pop(STAGE_SUMMARIES_KEY, None)
     session_state.pop(ANALYSIS_GENERATION_KEY, None)
     session_state.pop(ANALYSIS_RESULTS_KEY, None)
+    session_state.pop(REVIEW_ROWS_KEY, None)
+    session_state.pop(REVIEW_ROWS_GENERATION_KEY, None)
     return state, True
 
 
