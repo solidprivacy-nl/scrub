@@ -1,7 +1,11 @@
 from premium_core_flow_state import PresentationMode, Stage, Workflow
 from premium_streamlit_state import (
+    ANALYSIS_GENERATION_KEY,
+    ANALYSIS_RESULTS_KEY,
     CORE_STATE_KEY,
     STAGE_SUMMARIES_KEY,
+    cache_analysis_results,
+    get_cached_analysis_results,
     get_core_flow_state,
     get_stage_summaries,
     mark_processing_complete,
@@ -36,11 +40,12 @@ def test_adapter_initializes_standard_anonymize_state():
     assert state.stage is Stage.ADD
 
 
-def test_presentation_switch_preserves_processing_lineage():
+def test_presentation_switch_preserves_processing_lineage_and_analysis_cache():
     session = {}
     g = generation()
     synchronize_processing_generation(session, g)
     mark_processing_complete(session, g)
+    cache_analysis_results(session, g, ["result"])
     before = get_core_flow_state(session)
     after = synchronize_shell_choices(
         session,
@@ -50,13 +55,16 @@ def test_presentation_switch_preserves_processing_lineage():
     assert after.source_generation == before.source_generation
     assert after.processed_generation == before.processed_generation
     assert after.stage is Stage.REVIEW
+    assert get_cached_analysis_results(session, g) == ["result"]
 
 
-def test_workflow_switch_fails_closed_and_keeps_presentation_choice():
+def test_workflow_switch_fails_closed_clears_cache_and_keeps_presentation_choice():
     session = {}
     g = generation()
     synchronize_processing_generation(session, g)
     mark_processing_complete(session, g)
+    cache_analysis_results(session, g, ["result"])
+    set_stage_summary(session, Stage.ADD, "contract.docx")
     state = synchronize_shell_choices(
         session,
         workflow=Workflow.REINSERT,
@@ -67,6 +75,9 @@ def test_workflow_switch_fails_closed_and_keeps_presentation_choice():
     assert state.stage is Stage.ADD
     assert state.source_generation is None
     assert state.processed_generation is None
+    assert ANALYSIS_GENERATION_KEY not in session
+    assert ANALYSIS_RESULTS_KEY not in session
+    assert STAGE_SUMMARIES_KEY not in session
 
 
 def test_processing_generation_is_deterministic_and_changes_with_inputs():
@@ -75,12 +86,13 @@ def test_processing_generation_is_deterministic_and_changes_with_inputs():
     assert generation(profile="Dutch Care Strict") != generation(profile="Dutch Legal Strict")
 
 
-def test_changed_processing_generation_invalidates_downstream_and_summaries():
+def test_changed_processing_generation_invalidates_downstream_summaries_and_analysis():
     session = {}
     first = generation()
     synchronize_processing_generation(session, first)
     mark_processing_complete(session, first)
     mark_review_complete(session)
+    cache_analysis_results(session, first, ["result"])
     set_stage_summary(session, Stage.ADD, "contract.docx · Juridisch")
     set_stage_summary(session, Stage.REVIEW, "14 gecontroleerd")
 
@@ -93,6 +105,27 @@ def test_changed_processing_generation_invalidates_downstream_and_summaries():
     assert changed_state.reviewed_generation is None
     assert changed_state.export_generation is None
     assert STAGE_SUMMARIES_KEY not in session
+    assert ANALYSIS_GENERATION_KEY not in session
+    assert ANALYSIS_RESULTS_KEY not in session
+
+
+def test_current_generation_analysis_cache_distinguishes_empty_results_from_missing_cache():
+    session = {}
+    g = generation()
+    assert get_cached_analysis_results(session, g) is None
+    cache_analysis_results(session, g, [])
+    assert get_cached_analysis_results(session, g) == []
+    assert get_cached_analysis_results(session, generation(text="Other")) is None
+
+
+def test_analysis_cache_returns_copy_not_mutable_internal_list():
+    session = {}
+    g = generation()
+    cache_analysis_results(session, g, ["a"])
+    first = get_cached_analysis_results(session, g)
+    assert first == ["a"]
+    first.append("b")
+    assert get_cached_analysis_results(session, g) == ["a"]
 
 
 def test_same_generation_is_noop():
@@ -115,7 +148,7 @@ def test_processing_and_review_completion_auto_advance_state():
     assert completed.export_is_current is True
 
 
-def test_explicit_return_stage_preserves_current_lineage():
+def test_explicit_return_to_add_preserves_current_lineage():
     session = {}
     g = generation()
     synchronize_processing_generation(session, g)
@@ -128,6 +161,19 @@ def test_explicit_return_stage_preserves_current_lineage():
     assert after.processed_generation == before.processed_generation
     assert after.reviewed_generation == before.reviewed_generation
     assert after.export_generation == before.export_generation
+
+
+def test_explicit_return_to_review_fails_closed_for_export():
+    session = {}
+    g = generation()
+    synchronize_processing_generation(session, g)
+    mark_processing_complete(session, g)
+    mark_review_complete(session)
+    after = select_stage(session, Stage.REVIEW)
+    assert after.stage is Stage.REVIEW
+    assert after.processed_generation == g
+    assert after.reviewed_generation is None
+    assert after.export_generation is None
 
 
 def test_stage_summaries_are_compact_session_metadata_only():
