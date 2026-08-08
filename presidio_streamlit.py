@@ -108,7 +108,7 @@ from processed_text_selection_integration import (
     undo_latest_selection_action,
 )
 
-from premium_app_shell import stage_is_active
+from premium_app_shell import stage_is_active, standard_operator_is_supported
 from premium_core_flow_state import PresentationMode, Stage, Workflow
 from premium_streamlit_state import (
     cache_analysis_results,
@@ -474,6 +474,13 @@ else:
     st_operator = st.session_state.get("_premium_operator_value", "replace")
     if st_operator not in OPERATOR_LABELS:
         st_operator = "replace"
+    if not standard_operator_is_supported(st_operator):
+        st.warning(
+            "Deze geavanceerde manier van vervangen is alleen beschikbaar in Expert. "
+            "Schakel terug naar Expert om deze instelling te behouden of aan te passen."
+        )
+        st.caption("Standaard wijzigt deze Expert-instelling niet automatisch.")
+        st.stop()
 
     st_threshold_default = configured_threshold(st_recognition_profile)
     st_threshold = float(st.session_state.get("_premium_threshold", st_threshold_default))
