@@ -2,7 +2,7 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Role: `implementation_operations`  
-Status: `IMPLEMENTATION_IN_PROGRESS`  
+Status: `RELEASE_CANDIDATE_READY`  
 Issue: #86  
 PR: #87  
 Base main: `d5fcd8d6019f136e82877b646af2d085f9eb1720`  
@@ -33,7 +33,7 @@ Planning, architecture, execution-order and contract-test changes only:
 - `DECISION_LOG.md`;
 - `tests/test_premium_staged_workspace_decision.py`;
 - issue/PR binding notes for active PR #85;
-- claim and handover administration.
+- this claim and the final handover.
 
 ## Explicit intervention in active Premium work
 
@@ -41,9 +41,9 @@ PR #85 is amended, not discarded. Its current `premium_app_shell.py` and `tests/
 
 ## Administrative finalization
 
-The large historical control files were updated through a temporary self-cleaning PR workflow so their existing history was **prepended to, not replaced or truncated**. The temporary workflow and prefix helper files removed themselves in the same administrative commit and are absent from the PR diff.
+The large historical control files were updated through temporary self-cleaning PR workflows so their existing history was prepended to, not replaced or truncated. Those workflows and temporary helper files removed themselves and are absent from the persistent PR diff.
 
-Final persistent candidate paths are limited to:
+Persistent candidate paths are:
 
 - `CHANGELOG.md`;
 - `DECISION_LOG.md`;
@@ -51,10 +51,8 @@ Final persistent candidate paths are limited to:
 - `ROADMAP.md`;
 - `WORKPACKAGES.md`;
 - `tests/test_premium_staged_workspace_decision.py`;
-- this claim;
-- final handover when written.
-
-The first PR test runs before administrative finalization are not release evidence because the exact tested heads did not yet contain the new WORKPACKAGES/CHANGELOG/DECISION_LOG records. A connector-originated claim update is used to obtain a normal PR-triggered full regression on the complete candidate tree.
+- `workpackage_claims/scrub_wp_premium_staged_workspace_decision_freeze.md`;
+- `handover/workpackages/20260808_1255_premium_staged_workspace_decision_freeze.md`.
 
 ## Safety boundary
 
@@ -62,12 +60,23 @@ No production Streamlit/UI behavior changes in this package. No recognizer, thre
 
 Human review remains mandatory. Synthetic/test content only.
 
-## Validation plan
+## Validation
 
-- documentation contract tests freeze staged-workspace semantics and execution order;
-- full GitHub Actions regression on the exact PR candidate;
-- fresh independent `governance_release_assurance` decision required before merge;
-- Hugging Face sync: not applicable because no runtime files change;
-- app verification: not applicable because no live UI behavior changes.
+One initial new-test assertion was overly literal about Markdown emphasis and produced `1 failed, 1189 passed` on run #2143. It was repaired without weakening the architecture contract.
+
+Pre-final administrative candidate:
+
+```text
+GitHub Actions Tests run #2145 / ID 31253772414
+python -m pytest -q tests
+1190 passed in 12.23s
+conclusion: success
+```
+
+After that run, only roadmap scope cleanup plus this claim/handover administration changed. A fresh normal full `Tests` run on the exact final PR head is mandatory before assurance may treat this claim as machine-evidence-complete. No further candidate edits are permitted after that exact-head run unless the candidate returns to implementation for repair.
+
+- Hugging Face sync: `NOT APPLICABLE` — no runtime/deployment files changed.
+- App verification: `NOT APPLICABLE` — no live UI behavior changed.
+- Independent `governance_release_assurance`: `REQUIRED` before merge.
 
 Implementation does not self-certify or self-merge.
