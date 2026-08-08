@@ -291,9 +291,7 @@ with presentation_col:
     )
 
 premium_workflow = Workflow.ANONYMIZE if workflow_choice == "Anonimiseren" else Workflow.REINSERT
-premium_presentation = (
-    PresentationMode.STANDARD if presentation_choice == "Standaard" else PresentationMode.EXPERT
-)
+premium_presentation = PresentationMode.STANDARD if presentation_choice == "Standaard" else PresentationMode.EXPERT
 premium_state = synchronize_shell_choices(
     st.session_state,
     workflow=premium_workflow,
@@ -306,167 +304,176 @@ if premium_workflow is Workflow.REINSERT:
     render_reinsert_mode()
     st.stop()
 
-profile_options = list(PROFILE_OPTIONS.keys())
-stored_profile_label = st.session_state.get("_premium_profile_label", profile_options[1])
-if stored_profile_label not in profile_options:
-    stored_profile_label = profile_options[1]
-profile_label = stored_profile_label
-
-operator_values = list(OPERATOR_LABELS.keys())
-stored_operator = st.session_state.get("_premium_operator_value", "replace")
-if stored_operator not in operator_values:
-    stored_operator = "replace"
-st_operator = stored_operator
-
 if is_premium_expert:
     st.sidebar.header(APP_TITLE)
-    st.sidebar.caption("Expertinstellingen")
+    st.sidebar.caption(APP_SUBTITLE)
+
     profile_label = st.sidebar.selectbox(
         "Controlemodus",
-        profile_options,
-        index=profile_options.index(stored_profile_label),
+        list(PROFILE_OPTIONS.keys()),
+        index=1,
         help=PROFILE_HELP,
-        key="premium_profile_expert_widget",
     )
-    st.session_state["_premium_profile_label"] = profile_label
     st_recognition_profile = PROFILE_OPTIONS[profile_label]
     with st.sidebar.expander("Wat doet deze controlemodus?", expanded=False):
         st.info(configured_description(st_recognition_profile))
 
-    operator_labels = list(OPERATOR_LABELS.values())
     operator_label = st.sidebar.selectbox(
         "Manier van vervangen",
-        operator_labels,
-        index=operator_values.index(stored_operator),
+        list(OPERATOR_LABELS.values()),
+        index=list(OPERATOR_LABELS.keys()).index("replace"),
         help=OPERATOR_HELP,
-        key="premium_operator_expert_widget",
     )
     st_operator = OPERATOR_LABEL_TO_VALUE[operator_label]
-    st.session_state["_premium_operator_value"] = st_operator
 
-    st_threshold_default = float(
-        st.session_state.get("_premium_threshold", configured_threshold(st_recognition_profile))
-    )
+    st_threshold_default = configured_threshold(st_recognition_profile)
+
     with st.sidebar.expander("Geavanceerde instellingen", expanded=False):
         st.caption(ADVANCED_SETTINGS_HELP)
         model_help_text = (
-  "Kies het NER-model dat naast regelherkenning wordt gebruikt. "
-  "De Nederlandse profielherkenners voor zorg en juridisch zijn regelgebaseerd."
+            "Kies het NER-model dat naast regelherkenning wordt gebruikt. "
+            "De Nederlandse profielherkenners voor zorg en juridisch zijn regelgebaseerd."
         )
+        st_ta_key = st_ta_endpoint = ""
         model_list = [
-  "spaCy/en_core_web_lg",
-  "flair/ner-english-large",
-  "HuggingFace/obi/deid_roberta_i2b2",
-  "HuggingFace/StanfordAIMI/stanford-deidentifier-base",
-  "stanza/en",
-  "Azure AI Language",
-  "Other",
+            "spaCy/en_core_web_lg",
+            "flair/ner-english-large",
+            "HuggingFace/obi/deid_roberta_i2b2",
+            "HuggingFace/StanfordAIMI/stanford-deidentifier-base",
+            "stanza/en",
+            "Azure AI Language",
+            "Other",
         ]
         if not allow_other_models:
-  model_list.pop()
-        stored_model_choice = st.session_state.get("_premium_model_choice", "flair/ner-english-large")
-        if stored_model_choice not in model_list:
-  stored_model_choice = "flair/ner-english-large"
-        st_model_choice = st.selectbox(
-  "Technisch NER-model",
-  model_list,
-  index=model_list.index(stored_model_choice),
-  help=model_help_text,
-  key="premium_model_expert_widget",
+            model_list.pop()
+        st_model = st.selectbox(
+            "Technisch NER-model",
+            model_list,
+            index=1,
+            help=model_help_text,
         )
-        st.session_state["_premium_model_choice"] = st_model_choice
-        st_model_package = st_model_choice.split("/")[0]
-        st_model = (
-  st_model_choice
-  if st_model_package.lower() not in ("spacy", "stanza", "huggingface")
-  else "/".join(st_model_choice.split("/")[1:])
-        )
-        if st_model == "Other":
-  st_model_package = st.selectbox(
-      "NER-modelpakket",
-      options=["spaCy", "stanza", "Flair", "HuggingFace"],
-      key="premium_model_package_expert_widget",
-  )
-  st_model = st.text_input(
-      "NER-modelnaam",
-      value=st.session_state.get("_premium_custom_model", ""),
-      key="premium_custom_model_expert_widget",
-  )
-  st.session_state["_premium_custom_model"] = st_model
 
-        st_ta_key = ""
-        st_ta_endpoint = ""
+        st_model_package = st_model.split("/")[0]
+        st_model = (
+            st_model
+            if st_model_package.lower() not in ("spacy", "stanza", "huggingface")
+            else "/".join(st_model.split("/")[1:])
+        )
+
+        if st_model == "Other":
+            st_model_package = st.selectbox(
+                "NER-modelpakket", options=["spaCy", "stanza", "Flair", "HuggingFace"]
+            )
+            st_model = st.text_input("NER-modelnaam", value="")
+
         if st_model == "Azure AI Language":
-  st_ta_key = st.text_input(
-      "Azure AI Language key",
-      value=os.getenv("TA_KEY", ""),
-      type="password",
-      key="premium_ta_key_expert_widget",
-  )
-  st_ta_endpoint = st.text_input(
-      "Azure AI Language endpoint",
-      value=os.getenv("TA_ENDPOINT", default=""),
-      key="premium_ta_endpoint_expert_widget",
-  )
+            st_ta_key = st.text_input(
+                "Azure AI Language key", value=os.getenv("TA_KEY", ""), type="password"
+            )
+            st_ta_endpoint = st.text_input(
+                "Azure AI Language endpoint",
+                value=os.getenv("TA_ENDPOINT", default=""),
+            )
 
         st_threshold = st.slider(
-  label="Gevoeligheid van herkenning",
-  min_value=0.0,
-  max_value=1.0,
-  value=st_threshold_default,
-  help="Lagere waarde = meer gevonden gegevens, maar ook meer kans op fout-positieven.",
-  key="premium_threshold_expert_widget",
+            label="Gevoeligheid van herkenning",
+            min_value=0.0,
+            max_value=1.0,
+            value=st_threshold_default,
+            help="Lagere waarde = meer gevonden gegevens, maar ook meer kans op fout-positieven.",
         )
-        st_session_threshold = float(st_threshold)
-        st.session_state["_premium_threshold"] = st_session_threshold
         st_return_decision_process = st.checkbox(
-  "Toon technische beslisinformatie",
-  value=bool(st.session_state.get("_premium_return_decision_process", False)),
-  help="Voegt technische uitlegvelden toe aan de resultatentabel.",
-  key="premium_decision_process_expert_widget",
+            "Toon technische beslisinformatie",
+            value=False,
+            help="Voegt technische uitlegvelden toe aan de resultatentabel.",
         )
-        st.session_state["_premium_return_decision_process"] = st_return_decision_process
-        st_mask_char = st.text_input(
-  "Maskeringsteken",
-  value=str(st.session_state.get("_premium_mask_char", "*")),
-  max_chars=1,
-  key="premium_mask_char_expert_widget",
-        )
-        st.session_state["_premium_mask_char"] = st_mask_char
-        st_number_of_chars = st.number_input(
-  "Aantal te maskeren tekens",
-  value=int(st.session_state.get("_premium_number_of_chars", 15)),
-  min_value=0,
-  max_value=100,
-  key="premium_number_chars_expert_widget",
-        )
-        st.session_state["_premium_number_of_chars"] = int(st_number_of_chars)
-        st_encrypt_key = st.text_input(
-  "AES-sleutel",
-  value=str(st.session_state.get("_premium_encrypt_key", "WmZq4t7w!z%C&F)J")),
-  key="premium_encrypt_key_expert_widget",
-        )
-        st.session_state["_premium_encrypt_key"] = st_encrypt_key
+        st_mask_char = st.text_input("Maskeringsteken", value="*", max_chars=1)
+        st_number_of_chars = st.number_input("Aantal te maskeren tekens", value=15, min_value=0, max_value=100)
+        st_encrypt_key = st.text_input("AES-sleutel", value="WmZq4t7w!z%C&F)J")
 
         st.markdown("**Woordenlijsten**")
-        st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.") or []
+        st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
         st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
-        st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.") or []
+        st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
         st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
-        st.session_state["_premium_allow_list"] = list(st_allow_list)
-        st.session_state["_premium_deny_list"] = list(st_deny_list)
+
+    analyzer_params = (st_model_package, st_model, st_ta_key, st_ta_endpoint)
+    open_ai_params = None
+
+
+    def set_up_openai_synthesis():
+        if os.getenv("OPENAI_TYPE", default="openai") == "Azure":
+            openai_api_type = "azure"
+            st_openai_api_base = st.sidebar.text_input(
+                "Azure OpenAI base URL", value=os.getenv("AZURE_OPENAI_ENDPOINT", default="")
+            )
+            openai_key = os.getenv("AZURE_OPENAI_KEY", default="")
+            st_deployment_id = st.sidebar.text_input(
+                "Deployment name", value=os.getenv("AZURE_OPENAI_DEPLOYMENT", default="")
+            )
+            st_openai_version = st.sidebar.text_input(
+                "OpenAI version", value=os.getenv("OPENAI_API_VERSION", default="2023-05-15")
+            )
+        else:
+            openai_api_type = "openai"
+            st_openai_version = st_openai_api_base = None
+            st_deployment_id = ""
+            openai_key = os.getenv("OPENAI_KEY", default="")
+
+        st_openai_key = st.sidebar.text_input("OPENAI_KEY", value=openai_key, type="password")
+        st_openai_model = st.sidebar.text_input(
+            "OpenAI-model voor synthetische tekst",
+            value=os.getenv("OPENAI_MODEL", default="gpt-3.5-turbo-instruct"),
+        )
+        return (
+            openai_api_type,
+            st_openai_api_base,
+            st_deployment_id,
+            st_openai_version,
+            st_openai_key,
+            st_openai_model,
+        )
+
+
+    if st_operator == "synthesize":
+        (
+            openai_api_type,
+            st_openai_api_base,
+            st_deployment_id,
+            st_openai_version,
+            st_openai_key,
+            st_openai_model,
+        ) = set_up_openai_synthesis()
+        open_ai_params = OpenAIParams(
+            openai_key=st_openai_key,
+            model=st_openai_model,
+            api_base=st_openai_api_base,
+            deployment_id=st_deployment_id,
+            api_version=st_openai_version,
+            api_type=openai_api_type,
+        )
+    st.session_state["_premium_profile_label"] = profile_label
+    st.session_state["_premium_operator_value"] = st_operator
+    st.session_state["_premium_threshold"] = float(st_threshold)
+    st.session_state["_premium_return_decision_process"] = bool(st_return_decision_process)
+    st.session_state["_premium_mask_char"] = st_mask_char
+    st.session_state["_premium_number_of_chars"] = int(st_number_of_chars)
+    st.session_state["_premium_encrypt_key"] = st_encrypt_key
+    st.session_state["_premium_allow_list"] = list(st_allow_list or [])
+    st.session_state["_premium_deny_list"] = list(st_deny_list or [])
+    st.session_state["_premium_analyzer_params"] = tuple(analyzer_params)
 else:
+    profile_options = list(PROFILE_OPTIONS.keys())
+    profile_label = st.session_state.get("_premium_profile_label", profile_options[1])
+    if profile_label not in profile_options:
+        profile_label = profile_options[1]
     st_recognition_profile = PROFILE_OPTIONS[profile_label]
+
+    st_operator = st.session_state.get("_premium_operator_value", "replace")
+    if st_operator not in OPERATOR_LABELS:
+        st_operator = "replace"
+
     st_threshold_default = configured_threshold(st_recognition_profile)
-    st_model_choice = st.session_state.get("_premium_model_choice", "flair/ner-english-large")
-    st_model_package = st_model_choice.split("/")[0]
-    st_model = (
-        st_model_choice
-        if st_model_package.lower() not in ("spacy", "stanza", "huggingface")
-        else "/".join(st_model_choice.split("/")[1:])
-    )
-    st_ta_key = st.session_state.get("premium_ta_key_expert_widget", "")
-    st_ta_endpoint = st.session_state.get("premium_ta_endpoint_expert_widget", "")
     st_threshold = float(st.session_state.get("_premium_threshold", st_threshold_default))
     st_return_decision_process = bool(st.session_state.get("_premium_return_decision_process", False))
     st_mask_char = str(st.session_state.get("_premium_mask_char", "*"))
@@ -474,40 +481,34 @@ else:
     st_encrypt_key = str(st.session_state.get("_premium_encrypt_key", "WmZq4t7w!z%C&F)J"))
     st_allow_list = list(st.session_state.get("_premium_allow_list", []))
     st_deny_list = list(st.session_state.get("_premium_deny_list", []))
-
-analyzer_params = (st_model_package, st_model, st_ta_key, st_ta_endpoint)
-open_ai_params = None
-
-if st_operator == "synthesize":
-    if os.getenv("OPENAI_TYPE", default="openai") == "Azure":
-        openai_api_type = "azure"
-        st_openai_api_base = os.getenv("AZURE_OPENAI_ENDPOINT", default="")
-        openai_key = os.getenv("AZURE_OPENAI_KEY", default="")
-        st_deployment_id = os.getenv("AZURE_OPENAI_DEPLOYMENT", default="")
-        st_openai_version = os.getenv("OPENAI_API_VERSION", default="2023-05-15")
-    else:
-        openai_api_type = "openai"
-        st_openai_version = st_openai_api_base = None
-        st_deployment_id = ""
-        openai_key = os.getenv("OPENAI_KEY", default="")
-    if is_premium_expert:
-        st_openai_key = st.sidebar.text_input("OPENAI_KEY", value=openai_key, type="password")
-        st_openai_model = st.sidebar.text_input(
-  "OpenAI-model voor synthetische tekst",
-  value=os.getenv("OPENAI_MODEL", default="gpt-3.5-turbo-instruct"),
+    analyzer_params = tuple(
+        st.session_state.get(
+            "_premium_analyzer_params",
+            ("flair", "flair/ner-english-large", "", ""),
         )
-    else:
-        st_openai_key = openai_key
-        st_openai_model = os.getenv("OPENAI_MODEL", default="gpt-3.5-turbo-instruct")
-    open_ai_params = OpenAIParams(
-        openai_key=st_openai_key,
-        model=st_openai_model,
-        api_base=st_openai_api_base,
-        deployment_id=st_deployment_id,
-        api_version=st_openai_version,
-        api_type=openai_api_type,
     )
+    open_ai_params = None
 
+    if st_operator == "synthesize":
+        if os.getenv("OPENAI_TYPE", default="openai") == "Azure":
+            openai_api_type = "azure"
+            st_openai_api_base = os.getenv("AZURE_OPENAI_ENDPOINT", default="")
+            openai_key = os.getenv("AZURE_OPENAI_KEY", default="")
+            st_deployment_id = os.getenv("AZURE_OPENAI_DEPLOYMENT", default="")
+            st_openai_version = os.getenv("OPENAI_API_VERSION", default="2023-05-15")
+        else:
+            openai_api_type = "openai"
+            st_openai_version = st_openai_api_base = None
+            st_deployment_id = ""
+            openai_key = os.getenv("OPENAI_KEY", default="")
+        open_ai_params = OpenAIParams(
+            openai_key=openai_key,
+            model=os.getenv("OPENAI_MODEL", default="gpt-3.5-turbo-instruct"),
+            api_base=st_openai_api_base,
+            deployment_id=st_deployment_id,
+            api_version=st_openai_version,
+            api_type=openai_api_type,
+        )
 
 if is_premium_expert:
     with st.expander("Over deze app", expanded=False):
