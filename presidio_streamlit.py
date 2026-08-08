@@ -137,6 +137,7 @@ from premium_streamlit_state import (
     synchronize_shell_choices,
 )
 from premium_streamlit_shell_ui import render_stage_header
+from premium_streamlit_export_gate import render_export_readiness_gate
 
 from profile_ui_support import (
     care_example_names,
@@ -1432,8 +1433,19 @@ try:
             render_stage_header(premium_state, Stage.DOWNLOAD)
         else:
             st.subheader("3. Exporteer resultaat")
-        st.caption("Download documenten; Scrub Key en auditbestanden blijven apart.")
 
+        export_surface_ready = render_export_readiness_gate(
+            st.session_state,
+            is_expert=is_premium_expert,
+            generation=current_processing_generation,
+            reviewed_rows=edited_replacements_df.to_dict("records"),
+        )
+        if not export_surface_ready:
+            if is_premium_standard:
+                st.caption("Downloaden is beschikbaar nadat de huidige controle expliciet is afgerond.")
+            st.stop()
+
+        st.caption("Download documenten; Scrub Key en auditbestanden blijven apart.")
         st.markdown("**Document downloaden**")
         download_txt_col, download_docx_col, download_pdf_col = st.columns(3)
         with download_txt_col:
