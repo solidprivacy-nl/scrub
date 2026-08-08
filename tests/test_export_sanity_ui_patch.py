@@ -38,6 +38,14 @@ def test_export_sanity_warning_behavior_is_advisory_and_non_blocking():
     assert "downloads blijven beschikbaar" in PATCH_TEXT
     assert "exportinstellingen blijven ongewijzigd" in PATCH_TEXT
     assert "st.stop(" not in PATCH_TEXT
-    assert "raise " not in PATCH_TEXT
+
+    premium_direct_source_guard = '''if "premium_streamlit_shell_ui" in text:
+    APP_FILE.write_text(text, encoding="utf-8")
+    raise SystemExit(0)
+'''
+    assert premium_direct_source_guard in PATCH_TEXT
+    legacy_patch_body = PATCH_TEXT.replace(premium_direct_source_guard, "", 1)
+    assert "raise " not in legacy_patch_body
+
     assert "blocks_export" not in PATCH_TEXT
     assert "changes_export_semantics" not in PATCH_TEXT

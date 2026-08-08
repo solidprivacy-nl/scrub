@@ -1,3 +1,97 @@
+## 2026-08-08 16:55 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — repair after blind-assurance FAIL
+
+Status: `RELEASE_CANDIDATE_READY` only after a fresh exact-head full-suite run; fresh independent assurance remains mandatory.
+
+Independent assurance on prior head `2b04ca6260bddee07fbcf901239cee2955bd6dc7` returned `FAIL` because switching `Standaard → Expert` could silently reset an explicitly selected Zorg profile to the hard-coded Expert default Juridisch. The same repair cycle reviewed operator, threshold, entity selection, allow/deny lists and analyzer configuration as processing-affecting state.
+
+Repair:
+- Standard and Expert now hydrate the same persisted processing settings;
+- entering Expert no longer uses a hard-coded recognition-profile or operator default when a valid current choice exists;
+- returning to Standard rehydrates the Standard profile widget from the shared processing state;
+- threshold, entity selection, allow/deny lists and analyzer/model settings are preserved across presentation-only switches;
+- deterministic processing-generation synchronization now runs in both presentation modes;
+- presentation-only switching with unchanged settings preserves valid downstream lineage;
+- a real processing-affecting Expert change invalidates processed/review/export lineage fail-closed;
+- Standard still refuses unsupported Expert-only operators without silently rewriting them.
+
+Regression evidence before administrative finalization:
+- GitHub Actions Tests run #2229 / ID `31263099583`, job `93116829430`;
+- PR merge candidate `bd3c404f7075d86620272bf28c9a5192006e8209`;
+- `python -m pytest -q tests` → `1235 passed in 14.48s`;
+- new coverage explicitly includes Standard Zorg → Expert → Standard state preservation and real-change invalidation.
+
+Protected semantics unchanged:
+- recognizers/profile rules and threshold meaning;
+- review-table/include authority and direct masking;
+- export bytes, filenames and MIME types;
+- Scrub Key, reinsert and audit semantics;
+- dependencies and local/cloud processing boundary;
+- mandatory human review.
+
+A fresh exact-head regression is required after this administrative closeout, followed by a new blind `governance_release_assurance` review. The later Premium Input Stage package remains blocked.
+
+---
+
+## 2026-08-08 15:28 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — release candidate prepared
+
+Status: `RELEASE_CANDIDATE_READY`; final exact-head CI and fresh independent assurance required before merge.
+
+Purpose:
+- move the merged Premium staged-workspace architecture from helper/state primitives into the production Streamlit shell;
+- make Standard behave as one persistent document workspace with `Toevoegen → Controleren → Downloaden` and exactly one dominant stage;
+- preserve Expert and all existing processing/review/export/Scrub Key/reinsert/audit semantics.
+
+Implemented:
+- global `Anonimiseren | Terugzetten` and `Standaard | Expert` controls;
+- persistent application-panel stage headers with active/completed/future states;
+- compact completed summaries and passive future stages;
+- primary `Document verwerken` and `Controle afronden` progression actions;
+- explicit earlier-stage return;
+- deterministic processing lineage and fail-closed downstream invalidation;
+- current-generation analysis cache to prevent silent recognition reruns during stage navigation;
+- cached review rows; reopening a completed Review invalidates Download until Review is explicitly completed again;
+- Standard hides the permanent settings sidebar while Expert retains advanced controls;
+- Standard does not silently modify Expert-only `highlight`/`synthesize` operator choices;
+- legacy runtime source patch exits for the direct Premium shell, preventing the retired form/two-mode UI from being re-injected at startup.
+
+Files added:
+- `premium_streamlit_state.py`;
+- `premium_streamlit_shell_ui.py`;
+- `tests/test_premium_streamlit_state.py`;
+- `tests/test_premium_app_shell_streamlit_integration.py`;
+- implementation claim and handover.
+
+Files changed:
+- `premium_app_shell.py`;
+- `presidio_streamlit.py`;
+- `fix_streamlit_nested_expanders.py`;
+- source-level UI contract tests updated where literal expectations described the retired shell;
+- `WORKPACKAGES.md`, `CHANGELOG.md`, `RELEASE_NOTES.md` for closeout administration.
+
+Validation:
+- clean runtime/product head `0e1a5fbb3d6c3b8f8293779e598ececd6ea4aa1d`;
+- GitHub Actions Tests #2200 / run `31259576962`, job `93108182555`;
+- `python -m pytest -q tests` → `1225 passed in 12.55s`;
+- final post-administration exact-head full regression still required before assurance;
+- Hugging Face sync and live app verification are pending after PASS/merge because runtime UI changed.
+
+Intentionally unchanged:
+- recognizers/profile rules and threshold meaning;
+- replacement/include authority and direct masking semantics;
+- export bytes, filenames and MIME types;
+- Scrub Key schema/binding/lifecycle;
+- reinsert and audit semantics;
+- dependencies and cloud/local-processing boundary;
+- mandatory human review.
+
+Next gate:
+- freeze final exact head after this administrative closeout;
+- full GitHub Actions regression;
+- fresh blind `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION_VERIFY`;
+- no merge and no Input Stage work before independent PASS.
+
+---
+
 ## 2026-08-08 Europe/Amsterdam — SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — staged workspace architecture candidate
 
 Status: `IMPLEMENTATION_IN_PROGRESS`; exact-head CI and independent assurance required before merge.

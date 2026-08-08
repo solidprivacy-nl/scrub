@@ -21,6 +21,12 @@ from pathlib import Path
 APP_FILE = Path(__file__).with_name("presidio_streamlit.py")
 text = APP_FILE.read_text(encoding="utf-8")
 
+# The Premium app shell is now direct source. Legacy runtime source mutation
+# must not re-inject the retired form/two-mode UI into that source.
+if "premium_streamlit_shell_ui" in text:
+    APP_FILE.write_text(text, encoding="utf-8")
+    raise SystemExit(0)
+
 
 def replace_once(source: str, old: str, new: str) -> str:
     if old in source and new not in source:

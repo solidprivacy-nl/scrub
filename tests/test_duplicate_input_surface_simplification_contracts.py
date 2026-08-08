@@ -116,7 +116,8 @@ def test_input_precedence_markers_remain_present() -> None:
     app_text = read(APP_PATH)
 
     for marker in [
-        'input_text = "".join(demo_text)',
+        'st.session_state.get("_premium_cached_text", "".join(demo_text))',
+        'else "".join(demo_text)',
         'if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:',
         "if uploaded_file is not None:",
         "input_text, uploaded_file_type = uploaded_file_to_text(uploaded_file)",
@@ -199,6 +200,7 @@ def test_contract_tests_remain_source_level_only() -> None:
 
     assert "streamlit" not in imported_roots
     assert "presidio_streamlit" not in imported_roots
+
 
 def test_input_controls_are_grouped_under_single_input_surface() -> None:
     app_text = read(APP_PATH)

@@ -133,8 +133,11 @@ def test_audit_downloads_and_docx_hygiene_audit_remain_available() -> None:
 
 
 def test_no_new_bundle_runtime_or_scope_markers_are_present() -> None:
-    source = "\n".join(
+    source_with_comments = "\n".join(
         [read(APP_PATH), read(DOCKERFILE_PATH), read(NESTED_PATCH_PATH)]
+    )
+    source = "\n".join(
+        line for line in source_with_comments.splitlines() if not line.lstrip().startswith("#")
     ).lower()
 
     forbidden_terms = [

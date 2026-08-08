@@ -8,8 +8,9 @@ STARTUP_PATCH_TEXT = Path("fix_streamlit_nested_expanders.py").read_text(encodin
 
 def test_reinsert_flow_is_direct_source():
     assert "from reinsert_mode_ui import render_reinsert_mode" in APP_TEXT
-    assert 'solidprivacy_work_mode = st.radio(' in APP_TEXT
-    assert 'if solidprivacy_work_mode == "Originele waarden terugzetten":' in APP_TEXT
+    assert '["Anonimiseren", "Terugzetten"]' in APP_TEXT
+    assert 'premium_workflow = Workflow.ANONYMIZE if workflow_choice == "Anonimiseren" else Workflow.REINSERT' in APP_TEXT
+    assert "if premium_workflow is Workflow.REINSERT:" in APP_TEXT
     assert "render_reinsert_mode()" in APP_TEXT
     assert "st.stop()" in APP_TEXT
 
@@ -111,8 +112,9 @@ def test_no_ai_cloud_ocr_or_restored_pdf_added():
         assert required in REINSERT_UI_TEXT
 
 
-def test_startup_injection_is_guarded_against_duplicate_direct_mode():
-    assert "if mode_marker in text and 'solidprivacy_work_mode = st.radio(' not in text:" in STARTUP_PATCH_TEXT
+def test_startup_injection_is_guarded_against_premium_direct_mode():
+    assert 'premium_streamlit_shell_ui' in STARTUP_PATCH_TEXT
+    assert "raise SystemExit(0)" in STARTUP_PATCH_TEXT
 
 
 def test_pdf_text_startup_patch_skips_direct_source_reinsert_ui():

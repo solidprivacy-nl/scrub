@@ -108,6 +108,31 @@ from processed_text_selection_integration import (
     undo_latest_selection_action,
 )
 
+from premium_app_shell import stage_is_active, standard_operator_is_supported
+from premium_core_flow_state import PresentationMode, Stage, Workflow
+from premium_streamlit_state import (
+    ALLOW_LIST_KEY,
+    DENY_LIST_KEY,
+    analyzer_model_label,
+    cache_analysis_results,
+    get_cached_analysis_results,
+    get_core_flow_state,
+    mark_processing_complete,
+    mark_review_complete,
+    persist_processing_settings,
+    processing_generation,
+    set_stage_summary,
+    stored_analyzer_params,
+    stored_entities,
+    stored_operator_value,
+    stored_profile_label,
+    stored_string_list,
+    stored_threshold,
+    synchronize_processing_generation,
+    synchronize_shell_choices,
+)
+from premium_streamlit_shell_ui import render_stage_header
+
 from profile_ui_support import (
     care_example_names,
     care_example_text,
@@ -246,7 +271,7 @@ def safe_bool(value):
 st.set_page_config(
     page_title=APP_TITLE,
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
     menu_items={"About": "SolidPrivacy Scrub"},
 )
 
@@ -254,201 +279,363 @@ dotenv.load_dotenv()
 logger = logging.getLogger("solidprivacy-scrub")
 allow_other_models = os.getenv("ALLOW_OTHER_MODELS", False)
 
-st.sidebar.header(APP_TITLE)
-st.sidebar.caption(APP_SUBTITLE)
-
-profile_label = st.sidebar.selectbox(
-    "Controlemodus",
-    list(PROFILE_OPTIONS.keys()),
-    index=1,
-    help=PROFILE_HELP,
-)
-st_recognition_profile = PROFILE_OPTIONS[profile_label]
-with st.sidebar.expander("Wat doet deze controlemodus?", expanded=False):
-    st.info(configured_description(st_recognition_profile))
-
-operator_label = st.sidebar.selectbox(
-    "Manier van vervangen",
-    list(OPERATOR_LABELS.values()),
-    index=list(OPERATOR_LABELS.keys()).index("replace"),
-    help=OPERATOR_HELP,
-)
-st_operator = OPERATOR_LABEL_TO_VALUE[operator_label]
-
-st_threshold_default = configured_threshold(st_recognition_profile)
-
-with st.sidebar.expander("Geavanceerde instellingen", expanded=False):
-    st.caption(ADVANCED_SETTINGS_HELP)
-    model_help_text = (
-        "Kies het NER-model dat naast regelherkenning wordt gebruikt. "
-        "De Nederlandse profielherkenners voor zorg en juridisch zijn regelgebaseerd."
-    )
-    st_ta_key = st_ta_endpoint = ""
-    model_list = [
-        "spaCy/en_core_web_lg",
-        "flair/ner-english-large",
-        "HuggingFace/obi/deid_roberta_i2b2",
-        "HuggingFace/StanfordAIMI/stanford-deidentifier-base",
-        "stanza/en",
-        "Azure AI Language",
-        "Other",
-    ]
-    if not allow_other_models:
-        model_list.pop()
-    st_model = st.selectbox(
-        "Technisch NER-model",
-        model_list,
-        index=1,
-        help=model_help_text,
-    )
-
-    st_model_package = st_model.split("/")[0]
-    st_model = (
-        st_model
-        if st_model_package.lower() not in ("spacy", "stanza", "huggingface")
-        else "/".join(st_model.split("/")[1:])
-    )
-
-    if st_model == "Other":
-        st_model_package = st.selectbox(
-            "NER-modelpakket", options=["spaCy", "stanza", "Flair", "HuggingFace"]
-        )
-        st_model = st.text_input("NER-modelnaam", value="")
-
-    if st_model == "Azure AI Language":
-        st_ta_key = st.text_input(
-            "Azure AI Language key", value=os.getenv("TA_KEY", ""), type="password"
-        )
-        st_ta_endpoint = st.text_input(
-            "Azure AI Language endpoint",
-            value=os.getenv("TA_ENDPOINT", default=""),
-        )
-
-    st_threshold = st.slider(
-        label="Gevoeligheid van herkenning",
-        min_value=0.0,
-        max_value=1.0,
-        value=st_threshold_default,
-        help="Lagere waarde = meer gevonden gegevens, maar ook meer kans op fout-positieven.",
-    )
-    st_return_decision_process = st.checkbox(
-        "Toon technische beslisinformatie",
-        value=False,
-        help="Voegt technische uitlegvelden toe aan de resultatentabel.",
-    )
-    st_mask_char = st.text_input("Maskeringsteken", value="*", max_chars=1)
-    st_number_of_chars = st.number_input("Aantal te maskeren tekens", value=15, min_value=0, max_value=100)
-    st_encrypt_key = st.text_input("AES-sleutel", value="WmZq4t7w!z%C&F)J")
-
-    st.markdown("**Woordenlijsten**")
-    st_allow_list = st_tags(label="Niet vervangen", text="Voer woord in en druk op Enter.")
-    st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
-    st_deny_list = st_tags(label="Extra controleren", text="Voer woord in en druk op Enter.")
-    st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
-
-analyzer_params = (st_model_package, st_model, st_ta_key, st_ta_endpoint)
-open_ai_params = None
-
-
-def set_up_openai_synthesis():
-    if os.getenv("OPENAI_TYPE", default="openai") == "Azure":
-        openai_api_type = "azure"
-        st_openai_api_base = st.sidebar.text_input(
-            "Azure OpenAI base URL", value=os.getenv("AZURE_OPENAI_ENDPOINT", default="")
-        )
-        openai_key = os.getenv("AZURE_OPENAI_KEY", default="")
-        st_deployment_id = st.sidebar.text_input(
-            "Deployment name", value=os.getenv("AZURE_OPENAI_DEPLOYMENT", default="")
-        )
-        st_openai_version = st.sidebar.text_input(
-            "OpenAI version", value=os.getenv("OPENAI_API_VERSION", default="2023-05-15")
-        )
-    else:
-        openai_api_type = "openai"
-        st_openai_version = st_openai_api_base = None
-        st_deployment_id = ""
-        openai_key = os.getenv("OPENAI_KEY", default="")
-
-    st_openai_key = st.sidebar.text_input("OPENAI_KEY", value=openai_key, type="password")
-    st_openai_model = st.sidebar.text_input(
-        "OpenAI-model voor synthetische tekst",
-        value=os.getenv("OPENAI_MODEL", default="gpt-3.5-turbo-instruct"),
-    )
-    return (
-        openai_api_type,
-        st_openai_api_base,
-        st_deployment_id,
-        st_openai_version,
-        st_openai_key,
-        st_openai_model,
-    )
-
-
-if st_operator == "synthesize":
-    (
-        openai_api_type,
-        st_openai_api_base,
-        st_deployment_id,
-        st_openai_version,
-        st_openai_key,
-        st_openai_model,
-    ) = set_up_openai_synthesis()
-    open_ai_params = OpenAIParams(
-        openai_key=st_openai_key,
-        model=st_openai_model,
-        api_base=st_openai_api_base,
-        deployment_id=st_deployment_id,
-        api_version=st_openai_version,
-        api_type=openai_api_type,
-    )
-
 st.title(APP_TITLE)
 st.subheader(APP_SUBTITLE)
 st.write(APP_INTRO)
 st.info(LOCAL_PROCESSING_NOTE)
 
-st.markdown("**Kies werkmodus**")
-solidprivacy_work_mode = st.radio(
-    "Werkmodus",
-    ["Anonimiseren", "Originele waarden terugzetten"],
-    horizontal=True,
-    key="solidprivacy_work_mode",
-    help="Kies Anonimiseren voor opschonen en export. Kies Originele waarden terugzetten voor lokaal terugzetten met een Scrub Key.",
+workflow_col, presentation_col = st.columns([1.2, 1.0])
+with workflow_col:
+    workflow_choice = st.radio(
+        "Werkstroom",
+        ["Anonimiseren", "Terugzetten"],
+        horizontal=True,
+        key="premium_workflow_choice",
+        help="Anonimiseren maakt een veilig deelbare versie. Terugzetten herstelt lokaal originele waarden met een Scrub Key.",
+    )
+with presentation_col:
+    presentation_choice = st.radio(
+        "Weergave",
+        ["Standaard", "Expert"],
+        horizontal=True,
+        key="premium_presentation_choice",
+        help="Standaard toont alleen de kernworkflow. Expert ontsluit technische instellingen en extra controlehulpen.",
+    )
+
+premium_workflow = Workflow.ANONYMIZE if workflow_choice == "Anonimiseren" else Workflow.REINSERT
+premium_presentation = PresentationMode.STANDARD if presentation_choice == "Standaard" else PresentationMode.EXPERT
+previous_premium_state = get_core_flow_state(st.session_state)
+presentation_mode_changed = previous_premium_state.presentation_mode is not premium_presentation
+premium_state = synchronize_shell_choices(
+    st.session_state,
+    workflow=premium_workflow,
+    presentation_mode=premium_presentation,
 )
-if solidprivacy_work_mode == "Originele waarden terugzetten":
+is_premium_standard = premium_presentation is PresentationMode.STANDARD
+is_premium_expert = premium_presentation is PresentationMode.EXPERT
+entering_expert = presentation_mode_changed and is_premium_expert
+entering_standard = presentation_mode_changed and is_premium_standard
+
+if premium_workflow is Workflow.REINSERT:
     render_reinsert_mode()
     st.stop()
 
-with st.expander("Over deze app", expanded=False):
-    st.write(
-        "SolidPrivacy Scrub helpt bij het controleerbaar opschonen van vertrouwelijke "
-        "Nederlandse documenten. De herkenning combineert algemene patroonherkenning "
-        "met expliciete profielen voor zorg en juridische documenten."
-    )
-    st.write(
-        "De technische detectie-engine blijft onder de motorkap. De gebruiker beoordeelt "
-        "altijd zelf de gevonden gegevens en mogelijke kandidaten in de vervangtabel."
-    )
+if is_premium_expert:
+    st.sidebar.header(APP_TITLE)
+    st.sidebar.caption(APP_SUBTITLE)
 
-with st.expander("Controle-instellingen en herkenning", expanded=False):
-    if st_recognition_profile == "Dutch Care Strict":
-        st.info(
-            "Zorgcontrole is actief. Scrub zoekt extra naar patiënt- en cliëntnummers, "
-            "EPD/ECD- en dossiernummers, verwijzingen, laboratorium- en incidentreferenties, "
-            "zorgverleners, organisaties, locaties en exacte zorgdata. Diagnose, medicatie, "
-            "dosering, labwaarden en observaties blijven zo veel mogelijk leesbaar."
+    profile_options = list(PROFILE_OPTIONS.keys())
+    profile_label = stored_profile_label(st.session_state, profile_options)
+    stored_operator = stored_operator_value(st.session_state, OPERATOR_LABELS.keys())
+    if entering_expert:
+        st.session_state["premium_profile_expert_widget"] = profile_label
+        st.session_state["premium_operator_expert_widget"] = OPERATOR_LABELS[stored_operator]
+
+    profile_label = st.sidebar.selectbox(
+        "Controlemodus",
+        profile_options,
+        index=profile_options.index(profile_label),
+        help=PROFILE_HELP,
+        key="premium_profile_expert_widget",
+    )
+    st_recognition_profile = PROFILE_OPTIONS[profile_label]
+    with st.sidebar.expander("Wat doet deze controlemodus?", expanded=False):
+        st.info(configured_description(st_recognition_profile))
+
+    stored_operator_label = OPERATOR_LABELS[stored_operator]
+    operator_values = list(OPERATOR_LABELS.values())
+    operator_label = st.sidebar.selectbox(
+        "Manier van vervangen",
+        operator_values,
+        index=operator_values.index(stored_operator_label),
+        help=OPERATOR_HELP,
+        key="premium_operator_expert_widget",
+    )
+    st_operator = OPERATOR_LABEL_TO_VALUE[operator_label]
+
+    st_threshold_default = configured_threshold(st_recognition_profile)
+    threshold_value = stored_threshold(st.session_state, st_threshold_default)
+    if entering_expert:
+        st.session_state["premium_threshold_expert_widget"] = threshold_value
+
+    with st.sidebar.expander("Geavanceerde instellingen", expanded=False):
+        st.caption(ADVANCED_SETTINGS_HELP)
+        model_help_text = (
+            "Kies het NER-model dat naast regelherkenning wordt gebruikt. "
+            "De Nederlandse profielherkenners voor zorg en juridisch zijn regelgebaseerd."
         )
-    elif st_recognition_profile == "Dutch Legal Strict":
-        st.info(
-            "Juridische controle is actief. Scrub zoekt extra naar zaaknummers, rolnummers, "
-            "rekestnummers, parketnummers, dossiernummers, clientnummers, CJIB, ECLI, "
-            "procespartijen, instanties en mogelijke juridische referenties."
+        st_ta_key = st_ta_endpoint = ""
+        model_list = [
+            "spaCy/en_core_web_lg",
+            "flair/ner-english-large",
+            "HuggingFace/obi/deid_roberta_i2b2",
+            "HuggingFace/StanfordAIMI/stanford-deidentifier-base",
+            "stanza/en",
+            "Azure AI Language",
+            "Other",
+        ]
+        if not allow_other_models:
+            model_list.pop()
+
+        saved_analyzer_params = stored_analyzer_params(
+            st.session_state,
+            ("flair", "flair/ner-english-large", "", ""),
         )
-    elif st_recognition_profile == "Dutch / EU":
-        st.info(
-            "Algemene Nederlandse controle is actief. Scrub zoekt onder meer naar BSN, postcode, "
-            "KvK, btw-nummer, Nederlandse IBAN, telefoonnummers, adressen, kentekens en BIG-nummers."
+        saved_model_label = analyzer_model_label(saved_analyzer_params, model_list)
+        if entering_expert:
+            st.session_state["premium_model_expert_widget"] = saved_model_label
+        selected_model_label = st.selectbox(
+            "Technisch NER-model",
+            model_list,
+            index=model_list.index(saved_model_label),
+            help=model_help_text,
+            key="premium_model_expert_widget",
         )
+
+        st_model_package = selected_model_label.split("/")[0]
+        st_model = (
+            selected_model_label
+            if st_model_package.lower() not in ("spacy", "stanza", "huggingface")
+            else "/".join(selected_model_label.split("/")[1:])
+        )
+
+        if selected_model_label == "Other":
+            custom_packages = ["spaCy", "stanza", "Flair", "HuggingFace"]
+            saved_package = str(saved_analyzer_params[0])
+            custom_package_default = saved_package if saved_package in custom_packages else custom_packages[0]
+            custom_model_default = str(saved_analyzer_params[1])
+            if entering_expert:
+                st.session_state["premium_custom_model_package_widget"] = custom_package_default
+                st.session_state["premium_custom_model_name_widget"] = custom_model_default
+            st_model_package = st.selectbox(
+                "NER-modelpakket",
+                options=custom_packages,
+                index=custom_packages.index(custom_package_default),
+                key="premium_custom_model_package_widget",
+            )
+            st_model = st.text_input(
+                "NER-modelnaam",
+                value=custom_model_default,
+                key="premium_custom_model_name_widget",
+            )
+
+        if selected_model_label == "Azure AI Language":
+            saved_is_azure = analyzer_model_label(saved_analyzer_params, ["Azure AI Language", "Other"]) == "Azure AI Language"
+            saved_ta_key = str(saved_analyzer_params[2]) if saved_is_azure else os.getenv("TA_KEY", "")
+            saved_ta_endpoint = str(saved_analyzer_params[3]) if saved_is_azure else os.getenv("TA_ENDPOINT", default="")
+            if entering_expert:
+                st.session_state["premium_ta_key_widget"] = saved_ta_key
+                st.session_state["premium_ta_endpoint_widget"] = saved_ta_endpoint
+            st_ta_key = st.text_input(
+                "Azure AI Language key",
+                value=saved_ta_key,
+                type="password",
+                key="premium_ta_key_widget",
+            )
+            st_ta_endpoint = st.text_input(
+                "Azure AI Language endpoint",
+                value=saved_ta_endpoint,
+                key="premium_ta_endpoint_widget",
+            )
+
+        st_threshold = st.slider(
+            label="Gevoeligheid van herkenning",
+            min_value=0.0,
+            max_value=1.0,
+            value=threshold_value,
+            help="Lagere waarde = meer gevonden gegevens, maar ook meer kans op fout-positieven.",
+            key="premium_threshold_expert_widget",
+        )
+        stored_return_decision = bool(st.session_state.get("_premium_return_decision_process", False))
+        stored_mask_char = str(st.session_state.get("_premium_mask_char", "*"))
+        stored_number_of_chars = int(st.session_state.get("_premium_number_of_chars", 15))
+        stored_encrypt_key = str(st.session_state.get("_premium_encrypt_key", "WmZq4t7w!z%C&F)J"))
+        if entering_expert:
+            st.session_state["premium_return_decision_widget"] = stored_return_decision
+            st.session_state["premium_mask_char_widget"] = stored_mask_char
+            st.session_state["premium_number_chars_widget"] = stored_number_of_chars
+            st.session_state["premium_encrypt_key_widget"] = stored_encrypt_key
+        st_return_decision_process = st.checkbox(
+            "Toon technische beslisinformatie",
+            value=stored_return_decision,
+            help="Voegt technische uitlegvelden toe aan de resultatentabel.",
+            key="premium_return_decision_widget",
+        )
+        st_mask_char = st.text_input(
+            "Maskeringsteken", value=stored_mask_char, max_chars=1, key="premium_mask_char_widget"
+        )
+        st_number_of_chars = st.number_input(
+            "Aantal te maskeren tekens",
+            value=stored_number_of_chars,
+            min_value=0,
+            max_value=100,
+            key="premium_number_chars_widget",
+        )
+        st_encrypt_key = st.text_input(
+            "AES-sleutel", value=stored_encrypt_key, key="premium_encrypt_key_widget"
+        )
+
+        st.markdown("**Woordenlijsten**")
+        st_allow_list = st_tags(
+            label="Niet vervangen",
+            text="Voer woord in en druk op Enter.",
+            value=stored_string_list(st.session_state, ALLOW_LIST_KEY),
+        )
+        st.caption("Woorden in deze lijst worden niet als gevoelig gegeven behandeld.")
+        st_deny_list = st_tags(
+            label="Extra controleren",
+            text="Voer woord in en druk op Enter.",
+            value=stored_string_list(st.session_state, DENY_LIST_KEY),
+        )
+        st.caption("Woorden in deze lijst krijgen extra aandacht bij de herkenning.")
+
+    analyzer_params = (st_model_package, st_model, st_ta_key, st_ta_endpoint)
+    open_ai_params = None
+
+    def set_up_openai_synthesis():
+        if os.getenv("OPENAI_TYPE", default="openai") == "Azure":
+            openai_api_type = "azure"
+            st_openai_api_base = st.sidebar.text_input(
+                "Azure OpenAI base URL", value=os.getenv("AZURE_OPENAI_ENDPOINT", default="")
+            )
+            openai_key = os.getenv("AZURE_OPENAI_KEY", default="")
+            st_deployment_id = st.sidebar.text_input(
+                "Deployment name", value=os.getenv("AZURE_OPENAI_DEPLOYMENT", default="")
+            )
+            st_openai_version = st.sidebar.text_input(
+                "OpenAI version", value=os.getenv("OPENAI_API_VERSION", default="2023-05-15")
+            )
+        else:
+            openai_api_type = "openai"
+            st_openai_version = st_openai_api_base = None
+            st_deployment_id = ""
+            openai_key = os.getenv("OPENAI_KEY", default="")
+
+        st_openai_key = st.sidebar.text_input("OPENAI_KEY", value=openai_key, type="password")
+        st_openai_model = st.sidebar.text_input(
+            "OpenAI-model voor synthetische tekst",
+            value=os.getenv("OPENAI_MODEL", default="gpt-3.5-turbo-instruct"),
+        )
+        return (
+            openai_api_type,
+            st_openai_api_base,
+            st_deployment_id,
+            st_openai_version,
+            st_openai_key,
+            st_openai_model,
+        )
+
+    if st_operator == "synthesize":
+        (
+            openai_api_type,
+            st_openai_api_base,
+            st_deployment_id,
+            st_openai_version,
+            st_openai_key,
+            st_openai_model,
+        ) = set_up_openai_synthesis()
+        open_ai_params = OpenAIParams(
+            openai_key=st_openai_key,
+            model=st_openai_model,
+            api_base=st_openai_api_base,
+            deployment_id=st_deployment_id,
+            api_version=st_openai_version,
+            api_type=openai_api_type,
+        )
+else:
+    profile_options = list(PROFILE_OPTIONS.keys())
+    profile_label = stored_profile_label(st.session_state, profile_options)
+    st_recognition_profile = PROFILE_OPTIONS[profile_label]
+
+    st_operator = stored_operator_value(st.session_state, OPERATOR_LABELS.keys())
+    if not standard_operator_is_supported(st_operator):
+        st.warning(
+            "Deze geavanceerde manier van vervangen is alleen beschikbaar in Expert. "
+            "Schakel terug naar Expert om deze instelling te behouden of aan te passen."
+        )
+        st.caption("Standaard wijzigt deze Expert-instelling niet automatisch.")
+        st.stop()
+
+    st_threshold_default = configured_threshold(st_recognition_profile)
+    st_threshold = stored_threshold(st.session_state, st_threshold_default)
+    st_return_decision_process = bool(st.session_state.get("_premium_return_decision_process", False))
+    st_mask_char = str(st.session_state.get("_premium_mask_char", "*"))
+    st_number_of_chars = int(st.session_state.get("_premium_number_of_chars", 15))
+    st_encrypt_key = str(st.session_state.get("_premium_encrypt_key", "WmZq4t7w!z%C&F)J"))
+    st_allow_list = stored_string_list(st.session_state, ALLOW_LIST_KEY)
+    st_deny_list = stored_string_list(st.session_state, DENY_LIST_KEY)
+    analyzer_params = stored_analyzer_params(
+        st.session_state,
+        ("flair", "flair/ner-english-large", "", ""),
+    )
+    open_ai_params = None
+
+    if st_operator == "synthesize":
+        if os.getenv("OPENAI_TYPE", default="openai") == "Azure":
+            openai_api_type = "azure"
+            st_openai_api_base = os.getenv("AZURE_OPENAI_ENDPOINT", default="")
+            openai_key = os.getenv("AZURE_OPENAI_KEY", default="")
+            st_deployment_id = os.getenv("AZURE_OPENAI_DEPLOYMENT", default="")
+            st_openai_version = os.getenv("OPENAI_API_VERSION", default="2023-05-15")
+        else:
+            openai_api_type = "openai"
+            st_openai_version = st_openai_api_base = None
+            st_deployment_id = ""
+            openai_key = os.getenv("OPENAI_KEY", default="")
+        open_ai_params = OpenAIParams(
+            openai_key=openai_key,
+            model=os.getenv("OPENAI_MODEL", default="gpt-3.5-turbo-instruct"),
+            api_base=st_openai_api_base,
+            deployment_id=st_deployment_id,
+            api_version=st_openai_version,
+            api_type=openai_api_type,
+        )
+
+persist_processing_settings(
+    st.session_state,
+    profile_label=profile_label,
+    operator=st_operator,
+    threshold=st_threshold,
+    allow_list=st_allow_list,
+    deny_list=st_deny_list,
+    analyzer_params=analyzer_params,
+)
+st.session_state["_premium_return_decision_process"] = bool(st_return_decision_process)
+st.session_state["_premium_mask_char"] = st_mask_char
+st.session_state["_premium_number_of_chars"] = int(st_number_of_chars)
+st.session_state["_premium_encrypt_key"] = st_encrypt_key
+
+if is_premium_expert:
+    with st.expander("Over deze app", expanded=False):
+        st.write(
+            "SolidPrivacy Scrub helpt bij het controleerbaar opschonen van vertrouwelijke "
+            "Nederlandse documenten. De herkenning combineert algemene patroonherkenning "
+            "met expliciete profielen voor zorg en juridische documenten."
+        )
+        st.write(
+            "De technische detectie-engine blijft onder de motorkap. De gebruiker beoordeelt "
+            "altijd zelf de gevonden gegevens en mogelijke kandidaten in de vervangtabel."
+        )
+
+    with st.expander("Controle-instellingen en herkenning", expanded=False):
+        if st_recognition_profile == "Dutch Care Strict":
+            st.info(
+                "Zorgcontrole is actief. Scrub zoekt extra naar patiënt- en cliëntnummers, "
+                "EPD/ECD- en dossiernummers, verwijzingen, laboratorium- en incidentreferenties, "
+                "zorgverleners, organisaties, locaties en exacte zorgdata. Diagnose, medicatie, "
+                "dosering, labwaarden en observaties blijven zo veel mogelijk leesbaar."
+            )
+        elif st_recognition_profile == "Dutch Legal Strict":
+            st.info(
+                "Juridische controle is actief. Scrub zoekt extra naar zaaknummers, rolnummers, "
+                "rekestnummers, parketnummers, dossiernummers, clientnummers, CJIB, ECLI, "
+                "procespartijen, instanties en mogelijke juridische referenties."
+            )
+        elif st_recognition_profile == "Dutch / EU":
+            st.info(
+                "Algemene Nederlandse controle is actief. Scrub zoekt onder meer naar BSN, postcode, "
+                "KvK, btw-nummer, Nederlandse IBAN, telefoonnummers, adressen, kentekens en BIG-nummers."
+            )
 
 try:
     with open("demo_text.txt", encoding="utf-8") as f:
@@ -456,69 +643,113 @@ try:
 except Exception:
     demo_text = ["Plak of upload hier tekst om te controleren."]
 
-st.subheader("1. Voeg document of tekst toe")
-with st.container(border=True):
-    st.caption(
-        "Voeg hier één bron toe: upload een document, laad optioneel een synthetisch testvoorbeeld "
-        "of plak/bewerk de tekst in hetzelfde invoervlak."
-    )
-    uploaded_file = st.file_uploader(
-        "Upload een .txt-, .docx- of tekstgebaseerd .pdf-bestand",
-        type=["txt", "docx", "pdf"],
-        help="Gebruik in deze publieke prototypeomgeving alleen synthetische of goedgekeurde testdocumenten.",
-    )
+if is_premium_standard:
+    render_stage_header(premium_state, Stage.ADD)
+elif is_premium_expert:
+    st.subheader("1. Voeg document of tekst toe")
 
-    uploaded_file_type = None
-    input_text = "".join(demo_text)
-
-    if st_recognition_profile == "Dutch Care Strict":
-        with st.expander("Gebruik een synthetisch zorgvoorbeeld", expanded=False):
-            sample_name = st.selectbox(
-                "Laad synthetisch zorgvoorbeeld",
-                ["Geen testvoorbeeld laden"] + care_example_names(),
-                index=0,
+show_add_workspace = is_premium_expert or stage_is_active(premium_state, Stage.ADD)
+if show_add_workspace:
+    with st.container(border=True):
+        if is_premium_standard:
+            if entering_standard:
+                st.session_state["premium_profile_standard_widget"] = profile_label
+            selected_profile_label = st.selectbox(
+                "Controlemodus",
+                profile_options,
+                index=profile_options.index(profile_label),
+                help=PROFILE_HELP,
+                key="premium_profile_standard_widget",
             )
-            if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:
-                input_text = care_example_text(sample_name)
-                st.caption("Synthetische voorbeeldtekst geladen. Er staan geen echte persoonsgegevens in.")
+            if selected_profile_label != profile_label:
+                st.session_state["_premium_profile_label"] = selected_profile_label
+                st.rerun()
+            st.caption(configured_description(st_recognition_profile))
 
-    elif st_recognition_profile == "Dutch Legal Strict":
-        with st.expander("Gebruik een synthetisch juridisch testvoorbeeld", expanded=False):
-            example_names = get_example_names()
-            if LEGAL_EXAMPLES_IMPORT_ERROR is not None:
-                st.warning(
-                    "Kon legal_test_examples.py niet laden. Ingebouwde fallback-voorbeelden worden getoond. "
-                    f"Foutmelding: {LEGAL_EXAMPLES_IMPORT_ERROR}"
+        st.caption(
+            "Voeg hier één bron toe: upload een document, laad optioneel een synthetisch testvoorbeeld "
+            "of plak/bewerk de tekst in hetzelfde invoervlak."
+        )
+        uploaded_file = st.file_uploader(
+            "Upload een .txt-, .docx- of tekstgebaseerd .pdf-bestand",
+            type=["txt", "docx", "pdf"],
+            help="Gebruik in deze publieke prototypeomgeving alleen synthetische of goedgekeurde testdocumenten.",
+        )
+        if uploaded_file is None and is_premium_standard:
+            uploaded_file = st.session_state.get("_premium_cached_uploaded_file")
+            if uploaded_file is not None:
+                st.caption(f"Huidige bron: {uploaded_file.name}")
+
+        uploaded_file_type = (
+            st.session_state.get("_premium_cached_uploaded_file_type")
+            if is_premium_standard and uploaded_file is not None
+            else None
+        )
+        input_text = (
+            st.session_state.get("_premium_cached_text", "".join(demo_text))
+            if is_premium_standard
+            else "".join(demo_text)
+        )
+
+        if st_recognition_profile == "Dutch Care Strict":
+            with st.expander("Gebruik een synthetisch zorgvoorbeeld", expanded=False):
+                sample_name = st.selectbox(
+                    "Laad synthetisch zorgvoorbeeld",
+                    ["Geen testvoorbeeld laden"] + care_example_names(),
+                    index=0,
                 )
-            elif not example_names:
-                st.warning("Er zijn geen juridische voorbeelden geladen.")
-                example_names = list(EMBEDDED_LEGAL_TEST_CASES.keys())
+                if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:
+                    input_text = care_example_text(sample_name)
+                    st.caption("Synthetische voorbeeldtekst geladen. Er staan geen echte persoonsgegevens in.")
 
-            sample_name = st.selectbox(
-                "Laad synthetisch juridisch voorbeeld",
-                ["Geen testvoorbeeld laden"] + example_names,
-                index=0,
-            )
-            if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:
-                example_text = get_example_text(sample_name)
-                if not example_text and sample_name in EMBEDDED_LEGAL_TEST_CASES:
-                    example_text = EMBEDDED_LEGAL_TEST_CASES[sample_name]
-                input_text = example_text
-                st.caption("Synthetische voorbeeldtekst geladen. Er staan geen echte persoonsgegevens in.")
+        elif st_recognition_profile == "Dutch Legal Strict":
+            with st.expander("Gebruik een synthetisch juridisch testvoorbeeld", expanded=False):
+                example_names = get_example_names()
+                if LEGAL_EXAMPLES_IMPORT_ERROR is not None:
+                    st.warning(
+                        "Kon legal_test_examples.py niet laden. Ingebouwde fallback-voorbeelden worden getoond. "
+                        f"Foutmelding: {LEGAL_EXAMPLES_IMPORT_ERROR}"
+                    )
+                elif not example_names:
+                    st.warning("Er zijn geen juridische voorbeelden geladen.")
+                    example_names = list(EMBEDDED_LEGAL_TEST_CASES.keys())
 
-    if uploaded_file is not None:
-        try:
-            input_text, uploaded_file_type = uploaded_file_to_text(uploaded_file)
-            st.success(f"Bestand geladen: {uploaded_file.name}")
-        except Exception as upload_error:
-            st.error(f"Kon het bestand niet lezen: {upload_error}")
+                sample_name = st.selectbox(
+                    "Laad synthetisch juridisch voorbeeld",
+                    ["Geen testvoorbeeld laden"] + example_names,
+                    index=0,
+                )
+                if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:
+                    example_text = get_example_text(sample_name)
+                    if not example_text and sample_name in EMBEDDED_LEGAL_TEST_CASES:
+                        example_text = EMBEDDED_LEGAL_TEST_CASES[sample_name]
+                    input_text = example_text
+                    st.caption("Synthetische voorbeeldtekst geladen. Er staan geen echte persoonsgegevens in.")
 
-    st_text = st.text_area(
-        label="Plak tekst of controleer de uit het document gehaalde tekst",
-        value=input_text,
-        height=240,
-        key="text_input",
-    )
+        if uploaded_file is not None:
+            try:
+                input_text, uploaded_file_type = uploaded_file_to_text(uploaded_file)
+                st.success(f"Bestand geladen: {uploaded_file.name}")
+            except Exception as upload_error:
+                st.error(f"Kon het bestand niet lezen: {upload_error}")
+
+        st_text = st.text_area(
+            label="Plak tekst of controleer de uit het document gehaalde tekst",
+            value=input_text,
+            height=240,
+            key="text_input",
+        )
+
+    st.session_state["_premium_cached_text"] = st_text
+    st.session_state["_premium_cached_uploaded_file"] = uploaded_file
+    st.session_state["_premium_cached_uploaded_file_type"] = uploaded_file_type
+else:
+    st_text = str(st.session_state.get("_premium_cached_text", ""))
+    uploaded_file = st.session_state.get("_premium_cached_uploaded_file")
+    uploaded_file_type = st.session_state.get("_premium_cached_uploaded_file_type")
+    if not st_text:
+        st.error("De huidige bron is niet meer beschikbaar. Open Toevoegen en laad de bron opnieuw.")
+        st.stop()
 
 try:
     all_supported_entities = list(get_supported_entities(*analyzer_params))
@@ -534,32 +765,119 @@ try:
         dutch_care_entities=care_dutch_entities,
     )
 
-    with st.sidebar.expander("Te herkennen gegevenstypen", expanded=False):
-        st_entities = st.multiselect(
-            label="Welke typen gegevens moet Scrub zoeken?",
-            options=all_supported_entities,
-            default=default_entities,
-            help="Laat dit standaard staan, tenzij je gericht wilt testen of tunen.",
-        )
+    entity_defaults = stored_entities(
+        st.session_state,
+        all_supported_entities,
+        default_entities,
+    )
+    if is_premium_expert:
+        with st.sidebar.expander("Te herkennen gegevenstypen", expanded=False):
+            if entering_expert:
+                st.session_state["premium_entities_expert_widget"] = list(entity_defaults)
+            st_entities = st.multiselect(
+                label="Welke typen gegevens moet Scrub zoeken?",
+                options=all_supported_entities,
+                default=entity_defaults,
+                help="Laat dit standaard staan, tenzij je gericht wilt testen of tunen.",
+                key="premium_entities_expert_widget",
+            )
+    else:
+        st_entities = list(entity_defaults)
 
-    analyzer_load_state = st.info("Herkenningsengine starten...")
-    analyzer = analyzer_engine(*analyzer_params)
-    analyzer_load_state.empty()
-
-    st_analyze_results = analyze(
-        *analyzer_params,
-        text=st_text,
+    persist_processing_settings(
+        st.session_state,
+        profile_label=profile_label,
+        operator=st_operator,
+        threshold=st_threshold,
         entities=st_entities,
-        language="en",
-        score_threshold=st_threshold,
-        return_decision_process=st_return_decision_process,
         allow_list=st_allow_list,
         deny_list=st_deny_list,
+        analyzer_params=analyzer_params,
     )
-    st_analyze_results = resolve_configured_analysis_results(
-        st_recognition_profile,
-        st_analyze_results,
+
+    current_processing_generation = processing_generation(
+        text=st_text,
+        profile=st_recognition_profile,
+        operator=st_operator,
+        threshold=st_threshold,
+        entities=st_entities,
+        allow_list=st_allow_list,
+        deny_list=st_deny_list,
+        analyzer_params=analyzer_params,
     )
+    premium_state, processing_inputs_changed = synchronize_processing_generation(
+        st.session_state, current_processing_generation
+    )
+    if processing_inputs_changed:
+        st.session_state.pop("_premium_cached_review_rows", None)
+
+    if is_premium_standard and st_operator not in ("highlight", "synthesize"):
+        if stage_is_active(premium_state, Stage.ADD):
+            process_clicked = st.button(
+                "Document verwerken",
+                type="primary",
+                use_container_width=True,
+                disabled=not bool(st_text.strip()),
+                key="premium_process_document",
+            )
+            if not process_clicked:
+                render_stage_header(premium_state, Stage.REVIEW)
+                render_stage_header(premium_state, Stage.DOWNLOAD)
+                st.stop()
+            st.session_state["_premium_process_requested_generation"] = current_processing_generation
+
+
+    cached_analysis_results = None
+    if is_premium_standard and not stage_is_active(premium_state, Stage.ADD):
+        cached_analysis_results = get_cached_analysis_results(
+            st.session_state, current_processing_generation
+        )
+
+    if cached_analysis_results is not None:
+        st_analyze_results = cached_analysis_results
+    else:
+        analyzer_load_state = st.info("Herkenningsengine starten...")
+        analyzer = analyzer_engine(*analyzer_params)
+        analyzer_load_state.empty()
+
+        st_analyze_results = analyze(
+            *analyzer_params,
+            text=st_text,
+            entities=st_entities,
+            language="en",
+            score_threshold=st_threshold,
+            return_decision_process=st_return_decision_process,
+            allow_list=st_allow_list,
+            deny_list=st_deny_list,
+        )
+        st_analyze_results = resolve_configured_analysis_results(
+            st_recognition_profile,
+            st_analyze_results,
+        )
+        if is_premium_standard:
+            cache_analysis_results(
+                st.session_state,
+                current_processing_generation,
+                st_analyze_results,
+            )
+
+    if (
+        is_premium_standard
+        and st_operator not in ("highlight", "synthesize")
+        and stage_is_active(premium_state, Stage.ADD)
+        and st.session_state.pop("_premium_process_requested_generation", None)
+        == current_processing_generation
+    ):
+        premium_state = mark_processing_complete(
+            st.session_state, current_processing_generation
+        )
+        source_name = uploaded_file.name if uploaded_file is not None else "Geplakte tekst"
+        set_stage_summary(
+            st.session_state,
+            Stage.ADD,
+            f"{source_name} · {profile_label}",
+        )
+        st.rerun()
 
     if st_operator not in ("highlight", "synthesize"):
         document_scope_key = manual_mask_document_key(st_text)
@@ -721,270 +1039,306 @@ try:
                 seen_find_values.add(manual_find_text)
 
         replacement_editor_df = pd.DataFrame(default_editor_rows)
-
-        st.divider()
-        st.subheader("2. Controleer resultaat")
-        st.caption(
-            "Controleer het resultaat. Details en extra hulpmiddelen staan standaard ingeklapt."
-        )
-        selection_inspection = selection_inspection_result(
-            st.session_state,
-            document_scope_key,
-        )
-        restore_source_scroll, restore_processed_scroll = selection_scroll_restore(
-            st.session_state,
-            document_scope_key,
-        )
-        side_by_side_review_state = render_side_by_side_review_panel(
-            source_text=st_text,
-            edited_replacements_df=replacement_editor_df,
-            document_scope_key=document_scope_key,
-            inspection_result=selection_inspection,
-            restore_source_scroll_ratio=restore_source_scroll,
-            restore_processed_scroll_ratio=restore_processed_scroll,
-        )
-
-        selection_event = side_by_side_review_state.get("component_event")
-        selection_outcome = handle_selection_component_event(
-            st.session_state,
-            selection_event,
-            source_text=st_text,
-            processed_text=side_by_side_review_state.get("processed_text", ""),
-            document_scope_key=document_scope_key,
-            document_binding_id=document_binding_id,
-            existing_rows=replacement_editor_df,
-            marked_ranges=side_by_side_review_state.get("highlight_spans", ()),
-        )
-        if selection_outcome.rerun_required:
-            st.rerun()
-
-        selection_notice = selection_feedback(st.session_state, document_scope_key)
-        selection_notice_level = str(selection_notice.get("level", ""))
-        selection_notice_message = str(selection_notice.get("message", ""))
-        if selection_notice_message:
-            if selection_notice_level == "success":
-                st.success(selection_notice_message)
-            elif selection_notice_level == "warning":
-                st.warning(selection_notice_message)
-            else:
-                st.info(selection_notice_message)
-
-        if latest_selection_action(st.session_state, document_scope_key) is not None:
-            if st.button(
-                "Laatste maskering uit tekstselectie ongedaan maken",
-                key=f"undo_processed_text_selection_{document_scope_key}",
-            ):
-                undo_outcome = undo_latest_selection_action(
-                    st.session_state,
-                    document_scope_key=document_scope_key,
-                )
-                if undo_outcome.rerun_required:
-                    st.rerun()
-                if undo_outcome.message:
-                    st.warning(undo_outcome.message)
-
-        review_mode = side_by_side_review_state.get("review_mode", "Basiscontrole")
-        is_expert_review = review_mode == "Expertcontrole"
-        is_basic_review = not is_expert_review
-
-        st.caption(
-            "Pas alleen aan wat nodig is; de vervangtabel blijft beschikbaar voor detailcontrole."
-        )
-        if is_expert_review:
-            with st.expander("Waarom controleren?", expanded=False):
-                st.info(REVIEW_INTRO_GUIDANCE)
-                st.markdown(f"- {CANDIDATE_GUIDANCE}")
-                st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
-                st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
-                st.markdown(f"- {AI_USAGE_GUIDANCE}")
-
-        if "review_order" in replacement_editor_df.columns:
-            replacement_editor_df = replacement_editor_df.sort_values(
-                by=["review_order", "type_label", "find"], kind="stable"
-            ).reset_index(drop=True)
-        if "review_status_label" in replacement_editor_df.columns:
-            status_counts = replacement_editor_df["review_status_label"].value_counts().to_dict()
-            status_parts = [f"{label}: {count}" for label, count in status_counts.items()]
-            if status_parts:
-                st.caption("Reviewstatus: " + " · ".join(status_parts))
-
-        with st.expander("Gemiste waarde toevoegen", expanded=False):
-            st.caption("Voeg een gemiste waarde rechtstreeks toe aan de vervangtabel.")
-
-            with st.form("manual_mask_entry_form", clear_on_submit=True):
-                value_col, type_col, replacement_col = st.columns([2.0, 1.1, 1.6])
-
-                with value_col:
-                    manual_value = st.text_input(
-                        "Waarde die alsnog gemaskeerd moet worden"
+        if is_premium_standard and stage_is_active(premium_state, Stage.REVIEW):
+            cached_review_rows = st.session_state.get("_premium_cached_review_rows")
+            if isinstance(cached_review_rows, list) and cached_review_rows:
+                cached_review_df = pd.DataFrame(cached_review_rows)
+                if "find" in cached_review_df.columns and "find" in replacement_editor_df.columns:
+                    cached_find_values = {
+                        safe_cell(value) for value in cached_review_df["find"].tolist()
+                    }
+                    new_rows_df = replacement_editor_df[
+                        ~replacement_editor_df["find"].map(safe_cell).isin(cached_find_values)
+                    ]
+                    replacement_editor_df = pd.concat(
+                        [cached_review_df, new_rows_df], ignore_index=True
                     )
+                else:
+                    replacement_editor_df = cached_review_df
 
-                with type_col:
-                    manual_type_label = st.selectbox(
-                        "Type gegeven",
-                        list(MANUAL_MASK_TYPE_OPTIONS),
-                    )
+        if is_premium_standard:
+            render_stage_header(premium_state, Stage.REVIEW)
 
-                manual_placeholder = build_manual_placeholder(
-                    manual_type_label,
-                    replacement_editor_df,
-                    document_binding_id,
-                )
-
-                with replacement_col:
-                    manual_replace_with = st.text_input(
-                        "Vervangen door",
-                        value=manual_placeholder,
-                    )
-
-                manual_submit = st.form_submit_button(
-                    "Toevoegen aan vervangtabel",
-                    use_container_width=True,
-                )
-
-        if manual_submit:
-            existing_find_values = (
-                replacement_editor_df["find"].tolist()
-                if "find" in replacement_editor_df.columns
-                else []
+        show_review_workspace = is_premium_expert or stage_is_active(premium_state, Stage.REVIEW)
+        if show_review_workspace:
+            if is_premium_expert:
+                st.divider()
+                st.subheader("2. Controleer resultaat")
+            st.caption(
+                "Controleer het resultaat. Details en extra hulpmiddelen staan standaard ingeklapt."
             )
-            validation = validate_manual_mask_input(
-                manual_value,
+            selection_inspection = selection_inspection_result(
+                st.session_state,
+                document_scope_key,
+            )
+            restore_source_scroll, restore_processed_scroll = selection_scroll_restore(
+                st.session_state,
+                document_scope_key,
+            )
+            side_by_side_review_state = render_side_by_side_review_panel(
                 source_text=st_text,
-                existing_find_values=existing_find_values,
+                edited_replacements_df=replacement_editor_df,
+                document_scope_key=document_scope_key,
+                inspection_result=selection_inspection,
+                restore_source_scroll_ratio=restore_source_scroll,
+                restore_processed_scroll_ratio=restore_processed_scroll,
             )
-            if not validation.is_valid:
-                st.warning(validation.message)
-            else:
-                manual_row = build_manual_mask_row(
-                    find_text=manual_value,
-                    manual_type=manual_type_label,
-                    replace_with=manual_replace_with,
-                    existing_rows=replacement_editor_df,
-                    document_binding_id=document_binding_id,
-                )
-                manual_mask_rows = st.session_state.get("manual_mask_rows", {})
-                if not isinstance(manual_mask_rows, dict):
-                    manual_mask_rows = {}
-                manual_mask_rows[manual_mask_key] = manual_mask_rows.get(manual_mask_key, []) + [manual_row]
-                st.session_state["manual_mask_rows"] = manual_mask_rows
-                st.success("Toegevoegd aan de vervangtabel.")
+
+            selection_event = side_by_side_review_state.get("component_event")
+            selection_outcome = handle_selection_component_event(
+                st.session_state,
+                selection_event,
+                source_text=st_text,
+                processed_text=side_by_side_review_state.get("processed_text", ""),
+                document_scope_key=document_scope_key,
+                document_binding_id=document_binding_id,
+                existing_rows=replacement_editor_df,
+                marked_ranges=side_by_side_review_state.get("highlight_spans", ()),
+            )
+            if selection_outcome.rerun_required:
                 st.rerun()
 
-        if is_expert_review:
-            with st.expander("Extra controlehulpen", expanded=False):
-                review_filter = st.selectbox(
-                    "Focusfilter voor controle",
-                    REVIEW_FILTER_OPTIONS,
-                    index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
-                    help=FOCUS_FILTER_GUIDANCE,
-                )
-                if review_filter != FILTER_SHOW_ALL:
-                    focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
-                    st.caption(f"{len(focus_df)} van {len(replacement_editor_df)} rij(en) zichtbaar in dit focusoverzicht.")
-                    st.dataframe(
-                        focus_df[[col for col in ["review_status_label", "find", "replace_with", "type_label", "confidence", "source_label"] if col in focus_df.columns]],
+            selection_notice = selection_feedback(st.session_state, document_scope_key)
+            selection_notice_level = str(selection_notice.get("level", ""))
+            selection_notice_message = str(selection_notice.get("message", ""))
+            if selection_notice_message:
+                if selection_notice_level == "success":
+                    st.success(selection_notice_message)
+                elif selection_notice_level == "warning":
+                    st.warning(selection_notice_message)
+                else:
+                    st.info(selection_notice_message)
+
+            if latest_selection_action(st.session_state, document_scope_key) is not None:
+                if st.button(
+                    "Laatste maskering uit tekstselectie ongedaan maken",
+                    key=f"undo_processed_text_selection_{document_scope_key}",
+                ):
+                    undo_outcome = undo_latest_selection_action(
+                        st.session_state,
+                        document_scope_key=document_scope_key,
+                    )
+                    if undo_outcome.rerun_required:
+                        st.rerun()
+                    if undo_outcome.message:
+                        st.warning(undo_outcome.message)
+
+            review_mode = side_by_side_review_state.get("review_mode", "Basiscontrole")
+            is_expert_review = review_mode == "Expertcontrole"
+            is_basic_review = not is_expert_review
+
+            st.caption(
+                "Pas alleen aan wat nodig is; de vervangtabel blijft beschikbaar voor detailcontrole."
+            )
+            if is_expert_review:
+                with st.expander("Waarom controleren?", expanded=False):
+                    st.info(REVIEW_INTRO_GUIDANCE)
+                    st.markdown(f"- {CANDIDATE_GUIDANCE}")
+                    st.markdown(f"- {FOCUS_FILTER_GUIDANCE}")
+                    st.markdown(f"- {TECHNICAL_DETAILS_GUIDANCE}")
+                    st.markdown(f"- {AI_USAGE_GUIDANCE}")
+
+            if "review_order" in replacement_editor_df.columns:
+                replacement_editor_df = replacement_editor_df.sort_values(
+                    by=["review_order", "type_label", "find"], kind="stable"
+                ).reset_index(drop=True)
+            if "review_status_label" in replacement_editor_df.columns:
+                status_counts = replacement_editor_df["review_status_label"].value_counts().to_dict()
+                status_parts = [f"{label}: {count}" for label, count in status_counts.items()]
+                if status_parts:
+                    st.caption("Reviewstatus: " + " · ".join(status_parts))
+
+            with st.expander("Gemiste waarde toevoegen", expanded=False):
+                st.caption("Voeg een gemiste waarde rechtstreeks toe aan de vervangtabel.")
+
+                with st.form("manual_mask_entry_form", clear_on_submit=True):
+                    value_col, type_col, replacement_col = st.columns([2.0, 1.1, 1.6])
+
+                    with value_col:
+                        manual_value = st.text_input(
+                            "Waarde die alsnog gemaskeerd moet worden"
+                        )
+
+                    with type_col:
+                        manual_type_label = st.selectbox(
+                            "Type gegeven",
+                            list(MANUAL_MASK_TYPE_OPTIONS),
+                        )
+
+                    manual_placeholder = build_manual_placeholder(
+                        manual_type_label,
+                        replacement_editor_df,
+                        document_binding_id,
+                    )
+
+                    with replacement_col:
+                        manual_replace_with = st.text_input(
+                            "Vervangen door",
+                            value=manual_placeholder,
+                        )
+
+                    manual_submit = st.form_submit_button(
+                        "Toevoegen aan vervangtabel",
                         use_container_width=True,
                     )
-                    st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
 
-        if st_recognition_profile == "Dutch Legal Strict":
-            if is_expert_review or candidate_rows:
-                with st.expander("Mogelijk extra te controleren waarden", expanded=False):
-                    if candidate_rows:
-                        st.warning(
-                            "Deze waarden zijn niet automatisch vervangen, maar lijken mogelijk op juridische of administratieve referenties. "
-                            "Controleer ze en vink ze alleen aan als ze echt vervangen moeten worden."
-                        )
-                        candidate_display_df = pd.DataFrame(candidate_rows)
-                        candidate_display_df["type_gegeven"] = candidate_display_df["entity_type"].map(entity_label)
-                        candidate_display_df["zekerheid"] = candidate_display_df["score"].map(confidence_label)
-                        candidate_display_df = candidate_display_df[
-                            ["type_gegeven", "text", "placeholder", "zekerheid", "reason", "context"]
-                        ].rename(
-                            columns={
-                                "type_gegeven": "Type gegeven",
-                                "text": "Gevonden tekst",
-                                "placeholder": "Voorgestelde vervanging",
-                                "zekerheid": "Zekerheid",
-                                "reason": "Reden",
-                                "context": "Context",
-                            }
-                        )
-                        st.dataframe(candidate_display_df, use_container_width=True)
-                    else:
-                        st.success("Geen mogelijke gemiste referenties gevonden door de auditlaag.")
-
-        replacement_table_label = (
-            f"Vervangtabel controleren — {len(replacement_editor_df.index)} items"
-            if is_expert_review
-            else f"Details aanpassen — vervangtabel ({len(replacement_editor_df.index)} items)"
-        )
-        with st.expander(replacement_table_label, expanded=False):
-            st.caption("De vervangtabel blijft leidend voor beslissingen en export.")
-            edited_replacements_df = st.data_editor(
-                replacement_editor_df,
-                hide_index=True,
-                num_rows="dynamic",
-                use_container_width=True,
-                column_order=main_review_columns(replacement_editor_df.columns),
-                column_config={
-                    "include": st.column_config.CheckboxColumn(
-                        "Meenemen", help="Vink uit om deze vervanging niet toe te passen.", default=True
-                    ),
-                    "remember": st.column_config.CheckboxColumn(
-                        "Onthouden", help="Bewaar deze vervanging voor later gebruik.", default=False
-                    ),
-                    "review_status_label": st.column_config.TextColumn(
-                        "Status", help="Reviewstatus: automatisch vervangen, controle nodig, handmatig of onthouden."
-                    ),
-                    "find": st.column_config.TextColumn(
-                        "Gevonden tekst", help="Exacte tekst die vervangen moet worden."
-                    ),
-                    "replace_with": st.column_config.TextColumn(
-                        "Vervangen door", help="Placeholder of vervangende tekst."
-                    ),
-                    "type_label": st.column_config.TextColumn(
-                        "Type gegeven", help="Gebruiksvriendelijke categorie."
-                    ),
-                    "confidence": st.column_config.TextColumn(
-                        "Zekerheid", help="Globale inschatting van de herkenningszekerheid."
-                    ),
-                    "source_label": st.column_config.TextColumn(
-                        "Bron", help="Automatisch herkend, mogelijke kandidaat, onthouden of handmatig."
-                    ),
-                    "reason": st.column_config.TextColumn(
-                        "Reden", help="Waarom deze regel is voorgesteld."
-                    ),
-                    "context": st.column_config.TextColumn(
-                        "Context", help="Nabije tekst voor kandidaatregels."
-                    ),
-                    "entity_type": st.column_config.TextColumn(
-                        "Technisch type", help="Interne herkennercategorie."
-                    ),
-                    "score": st.column_config.NumberColumn(
-                        "Technische score", help="Numerieke score, indien beschikbaar.", format="%.3f"
-                    ),
-                    "source": st.column_config.TextColumn("Technische bron"),
-                },
-                key="replacement_editor",
-            )
-
-        if is_expert_review:
-            with st.expander("Geavanceerde details bij de vervangtabel", expanded=False):
-                st.caption(TECHNICAL_DETAILS_GUIDANCE)
-                technical_columns = technical_display_columns(replacement_editor_df.columns)
-                if technical_columns:
-                    st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
+            if manual_submit:
+                existing_find_values = (
+                    replacement_editor_df["find"].tolist()
+                    if "find" in replacement_editor_df.columns
+                    else []
+                )
+                validation = validate_manual_mask_input(
+                    manual_value,
+                    source_text=st_text,
+                    existing_find_values=existing_find_values,
+                )
+                if not validation.is_valid:
+                    st.warning(validation.message)
                 else:
-                    st.caption("Geen technische detailkolommen beschikbaar.")
+                    manual_row = build_manual_mask_row(
+                        find_text=manual_value,
+                        manual_type=manual_type_label,
+                        replace_with=manual_replace_with,
+                        existing_rows=replacement_editor_df,
+                        document_binding_id=document_binding_id,
+                    )
+                    manual_mask_rows = st.session_state.get("manual_mask_rows", {})
+                    if not isinstance(manual_mask_rows, dict):
+                        manual_mask_rows = {}
+                    manual_mask_rows[manual_mask_key] = manual_mask_rows.get(manual_mask_key, []) + [manual_row]
+                    st.session_state["manual_mask_rows"] = manual_mask_rows
+                    st.success("Toegevoegd aan de vervangtabel.")
+                    st.rerun()
 
-        if is_expert_review:
-            render_serial_review_panel(
-                displayed_text=st_text,
-                edited_replacements_df=edited_replacements_df,
-                include_side_by_side=False,
+            if is_expert_review:
+                with st.expander("Extra controlehulpen", expanded=False):
+                    review_filter = st.selectbox(
+                        "Focusfilter voor controle",
+                        REVIEW_FILTER_OPTIONS,
+                        index=REVIEW_FILTER_OPTIONS.index(FILTER_SHOW_ALL),
+                        help=FOCUS_FILTER_GUIDANCE,
+                    )
+                    if review_filter != FILTER_SHOW_ALL:
+                        focus_df = filter_review_dataframe(replacement_editor_df, review_filter)
+                        st.caption(f"{len(focus_df)} van {len(replacement_editor_df)} rij(en) zichtbaar in dit focusoverzicht.")
+                        st.dataframe(
+                            focus_df[[col for col in ["review_status_label", "find", "replace_with", "type_label", "confidence", "source_label"] if col in focus_df.columns]],
+                            use_container_width=True,
+                        )
+                        st.caption("Pas wijzigingen toe in de volledige vervangtabel hieronder; dit focusoverzicht is alleen bedoeld om sneller te controleren.")
+
+            if st_recognition_profile == "Dutch Legal Strict":
+                if is_expert_review or candidate_rows:
+                    with st.expander("Mogelijk extra te controleren waarden", expanded=False):
+                        if candidate_rows:
+                            st.warning(
+                                "Deze waarden zijn niet automatisch vervangen, maar lijken mogelijk op juridische of administratieve referenties. "
+                                "Controleer ze en vink ze alleen aan als ze echt vervangen moeten worden."
+                            )
+                            candidate_display_df = pd.DataFrame(candidate_rows)
+                            candidate_display_df["type_gegeven"] = candidate_display_df["entity_type"].map(entity_label)
+                            candidate_display_df["zekerheid"] = candidate_display_df["score"].map(confidence_label)
+                            candidate_display_df = candidate_display_df[
+                                ["type_gegeven", "text", "placeholder", "zekerheid", "reason", "context"]
+                            ].rename(
+                                columns={
+                                    "type_gegeven": "Type gegeven",
+                                    "text": "Gevonden tekst",
+                                    "placeholder": "Voorgestelde vervanging",
+                                    "zekerheid": "Zekerheid",
+                                    "reason": "Reden",
+                                    "context": "Context",
+                                }
+                            )
+                            st.dataframe(candidate_display_df, use_container_width=True)
+                        else:
+                            st.success("Geen mogelijke gemiste referenties gevonden door de auditlaag.")
+
+            replacement_table_label = (
+                f"Vervangtabel controleren — {len(replacement_editor_df.index)} items"
+                if is_expert_review
+                else f"Details aanpassen — vervangtabel ({len(replacement_editor_df.index)} items)"
             )
+            with st.expander(replacement_table_label, expanded=False):
+                st.caption("De vervangtabel blijft leidend voor beslissingen en export.")
+                edited_replacements_df = st.data_editor(
+                    replacement_editor_df,
+                    hide_index=True,
+                    num_rows="dynamic",
+                    use_container_width=True,
+                    column_order=main_review_columns(replacement_editor_df.columns),
+                    column_config={
+                        "include": st.column_config.CheckboxColumn(
+                            "Meenemen", help="Vink uit om deze vervanging niet toe te passen.", default=True
+                        ),
+                        "remember": st.column_config.CheckboxColumn(
+                            "Onthouden", help="Bewaar deze vervanging voor later gebruik.", default=False
+                        ),
+                        "review_status_label": st.column_config.TextColumn(
+                            "Status", help="Reviewstatus: automatisch vervangen, controle nodig, handmatig of onthouden."
+                        ),
+                        "find": st.column_config.TextColumn(
+                            "Gevonden tekst", help="Exacte tekst die vervangen moet worden."
+                        ),
+                        "replace_with": st.column_config.TextColumn(
+                            "Vervangen door", help="Placeholder of vervangende tekst."
+                        ),
+                        "type_label": st.column_config.TextColumn(
+                            "Type gegeven", help="Gebruiksvriendelijke categorie."
+                        ),
+                        "confidence": st.column_config.TextColumn(
+                            "Zekerheid", help="Globale inschatting van de herkenningszekerheid."
+                        ),
+                        "source_label": st.column_config.TextColumn(
+                            "Bron", help="Automatisch herkend, mogelijke kandidaat, onthouden of handmatig."
+                        ),
+                        "reason": st.column_config.TextColumn(
+                            "Reden", help="Waarom deze regel is voorgesteld."
+                        ),
+                        "context": st.column_config.TextColumn(
+                            "Context", help="Nabije tekst voor kandidaatregels."
+                        ),
+                        "entity_type": st.column_config.TextColumn(
+                            "Technisch type", help="Interne herkennercategorie."
+                        ),
+                        "score": st.column_config.NumberColumn(
+                            "Technische score", help="Numerieke score, indien beschikbaar.", format="%.3f"
+                        ),
+                        "source": st.column_config.TextColumn("Technische bron"),
+                    },
+                    key="replacement_editor",
+                )
+                if is_premium_standard:
+                    st.session_state["_premium_cached_review_rows"] = (
+                        edited_replacements_df.to_dict("records")
+                    )
+
+            if is_expert_review:
+                with st.expander("Geavanceerde details bij de vervangtabel", expanded=False):
+                    st.caption(TECHNICAL_DETAILS_GUIDANCE)
+                    technical_columns = technical_display_columns(replacement_editor_df.columns)
+                    if technical_columns:
+                        st.dataframe(replacement_editor_df[technical_columns], use_container_width=True)
+                    else:
+                        st.caption("Geen technische detailkolommen beschikbaar.")
+
+            if is_expert_review:
+                render_serial_review_panel(
+                    displayed_text=st_text,
+                    edited_replacements_df=edited_replacements_df,
+                    include_side_by_side=False,
+                )
+
+        else:
+            cached_review_rows = st.session_state.get("_premium_cached_review_rows")
+            if not isinstance(cached_review_rows, list) or not cached_review_rows:
+                st.error("De afgeronde controle is niet meer beschikbaar. Open Controleren opnieuw.")
+                st.stop()
+            edited_replacements_df = pd.DataFrame(cached_review_rows)
+            review_mode = "Basiscontrole"
+            is_expert_review = False
+            is_basic_review = True
 
         edited_replacements = {}
         edited_report_rows = []
@@ -1014,6 +1368,26 @@ try:
 
         export_text = apply_replacements_to_text(st_text, edited_replacements)
 
+        if is_premium_standard and stage_is_active(premium_state, Stage.REVIEW):
+            if st.button(
+                "Controle afronden",
+                type="primary",
+                use_container_width=True,
+                key="premium_complete_review",
+            ):
+                st.session_state["_premium_cached_review_rows"] = edited_replacements_df.to_dict("records")
+                manual_count = 0
+                if "source" in edited_replacements_df.columns:
+                    manual_count = int((edited_replacements_df["source"] == "manual").sum())
+                review_summary = f"{len(edited_replacements_df.index)} gecontroleerd"
+                if manual_count:
+                    review_summary += f" · {manual_count} handmatig toegevoegd"
+                set_stage_summary(st.session_state, Stage.REVIEW, review_summary)
+                premium_state = mark_review_complete(st.session_state)
+                st.rerun()
+            render_stage_header(premium_state, Stage.DOWNLOAD)
+            st.stop()
+
         if is_expert_review:
             with st.expander("Herbruikbare vervangingen", expanded=False):
                 remember_rows_to_save = []
@@ -1037,7 +1411,10 @@ try:
                         clear_remembered_replacements()
                         st.warning("Onthouden vervangingen gewist.")
 
-        st.subheader("3. Exporteer resultaat")
+        if is_premium_standard:
+            render_stage_header(premium_state, Stage.DOWNLOAD)
+        else:
+            st.subheader("3. Exporteer resultaat")
         st.caption("Download documenten; Scrub Key en auditbestanden blijven apart.")
 
         st.markdown("**Document downloaden**")

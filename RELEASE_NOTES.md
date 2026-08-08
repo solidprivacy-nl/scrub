@@ -1,3 +1,26 @@
+## 2026-08-08 — Standaard en Expert behouden dezelfde verwerkingskeuzes
+
+- Wisselen tussen `Standaard` en `Expert` verandert niet langer ongemerkt de gekozen controlemodus of andere verwerkingsinstellingen.
+- Een gekozen Zorg-, Juridisch- of ander profiel blijft behouden wanneer alleen de weergave verandert.
+- Ook gevoeligheid, gegevenstypen, woordenlijsten en technische herkenningsinstellingen worden over beide weergaven heen consistent gehouden.
+- Alleen een echte wijziging aan een verwerkingsinstelling maakt eerdere controle- en downloadstatus ongeldig; alleen wisselen van weergave doet dat niet.
+- Herkenning, vervangingslogica, exportbestanden, Scrub Key, terugzetten en verplichte menselijke controle zijn inhoudelijk niet gewijzigd.
+
+---
+
+## 2026-08-08 — Premium workflow krijgt één duidelijke documentworkspace
+
+- De standaardweergave organiseert anonimiseren voortaan rond drie vaste fasen: `Toevoegen → Controleren → Downloaden`.
+- Slechts één fase is tegelijk volledig actief. Afgeronde fasen worden compacte statusregels en volgende fasen blijven zichtbaar zonder te concurreren om aandacht.
+- Na verwerken gaat de werkruimte automatisch naar controleren; na expliciet afronden van de controle gaat zij naar downloaden.
+- Je kunt terug naar een eerdere fase. Een wijziging die de verwerking beïnvloedt maakt latere resultaten veilig ongeldig, zodat verouderde downloads niet als actueel blijven verschijnen.
+- `Standaard` toont geen permanente instellingenbalk. `Expert` blijft beschikbaar voor geavanceerde instellingen en controlehulpen.
+- De afzonderlijke werkstroom `Terugzetten` blijft beschikbaar voor lokaal herstel met een Scrub Key.
+- Geavanceerde Expert-vervangmodi worden niet stil aangepast wanneer je naar Standaard wisselt; de app vraagt dan om terug te keren naar Expert.
+- Herkenningsregels, menselijke controle, vervanglogica, downloadinhoud en -namen, Scrub Key, terugzetten en auditsemantiek zijn niet bedoeld te veranderen door deze shell-herstructurering.
+
+---
+
 ## 2026-08-04 23:15 Europe/Amsterdam — Kortere placeholders in de controleweergave
 
 - Lange documentgebonden placeholders worden in de controleweergave compacter getoond. Zo wordt bijvoorbeeld `[LOCATIE_BSK732WYQ424ZIEQ6_02]` zichtbaar als `[LOCATIE_02]`.
