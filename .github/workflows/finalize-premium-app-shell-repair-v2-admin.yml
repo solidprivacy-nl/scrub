@@ -1,0 +1,31 @@
+name: Finalize Premium App Shell repair v2 administration
+
+on:
+  push:
+    branches:
+      - wp/premium-app-shell-post-merge-state-repair-v2
+    paths:
+      - .github/workflows/finalize-premium-app-shell-repair-v2-admin.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wp/premium-app-shell-post-merge-state-repair-v2
+          fetch-depth: 0
+      - name: Apply administration
+        run: python scripts/finalize_premium_app_shell_repair_v2_admin.py
+      - name: Self-clean and commit
+        run: |
+          rm scripts/finalize_premium_app_shell_repair_v2_admin.py
+          rm .github/workflows/finalize-premium-app-shell-repair-v2-admin.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs(ui): record App Shell repair v2 candidate"
+          git push origin HEAD:wp/premium-app-shell-post-merge-state-repair-v2
