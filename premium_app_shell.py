@@ -96,14 +96,23 @@ def stage_can_open(state: CoreFlowState, stage: Stage) -> bool:
 
 
 def open_stage(state: CoreFlowState, stage: Stage) -> CoreFlowState:
-    """Open an eligible stage as a presentation transition only.
+    """Open an eligible stage with fail-closed downstream handling.
 
-    Returning to an earlier stage does not invalidate valid lineage by itself.
-    Processing-affecting edits must still call ``with_source`` or
-    ``invalidate_for_processing_change`` before downstream content is shown.
+    Returning to Add is presentation-only until a processing-affecting input is
+    actually changed. Reopening a completed Review is different: that stage is
+    authoritative for export decisions, so Download becomes ineligible until
+    the review is explicitly completed again. This prevents an edited review
+    from leaving stale export lineage available through a completed header.
     """
     if not stage_can_open(state, stage):
         raise ValueError(f"stage {stage.value} is not eligible")
+    if stage is Stage.REVIEW and _review_is_current(state):
+        return replace(
+            state,
+            stage=Stage.REVIEW,
+            reviewed_generation=None,
+            export_generation=None,
+        )
     return replace(state, stage=stage)
 
 
