@@ -1,0 +1,31 @@
+name: Apply Premium export gate repair v2
+
+on:
+  push:
+    branches:
+      - wp/premium-app-shell-post-merge-state-repair-v2
+    paths:
+      - .github/workflows/apply-premium-export-gate-v2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wp/premium-app-shell-post-merge-state-repair-v2
+          fetch-depth: 0
+      - name: Apply guarded source patch
+        run: python scripts/apply_premium_export_gate_patch.py
+      - name: Remove one-shot executor and commit
+        run: |
+          rm scripts/apply_premium_export_gate_patch.py
+          rm .github/workflows/apply-premium-export-gate-v2.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add presidio_streamlit.py scripts/apply_premium_export_gate_patch.py .github/workflows/apply-premium-export-gate-v2.yml
+          git commit -m "fix(ui): enforce fail-closed export after review edits"
+          git push origin HEAD:wp/premium-app-shell-post-merge-state-repair-v2
