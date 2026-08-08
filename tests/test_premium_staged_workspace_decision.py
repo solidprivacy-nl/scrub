@@ -34,8 +34,8 @@ def test_decision_rejects_routed_pages_and_nested_form_accordion() -> None:
     text = DECISION.read_text(encoding="utf-8")
 
     for required in [
-        "not a three-page wizard",
-        "Do not implement the Standard core flow as three isolated routed pages/screens",
+        "three-page wizard",
+        "three separate core-flow pages: rejected for Standard",
         "No nested core-flow accordion hierarchy",
         "Do not build an accordion inside an accordion",
         "Stage panels, not generic Streamlit expanders",
