@@ -47,4 +47,8 @@ Exclusive ownership is claimed for the shared Streamlit shell surface while this
 - fresh independent `governance_release_assurance` before merge;
 - after merge, exact-main Actions + GitHub→Hugging Face sync + live app verification because UI behavior changes.
 
+## Execution-continuity note — 2026-08-08 15:08 Europe/Amsterdam
+
+The latest PR event at head `7938b04a122e35d4a7a9fb9a64b0dec564ed8f87` ended as `action_required` before job creation (`0` jobs), so it is an Actions invocation-state problem rather than a regression-test failure. This administrative claim update intentionally creates a normal repository-user synchronize event without changing product semantics, solely to obtain executable exact-head CI on the current implementation candidate. The resulting new head must be treated as the only candidate eligible for later assurance.
+
 Implementation will not self-certify or self-merge.
