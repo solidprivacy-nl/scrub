@@ -1,0 +1,29 @@
+name: Premium legacy patch guard
+
+on:
+  push:
+    branches:
+      - wp/premium-app-shell-implementation
+    paths:
+      - .github/workflows/premium-legacy-patch-guard.yml
+
+permissions:
+  contents: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wp/premium-app-shell-implementation
+          fetch-depth: 0
+      - name: Guard legacy runtime patch
+        run: python tools/_guard_legacy_streamlit_patch.py
+      - name: Commit guard
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(ui): bypass legacy runtime patches for premium shell"
+          git push origin HEAD:wp/premium-app-shell-implementation
