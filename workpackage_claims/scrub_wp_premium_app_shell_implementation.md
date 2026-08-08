@@ -49,6 +49,10 @@ Exclusive ownership is claimed for the shared Streamlit shell surface while this
 
 ## Execution-continuity note — 2026-08-08 15:08 Europe/Amsterdam
 
-The latest PR event at head `7938b04a122e35d4a7a9fb9a64b0dec564ed8f87` ended as `action_required` before job creation (`0` jobs), so it is an Actions invocation-state problem rather than a regression-test failure. This administrative claim update intentionally creates a normal repository-user synchronize event without changing product semantics, solely to obtain executable exact-head CI on the current implementation candidate. The resulting new head must be treated as the only candidate eligible for later assurance.
+The PR event at head `7938b04a122e35d4a7a9fb9a64b0dec564ed8f87` ended as `action_required` before job creation (`0` jobs), so it was an Actions invocation-state problem rather than a regression-test failure. A normal repository-user synchronize event was generated without changing product semantics. That executable CI cycle produced implementation repairs on the branch.
+
+## Execution-continuity note — 2026-08-08 15:13 Europe/Amsterdam
+
+The implementation branch has since advanced through CI-driven repair commits to `8d77cb9733422fa5a25abda4b2ed554bde29706c` (`fix(ui): harden staged review and analysis state`). Its automatic bot-authored synchronize event again ended as `action_required` before job creation. This claim-only update deliberately retriggers exact-head GitHub Actions under a normal repository-user event. It changes no product/runtime semantics. Only the resulting new head and its real executable CI evidence may be used for completion or later independent assurance.
 
 Implementation will not self-certify or self-merge.
