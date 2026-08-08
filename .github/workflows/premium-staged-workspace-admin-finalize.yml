@@ -19,412 +19,52 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 1
 
-      - name: Prepend authoritative Premium queue and decision records
+      - name: Prepend authoritative records and self-clean
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          workpackages_marker = "SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — urgent architecture gate"
-          workpackages_prefix = '''# SolidPrivacy Scrub — Current authoritative execution queue
-
-> **Current status override — 2026-08-08 Europe/Amsterdam**  
-> This section is the authoritative current execution queue. Older queue/status sections retained below are historical records and must not override this section.
-
-## Premium UI priority
-
-The coordinator has explicitly prioritized the Premium interface. The active Standard target is a **single-page staged document workspace**, not three separate routed core-flow pages and not a long form with nested expanders.
-
-Binding principle:
-
-```text
-One document. One workspace. Three stages. One active task.
-
-Toevoegen → Controleren → Downloaden
-```
-
-All three stage headers remain present in one workspace. Exactly one stage is expanded/dominant at a time. Completed stages collapse to compact summaries, future stages remain visible but passive, successful completion auto-advances, and explicit return to an earlier stage is allowed. Processing-affecting earlier changes invalidate downstream state fail-closed.
-
-Governing design:
-- `PREMIUM_STAGED_WORKSPACE_DECISION.md`;
-- `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`;
-- merged `premium_core_flow_state.py` state invariants;
-- ROADMAP Premium core-flow section.
-
-Historical prerequisites now completed:
-- `SCRUB-WP_PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN` — planning completed;
-- `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION` — independent governance gate closed;
-- `SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT` — merged through PR #80;
-- `SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL` — merged through PR #82.
-
-### 1. SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — urgent architecture gate
-
-Status: `IMPLEMENTATION_IN_PROGRESS` until exact-head CI and independent assurance.  
-Role: `implementation_operations`  
-Issue: #86  
-Dependency: merged PR #80 UI contract + merged PR #82 state model.  
-Parallelization: documentation/contract-only; production Streamlit integration in PR #85 must wait for this decision to be incorporated.
-
-Goal:
-- freeze the approved staged-workspace interaction model before the active App Shell package enters `presidio_streamlit.py`;
-- remove ambiguity between three routed screens versus one persistent staged workspace;
-- make the Premium line the dominant execution queue.
-
-Required output:
-- detailed first-principles design decision;
-- roadmap realignment;
-- this authoritative workpackage queue;
-- changelog and decision-log record;
-- contract tests;
-- explicit binding note on issue #84 / PR #85;
-- implementation claim and handover.
-
-Acceptance:
-- Standard explicitly means one persistent page/workspace with three persistent stage headers;
-- exactly one stage exposes its full surface at a time;
-- completed stages summarize, future stages remain passive;
-- successful stage completion advances automatically;
-- explicit prior-stage return is allowed;
-- processing-affecting changes invalidate downstream state;
-- three isolated routed pages are rejected for the Standard core flow;
-- nested core-flow expanders are rejected as the default Standard pattern;
-- no runtime/UI product semantics change in this package;
-- exact-head GitHub Actions passes;
-- fresh independent `governance_release_assurance` is required before merge.
-
-Intentionally excluded:
-- recognizers, thresholds, replacement logic, review authority;
-- export bytes/names/MIME;
-- Scrub Key/reinsert/audit semantics;
-- production Streamlit integration;
-- dependencies, runtime, deployment or Hugging Face behavior.
-
-### 2. SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — active draft PR #85, amended
-
-Status: active draft; **production integration gated by package 1**.  
-Issue: #84  
-PR: #85  
-Dependency: `SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE` merged after independent PASS.
-
-Existing reusable work:
-- `premium_app_shell.py` presentation primitives;
-- `tests/test_premium_app_shell.py`;
-- top-level `Anonimiseren | Terugzetten` labels;
-- global `Standaard | Expert` labels;
-- stage labels and one-active-stage primitive;
-- Standard sidebar-hidden / Expert sidebar-available primitive.
-
-Required before production integration:
-- model active / completed / future stage presentation explicitly;
-- compact completed-stage summary contract;
-- passive future-stage contract;
-- automatic progression hooks from Add → Review → Download;
-- explicit prior-stage return/edit affordance;
-- no routed-page interpretation for the three anonymization stages;
-- no generic nested-expander hierarchy in Standard;
-- bind to `premium_core_flow_state.py` lineage/invalidation rules.
-
-Production integration acceptance:
-- integrate the staged shell in the existing Streamlit application without changing processing semantics;
-- all three stage headers remain persistently represented;
-- exactly one stage is dominant;
-- no permanent Standard configuration sidebar;
-- no stale review/export remains presented as current;
-- current review table/include authority, direct masking, export, Scrub Key, reinsert and audit semantics remain intact;
-- full exact-head regression green;
-- independent assurance PASS before merge.
-
-Do not merge PR #85 merely because helper tests are green.
-
-### 3. SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION
-
-Status: queued after App Shell PASS/merge.  
-Dependency: package 2 merged and deployed/smoke-safe as required.  
-Shared UI rule: sequential; do not edit `presidio_streamlit.py` in parallel with another Premium production package.
-
-Goal:
-- make `Toevoegen` feel like one clear acquisition task rather than a settings form.
-
-Target Standard surface:
-- upload document OR paste text through one coherent source surface;
-- essential recognition profile/context visible and understandable;
-- one dominant action: `Document verwerken`;
-- nonessential tuning hidden or moved to Expert/secondary disclosure;
-- source identity survives into the compact completed-stage summary.
-
-Acceptance:
-- no duplicate input surfaces;
-- no forest of default-open settings;
-- one dominant processing action;
-- profile never changes silently;
-- ingestion, recognizer selection and processing semantics unchanged;
-- processing-affecting edits invalidate downstream state;
-- full regression + independent assurance before merge;
-- live app verification after deployment because UI behavior changes.
-
-### 4. SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION
-
-Status: queued after Input Stage PASS/merge.  
-Dependency: package 3.  
-Conflict boundary: exclusive ownership of shared review/Streamlit surfaces while active.
-
-Goal:
-- make `Controleren` the main document-review workspace rather than a collection of helper panels.
-
-Target Standard surface:
-- source and processed/checked text form the dominant review surface;
-- direct missed-value masking remains accessible where the user notices a miss;
-- review table remains authoritative source of truth and fallback, but not necessarily the visually dominant first surface;
-- technical filters, diagnostics and tuning move out of the primary hierarchy;
-- one dominant completion action: `Controle afronden`.
-
-Acceptance:
-- mandatory human review is not weakened;
-- include/exclude state remains authoritative;
-- direct masking produces normal document-bound manual rows;
-- no recognizer/export/Scrub Key/reinsert semantic drift;
-- compact completed review summary is trustworthy and nontechnical;
-- full regression + independent assurance before merge;
-- live app verification required.
-
-### 5. SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION
-
-Status: queued after Review Stage PASS/merge.  
-Dependency: package 4.  
-Conflict boundary: exclusive ownership of shared export/Streamlit surfaces while active.
-
-Goal:
-- make `Downloaden` end with one obvious recommended cleaned-document action instead of multiple equal-weight download controls.
-
-Target Standard surface:
-- one dominant recommended document download selected only from already eligible outputs;
-- alternate formats secondary;
-- Scrub Key clearly separated as sensitive restoration material;
-- audit/residual-risk evidence accessible but secondary;
-- one dominant action: `Document downloaden`.
-
-Acceptance:
-- export bytes, eligibility, filenames and MIME types unchanged;
-- Scrub Key lifecycle/warning/binding unchanged;
-- audit evidence not removed;
-- current-generation guard prevents stale downloads;
-- full regression + independent assurance before merge;
-- live app verification required.
-
-### 6. SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION
-
-Status: queued after Export Stage PASS/merge.  
-Dependency: packages 2–5.
-
-Goal:
-- prove that Standard removes visual complexity without removing capability or safety.
-
-Required evidence:
-- Standard ↔ Expert presentation switch preserves valid source/review state;
-- presentation-only changes do not reprocess;
-- processing-affecting Expert changes invalidate downstream lineage correctly;
-- all advanced review, audit and troubleshooting capabilities remain available where intended;
-- no review/export/Scrub Key/reinsert capability is silently lost;
-- Standard cannot expose stale current-looking output.
-
-Acceptance:
-- deterministic parity/regression tests;
-- full suite green;
-- independent assurance PASS.
-
-### 7. SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT
-
-Status: final queued Premium gate.  
-Dependency: packages 2–6 independently passed and merged.
-
-Goal:
-- verify the deployed Premium Standard flow end-to-end in the actual app.
-
-Required live acceptance:
-1. first impression is a task workspace, not a long form;
-2. `Toevoegen`, `Controleren`, `Downloaden` remain visibly the workflow structure;
-3. only one stage is fully open at once;
-4. successful completion auto-advances;
-5. completed stages collapse into compact meaningful summaries;
-6. future stages remain passive and non-competing;
-7. returning to an earlier stage is obvious;
-8. stale downstream state is invalidated visibly and safely;
-9. one dominant primary action per active stage;
-10. Standard has no permanent configuration sidebar;
-11. review remains sufficient for mandatory human review;
-12. one recommended cleaned-document download dominates the final stage;
-13. Scrub Key, alternate formats and audit remain accessible but secondary;
-14. no nested-expander form hierarchy replaces the old long form;
-15. no recognizer/export/Scrub Key/reinsert/audit semantics changed unintentionally.
-
-Validation:
-- exact GitHub Actions evidence;
-- GitHub → Hugging Face synchronization for the exact runtime candidate;
-- runtime health/smoke evidence;
-- coordinator/user subjective UX verification;
-- final governance closeout.
-
-## Binding execution order
-
-```text
-SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE
-→ SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION
-→ SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION
-→ SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION
-→ SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION
-→ SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION
-→ SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT
-```
-
-Safety/coordination rule:
-- **do not run the shared Streamlit UI packages in parallel**;
-- specifically avoid parallel edits to `presidio_streamlit.py`, `fix_streamlit_nested_expanders.py`, review-table flow and export/download flow;
-- helper/spec/test work can proceed separately only when it does not create conflicting implementation authority;
-- privacy/safety blockers may interrupt this sequence, but generic backlog work must not dilute the current Premium UI focus by default.
-
----
-
-'''
-
-          changelog_marker = "SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — staged workspace architecture candidate"
-          changelog_prefix = '''## 2026-08-08 Europe/Amsterdam — SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — staged workspace architecture candidate
-
-Status: `IMPLEMENTATION_IN_PROGRESS`; exact-head CI and independent assurance required before merge.
-
-Purpose:
-- convert the coordinator-approved first-principles comparison of three routed screens versus a one-page staged workspace into a binding Premium UI architecture decision;
-- intervene before PR #85 enters production `presidio_streamlit.py` integration;
-- make the Premium staged-workspace sequence the authoritative active execution queue.
-
-Decision:
-```text
-One document. One workspace. Three stages. One active task.
-
-Toevoegen → Controleren → Downloaden
-```
-
-Binding Standard behavior:
-- all three stage headers remain in one persistent page/workspace;
-- exactly one stage is expanded/dominant at a time;
-- completed stages collapse to compact status summaries;
-- future stages remain visible but passive;
-- successful completion auto-advances to the next stage;
-- deliberate return to an earlier stage remains possible;
-- processing-affecting earlier changes invalidate processed/review/export lineage fail-closed;
-- three separate routed pages are rejected for these core stages;
-- a classic nested-expander form is also rejected as the default Standard pattern.
-
-First-principles rationale:
-- Scrub is an iterative document-review workflow, not a strictly linear checkout;
-- the interface should represent document state rather than page navigation;
-- the staged workspace preserves one-task-at-a-time focus while retaining document identity, progress, correction context and visible trust state;
-- it aligns directly with the merged `premium_core_flow_state.py` generation/invalidation model and reduces routing/state-restoration complexity in Streamlit.
-
-Current PR #85 consequence:
-- PR #85 is amended, not discarded;
-- current pure `premium_app_shell.py` helper work remains reusable;
-- production Streamlit integration is gated until this decision is independently assured and incorporated;
-- PR #85 must add/test completed/future/active panels, compact summaries, auto-progression hooks, prior-stage return/edit and no-three-page semantics before production integration.
-
-Files added/changed in the candidate:
-- added `PREMIUM_STAGED_WORKSPACE_DECISION.md`;
-- updated `ROADMAP.md`;
-- updated `WORKPACKAGES.md` with an authoritative current Premium queue while retaining older content as historical records;
-- updated `DECISION_LOG.md` with D043;
-- updated `CHANGELOG.md`;
-- added `tests/test_premium_staged_workspace_decision.py`;
-- added implementation claim and handover administration.
-
-Validation boundary:
-- documentation/architecture/contract-only package;
-- no production Streamlit or runtime product behavior changes;
-- no recognizer, threshold, replacement, review authority, export bytes/names/MIME, Scrub Key, reinsert, audit, dependency or Hugging Face behavior changes;
-- Hugging Face sync: not applicable;
-- app verification: not applicable;
-- exact-head GitHub Actions and independent `governance_release_assurance` remain required before merge.
-
----
-
-'''
-
-          decision_marker = "D043 — Freeze Premium Standard as a single-page staged document workspace"
-          decision_prefix = '''## 2026-08-08 — D043 — Freeze Premium Standard as a single-page staged document workspace
-
-Status: accepted product/UX architecture direction; implementation candidate subject to normal independent assurance.
-
-Decision:
-
-```text
-For the Standard anonymization core flow, use one persistent document workspace containing Toevoegen → Controleren → Downloaden. Keep all three stage headers visible, allow exactly one expanded/dominant stage at a time, collapse completed stages to compact summaries, keep future stages passive, auto-advance after successful completion, and allow explicit return to an earlier stage with fail-closed downstream invalidation.
-```
-
-Explicitly rejected for Standard:
-
-```text
-Toevoegen page → Controleren page → Downloaden page
-```
-
-The three core stages are states of the same document, not three separate routed screens. Also reject a conventional long Streamlit form rebuilt as a tree of independent or nested expanders.
-
-First-principles reason:
-- the scarce resource is user attention during a privacy-sensitive review task;
-- Scrub is iterative: review can legitimately send the user back to input/profile correction;
-- the interface must preserve confidence about source identity, completed work and whether downstream state is still current;
-- page routing maximizes isolation but removes spatial workflow context and adds state-restoration/routing complexity;
-- one staged workspace preserves the cognitive benefit of one task at a time while representing document state directly;
-- the model maps naturally to the merged source/processed/review/export generation lineage in `premium_core_flow_state.py`.
-
-Binding interaction consequences:
-- one dominant primary action per active stage;
-- no permanent configuration sidebar in Standard;
-- completed stage summaries contain orientation/trust information only, not mini-forms;
-- future stages show status rather than disabled control forests;
-- successful processing opens Controleren automatically;
-- explicit review completion opens Downloaden automatically;
-- earlier processing-affecting edits invalidate downstream review/export state before those results can be presented as current;
-- no nested core-flow accordion hierarchy in Standard;
-- stage surfaces should read as application panels even when Streamlit primitives are used internally.
-
-Current workpackage consequence:
-- insert `SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE` before further production integration in `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION`;
-- retain PR #85's compatible pure helper/test work;
-- require PR #85 to incorporate the staged-workspace semantics before touching/merging production `presidio_streamlit.py` integration;
-- continue sequentially with Input, Review, Export, Expert parity and live app closeout packages.
-
-Safety boundary:
-- this decision changes presentation architecture, not anonymization semantics;
-- recognizers, thresholds, review authority, direct masking, export bytes/names/MIME, Scrub Key, reinsert, audit and human-review requirements remain unchanged;
-- Standard is lower cognitive load, not lower safety.
-
-Evidence:
-- coordinator/user approval on 2026-08-08 Europe/Amsterdam after explicit first-principles comparison;
-- `PREMIUM_STAGED_WORKSPACE_DECISION.md`;
-- `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`;
-- merged Premium UI contract and state model.
-
----
-
-'''
-
-          def prepend_once(path: str, marker: str, prefix: str) -> None:
-              p = Path(path)
-              current = p.read_text(encoding="utf-8")
+          records = [
+              (
+                  "WORKPACKAGES.md",
+                  ".admin/premium_staged_workspace_workpackages_prefix.md",
+                  "SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — urgent architecture gate",
+              ),
+              (
+                  "CHANGELOG.md",
+                  ".admin/premium_staged_workspace_changelog_prefix.md",
+                  "SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — staged workspace architecture candidate",
+              ),
+              (
+                  "DECISION_LOG.md",
+                  ".admin/premium_staged_workspace_decision_prefix.md",
+                  "D043 — Freeze Premium Standard as a single-page staged document workspace",
+              ),
+          ]
+
+          for target_name, prefix_name, marker in records:
+              target = Path(target_name)
+              current = target.read_text(encoding="utf-8")
               if marker not in current:
-                  p.write_text(prefix + current, encoding="utf-8")
+                  prefix = Path(prefix_name).read_text(encoding="utf-8")
+                  target.write_text(prefix + current, encoding="utf-8")
 
-          prepend_once("WORKPACKAGES.md", workpackages_marker, workpackages_prefix)
-          prepend_once("CHANGELOG.md", changelog_marker, changelog_prefix)
-          prepend_once("DECISION_LOG.md", decision_marker, decision_prefix)
-
-          Path(".github/workflows/premium-staged-workspace-admin-finalize.yml").unlink()
+          for path in [
+              ".admin/premium_staged_workspace_workpackages_prefix.md",
+              ".admin/premium_staged_workspace_changelog_prefix.md",
+              ".admin/premium_staged_workspace_decision_prefix.md",
+              ".github/workflows/premium-staged-workspace-admin-finalize.yml",
+          ]:
+              Path(path).unlink(missing_ok=True)
           PY
 
-      - name: Commit self-cleaning administrative finalization
+      - name: Commit administrative finalization
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add WORKPACKAGES.md CHANGELOG.md DECISION_LOG.md .github/workflows/premium-staged-workspace-admin-finalize.yml
+          git add -A
           if git diff --cached --quiet; then
             exit 0
           fi
