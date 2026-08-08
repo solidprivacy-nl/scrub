@@ -1,0 +1,54 @@
+name: Premium app shell diagnostics
+
+on:
+  push:
+    branches:
+      - wp/premium-app-shell-implementation
+    paths:
+      - .github/workflows/premium-app-shell-diagnostics.yml
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wp/premium-app-shell-implementation
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install regression dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest presidio-analyzer click==8.1.8 python-docx pymupdf reportlab pypdf
+      - name: Capture exact pytest failures
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          PYTHONPATH="$GITHUB_WORKSPACE" python -m pytest -q tests --tb=short > /tmp/premium-pytest.txt 2>&1
+          status=$?
+          set -e
+          {
+            echo "## Automated Premium App Shell diagnostic"
+            echo
+            echo "Head: \`$(git rev-parse HEAD)\`"
+            echo "Pytest exit: \`$status\`"
+            echo
+            echo '```text'
+            tail -n 180 /tmp/premium-pytest.txt
+            echo '```'
+          } > /tmp/issue-comment.md
+          gh issue comment 84 --repo solidprivacy-nl/scrub --body-file /tmp/issue-comment.md
+      - name: Self-clean diagnostic workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/premium-app-shell-diagnostics.yml
+          git commit -m "chore(ui): remove app-shell diagnostic workflow"
+          git push origin HEAD:wp/premium-app-shell-implementation
