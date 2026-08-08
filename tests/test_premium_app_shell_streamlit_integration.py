@@ -4,6 +4,7 @@ import ast
 
 SOURCE = Path("presidio_streamlit.py").read_text(encoding="utf-8")
 SHELL_UI = Path("premium_streamlit_shell_ui.py").read_text(encoding="utf-8")
+LEGACY_PATCH = Path("fix_streamlit_nested_expanders.py").read_text(encoding="utf-8")
 
 
 def test_premium_streamlit_source_remains_syntactically_valid():
@@ -42,6 +43,24 @@ def test_non_active_standard_stage_content_is_cached_not_rendered_in_parallel():
     assert 'show_review_workspace = is_premium_expert or stage_is_active(premium_state, Stage.REVIEW)' in SOURCE
     assert '_premium_cached_review_rows' in SOURCE
     assert 'render_stage_header(premium_state, Stage.DOWNLOAD)\n            st.stop()' in SOURCE
+
+
+def test_standard_stage_navigation_reuses_current_generation_analysis_instead_of_reprocessing():
+    assert 'get_cached_analysis_results(' in SOURCE
+    assert 'cache_analysis_results(' in SOURCE
+    assert 'if cached_analysis_results is not None:' in SOURCE
+    assert 'if is_premium_standard and not stage_is_active(premium_state, Stage.ADD):' in SOURCE
+
+
+def test_review_reopen_uses_cached_authoritative_rows_and_requires_recompletion():
+    assert 'cached_review_rows = st.session_state.get("_premium_cached_review_rows")' in SOURCE
+    assert 'edited_replacements_df.to_dict("records")' in SOURCE
+    assert 'mark_review_complete(st.session_state)' in SOURCE
+
+
+def test_legacy_runtime_patch_cannot_reinject_retired_form_ui_into_premium_source():
+    assert 'if "premium_streamlit_shell_ui" in text:' in LEGACY_PATCH
+    assert 'raise SystemExit(0)' in LEGACY_PATCH
 
 
 def test_existing_export_and_scrub_key_payload_contracts_are_not_rewritten():
