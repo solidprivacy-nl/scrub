@@ -91,6 +91,12 @@ def test_scrub_key_is_not_created_or_selected_by_download_priority():
     assert recommended_download("txt", eligible) == "cleaned_txt"
 
 
+def test_scrub_key_alone_is_never_promoted_to_recommended_download():
+    assert recommended_download("txt", ["scrub_key"]) is None
+    assert recommended_download("docx", ["scrub_key"]) is None
+    assert recommended_download("unknown", ["scrub_key"]) is None
+
+
 def test_workflow_navigation_cannot_leak_stale_state():
     state = processed_state().complete_review().with_workflow(Workflow.REINSERT)
     assert state.workflow == Workflow.REINSERT
