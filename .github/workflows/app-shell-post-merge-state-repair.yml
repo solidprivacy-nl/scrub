@@ -1,0 +1,282 @@
+name: Apply App Shell post-merge state repair
+
+on:
+  push:
+    branches:
+      - wp/premium-app-shell-post-merge-state-repair
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wp/premium-app-shell-post-merge-state-repair
+          fetch-depth: 0
+      - name: Patch cross-mode runtime state
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          state_path = Path('premium_streamlit_state.py')
+          state = state_path.read_text(encoding='utf-8')
+
+          old = 'ANALYZER_PARAMS_KEY = "_premium_analyzer_params"\n'
+          new = '''ANALYZER_PARAMS_KEY = "_premium_analyzer_params"\nSOURCE_TEXT_KEY = "_premium_cached_text"\nREVIEW_ROWS_KEY = "_premium_cached_review_rows"\nREVIEW_ROWS_GENERATION_KEY = "_premium_review_rows_generation"\n'''
+          assert old in state
+          state = state.replace(old, new, 1)
+
+          old = '''    if workflow is not previous_workflow:\n        session_state.pop(ANALYSIS_GENERATION_KEY, None)\n        session_state.pop(ANALYSIS_RESULTS_KEY, None)\n        session_state.pop(STAGE_SUMMARIES_KEY, None)\n'''
+          new = '''    if workflow is not previous_workflow:\n        session_state.pop(ANALYSIS_GENERATION_KEY, None)\n        session_state.pop(ANALYSIS_RESULTS_KEY, None)\n        session_state.pop(REVIEW_ROWS_KEY, None)\n        session_state.pop(REVIEW_ROWS_GENERATION_KEY, None)\n        session_state.pop(STAGE_SUMMARIES_KEY, None)\n'''
+          assert old in state
+          state = state.replace(old, new, 1)
+
+          marker = '\n\ndef processing_generation(\n'
+          insert = r'''
+
+
+def stored_source_text(session_state: Mapping[str, Any], default: str = "") -> str:
+    """Return the current authoritative source text in either presentation mode."""
+    value = session_state.get(SOURCE_TEXT_KEY, default)
+    return str(value) if value is not None else str(default)
+
+
+def _stable_review_value(value: Any) -> Any:
+    """Normalize dataframe scalar values only for deterministic row comparison."""
+    if value is None:
+        return None
+    try:
+        if value != value:
+            return None
+    except Exception:
+        pass
+    if isinstance(value, (str, int, float, bool)):
+        return value
+    return str(value)
+
+
+def review_rows_signature(rows: Sequence[Mapping[str, Any]]) -> str:
+    """Return a deterministic signature without changing the cached row payload."""
+    normalized = []
+    for row in rows:
+        normalized.append(
+            {
+                str(key): _stable_review_value(value)
+                for key, value in sorted(row.items(), key=lambda item: str(item[0]))
+            }
+        )
+    return json.dumps(normalized, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def review_rows_changed(
+    previous_rows: Sequence[Mapping[str, Any]], current_rows: Sequence[Mapping[str, Any]]
+) -> bool:
+    """Detect a real review decision/edit change while tolerating NaN-like values."""
+    return review_rows_signature(previous_rows) != review_rows_signature(current_rows)
+
+
+def cache_review_rows(
+    session_state: MutableMapping[str, Any],
+    generation: str,
+    rows: Sequence[Mapping[str, Any]],
+) -> None:
+    """Persist the authoritative review working set for exactly one generation."""
+    session_state[REVIEW_ROWS_GENERATION_KEY] = str(generation)
+    session_state[REVIEW_ROWS_KEY] = [dict(row) for row in rows]
+
+
+def get_cached_review_rows(
+    session_state: Mapping[str, Any], generation: str
+) -> Optional[list[dict[str, Any]]]:
+    """Return defensive review-row copies only when their generation is current."""
+    if session_state.get(REVIEW_ROWS_GENERATION_KEY) != generation:
+        return None
+    rows = session_state.get(REVIEW_ROWS_KEY)
+    if not isinstance(rows, list):
+        return None
+    if not all(isinstance(row, Mapping) for row in rows):
+        return None
+    return [dict(row) for row in rows]
+'''
+          assert marker in state
+          state = state.replace(marker, insert + marker, 1)
+
+          old = '''    session_state.pop(STAGE_SUMMARIES_KEY, None)\n    session_state.pop(ANALYSIS_GENERATION_KEY, None)\n    session_state.pop(ANALYSIS_RESULTS_KEY, None)\n    return state, True\n'''
+          new = '''    session_state.pop(STAGE_SUMMARIES_KEY, None)\n    session_state.pop(ANALYSIS_GENERATION_KEY, None)\n    session_state.pop(ANALYSIS_RESULTS_KEY, None)\n    session_state.pop(REVIEW_ROWS_KEY, None)\n    session_state.pop(REVIEW_ROWS_GENERATION_KEY, None)\n    return state, True\n'''
+          assert old in state
+          state = state.replace(old, new, 1)
+          state_path.write_text(state, encoding='utf-8')
+
+          app_path = Path('presidio_streamlit.py')
+          app = app_path.read_text(encoding='utf-8')
+
+          old = '''    analyzer_model_label,\n    cache_analysis_results,\n    get_cached_analysis_results,\n    get_core_flow_state,\n    mark_processing_complete,\n    mark_review_complete,\n    persist_processing_settings,\n    processing_generation,\n    set_stage_summary,\n    stored_analyzer_params,\n    stored_entities,\n    stored_operator_value,\n    stored_profile_label,\n    stored_string_list,\n    stored_threshold,\n    synchronize_processing_generation,\n    synchronize_shell_choices,\n'''
+          new = '''    analyzer_model_label,\n    cache_analysis_results,\n    cache_review_rows,\n    get_cached_analysis_results,\n    get_cached_review_rows,\n    get_core_flow_state,\n    mark_processing_complete,\n    mark_review_complete,\n    persist_processing_settings,\n    processing_generation,\n    review_rows_changed,\n    select_stage,\n    set_stage_summary,\n    stored_analyzer_params,\n    stored_entities,\n    stored_operator_value,\n    stored_profile_label,\n    stored_source_text,\n    stored_string_list,\n    stored_threshold,\n    synchronize_processing_generation,\n    synchronize_shell_choices,\n'''
+          assert old in app
+          app = app.replace(old, new, 1)
+
+          old = '''        uploaded_file = st.file_uploader(\n            "Upload een .txt-, .docx- of tekstgebaseerd .pdf-bestand",\n            type=["txt", "docx", "pdf"],\n            help="Gebruik in deze publieke prototypeomgeving alleen synthetische of goedgekeurde testdocumenten.",\n        )\n        if uploaded_file is None and is_premium_standard:\n            uploaded_file = st.session_state.get("_premium_cached_uploaded_file")\n            if uploaded_file is not None:\n                st.caption(f"Huidige bron: {uploaded_file.name}")\n\n        uploaded_file_type = (\n            st.session_state.get("_premium_cached_uploaded_file_type")\n            if is_premium_standard and uploaded_file is not None\n            else None\n        )\n        input_text = (\n            st.session_state.get("_premium_cached_text", "".join(demo_text))\n            if is_premium_standard\n            else "".join(demo_text)\n        )\n'''
+          new = '''        new_uploaded_file = st.file_uploader(\n            "Upload een .txt-, .docx- of tekstgebaseerd .pdf-bestand",\n            type=["txt", "docx", "pdf"],\n            help="Gebruik in deze publieke prototypeomgeving alleen synthetische of goedgekeurde testdocumenten.",\n        )\n        cached_uploaded_file = st.session_state.get("_premium_cached_uploaded_file")\n        uploaded_file = new_uploaded_file if new_uploaded_file is not None else cached_uploaded_file\n        if new_uploaded_file is None and cached_uploaded_file is not None:\n            st.caption(f"Huidige bron: {cached_uploaded_file.name}")\n\n        uploaded_file_type = (\n            None\n            if new_uploaded_file is not None\n            else st.session_state.get("_premium_cached_uploaded_file_type")\n        )\n        input_text = stored_source_text(st.session_state, "".join(demo_text))\n'''
+          assert old in app
+          app = app.replace(old, new, 1)
+
+          old = '''    cached_analysis_results = None\n    if is_premium_standard and not stage_is_active(premium_state, Stage.ADD):\n        cached_analysis_results = get_cached_analysis_results(\n            st.session_state, current_processing_generation\n        )\n'''
+          new = '''    cached_analysis_results = get_cached_analysis_results(\n        st.session_state, current_processing_generation\n    )\n'''
+          assert old in app
+          app = app.replace(old, new, 1)
+
+          old = '''        if is_premium_standard:\n            cache_analysis_results(\n                st.session_state,\n                current_processing_generation,\n                st_analyze_results,\n            )\n'''
+          new = '''        cache_analysis_results(\n            st.session_state,\n            current_processing_generation,\n            st_analyze_results,\n        )\n'''
+          assert old in app
+          app = app.replace(old, new, 1)
+
+          old = '''        replacement_editor_df = pd.DataFrame(default_editor_rows)\n        if is_premium_standard and stage_is_active(premium_state, Stage.REVIEW):\n            cached_review_rows = st.session_state.get("_premium_cached_review_rows")\n            if isinstance(cached_review_rows, list) and cached_review_rows:\n                cached_review_df = pd.DataFrame(cached_review_rows)\n                if "find" in cached_review_df.columns and "find" in replacement_editor_df.columns:\n                    cached_find_values = {\n                        safe_cell(value) for value in cached_review_df["find"].tolist()\n                    }\n                    new_rows_df = replacement_editor_df[\n                        ~replacement_editor_df["find"].map(safe_cell).isin(cached_find_values)\n                    ]\n                    replacement_editor_df = pd.concat(\n                        [cached_review_df, new_rows_df], ignore_index=True\n                    )\n                else:\n                    replacement_editor_df = cached_review_df\n'''
+          new = '''        replacement_editor_df = pd.DataFrame(default_editor_rows)\n        cached_review_rows = get_cached_review_rows(\n            st.session_state, current_processing_generation\n        )\n        if cached_review_rows:\n            cached_review_df = pd.DataFrame(cached_review_rows)\n            if "find" in cached_review_df.columns and "find" in replacement_editor_df.columns:\n                cached_find_values = {\n                    safe_cell(value) for value in cached_review_df["find"].tolist()\n                }\n                new_rows_df = replacement_editor_df[\n                    ~replacement_editor_df["find"].map(safe_cell).isin(cached_find_values)\n                ]\n                replacement_editor_df = pd.concat(\n                    [cached_review_df, new_rows_df], ignore_index=True\n                )\n            else:\n                replacement_editor_df = cached_review_df\n'''
+          assert old in app
+          app = app.replace(old, new, 1)
+
+          old = '''                if is_premium_standard:\n                    st.session_state["_premium_cached_review_rows"] = (\n                        edited_replacements_df.to_dict("records")\n                    )\n'''
+          new = '''                edited_review_records = edited_replacements_df.to_dict("records")\n                review_working_set_changed = (\n                    cached_review_rows is not None\n                    and review_rows_changed(cached_review_rows, edited_review_records)\n                )\n                cache_review_rows(\n                    st.session_state,\n                    current_processing_generation,\n                    edited_review_records,\n                )\n                if review_working_set_changed and (\n                    premium_state.reviewed_generation is not None\n                    or premium_state.export_generation is not None\n                ):\n                    premium_state = select_stage(st.session_state, Stage.REVIEW)\n                    set_stage_summary(st.session_state, Stage.REVIEW, "")\n'''
+          assert old in app
+          app = app.replace(old, new, 1)
+
+          old = '''        else:\n            cached_review_rows = st.session_state.get("_premium_cached_review_rows")\n            if not isinstance(cached_review_rows, list) or not cached_review_rows:\n                st.error("De afgeronde controle is niet meer beschikbaar. Open Controleren opnieuw.")\n                st.stop()\n            edited_replacements_df = pd.DataFrame(cached_review_rows)\n'''
+          new = '''        else:\n            cached_review_rows = get_cached_review_rows(\n                st.session_state, current_processing_generation\n            )\n            if not cached_review_rows:\n                st.error("De afgeronde controle is niet meer beschikbaar. Open Controleren opnieuw.")\n                st.stop()\n            edited_replacements_df = pd.DataFrame(cached_review_rows)\n'''
+          assert old in app
+          app = app.replace(old, new, 1)
+
+          old = '''                st.session_state["_premium_cached_review_rows"] = edited_replacements_df.to_dict("records")\n                manual_count = 0\n'''
+          new = '''                cache_review_rows(\n                    st.session_state,\n                    current_processing_generation,\n                    edited_replacements_df.to_dict("records"),\n                )\n                manual_count = 0\n'''
+          assert old in app
+          app = app.replace(old, new, 1)
+          app_path.write_text(app, encoding='utf-8')
+
+          test_path = Path('tests/test_premium_cross_mode_runtime_state.py')
+          test_path.write_text(r'''from pathlib import Path
+
+from premium_core_flow_state import PresentationMode, Workflow
+from premium_streamlit_state import (
+    SOURCE_TEXT_KEY,
+    cache_analysis_results,
+    cache_review_rows,
+    get_cached_analysis_results,
+    get_cached_review_rows,
+    get_core_flow_state,
+    mark_processing_complete,
+    mark_review_complete,
+    processing_generation,
+    review_rows_changed,
+    stored_source_text,
+    synchronize_processing_generation,
+    synchronize_shell_choices,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def generation(text="Zorgbron", profile="Dutch Care Strict", threshold=0.30):
+    return processing_generation(
+        text=text,
+        profile=profile,
+        operator="replace",
+        threshold=threshold,
+        entities=["PERSON", "NL_CARE_CLIENT_NUMBER"],
+        allow_list=["veilig"],
+        deny_list=["extra"],
+        analyzer_params=["flair", "ner-english-large", "", ""],
+    )
+
+
+def completed_download_session():
+    session = {SOURCE_TEXT_KEY: "Cliënt C-100 heeft een afspraak."}
+    g = generation(text=session[SOURCE_TEXT_KEY])
+    synchronize_processing_generation(session, g)
+    mark_processing_complete(session, g)
+    cache_analysis_results(session, g, ["analysis"])
+    cache_review_rows(
+        session,
+        g,
+        [{"include": True, "find": "C-100", "replace_with": "[CLIENT_01]", "score": float("nan")}],
+    )
+    mark_review_complete(session)
+    return session, g
+
+
+def test_completed_standard_download_survives_expert_roundtrip_without_lineage_change():
+    session, g = completed_download_session()
+    before = get_core_flow_state(session)
+
+    expert = synchronize_shell_choices(
+        session,
+        workflow=Workflow.ANONYMIZE,
+        presentation_mode=PresentationMode.EXPERT,
+    )
+    assert stored_source_text(session) == "Cliënt C-100 heeft een afspraak."
+    assert get_cached_analysis_results(session, g) == ["analysis"]
+    assert get_cached_review_rows(session, g)[0]["find"] == "C-100"
+    assert expert.source_generation == before.source_generation
+    assert expert.processed_generation == before.processed_generation
+    assert expert.reviewed_generation == before.reviewed_generation
+    assert expert.export_generation == before.export_generation
+
+    standard = synchronize_shell_choices(
+        session,
+        workflow=Workflow.ANONYMIZE,
+        presentation_mode=PresentationMode.STANDARD,
+    )
+    assert standard.source_generation == g
+    assert standard.processed_generation == g
+    assert standard.reviewed_generation == g
+    assert standard.export_generation == g
+
+
+def test_review_cache_is_generation_bound_and_cleared_by_real_processing_change():
+    session, g = completed_download_session()
+    changed_generation = generation(text="Andere zorgbron")
+    state, changed = synchronize_processing_generation(session, changed_generation)
+    assert changed is True
+    assert state.source_generation == changed_generation
+    assert state.processed_generation is None
+    assert state.reviewed_generation is None
+    assert state.export_generation is None
+    assert get_cached_analysis_results(session, g) is None
+    assert get_cached_review_rows(session, g) is None
+    assert get_cached_review_rows(session, changed_generation) is None
+
+
+def test_review_row_change_detection_tolerates_nan_but_detects_decision_change():
+    old = [{"include": True, "find": "C-100", "score": float("nan")}]
+    same = [{"include": True, "find": "C-100", "score": float("nan")}]
+    changed = [{"include": False, "find": "C-100", "score": float("nan")}]
+    assert review_rows_changed(old, same) is False
+    assert review_rows_changed(old, changed) is True
+
+
+def test_streamlit_runtime_uses_shared_source_analysis_and_review_state_in_both_modes():
+    source = (ROOT / "presidio_streamlit.py").read_text(encoding="utf-8")
+    assert 'input_text = stored_source_text(st.session_state, "".join(demo_text))' in source
+    assert 'if is_premium_standard\n            else "".join(demo_text)' not in source
+    assert 'cached_analysis_results = get_cached_analysis_results(' in source
+    assert 'if is_premium_standard and not stage_is_active(premium_state, Stage.ADD):' not in source
+    assert 'cached_review_rows = get_cached_review_rows(' in source
+    assert 'cache_review_rows(' in source
+    assert 'review_working_set_changed' in source
+    assert 'premium_state = select_stage(st.session_state, Stage.REVIEW)' in source
+    assert 'st.session_state["_premium_cached_review_rows"] = (' not in source
+''', encoding='utf-8')
+          PY
+          python -m py_compile premium_streamlit_state.py presidio_streamlit.py
+      - name: Commit repair and self-clean workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm .github/workflows/app-shell-post-merge-state-repair.yml
+          git add premium_streamlit_state.py presidio_streamlit.py tests/test_premium_cross_mode_runtime_state.py .github/workflows/app-shell-post-merge-state-repair.yml
+          git commit -m "fix(ui): preserve cross-mode source and review state"
+          git push origin HEAD:wp/premium-app-shell-post-merge-state-repair
