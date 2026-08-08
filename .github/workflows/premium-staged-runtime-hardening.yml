@@ -1,0 +1,29 @@
+name: Premium staged runtime hardening
+
+on:
+  push:
+    branches:
+      - wp/premium-app-shell-implementation
+    paths:
+      - .github/workflows/premium-staged-runtime-hardening.yml
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wp/premium-app-shell-implementation
+          fetch-depth: 0
+      - name: Harden staged runtime behavior
+        run: python tools/_harden_premium_staged_runtime.py
+      - name: Commit hardening
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(ui): harden staged review and analysis state"
+          git push origin HEAD:wp/premium-app-shell-implementation
