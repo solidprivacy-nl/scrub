@@ -1,0 +1,32 @@
+name: Finalize Premium App Shell repair
+
+on:
+  push:
+    branches:
+      - wp/premium-app-shell-implementation
+    paths:
+      - .github/workflows/finalize-premium-app-shell-repair.yml
+      - tools/finalize_premium_app_shell_repair.py
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: wp/premium-app-shell-implementation
+          fetch-depth: 0
+      - name: Apply repair closeout administration
+        run: python tools/finalize_premium_app_shell_repair.py
+      - name: Self-clean and commit administration
+        run: |
+          rm .github/workflows/finalize-premium-app-shell-repair.yml
+          rm tools/finalize_premium_app_shell_repair.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md RELEASE_NOTES.md WORKPACKAGES.md workpackage_claims/scrub_wp_premium_app_shell_implementation.md handover/workpackages/20260808_1655_premium_app_shell_state_preservation_repair.md .github/workflows/finalize-premium-app-shell-repair.yml tools/finalize_premium_app_shell_repair.py
+          git commit -m "chore(ui): finalize App Shell state-preservation repair"
+          git push origin HEAD:wp/premium-app-shell-implementation
