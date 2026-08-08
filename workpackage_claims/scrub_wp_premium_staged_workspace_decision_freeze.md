@@ -4,6 +4,7 @@ Repository: `solidprivacy-nl/scrub`
 Role: `implementation_operations`  
 Status: `IMPLEMENTATION_IN_PROGRESS`  
 Issue: #86  
+PR: #87  
 Base main: `d5fcd8d6019f136e82877b646af2d085f9eb1720`  
 Branch: `wp/premium-staged-workspace-decision`
 
@@ -30,13 +31,30 @@ Planning, architecture, execution-order and contract-test changes only:
 - `WORKPACKAGES.md`;
 - `CHANGELOG.md`;
 - `DECISION_LOG.md`;
-- documentation contract test;
+- `tests/test_premium_staged_workspace_decision.py`;
 - issue/PR binding notes for active PR #85;
 - claim and handover administration.
 
 ## Explicit intervention in active Premium work
 
 PR #85 is amended, not discarded. Its current `premium_app_shell.py` and `tests/test_premium_app_shell.py` helper work is reusable. Production `presidio_streamlit.py` integration must not proceed under a three-page or generic nested-expander interpretation; it must incorporate this staged-workspace decision after the decision candidate is independently assured and merged.
+
+## Administrative finalization
+
+The large historical control files were updated through a temporary self-cleaning PR workflow so their existing history was **prepended to, not replaced or truncated**. The temporary workflow and prefix helper files removed themselves in the same administrative commit and are absent from the PR diff.
+
+Final persistent candidate paths are limited to:
+
+- `CHANGELOG.md`;
+- `DECISION_LOG.md`;
+- `PREMIUM_STAGED_WORKSPACE_DECISION.md`;
+- `ROADMAP.md`;
+- `WORKPACKAGES.md`;
+- `tests/test_premium_staged_workspace_decision.py`;
+- this claim;
+- final handover when written.
+
+The first PR test runs before administrative finalization are not release evidence because the exact tested heads did not yet contain the new WORKPACKAGES/CHANGELOG/DECISION_LOG records. A connector-originated claim update is used to obtain a normal PR-triggered full regression on the complete candidate tree.
 
 ## Safety boundary
 
@@ -47,8 +65,8 @@ Human review remains mandatory. Synthetic/test content only.
 ## Validation plan
 
 - documentation contract tests freeze staged-workspace semantics and execution order;
-- full GitHub Actions regression on the exact PR head;
-- independent `governance_release_assurance` decision required before merge;
+- full GitHub Actions regression on the exact PR candidate;
+- fresh independent `governance_release_assurance` decision required before merge;
 - Hugging Face sync: not applicable because no runtime files change;
 - app verification: not applicable because no live UI behavior changes.
 
