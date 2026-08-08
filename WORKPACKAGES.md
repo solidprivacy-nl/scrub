@@ -105,12 +105,21 @@ Intentionally excluded:
 - production Streamlit integration;
 - dependencies, runtime, deployment or Hugging Face behavior.
 
-### 2. SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — active draft PR #85, amended
+### 2. SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — repaired candidate pending fresh assurance
 
-Status: active draft; **production integration gated by package 1**.  
+Status: `RELEASE_CANDIDATE_READY` after repair of the prior assurance FAIL; fresh exact-head CI + fresh blind assurance required before merge.  
 Issue: #84  
 PR: #85  
 Dependency: `SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE` merged after independent PASS.
+
+
+Repair gate — 2026-08-08:
+- prior exact head `2b04ca6260bddee07fbcf901239cee2955bd6dc7` received independent `FAIL` because Standard → Expert could silently reset Zorg to Juridisch;
+- repaired candidate must preserve profile, operator, threshold, entity selection, allow/deny lists and analyzer configuration across presentation-only switching;
+- presentation-only Standard ↔ Expert must keep deterministic processing generation and valid downstream lineage unchanged;
+- a real processing-setting change must invalidate downstream lineage fail-closed;
+- dedicated Standard Zorg → Expert → Standard regression coverage is mandatory;
+- the repaired head requires a completely fresh blind reviewer; prior issue #90 cannot authorize the repair.
 
 Existing reusable work:
 - `premium_app_shell.py` presentation primitives;

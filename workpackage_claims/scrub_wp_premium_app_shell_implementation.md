@@ -2,7 +2,7 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Role: `implementation_operations`  
-Status: `IMPLEMENTATION_IN_PROGRESS`  
+Status: `RELEASE_CANDIDATE_READY`  
 Issue: #84  
 PR: #85  
 Branch: `wp/premium-app-shell-implementation`  
@@ -83,3 +83,21 @@ A connector-authored claim update intentionally retriggers normal PR GitHub Acti
 Only a new exact repaired head with a real executable full-suite result may become `RELEASE_CANDIDATE_READY`.
 
 Implementation does not self-certify or self-merge. Any repaired release candidate requires a fresh independent `governance_release_assurance` decision.
+
+
+## Repair validation result — 2026-08-08 16:55 Europe/Amsterdam
+
+The functional repair and new regression contracts are green before final administrative identity:
+
+```text
+Tests run #2229 / ID 31263099583
+job 93116829430
+branch head under test: f6dd1fede240f9cacf29bd5323dec9f182052828
+PR merge candidate: bd3c404f7075d86620272bf28c9a5192006e8209
+base main in tested merge candidate: 2831da154e6c299b3616d62a37f151ebfa9c45f1
+command: python -m pytest -q tests
+result: 1235 passed in 14.48s
+conclusion: success
+```
+
+The final administrative commit changes candidate identity but not runtime behavior. Therefore this claim is not sufficient release evidence by itself: a fresh full exact-head GitHub Actions run on the final candidate is mandatory before handoff to a new blind reviewer.

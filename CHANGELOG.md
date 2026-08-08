@@ -1,3 +1,37 @@
+## 2026-08-08 16:55 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — repair after blind-assurance FAIL
+
+Status: `RELEASE_CANDIDATE_READY` only after a fresh exact-head full-suite run; fresh independent assurance remains mandatory.
+
+Independent assurance on prior head `2b04ca6260bddee07fbcf901239cee2955bd6dc7` returned `FAIL` because switching `Standaard → Expert` could silently reset an explicitly selected Zorg profile to the hard-coded Expert default Juridisch. The same repair cycle reviewed operator, threshold, entity selection, allow/deny lists and analyzer configuration as processing-affecting state.
+
+Repair:
+- Standard and Expert now hydrate the same persisted processing settings;
+- entering Expert no longer uses a hard-coded recognition-profile or operator default when a valid current choice exists;
+- returning to Standard rehydrates the Standard profile widget from the shared processing state;
+- threshold, entity selection, allow/deny lists and analyzer/model settings are preserved across presentation-only switches;
+- deterministic processing-generation synchronization now runs in both presentation modes;
+- presentation-only switching with unchanged settings preserves valid downstream lineage;
+- a real processing-affecting Expert change invalidates processed/review/export lineage fail-closed;
+- Standard still refuses unsupported Expert-only operators without silently rewriting them.
+
+Regression evidence before administrative finalization:
+- GitHub Actions Tests run #2229 / ID `31263099583`, job `93116829430`;
+- PR merge candidate `bd3c404f7075d86620272bf28c9a5192006e8209`;
+- `python -m pytest -q tests` → `1235 passed in 14.48s`;
+- new coverage explicitly includes Standard Zorg → Expert → Standard state preservation and real-change invalidation.
+
+Protected semantics unchanged:
+- recognizers/profile rules and threshold meaning;
+- review-table/include authority and direct masking;
+- export bytes, filenames and MIME types;
+- Scrub Key, reinsert and audit semantics;
+- dependencies and local/cloud processing boundary;
+- mandatory human review.
+
+A fresh exact-head regression is required after this administrative closeout, followed by a new blind `governance_release_assurance` review. The later Premium Input Stage package remains blocked.
+
+---
+
 ## 2026-08-08 15:28 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — release candidate prepared
 
 Status: `RELEASE_CANDIDATE_READY`; final exact-head CI and fresh independent assurance required before merge.

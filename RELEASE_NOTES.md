@@ -1,3 +1,13 @@
+## 2026-08-08 — Standaard en Expert behouden dezelfde verwerkingskeuzes
+
+- Wisselen tussen `Standaard` en `Expert` verandert niet langer ongemerkt de gekozen controlemodus of andere verwerkingsinstellingen.
+- Een gekozen Zorg-, Juridisch- of ander profiel blijft behouden wanneer alleen de weergave verandert.
+- Ook gevoeligheid, gegevenstypen, woordenlijsten en technische herkenningsinstellingen worden over beide weergaven heen consistent gehouden.
+- Alleen een echte wijziging aan een verwerkingsinstelling maakt eerdere controle- en downloadstatus ongeldig; alleen wisselen van weergave doet dat niet.
+- Herkenning, vervangingslogica, exportbestanden, Scrub Key, terugzetten en verplichte menselijke controle zijn inhoudelijk niet gewijzigd.
+
+---
+
 ## 2026-08-08 — Premium workflow krijgt één duidelijke documentworkspace
 
 - De standaardweergave organiseert anonimiseren voortaan rond drie vaste fasen: `Toevoegen → Controleren → Downloaden`.
