@@ -116,13 +116,16 @@ def test_input_precedence_markers_remain_present() -> None:
     app_text = read(APP_PATH)
 
     for marker in [
-        'st.session_state.get("_premium_cached_text", "".join(demo_text))',
-        'else "".join(demo_text)',
+        'input_text = stored_source_text(st.session_state, "".join(demo_text))',
+        'cached_uploaded_file = st.session_state.get("_premium_cached_uploaded_file")',
+        'uploaded_file = new_uploaded_file if new_uploaded_file is not None else cached_uploaded_file',
         'if sample_name != "Geen testvoorbeeld laden" and uploaded_file is None:',
         "if uploaded_file is not None:",
         "input_text, uploaded_file_type = uploaded_file_to_text(uploaded_file)",
     ]:
         assert_contains(app_text, marker)
+
+    assert 'if is_premium_standard\n            else "".join(demo_text)' not in app_text
 
 
 def test_review_export_and_scrub_key_surface_remains_present() -> None:
