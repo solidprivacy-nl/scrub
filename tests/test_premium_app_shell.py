@@ -99,7 +99,7 @@ def test_explicit_review_completion_maps_to_download_and_compact_summaries():
     assert view.stage_panels[1].summary == "14 gecontroleerd · 1 handmatig toegevoegd"
 
 
-def test_returning_to_earlier_stage_preserves_valid_lineage_until_an_edit_occurs():
+def test_returning_to_add_preserves_valid_lineage_until_processing_input_changes():
     original = reviewed_state()
     returned = open_stage(original, Stage.ADD)
     assert returned.source_generation == original.source_generation
@@ -112,6 +112,20 @@ def test_returning_to_earlier_stage_preserves_valid_lineage_until_an_edit_occurs
         StagePanelStatus.ACTIVE,
         StagePanelStatus.COMPLETED,
         StagePanelStatus.COMPLETED,
+    ]
+
+
+def test_reopening_completed_review_invalidates_download_until_review_is_completed_again():
+    returned = open_stage(reviewed_state(), Stage.REVIEW)
+    assert returned.stage is Stage.REVIEW
+    assert returned.processed_generation == returned.source_generation
+    assert returned.reviewed_generation is None
+    assert returned.export_generation is None
+    assert stage_can_open(returned, Stage.DOWNLOAD) is False
+    assert [panel.status for panel in build_app_shell_view(returned).stage_panels] == [
+        StagePanelStatus.COMPLETED,
+        StagePanelStatus.ACTIVE,
+        StagePanelStatus.FUTURE,
     ]
 
 
