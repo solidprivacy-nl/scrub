@@ -84,7 +84,6 @@ Only a new exact repaired head with a real executable full-suite result may beco
 
 Implementation does not self-certify or self-merge. Any repaired release candidate requires a fresh independent `governance_release_assurance` decision.
 
-
 ## Repair validation result — 2026-08-08 16:55 Europe/Amsterdam
 
 The functional repair and new regression contracts are green before final administrative identity:
@@ -101,3 +100,7 @@ conclusion: success
 ```
 
 The final administrative commit changes candidate identity but not runtime behavior. Therefore this claim is not sufficient release evidence by itself: a fresh full exact-head GitHub Actions run on the final candidate is mandatory before handoff to a new blind reviewer.
+
+## Final-candidate validation trigger — 2026-08-08 16:57 Europe/Amsterdam
+
+Administrative closeout was applied on bot-authored head `aac73737a8aefe1a80f714746d92181615a9a80a`. This connector-authored, semantics-neutral claim update exists solely to create an executable PR synchronize event for the **final repaired candidate identity**. No product/runtime source or test logic is changed by this paragraph. The resulting new exact head and its raw GitHub Actions evidence are the only valid identity/evidence for fresh assurance.
