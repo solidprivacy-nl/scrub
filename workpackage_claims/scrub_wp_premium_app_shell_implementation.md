@@ -2,11 +2,12 @@
 
 Repository: `solidprivacy-nl/scrub`  
 Role: `implementation_operations`  
-Status: `IMPLEMENTATION_IN_PROGRESS`  
+Status: `RELEASE_CANDIDATE_READY`  
 Issue: #84  
 PR: #85  
 Branch: `wp/premium-app-shell-implementation`  
-Claimed: 2026-08-08 14:47 Europe/Amsterdam
+Claimed: 2026-08-08 14:47 Europe/Amsterdam  
+Candidate prepared: 2026-08-08 15:28 Europe/Amsterdam
 
 ## Dependency check
 
@@ -16,43 +17,72 @@ The upstream staged-workspace architecture gate is satisfied:
 - PR #87 merged unchanged as `d54eb06f9c6fea7c1f36cdb082b475c0d4666507`;
 - the binding Standard model is therefore `One document. One workspace. Three stages. One active task.`
 
-## Scope
+## Implemented scope
 
-Implement the shared Premium App Shell only:
+The production Streamlit candidate now implements the shared Premium App Shell:
 
 - top-level `Anonimiseren | Terugzetten`;
 - global `Standaard | Expert`;
 - persistent `Toevoegen → Controleren → Downloaden` stage presentation;
-- exactly one dominant stage in Standard;
+- exactly one dominant Standard stage;
 - explicit active/completed/future stage states;
 - compact completed-stage summaries and passive future stages;
+- successful processing auto-advances to Review;
+- explicit review completion auto-advances to Download;
 - explicit return/edit affordance;
-- automatic progression hooks tied to current processing/review lineage;
+- deterministic processing lineage and fail-closed downstream invalidation;
+- current-generation analysis cache so stage navigation does not silently re-run recognition;
+- cached review rows with fail-closed Download invalidation when Review is reopened;
 - Standard without a permanent configuration sidebar;
-- production integration into `presidio_streamlit.py` without redesigning stage internals beyond shell/grouping needs.
+- Expert retains the existing advanced configuration surface;
+- Expert-only `highlight` and `synthesize` choices are never silently rewritten by Standard: Standard asks the user to return to Expert;
+- legacy runtime patching is bypassed for the direct Premium source so the retired long-form/two-mode UI cannot be re-injected at container startup.
 
-## Safety boundary
+## Safety boundary preserved
 
-Do not change recognizers, thresholds, replacement semantics, review-table/include authority, direct masking semantics, export bytes/names/MIME, Scrub Key schema/binding/lifecycle, reinsert semantics, audit semantics, dependencies, cloud/local-processing boundary, or the mandatory human-review requirement.
+No intended semantic changes to:
 
-## Coordination
+- recognizers or profile rules;
+- recognition thresholds as processing semantics;
+- replacement-table/include authority;
+- direct masking semantics;
+- export bytes, filenames or MIME types;
+- Scrub Key schema, document binding or lifecycle;
+- reinsert behavior;
+- audit semantics;
+- dependencies;
+- cloud/local-processing boundary;
+- mandatory human review.
 
-Exclusive ownership is claimed for the shared Streamlit shell surface while this package is active. Do not run another package that edits `presidio_streamlit.py`, `fix_streamlit_nested_expanders.py`, review-table flow, export/download flow, or shared workflow state in parallel.
+The App Shell is presentation/state orchestration only. Subsequent Input, Review and Export simplification remain separate sequential workpackages.
 
-## Validation plan
+## Regression evidence
 
-- focused pure shell/state tests first;
-- production integration contract tests;
-- full GitHub Actions regression on the exact candidate head;
-- fresh independent `governance_release_assurance` before merge;
-- after merge, exact-main Actions + GitHub→Hugging Face sync + live app verification because UI behavior changes.
+Normal PR-triggered GitHub Actions on clean product head `0e1a5fbb3d6c3b8f8293779e598ececd6ea4aa1d`:
 
-## Execution-continuity note — 2026-08-08 15:08 Europe/Amsterdam
+```text
+Tests run #2200 / ID 31259576962
+job 93108182555
+python -m pytest -q tests
+1225 passed in 12.55s
+conclusion: success
+```
 
-The PR event at head `7938b04a122e35d4a7a9fb9a64b0dec564ed8f87` ended as `action_required` before job creation (`0` jobs), so it was an Actions invocation-state problem rather than a regression-test failure. A normal repository-user synchronize event was generated without changing product semantics. That executable CI cycle produced implementation repairs on the branch.
+Earlier red runs were used as implementation feedback. A temporary diagnostic workflow confirmed an intermediate repaired head at `1223 passed`; that diagnostic workflow was removed from the candidate before clean-head validation.
 
-## Execution-continuity note — 2026-08-08 15:13 Europe/Amsterdam
+## Finalization boundary
 
-The implementation branch has since advanced through CI-driven repair commits to `8d77cb9733422fa5a25abda4b2ed554bde29706c` (`fix(ui): harden staged review and analysis state`). Its automatic bot-authored synchronize event again ended as `action_required` before job creation. This claim-only update deliberately retriggers exact-head GitHub Actions under a normal repository-user event. It changes no product/runtime semantics. Only the resulting new head and its real executable CI evidence may be used for completion or later independent assurance.
+Administrative closeout files are added after the clean product regression. Those administrative commits change candidate identity but not runtime product behavior, therefore a fresh full exact-head GitHub Actions run is still required before assurance. The exact final assurance head and run evidence must be recorded in PR #85 / issue #84 metadata without further repository changes.
 
-Implementation will not self-certify or self-merge.
+## Coordination and governance
+
+Exclusive ownership of the shared Streamlit shell remains claimed until this candidate leaves implementation. Do not run another package that edits `presidio_streamlit.py`, `fix_streamlit_nested_expanders.py`, review-table flow, export/download flow, or shared workflow state in parallel.
+
+Implementation does not self-certify or self-merge. Fresh independent `governance_release_assurance` must issue `PASS | FAIL | INDETERMINATE` on the final exact head before merge.
+
+After PASS/merge:
+
+1. verify exact-main GitHub Actions;
+2. verify GitHub → Hugging Face synchronization for the exact runtime candidate;
+3. request live app verification because UI behavior changed;
+4. only then release `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION`.
