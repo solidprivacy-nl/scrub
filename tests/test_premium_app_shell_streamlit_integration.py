@@ -58,6 +58,16 @@ def test_review_reopen_uses_cached_authoritative_rows_and_requires_recompletion(
     assert 'mark_review_complete(st.session_state)' in SOURCE
 
 
+def test_standard_never_silently_rewrites_expert_only_operator_choice():
+    assert 'if not standard_operator_is_supported(st_operator):' in SOURCE
+    assert 'Standaard wijzigt deze Expert-instelling niet automatisch.' in SOURCE
+    guard_start = SOURCE.index('if not standard_operator_is_supported(st_operator):')
+    guard_end = SOURCE.index('st_threshold_default =', guard_start)
+    guard_block = SOURCE[guard_start:guard_end]
+    assert 'st_operator =' not in guard_block
+    assert 'st.stop()' in guard_block
+
+
 def test_legacy_runtime_patch_cannot_reinject_retired_form_ui_into_premium_source():
     assert 'if "premium_streamlit_shell_ui" in text:' in LEGACY_PATCH
     assert 'raise SystemExit(0)' in LEGACY_PATCH
