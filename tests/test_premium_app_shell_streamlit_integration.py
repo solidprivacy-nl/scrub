@@ -45,15 +45,19 @@ def test_non_active_standard_stage_content_is_cached_not_rendered_in_parallel():
     assert 'render_stage_header(premium_state, Stage.DOWNLOAD)\n            st.stop()' in SOURCE
 
 
-def test_standard_stage_navigation_reuses_current_generation_analysis_instead_of_reprocessing():
+def test_stage_navigation_in_both_presentations_reuses_current_generation_analysis():
     assert 'get_cached_analysis_results(' in SOURCE
     assert 'cache_analysis_results(' in SOURCE
     assert 'if cached_analysis_results is not None:' in SOURCE
-    assert 'if is_premium_standard and not stage_is_active(premium_state, Stage.ADD):' in SOURCE
+    assert 'cached_analysis_results = get_cached_analysis_results(\n        st.session_state, current_processing_generation\n    )' in SOURCE
+    assert 'if is_premium_standard and not stage_is_active(premium_state, Stage.ADD):' not in SOURCE
 
 
-def test_review_reopen_uses_cached_authoritative_rows_and_requires_recompletion():
-    assert 'cached_review_rows = st.session_state.get("_premium_cached_review_rows")' in SOURCE
+def test_review_reopen_uses_generation_bound_authoritative_rows_and_requires_recompletion():
+    assert 'cached_review_rows = get_cached_review_rows(' in SOURCE
+    assert 'cache_review_rows(' in SOURCE
+    assert 'review_working_set_changed' in SOURCE
+    assert 'premium_state = select_stage(st.session_state, Stage.REVIEW)' in SOURCE
     assert 'edited_replacements_df.to_dict("records")' in SOURCE
     assert 'mark_review_complete(st.session_state)' in SOURCE
 

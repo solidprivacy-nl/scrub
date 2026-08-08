@@ -1,3 +1,17 @@
+## Unreleased — Premium review/export safety
+
+A pending Premium App Shell correction makes the download boundary stricter after review changes. When an Expert user changes a reviewed replacement, document downloads, the Scrub Key and audit downloads remain unavailable until the current review is explicitly completed again. A change to the source or processing settings requires reprocessing first. No existing export format or Scrub Key content is changed by this correction.
+
+This change is not released until independent assurance, merge, synchronization and required live-app verification are complete.
+
+---
+
+## Unreleased — Premium App Shell cross-mode state integrity repair
+
+Pending PR #99 keeps document source, current-generation analysis and reviewed replacement state stable across Standard/Expert presentation switches. Genuine user changes still invalidate stale downstream state fail-closed. This is not release-confirmed until independent assurance, merge, deployment evidence and live-app verification complete.
+
+---
+
 ## 2026-08-08 — Standaard en Expert behouden dezelfde verwerkingskeuzes
 
 - Wisselen tussen `Standaard` en `Expert` verandert niet langer ongemerkt de gekozen controlemodus of andere verwerkingsinstellingen.

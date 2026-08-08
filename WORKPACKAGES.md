@@ -1,5 +1,51 @@
 # SolidPrivacy Scrub — Current execution status override
 
+> **2026-08-08 21:50 Europe/Amsterdam**  
+> This block supersedes lower current-status fields for the Premium UI line. Historical package records remain below.
+
+## Premium UI execution queue
+
+1. `SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE` — **COMPLETED**.
+2. `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION` — **MERGED BUT OUTCOME NOT CONFIRMED**; parent governance conflict issue #96 remains open after contradictory earlier assurance.
+3. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR_V2` — **IMPLEMENTATION_IN_PROGRESS / PR #104**. This V2 candidate supersedes failed PR #99 and addresses issue #101's two blockers: actual fail-closed export enforcement and executable Streamlit transition evidence. Final exact-head CI and a completely fresh blind `governance_release_assurance` review are mandatory.
+4. `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION` — **BLOCKED** until V2 independently PASSes, merges unchanged, exact-main/Hugging Face/runtime evidence is green, issue #96 is independently reconciled, and required live-app verification closes.
+5. `SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION` — queued after Input Stage.
+6. `SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION` — queued after Review Stage.
+7. `SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION` — queued after the three stage packages.
+8. `SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT` — final live Premium gate.
+
+### V2 acceptance gate
+
+- no document/Scrub-Key/audit download control may render unless `export_is_current` is true;
+- a genuine Expert review-row edit must preserve the edited working set but clear completed review/export lineage and block downloads immediately;
+- explicit human re-completion is required before downloads return;
+- source/processing changes cannot be bypassed through review re-completion;
+- executable `streamlit.testing.v1.AppTest` coverage must run in GitHub Actions;
+- Standard/Expert must preserve authoritative source, current analysis and generation-bound review rows on presentation-only switches;
+- Expert-only operators must not be silently coerced by Standard;
+- protected recognizer, export-payload, Scrub Key, reinsert, audit and mandatory-review semantics remain unchanged.
+
+Do **not** start downstream shared Streamlit work while this gate is open.
+
+---
+
+# SolidPrivacy Scrub — Current execution status override
+
+> **2026-08-08 20:35 Europe/Amsterdam**  
+> This block supersedes lower current-status fields until issue #96 is closed.
+
+1. `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION` — **MERGED BUT OUTCOME NOT CONFIRMED**; contradictory #93 PASS / #92 FAIL is tracked in #96.
+2. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_ASSURANCE_CONFLICT` — **OPEN / BLOCKING**, issue #96; concrete #92 findings reproduced.
+3. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR` — **IMPLEMENTATION_IN_PROGRESS**, issue #98 / PR #99; exact-head CI and fresh independent assurance required.
+4. `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION` — **BLOCKED** until repair PASS/merge, exact-main + Hugging Face/runtime evidence, and independent #96/App Shell outcome closeout.
+5. Later Premium Review, Export, Expert parity and live closeout packages remain queued sequentially.
+
+Invariant: `Standaard ↔ Expert` alone must preserve authoritative source, processing generation, current-generation analysis and reviewed working set. Real source, processing-setting or review-decision changes invalidate downstream state fail-closed.
+
+---
+
+# SolidPrivacy Scrub — Current execution status override
+
 > **2026-08-08 15:28 Europe/Amsterdam**  
 > This block supersedes lower current-status fields until the next Premium package transition. Historical package descriptions remain retained below.
 

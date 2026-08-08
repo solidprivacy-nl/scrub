@@ -1,3 +1,58 @@
+## 2026-08-08 21:50 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR_V2 — executable fail-closed Expert export repair
+
+Status: `IMPLEMENTATION_IN_PROGRESS` until the post-administration exact-head full-suite run is green; fresh independent assurance remains mandatory.
+
+Reason:
+- independent assurance issue #101 correctly returned `FAIL` on PR #99 because a real Expert review edit cleared review/export lineage but the same render still exposed document, Scrub Key and audit downloads;
+- the same review also found that prior evidence lacked an executable Streamlit transition test.
+
+Repair:
+- all existing export/download controls now sit behind current `CoreFlowState.export_is_current` lineage;
+- a real Expert review edit immediately blocks the entire downstream export surface;
+- Expert exposes one explicit `Controle opnieuw afronden` action only when current processing is still reviewable;
+- review is never silently auto-completed after edits;
+- real source/processing-setting changes remain blocked until reprocessing and cannot use the review-recompletion shortcut;
+- authoritative edited review rows remain generation-bound and survive Standard/Expert presentation switches;
+- product export payload bytes, filenames and MIME semantics are unchanged once eligibility is current.
+
+Executable regression:
+- added `streamlit.testing.v1.AppTest` coverage for Standard Download → Expert → review edit → export blocked → explicit review completion → Standard with source/generation/analysis/review state preserved;
+- added executable processing-setting invalidation coverage;
+- added executable Expert-only `highlight` preservation coverage;
+- CI now installs Streamlit for the test environment.
+
+Pre-administration machine evidence:
+- PR #104 head `d688cc3b980da63c3c3f0bfb98e990a00b746c4b`;
+- base main `2623524c858216318d238213e37445193510fa73`;
+- tested merge candidate `abeb56ee683fb4c97e0c2fef7786ed65c825b582`;
+- Tests #2261 / run `31275276471`, job `93147717998`;
+- raw checkout confirms the exact merge candidate;
+- Streamlit `1.61.1` installed in CI;
+- `python -m pytest -q tests` → `1244 passed in 13.89s`.
+
+Protected semantics intentionally unchanged:
+- recognizers/profile rules and threshold meaning;
+- authoritative include/replacement decisions and direct masking;
+- eligible export bytes, filenames and MIME types;
+- Scrub Key schema/binding/lifecycle;
+- reinsert and audit semantics;
+- local/cloud processing boundary;
+- mandatory human review.
+
+Final exact-head CI is mandatory after this administration. Implementation does not self-certify or self-merge. Parent issue #96 and Premium Input Stage remain blocked pending fresh assurance, merge, deployment evidence and live app verification.
+
+---
+
+## 2026-08-08 20:35 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR
+
+Status: `IMPLEMENTATION_IN_PROGRESS`; issue #98 / PR #99 repairs the reproduced issue #92 cross-mode source, analysis-cache and review-state defects. Standard and Expert now share authoritative source context, current-generation analysis and generation-bound review rows. Real source/processing/review changes continue to invalidate downstream state fail-closed.
+
+Pre-administration evidence: Tests #2247 / run `31272188513`, job `93139919879`, head `69fde971783aa20d5cbcb2c13cd8a8538fa1ebe4`, merge candidate `65ca1ab73f03a2513a2004d49f190c2a233d261e`, `1240 passed in 9.65s`.
+
+Fresh exact-head CI and independent assurance remain mandatory. Issue #96 and Premium Input Stage remain blocked.
+
+---
+
 ## 2026-08-08 16:55 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION — repair after blind-assurance FAIL
 
 Status: `RELEASE_CANDIDATE_READY` only after a fresh exact-head full-suite run; fresh independent assurance remains mandatory.

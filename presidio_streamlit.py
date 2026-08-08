@@ -115,23 +115,29 @@ from premium_streamlit_state import (
     DENY_LIST_KEY,
     analyzer_model_label,
     cache_analysis_results,
+    cache_review_rows,
     get_cached_analysis_results,
+    get_cached_review_rows,
     get_core_flow_state,
     mark_processing_complete,
     mark_review_complete,
     persist_processing_settings,
     processing_generation,
+    review_rows_changed,
+    select_stage,
     set_stage_summary,
     stored_analyzer_params,
     stored_entities,
     stored_operator_value,
     stored_profile_label,
+    stored_source_text,
     stored_string_list,
     stored_threshold,
     synchronize_processing_generation,
     synchronize_shell_choices,
 )
 from premium_streamlit_shell_ui import render_stage_header
+from premium_streamlit_export_gate import render_export_readiness_gate
 
 from profile_ui_support import (
     care_example_names,
@@ -670,26 +676,22 @@ if show_add_workspace:
             "Voeg hier één bron toe: upload een document, laad optioneel een synthetisch testvoorbeeld "
             "of plak/bewerk de tekst in hetzelfde invoervlak."
         )
-        uploaded_file = st.file_uploader(
+        new_uploaded_file = st.file_uploader(
             "Upload een .txt-, .docx- of tekstgebaseerd .pdf-bestand",
             type=["txt", "docx", "pdf"],
             help="Gebruik in deze publieke prototypeomgeving alleen synthetische of goedgekeurde testdocumenten.",
         )
-        if uploaded_file is None and is_premium_standard:
-            uploaded_file = st.session_state.get("_premium_cached_uploaded_file")
-            if uploaded_file is not None:
-                st.caption(f"Huidige bron: {uploaded_file.name}")
+        cached_uploaded_file = st.session_state.get("_premium_cached_uploaded_file")
+        uploaded_file = new_uploaded_file if new_uploaded_file is not None else cached_uploaded_file
+        if new_uploaded_file is None and cached_uploaded_file is not None:
+            st.caption(f"Huidige bron: {cached_uploaded_file.name}")
 
         uploaded_file_type = (
-            st.session_state.get("_premium_cached_uploaded_file_type")
-            if is_premium_standard and uploaded_file is not None
-            else None
+            None
+            if new_uploaded_file is not None
+            else st.session_state.get("_premium_cached_uploaded_file_type")
         )
-        input_text = (
-            st.session_state.get("_premium_cached_text", "".join(demo_text))
-            if is_premium_standard
-            else "".join(demo_text)
-        )
+        input_text = stored_source_text(st.session_state, "".join(demo_text))
 
         if st_recognition_profile == "Dutch Care Strict":
             with st.expander("Gebruik een synthetisch zorgvoorbeeld", expanded=False):
@@ -827,11 +829,9 @@ try:
             st.session_state["_premium_process_requested_generation"] = current_processing_generation
 
 
-    cached_analysis_results = None
-    if is_premium_standard and not stage_is_active(premium_state, Stage.ADD):
-        cached_analysis_results = get_cached_analysis_results(
-            st.session_state, current_processing_generation
-        )
+    cached_analysis_results = get_cached_analysis_results(
+        st.session_state, current_processing_generation
+    )
 
     if cached_analysis_results is not None:
         st_analyze_results = cached_analysis_results
@@ -854,12 +854,11 @@ try:
             st_recognition_profile,
             st_analyze_results,
         )
-        if is_premium_standard:
-            cache_analysis_results(
-                st.session_state,
-                current_processing_generation,
-                st_analyze_results,
-            )
+        cache_analysis_results(
+            st.session_state,
+            current_processing_generation,
+            st_analyze_results,
+        )
 
     if (
         is_premium_standard
@@ -1039,22 +1038,23 @@ try:
                 seen_find_values.add(manual_find_text)
 
         replacement_editor_df = pd.DataFrame(default_editor_rows)
-        if is_premium_standard and stage_is_active(premium_state, Stage.REVIEW):
-            cached_review_rows = st.session_state.get("_premium_cached_review_rows")
-            if isinstance(cached_review_rows, list) and cached_review_rows:
-                cached_review_df = pd.DataFrame(cached_review_rows)
-                if "find" in cached_review_df.columns and "find" in replacement_editor_df.columns:
-                    cached_find_values = {
-                        safe_cell(value) for value in cached_review_df["find"].tolist()
-                    }
-                    new_rows_df = replacement_editor_df[
-                        ~replacement_editor_df["find"].map(safe_cell).isin(cached_find_values)
-                    ]
-                    replacement_editor_df = pd.concat(
-                        [cached_review_df, new_rows_df], ignore_index=True
-                    )
-                else:
-                    replacement_editor_df = cached_review_df
+        cached_review_rows = get_cached_review_rows(
+            st.session_state, current_processing_generation
+        )
+        if cached_review_rows:
+            cached_review_df = pd.DataFrame(cached_review_rows)
+            if "find" in cached_review_df.columns and "find" in replacement_editor_df.columns:
+                cached_find_values = {
+                    safe_cell(value) for value in cached_review_df["find"].tolist()
+                }
+                new_rows_df = replacement_editor_df[
+                    ~replacement_editor_df["find"].map(safe_cell).isin(cached_find_values)
+                ]
+                replacement_editor_df = pd.concat(
+                    [cached_review_df, new_rows_df], ignore_index=True
+                )
+            else:
+                replacement_editor_df = cached_review_df
 
         if is_premium_standard:
             render_stage_header(premium_state, Stage.REVIEW)
@@ -1309,10 +1309,22 @@ try:
                     },
                     key="replacement_editor",
                 )
-                if is_premium_standard:
-                    st.session_state["_premium_cached_review_rows"] = (
-                        edited_replacements_df.to_dict("records")
-                    )
+                edited_review_records = edited_replacements_df.to_dict("records")
+                review_working_set_changed = (
+                    cached_review_rows is not None
+                    and review_rows_changed(cached_review_rows, edited_review_records)
+                )
+                cache_review_rows(
+                    st.session_state,
+                    current_processing_generation,
+                    edited_review_records,
+                )
+                if review_working_set_changed and (
+                    premium_state.reviewed_generation is not None
+                    or premium_state.export_generation is not None
+                ):
+                    premium_state = select_stage(st.session_state, Stage.REVIEW)
+                    set_stage_summary(st.session_state, Stage.REVIEW, "")
 
             if is_expert_review:
                 with st.expander("Geavanceerde details bij de vervangtabel", expanded=False):
@@ -1331,8 +1343,10 @@ try:
                 )
 
         else:
-            cached_review_rows = st.session_state.get("_premium_cached_review_rows")
-            if not isinstance(cached_review_rows, list) or not cached_review_rows:
+            cached_review_rows = get_cached_review_rows(
+                st.session_state, current_processing_generation
+            )
+            if not cached_review_rows:
                 st.error("De afgeronde controle is niet meer beschikbaar. Open Controleren opnieuw.")
                 st.stop()
             edited_replacements_df = pd.DataFrame(cached_review_rows)
@@ -1375,7 +1389,11 @@ try:
                 use_container_width=True,
                 key="premium_complete_review",
             ):
-                st.session_state["_premium_cached_review_rows"] = edited_replacements_df.to_dict("records")
+                cache_review_rows(
+                    st.session_state,
+                    current_processing_generation,
+                    edited_replacements_df.to_dict("records"),
+                )
                 manual_count = 0
                 if "source" in edited_replacements_df.columns:
                     manual_count = int((edited_replacements_df["source"] == "manual").sum())
@@ -1415,8 +1433,19 @@ try:
             render_stage_header(premium_state, Stage.DOWNLOAD)
         else:
             st.subheader("3. Exporteer resultaat")
-        st.caption("Download documenten; Scrub Key en auditbestanden blijven apart.")
 
+        export_surface_ready = render_export_readiness_gate(
+            st.session_state,
+            is_expert=is_premium_expert,
+            generation=current_processing_generation,
+            reviewed_rows=edited_replacements_df.to_dict("records"),
+        )
+        if not export_surface_ready:
+            if is_premium_standard:
+                st.caption("Downloaden is beschikbaar nadat de huidige controle expliciet is afgerond.")
+            st.stop()
+
+        st.caption("Download documenten; Scrub Key en auditbestanden blijven apart.")
         st.markdown("**Document downloaden**")
         download_txt_col, download_docx_col, download_pdf_col = st.columns(3)
         with download_txt_col:
