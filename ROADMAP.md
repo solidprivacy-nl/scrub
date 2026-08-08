@@ -139,7 +139,7 @@ SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE — completed with a bound-pl
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS — completed with frozen placeholder, digest, legacy and fail-closed model contracts.
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION — completed with pure binding-ID, placeholder, digest, bound-key and document/key validation helpers.
 SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION — completed with bound placeholders and schema-1.1 key export.
-SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — implemented with dual-read import, fail-closed binding enforcement and explicit legacy compatibility.
+SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION — implemented with dual-read import, fail-closed binding enforcement and explicit legacy compatibility; app verification pending.
 SCRUB-WP_AI_FIRST_DESKTOP_PACKAGING_ROADMAP_ALIGNMENT — completed as a documentation-only Phase 9 execution-model refinement; installer implementation remains gated.
 SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION — independently assured and governance gate closed through issue #70/#73 recovery.
 SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT — merged through PR #80; contract only, no production UI behavior.
@@ -636,7 +636,7 @@ The current Streamlit integration is now implemented and regression-green. `Zorg
 
 The deterministic cross-profile regression matrix is now green. Across eight care document families and twelve legal examples, Care and International retain all 108 dedicated care expectations, Care/International and Legal/International dedicated-type parity hold, no dedicated Care or Legal entities leak into the wrong profiles, and no protected clinical phrase is overlapped. The historical legal metadata remains visible as 132/148 deterministic expectations, sixteen recorded gaps and four negative observations; these are existing benchmark observations, not hidden or reclassified as Zorg success. Generic NER remains outside this matrix. GitHub-to-Hugging-Face synchronization and deployed app behavior were confirmed on 2026-08-03; the current-web Zorgfilter line is completed and app-verified. Desktop UX work remains separately gated by Phase 9 and explicit approval.
 
-GitHub-to-Hugging-Face synchronization is independently verified for merge commit `cca4a25aaff28a7ba647c961d8e50f0e076921e2`: twelve relevant source files match byte-for-byte, all correctly scoped Zorg markers are present, the Streamlit health endpoint returns `200 / ok` and the Space root returns HTTP 200. The initial sync check produced a false negative because two marker groups were assigned to the wrong modules; the hashes were already equal and the corrected verification passed.
+GitHub-to-Hugging-Face synchronization is now independently verified for merge commit `cca4a25aaff28a7ba647c961d8e50f0e076921e2`: twelve relevant source files match byte-for-byte, all correctly scoped Zorg markers are present, the Streamlit health endpoint returns `200 / ok` and the Space root returns HTTP 200. The initial sync check produced a false negative because two marker groups were assigned to the wrong modules; the hashes were already equal and the corrected verification passed. The remaining gate is coordinator/user confirmation of the visible app behavior and generic-NER observation.
 
 ### Current and final interface direction
 
