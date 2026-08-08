@@ -7,6 +7,7 @@ from premium_app_shell import (
     open_stage,
     stage_can_open,
     stage_is_active,
+    standard_operator_is_supported,
     standard_view_hides_configuration_sidebar,
 )
 from premium_core_flow_state import CoreFlowState, PresentationMode, Stage, Workflow
@@ -29,6 +30,17 @@ def test_standard_shell_uses_approved_labels_and_hides_configuration_sidebar():
     assert view.active_stage_label == "Toevoegen"
     assert view.show_configuration_sidebar is False
     assert standard_view_hides_configuration_sidebar(state) is True
+
+
+def test_standard_rejects_expert_only_operators_without_mutating_them():
+    assert standard_operator_is_supported("replace") is True
+    assert standard_operator_is_supported("redact") is True
+    assert standard_operator_is_supported("mask") is True
+    assert standard_operator_is_supported("hash") is True
+    assert standard_operator_is_supported("encrypt") is True
+    assert standard_operator_is_supported("keep") is True
+    assert standard_operator_is_supported("highlight") is False
+    assert standard_operator_is_supported("synthesize") is False
 
 
 def test_expert_shell_keeps_same_stage_model_and_exposes_configuration_surface():
