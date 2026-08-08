@@ -1,14 +1,14 @@
 """Small session-state adapter for the Premium staged workspace.
 
-The adapter stores only the pure ``CoreFlowState`` plus compact presentation
-summaries. It never invokes recognition, replacement, export, Scrub Key,
-reinsert or audit behavior.
+The adapter stores only the pure ``CoreFlowState``, compact presentation
+summaries and current-generation analysis output. It never invokes recognition,
+replacement, export, Scrub Key, reinsert or audit behavior itself.
 """
 from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any, Mapping, MutableMapping, Sequence
+from typing import Any, Mapping, MutableMapping, Optional, Sequence
 
 from premium_app_shell import open_stage
 from premium_core_flow_state import CoreFlowState, PresentationMode, Stage, Workflow
@@ -16,6 +16,8 @@ from premium_core_flow_state import CoreFlowState, PresentationMode, Stage, Work
 
 CORE_STATE_KEY = "_premium_core_flow_state"
 STAGE_SUMMARIES_KEY = "_premium_stage_summaries"
+ANALYSIS_GENERATION_KEY = "_premium_analysis_generation"
+ANALYSIS_RESULTS_KEY = "_premium_analysis_results"
 
 
 def get_core_flow_state(session_state: MutableMapping[str, Any]) -> CoreFlowState:
@@ -42,8 +44,13 @@ def synchronize_shell_choices(
 ) -> CoreFlowState:
     """Apply top-level presentation/navigation choices without hidden reprocessing."""
     state = get_core_flow_state(session_state)
+    previous_workflow = state.workflow
     state = state.with_workflow(workflow)
     state = state.with_presentation_mode(presentation_mode)
+    if workflow is not previous_workflow:
+        session_state.pop(ANALYSIS_GENERATION_KEY, None)
+        session_state.pop(ANALYSIS_RESULTS_KEY, None)
+        session_state.pop(STAGE_SUMMARIES_KEY, None)
     return set_core_flow_state(session_state, state)
 
 
@@ -87,7 +94,29 @@ def synchronize_processing_generation(
     state = state.with_source(generation)
     set_core_flow_state(session_state, state)
     session_state.pop(STAGE_SUMMARIES_KEY, None)
+    session_state.pop(ANALYSIS_GENERATION_KEY, None)
+    session_state.pop(ANALYSIS_RESULTS_KEY, None)
     return state, True
+
+
+def cache_analysis_results(
+    session_state: MutableMapping[str, Any], generation: str, results: Sequence[Any]
+) -> None:
+    """Cache only analysis belonging to the current deterministic generation."""
+    session_state[ANALYSIS_GENERATION_KEY] = generation
+    session_state[ANALYSIS_RESULTS_KEY] = list(results)
+
+
+def get_cached_analysis_results(
+    session_state: Mapping[str, Any], generation: str
+) -> Optional[list[Any]]:
+    """Return current-generation analysis, including an intentionally empty result list."""
+    if session_state.get(ANALYSIS_GENERATION_KEY) != generation:
+        return None
+    results = session_state.get(ANALYSIS_RESULTS_KEY)
+    if not isinstance(results, list):
+        return None
+    return list(results)
 
 
 def mark_processing_complete(
