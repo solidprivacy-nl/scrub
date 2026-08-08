@@ -1,1 +1,53 @@
-from pathlib import Path\nimport ast\n\n\nSOURCE = Path("presidio_streamlit.py").read_text(encoding="utf-8")\nSHELL_UI = Path("premium_streamlit_shell_ui.py").read_text(encoding="utf-8")\n\n\ndef test_premium_streamlit_source_remains_syntactically_valid():\n    ast.parse(SOURCE)\n\n\ndef test_standard_shell_is_global_and_sidebar_starts_collapsed():\n    assert 'initial_sidebar_state="collapsed"' in SOURCE\n    assert '["Anonimiseren", "Terugzetten"]' in SOURCE\n    assert '["Standaard", "Expert"]' in SOURCE\n    assert 'if premium_workflow is Workflow.REINSERT:' in SOURCE\n    assert 'if is_premium_expert:\n    st.sidebar.header(APP_TITLE)' in SOURCE\n\n\ndef test_standard_uses_three_persistent_stage_headers_without_routed_pages():\n    assert 'render_stage_header(premium_state, Stage.ADD)' in SOURCE\n    assert 'render_stage_header(premium_state, Stage.REVIEW)' in SOURCE\n    assert 'render_stage_header(premium_state, Stage.DOWNLOAD)' in SOURCE\n    assert 'st.switch_page' not in SOURCE\n    assert 'st.Page(' not in SOURCE\n    assert 'st.navigation(' not in SOURCE\n    assert 'with st.container(border=True):' in SHELL_UI\n    assert 'st.expander' not in SHELL_UI\n\n\ndef test_standard_processing_and_review_actions_drive_auto_progression():\n    assert '"Document verwerken"' in SOURCE\n    assert 'mark_processing_complete(' in SOURCE\n    assert '"Controle afronden"' in SOURCE\n    assert 'mark_review_complete(st.session_state)' in SOURCE\n    assert 'synchronize_processing_generation(' in SOURCE\n\n\ndef test_non_active_standard_stage_content_is_cached_not_rendered_in_parallel():\n    assert 'show_add_workspace = is_premium_expert or stage_is_active(premium_state, Stage.ADD)' in SOURCE\n    assert 'show_review_workspace = is_premium_expert or stage_is_active(premium_state, Stage.REVIEW)' in SOURCE\n    assert '_premium_cached_review_rows' in SOURCE\n    assert 'render_stage_header(premium_state, Stage.DOWNLOAD)\n            st.stop()' in SOURCE\n\n\ndef test_existing_export_and_scrub_key_payload_contracts_are_not_rewritten():\n    assert 'file_name="opgeschoonde_tekst.txt"' in SOURCE\n    assert 'mime="text/plain"' in SOURCE\n    assert 'file_name="solidprivacy_scrub_key.json"' in SOURCE\n    assert 'mime="application/json"' in SOURCE\n    assert 'build_bound_scrub_key(' in SOURCE\n    assert 'validate_bound_scrub_key(scrub_key)' in SOURCE\n
+from pathlib import Path
+import ast
+
+
+SOURCE = Path("presidio_streamlit.py").read_text(encoding="utf-8")
+SHELL_UI = Path("premium_streamlit_shell_ui.py").read_text(encoding="utf-8")
+
+
+def test_premium_streamlit_source_remains_syntactically_valid():
+    ast.parse(SOURCE)
+
+
+def test_standard_shell_is_global_and_sidebar_starts_collapsed():
+    assert 'initial_sidebar_state="collapsed"' in SOURCE
+    assert '["Anonimiseren", "Terugzetten"]' in SOURCE
+    assert '["Standaard", "Expert"]' in SOURCE
+    assert 'if premium_workflow is Workflow.REINSERT:' in SOURCE
+    assert 'if is_premium_expert:\n    st.sidebar.header(APP_TITLE)' in SOURCE
+
+
+def test_standard_uses_three_persistent_stage_headers_without_routed_pages():
+    assert 'render_stage_header(premium_state, Stage.ADD)' in SOURCE
+    assert 'render_stage_header(premium_state, Stage.REVIEW)' in SOURCE
+    assert 'render_stage_header(premium_state, Stage.DOWNLOAD)' in SOURCE
+    assert 'st.switch_page' not in SOURCE
+    assert 'st.Page(' not in SOURCE
+    assert 'st.navigation(' not in SOURCE
+    assert 'with st.container(border=True):' in SHELL_UI
+    assert 'st.expander' not in SHELL_UI
+
+
+def test_standard_processing_and_review_actions_drive_auto_progression():
+    assert '"Document verwerken"' in SOURCE
+    assert 'mark_processing_complete(' in SOURCE
+    assert '"Controle afronden"' in SOURCE
+    assert 'mark_review_complete(st.session_state)' in SOURCE
+    assert 'synchronize_processing_generation(' in SOURCE
+
+
+def test_non_active_standard_stage_content_is_cached_not_rendered_in_parallel():
+    assert 'show_add_workspace = is_premium_expert or stage_is_active(premium_state, Stage.ADD)' in SOURCE
+    assert 'show_review_workspace = is_premium_expert or stage_is_active(premium_state, Stage.REVIEW)' in SOURCE
+    assert '_premium_cached_review_rows' in SOURCE
+    assert 'render_stage_header(premium_state, Stage.DOWNLOAD)\n            st.stop()' in SOURCE
+
+
+def test_existing_export_and_scrub_key_payload_contracts_are_not_rewritten():
+    assert 'file_name="opgeschoonde_tekst.txt"' in SOURCE
+    assert 'mime="text/plain"' in SOURCE
+    assert 'file_name="solidprivacy_scrub_key.json"' in SOURCE
+    assert 'mime="application/json"' in SOURCE
+    assert 'build_bound_scrub_key(' in SOURCE
+    assert 'validate_bound_scrub_key(scrub_key)' in SOURCE
