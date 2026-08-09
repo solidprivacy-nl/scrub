@@ -1,3 +1,19 @@
+## 2026-08-09 23:51 Europe/Amsterdam — SCRUB-WP_REVIEW_MARKER_COMPACTION_LIVE_REGRESSION_REPAIR
+
+Status: implementation candidate in PR #108; functional full-suite CI green; final exact-head CI and fresh blind assurance required.
+
+Live verification after the independently PASSed/deployed Premium App Shell V2 found yellow processed-text markers shifted into neighboring ordinary text and full document-binding tokens visible instead of compact aliases. Source reconstruction confirmed one display root cause: `find_exact_highlight_spans()` normalized the entire processed document with `.strip()` before computing offsets while the renderer used the original untrimmed text. Leading DOCX/PDF whitespace therefore shifted all marker coordinates and could split a strict bound token so the compact-display segmenter could no longer recognize it.
+
+Repair: document/processed text now retains exact outer whitespace for coordinate calculations; scalar review-cell normalization remains trimmed. Added synthetic regressions for leading whitespace, exact full-token spans, highlighted compact `[LABEL_NN]` display and marker-off compaction. No recognizer, review-authority, export, Scrub Key, reinsert or audit semantics changed.
+
+Functional evidence: head `a9e977b2ad21ff4f5c86d405d56ebce60cafe3ec`; merge candidate `5b9af3a09519128d40b842b50fe1421b289ea2bd`; Tests #2279 / run `31337824222`, job `93306469803`; Streamlit 1.61.1; `1247 passed in 12.80s`.
+
+Separate live finding: Dutch address spans around `Polderweg 8` absorb adjacent ordinary words and proliferate near-duplicate review rows. This is isolated in issue #107 and is intentionally not repaired in PR #108.
+
+Governance transparency: two accidental empty `operator_triggers/.keep` adds on main were each immediately followed by clean-tree fast-forward commits restoring the exact prior repository tree; final tree delta is zero and the path is excluded from HF sync. Details are in the #106 handover.
+
+---
+
 ## 2026-08-08 21:50 Europe/Amsterdam — SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR_V2 — executable fail-closed Expert export repair
 
 Status: `IMPLEMENTATION_IN_PROGRESS` until the post-administration exact-head full-suite run is green; fresh independent assurance remains mandatory.
