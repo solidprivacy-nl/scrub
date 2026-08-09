@@ -4,7 +4,7 @@ Repository: `solidprivacy-nl/scrub`
 Role: `implementation_operations`  
 Issue: #106  
 PR: #108  
-Status: `IMPLEMENTATION_IN_PROGRESS` pending final exact-head CI and fresh independent assurance
+Status: `RELEASE_CANDIDATE_READY` subject to final exact-head CI and fresh independent assurance
 
 ## Claimed implementation scope
 
@@ -22,4 +22,8 @@ No intended change to recognizers, profile rules, threshold semantics, Dutch add
 
 Tests #2279 / run `31337824222`, job `93306469803`; exact PR merge candidate `5b9af3a09519128d40b842b50fe1421b289ea2bd`; Streamlit `1.61.1`; `python -m pytest -q tests` → `1247 passed in 12.80s`.
 
-This claim is administrative evidence only. A final exact-head full-suite run after administration and a fresh blind `governance_release_assurance` verdict are mandatory before merge.
+## Administration state
+
+Project administration and the persistent handover are present. The temporary administration workflow/finalizer self-cleaned and are not part of the persistent PR diff. Persistent changed paths are limited to the three project-status documents, the handover, this claim, `review_highlight_toggle.py`, and the dedicated regression test.
+
+This claim is administrative evidence only and must not be used as pre-verdict assurance evidence. The commit produced by this claim update is the intended final repository mutation. Full exact-head CI on that frozen head and a fresh blind `governance_release_assurance` verdict are mandatory before merge.
