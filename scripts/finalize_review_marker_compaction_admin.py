@@ -1,0 +1,51 @@
+from pathlib import Path
+
+
+UPDATES = {
+    "WORKPACKAGES.md": """# Current execution status override — 2026-08-09 23:51 Europe/Amsterdam
+
+1. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR_V2_VERIFY` — **INDEPENDENT PASS / PR #104 MERGED / EXACT-MAIN + HUGGING FACE SYNC GREEN**, but required live app verification subsequently returned **FAIL** on marker/compact-display and Dutch address-span behavior. Issues #105 and #96 remain open until deployed repairs are live-verified.
+2. `SCRUB-WP_REVIEW_MARKER_COMPACTION_LIVE_REGRESSION_REPAIR` — **IMPLEMENTED / PR #108 / fresh assurance pending**. Confirmed root cause: processed highlight offsets were calculated against `.strip()`-trimmed document text and applied to untrimmed text. The repair preserves exact document whitespace and keeps full bound tokens intact for existing compact visual aliases.
+3. `SCRUB-WP_DUTCH_ADDRESS_SPAN_PRECISION_REPAIR` — **OPEN / issue #107 / queued separately after marker repair isolation**. Must stop adjacent-word overcapture around values such as `Polderweg 8` without weakening address recall.
+4. `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION` — **BLOCKED** until #106 and #107 independently PASS, merge/sync, and the coordinator confirms a fresh live-app verification on the same document flow.
+5. Later Premium Review, Export, Expert parity and final closeout packages remain sequentially queued.
+
+Do not combine the marker/display and recognizer-semantic repairs. The authoritative full Scrub Key/export placeholder token must not be shortened; compact aliases are display-only.
+
+---
+
+""",
+    "CHANGELOG.md": """## 2026-08-09 23:51 Europe/Amsterdam — SCRUB-WP_REVIEW_MARKER_COMPACTION_LIVE_REGRESSION_REPAIR
+
+Status: implementation candidate in PR #108; functional full-suite CI green; final exact-head CI and fresh blind assurance required.
+
+Live verification after the independently PASSed/deployed Premium App Shell V2 found yellow processed-text markers shifted into neighboring ordinary text and full document-binding tokens visible instead of compact aliases. Source reconstruction confirmed one display root cause: `find_exact_highlight_spans()` normalized the entire processed document with `.strip()` before computing offsets while the renderer used the original untrimmed text. Leading DOCX/PDF whitespace therefore shifted all marker coordinates and could split a strict bound token so the compact-display segmenter could no longer recognize it.
+
+Repair: document/processed text now retains exact outer whitespace for coordinate calculations; scalar review-cell normalization remains trimmed. Added synthetic regressions for leading whitespace, exact full-token spans, highlighted compact `[LABEL_NN]` display and marker-off compaction. No recognizer, review-authority, export, Scrub Key, reinsert or audit semantics changed.
+
+Functional evidence: head `a9e977b2ad21ff4f5c86d405d56ebce60cafe3ec`; merge candidate `5b9af3a09519128d40b842b50fe1421b289ea2bd`; Tests #2279 / run `31337824222`, job `93306469803`; Streamlit 1.61.1; `1247 passed in 12.80s`.
+
+Separate live finding: Dutch address spans around `Polderweg 8` absorb adjacent ordinary words and proliferate near-duplicate review rows. This is isolated in issue #107 and is intentionally not repaired in PR #108.
+
+Governance transparency: two accidental empty `operator_triggers/.keep` adds on main were each immediately followed by clean-tree fast-forward commits restoring the exact prior repository tree; final tree delta is zero and the path is excluded from HF sync. Details are in the #106 handover.
+
+---
+
+""",
+    "RELEASE_NOTES.md": """## 2026-08-09 — Reviewmarkeringen en compacte codes
+
+Een gerichte reparatie is voorbereid voor een live gevonden reviewprobleem waarbij gele markeringen konden verschuiven als een document met witruimte of lege regels begon. Daardoor konden ook de interne lange documentcodes zichtbaar worden in plaats van de bedoelde compacte weergave. De reparatie houdt markeringen exact op de vervangen waarde en behoudt compacte codes in de reviewweergave, zonder de veilige volledige codes in Scrub Key, export of herstel te wijzigen.
+
+De afzonderlijke adresherkenningsbevinding waarbij woorden rondom bijvoorbeeld `Polderweg 8` worden meegenomen, wordt in een apart pakket opgelost en is nog niet onderdeel van deze reparatie.
+
+---
+
+""",
+}
+
+
+for filename, prefix in UPDATES.items():
+    path = Path(filename)
+    current = path.read_text(encoding="utf-8")
+    if not current.startswith(prefix):
+        path.write_text(prefix + current, encoding="utf-8")
