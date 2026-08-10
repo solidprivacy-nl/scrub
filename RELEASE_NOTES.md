@@ -1,3 +1,11 @@
+## 2026-08-09 — Reviewmarkeringen en compacte codes
+
+Een gerichte reparatie is voorbereid voor een live gevonden reviewprobleem waarbij gele markeringen konden verschuiven als een document met witruimte of lege regels begon. Daardoor konden ook de interne lange documentcodes zichtbaar worden in plaats van de bedoelde compacte weergave. De reparatie houdt markeringen exact op de vervangen waarde en behoudt compacte codes in de reviewweergave, zonder de veilige volledige codes in Scrub Key, export of herstel te wijzigen.
+
+De afzonderlijke adresherkenningsbevinding waarbij woorden rondom bijvoorbeeld `Polderweg 8` worden meegenomen, wordt in een apart pakket opgelost en is nog niet onderdeel van deze reparatie.
+
+---
+
 ## Unreleased — Premium review/export safety
 
 A pending Premium App Shell correction makes the download boundary stricter after review changes. When an Expert user changes a reviewed replacement, document downloads, the Scrub Key and audit downloads remain unavailable until the current review is explicitly completed again. A change to the source or processing settings requires reprocessing first. No existing export format or Scrub Key content is changed by this correction.

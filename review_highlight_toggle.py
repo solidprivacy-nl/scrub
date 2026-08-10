@@ -46,7 +46,9 @@ HIGHLIGHT_CSS = """
 """.strip()
 
 
-def _safe_text(value: Any) -> str:
+def _raw_text(value: Any) -> str:
+    """Return document text without changing layout-significant whitespace."""
+
     if value is None:
         return ""
     try:
@@ -54,7 +56,13 @@ def _safe_text(value: Any) -> str:
             return ""
     except Exception:
         pass
-    return str(value).strip()
+    return str(value)
+
+
+def _safe_text(value: Any) -> str:
+    """Normalize scalar review-cell values where outer whitespace is not semantic."""
+
+    return _raw_text(value).strip()
 
 
 def _safe_bool(value: Any) -> bool:
@@ -105,9 +113,9 @@ def build_highlight_terms(review_rows: Any) -> list[str]:
 
 
 def find_exact_highlight_spans(text: str, terms: Iterable[str]) -> list[tuple[int, int]]:
-    """Find non-overlapping exact spans for highlight terms in raw text."""
+    """Find exact spans against the unchanged processed-text coordinate space."""
 
-    raw_text = _safe_text(text)
+    raw_text = _raw_text(text)
     spans: list[tuple[int, int]] = []
     for term in terms:
         safe_term = _safe_text(term)
@@ -122,13 +130,15 @@ def find_exact_highlight_spans(text: str, terms: Iterable[str]) -> list[tuple[in
 
 
 def build_highlighted_preview_html(text: str, terms: Iterable[str]) -> str:
-    """Build escaped HTML for a marked preview.
+    """Build escaped HTML for a marked preview without trimming document text.
 
     The raw document text is never inserted into HTML unescaped. Only escaped
-    fragments are wrapped in a static ``mark`` element.
+    fragments are wrapped in a static ``mark`` element. Leading/trailing
+    whitespace is preserved because highlight offsets are part of the exact
+    processed-text coordinate space used by the review component.
     """
 
-    raw_text = _safe_text(text)
+    raw_text = _raw_text(text)
     spans = find_exact_highlight_spans(raw_text, terms)
     if not spans:
         escaped_text = html.escape(raw_text)

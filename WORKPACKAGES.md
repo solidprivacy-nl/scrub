@@ -1,3 +1,15 @@
+# Current execution status override — 2026-08-09 23:51 Europe/Amsterdam
+
+1. `SCRUB-WP_PREMIUM_APP_SHELL_POST_MERGE_STATE_REPAIR_V2_VERIFY` — **INDEPENDENT PASS / PR #104 MERGED / EXACT-MAIN + HUGGING FACE SYNC GREEN**, but required live app verification subsequently returned **FAIL** on marker/compact-display and Dutch address-span behavior. Issues #105 and #96 remain open until deployed repairs are live-verified.
+2. `SCRUB-WP_REVIEW_MARKER_COMPACTION_LIVE_REGRESSION_REPAIR` — **IMPLEMENTED / PR #108 / fresh assurance pending**. Confirmed root cause: processed highlight offsets were calculated against `.strip()`-trimmed document text and applied to untrimmed text. The repair preserves exact document whitespace and keeps full bound tokens intact for existing compact visual aliases.
+3. `SCRUB-WP_DUTCH_ADDRESS_SPAN_PRECISION_REPAIR` — **OPEN / issue #107 / queued separately after marker repair isolation**. Must stop adjacent-word overcapture around values such as `Polderweg 8` without weakening address recall.
+4. `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION` — **BLOCKED** until #106 and #107 independently PASS, merge/sync, and the coordinator confirms a fresh live-app verification on the same document flow.
+5. Later Premium Review, Export, Expert parity and final closeout packages remain sequentially queued.
+
+Do not combine the marker/display and recognizer-semantic repairs. The authoritative full Scrub Key/export placeholder token must not be shortened; compact aliases are display-only.
+
+---
+
 # SolidPrivacy Scrub — Current execution status override
 
 > **2026-08-08 21:50 Europe/Amsterdam**  
