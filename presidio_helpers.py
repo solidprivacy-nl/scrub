@@ -27,6 +27,7 @@ from presidio_nlp_engine_config import (
     create_nlp_engine_with_azure_ai_language,
     create_nlp_engine_with_stanza,
 )
+from dutch_address_span_precision import tighten_dutch_address_results
 
 try:
     from dutch_recognizers import get_dutch_recognizers, get_dutch_entity_names
@@ -169,9 +170,13 @@ def analyze(
         kwargs["ad_hoc_recognizers"] = [ad_hoc_recognizer] if ad_hoc_recognizer else []
         del kwargs["regex_params"]
 
-    return analyzer_engine(model_family, model_path, ta_key, ta_endpoint).analyze(
+    results = analyzer_engine(model_family, model_path, ta_key, ta_endpoint).analyze(
         **kwargs
     )
+    # The underlying NL_ADDRESS recognizer is deliberately recall-oriented.
+    # Narrow only provably over-broad address spans; ambiguous shapes stay
+    # untouched so privacy-critical recall fails safe.
+    return tighten_dutch_address_results(kwargs.get("text", ""), results)
 
 
 def anonymize(
