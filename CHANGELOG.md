@@ -20,9 +20,10 @@ The archived file is historical provenance only; it must not be interpreted as a
 
 ## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_VALIDATION_HIERARCHY_CLARIFICATION
 
-Status: `IMPLEMENTATION IN PROGRESS`; independent assurance required before merge.  
+Status: `RELEASE CANDIDATE PREPARATION`; independent assurance required before merge.  
 Role: `implementation_operations`  
 Issue: #117  
+PR: #118  
 Branch: `wp/repository-convergence-validation-hierarchy`  
 Base: `7e4f5491fa6616f9f1b08649a4ed9dfd80de0d84`
 
@@ -44,10 +45,40 @@ Source reconstruction established that:
 - ROADMAP validation wording is aligned to D045;
 - the temporary convergence ledger classifies the evidence generations explicitly;
 - one narrow contract test validates actual workflow/source metadata plus the binding decision;
-- no runner, corpus, recognizer, threshold or product/runtime behavior is changed;
+- obsolete bootstrap tests are rebound to current semantic convergence invariants rather than stale wording/status placement;
+- no runner, corpus, recognizer, threshold, workflow implementation or product/runtime behavior is changed;
 - no diagnostic score is promoted to a merge/production gate.
 
-A final exact-head full regression and fresh blind `governance_release_assurance` PASS remain mandatory before merge.
+### Validation history before final freeze
+
+Initial PR candidate run:
+
+```text
+Tests run 33930040668
+job 101206596706
+4 failed, 1264 passed in 14.74s
+```
+
+The failures were governance/test-contract drift only:
+
+- `WORKPACKAGES.md` no longer legitimately contains the bootstrap placeholder `WP-CONVERGENCE-02..N` because actual evidence-derived packages now exist;
+- the debt ledger no longer legitimately lists the live Docker startup invocation as unresolved after independently assured PR #116 removed it;
+- the temporary ledger no longer needs duplicate `no new framework` prose when D045 carries the canonical prohibition;
+- the new hierarchy test was incorrectly coupled to Markdown backtick formatting around `.github/workflows/tests.yml`.
+
+The remediation kept the underlying invariants and removed only stale placement/status/format assertions.
+
+Corrected pre-final candidate:
+
+```text
+head 2147c854b344e628515076a624efc6176a74ca84
+Tests run 33930216093
+job 101207097941
+1268 passed in 13.72s
+SUCCESS
+```
+
+The claim closeout, changelog update and mandatory implementation handover are committed after that pre-final green run. A final full regression on the resulting exact head is therefore still required before freeze and fresh blind `governance_release_assurance`.
 
 ---
 
