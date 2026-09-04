@@ -7,8 +7,10 @@ COMBINED_TEXT = PATCH_TEXT + "\n" + APP_TEXT
 DOCKERFILE_TEXT = Path("Dockerfile").read_text(encoding="utf-8")
 
 
-def test_wp28c_post_patch_runs_after_main_scrub_key_ui_patch():
-    assert "python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py" in DOCKERFILE_TEXT
+def test_wp28c_historical_patch_is_not_runtime_startup_authority():
+    assert "python fix_streamlit_nested_expanders.py" not in DOCKERFILE_TEXT
+    assert "python fix_streamlit_pdf_text_reinsert.py" not in DOCKERFILE_TEXT
+    assert "streamlit run presidio_streamlit.py" in DOCKERFILE_TEXT
     assert "WP28C — MVP Scrub Key warning/acknowledgement UI implementation" in PATCH_TEXT
     assert "after the main Scrub Key/reinsert UI has been injected" in PATCH_TEXT
 

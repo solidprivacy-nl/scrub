@@ -48,7 +48,6 @@ ENV SCRUB_ROLLBACK_REPAIR=20260613_0015
 # Copy the current directory contents into the container at $HOME/app setting the owner to the user
 COPY --chown=user . $HOME/app
 
-# WP42D-ROLLBACK: disable the experimental static highlight preview startup patch.
-# The patch caused repeated runtime errors in the Hugging Face Space and is parked
-# until it can be redesigned without mutating presidio_streamlit.py at startup.
-CMD ["sh", "-c", "python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py && streamlit run presidio_streamlit.py --server.port=7860 --server.address=0.0.0.0 --server.enableXsrfProtection=false --server.enableCORS=false"]
+# The current Premium and reinsert UI are direct source. Start Streamlit without
+# invoking the retired compatibility scripts that previously mutated presidio_streamlit.py.
+CMD ["sh", "-c", "streamlit run presidio_streamlit.py --server.port=7860 --server.address=0.0.0.0 --server.enableXsrfProtection=false --server.enableCORS=false"]

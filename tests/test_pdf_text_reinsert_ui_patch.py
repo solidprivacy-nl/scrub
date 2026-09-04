@@ -101,8 +101,14 @@ def test_pdf_text_reinsert_is_inserted_before_anonymization_else_branch():
     assert "'''else:\n'''" in PATCH_TEXT
 
 
-def test_dockerfile_runs_pdf_text_reinsert_patch_after_existing_patch():
-    assert "python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py" in DOCKERFILE_TEXT
+def test_dockerfile_starts_direct_source_without_runtime_patch_invocation():
+    assert "streamlit run presidio_streamlit.py" in DOCKERFILE_TEXT
+    assert "python fix_streamlit_nested_expanders.py" not in DOCKERFILE_TEXT
+    assert "python fix_streamlit_pdf_text_reinsert.py" not in DOCKERFILE_TEXT
+    assert "--server.port=7860" in DOCKERFILE_TEXT
+    assert "--server.address=0.0.0.0" in DOCKERFILE_TEXT
+    assert "--server.enableXsrfProtection=false" in DOCKERFILE_TEXT
+    assert "--server.enableCORS=false" in DOCKERFILE_TEXT
 
 
 def test_dockerfile_installs_runtime_pdf_parser_for_approved_ui_path():

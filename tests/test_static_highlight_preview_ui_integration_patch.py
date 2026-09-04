@@ -50,11 +50,11 @@ def test_app_source_no_longer_contains_static_highlight_preview_block():
         assert phrase not in text
 
 
-def test_dockerfile_does_not_run_static_highlight_preview_patch():
+def test_dockerfile_runs_direct_app_without_historical_source_patches():
     text = DOCKERFILE.read_text(encoding="utf-8")
 
-    assert "python fix_streamlit_nested_expanders.py" in text
-    assert "python fix_streamlit_pdf_text_reinsert.py" in text
+    assert "python fix_streamlit_nested_expanders.py" not in text
+    assert "python fix_streamlit_pdf_text_reinsert.py" not in text
     assert "python fix_streamlit_static_highlight_preview.py" not in text
     assert "streamlit run presidio_streamlit.py" in text
 
