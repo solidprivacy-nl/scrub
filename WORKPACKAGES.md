@@ -24,6 +24,8 @@ implementation_operations
 
 Implementation cannot certify its own candidate. Governance cannot silently repair what it reviews. Workpackages should represent one coherent root-cause cluster that can be independently understood, tested and rolled back.
 
+Shared Streamlit/review/export/runtime surfaces remain sequential when a package touches them.
+
 ---
 
 # Stage 1 — Repository Convergence — ACTIVE
@@ -105,7 +107,7 @@ The current direct-source app already contains the Premium shell and reinsert UI
 
 - remove only the Docker pre-start invocation of `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py`;
 - start Streamlit directly with the existing port/address/XSRF/CORS flags unchanged;
-- rebind the Docker-specific test from historical patch ordering to the current no-runtime-mutation invariant;
+- rebind Docker-specific tests from historical patch ordering to the current no-runtime-mutation invariant;
 - keep both historical patch scripts and their broader historical tests for a later evidence-based retirement decision.
 
 #### Explicit non-scope
@@ -124,7 +126,7 @@ No change to:
 
 - neither patch script is invoked at runtime startup;
 - direct Streamlit command retains existing server flags;
-- focused/current startup contract is green;
+- focused/current startup contracts are green;
 - full exact-head `python -m pytest -q tests` is green;
 - changed-file scope remains root-cause narrow;
 - fresh independent `governance_release_assurance` returns PASS before merge;
