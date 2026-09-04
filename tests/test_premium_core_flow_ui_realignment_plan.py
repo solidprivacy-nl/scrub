@@ -45,27 +45,37 @@ def test_plan_preserves_safety_and_roundtrip_semantics() -> None:
         assert required in text
 
 
-def test_roadmap_and_workpackages_route_the_new_ui_line_sequentially() -> None:
+def test_current_strategy_preserves_implemented_ui_contract_without_reactivating_old_queue() -> None:
     roadmap = ROADMAP.read_text(encoding="utf-8")
     workpackages = WORKPACKAGES.read_text(encoding="utf-8")
+    decisions = DECISIONS.read_text(encoding="utf-8")
 
-    assert "Premium core-flow UI realignment" in roadmap
-    assert "SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT" in roadmap
-    assert "SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL" in roadmap
-    assert "SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION" in roadmap
-    assert "SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT" in roadmap
-    assert "SCRUB-WP_PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN" in workpackages
-    assert "SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION" in workpackages
-    assert "do not run the shared Streamlit UI packages in parallel" in workpackages
+    assert "generation-bound Standard/Expert workflow state" in roadmap
+    assert "## D041" in decisions
+    assert "## D043" in decisions
+    assert "global `Standaard | Expert` presentation" in decisions
+    assert "exactly one Standard stage is dominant at a time" in decisions
+    assert "Shared Streamlit/review/export/runtime surfaces remain sequential" in workpackages
+
+    # Historical implementation packages are evidence, not the current queue.
+    for obsolete_current_package in [
+        "SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT",
+        "SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL",
+        "SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION",
+        "SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT",
+    ]:
+        assert obsolete_current_package not in workpackages
 
 
 def test_decision_log_records_global_view_and_stage_model() -> None:
     text = DECISIONS.read_text(encoding="utf-8")
 
-    assert "D041" in text
-    assert "application-wide Standard/Expert presentation model" in text
-    assert "one active stage at a time" in text
-    assert "visibility and grouping only" in text
+    assert "## D041" in text
+    assert "global `Standaard | Expert` presentation" in text
+    assert "presentation-only switching" in text
+    assert "## D043" in text
+    assert "exactly one Standard stage is dominant at a time" in text
+    assert "Standard is lower cognitive load, not lower safety" in text
 
 
 def test_claim_is_planning_only() -> None:
