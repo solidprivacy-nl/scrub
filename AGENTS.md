@@ -10,7 +10,7 @@ Work only in:
 solidprivacy-nl/scrub
 ```
 
-Do not modify unrelated repositories. If the active repository is not `solidprivacy-nl/scrub`, stop and report the mismatch.
+Use `solidprivacy-nl/solidprivacy` only when an explicitly shared SolidPrivacy workflow/component is required by the current workpackage. Do not modify unrelated repositories.
 
 ## Required start sequence
 
@@ -21,196 +21,160 @@ Before starting any task, read in order:
 3. `WORKPACKAGES.md`
 4. `CHANGELOG.md`
 
-Also read when relevant:
+For consequential work also read:
 
-- `RISK_REGISTER.md`
-- `DECISION_LOG.md`
-- `STATUS_MONITORING_RUNBOOK.md`
-- `RELEASE_NOTES.md`
-- feature specs such as `SCRUB_KEY_SPEC.md` and `PDF_TEXT_REINSERT_UI_PLAN.md`
+1. `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`
+2. `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`
 
-## Workpackage claim check
+Read `RISK_REGISTER.md`, `DECISION_LOG.md` and relevant product contracts for the affected surface.
 
-Before starting implementation or documentation changes for a workpackage, check `workpackage_claims/`.
+GitHub is the source of truth. If canonical docs conflict with current source/runtime evidence, surface and reconcile the conflict rather than silently selecting one.
 
-If a claim file for the same workpackage already exists:
+## Engineering doctrine
 
-- status `in_progress`: stop and report that the package is already claimed;
-- status `completed`: stop and report that the package is already done;
-- status `blocked`: stop and read the blocking reason;
-- status `abandoned`: continue only with coordinator approval.
+Follow the SolidPrivacy Execution & Engineering Constitution:
 
-If no claim exists, create a new claim file before editing code, tests, UI, export, schema or shared documentation files.
+- business outcome first;
+- smallest complete solution;
+- solid but simple;
+- no overengineering;
+- first-principles reasoning;
+- proven/native solutions before custom machinery;
+- one source of truth;
+- remove obsolete/conflicting active paths;
+- verify behavior and security;
+- Done requires implementation, verification, cleanup and documentation alignment.
 
-Use `GitHub.create_file` for the claim. Do not overwrite an existing claim. This is the lightweight lock that prevents two workers from silently starting the same package.
+## Current strategic direction
 
-When the workpackage is done, update the same claim file to `completed` and record the final commit or PR, handover path, tests/checks, validation status, remaining risks and next recommended step.
-
-## Product direction
-
-The product direction is:
-
-```text
-Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit
-```
-
-The roadmap is risk-driven. Highest risks:
-
-1. false negatives / missed sensitive data;
-2. Scrub Key leakage or accidental sharing;
-3. hidden document content and metadata leakage;
-4. cloud-demo trust gap versus local-first promise;
-5. placeholder corruption during AI roundtrip;
-6. review UX limitations;
-7. PDF-scope misunderstandings.
-
-## Safety rules
-
-Do not weaken privacy or review controls.
-
-Do not silently change export semantics.
-
-Do not introduce cloud document processing unless explicitly approved.
-
-Do not store secrets, tokens or real personal data.
-
-Use synthetic data only.
-
-Preserve legal/professional context: replace sensitive values, not legal meaning.
-
-Treat the Scrub Key as sensitive re-identification data.
-
-## Workpackage discipline
-
-Work only on the assigned workpackage.
-
-Do not broaden scope.
-
-Do not start another workpackage unless explicitly instructed.
-
-If the task is specification-only, do not change code, tests, dependencies or UI.
-
-If the task is closeout-only, do not change code, tests, dependencies or UI.
-
-If the task is implementation, prefer helper modules and tests before UI changes.
-
-## Parallelization rules
-
-Safe to work on in parallel:
-
-- separate specification documents;
-- helper modules in separate files;
-- tests that do not touch the same UI flow;
-- risk reviews;
-- architecture plans;
-- non-UI documentation.
-
-Do not work in parallel without explicit coordination on:
-
-- `presidio_streamlit.py`
-- `fix_streamlit_nested_expanders.py`
-- `fix_streamlit_pdf_text_reinsert.py`
-- review table UI flow
-- export/download UI flow
-- shared workflow state
-- Docker/runtime startup patch order
-
-## Testing and validation
-
-Run the tests named in the workpackage.
-
-If no tests are required because the task is documentation-only or specification-only, state that clearly.
-
-For implementation tasks, run targeted tests first, then related regression tests when practical.
-
-Do not claim success if tests were not run. State the exact validation status.
-
-## GitHub Actions and sync
-
-Where possible, check GitHub Actions and GitHub-to-Hugging-Face sync status for the relevant commit.
-
-If connector or environment access prevents status lookup, say so clearly.
-
-Do not ask for app verification until Actions and sync are green.
-
-UI changes require app verification by the coordinator/user.
-
-## Documentation updates
-
-Update these files according to the workpackage:
-
-- `WORKPACKAGES.md` for status and next queue;
-- `CHANGELOG.md` for internal implementation history;
-- `RELEASE_NOTES.md` for user-visible product changes;
-- `RISK_REGISTER.md` for risk state changes;
-- `DECISION_LOG.md` for accepted strategic/architecture decisions.
-
-Do not update `ROADMAP.md` unless strategy, phase order or product direction changes.
-
-## Handover process
-
-Every task must create a handover file in:
+The active line is:
 
 ```text
-handover/workpackages/
+Repository Convergence
+→ Scrub Private Application
+→ Private Service
+→ External Product & Service Assurance
+→ Pilot
 ```
 
-Filename format:
+Normal new feature development is paused until `SCRUB_REPOSITORY_CONVERGED`.
+
+After convergence, `main` becomes the active Scrub Private line.
+
+Hugging Face is a synthetic/approved-test application-validation environment, not the final confidential-production trust environment.
+
+Local/offline functionality is preserved/deferred. Do not restart old installer or historical Premium work merely because old files/issues mention it.
+
+Do not build a new Evidence Framework; reuse and reconcile the existing validation systems.
+
+## Worker claim rule
+
+Before implementation, claim one specific workpackage in `workpackage_claims/` with:
+
+- workpackage title;
+- role;
+- issue/branch where applicable;
+- exact starting base;
+- scope and exclusions;
+- required validation.
+
+Do not claim multiple overlapping shared-surface packages in one worker.
+
+## Implementation and assurance separation
+
+Consequential work uses two separated roles:
+
+```text
+implementation_operations
+governance_release_assurance
+```
+
+Implementation may create a candidate but may not certify it.
+
+Assurance must use a fresh independent worker/session, reconstruct exact source/evidence, and record `PASS`, `FAIL` or `INDETERMINATE`. Before its initial verdict it must not rely on implementation handovers, self-assessments or conclusions. Assurance may not silently repair what it reviews.
+
+A changed/repaired exact head requires a fresh assurance pass.
+
+## Workpackage sizing
+
+Use small coherent root-cause packages.
+
+Do not create one giant convergence PR. Do not fragment trivial administrative edits into meaningless ritual packages.
+
+**Do not refactor for aesthetics.**
+
+During Repository Convergence, a cleanup/refactor requires a concrete current reason such as duplicate/contradictory/dead behavior, privacy/security risk, obsolete compatibility, meaningful maintenance burden, runtime instability or evidence-authority ambiguity.
+
+“A cleaner architecture” alone is not sufficient.
+
+## Shared-surface sequencing
+
+Avoid uncoordinated parallel edits to:
+
+- `presidio_streamlit.py`;
+- Streamlit/Docker startup behavior;
+- review table/direct-correction flow;
+- processing-generation state;
+- export/download flow;
+- Scrub Key/reinsert paths.
+
+Keep shared runtime/UI integration sequential unless explicit coordination proves independence.
+
+## Testing and deployment
+
+Where tools allow, workers self-check:
+
+1. relevant focused tests;
+2. full GitHub Actions on the exact candidate when required;
+3. failed-job logs;
+4. exact-main Actions after authorized merge;
+5. GitHub→Hugging Face sync when applicable;
+6. deployed/live app verification when visible/runtime behavior changed.
+
+Do not treat code inspection alone as proof.
+
+## Documentation ownership
+
+- `ROADMAP.md` = strategic stages, not implementation history.
+- `WORKPACKAGES.md` = one current executable queue.
+- `CHANGELOG.md` = current implementation history; exact pre-convergence history is preserved in `history/CHANGELOG_PRE_CONVERGENCE_20260904.md` and Git at the baseline SHA.
+- `DECISION_LOG.md` = accepted current binding decisions.
+- `RISK_REGISTER.md` = current risks.
+- temporary audit/debt ledgers = execution evidence only; they must not become competing permanent status authorities.
+
+## Handover
+
+Every worker writes:
 
 ```text
 handover/workpackages/YYYYMMDD_HHMM_<workpackage_slug>.md
 ```
 
-The handover file must include:
+Include:
 
-- repository worked in;
-- workpackage title;
-- status;
-- files added;
-- files changed;
-- tests added/updated;
-- validation status;
-- GitHub Actions status;
-- Hugging Face sync status;
-- app verification status;
-- remaining risks;
+- repository;
+- workpackage;
+- role/status;
+- exact candidate/baseline identity where relevant;
+- files added/changed;
+- tests;
+- validation;
+- GitHub Actions;
+- Hugging Face sync;
+- app verification;
+- remaining risks/blockers;
 - next recommended step.
 
-For Codex or other parallel worker tasks, do not paste the full handover into the coordinator chat when the handover has been committed to the repository.
+## Safety
 
-Instead, the final worker response should provide only:
+- Do not weaken human review/privacy controls.
+- Do not silently change export or Scrub Key semantics.
+- Treat false negatives as product-critical.
+- Treat Scrub Keys as sensitive re-identification material.
+- Use synthetic data only.
+- Do not store secrets/tokens/real personal data.
+- Preserve legal and clinical meaning.
+- Do not introduce external/cloud document processing unless explicitly approved for the relevant product line.
+- Do not claim perfect anonymisation/recall or production readiness from synthetic tests.
 
-- workpackage title;
-- status;
-- commit SHA or PR link;
-- handover file path;
-- short summary of files added/changed;
-- tests/checks run;
-- remaining risks;
-- next recommended step.
-
-The coordinator can then read the committed handover from GitHub.
-
-Only paste the full handover into chat if:
-
-- the handover could not be committed;
-- GitHub access failed;
-- there is a conflict or permission issue;
-- the coordinator explicitly asks for the full text.
-
-## Conflict rule
-
-Before editing shared documentation files, fetch the latest version.
-
-If there is a SHA conflict, update conflict or missing permission, stop and report instead of overwriting another worker’s changes.
-
-## Final response requirements
-
-In the final response, summarize:
-
-- what was changed;
-- which files were touched;
-- what tests/checks were run;
-- what was intentionally not changed;
-- remaining risks;
-- next recommended step.
+For Scrub Private, the target is no intentional persistent customer document content, no content-bearing ordinary logs, no document-content backup and no third-party document-processing egress. Minimal non-document control-plane metadata may persist only when justified by a real service requirement.

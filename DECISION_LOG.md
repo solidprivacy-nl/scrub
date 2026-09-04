@@ -1,739 +1,264 @@
-## 2026-08-08 — D043 — Freeze Premium Standard as a single-page staged document workspace
+# SolidPrivacy Scrub — Current Decision Log
 
-Status: accepted product/UX architecture direction; implementation candidate subject to normal independent assurance.
+This file records **accepted decisions that remain materially binding on current/future product work**.
 
-Decision:
-
-```text
-For the Standard anonymization core flow, use one persistent document workspace containing Toevoegen → Controleren → Downloaden. Keep all three stage headers visible, allow exactly one expanded/dominant stage at a time, collapse completed stages to compact summaries, keep future stages passive, auto-advance after successful completion, and allow explicit return to an earlier stage with fail-closed downstream invalidation.
-```
-
-Explicitly rejected for Standard:
+Detailed pre-convergence decision history remains recoverable from exact baseline:
 
 ```text
-Toevoegen page → Controleren page → Downloaden page
+54c73e0ebf5a3a3ed7039a50596fb57694add3cd
 ```
 
-The three core stages are states of the same document, not three separate routed screens. Also reject a conventional long Streamlit form rebuilt as a tree of independent or nested expanders.
-
-First-principles reason:
-- the scarce resource is user attention during a privacy-sensitive review task;
-- Scrub is iterative: review can legitimately send the user back to input/profile correction;
-- the interface must preserve confidence about source identity, completed work and whether downstream state is still current;
-- page routing maximizes isolation but removes spatial workflow context and adds state-restoration/routing complexity;
-- one staged workspace preserves the cognitive benefit of one task at a time while representing document state directly;
-- the model maps naturally to the merged source/processed/review/export generation lineage in `premium_core_flow_state.py`.
-
-Binding interaction consequences:
-- one dominant primary action per active stage;
-- no permanent configuration sidebar in Standard;
-- completed stage summaries contain orientation/trust information only, not mini-forms;
-- future stages show status rather than disabled control forests;
-- successful processing opens Controleren automatically;
-- explicit review completion opens Downloaden automatically;
-- earlier processing-affecting edits invalidate downstream review/export state before those results can be presented as current;
-- no nested core-flow accordion hierarchy in Standard;
-- stage surfaces should read as application panels even when Streamlit primitives are used internally.
-
-Current workpackage consequence:
-- insert `SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE` before further production integration in `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION`;
-- retain PR #85's compatible pure helper/test work;
-- require PR #85 to incorporate the staged-workspace semantics before touching/merging production `presidio_streamlit.py` integration;
-- continue sequentially with Input, Review, Export, Expert parity and live app closeout packages.
-
-Safety boundary:
-- this decision changes presentation architecture, not anonymization semantics;
-- recognizers, thresholds, review authority, direct masking, export bytes/names/MIME, Scrub Key, reinsert, audit and human-review requirements remain unchanged;
-- Standard is lower cognitive load, not lower safety.
-
-Evidence:
-- coordinator/user approval on 2026-08-08 Europe/Amsterdam after explicit first-principles comparison;
-- `PREMIUM_STAGED_WORKSPACE_DECISION.md`;
-- `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`;
-- merged Premium UI contract and state model.
+Git and `CHANGELOG.md` are the historical provenance layers. This file must not become another implementation-history ledger.
 
 ---
 
-## 2026-08-06 — D042 — Separate implementation from blind independent release assurance
+## D044 — 2026-09-04 — Repository Convergence before further normal feature development; Scrub Private becomes the active future production line
 
-Status: accepted project-governance and release-control decision
-
-Decision:
-
-```text
-Adopt CROSS_PROJECT_TWO_ROLE_GOVERNANCE_V1 for consequential Scrub work. Use one coordinator and two separated roles: implementation_operations and governance_release_assurance. Implementation prepares an identifiable candidate but cannot certify it. Governance reconstructs it independently and cannot silently repair it.
-```
-
-Scrub-specific strengthening:
-
-```text
-Before its initial PASS / FAIL / INDETERMINATE, governance may inspect the requested outcome, authoritative control files, candidate source/diff, acceptance criteria and raw machine/deployment evidence, but may not read the implementation handover, implementation self-assessment or implementation conclusions.
-```
-
-Reason:
-- Scrub processes privacy-sensitive professional documents and creates re-identification-sensitive Scrub Keys;
-- builder self-certification creates avoidable confirmation bias and weakens release confidence;
-- the Weekly ETF donor architecture already establishes a mature coordinator/implementation/assurance split;
-- the user's explicit requirement is stronger than ordinary review and requires conclusion isolation before the initial assurance decision.
-
-Operating consequences:
-- consequential implementation and verification are separate workpackages and separate workers/sessions;
-- the user continues to give one instruction and receives one consolidated status;
-- a failed or indeterminate candidate returns to implementation and requires a fresh assurance pass;
-- implementation statuses are limited to `IMPLEMENTATION_IN_PROGRESS`, `IMPLEMENTATION_BLOCKED` and `RELEASE_CANDIDATE_READY`;
-- assurance decisions are `PASS`, `FAIL` or `INDETERMINATE`;
-- merge/deployment execution and independently confirmed outcome remain distinct statuses.
-
-Initial maturity:
-- `LEVEL_1_CHECKLIST`;
-- target `LEVEL_2_MACHINE_EVIDENCE` through a later structured assurance-record package;
-- no claim that documentation alone provides hard CI or post-action enforcement.
-
-Authority:
-- canonical standard: `market-predictions/control-plane/control/CROSS_PROJECT_TWO_ROLE_GOVERNANCE_STANDARD_V1.md`;
-- project bootstrap: `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`;
-- project contract: `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`.
-
-## 2026-08-05 — D041 — Move from review-local decluttering to an application-wide premium core-flow shell
-
-Status: accepted product, UX and implementation-sequence decision
+Status: **accepted strategic/architecture direction; implementation of the bootstrap candidate remains subject to normal independent assurance**
 
 Decision:
 
 ```text
-Adopt an application-wide Standard/Expert presentation model and a one-active-stage document workspace. Separate Anonymize and Reinsert as top-level workflows. In Standard, present Toevoegen → Controleren → Downloaden with one primary action per stage and progressive disclosure of settings, alternative formats, Scrub Key and audit evidence.
+Pause normal new feature development.
+
+Preserve exact current source by SHA
+→ reconstruct active/reachable current truth
+→ classify CANONICAL / RECONCILE / RETIRE / VARIANT-SPECIFIC
+→ remove only proven debt
+→ reconcile current documentation/issues/evidence authority
+→ verify one clean baseline
+→ after convergence, continue main as Scrub Private
+→ finish Private-oriented application behavior on Hugging Face with synthetic data
+→ add production Private Service controls
+→ external assurance
+→ pilot Legal first, then Zorg based on evidence.
 ```
 
-Reason:
+Reasons:
 
-- live app evidence confirms that earlier Basic/Expert and decluttering work improved individual sections but left the whole product as a long form;
-- premium and enterprise credibility require a coherent task hierarchy, not merely fewer open expanders;
-- input alternatives, profile settings, review machinery, normal downloads, restore material and audit evidence serve different user goals and should not have equal visual weight;
-- one active stage at a time reduces cognitive load and makes the current task explicit.
+- current repository contains mature functionality that must not be rebuilt from stale assumptions;
+- canonical docs/workpackages/issues contain multiple generations of status and local-first deployment assumptions;
+- active technical legacy and valid-but-hosted-incompatible functionality must be distinguished before removal;
+- version control preserves prior/full-feature functionality more safely than an in-repository source clone;
+- the shortest path to the business outcome is to clean current truth first, then adapt only the trust boundary required by Scrub Private.
 
-Presentation boundary:
+Binding consequences:
 
-- recommended global labels are `Standaard` and `Expert`, subject to contract freeze;
-- Standard has no permanent configuration sidebar;
-- Expert preserves full inspection, tuning, audit and troubleshooting;
-- switching presentation changes visibility and grouping only and must preserve input, replacement decisions and session state.
+- exact Git SHA is preservation authority; optional tags are only human-readable markers;
+- no `/app_v2`, `/scrub-new`, duplicate Streamlit main or other source clone;
+- `ROADMAP.md` contains five strategic stages only;
+- `WORKPACKAGES.md` contains one current executable queue only;
+- the temporary convergence debt ledger is not a new permanent source of truth;
+- no cleanup refactor is justified by aesthetics alone;
+- no new Evidence Framework; reconcile/reuse existing synthetic/benchmark/E2E/security evidence;
+- human review and existing privacy/safety semantics remain binding;
+- Hugging Face is a synthetic/approved-test application-validation environment, not confidential-production infrastructure assurance;
+- Local/offline capability remains recoverable/deferred and is not the active delivery line;
+- after `SCRUB_REPOSITORY_CONVERGED`, `main` becomes the active Scrub Private development line.
 
-Safety boundary:
-
-- human review remains mandatory;
-- the review table remains source of truth and fallback;
-- no silent profile or recognizer changes;
-- no export-byte, filename, MIME, Scrub Key, reinsert or audit semantic changes;
-- no cloud document processing, telemetry or browser persistence;
-- an explicit processing action requires a pure stale-state and transition model before UI integration.
-
-Approved sequence:
-
-1. `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION`
-2. `SCRUB-WP_PREMIUM_CORE_FLOW_UI_CONTRACT`
-3. `SCRUB-WP_PREMIUM_CORE_FLOW_STATE_MODEL`
-4. `SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION`
-5. `SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION`
-6. `SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION`
-7. `SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION`
-8. `SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION`
-9. `SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT`
-
-Evidence:
-
-- coordinator/user feedback at 2026-08-05 10:49 Europe/Amsterdam;
-- `BASIC_EXPERT_REVIEW_MODE_PLAN.md`;
-- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md`;
-- `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md`.
-
-## 2026-08-04 — D040 — Use a two-stage server-authoritative protocol for direct masking from processed text
-
-Status: accepted product, UX and implementation-sequence decision
-
-Decision:
+Scrub Private content-plane direction:
 
 ```text
-Allow a user to select an unmasked value in Verwerkte tekst, invoke a right-click or visible/keyboard masking action, inspect the server-validated exact-occurrence impact, choose a broad type and create one normal manual replacement row. Version one masks all safe exact occurrences only.
+no intentional persistent customer document content
+no content-bearing ordinary application logs
+no document-content backup
+no third-party document-processing egress
+minimal non-document control-plane persistence only when a real service requirement justifies it
 ```
 
-Protocol:
-
-```text
-inspect_selection
-→ server validates UTF-16 offsets, text, document scope, processed hash, collisions and occurrence count
-→ ready / confirmation_required / blocked inspection result
-→ commit_manual_mask with a current single-use inspection ID
-→ server revalidates and creates the bound manual row
-```
-
-Safety boundaries:
-- one to five safe exact occurrences are ready;
-- six to twenty require explicit confirmation;
-- more than twenty are blocked from the quick path;
-- embedded substrings, nested included replacement terms, marked-range intersections, duplicates, stale views and replays fail closed;
-- the review table remains source of truth and `Gemiste waarde toevoegen` remains fallback;
-- browser code never creates placeholders, mutates the table, writes a Scrub Key or builds an export;
-- no external assets, telemetry, browser persistence or cloud processing;
-- no occurrence-specific replacement, rich editor or Streamlit upgrade in this line.
-
-Reason:
-- direct correction where a false negative is noticed reduces navigation friction and copying mistakes;
-- a server-derived impact step is required because browser-supplied counts and types are untrusted;
-- all-exact behavior matches current replacement/export/Scrub Key/reinsert semantics;
-- occurrence-specific behavior would require a separate span-aware architecture.
-
-Approved sequence:
-1. `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_CONTRACT`
-2. `SCRUB-WP_PROCESSED_TEXT_SELECTION_MASKING_ACTION_MODEL`
-3. `SCRUB-WP_PROCESSED_TEXT_SELECTION_COMPONENT_SPIKE`
-4. `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`
-5. `SCRUB-WP_PROCESSED_TEXT_SELECTION_CROSS_FLOW_REGRESSION`
-6. `SCRUB-WP_PROCESSED_TEXT_SELECTION_APP_VERIFY`
-
-Evidence:
-- coordinator/user approval at 2026-08-04 00:09 Europe/Amsterdam;
-- `PROCESSED_TEXT_SELECTION_MASKING_PLAN.md`;
-- `PROCESSED_TEXT_SELECTION_MASKING_CONTRACT.md`;
-- `test_cases/processed_text_selection_masking/contract.json`.
-
-## 2026-08-03 — D039 — Add Zorgfilter v1 with clinical-context preservation
-
-Status: accepted product and implementation-sequence decision
-
-Decision:
-
-```text
-Add an explicit Dutch Zorg profile. Replace date of birth and patient/client identity by default. Show other exact care dates, provider identity, BIG/AGB, organizations and locations for review and select them by default. Preserve diagnosis, medication, dosage, laboratory results and observations. Surface rare-case indirect re-identification as residual-risk evidence rather than blindly masking clinical meaning.
-```
-
-Implementation sequence:
-- policy and fully synthetic corpus first;
-- current-engine baseline and gap triage second;
-- recognizer contracts and pure recognizer implementation before UI;
-- central profile configuration before adding the fourth Streamlit profile;
-- cross-profile regression and live app verification before closeout.
-
-Reason:
-- Care documents contain both direct identifiers and essential clinical meaning.
-- A broad medical-word filter would destroy usability and potentially clinical/legal context.
-- The current `NL_HEALTHCARE_REFERENCE` category combines values with different privacy policies and must be split through evidence-driven work.
-- A fourth UI label without dedicated detection evidence would be cosmetic and unsafe.
-
-Boundaries:
-- synthetic data only;
-- human review remains required;
-- no production-readiness claim from corpus or benchmark results;
-- no silent profile switching;
-- no cloud document processing;
-- no export, Scrub Key or reinsert semantic change in the foundation package.
-
-## 2026-08-03 — D038 — Use AI-first execution with human-controlled signing, security and release gates for Phase 9 desktop packaging
-
-Status: accepted roadmap and execution-model decision; implementation remains gated
-
-Decision:
-
-```text
-When the final local desktop/offline installer phase is explicitly opened, use scoped AI agents for deterministic packaging, CI, synthetic testing and release-candidate preparation. Target a signed Tauri Windows shell with a bundled PyInstaller onedir Python/Presidio sidecar, a low-friction setup.exe and a managed-deployment MSI. Retain human control over publisher identity, production signing, public release, security claims, real-user acceptance and safety-critical semantic changes.
-```
-
-Planning assumptions:
-- 60–70% of first-cycle development/integration labor may be agent-executed;
-- 75–90% of repetitive later release work may be automated;
-- post-agent development/integration planning range: approximately EUR 8,000–24,000;
-- independent security review, test hardware, signing and human release oversight remain retained costs.
-
-Boundaries:
-- Phase 9 remains gated by Phase 6 quality closeout and explicit coordinator approval.
-- No installer, runtime, UI, dependency, export, Scrub Key, reinsert or cloud behavior changes in this decision package.
-- Synthetic data only.
-- No single agent receives unrestricted repository-write, signing-identity and public-release authority.
-- Successful packaging alone does not justify a production-readiness or local-only security claim.
-
-## 2026-07-28 — D037 — Validate document/key binding before every reinsert replacement
-
-Status: accepted reinsert-integration decision
-
-Decision:
-
-```text
-Validate the complete supported text surface against the supplied Scrub Key before any original value is restored. Permit verified bound matches and explicit legacy-v1.0 compatibility only. All mismatch, mixed-binding, missing-binding, invalid-digest and invalid-bound-key states fail closed with zero replacements and no partial DOCX output.
-```
-
-Reason:
-
-- Structural key validity alone cannot prove that a key belongs to a document.
-- Applying a wrong but valid key can silently restore incorrect confidential values.
-- Validation must happen before mutation so document-level helpers cannot produce partial output.
-- Legacy compatibility remains necessary, but it must never be presented as a verified document match.
-- The document-first three-step UX remains simpler and does not require new execution gates.
+This decision does not itself remove current replacement-memory or external-processing functionality. Those are variant-specific candidates for a later, separately assured Private adaptation after the clean baseline.
 
 ---
 
-## 2026-07-27 — D036 — Preserve custom replacement text and fail verified key export rather than silently rewriting it
+## D043 — 2026-08-08 — Premium Standard is a single-page staged document workspace
 
-Status: accepted export-integration decision
-
-Decision:
-
-```text
-Generate document-bound placeholders by default. Rebind only recognised placeholder tokens. Never silently replace arbitrary user-chosen replacement text with a placeholder. When any included mapping remains unbound, keep the document export behavior but block schema-1.1 Scrub Key download with a visible validation warning.
-```
-
-Reason:
-
-- Review choices remain source of truth.
-- Silent rewriting would change legal/readability semantics and user intent.
-- A bound key must not claim verified document matching for an unbound mapping.
-- Fail-visible key export is safer than a false binding claim.
-
----
-
-# SolidPrivacy Scrub — Decision Log
-
-This file records accepted strategic, product and architecture decisions.
-
----
-
-## 2026-07-27 — D035 — Keep binding-model implementation pure until sequential export and reinsert integration
-
-Status: accepted implementation decision
+Status: accepted and implemented direction; preserve unless current runtime evidence justifies change.
 
 Decision:
 
 ```text
-Implement document/Scrub-Key binding as a new pure helper module first. Do not alter current placeholder creation, Scrub Key export/import, deterministic replacement or Streamlit behavior in the model package. Export integration creates bound artifacts in the next package; reinsert integration enforces binding only after bound export is proven.
+One document. One workspace. Three stages. One active task.
+
+Toevoegen → Controleren → Downloaden
 ```
 
-Reason:
+Binding behavior:
 
-- Placeholder generation, key export and reinsert are shared safety-critical surfaces.
-- Pure helpers can be validated completely against the frozen contract without silently changing current output semantics.
-- Sequential integration preserves explicit migration and rollback boundaries.
+- all three stages remain represented in one workspace;
+- exactly one Standard stage is dominant at a time;
+- completed stages collapse to compact summaries;
+- future stages are visible but passive;
+- successful completion advances safely;
+- explicit return to earlier stages is allowed;
+- processing-affecting changes invalidate downstream review/export state fail-closed;
+- Standard is lower cognitive load, not lower safety;
+- three routed pages and a nested-expander long form are rejected as the Standard core-flow target.
 
-Implemented model boundaries:
+---
 
-- local random/injected binding-ID generation;
-- strict bound placeholder build/parse and document-ID extraction;
+## D042 — 2026-08-06 — Separate implementation from blind independent release assurance
+
+Status: accepted and binding governance decision.
+
+Decision:
+
+```text
+implementation_operations
+→ identifiable exact candidate
+→ governance_release_assurance fresh blind reconstruction
+→ PASS | FAIL | INDETERMINATE
+→ authorized action
+→ independent post-action confirmation
+```
+
+Implementation may not certify its own consequential candidate. Assurance may not repair what it reviews and may not read implementation conclusions before its initial verdict.
+
+---
+
+## D041 — 2026-08-05 — Application-wide Standard/Expert premium core-flow shell
+
+Status: accepted and implemented direction.
+
+Decision:
+
+- top-level `Anonimiseren | Terugzetten` workflows;
+- global `Standaard | Expert` presentation;
+- Standard uses the staged `Toevoegen → Controleren → Downloaden` workspace;
+- Expert operates over the same authoritative source/processing/review state;
+- presentation-only switching must not silently change profile/settings, reprocess or reset valid state;
+- human review and export/Scrub Key/reinsert semantics are not weakened by presentation simplification.
+
+---
+
+## D040 — 2026-08-04 — Server-authoritative direct masking from processed text
+
+Status: accepted and implemented product decision.
+
+Decision:
+
+A user may select a missed sensitive value in processed text, but browser selection is only an input event. The server validates scope, offsets, exact occurrences, collisions and stale/replay state before creating one normal document-bound manual replacement row.
+
+The review table/authoritative review state remains source of truth. Direct masking may not write Scrub Keys or exports independently.
+
+---
+
+## D039 — 2026-08-03 — Zorg profile with clinical-context preservation
+
+Status: accepted and implemented product decision.
+
+Decision:
+
+- direct patient/client identity and date of birth: replace;
+- other exact care dates/provider identity and dedicated care identifiers: review according to policy, selected by default where defined;
+- diagnosis, medication, dosage, laboratory results, observations and clinically meaningful context: preserve;
+- rare indirect-identification risk: surface for review/audit rather than blindly destroying clinical meaning;
+- synthetic corpus/evidence and human review remain mandatory; no production-safety claim from corpus scores alone.
+
+---
+
+## D038 — 2026-08-03 — Local desktop packaging is a deferred product option, not current execution authority
+
+Status: historical decision retained only where still applicable.
+
+The previously selected signed Tauri/PyInstaller local packaging direction remains recoverable if Local becomes an active product requirement later.
+
+D044 supersedes its roadmap priority. Installer work is not part of the current execution line.
+
+---
+
+## D037 — 2026-07-28 — Validate document/key binding before every reinsert replacement
+
+Status: accepted and binding safety decision.
+
+Decision:
+
+Validate the complete supported document text surface against the supplied Scrub Key before restoring any original value. Bound mismatch, mixed binding, missing binding or invalid mapping digest fails closed with zero replacements. Legacy unbound behavior remains explicitly unverified where supported.
+
+---
+
+## D036 — 2026-07-27 — Preserve intentional custom replacement text; fail verified key export rather than silently rewriting it
+
+Status: accepted and binding review/export decision.
+
+Decision:
+
+Do not silently convert arbitrary user-chosen replacement text into bound placeholders merely to make Scrub Key export succeed. Preserve the reviewed replacement decision and fail visibly/block verified key export when a fully bound mapping cannot be established.
+
+---
+
+## D035 — 2026-07-27 — Implement Scrub Key binding in pure model first, then integrate sequentially
+
+Status: accepted implementation/safety pattern; completed historically.
+
+Decision remains relevant as a precedent: safety-critical shared placeholder/key/reinsert changes should be isolated in pure/testable helpers before sequential integration into export/reinsert when new changes are genuinely required.
+
+---
+
+## D034 — 2026-07-27 — Bound-placeholder and mapping-digest contract
+
+Status: accepted and implemented safety contract.
+
+Binding direction:
+
+- document-specific binding ID in automatic/manual bound placeholders;
+- schema-1.1 bound key direction;
 - canonical SHA-256 mapping digest;
-- bound key validation;
-- eight stable document/key statuses and six fail-closed statuses;
-- explicit legacy-v1.0 unbound compatibility;
-- no UI, export or reinsert integration;
-- no cloud, AI, file persistence, signing or secret storage.
+- explicit legacy-unbound compatibility state;
+- mismatch/mixed/missing/digest-invalid bound states fail closed before replacement.
 
-Evidence:
-
-- `scrub_key_binding.py`
-- `tests/test_scrub_key_binding_model.py`
-- `output/validation/mvp_scrub_key_binding_model_validation.json`
+Do not shorten or mutate authoritative bound tokens merely for visual convenience; compact aliases are presentation-only.
 
 ---
 
-## 2026-07-27 — D034 — Freeze the bound-placeholder and mapping-digest contract before model implementation
+## D033 — 2026-07-27 — Document-specific placeholder namespaces bind new Scrub Keys to their document
 
-Status: accepted test/specification decision; model implementation may proceed
+Status: accepted and implemented architecture decision.
 
-Decision:
+Each new bound Scrub Key/document uses one locally generated non-sensitive binding ID carried by automatic/manual placeholders and the corresponding key. A mapping digest complements this for accidental corruption detection. The binding token, not filenames/labels/content heuristics, is the cross-format document/key association.
 
-```text
-Freeze binding IDs as B plus sixteen uppercase RFC 4648 base32 characters, automatic placeholders as [LABEL_BINDINGID_INDEX], manual placeholders as [LABEL_BINDINGID_HANDMATIG_INDEX], and the bound-key direction as schema version 1.1 with binding version 1 and a canonical SHA-256 mapping digest. Preserve explicit legacy-v1.0 unbound compatibility and require all bound mismatch, mixed-ID, missing-binding, invalid-digest and invalid-bound-key states to fail closed before replacement.
-```
-
-Reason:
-
-- Exact grammar and canonicalization are required before multiple shared placeholder, export and reinsert surfaces change.
-- A fixed synthetic digest fixture makes implementation independently testable.
-- Bound and legacy statuses must not be conflated.
-- UI simplification must survive the security change without new source/key execution gates.
-
-Boundaries:
-
-- Contract/tests only in this package; no product behavior change.
-- Mapping digest is not authenticity or a signature.
-- No automatic placeholder repair or legacy upgrade.
-- Preserve the three-step document-first reinsert flow and final confidential-download acknowledgement.
-- Model implementation remains pure and Streamlit-free.
-- Export and reinsert integration require later sequential packages.
-- Human review remains mandatory; no production-readiness claim.
-
-Evidence:
-
-- `SCRUB_KEY_BINDING_CONTRACT.md`
-- `test_cases/mvp_phase6/scrub_key_binding_contract.json`
-- `tests/test_mvp_scrub_key_binding_contracts.py`
-- `output/validation/mvp_scrub_key_binding_contract_validation.json`
+Legacy unbound keys remain explicitly distinguishable and must not be silently reinterpreted as verified bound matches.
 
 ---
 
-## 2026-07-27 — D033 — Bind new Scrub Keys through document-specific placeholder namespaces
+## D031 — 2026-07-27 — Reinsert is document-first and automatically processes valid source/key inputs
 
-Status: accepted planning/architecture decision; implementation requires green contract tests
+Status: accepted and implemented UX/safety decision.
 
-Decision:
+Current reinsert direction:
 
 ```text
-For new bound Scrub Keys, carry one locally generated, non-sensitive document binding ID in every automatic and manual placeholder and in the corresponding Scrub Key. Complement this with a canonical SHA-256 mapping digest for accidental key-corruption detection. Reinsert must fail closed before any replacement when a bound key mismatches the document, the document contains mixed binding IDs, or the mapping digest is invalid.
+source document/text
+→ corresponding Scrub Key
+→ deterministic validation/reinsert
+→ restored download
 ```
 
-Reason:
-
-- Generic placeholder namespaces allow a wrong valid key to restore wrong originals without an audit mismatch.
-- A binding token inside placeholders survives pasted-text, TXT, DOCX and PDF-text roundtrips when the placeholders themselves survive.
-- Labels, filenames, metadata, content hashes and placeholder-list hashes are not reliable cross-format AI-roundtrip bindings.
-- A digest detects accidental edits but is not authenticity; malicious tampering requires later protected signing-key infrastructure.
-
-Compatibility and UX boundaries:
-
-- Introduce an explicit new bound-key contract; do not silently reinterpret legacy v1.0 keys.
-- Legacy unbound keys may remain dual-readable with a visible unbound warning.
-- Preserve the document-first three-step reinsert flow and the final confidential-download acknowledgement.
-- Add no repeated confirmation buttons or checkboxes.
-- Preserve unknown, duplicate and missing-placeholder audit reporting.
-- No cloud processing, server secret, OCR or restored-PDF behavior.
-- Human review remains mandatory; no production-readiness claim.
-
-Approved sequence:
-
-1. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_CONTRACT_TESTS`
-2. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_MODEL_IMPLEMENTATION`
-3. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_EXPORT_INTEGRATION`
-4. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_REINSERT_INTEGRATION`
-5. `SCRUB-WP_MVP_SCRUB_KEY_BINDING_APP_VERIFY`
-
-Evidence:
-
-- `MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE.md`
-- `output/validation/mvp_scrub_key_document_binding_gap_triage.json`
-- `output/validation/mvp_scrub_key_roundtrip_validation_report.json`
+Source type recognition and structural key validation may run automatically when valid inputs are present. Do not reintroduce redundant hidden confirmation buttons/checkboxes merely to create a sense of safety. Keep the meaningful confidentiality acknowledgement at the restored-output boundary and fail invalid/ambiguous keys visibly.
 
 ---
 
-## 2026-07-27 — D032 — Roundtrip evidence requires document/key-binding triage before implementation
+## D030 — 2026-07-17 — Supported DOCX reinsert includes body, tables, headers and footers
 
-Status: accepted evidence-routing decision
+Status: accepted and implemented document-fidelity decision.
 
-Decision:
-
-```text
-Treat the missing document/Scrub-Key binding as a critical Phase 6 finding. Do not implement an implicit heuristic or silently change the Scrub Key schema, export or reinsert semantics inside the validation package. Open a separate triage package to define the binding contract and migration boundaries first.
-```
-
-Reason:
-
-- A wrong key with a disjoint placeholder namespace is visibly rejected through unknown/not-found audit evidence.
-- A structurally valid wrong or tampered key with the same placeholder names restores wrong original values with no validation issue, unknown placeholder or missing-placeholder signal.
-- Document labels are descriptive metadata and are not currently a verified binding mechanism.
-- A safe correction may affect key creation, scrubbed output metadata, import compatibility and export semantics.
-
-Boundaries:
-
-- Preserve current deterministic local behavior until the triage decision is approved.
-- Do not guess whether a key belongs to a document.
-- Do not auto-repair malformed placeholders.
-- Preserve existing audit evidence and human review.
-- Use synthetic data only; no production-readiness claim.
-
-Evidence:
-
-- `output/validation/mvp_scrub_key_roundtrip_validation_report.json`
-- `test_cases/mvp_phase6/scrub_key_roundtrip_manifest.json`
-- `tests/test_mvp_scrub_key_roundtrip_validation.py`
+Restore supported placeholders in existing `word/document.xml`, `word/header*.xml` and `word/footer*.xml` text nodes. Do not imply support for comments, tracked-change-only parts, footnotes/endnotes, text boxes, metadata or split placeholders unless a separate evidence-backed package adds and verifies that support.
 
 ---
 
-## 2026-07-27 — D031 — Reinsert is document-first with automatic source/key processing
+## D021 — 2026-06-14 — Unified side-by-side review is the target review surface
 
-Status: accepted evidence-driven UX and safety decision
+Status: accepted and still materially binding product/UX decision.
 
-Decision:
+The main review experience centers on source text/document versus processed/checked text. Highlights are a visual aid, not an alternate mutation authority. The authoritative review table/state remains the fallback/source of truth, and future review work should avoid proliferating duplicate helper panels.
 
-```text
-Present local reinsert as source document/text → corresponding Scrub Key → restored download. Automatically recognise the source type, structurally validate the supplied Scrub Key and run deterministic local reinsert when both inputs are valid. Keep one explicit confidentiality acknowledgement at the restored-output download boundary instead of repeating acknowledgements and action buttons before processing.
-```
-
-Reason:
-
-- Live Phase 6 verification confirmed that DOCX restoration works, but users can reasonably interpret an uploaded and visibly listed file as already accepted.
-- Requiring a checkbox and action button after each upload creates hidden completion states and unnecessary form friction.
-- The highest-risk user action is obtaining and handling the restored confidential output, so the explicit acknowledgement remains at that boundary.
-- Automatic key validation does not weaken structural validation or change Scrub Key semantics.
-
-Boundaries:
-
-- Keep warnings about pseudonymisation, key sensitivity and local-only use visible.
-- Invalid or ambiguous keys must still fail clearly and must not be used.
-- Preserve result/audit warnings for unknown, duplicate and missing placeholders.
-- Preserve existing helpers, output bytes, filenames and MIME types.
-- Do not add cloud, AI, OCR, restored-PDF or key-storage behavior.
-- Human review remains required and no production-readiness claim is created.
-
-Evidence:
-
-- User-confirmed restored synthetic DOCX containing body, table, header and footer values.
-- `tests/test_reinsert_auto_flow.py`
-- `tests/test_reinsert_auto_flow_ui.py`
-- `output/validation/mvp_reinsert_auto_flow_validation.json`
+This direction is implemented within the later D041/D043 Premium staged workspace.
 
 ---
 
-## 2026-07-17 — D030 — Restore existing DOCX header and footer text during deterministic reinsert
+# Current decision discipline
 
-Status: accepted implementation decision
+New decisions belong here only when they remain materially binding on current/future work.
 
-Decision:
+Do not copy workpackage status, test runs or implementation narrative into this file.
 
-```text
-Extend the existing local deterministic DOCX reinsert helper to process WordprocessingML text nodes in word/header*.xml and word/footer*.xml in addition to word/document.xml.
-```
-
-Reason:
-
-- The scrubbed DOCX export already replaces reviewed values in body, table, header and footer paragraphs.
-- The Phase 6 matrix showed that reinsert restored body/table values but left header/footer placeholders behind.
-- The gap belongs to document fidelity and reinsert scope, not detection or recognizer behavior.
-
-Boundaries:
-
-- Process only existing body, header and footer WordprocessingML text nodes.
-- Preserve unrelated OOXML package parts byte-for-byte where they are not rewritten.
-- Do not claim support for comments, tracked-change-only parts, footnotes/endnotes, text boxes, metadata or placeholders split across text nodes.
-- Do not add OCR or restored-PDF behavior.
-- Keep processing local, deterministic and Scrub Key driven.
-
-Evidence:
-
-- `output/validation/mvp_phase6_document_hygiene_fidelity_hardening_report.json`
-- `output/validation/mvp_phase6_false_negative_gap_triage.json`
-
----
-
-## 2026-07-17 — D029 — Current Phase 6 matrix does not justify a recognizer fix
-
-Status: accepted evidence-routing decision
-
-Decision:
-
-```text
-Do not open a recognizer or threshold implementation package from the first corrected Phase 6 synthetic matrix.
-```
-
-Reason:
-
-- The corrected matrix contains no reproducible detection false negative, misclassification or legal-role over-masking evidence.
-- The DOCX result concerns header/footer reinsert fidelity and helper scope.
-- The PDF result reflects the approved restored-TXT-only/no-OCR product boundary.
-- Treating either item as a recognizer problem would target the wrong layer and weaken evidence discipline.
-
-Consequences:
-
-- Route both findings to `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`.
-- Preserve current recognizer and threshold behavior.
-- Keep the PDF limitation explicit; do not infer OCR or restored-PDF authorization.
-- Preserve human review and the no-production-readiness-claim boundary.
-
-Evidence:
-
-- `output/validation/mvp_phase6_false_negative_gap_triage.json`
-- `output/validation/mvp_phase6_synthetic_validation_report.json`
-
----
-
-## 2026-07-17 — D028 — Phase 6 workflow validation becomes the active development line
-
-Status: accepted product-direction decision
-
-Decision:
-
-```text
-Close the verified MVP UI simplification line as the default development focus and activate Phase 6 end-to-end workflow validation and trust hardening.
-```
-
-Reason:
-
-```text
-The current import, review, manual correction and export interface has been live-app verified and works as expected. The next material risk reduction comes from proving the supported workflow with synthetic evidence, then fixing only reproducible trust gaps.
-```
-
-Consequences:
-
-- Start with `SCRUB-WP_MVP_E2E_SYNTHETIC_VALIDATION_MATRIX`.
-- Open recognizer, document-hygiene, Scrub Key/roundtrip or audit fixes only from reproducible evidence.
-- Do not start another broad UI package by default.
-- Phase 7 pilots remain parked until the Phase 6 quality gate is explicitly approved.
-- Local installer/packaging work remains deferred.
-- Human review remains mandatory; no production-readiness claim is created by this decision.
-
----
-
-## 2026-07-03 — D027 — Basiscontrole / Expertcontrole as review-mode direction
-
-Status: accepted planning recommendation, implementation pending contract tests
-
-Decision:
-
-```text
-Use Basiscontrole / Expertcontrole as the planning names for the two normal review-mode layers.
-Basiscontrole is the default MVP path.
-Expertcontrole exposes the full inspection/audit machinery.
-Mode switching changes visibility only, not processing or export semantics.
-```
-
-Reason:
-
-```text
-The MVP interface needs a true less-is-more default path without weakening legal/privacy review controls. Basiscontrole communicates lower cognitive load while keeping the workflow framed as a serious control task.
-```
-
-Boundaries:
-
-- Basiscontrole is not weaker review.
-- The review table remains source of truth internally.
-- Mode switching must not change recognizer behavior, replacement logic, export output, Scrub Key JSON, reinsert behavior or audit generation.
-- Implementation requires contract tests first.
-
----
-
-## 2026-06-18 — D026 — Temporarily prioritize MVP UI cleanup and export/download redesign
-
-Status: accepted product-direction decision
-
-Decision:
-
-```text
-Pause new recall/benchmark follow-up packages temporarily and prioritize MVP UI cleanup/export redesign.
-```
-
-Reason:
-
-```text
-The app must move from a prototype/debug interface toward a professional MVP workflow.
-```
-
-Consequence:
-
-```text
-Next packages focus on export/download UX and hiding/collapsing debug details without weakening safety controls.
-```
-
-Implications:
-
-- Recall/benchmark follow-up packages are parked unless a concrete blocker appears.
-- Export/download UX is now the active next user-visible improvement line.
-- Technical/audit details must remain available but move out of the primary flow where appropriate.
-- Scrub Key must stay clearly separated and visibly sensitive.
-- Export semantics must not change silently.
-- The review table remains source of truth and fallback.
-- No Streamlit implementation is approved by this planning decision; implementation requires separate workpackages.
-
----
-
-## 2026-06-18 — D025 — PERSON-name implementation requires green contract tests first
-
-Status: accepted tests/specification decision
-
-Decision:
-
-```text
-PERSON-name recognizer implementation may only start after contract tests are green.
-```
-
-Reason:
-
-```text
-Value-only matching and role preservation are safety-critical.
-```
-
-Consequence:
-
-```text
-Implementation package must satisfy the contract fixture before benchmark review.
-```
-
----
-
-## 2026-06-18 — D024 — PERSON-name improvement proceeds test-first
-
-Status: accepted planning/specification decision
-
-Decision:
-
-```text
-PERSON-name improvement will proceed test-first.
-```
-
-Reason:
-
-```text
-Single-surname and role/context cases are high-risk for over-masking and legal/care meaning damage.
-```
-
-Consequence:
-
-```text
-Contract tests are required before recognizer implementation.
-```
-
----
-
-## 2026-06-15 — D023 — Synchronized scrolling is default review behavior, not a user-facing technical control
-
-Status: accepted bounded UX refinement decision
-
-Decision:
-
-```text
-In the central side-by-side review surface, synchronized scrolling should be on by default and should not be exposed as a visible checkbox.
-```
-
-Boundary:
-
-This decision does not change replacement behavior, export/download behavior, Scrub Key behavior or reinsert behavior.
-
----
-
-## 2026-06-15 — D022 — Bounded synchronized side-by-side scrolling approved after prototype review
-
-Status: accepted bounded UX implementation decision; refined by D023 for visible control behavior
-
-Decision:
-
-```text
-After visual review of the isolated synchronized-scroll prototype, bounded synchronized scrolling may be integrated into the existing side-by-side review surface.
-```
-
-Implementation boundaries:
-
-- Keep synchronized scrolling bounded to the side-by-side review surface.
-- Do not change replacement behavior.
-- Do not mutate review table state.
-- Do not write or change Scrub Key data.
-- Do not change export/download behavior.
-- Do not change reinsert behavior.
-- Do not use real data.
-
----
-
-## 2026-06-14 — D021 — Unified side-by-side review surface is the target review UX
-
-Status: accepted product/UX direction
-
-Decision:
-
-```text
-The review UX should move toward one unified side-by-side main review surface: source text on the left, processed/checked text on the right, with optional highlights integrated in the processed-text pane. The product should not keep adding separate helper panels or duplicate preview expanders for every review feature.
-```
-
-Implications:
-
-- Future review UX work should centralize around source-vs-processed comparison.
-- The review table remains source of truth and fallback.
-- Serial review remains a guided review layer, not a replacement of the table.
-- The old replacement decision helper panel must not return as normal user-facing UI.
-- Do not start panel removal, click-to-mark, advanced editor, full-document marking, Scrub Key writes, export blocking or reinsert behavior changes without separate approved packages.
-
----
-
-## Historical note
-
-Older decisions remain available in Git history.
+If a decision is superseded, mark the superseding decision explicitly rather than leaving two competing current rules.

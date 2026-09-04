@@ -59,30 +59,39 @@ def test_decision_preserves_state_safety_and_product_semantics() -> None:
         assert required in text
 
 
-def test_roadmap_makes_staged_workspace_the_urgent_premium_gate() -> None:
-    text = ROADMAP.read_text(encoding="utf-8")
+def test_current_roadmap_preserves_staged_workspace_without_reactivating_old_gate() -> None:
+    roadmap = ROADMAP.read_text(encoding="utf-8")
+    decisions = DECISION_LOG.read_text(encoding="utf-8")
 
-    assert "PREMIUM_STAGED_WORKSPACE_DECISION.md" in text
-    assert "SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — URGENT CURRENT PACKAGE" in text
-    assert "production integration paused until package 3 is incorporated" in text
-    assert "PR #85 is **amended, not discarded**" in text
-    assert "one persistent document workspace" in text
-    assert "no three routed pages" in text
+    assert "generation-bound Standard/Expert workflow state" in roadmap
+    assert "Stage 1 — Repository Convergence — CURRENT" in roadmap
+    assert "## D043" in decisions
+    assert "single-page staged document workspace" in decisions
+    assert "three routed pages" in decisions
+
+    # Old implementation-gate prose is historical, not current strategy.
+    assert "SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE — URGENT CURRENT PACKAGE" not in roadmap
+    assert "production integration paused until package 3 is incorporated" not in roadmap
+    assert "PR #85 is **amended, not discarded**" not in roadmap
 
 
-def test_workpackages_and_decision_log_bind_the_execution_order() -> None:
+def test_current_workpackages_preserve_shared_surface_sequencing_not_historical_package_order() -> None:
     workpackages = WORKPACKAGES.read_text(encoding="utf-8")
     decisions = DECISION_LOG.read_text(encoding="utf-8")
 
-    assert "SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE" in workpackages
-    assert "SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION" in workpackages
-    assert "SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION" in workpackages
-    assert "SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION" in workpackages
-    assert "SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION" in workpackages
-    assert "SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION" in workpackages
-    assert "SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT" in workpackages
-    assert "do not run the shared Streamlit UI packages in parallel" in workpackages
-
-    assert "D043" in decisions
+    assert "Shared Streamlit/review/export/runtime surfaces remain sequential" in workpackages
+    assert "## D043" in decisions
     assert "single-page staged document workspace" in decisions
-    assert "three separate routed screens" in decisions
+    assert "three separate routed screens" not in decisions
+    assert "three routed pages" in decisions
+
+    for obsolete_current_package in [
+        "SCRUB-WP_PREMIUM_STAGED_WORKSPACE_DECISION_FREEZE",
+        "SCRUB-WP_PREMIUM_APP_SHELL_IMPLEMENTATION",
+        "SCRUB-WP_PREMIUM_INPUT_STAGE_SIMPLIFICATION",
+        "SCRUB-WP_PREMIUM_REVIEW_STAGE_SIMPLIFICATION",
+        "SCRUB-WP_PREMIUM_EXPORT_STAGE_SIMPLIFICATION",
+        "SCRUB-WP_PREMIUM_EXPERT_PARITY_REGRESSION",
+        "SCRUB-WP_PREMIUM_CORE_FLOW_APP_VERIFY_CLOSEOUT",
+    ]:
+        assert obsolete_current_package not in workpackages

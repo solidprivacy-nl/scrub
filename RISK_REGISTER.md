@@ -1,267 +1,396 @@
-# SolidPrivacy Scrub — Risk Register
+# SolidPrivacy Scrub — Current Risk Register
 
-This register tracks product, privacy, security and trust risks.
+This register tracks the **current** product, privacy, security, trust and execution risks for SolidPrivacy Scrub.
 
-Status values: `open`, `mitigating`, `accepted`, `closed`.
+Detailed pre-convergence risk-history remains recoverable from exact baseline:
 
+```text
+54c73e0ebf5a3a3ed7039a50596fb57694add3cd
+```
+
+Git/CHANGELOG preserve execution history. This file should show the live risk picture rather than accumulate workpackage narrative.
+
+Status values: `open`, `mitigating`, `accepted`, `closed`.  
 Impact values: `critical`, `high`, `medium`, `low`.
 
 ---
 
 ## R1 — False negatives / missed sensitive data
 
-Status: mitigating
-Impact: critical
+Status: `mitigating`  
+Impact: `critical`
 
 Risk:
 
 ```text
-Sensitive data remains in the scrubbed output and the user wrongly trusts the result.
+Sensitive data remains in scrubbed output and the user wrongly trusts the result.
 ```
 
-Current mitigations include human review, review guidance, diagnostic recall benchmark artifacts, PERSON-name diagnostic/contract/helper work, planning-only threshold policy and a verified simple manual missed-value entry that adds user-supplied values to the existing replacement table. A selection-driven processed-text correction path is approved with an all-exact version-one boundary. Its frozen contract, action model, local component and production integration enforce a two-stage server-authoritative inspect/commit protocol. Accepted commits append one normal document-scoped row, rerun before export and remain visible in the authoritative review table. The static renderer and manual form remain fallbacks. Deployment synchronization and live browser verification are green, including selection, exact-occurrence masking, normal table-row creation and one-step undo. Phase 6 now starts with a synthetic end-to-end validation matrix so new fixes are driven by reproducible false-negative, misclassification and over-masking evidence. The first machine-readable matrix baseline is stored in `output/validation/mvp_phase6_synthetic_validation_report.json` with 3 synthetic cases and 2 recorded evidence gaps or known limitations. Triage confirms that neither remaining item is a detection false negative, so no recognizer fix is justified by this bounded baseline.
+Current controls/evidence:
 
-Remaining gaps:
+- layered deterministic Dutch recognizers plus generic NER;
+- dedicated Legal/Zorg rules and profile policy;
+- recognizer-backed synthetic corpus benchmark/reporting;
+- domain-specific baseline/gap-triage/cross-profile tests;
+- manual missed-value addition and direct processed-text correction;
+- mandatory human review;
+- residual-risk/known-limitation language.
 
-- No accepted production recall/precision threshold exists.
-- No production benchmark gate exists.
-- No production safety claim is supported.
-- Human review remains necessary.
+Current gaps:
+
+- no accepted real-world production recall guarantee exists;
+- synthetic corpora do not prove complete production coverage;
+- human review remains necessary;
+- new recognizer changes must remain evidence-driven so precision fixes do not silently reduce recall.
+
+Required principle:
+
+> Do not claim perfect recall or production safety from synthetic benchmark results.
 
 ---
 
-## R2 — Scrub Key leakage or accidental sharing
+## R2 — Scrub Key leakage, mismatch or misuse
 
-Status: mitigating
-Impact: critical
+Status: `mitigating`  
+Impact: `critical`
 
 Risk:
 
 ```text
-The Scrub Key is shared, leaked, retained too long, tampered with or mishandled, allowing full re-identification of scrubbed content.
+A Scrub Key leaks, is paired with the wrong document, is corrupted/tampered with, or is otherwise mishandled, enabling incorrect or unauthorized re-identification.
 ```
 
-Current mitigations include warnings and acknowledgements. Export/download UX grouping is implemented directly in `presidio_streamlit.py` so the key file is visually separated from normal document exports and shown with a specific warning. Live app verification confirmed the grouped export UI. Reinsert now keeps the key-sensitivity warning visible, automatically applies the existing structural validation to a supplied key, and preserves one explicit confidentiality acknowledgement at the restored-output download boundary. Redundant pre-processing acknowledgements are removed because they obscured workflow state without adding key validation.
+Current controls/evidence:
 
-The manual missed-value entry flows through the existing replacement table and existing Scrub Key/export paths without changing key semantics. No key storage, schema or lifecycle behavior is added by the automatic reinsert flow. The Phase 6 adversarial roundtrip matrix exposes a critical unresolved gap: a structurally valid wrong or tampered key that reuses the same placeholder namespace can restore incorrect original values without a detectable mismatch. This is routed to `SCRUB-WP_MVP_SCRUB_KEY_DOCUMENT_BINDING_GAP_TRIAGE`; no schema or export change is authorized by the validation package. Triage recommends a non-sensitive document binding ID inside every automatic/manual placeholder and the corresponding key, plus a canonical mapping digest for accidental corruption. Contract tests now freeze legacy v1.0 unbound behavior, a document-specific base32 binding ID, canonical SHA-256 mapping digest and fail-closed mismatch/mixed-ID/digest-error statuses before model implementation. The pure model implements those contracts, and anonymization/export now creates bound placeholders plus schema-1.1 keys when all selected mappings are bound. Arbitrary custom replacement text is preserved but visibly blocks verified key export. Reinsert now validates the complete supported document text surface before replacement. Correct bound matches are verified; wrong, mixed, missing or digest-invalid bindings fail closed with zero replacements, and DOCX failures return the exact original package bytes. Legacy v1.0 compatibility remains explicitly unverified. The accidental pairing/corruption path is technically mitigated but the risk remains open until deployed app verification passes. Signatures/HMAC remain deferred until protected local signing-key management exists. Display-only placeholder compaction does not shorten the binding ID, alter the mapping digest or change any key/export/reinsert token; full-token roundtrip verification remains required after deployment.
+- explicit sensitive-key treatment in UI;
+- document-bound placeholders;
+- mapping digest;
+- structural key validation;
+- fail-closed wrong/mixed/missing-binding handling;
+- controlled TXT/DOCX/PDF-to-TXT reinsert paths;
+- adversarial/roundtrip tests;
+- legacy unbound state kept explicitly unverified.
+
+Current gaps:
+
+- Scrub Key remains inherently sensitive re-identification material;
+- cryptographic authenticity/signing is not implied by the current mapping digest;
+- user/operational handling remains part of the threat model.
 
 ---
 
-## R3 — Placeholder corruption during AI roundtrip
+## R3 — Placeholder corruption during AI/external roundtrip
 
-Status: mitigating
-Impact: high
+Status: `mitigating`  
+Impact: `high`
 
 Risk:
 
 ```text
-An AI system rewrites, translates, merges or deletes placeholders, causing deterministic reinsert to fail or restore incompletely.
+An external AI/process rewrites, translates, merges, deletes or corrupts placeholders, causing deterministic reinsert to fail or restore incompletely.
 ```
 
-Current mitigations include placeholder robustness helper/test work and reinsert audit reporting. The Phase 6 roundtrip matrix validates translated, merged, unknown, repeated and malformed mutations. Unknown grammar-valid placeholders are visible, while malformed tokens outside the strict grammar are signalled indirectly through expected placeholders not found. This diagnostic limitation is included in the document-binding gap triage. It is not part of the critical binding implementation line; an optional later diagnostic-hardening package may report malformed near-placeholders directly without guessing or repairing values.
+Current controls/evidence:
+
+- stable bound placeholder grammar;
+- mapping/document binding;
+- roundtrip/adversarial mutation tests;
+- unknown/missing placeholder diagnostics;
+- fail-visible reinsert behavior.
+
+Current gaps:
+
+- malformed near-placeholders outside strict grammar may remain a diagnostic limitation;
+- Scrub must not silently guess/repair values where binding cannot be proven.
 
 ---
 
-## R4 — Hidden document content and metadata leakage
+## R4 — Hidden document content, metadata and unsupported-part leakage
 
-Status: mitigating
-Impact: high
+Status: `mitigating`  
+Impact: `high`
 
 Risk:
 
 ```text
-DOCX metadata, comments, tracked changes, headers, footers or hidden content contain sensitive data that is not scrubbed or cleaned.
+DOCX metadata, comments, tracked changes, unsupported XML parts, headers/footers or other hidden content retains sensitive information outside the supported scrub/reinsert surface.
 ```
 
-DOCX hygiene audit remains report-only. Export grouping keeps audit details available and does not imply a clean-DOCX guarantee. The review debug collapse line explicitly keeps audit details available rather than removing them. The Phase 6 synthetic DOCX case now records header/footer findings and the existing main-document-only reinsert boundary as reproducible evidence for the document-hygiene hardening package. Gap triage classifies this as document fidelity and reinsert scope and routes it to `SCRUB-WP_MVP_DOCUMENT_HYGIENE_FIDELITY_HARDENING`. The hardening package now restores placeholders in existing DOCX header and footer XML parts while retaining hygiene reporting and explicit unsupported-part warnings.
+Current controls/evidence:
+
+- DOCX hygiene/audit reporting;
+- body/table/header/footer supported handling;
+- synthetic fidelity/hygiene tests;
+- explicit unsupported-part warnings;
+- PDF support is text-based with explicit product limitations.
+
+Current gaps:
+
+- unsupported DOCX parts remain a known boundary;
+- hygiene reporting must not be presented as a complete clean-document guarantee where unsupported content may exist.
 
 ---
 
-## R5 — Cloud-demo trust gap and deferred installer risk
+## R5 — Scrub Private content-retention / external-egress trust boundary
 
-Status: mitigating
-Impact: high
+Status: `open`  
+Impact: `critical`
 
 Risk:
 
 ```text
-The final product promise is local-first, but the current fast validation surface is the Hugging Face cloud demo.
+A managed Private service retains customer document content, mappings or Scrub Keys, logs content, backs it up, or sends document content to a third party contrary to the intended service promise.
 ```
 
-Local/offline installer work remains later. The current focus is making the web prototype workflow credible first.
+Current evidence on pre-convergence/full-feature application:
+
+- `replacement_memory.py` intentionally persists original/replacement/entity values to `/data/replacement_memory.json` when persistent storage exists;
+- current Expert functionality includes Azure AI Language and OpenAI/Azure synthesis paths;
+- synthesis helper currently prints a content-bearing prompt.
+
+These are not evidence that the current prototype is defective for every deployment model; they are **variant-specific conflicts** with Scrub Private.
+
+Scrub Private target:
+
+```text
+no intentional persistent server-side customer document content
+no content-bearing ordinary application logs
+no document-content backup
+no third-party document-processing egress
+minimal non-document control-plane persistence only when required
+```
+
+Mitigation sequence:
+
+- first complete Repository Convergence without destroying potentially useful Local/full-feature behavior;
+- then remove/exclude hosted-incompatible persistence/egress from the Private line in separately tested/assured workpackages;
+- prove application-level behavior on HF with synthetic data;
+- prove infrastructure/service retention properties later on controlled production infrastructure.
+
+Do not use HF application tests to claim provider-level zero retention.
 
 ---
 
-## R6 — Review UX and interface clarity risk
+## R6 — Review UX, stale state and workflow clarity
 
-Status: mitigating
-Impact: high
+Status: `mitigating`  
+Impact: `high`
 
 Risk:
 
 ```text
-The interface still feels like a technical prototype, which can reduce confidence and increase review mistakes.
+The user misses a sensitive value, changes state without realizing downstream output is stale, or the interface obscures whether review is complete/current.
 ```
 
-Current mitigations:
+Current controls/evidence:
 
-- Review table remains source of truth and fallback.
-- Side-by-side review surface, synced scrolling and collapsible review table are live and verified.
-- Export/download UX is directly implemented in `presidio_streamlit.py` and live verified.
-- `REVIEW_DEBUG_ELEMENTS_COLLAPSE_PLAN.md` narrows review UI cleanup to a small interface pass, not a new review loop.
-- `WP_REVIEW_DEBUG_ELEMENTS_COLLAPSE_IMPLEMENTATION` made the existing step-by-step review aid collapsed by default and removed debug/governance wording from the primary UI.
-- `WP_MVP_FAST_MANUAL_MASK_ENTRY` adds a verified simple user-facing path to add missed values to the existing replacement table.
-- The contract, action model and component spike are now connected through `SCRUB-WP_PROCESSED_TEXT_SELECTION_TABLE_INTEGRATION`. The review table remains source of truth; the component is only an input route into normal bound manual rows.
-- Live app evidence on 2026-08-05 confirms that local decluttering is not sufficient: the application still exposes input, settings, review, downloads, Scrub Key and audit as one long form. `PREMIUM_CORE_FLOW_UI_REALIGNMENT_PLAN.md` mitigates this through a global Standard/Expert model, top-level workflow navigation, one active stage and progressive disclosure.
+- staged Premium workspace;
+- Standard/Expert modes over shared authoritative state;
+- generation-bound analysis/review/export state;
+- fail-closed stale export gating;
+- explicit re-completion after review edits;
+- source-versus-processed review;
+- authoritative replacement table;
+- direct/manual missed-value correction;
+- AppTest and integration coverage.
 
-Gaps:
+Current gap:
 
-- Live reinsert verification exposed a concrete workflow-state problem: uploaded source and key files still required non-obvious follow-up checkboxes and buttons. `SCRUB-WP_MVP_REINSERT_AUTO_FLOW_SIMPLIFICATION_IMPLEMENTATION` addresses this narrowly with document-first ordering and automatic validation/processing.
-- Additional copy polish may still be needed, but it should remain separate and small.
-- Production table integration preserves collision/replay/stale guards, hidden-marker protection, immediate rerun and edit-aware undo. Deployment synchronization and live browser/app verification are green. Display-only placeholder compaction is implemented with lossless source tokens, exact UTF-16 mapping and protected compact spans; the underlying 80-bit binding remains unchanged. Focused deployment/app verification of the compact view is required before the remaining high-risk export/Scrub Key/reinsert cross-flow regression.
-- Implementation must avoid weakening review controls or hiding audit details; one final confidentiality acknowledgement remains at download.
-
-Recommended workpackages:
-
-- The general UI baseline is completed and app-verified. The automatic reinsert-flow package is permitted as a narrow exception because live Phase 6 validation exposed a concrete workflow blocker; broader UI work remains gated.
+- parent Premium live-verification issues contain stale/unfinished closeout state; current deployed behavior must be reconciled against merged marker/address repairs before declaring those historical gates closed.
 
 ---
 
 ## R7 — PDF limitations misunderstood by users
 
-Status: mitigating
-Impact: high
+Status: `mitigating`  
+Impact: `high`
 
 Risk:
 
 ```text
-Users may assume PDF support means complete restored PDF reinsert or OCR, while the approved scope is text-based extraction to restored TXT only.
+Users interpret text-based PDF support as OCR or complete restored-PDF fidelity.
 ```
 
-PDF limitations must remain clear in export/reinsert copy. The Phase 6 text-based PDF case verifies the current restored-TXT-only path and explicitly records that restored PDF and OCR are unsupported. Gap triage retains this as an explicit product boundary and does not authorize OCR or restored-PDF work. Document-fidelity hardening preserves that boundary unchanged.
+Current boundary:
+
+- text-based PDF extraction is supported;
+- OCR is not implied;
+- restored PDF generation is not implied;
+- reinsert output may be restored text rather than a reconstructed PDF.
+
+Copy, audit and pilot guidance must keep these limitations explicit.
 
 ---
 
-## R8 — Workflow status, audit visibility and evidence clarity
+## R8 — Audit/evidence clarity and false confidence
 
-Status: mitigating
-Impact: medium
+Status: `mitigating`  
+Impact: `high`
 
 Risk:
 
 ```text
-Evidence and audit controls become either too hidden to trust or too technical for normal users.
+Multiple benchmark/report generations are mistaken for equivalent safety evidence, or diagnostic metrics are presented as production-readiness/individual-document safety scores.
 ```
 
-Current mitigations:
+Current controls:
 
-- Coordinator screenshots/evidence are recorded when connector lookup is incomplete.
-- Diagnostic recall benchmark artifact workflow exists.
-- Audit/report details exist.
-- `MVP_UI_CLEANUP_AND_EXPORT_REDESIGN_PLAN.md` states that technical/audit details must remain available but become secondary.
-- Export/download UX now groups document downloads, key file, and audit/technical files while keeping audit details available.
-- The step-by-step review aid is now secondary by default, while review table and audit controls remain available.
-- The verified manual missed-value entry is intentionally placed in the primary review path because it directly supports faster anonymization.
-- The approved selection-driven route may reduce navigation friction, but every accepted action must still become a visible normal replacement-table row and must not mutate export or Scrub Key state directly from the browser component.
+- synthetic-only/report-only warnings in benchmark/residual-risk tooling;
+- known limitations and human-review requirement;
+- separate domain and workflow validation systems.
 
-Gaps:
+Current convergence requirement:
 
-- No generalized automated status artifact exists yet. `SCRUB-WP_MVP_AUDIT_RESIDUAL_RISK_EVIDENCE` is scheduled after the synthetic validation, gap-triage and roundtrip packages.
+Classify existing evidence paths as:
+
+```text
+CANONICAL RELEASE VALIDATION
+SUPPLEMENTAL DIAGNOSTIC
+HISTORICAL / SUPERSEDED
+```
+
+Do not create a replacement Evidence Framework merely to make the hierarchy look cleaner.
+
+Disallowed product behavior:
+
+- per-document “94% safe” or similar false precision;
+- production-safety claim solely from synthetic scores.
 
 ---
 
-## R9 — Dutch legal reference under-detection and role over-masking
+## R9 — Dutch Legal recognition precision/recall and context damage
 
-Status: mitigating
-Impact: high
+Status: `mitigating`  
+Impact: `high`
 
 Risk:
 
 ```text
-Dutch legal matter references can be missed or misclassified, while generic legal/care role words can be masked in ways that damage meaning.
+Legal identifiers/addresses/names are missed or misclassified, or ordinary legal/professional context is over-masked and loses meaning.
 ```
 
-Current mitigations include diagnostic benchmark work, preservation guidance, PERSON-name contract/helper work and a verified manual missed-value entry path. The Phase 6 synthetic matrix is now the evidence source for `SCRUB-WP_MVP_FALSE_NEGATIVE_GAP_TRIAGE`; only reproducible under-detection, misclassification or role-over-masking findings may open a subsequent fix package. The first triage found none of those categories; recognizer behavior remains unchanged.
+Current controls/evidence:
+
+- Dutch deterministic recognizers and Legal profile;
+- synthetic legal examples/corpus;
+- address-span precision repair on current main;
+- preserve/known-trap evidence;
+- manual/direct review correction;
+- human review.
+
+Future fixes remain test-first and must preserve recall/context.
 
 ---
 
-## R10 — Care-profile under-detection and clinical over-masking
+## R10 — Zorg under-detection and clinical over-masking
 
-Status: mitigating
-Impact: critical
+Status: `mitigating`  
+Impact: `critical`
 
 Risk:
 
 ```text
-A care document retains patient or trajectory identifiers, or Scrub removes diagnosis, medication, laboratory values, observations or care context and makes the document misleading or unusable.
+A care document retains patient/trajectory identifiers or Scrub removes clinical meaning and makes the document misleading/unusable.
 ```
+
+Current controls/evidence:
+
+- explicit Zorg profile/policy;
+- eight synthetic care-document families plus long-form variants;
+- current-engine baseline before dedicated rules;
+- gap triage;
+- dedicated care recognizer contracts/implementation;
+- collision/negative tests;
+- cross-profile regression;
+- clinical preserve expectations;
+- human review.
+
+Current gap:
+
+Synthetic and bounded app evidence does not establish complete production recall/precision or rare-case indirect-identification safety.
+
+Required principle:
+
+> Preserve diagnosis, medication, dosage, laboratory values, observations and useful care context unless there is a specific evidence-backed reason to treat a value as identifying.
+
+---
+
+## R11 — Repository/source-of-truth drift
+
+Status: `mitigating`  
+Impact: `high`
+
+Risk:
+
+```text
+Workers follow stale ROADMAP/WORKPACKAGES/issues or duplicate already-built functionality because repository documentation and actual main no longer describe one coherent current truth.
+```
+
+Observed pre-convergence symptoms:
+
+- old nine-phase/local-installer roadmap still active in docs;
+- multiple stacked `Current execution status override` sections in WORKPACKAGES;
+- open issues describing candidate states that already PASSed/merged;
+- historical Premium packages still presented as future work despite current main containing integrated staged behavior;
+- several generations of benchmark/report tooling with unclear release authority.
+
+Current mitigation:
+
+- Repository Convergence is the active execution line;
+- exact pre-convergence SHA preserved;
+- temporary capability/debt ledger;
+- ROADMAP/WORKPACKAGES/PROJECT_PROMPT reset;
+- stale issue/evidence hierarchy reconciliation before clean-baseline declaration;
+- no new feature work until `SCRUB_REPOSITORY_CONVERGED`.
+
+Exit condition:
+
+One clean exact SHA whose source, tests, current issues and canonical docs agree materially.
+
+---
+
+## R12 — Legacy runtime mutation / hidden startup authority
+
+Status: `mitigating`  
+Impact: `medium`
+
+Risk:
+
+```text
+Historical source-patch machinery remains in the startup path and can be mistaken for current product authority or accidentally reactivated.
+```
+
+Current evidence:
+
+- Docker still invokes `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py`;
+- current Premium/direct-source markers cause both to exit without changing source.
 
 Mitigation direction:
 
-- explicit Zorgfilter v1 policy contract;
-- fully synthetic corpus across eight care-document families;
-- exact replace, review and preserve expectations;
-- current-engine baseline before recognizer changes;
-- separate care taxonomy and recognizers;
-- negative tests for medical numbers, dosages, times, vital signs and laboratory values;
-- cross-profile regression before UI promotion;
-- human review and residual-risk evidence remain mandatory.
+- verify no supported current path depends on the mutation scripts;
+- retire invocation/obsolete scripts in a narrow consequential package if that proof holds;
+- retain product-level behavior tests rather than tests whose only purpose is to keep dead patch machinery alive.
 
-Approved policy boundary:
-
-```text
-Patient identity and date of birth: replace.
-Other exact care dates and provider identity: review, selected by default.
-Clinical meaning: preserve.
-Rare-case indirect identification: audit warning, not blind masking.
-```
-
-The current broad `NL_HEALTHCARE_REFERENCE` category is insufficient because it combines patient numbers, referral references, insurance identifiers and DBC/clinical codes under one behavior.
-
-Current bounded baseline evidence:
-
-- 25/81 expected replace/review values were found as exact spans;
-- 14/81 were found under the intended entity type;
-- 11 were misclassified and 56 missed;
-- only 4/42 review-selected values were found;
-- one AGB value collided with BSN recognition;
-- no designated clinical preserve phrase was overlapped by the current custom rules.
-
-Generic NER was excluded, so the PERSON and e-mail findings do not represent complete live-app behavior. This evidence increases confidence that dedicated care patterns and review policy are necessary, but does not establish production quality.
-
-Gap triage classified all 81 expectations. The largest unresolved family is contextual review recognition (36 values), followed by generic profile dependencies (13), care-specific reclassification (10), dedicated care references (5) and AGB/numeric collision guards (3). The recognizer contract package must freeze these routes before any care pattern implementation.
-
-The recognizer contract is now frozen with sixteen dedicated entities, 37 positive exact-span cases and 16 negative/collision/preservation cases. Implementation must pass these fixtures before any app registration or UI promotion.
-
-The pure recognizer implementation now passes all frozen fixtures and all 54 dedicated corpus expectations with zero protected-clinical overlaps. Risk R10 remains open because generic NER composition, AGB/BSN cross-recognizer precedence, visible profile policy, cross-profile regression and live app verification are not yet complete.
-
-The central profile model now freezes Care composition and exact-span precedence without changing the live application. Risk R10 remains open until the current app registers the care recognizers, uses the profile policy, runs cross-profile regression and passes deployed app verification.
-
-The current Streamlit integration registers the sixteen care recognizers and applies the central profile policy. Review-selected care detections are selected by default but visibly marked `Controle nodig`; unresolved strongly labelled references remain unchecked candidates. Cross-profile regression, byte-for-byte deployment verification and live app verification are green, including confirmation that clinical meaning remains readable and existing review, export, Scrub Key and reinsert flows remain present. Risk R10 remains mitigating because synthetic and bounded app evidence does not establish production recall, precision or rare-case safety; human review remains mandatory.
-
-The deterministic cross-profile matrix now passes all hard gates: 108/108 dedicated Care expectations are retained across Care and International, no dedicated Care or Legal entities leak into the wrong profiles, dedicated-type parity holds, and no protected clinical phrase is overlapped. Historical legal metadata remains explicitly recorded as 132/148 deterministic expectations, sixteen gaps and four negative observations. Risk R10 remains mitigating because GitHub-to-Hugging-Face deployment sync, generic-NER behavior and live app verification are still unconfirmed.
-
-Deployment sync is now independently verified: twelve relevant GitHub/Hugging Face files match byte-for-byte, all correctly scoped markers pass and the Space is healthy. Risk R10 remains mitigating only for the remaining human-visible app verification, generic-NER observation and the broader limitation that synthetic evidence does not prove production recall or precision.
-
-The tester-facing care corpus now uses long-form structured variants across all eight approved document families. Each addition supplies substantial clinical and workflow context without adding new names, identifiers, dates, addresses, contact details, organizations, locations or digits. This improves usability and preservation testing but does not change recognizer behavior or establish production recall, precision or rare-case safety.
+Do not combine this with hosted persistence/egress changes.
 
 ---
 
-## Product-claim boundary
+# Product-claim boundary
 
-Disallowed claims:
-
-```text
-Alle persoonsnamen worden altijd gevonden.
-Alle persoonsgegevens worden altijd gevonden.
-Alle juridische nummers worden altijd herkend.
-De app is veilig voor productie zonder menselijke review.
-De benchmark bewijst production readiness.
-```
-
-Allowed wording:
+Disallowed claims include:
 
 ```text
-Scrub helpt gevonden gegevens te controleren en exporteren, maar menselijke review blijft noodzakelijk.
-Technische en auditdetails blijven beschikbaar voor controle.
+Scrub vindt altijd alle persoonsgegevens.
+Scrub garandeert volledige anonymisering.
+De synthetische benchmark bewijst production readiness.
+Hugging Face tests bewijzen zero retention op provider-infrastructuurniveau.
+Een scrubbed document is veilig zonder menselijke controle.
 ```
+
+Allowed direction:
+
+```text
+Scrub helpt gevoelige waarden te detecteren, controleren en pseudonimiseren terwijl context behouden blijft. Menselijke review en zichtbare beperkingen blijven onderdeel van het veiligheidsmodel.
+```
+
+For Scrub Private, content-retention/security claims must match independently verified application and service behavior exactly.
