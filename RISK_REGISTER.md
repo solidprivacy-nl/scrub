@@ -2,13 +2,13 @@
 
 This register tracks the **current** product, privacy, security, trust and execution risks for SolidPrivacy Scrub.
 
-Detailed pre-convergence risk-history remains recoverable from exact baseline:
+Detailed pre-convergence risk history remains recoverable from exact baseline:
 
 ```text
 54c73e0ebf5a3a3ed7039a50596fb57694add3cd
 ```
 
-Git/CHANGELOG preserve execution history. This file should show the live risk picture rather than accumulate workpackage narrative.
+Git/CHANGELOG preserve execution history. This file represents the live risk picture rather than workpackage history.
 
 Status values: `open`, `mitigating`, `accepted`, `closed`.  
 Impact values: `critical`, `high`, `medium`, `low`.
@@ -41,9 +41,7 @@ Current gaps:
 - no accepted real-world production recall guarantee exists;
 - synthetic corpora do not prove complete production coverage;
 - human review remains necessary;
-- new recognizer changes must remain evidence-driven so precision fixes do not silently reduce recall.
-
-Required principle:
+- recognizer changes must remain evidence-driven so precision fixes do not silently reduce recall.
 
 > Do not claim perfect recall or production safety from synthetic benchmark results.
 
@@ -63,18 +61,17 @@ A Scrub Key leaks, is paired with the wrong document, is corrupted/tampered with
 Current controls/evidence:
 
 - explicit sensitive-key treatment in UI;
-- document-bound placeholders;
-- mapping digest;
-- structural key validation;
+- document-bound placeholders and mapping digest;
+- structural validation;
 - fail-closed wrong/mixed/missing-binding handling;
 - controlled TXT/DOCX/PDF-to-TXT reinsert paths;
 - adversarial/roundtrip tests;
-- legacy unbound state kept explicitly unverified.
+- legacy unbound state remains explicitly unverified.
 
 Current gaps:
 
 - Scrub Key remains inherently sensitive re-identification material;
-- cryptographic authenticity/signing is not implied by the current mapping digest;
+- mapping digest is not a cryptographic authenticity/signing claim;
 - user/operational handling remains part of the threat model.
 
 ---
@@ -90,18 +87,7 @@ Risk:
 An external AI/process rewrites, translates, merges, deletes or corrupts placeholders, causing deterministic reinsert to fail or restore incompletely.
 ```
 
-Current controls/evidence:
-
-- stable bound placeholder grammar;
-- mapping/document binding;
-- roundtrip/adversarial mutation tests;
-- unknown/missing placeholder diagnostics;
-- fail-visible reinsert behavior.
-
-Current gaps:
-
-- malformed near-placeholders outside strict grammar may remain a diagnostic limitation;
-- Scrub must not silently guess/repair values where binding cannot be proven.
+Controls include stable bound placeholder grammar, document/mapping binding, adversarial mutation tests, unknown/missing diagnostics and fail-visible reinsert. Scrub must not guess original values when binding cannot be proven.
 
 ---
 
@@ -116,18 +102,7 @@ Risk:
 DOCX metadata, comments, tracked changes, unsupported XML parts, headers/footers or other hidden content retains sensitive information outside the supported scrub/reinsert surface.
 ```
 
-Current controls/evidence:
-
-- DOCX hygiene/audit reporting;
-- body/table/header/footer supported handling;
-- synthetic fidelity/hygiene tests;
-- explicit unsupported-part warnings;
-- PDF support is text-based with explicit product limitations.
-
-Current gaps:
-
-- unsupported DOCX parts remain a known boundary;
-- hygiene reporting must not be presented as a complete clean-document guarantee where unsupported content may exist.
+Current controls include DOCX hygiene/audit reporting, body/table/header/footer support, synthetic fidelity tests, explicit unsupported-part warnings and bounded text-PDF support. Hygiene reporting must not be presented as a complete clean-document guarantee where unsupported content may exist.
 
 ---
 
@@ -142,13 +117,13 @@ Risk:
 A managed Private service retains customer document content, mappings or Scrub Keys, logs content, backs it up, or sends document content to a third party contrary to the intended service promise.
 ```
 
-Current evidence on pre-convergence/full-feature application:
+Current full-feature application evidence:
 
 - `replacement_memory.py` intentionally persists original/replacement/entity values to `/data/replacement_memory.json` when persistent storage exists;
-- current Expert functionality includes Azure AI Language and OpenAI/Azure synthesis paths;
+- Expert functionality includes Azure AI Language and OpenAI/Azure synthesis paths;
 - synthesis helper currently prints a content-bearing prompt.
 
-These are not evidence that the current prototype is defective for every deployment model; they are **variant-specific conflicts** with Scrub Private.
+These are variant-specific conflicts with Scrub Private, not proof that every current deployment model is defective.
 
 Scrub Private target:
 
@@ -160,12 +135,7 @@ no third-party document-processing egress
 minimal non-document control-plane persistence only when required
 ```
 
-Mitigation sequence:
-
-- first complete Repository Convergence without destroying potentially useful Local/full-feature behavior;
-- then remove/exclude hosted-incompatible persistence/egress from the Private line in separately tested/assured workpackages;
-- prove application-level behavior on HF with synthetic data;
-- prove infrastructure/service retention properties later on controlled production infrastructure.
+Mitigation sequence: first complete Repository Convergence without destroying potentially useful full-feature behavior; then remove/exclude hosted-incompatible persistence/egress from the Private line; prove application behavior on HF with synthetic data; prove infrastructure/service retention properties later on controlled production infrastructure.
 
 Do not use HF application tests to claim provider-level zero retention.
 
@@ -182,21 +152,9 @@ Risk:
 The user misses a sensitive value, changes state without realizing downstream output is stale, or the interface obscures whether review is complete/current.
 ```
 
-Current controls/evidence:
+Controls include staged Premium workspace, Standard/Expert over shared authoritative state, generation-bound review/export state, fail-closed stale export, explicit re-completion, source-versus-processed review and direct/manual correction.
 
-- staged Premium workspace;
-- Standard/Expert modes over shared authoritative state;
-- generation-bound analysis/review/export state;
-- fail-closed stale export gating;
-- explicit re-completion after review edits;
-- source-versus-processed review;
-- authoritative replacement table;
-- direct/manual missed-value correction;
-- AppTest and integration coverage.
-
-Current gap:
-
-- parent Premium live-verification issues contain stale/unfinished closeout state; current deployed behavior must be reconciled against merged marker/address repairs before declaring those historical gates closed.
+Current gap: parent Premium live-verification issues contain stale/unfinished closeout state; deployed behavior must be reconciled against merged marker/address repairs before those historical gates are declared closed.
 
 ---
 
@@ -211,14 +169,7 @@ Risk:
 Users interpret text-based PDF support as OCR or complete restored-PDF fidelity.
 ```
 
-Current boundary:
-
-- text-based PDF extraction is supported;
-- OCR is not implied;
-- restored PDF generation is not implied;
-- reinsert output may be restored text rather than a reconstructed PDF.
-
-Copy, audit and pilot guidance must keep these limitations explicit.
+Boundary: text-based extraction is supported; OCR is not implied; restored PDF generation is not implied; reinsert output may be restored text rather than reconstructed PDF. Copy, audit and pilot guidance must keep these limitations explicit.
 
 ---
 
@@ -233,15 +184,7 @@ Risk:
 Multiple benchmark/report generations are mistaken for equivalent safety evidence, or diagnostic metrics are presented as production-readiness/individual-document safety scores.
 ```
 
-Current controls:
-
-- synthetic-only/report-only warnings in benchmark/residual-risk tooling;
-- known limitations and human-review requirement;
-- separate domain and workflow validation systems.
-
 Current convergence requirement:
-
-Classify existing evidence paths as:
 
 ```text
 CANONICAL RELEASE VALIDATION
@@ -249,12 +192,7 @@ SUPPLEMENTAL DIAGNOSTIC
 HISTORICAL / SUPERSEDED
 ```
 
-Do not create a replacement Evidence Framework merely to make the hierarchy look cleaner.
-
-Disallowed product behavior:
-
-- per-document “94% safe” or similar false precision;
-- production-safety claim solely from synthetic scores.
+Synthetic/report warnings and mandatory human review remain. Do not create a replacement Evidence Framework or per-document false-precision safety score.
 
 ---
 
@@ -269,16 +207,7 @@ Risk:
 Legal identifiers/addresses/names are missed or misclassified, or ordinary legal/professional context is over-masked and loses meaning.
 ```
 
-Current controls/evidence:
-
-- Dutch deterministic recognizers and Legal profile;
-- synthetic legal examples/corpus;
-- address-span precision repair on current main;
-- preserve/known-trap evidence;
-- manual/direct review correction;
-- human review.
-
-Future fixes remain test-first and must preserve recall/context.
+Controls include Dutch deterministic recognizers, Legal profile, synthetic legal corpus, address-span repair, preserve/known-trap evidence, manual/direct correction and human review. Future fixes remain test-first and must preserve recall/context.
 
 ---
 
@@ -296,22 +225,17 @@ A care document retains patient/trajectory identifiers or Scrub removes clinical
 Current controls/evidence:
 
 - explicit Zorg profile/policy;
-- eight synthetic care-document families plus long-form variants;
-- current-engine baseline before dedicated rules;
-- gap triage;
+- synthetic care-document families plus long-form variants;
+- baseline/gap triage;
 - dedicated care recognizer contracts/implementation;
 - collision/negative tests;
 - cross-profile regression;
 - clinical preserve expectations;
 - human review.
 
-Current gap:
+Current gap: synthetic and bounded app evidence does not establish complete production recall/precision or rare-case indirect-identification safety.
 
-Synthetic and bounded app evidence does not establish complete production recall/precision or rare-case indirect-identification safety.
-
-Required principle:
-
-> Preserve diagnosis, medication, dosage, laboratory values, observations and useful care context unless there is a specific evidence-backed reason to treat a value as identifying.
+> Preserve diagnosis, medication, dosage, laboratory values, observations and useful care context unless a specific evidence-backed reason treats a value as identifying.
 
 ---
 
@@ -326,26 +250,17 @@ Risk:
 Workers follow stale ROADMAP/WORKPACKAGES/issues or duplicate already-built functionality because repository documentation and actual main no longer describe one coherent current truth.
 ```
 
-Observed pre-convergence symptoms:
-
-- old nine-phase/local-installer roadmap still active in docs;
-- multiple stacked `Current execution status override` sections in WORKPACKAGES;
-- open issues describing candidate states that already PASSed/merged;
-- historical Premium packages still presented as future work despite current main containing integrated staged behavior;
-- several generations of benchmark/report tooling with unclear release authority.
-
 Current mitigation:
 
-- Repository Convergence is the active execution line;
-- exact pre-convergence SHA preserved;
-- temporary capability/debt ledger;
-- ROADMAP/WORKPACKAGES/PROJECT_PROMPT reset;
-- stale issue/evidence hierarchy reconciliation before clean-baseline declaration;
-- no new feature work until `SCRUB_REPOSITORY_CONVERGED`.
+- Repository Convergence is active;
+- exact pre-convergence SHA is preserved;
+- bootstrap PR #114 PASSed/merged with exact-main Tests and HF sync green;
+- one current roadmap/workpackage model is in place;
+- temporary debt ledger is explicitly non-authoritative after convergence;
+- stale issue/evidence hierarchy reconciliation remains required;
+- normal feature work remains paused until `SCRUB_REPOSITORY_CONVERGED`.
 
-Exit condition:
-
-One clean exact SHA whose source, tests, current issues and canonical docs agree materially.
+Exit: one clean exact SHA whose source, tests, active issues and canonical docs materially agree.
 
 ---
 
@@ -357,21 +272,27 @@ Impact: `medium`
 Risk:
 
 ```text
-Historical source-patch machinery remains in the startup path and can be mistaken for current product authority or accidentally reactivated.
+Historical source-patch machinery remains in or near the runtime path and can be mistaken for current product authority or accidentally reactivated.
 ```
 
-Current evidence:
+Accepted-main finding before current workpackage:
 
-- Docker still invokes `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py`;
-- current Premium/direct-source markers cause both to exit without changing source.
+- Docker invoked `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py`;
+- current Premium/direct-source markers caused both to exit without source mutation.
 
-Mitigation direction:
+Current PR #116 candidate mitigation:
 
-- verify no supported current path depends on the mutation scripts;
-- retire invocation/obsolete scripts in a narrow consequential package if that proof holds;
-- retain product-level behavior tests rather than tests whose only purpose is to keep dead patch machinery alive.
+- Docker no longer invokes either historical source-patch script;
+- Streamlit starts the existing `presidio_streamlit.py` directly with the previous server flags unchanged;
+- tests are being rebound from historical patch-order assertions to direct-source/no-runtime-mutation contracts;
+- the two historical mutation scripts still remain in the repository and therefore remain separate `RETIRE` candidates.
 
-Do not combine this with hosted persistence/egress changes.
+Residual risk:
+
+- dormant historical patch code can still be mistaken for current authority or accidentally reintroduced;
+- script/test retirement must be evidence-based rather than a mass deletion.
+
+Do not combine this residual cleanup with Scrub Private persistence/egress changes.
 
 ---
 
