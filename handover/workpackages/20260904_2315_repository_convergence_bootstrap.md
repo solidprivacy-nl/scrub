@@ -3,9 +3,10 @@
 Repository: `solidprivacy-nl/scrub`  
 Role: `implementation_operations`  
 Issue: #113  
+PR: #114  
 Branch: `wp/repository-convergence-bootstrap`  
 Starting main: `54c73e0ebf5a3a3ed7039a50596fb57694add3cd`  
-Status: `IMPLEMENTATION_IN_PROGRESS` — candidate administration prepared; exact-head CI and fresh independent assurance pending.
+Status: `IMPLEMENTATION_REMEDIATED` — pre-final full regression green; final exact-head CI and fresh independent assurance still required.
 
 ## Summary
 
@@ -18,9 +19,12 @@ The package:
 - reconstructed current reachable architecture far enough to distinguish canonical capability, genuine debt candidates and variant-specific Private conflicts;
 - replaced stale roadmap/workpackage routing with one current Repository Convergence line;
 - aligned worker/governance documentation while preserving the two-role assurance model;
-- converted DECISION_LOG and RISK_REGISTER from historical execution narratives into current-truth documents while preserving the exact pre-convergence state in Git;
-- archived the full pre-convergence CHANGELOG byte-for-byte and started a clean post-convergence changelog;
-- added source-level contracts protecting the new current-truth model.
+- converted DECISION_LOG and RISK_REGISTER from historical execution narratives into current-truth documents while preserving exact pre-convergence provenance;
+- archived the complete pre-convergence CHANGELOG byte-for-byte and started a clean post-convergence changelog;
+- added source-level contracts protecting the new current-truth model;
+- received a fresh independent FAIL on the first candidate;
+- remediated only the eight test/governance inconsistencies identified by that reviewer;
+- restored full-suite green without restoring obsolete current queues or changing runtime behavior.
 
 ## Baseline preservation
 
@@ -48,6 +52,8 @@ No source clone (`app_v2`, `scrub-new`, duplicate Streamlit main) was created.
 
 ## Files changed
 
+Canonical documentation/governance:
+
 - `ROADMAP.md`
 - `WORKPACKAGES.md`
 - `PROJECT_PROMPT.md`
@@ -56,6 +62,16 @@ No source clone (`app_v2`, `scrub-new`, duplicate Streamlit main) was created.
 - `DECISION_LOG.md`
 - `RISK_REGISTER.md`
 - `CHANGELOG.md`
+
+Governance/contract tests remediated after independent FAIL:
+
+- `tests/test_repository_convergence_bootstrap_contracts.py`
+- `tests/test_mvp_document_fidelity_pr_final_contracts.py`
+- `tests/test_premium_core_flow_ui_realignment_plan.py`
+- `tests/test_premium_staged_workspace_decision.py`
+- `tests/test_reinsert_auto_flow_app_verify_closeout.py`
+
+No runtime/product source file is changed by PR #114.
 
 ## Current audit findings
 
@@ -96,35 +112,140 @@ This requires an isolated proof/retirement package, not deletion in the bootstra
 - #107/#106 correspond to merged child repairs and require stale-state reconciliation;
 - #105/#96 additionally required a final consolidated deployed live retest after those repairs. No evidence found in this implementation session proves that final retest occurred. Do not falsely close it as verified.
 
-## Tests
+## Independent assurance history
 
-Added:
+Fresh blind assurance reviewed exact prior head:
 
 ```text
-tests/test_repository_convergence_bootstrap_contracts.py
+ea203abb04f008a7e583387242a6f4917c72e591
 ```
 
-Contracts cover:
+against base:
 
-- exactly five strategic roadmap stages;
-- one current WORKPACKAGES queue without historical overrides;
-- preserved worker start/governance/safety rules;
-- current Repository Convergence / Scrub Private routing;
-- temporary/non-authoritative debt-ledger semantics;
-- retained still-binding review/Zorg/Scrub Key/reinsert/document decisions;
-- critical R1/R2/R10 continuity plus new current R5/R11/R12 risks;
-- archived pre-convergence changelog preservation;
-- bounded HF application-assurance wording;
-- rejection of source cloning/new Evidence Framework.
+```text
+54c73e0ebf5a3a3ed7039a50596fb57694add3cd
+```
 
-## Validation
+and returned:
 
-- Local execution: unavailable in the connector-only implementation environment.
-- Candidate diff at pre-CI review: documentation/governance/tests/administration only; no runtime product source changed.
-- GitHub Actions: pending exact-head PR run.
-- Hugging Face sync: runtime behavior unchanged; final path-ignore/sync status to be checked after authorized merge.
-- App verification: not applicable for this package because no product/UI/runtime behavior changes.
-- Independent assurance: pending fresh `governance_release_assurance` after exact-head CI.
+```text
+FAIL
+```
+
+Reviewer findings:
+
+1. exact-head `Tests` run `33920335521` was red: `8 failed, 1256 passed`;
+2. two new convergence tests encoded brittle string/prose placement instead of semantic governance contracts;
+3. six legacy tests still required historical Premium/fidelity/reinsert state to remain in current ROADMAP/WORKPACKAGES/CHANGELOG positions.
+
+The reviewer also independently found:
+
+- scope integrity good;
+- five-stage roadmap materially coherent/minimal;
+- still-binding product semantics materially preserved;
+- archived pre-convergence changelog preservation appropriate;
+- no runtime/HF/product activation occurred.
+
+No prior verdict transfers to a changed head.
+
+## Remediation performed
+
+Only tests/governance contracts were changed.
+
+### New convergence-contract repair
+
+- stage validation now parses formal `## Stage N — ...` headings and compares the exact ordered five-stage set;
+- Evidence Framework prohibition now checks a stable semantic prohibition once instead of requiring duplicate prose in multiple files.
+
+### Historical fidelity contract repair
+
+- historical completion/no-duplicate evidence is read from `history/CHANGELOG_PRE_CONVERGENCE_20260904.md` and the historical handover;
+- current supported DOCX scope is bound to D030 in `DECISION_LOG.md`;
+- current WORKPACKAGES no longer needs to carry the historical fidelity package.
+
+### Premium UI contract repair
+
+- plan/decision artifacts still protect the implemented one-document/staged-workspace semantics;
+- current authority is bound to D041/D043 and the current shared-surface sequencing rule;
+- obsolete Premium package names/order are explicitly not required in the current queue.
+
+### Reinsert contract repair
+
+- historical app-verification evidence is read from the archived changelog/claim/handover;
+- current document-first flow is bound to D031;
+- current fail-closed document/key binding is bound to D037;
+- old roadmap/workpackage placement is no longer release authority.
+
+## Validation evidence
+
+### Initial exact-head candidate — FAIL evidence
+
+Head:
+
+```text
+ea203abb04f008a7e583387242a6f4917c72e591
+```
+
+Tests run:
+
+```text
+33920335521
+```
+
+Result:
+
+```text
+8 failed, 1256 passed in 12.64s
+```
+
+### Remediated pre-final candidate — GREEN
+
+Head:
+
+```text
+dcdfb2c84bbaafe0beca79191bee509b9607b461
+```
+
+PR merge candidate checked out by Actions:
+
+```text
+ca222802fe5a5c21213df1ed71045fee0826c4ff
+```
+
+Tests run:
+
+```text
+33922952965
+```
+
+Job:
+
+```text
+101185112554
+```
+
+Raw result:
+
+```text
+1264 passed in 12.34s
+```
+
+This proves the reviewer-requested test/governance remediation is green.
+
+### Final exact-head status
+
+Administrative claim/handover/changelog/workpackage updates follow this green run and therefore change the branch head. A final exact-head full regression is still mandatory. The final frozen SHA and run must be recorded in the PR conversation without mutating the head again.
+
+## Hugging Face sync status
+
+- Baseline exact-main sync before this workpackage: success.
+- PR #114 contains no runtime product change.
+- No candidate deployment/app verification is required before merge for this docs/governance/test-only package.
+- After authorized merge, verify exact-main Actions and HF sync/path-ignore behavior according to the runbook.
+
+## App verification status
+
+Not applicable for PR #114: no product/UI/runtime behavior changes.
 
 ## Intentionally unchanged
 
@@ -141,16 +262,17 @@ Contracts cover:
 
 ## Remaining risks / blockers
 
-- Exact-head GitHub Actions must pass.
-- A fresh independent assurance worker must issue PASS before merge; implementation cannot self-certify.
+- Final administrative head must complete the full `Tests` workflow successfully.
+- A completely fresh independent assurance worker must review that exact new frozen SHA and return PASS before merge.
+- Prior FAIL is correctly non-transferable to the new head, and any future PASS is likewise exact-head only.
 - The later technical cleanup queue must remain audit-derived rather than pre-invented.
 - Parent Premium live-verification state (#105/#96) is not yet proven closed.
 
 ## Next recommended step
 
-1. Open the bootstrap PR and run exact-head full CI.
-2. Fix only concrete CI/contract defects, if any.
-3. Freeze the exact final head and update this handover/claim to `RELEASE_CANDIDATE_READY` with raw CI evidence.
-4. Dispatch a fresh blind `governance_release_assurance` review.
+1. Complete final administration without runtime changes.
+2. Run full exact-head CI.
+3. Freeze the exact final PR head and post the raw run/job/pass count to PR #114 without changing source.
+4. Dispatch fresh blind `governance_release_assurance` on that exact SHA.
 5. Merge only on PASS; verify exact-main Actions/HF sync handling.
-6. Continue autonomously with the evidence-backed convergence packages derived from the ledger.
+6. Continue with evidence-backed convergence packages derived from the ledger.
