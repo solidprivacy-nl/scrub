@@ -101,6 +101,8 @@ Use small coherent root-cause packages.
 
 Do not create one giant convergence PR. Do not fragment trivial administrative edits into meaningless ritual packages.
 
+**Do not refactor for aesthetics.**
+
 During Repository Convergence, a cleanup/refactor requires a concrete current reason such as duplicate/contradictory/dead behavior, privacy/security risk, obsolete compatibility, meaningful maintenance burden, runtime instability or evidence-authority ambiguity.
 
 “A cleaner architecture” alone is not sufficient.
@@ -135,8 +137,8 @@ Do not treat code inspection alone as proof.
 
 - `ROADMAP.md` = strategic stages, not implementation history.
 - `WORKPACKAGES.md` = one current executable queue.
-- `CHANGELOG.md` = historical implementation provenance; do not rewrite history for cleanliness.
-- `DECISION_LOG.md` = accepted decisions.
+- `CHANGELOG.md` = current implementation history; exact pre-convergence history is preserved in `history/CHANGELOG_PRE_CONVERGENCE_20260904.md` and Git at the baseline SHA.
+- `DECISION_LOG.md` = accepted current binding decisions.
 - `RISK_REGISTER.md` = current risks.
 - temporary audit/debt ledgers = execution evidence only; they must not become competing permanent status authorities.
 
