@@ -210,6 +210,51 @@ Do not shorten or mutate authoritative bound tokens merely for visual convenienc
 
 ---
 
+## D033 — 2026-07-27 — Document-specific placeholder namespaces bind new Scrub Keys to their document
+
+Status: accepted and implemented architecture decision.
+
+Each new bound Scrub Key/document uses one locally generated non-sensitive binding ID carried by automatic/manual placeholders and the corresponding key. A mapping digest complements this for accidental corruption detection. The binding token, not filenames/labels/content heuristics, is the cross-format document/key association.
+
+Legacy unbound keys remain explicitly distinguishable and must not be silently reinterpreted as verified bound matches.
+
+---
+
+## D031 — 2026-07-27 — Reinsert is document-first and automatically processes valid source/key inputs
+
+Status: accepted and implemented UX/safety decision.
+
+Current reinsert direction:
+
+```text
+source document/text
+→ corresponding Scrub Key
+→ deterministic validation/reinsert
+→ restored download
+```
+
+Source type recognition and structural key validation may run automatically when valid inputs are present. Do not reintroduce redundant hidden confirmation buttons/checkboxes merely to create a sense of safety. Keep the meaningful confidentiality acknowledgement at the restored-output boundary and fail invalid/ambiguous keys visibly.
+
+---
+
+## D030 — 2026-07-17 — Supported DOCX reinsert includes body, tables, headers and footers
+
+Status: accepted and implemented document-fidelity decision.
+
+Restore supported placeholders in existing `word/document.xml`, `word/header*.xml` and `word/footer*.xml` text nodes. Do not imply support for comments, tracked-change-only parts, footnotes/endnotes, text boxes, metadata or split placeholders unless a separate evidence-backed package adds and verifies that support.
+
+---
+
+## D021 — 2026-06-14 — Unified side-by-side review is the target review surface
+
+Status: accepted and still materially binding product/UX decision.
+
+The main review experience centers on source text/document versus processed/checked text. Highlights are a visual aid, not an alternate mutation authority. The authoritative review table/state remains the fallback/source of truth, and future review work should avoid proliferating duplicate helper panels.
+
+This direction is implemented within the later D041/D043 Premium staged workspace.
+
+---
+
 # Current decision discipline
 
 New decisions belong here only when they remain materially binding on current/future work.
