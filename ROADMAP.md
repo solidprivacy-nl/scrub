@@ -304,37 +304,42 @@ Do not resume historical Premium Input/Review/Export queues, installer work, pil
 
 # 6. Validation strategy
 
-Scrub already has multiple evidence generations. Convergence must identify the current release-validation hierarchy rather than create another framework.
+Validation authority is intentionally simple and follows D045.
 
-A validation path is a candidate for canonical release evidence when it:
+## Release regression gate
 
-1. executes against current supported product code or is intentionally a pure contract test;
-2. uses current committed synthetic/gold material where applicable;
-3. measures a currently meaningful risk;
-4. is reproducibly automated;
-5. is part of current CI/release validation or has a clear current role;
-6. states its limitations and does not imply unsupported production safety;
-7. is not superseded by a later path solving the same responsibility more completely.
-
-Classifications:
+There is one current regression gate for consequential candidates and post-merge `main`:
 
 ```text
-CANONICAL RELEASE VALIDATION
-SUPPLEMENTAL DIAGNOSTIC
-HISTORICAL / SUPERSEDED
+.github/workflows/tests.yml
+→ python -m pytest -q tests
+→ exact candidate/main SHA evidence
 ```
 
-Likely complementary current evidence includes:
+This full suite is the release regression authority used alongside independent `governance_release_assurance`.
 
-- full Python regression suite;
-- recognizer-backed corpus benchmark/report workflow;
-- Zorg baseline/recognizer/cross-profile evidence;
-- Phase-6 synthetic E2E workflow matrix;
-- Scrub Key security/roundtrip suites;
-- document hygiene/fidelity suites;
-- Premium Streamlit/AppTest state suites.
+## Capability regression evidence
 
-No new production recall/precision threshold is introduced merely as part of repository cleanup.
+Focused suites remain important evidence for the capability they exercise, including:
+
+- Phase-6 synthetic E2E workflow validation;
+- Scrub Key security/roundtrip tests;
+- document hygiene/fidelity tests;
+- Zorg recognizer/profile/cross-profile tests;
+- recognizer/candidate-scanner contracts;
+- Premium Streamlit/AppTest/state tests.
+
+They may be run independently for diagnosis, but they do not create separate competing merge gates.
+
+## Supplemental diagnostic evidence
+
+The recognizer-backed recall corpus/report workflow remains useful diagnostic evidence. Its own report policy is explicit: diagnostic only, no production gate, no enforced score thresholds.
+
+The older WP22/WP23/WP24 recall/scorecard/residual-risk chain is also supplemental/historical diagnostic evidence: WP22 scores supplied predictions and does not invoke recognizers; WP23/WP24 are report-only with known coverage limits.
+
+No diagnostic score is a merge gate. No new production recall/precision threshold is introduced merely as part of repository cleanup.
+
+Synthetic benchmark and E2E evidence never by itself proves production safety or removes mandatory human review.
 
 ---
 
