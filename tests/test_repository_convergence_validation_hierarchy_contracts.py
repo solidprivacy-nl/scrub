@@ -20,7 +20,7 @@ def test_full_tests_workflow_is_the_exact_sha_release_regression_gate() -> None:
     assert "python -m pytest -q tests" in workflow
     assert "## D045" in decision_log
     assert "RELEASE REGRESSION GATE" in decision_log
-    assert "`.github/workflows/tests.yml`" in decision_log
+    assert ".github/workflows/tests.yml" in decision_log
 
 
 def test_recall_report_self_identifies_as_supplemental_diagnostic() -> None:
@@ -33,7 +33,7 @@ def test_recall_report_self_identifies_as_supplemental_diagnostic() -> None:
 
     decision_log = (ROOT / "DECISION_LOG.md").read_text(encoding="utf-8")
     assert "SUPPLEMENTAL DIAGNOSTIC" in decision_log
-    assert "`recall_benchmark_report.py`" in decision_log
+    assert "recall_benchmark_report.py" in decision_log
 
 
 def test_legacy_wp22_wp23_wp24_chain_is_not_promoted_to_release_authority() -> None:
