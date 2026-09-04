@@ -44,8 +44,13 @@ def test_workpackages_contains_one_current_queue_not_historical_overrides() -> N
     assert "Repository Convergence" in workpackages
     assert "SCRUB-WP_REPOSITORY_CONVERGENCE_BOOTSTRAP" in workpackages
     assert "Current execution status override" not in workpackages
-    assert "WP-CONVERGENCE-02..N" in workpackages
-    assert "DERIVED, NOT PRE-INVENTED" in workpackages
+
+    current_wp_headings = re.findall(
+        r"^## (WP-CONVERGENCE-\d+ .+ — CURRENT)$",
+        workpackages,
+        flags=re.MULTILINE,
+    )
+    assert len(current_wp_headings) == 1
     assert "SCRUB_REPOSITORY_CONVERGED" in workpackages
 
 
@@ -129,16 +134,21 @@ def test_temporary_ledger_is_explicitly_non_authoritative_and_capability_level()
         "Persistent replacement memory",
         "Azure AI Language document recognition",
         "OpenAI/Azure OpenAI synthesis operator",
-        "Legacy startup patch script invocation in Dockerfile",
         "Recognizer-backed recall benchmark",
     ]:
         assert capability in ledger
+
+    assert "Runtime startup debt already resolved" in ledger
+    assert "fix_streamlit_nested_expanders.py" in ledger
+    assert "fix_streamlit_pdf_text_reinsert.py" in ledger
+    assert "no longer invokes" in ledger
 
 
 def test_decision_log_keeps_current_binding_decisions_and_adds_d044() -> None:
     decisions = read("DECISION_LOG.md")
 
     for marker in [
+        "D045 — 2026-09-05 — One exact-SHA regression gate",
         "D044 — 2026-09-04 — Repository Convergence",
         "D043",
         "D042",
@@ -217,12 +227,12 @@ def test_bootstrap_does_not_redefine_hugging_face_as_production_assurance() -> N
 
 def test_bootstrap_does_not_authorize_source_cloning_or_a_new_evidence_framework() -> None:
     roadmap = read("ROADMAP.md")
-    ledger = read("REPOSITORY_CONVERGENCE_DEBT_LEDGER.md")
+    decisions = read("DECISION_LOG.md")
 
     assert "no source-tree clone" in roadmap
     assert "No separate Evidence Framework" in roadmap
     assert "/app_v2" not in roadmap
     assert "/scrub-new" not in roadmap
-    # One stable semantic prohibition is enough; do not make duplicate prose
-    # across documents a release requirement.
-    assert "no new framework" in ledger.lower()
+    # One canonical semantic prohibition is enough; do not require duplicate
+    # wording across temporary execution artifacts.
+    assert "do not create a second Evidence Framework" in decisions
