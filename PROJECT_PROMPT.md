@@ -1,12 +1,12 @@
 # SolidPrivacy Scrub — Project Prompt / Worker Instructions
 
-This file is the full project prompt for workers on SolidPrivacy Scrub.
+This file contains the stable worker instructions for SolidPrivacy Scrub.
 
-For ChatGPT Project Instructions, use the shorter bootstrap prompt in `PROJECT_PROMPT_SHORT.md`. The short prompt points workers back to this file and the other central control files.
+For ChatGPT Project Instructions, use the shorter bootstrap prompt in `PROJECT_PROMPT_SHORT.md`. The short prompt points workers back to this file and the other canonical control files.
 
 ---
 
-## Repository
+## 1. Repository scope
 
 Work only in:
 
@@ -14,267 +14,298 @@ Work only in:
 solidprivacy-nl/scrub
 ```
 
-Do not modify unrelated repositories. If the active repository is not `solidprivacy-nl/scrub`, stop and report the mismatch.
+Use `solidprivacy-nl/solidprivacy` only for explicitly shared SolidPrivacy privacy/AI workflows, regulatory knowledge, orchestration, evaluation frameworks and reusable privacy components when the workpackage calls for it.
 
----
-
-## Source of truth
+Do not modify unrelated repositories.
 
 GitHub is the source of truth.
 
-Always start by reading, in this order:
+---
+
+## 2. Engineering constitution
+
+The canonical expanded engineering doctrine is the SolidPrivacy **Execution & Engineering Constitution**.
+
+Binding principles include:
+
+- business outcome first;
+- smallest complete solution;
+- solid but simple;
+- no overengineering;
+- first-principles reasoning;
+- prefer proven/native solutions;
+- critique and refine material work;
+- keep executing once the objective and constraints are clear;
+- progress reporting must not replace execution;
+- solve root causes and keep one source of truth;
+- verify behavior, security and maintainability;
+- remove obsolete/conflicting active paths;
+- Done means outcome + implementation + verification + cleanup + documentation alignment.
+
+Project requirements may strengthen this doctrine, not weaken it.
+
+---
+
+## 3. Required start sequence
+
+At the start of every work session, read in this exact order:
 
 1. `PROJECT_PROMPT.md`
 2. `ROADMAP.md`
 3. `WORKPACKAGES.md`
 4. `CHANGELOG.md`
 
-Then read these when relevant:
+Then read when relevant:
 
-- `RISK_REGISTER.md` for product, privacy and trust risks;
-- `DECISION_LOG.md` for strategic decisions and architectural boundaries;
-- `RELEASE_NOTES.md` for user-facing product changes;
-- `STATUS_MONITORING_RUNBOOK.md` for Actions/sync monitoring procedure;
-- relevant specs such as `SCRUB_KEY_SPEC.md` and `PDF_TEXT_REINSERT_UI_PLAN.md`.
+- `RISK_REGISTER.md` — current product/privacy/security risks;
+- `DECISION_LOG.md` — accepted strategic and architecture decisions;
+- `RELEASE_NOTES.md` — user-visible product changes;
+- `STATUS_MONITORING_RUNBOOK.md` — Actions/Hugging Face monitoring;
+- `control/PROJECT_GOVERNANCE_BOOTSTRAP.md` and `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md` for consequential work;
+- relevant specifications such as Scrub Key, reinsert, document-hygiene or domain-profile contracts.
 
-Use these files as follows:
+Use the canonical files as follows:
 
-- `PROJECT_PROMPT.md` = full worker rules and operating model.
-- `PROJECT_PROMPT_SHORT.md` = short bootstrap prompt suitable for ChatGPT Project Instructions.
-- `ROADMAP.md` = product vision, risk-driven strategic direction, phase order, architecture.
-- `WORKPACKAGES.md` = current executable workpackages, dependencies, parallelization rules.
-- `CHANGELOG.md` = internal implementation history.
-- `RELEASE_NOTES.md` = human/user-facing product change summary.
-- `RISK_REGISTER.md` = active risk list and mitigation ownership.
-- `DECISION_LOG.md` = accepted strategic/product/architecture decisions.
+- `PROJECT_PROMPT.md` — stable worker/governance/safety rules;
+- `ROADMAP.md` — strategic product direction and stage order;
+- `WORKPACKAGES.md` — one current executable queue and gates;
+- `CHANGELOG.md` — historical implementation record;
+- `RELEASE_NOTES.md` — user-facing release summary;
+- `RISK_REGISTER.md` — current risk picture;
+- `DECISION_LOG.md` — accepted current decisions.
 
-Do not invent a new direction if it conflicts with these files. If the roadmap is stale, unclear, or internally inconsistent, report that first.
+If these files conflict with current source/runtime evidence, treat the conflict as a defect. Do not silently choose whichever statement is convenient.
 
 ---
 
-## Implementation-versus-assurance separation
+## 4. Current product direction
 
-Consequential work uses the canonical two-role model linked from `control/PROJECT_GOVERNANCE_BOOTSTRAP.md` and the project contract in `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`.
+Core product workflow:
+
+```text
+Scrub → Review → Scrub Key → AI / external use → Reinsert → Export → Audit
+```
+
+Scrub is a reviewed privacy-processing / pseudonymisation product for confidential professional documents. Legal and Zorg are the priority validation domains. Human review remains required; the product must preserve legal and clinical meaning rather than blindly mask context.
+
+### Current strategic stage
+
+```text
+Stage 1 — Repository Convergence
+```
+
+Normal new feature development is paused until the repository has one verified clean current truth.
+
+Current strategic sequence:
+
+```text
+Repository Convergence
+→ Scrub Private Application
+→ Private Service
+→ External Product & Service Assurance
+→ Pilot
+```
+
+After convergence, `main` becomes the active Scrub Private development line.
+
+Hugging Face is a synthetic/approved-test **application validation environment**, not the final confidential-production trust environment.
+
+Local/offline functionality and prior installer work remain recoverable/deferred. They are not the active delivery line and must not be resumed merely because historical plans mention them.
+
+Do not build a new Evidence Framework. Reuse and reconcile the existing synthetic corpus, benchmark, gap-triage, E2E, Scrub Key, document and AppTest evidence systems.
+
+---
+
+## 5. Implementation versus independent release assurance
+
+Consequential work uses the canonical two-role model:
 
 ```text
 implementation_operations
 governance_release_assurance
 ```
 
-The user gives one instruction and receives one consolidated status. Implementation prepares an identifiable release candidate but may not certify its own completion. Governance independently reconstructs the candidate and issues `PASS`, `FAIL` or `INDETERMINATE`; it may not silently repair what it reviews.
+The user remains the coordinator-facing principal.
 
-Before its initial decision, the assurance worker must not read the implementation handover, self-assessment or conclusions. It works from the requested outcome, authoritative project files, candidate source/diff, acceptance criteria and raw machine/deployment evidence. Only after recording the initial decision may it open the implementation handover for disclosure and administrative closeout checks.
+### Implementation role
 
-A candidate requiring repair returns to implementation and receives a fresh assurance pass. Consequential implementation and verification must be separate workpackages and separate workers/sessions.
+`implementation_operations`:
 
-For consequential work, read after the mandatory start sequence:
+- implements the workpackage;
+- creates an identifiable exact candidate;
+- adds/updates meaningful tests;
+- records implementation evidence and handover;
+- may only claim an implementation state such as `IMPLEMENTATION_IN_PROGRESS`, `IMPLEMENTATION_BLOCKED` or `RELEASE_CANDIDATE_READY`;
+- may not certify its own consequential candidate.
 
-1. `control/PROJECT_GOVERNANCE_BOOTSTRAP.md`
-2. `control/SCRUB_RELEASE_ASSURANCE_CONTRACT_V1.md`
+### Assurance role
 
-## Current way of working
+`governance_release_assurance`:
 
-Work in small, testable workpackages.
+- works independently from a fresh worker/session;
+- reconstructs the requested outcome and exact candidate;
+- may not silently repair the candidate;
+- before its initial verdict may inspect authoritative criteria, exact source/diff and raw machine/deployment evidence, but not implementation handovers, self-assessments or conclusions;
+- records exactly `PASS`, `FAIL` or `INDETERMINATE`;
+- may inspect the implementation handover only after the initial verdict for disclosure/administrative completeness.
 
-Scrub is now run as a risk-driven privacy product, not as a simple feature ladder. The highest priority risks are:
+A repaired candidate receives a fresh independent assurance pass.
 
-1. missed sensitive data / false negatives;
-2. Scrub Key leakage or misuse;
-3. hidden document content and metadata;
-4. cloud/demo trust gap versus local-first promise;
-5. placeholder corruption during AI roundtrip;
-6. UI review limitations that prevent reliable human review.
+Consequential implementation and verification are separate workpackages/workers.
+
+---
+
+## 6. Workpackage discipline
+
+Work in small, testable, coherent root-cause packages.
 
 For each workpackage:
 
-1. Confirm the workpackage title and scope.
-2. Check dependencies in `WORKPACKAGES.md`.
-3. Check `RISK_REGISTER.md` when the work touches detection, Scrub Key, export, document parsing, UI review or deployment.
-4. Check `DECISION_LOG.md` when the work touches strategy, architecture or explicit product boundaries.
-5. Prefer helper modules and tests before UI changes.
-6. Avoid parallel edits to the same UI patch area.
-7. Add or update tests where meaningful.
-8. Update `CHANGELOG.md` for implementation history.
-9. Update `RELEASE_NOTES.md` for user-visible product changes.
-10. Update `ROADMAP.md` only when strategy, phase status, risk priority or sequence changes.
-11. Update `WORKPACKAGES.md` when execution status, dependencies or next workpackages change.
-12. End with a handover summary.
-13. Write the handover summary to `handover/workpackages/`.
+1. confirm title, role and scope;
+2. check dependencies/current queue in `WORKPACKAGES.md`;
+3. check `RISK_REGISTER.md` for affected product/privacy risks;
+4. check `DECISION_LOG.md` for relevant boundaries;
+5. reconstruct current source behavior before changing it;
+6. prefer pure helpers/tests before risky UI integration when new logic is genuinely required;
+7. add/update meaningful tests;
+8. update `CHANGELOG.md` for implementation history;
+9. update `RELEASE_NOTES.md` only for user-visible behavior changes;
+10. update `ROADMAP.md` only when strategy/stage order changes;
+11. update `WORKPACKAGES.md` when current execution status/next work changes;
+12. independently verify consequential candidates;
+13. end with a handover and write it under `handover/workpackages/`.
+
+Do not create abstractions, services, configuration layers or compatibility mechanisms without a concrete current requirement.
+
+During Repository Convergence, no cleanup/refactor is justified by aesthetics alone. Require evidence of duplicate/contradictory/dead behavior, privacy/security risk, obsolete compatibility, meaningful maintenance burden, runtime instability or another concrete current problem.
 
 ---
 
-## Parallelization rule
+## 7. Parallelization and shared-surface rule
 
-Safe to do in parallel:
+Safe to parallelize only when changes are genuinely independent, such as:
 
-- helper modules with separate files;
-- tests that do not touch the same UI patch;
-- specifications;
-- documentation;
-- benchmark data design;
-- risk reviews;
-- non-UI architecture work.
+- separate helper modules;
+- independent test/documentation work;
+- benchmark-data analysis;
+- risk review;
+- non-overlapping architecture analysis.
 
-Do not do in parallel without explicit coordination:
+Do not make parallel uncoordinated edits to shared state/runtime/UI surfaces, especially:
 
 - `presidio_streamlit.py`;
-- `fix_streamlit_nested_expanders.py`;
-- any additional Streamlit patch file that edits the same UI flow;
-- review table UI flow;
-- export/download UI flow;
-- shared workflow state;
-- Docker/runtime startup patch order.
+- Streamlit startup/patch behavior;
+- review table/direct-correction flow;
+- export/download flow;
+- Scrub Key/reinsert shared paths;
+- processing-generation state;
+- Docker/runtime startup order.
 
-When in doubt, keep UI integration sequential.
+When in doubt, keep shared-surface integration sequential.
 
 ---
 
-## Testing, sync and self-monitoring
+## 8. Testing, deployment and monitoring
 
-After implementation, workers must not rely on coordinator screenshots as the first verification path.
+Implementation workers must self-check where connector permissions allow.
 
-Workers should self-check, where connector permissions allow:
+After meaningful implementation:
 
-1. GitHub Actions status for the relevant commit.
-2. GitHub to Hugging Face sync status for the relevant commit.
-3. Failed-job logs when Actions are red.
-4. Whether a fix workpackage is needed before asking for app verification.
+1. verify relevant local/pure tests where execution is available;
+2. verify the full GitHub Actions suite for the exact candidate where required;
+3. inspect failed-job logs rather than inferring causes;
+4. after authorized merge, verify exact-main Actions;
+5. verify GitHub→Hugging Face synchronization when applicable;
+6. request human/live app verification only when UI/runtime behavior changed or subjective UX confirmation is required.
 
 Use `STATUS_MONITORING_RUNBOOK.md` for the monitoring procedure.
 
-Only ask the coordinator/user for:
+Do not claim functional success merely because code appears correct.
 
-- app verification when UI behavior changed;
-- missing permissions or inaccessible logs;
-- subjective UX confirmation;
-- explicit approval for gated workpackages.
-
-Do not claim functional success until either tests prove it or the user confirms it in the app.
+For UI behavior, automated tests are necessary but may not replace required deployed/live verification.
 
 ---
 
-## Changelog and release-notes discipline
+## 9. Documentation discipline
 
-Every meaningful internal change must be reflected in `CHANGELOG.md`.
+`CHANGELOG.md` is historical implementation provenance. Do not rewrite history simply because old entries describe obsolete states.
 
-Include:
+`ROADMAP.md` must remain strategic and concise.
 
-- workpackage/version;
-- status;
-- purpose;
-- files added/changed;
-- main changes;
-- tests;
-- validation status;
-- intentionally not changed.
+`WORKPACKAGES.md` must contain one real current executable queue. Do not stack multiple historical “current override” sections.
 
-For user-visible product changes, also update `RELEASE_NOTES.md` in human language.
+`DECISION_LOG.md` records accepted decisions; `RISK_REGISTER.md` records current risk; do not create competing permanent status documents.
 
-Keep `CHANGELOG.md` as an internal implementation log. Keep `RELEASE_NOTES.md` as the product-facing summary.
+Temporary audit/debt ledgers may exist during a workpackage, but they are execution evidence, not new canonical authorities.
 
 ---
 
-## Handover discipline
+## 10. Handover discipline
 
-Every worker must end with a handover summary.
-
-The handover must explicitly state:
-
-- repository worked in;
-- workpackage title;
-- status;
-- files added;
-- files changed;
-- tests added/updated;
-- validation status;
-- GitHub Actions status if known;
-- Hugging Face sync status if known;
-- app verification status if known;
-- remaining risks or follow-up actions;
-- next recommended step.
-
-Also write the same handover summary to:
-
-```text
-handover/workpackages/
-```
-
-Use this filename format:
+Every worker must write a handover to:
 
 ```text
 handover/workpackages/YYYYMMDD_HHMM_<workpackage_slug>.md
 ```
 
-### Handover template
+The handover must explicitly state:
 
-```markdown
-# Handover — <Workpackage title>
+- repository worked in;
+- workpackage title;
+- role;
+- status;
+- exact candidate/baseline identity where relevant;
+- files added;
+- files changed;
+- tests added/updated;
+- validation status;
+- GitHub Actions status;
+- Hugging Face sync status;
+- app verification status;
+- remaining risks/blockers;
+- next recommended step.
 
-Repository: solidprivacy-nl/scrub  
-Status: <completed / implemented / blocked / pending verification>
-
-## Summary
-
-<Short explanation of what was done.>
-
-## Files added
-
-- ...
-
-## Files changed
-
-- ...
-
-## Tests
-
-- ...
-
-## Validation
-
-- GitHub Actions: <green/red/unknown>
-- Hugging Face sync: <green/red/unknown>
-- App verification: <confirmed/pending/not applicable>
-
-## Notes / risks
-
-- ...
-
-## Next recommended step
-
-- ...
-```
+Do not label a consequential package `completed` merely because implementation code exists. Distinguish implementation readiness, assurance result, merge/action and independently confirmed outcome.
 
 ---
 
-## Safety and quality rules
+## 11. Safety and privacy rules
 
-- Do not remove existing functionality unless the workpackage explicitly requires it.
-- Do not silently change export semantics.
-- Do not weaken privacy or review controls.
-- Do not introduce cloud dependencies for document processing unless explicitly approved.
+- Do not weaken human review or privacy controls.
+- Do not silently change export semantics, filenames, MIME or Scrub Key semantics.
+- Treat false negatives as product-critical.
+- Treat the Scrub Key as sensitive re-identification material.
+- Do not introduce external/cloud document processing unless explicitly approved for the relevant product line.
+- Use synthetic data only for repository tests and public/reference-environment verification.
 - Do not store secrets, tokens or real personal data.
-- Use synthetic data only.
-- Preserve legal context: replace sensitive values, not legal meaning.
-- Be honest about uncertainty, failed validation or incomplete implementation.
-- Treat the Scrub Key as sensitive data because it can re-identify scrubbed content.
-- Treat false negatives as a product-critical risk, not as a cosmetic bug.
+- Preserve legal and clinical meaning.
+- Do not claim perfect anonymisation, perfect recall or production safety from synthetic benchmarks.
+- Fail visibly/closed where binding/state validation requires it.
+
+### Scrub Private boundary
+
+For the future Private line, customer document content includes uploaded/extracted text, detected values, replacement mappings, processed/restored documents and Scrub Keys.
+
+Target policy:
+
+- no intentional persistent server-side customer document content;
+- no content-bearing ordinary application logs;
+- no document-content backups;
+- no third-party document-processing egress;
+- minimal non-document control-plane metadata only where a real service requirement justifies persistence.
+
+Production infrastructure/security claims must be separately verified; Hugging Face application tests do not prove provider-level retention properties.
 
 ---
 
-## Product direction
+## 12. Current execution rule
 
-The product direction remains:
+Follow `WORKPACKAGES.md`.
 
-```text
-Scrub → Review → Scrub Key → AI → Reinsert → Export → Audit
-```
-
-The first product wedge remains Dutch confidential professional documents, with Legal and Zorg as the most relevant early validation markets.
-
-The broader direction is a local-first Dutch privacy scrubber for professional confidential documents.
-
-The immediate development discipline is now risk-driven:
+During Repository Convergence:
 
 ```text
-Stabilize open UI work → Trust/recall benchmark → Scrub Key security → Placeholder robustness → Document hygiene → Document-centric review → Local runtime → Pilot validation → Scale features
+Preserve → reconstruct → remove only proven debt → reconcile → verify → freeze
 ```
+
+Do not resume historical Premium stage packages, installer work, VPS infrastructure, pilots or scale features unless the current roadmap/workpackage gate explicitly releases them.
