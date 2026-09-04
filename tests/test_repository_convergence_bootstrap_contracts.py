@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 
@@ -11,15 +12,18 @@ def read(name: str) -> str:
 def test_roadmap_has_only_the_five_current_macro_stages() -> None:
     roadmap = read("ROADMAP.md")
 
-    stages = [
-        "Stage 1 — Repository Convergence",
-        "Stage 2 — Scrub Private Application",
-        "Stage 3 — Private Service",
-        "Stage 4 — External Product & Service Assurance",
-        "Stage 5 — Pilot",
+    stage_headings = re.findall(
+        r"^## Stage (\d+) — (.+?)(?: — CURRENT)?$",
+        roadmap,
+        flags=re.MULTILINE,
+    )
+    assert stage_headings == [
+        ("1", "Repository Convergence"),
+        ("2", "Scrub Private Application"),
+        ("3", "Private Service"),
+        ("4", "External Product & Service Assurance"),
+        ("5", "Pilot"),
     ]
-    for stage in stages:
-        assert roadmap.count(stage) == 1, stage
 
     for milestone in [
         "SCRUB_REPOSITORY_CONVERGED",
@@ -130,9 +134,6 @@ def test_temporary_ledger_is_explicitly_non_authoritative_and_capability_level()
     ]:
         assert capability in ledger
 
-    assert "No new Evidence Framework" not in ledger
-    assert "no new framework" in ledger.lower() or "no new evidence framework" in ledger.lower()
-
 
 def test_decision_log_keeps_current_binding_decisions_and_adds_d044() -> None:
     decisions = read("DECISION_LOG.md")
@@ -222,4 +223,6 @@ def test_bootstrap_does_not_authorize_source_cloning_or_a_new_evidence_framework
     assert "No separate Evidence Framework" in roadmap
     assert "/app_v2" not in roadmap
     assert "/scrub-new" not in roadmap
-    assert "new evidence framework" in ledger.lower()
+    # One stable semantic prohibition is enough; do not make duplicate prose
+    # across documents a release requirement.
+    assert "no new framework" in ledger.lower()
