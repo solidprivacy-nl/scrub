@@ -81,14 +81,13 @@ def test_existing_filenames_and_mime_types_remain_present():
         assert_contains(source, term)
 
 
-def test_dockerfile_no_longer_runs_export_startup_patch():
+def test_dockerfile_starts_direct_app_without_historical_export_or_ui_patches():
     dockerfile = read_text(DOCKERFILE_PATH)
 
     assert "fix_streamlit_export_download_ux.py" not in dockerfile
-    assert (
-        "python fix_streamlit_nested_expanders.py && python fix_streamlit_pdf_text_reinsert.py"
-        in dockerfile
-    )
+    assert "python fix_streamlit_nested_expanders.py" not in dockerfile
+    assert "python fix_streamlit_pdf_text_reinsert.py" not in dockerfile
+    assert "streamlit run presidio_streamlit.py" in dockerfile
 
 
 def test_no_bundle_or_zip_export_was_introduced():
