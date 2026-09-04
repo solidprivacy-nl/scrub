@@ -130,7 +130,8 @@ def test_temporary_ledger_is_explicitly_non_authoritative_and_capability_level()
     ]:
         assert capability in ledger
 
-    assert "new Evidence Framework" in ledger
+    assert "No new Evidence Framework" not in ledger
+    assert "no new framework" in ledger.lower() or "no new evidence framework" in ledger.lower()
 
 
 def test_decision_log_keeps_current_binding_decisions_and_adds_d044() -> None:
@@ -146,11 +147,17 @@ def test_decision_log_keeps_current_binding_decisions_and_adds_d044() -> None:
         "D037",
         "D036",
         "D034",
+        "D033",
+        "D031",
+        "D030",
+        "D021",
         "54c73e0ebf5a3a3ed7039a50596fb57694add3cd",
     ]:
         assert marker in decisions
 
     assert "main` becomes the active Scrub Private development line" in decisions
+    assert "human review" in decisions.lower()
+    assert "fail" in decisions.lower() and "closed" in decisions.lower()
 
 
 def test_risk_register_keeps_critical_product_risks_and_adds_current_truth_risks() -> None:
@@ -162,7 +169,6 @@ def test_risk_register_keeps_critical_product_risks_and_adds_current_truth_risks
     assert "R11 — Repository/source-of-truth drift" in risks
     assert "R12 — Legacy runtime mutation / hidden startup authority" in risks
 
-    # R1, R2 and R10 must remain explicitly critical.
     for heading in [
         "R1 — False negatives / missed sensitive data",
         "R2 — Scrub Key leakage, mismatch or misuse",
@@ -177,6 +183,20 @@ def test_risk_register_keeps_critical_product_risks_and_adds_current_truth_risks
     assert "Impact: `critical`" in r5
     assert "replacement_memory.py" in r5
     assert "Azure AI Language" in r5
+
+
+def test_changelog_preserves_preconvergence_history_without_using_it_as_current_queue() -> None:
+    changelog = read("CHANGELOG.md")
+    archived_path = ROOT / "history" / "CHANGELOG_PRE_CONVERGENCE_20260904.md"
+
+    assert archived_path.exists()
+    archived = archived_path.read_text(encoding="utf-8")
+
+    assert "SCRUB-WP_REPOSITORY_CONVERGENCE_BOOTSTRAP" in changelog
+    assert "history/CHANGELOG_PRE_CONVERGENCE_20260904.md" in changelog
+    assert "54c73e0ebf5a3a3ed7039a50596fb57694add3cd" in changelog
+    assert "SCRUB-WP_REVIEW_MARKER_COMPACTION_LIVE_REGRESSION_REPAIR" in archived
+    assert "historical provenance only" in changelog
 
 
 def test_bootstrap_does_not_redefine_hugging_face_as_production_assurance() -> None:
@@ -202,4 +222,4 @@ def test_bootstrap_does_not_authorize_source_cloning_or_a_new_evidence_framework
     assert "No separate Evidence Framework" in roadmap
     assert "/app_v2" not in roadmap
     assert "/scrub-new" not in roadmap
-    assert "Do not build a new Evidence Framework" not in ledger  # ledger records 'no new' but is not a new framework itself
+    assert "new evidence framework" in ledger.lower()
