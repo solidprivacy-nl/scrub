@@ -76,8 +76,10 @@ SCRUB-WP_REPOSITORY_CONVERGENCE_BOOTSTRAP
 
 Role: `implementation_operations`  
 Issue: #113  
+PR: #114  
 Branch: `wp/repository-convergence-bootstrap`  
-Dependency: WP-CONVERGENCE-00 evidence recorded.
+Dependency: WP-CONVERGENCE-00 evidence recorded.  
+Status: **IMPLEMENTATION_REMEDIATED — final exact-head CI and fresh independent assurance pending**.
 
 ### Goal
 
@@ -95,6 +97,20 @@ Reconstruct the active/reachable current system and replace stale strategic/exec
 - CHANGELOG entry preserving history;
 - contract tests protecting the new source-of-truth model;
 - implementation claim and handover.
+
+### Independent assurance remediation
+
+Fresh blind assurance on prior exact head `ea203abb04f008a7e583387242a6f4917c72e591` returned `FAIL` because the full suite was red and eight governance/document-location tests had not yet converged.
+
+Implementation repaired only those test/governance inconsistencies. Runtime/product files remain untouched.
+
+Pre-final remediation evidence:
+
+- remediated branch head `dcdfb2c84bbaafe0beca79191bee509b9607b461`;
+- `Tests` run `33922952965`;
+- raw result `1264 passed in 12.34s`.
+
+Administrative closeout changes the branch head, so a new final exact-head `Tests` run and a completely fresh independent assurance verdict are still mandatory. No verdict transfers between heads.
 
 ### Known audit findings — evidence only, not runtime authorization
 
@@ -128,7 +144,7 @@ This package must not change:
 
 - candidate diff remains documentation/governance/tests/administration only;
 - no active product/runtime source changed;
-- new contract tests pass;
+- new/current governance contract tests pass;
 - full exact-head repository regression passes;
 - fresh independent `governance_release_assurance` returns PASS before merge;
 - after merge, exact-main Tests are green;
