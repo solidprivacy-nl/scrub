@@ -7,7 +7,7 @@
 Date: 2026-09-05  
 Repository: `solidprivacy-nl/scrub`  
 Pre-convergence baseline: `54c73e0ebf5a3a3ed7039a50596fb57694add3cd`  
-Accepted bootstrap main: `255cd619d5cf6eab32f9383940eaa4af362cb68c`
+Accepted convergence main at start of WP-CONVERGENCE-03: `7e4f5491fa6616f9f1b08649a4ed9dfd80de0d84`
 
 ## Classification model
 
@@ -18,14 +18,14 @@ Accepted bootstrap main: `255cd619d5cf6eab32f9383940eaa4af362cb68c`
 
 Classification applies to capabilities/contracts/runtime paths, not mechanically to whole files.
 
-## Bootstrap debt already resolved
+## Bootstrap/current-truth debt already resolved
 
 PR #114 received fresh blind PASS and merged as `255cd619d5cf6eab32f9383940eaa4af362cb68c` with green exact-main Tests and GitHub→Hugging Face sync.
 
 The following are **not current cleanup tasks anymore**:
 
-- `PROJECT_PROMPT.md` and `AGENTS.md` now route through Repository Convergence → Scrub Private;
-- `ROADMAP.md` now contains the five strategic stages only;
+- `PROJECT_PROMPT.md` and `AGENTS.md` route through Repository Convergence → Scrub Private;
+- `ROADMAP.md` contains the five strategic stages;
 - `WORKPACKAGES.md` contains one current executable queue;
 - root `CHANGELOG.md` is post-reset history and the pre-convergence changelog is preserved byte-identically under `history/`;
 - D044 records the accepted convergence/private direction;
@@ -34,6 +34,18 @@ The following are **not current cleanup tasks anymore**:
 - Local/offline installer work is deferred variant-specific history, not an active delivery line.
 
 Do not reopen these items without fresh evidence of a current defect.
+
+## Runtime startup debt already resolved
+
+PR #116 received fresh blind PASS and merged as `7e4f5491fa6616f9f1b08649a4ed9dfd80de0d84` with green exact-main Tests and GitHub→Hugging Face sync.
+
+Resolved current-runtime finding:
+
+- Docker no longer invokes `fix_streamlit_nested_expanders.py` or `fix_streamlit_pdf_text_reinsert.py` before Streamlit startup;
+- Streamlit starts `presidio_streamlit.py` directly with the pre-existing server flags unchanged;
+- the historical patch-script files remain separate dormant RETIRE candidates and are not current runtime startup authority.
+
+Do not describe live Docker startup as source-mutating after this accepted main.
 
 ## Current capability/path ledger
 
@@ -45,17 +57,18 @@ Do not reopen these items without fresh evidence of a current defect.
 | Legal / Dutch recognition | Deterministic recognizers plus generic NER and Legal profile are current, with address-span repair on accepted main. | `CANONICAL` | Preserve and validate through current evidence paths. |
 | Zorg policy and recognizers | Dedicated Zorg policy/recognizers, synthetic corpus, gap triage and cross-profile evidence are integrated. | `CANONICAL` | Preserve clinical meaning and human review. |
 | TXT/DOCX/text-PDF handling and DOCX hygiene/fidelity | Supported import/export/reinsert/hygiene behavior exists with explicit PDF and unsupported-content boundaries. | `CANONICAL` | Preserve; no OCR/restored-PDF expansion during convergence. |
-| Recognizer-backed recall benchmark (`recall_benchmark_runner.py`, `recall_benchmark_report.py`, corpus workflow) | Executes the actual recognition stack against synthetic/gold material and produces diagnostic JSON/Markdown. | `CANONICAL` candidate | Confirm its release role in the validation-hierarchy package. |
-| Phase-6 synthetic E2E validation | Exercises TXT/DOCX/PDF workflow, manual additions, Scrub Key, export/reinsert and known limitations. | `CANONICAL` | Keep as workflow-level evidence complementary to recognizer benchmarks. |
-| Older entity-scorecard / residual-risk builders | Useful supplied-prediction/report-only diagnostics with explicit coverage limitations. | `RECONCILE` | Classify as supplemental or historical; **no new framework** and no arbitrary production threshold. |
+| Full `.github/workflows/tests.yml` regression | Runs `python -m pytest -q tests` for pull requests and `main`, and is used for exact-candidate/exact-main verification in the two-role release process. | `CANONICAL RELEASE REGRESSION GATE` | Preserve as the single current regression merge/main authority alongside independent assurance. |
+| Focused Phase-6, Scrub Key, document, Zorg, recognizer and Premium/AppTest suites | Exercise specific workflow/product/security/domain contracts and are included in the full regression suite. | `CANONICAL CAPABILITY REGRESSION EVIDENCE` | Preserve; may run independently for diagnosis but do not create competing merge authority. |
+| Recognizer-backed recall benchmark (`recall_benchmark_runner.py`, `recall_benchmark_report.py`, diagnostic workflow) | Runs recognizer/candidate-scanner diagnostics against synthetic/gold material, but report metadata explicitly says diagnostic-only, no production gate and no enforced thresholds. | `SUPPLEMENTAL DIAGNOSTIC` | Preserve diagnostic value; do not present scores as release/production gates. |
+| WP22 supplied-prediction runner (`benchmark/run_recall_precision.py`) | Scores supplied prediction JSON and explicitly does not call recognizers or apply CI thresholds. | `SUPPLEMENTAL / HISTORICAL DIAGNOSTIC` | Retain while useful for analysis/history; not release authority. |
+| WP23 entity scorecard / WP24 residual-risk report | Report-only wrappers over WP22 with no production gate; residual-risk builder explicitly records foundation-only/coverage limitations. | `SUPPLEMENTAL / HISTORICAL DIAGNOSTIC` | Retain within explicit limits; no threshold promotion during convergence. |
 | Persistent replacement memory (`replacement_memory.py` + Expert UI) | Deliberately persists original/replacement/entity values when persistent storage exists. | `VARIANT-SPECIFIC` | Preserve shared-baseline recoverability; remove/exclude from Scrub Private only in Stage 2. |
 | Azure AI Language document recognition | Current optional Expert path can send document content to Azure AI Language. | `VARIANT-SPECIFIC` | Exclude from Scrub Private in Stage 2; do not build a proxy/broker. |
 | OpenAI/Azure OpenAI synthesis operator | Current optional Expert path can send document-bearing prompts to an external provider. | `VARIANT-SPECIFIC` | Exclude from Scrub Private in Stage 2 unless explicitly re-approved. |
 | Content-bearing prompt print in `create_fake_data()` | Synthesis helper prints a content-bearing prompt. | `RECONCILE` / Private blocker | Remove with Private external-synthesis cleanup; add a narrow no-content-log contract, not a logging framework. |
-| Legacy startup patch script invocation in Dockerfile | Pre-WP finding: accepted main `255cd619…` invokes `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py`, although current direct-source markers make both exit without mutation. PR #116 candidate removes only those runtime invocations and starts Streamlit directly with existing server flags unchanged. | `RECONCILE — RESOLVED IN PR #116 CANDIDATE` | Require full exact-head regression + fresh independent PASS. Do not reintroduce runtime source mutation. |
-| `fix_streamlit_nested_expanders.py` historical mutation implementation | Historical compatibility code remains in repository and exits immediately on current Premium source. | `RETIRE` candidate | **Still unresolved after PR #116.** Decide later whether diagnostic/history value justifies keeping it; do not mass-delete tests blindly. |
-| `fix_streamlit_pdf_text_reinsert.py` historical mutation implementation | Historical compatibility code remains in repository and exits immediately on current direct-source reinsert marker. | `RETIRE` candidate | **Still unresolved after PR #116.** Treat separately from runtime invocation retirement. |
-| Docker/runtime production hardening | Python 3.10 base/build tools and permissive Streamlit XSRF/CORS settings remain. PR #116 does not change these. | `RECONCILE` / later service work | Defer major hardening to Private Service unless a current safety defect is proven. |
+| `fix_streamlit_nested_expanders.py` historical mutation implementation | Historical compatibility code remains in repository and is no longer invoked by Docker startup after PR #116. | `RETIRE` candidate | Decide later whether diagnostic/history value justifies keeping it; do not mass-delete tests blindly. |
+| `fix_streamlit_pdf_text_reinsert.py` historical mutation implementation | Historical compatibility code remains in repository and is no longer invoked by Docker startup after PR #116. | `RETIRE` candidate | Treat separately from completed runtime invocation retirement. |
+| Docker/runtime production hardening | Python 3.10 base/build tools and permissive Streamlit XSRF/CORS settings remain. PR #116 deliberately did not change these. | `RECONCILE` / later service work | Defer major hardening to Private Service unless a current safety defect is proven. |
 | `openai` and `azure-ai-textanalytics` dependencies | Used only by current variant-specific external-processing paths. | `RECONCILE` | Remove when those Private-incompatible paths are removed; do not leave unused dependencies. |
 | Open GitHub issues from Premium/governance repair cycles | Several describe candidate states already PASSed/merged; parent #105/#96 still lack proven final consolidated deployed retest. | `RECONCILE` | Reconstruct against current main; close stale cycles only with evidence and preserve unperformed live gate. |
 | HF workflow path-ignore churn | Governance-only bootstrap changes triggered an otherwise unnecessary but successful HF sync because some convergence/history paths are not ignored. | `RECONCILE` / low operational priority | Consider only if repeated churn creates real operational cost; do not mix with product/runtime packages. |
@@ -70,27 +83,41 @@ These notes are findings, not closure authority:
 - #105/#96: child marker/address defects were repaired by later PRs, but evidence found so far does **not** prove the final consolidated deployed live retest required by the parent issues. Do not close that residual gate as verified without evidence.
 - Earlier Premium/governance candidate cycles should be checked for stale open state, not treated as current implementation direction.
 
-## Current validation-hierarchy hypothesis
+## Current validation hierarchy
 
-Subject to a narrow follow-up verification:
+D045 defines the intended current authority, pending independent assurance of WP-CONVERGENCE-03:
 
-### Candidate canonical release/product evidence
+### Release regression authority
 
-- full `python -m pytest -q tests` regression;
-- recognizer-backed recall corpus/report workflow;
-- Zorg baseline/recognizer/cross-profile evidence where domain-specific;
+```text
+.github/workflows/tests.yml
+→ python -m pytest -q tests
+→ exact candidate/main SHA evidence
+```
+
+### Capability regression evidence
+
 - Phase-6 synthetic E2E workflow validation;
 - Scrub Key security/roundtrip tests;
 - document hygiene/fidelity tests;
-- Premium AppTest/state tests.
+- Zorg recognizer/profile/cross-profile tests;
+- recognizer/candidate-scanner contracts;
+- Premium Streamlit/AppTest/state tests;
+- other focused tests included in the full suite.
 
 ### Supplemental diagnostic evidence
 
-- entity scorecard and older report-only residual-risk builders when used within their explicit coverage limits.
+- recognizer-backed recall corpus/report workflow;
+- WP22 supplied-prediction recall/precision runner;
+- WP23 entity scorecard;
+- WP24 residual-risk report.
 
-### Explicit non-claim
+### Explicit non-claims
 
-None of the above alone proves production safety or removes the mandatory human-review requirement.
+- no diagnostic score is a merge or production gate;
+- no production recall/precision threshold is introduced by convergence;
+- synthetic validation does not prove production safety;
+- mandatory human review remains binding.
 
 ## Execution boundary
 

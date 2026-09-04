@@ -12,6 +12,66 @@ Git and `CHANGELOG.md` are the historical provenance layers. This file must not 
 
 ---
 
+## D045 — 2026-09-05 — One exact-SHA regression gate; capability suites and benchmark reports have subordinate evidence roles
+
+Status: **accepted validation-authority direction; candidate remains subject to independent assurance**
+
+Decision:
+
+Scrub has one current release regression gate for consequential candidates and post-merge `main`:
+
+```text
+RELEASE REGRESSION GATE
+.github/workflows/tests.yml
+→ python -m pytest -q tests
+→ exact candidate SHA / exact main SHA evidence
+```
+
+The full committed `tests/` suite is therefore the regression authority used in the implementation→assurance→merge process. Individual test families remain first-class evidence for the capability they exercise, but they do not become competing merge authorities.
+
+```text
+CAPABILITY REGRESSION EVIDENCE
+Phase-6 synthetic E2E
+Scrub Key security/roundtrip
+DOCX/document hygiene/fidelity
+Zorg recognizer/profile/cross-profile regression
+recognizer/candidate-scanner contracts
+Premium Streamlit/AppTest/state regressions
+other focused tests included in the full suite
+```
+
+The recognizer-backed corpus/report path is useful evidence but explicitly diagnostic:
+
+```text
+SUPPLEMENTAL DIAGNOSTIC
+recall_benchmark_runner.py
+recall_benchmark_report.py
+.github/workflows/recall-benchmark-report.yml
+```
+
+`recall_benchmark_report.py` declares `diagnostic_only`, `production_gate=False` and `thresholds_enforced=False`. Its workflow may fail on technical/schema execution defects, but recall/precision values are not a merge or production gate.
+
+The older WP22/WP23/WP24 chain is also diagnostic, not release authority:
+
+```text
+benchmark/run_recall_precision.py
+benchmark/build_entity_scorecard.py
+benchmark/build_residual_risk_report.py
+```
+
+WP22 scores supplied prediction JSON and explicitly does not call recognizers; WP23/WP24 are report-only and non-gating, with known coverage limitations. Preserve these helpers while they remain useful for historical/supplemental analysis, but do not present them as the current release gate.
+
+Binding consequences:
+
+- no diagnostic recall/precision score is a merge gate unless a later explicitly approved decision changes policy;
+- no new production recall/precision threshold is introduced by Repository Convergence;
+- capability/domain regressions may be run independently for diagnosis, but consequential release acceptance still requires the full exact-SHA `Tests` gate plus independent assurance;
+- synthetic benchmark/E2E results do not establish production safety or remove mandatory human review;
+- targeted workflows that operate on historical branches/snapshots do not outrank current exact-main regression evidence;
+- do not create a second Evidence Framework or duplicate validation authority to “unify” these assets.
+
+---
+
 ## D044 — 2026-09-04 — Repository Convergence before further normal feature development; Scrub Private becomes the active future production line
 
 Status: **accepted strategic/architecture direction; implementation of the bootstrap candidate remains subject to normal independent assurance**

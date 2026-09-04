@@ -80,11 +80,7 @@ Outputs now authoritative on `main` include the five-stage roadmap, one-current-
 
 ---
 
-## WP-CONVERGENCE-02..N — Evidence-backed technical/current-state cleanup — DERIVED, NOT PRE-INVENTED
-
-Only audit-proven root-cause clusters may become implementation packages.
-
-### WP-CONVERGENCE-02 — Startup invocation retirement — CURRENT
+## WP-CONVERGENCE-02 — Startup invocation retirement — COMPLETED
 
 Canonical title:
 
@@ -92,61 +88,84 @@ Canonical title:
 SCRUB-WP_REPOSITORY_CONVERGENCE_STARTUP_INVOCATION_RETIREMENT
 ```
 
-Role: `implementation_operations`  
 Issue: #115  
 PR: #116  
-Branch: `wp/repository-convergence-startup-invocation-retirement`  
-Base: `255cd619d5cf6eab32f9383940eaa4af362cb68c`  
+Reviewed frozen head: `cbaaa1e4560670116c41ca788786d80d670dcf34`  
+Merge/main SHA: `7e4f5491fa6616f9f1b08649a4ed9dfd80de0d84`  
+Status: **PASS → MERGED → exact-main verified**.
+
+Outcome:
+
+- Docker now starts `presidio_streamlit.py` directly;
+- runtime startup no longer invokes `fix_streamlit_nested_expanders.py` or `fix_streamlit_pdf_text_reinsert.py`;
+- existing port/address/XSRF/CORS flags remain unchanged;
+- dormant historical patch scripts remain separate later RETIRE candidates;
+- no user-visible product semantics changed.
+
+Evidence:
+
+- fresh blind `governance_release_assurance`: PASS on exact reviewed head;
+- exact-main `Tests` run `33929193443`: SUCCESS, `1264 passed`;
+- GitHub→Hugging Face sync run `33929193466`: SUCCESS;
+- deployed Space health confirmed Running/serving;
+- issue #115 closed.
+
+---
+
+## WP-CONVERGENCE-03 — Validation hierarchy clarification — CURRENT
+
+Canonical title:
+
+```text
+SCRUB-WP_REPOSITORY_CONVERGENCE_VALIDATION_HIERARCHY_CLARIFICATION
+```
+
+Role: `implementation_operations`  
+Issue: #117  
+Branch: `wp/repository-convergence-validation-hierarchy`  
+Base: `7e4f5491fa6616f9f1b08649a4ed9dfd80de0d84`  
 Status: **IMPLEMENTATION IN PROGRESS**.
 
-#### Proven root cause
+### Proven ambiguity
 
-The current direct-source app already contains the Premium shell and reinsert UI. The two historical startup patch scripts exit without mutation when they encounter those direct-source markers, yet Docker still invoked both before every Streamlit start.
+Multiple mature evidence generations exist, but their authority differs. Historical language could be read as if diagnostic report workflows were independent release gates.
 
-#### Smallest complete fix
+Source reconstruction shows:
 
-- remove only the Docker pre-start invocation of `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py`;
-- start Streamlit directly with the existing port/address/XSRF/CORS flags unchanged;
-- rebind Docker-specific tests from historical patch ordering to the current no-runtime-mutation invariant;
-- keep both historical patch scripts and their broader historical tests for a later evidence-based retirement decision.
+- `.github/workflows/tests.yml` runs the complete committed `tests/` suite and is the current exact-SHA release regression gate;
+- focused Phase-6, Scrub Key, document, Zorg, recognizer and Premium/AppTest suites are capability-level product regression evidence within that full gate;
+- `recall_benchmark_report.py` explicitly declares `diagnostic_only`, `production_gate=False`, `thresholds_enforced=False`;
+- WP22 scores supplied predictions without invoking recognizers;
+- WP23/WP24 are report-only/non-gating and carry coverage limitations.
 
-#### Explicit non-scope
+### Smallest complete fix
 
-No change to:
+- record binding validation authority in D045;
+- align ROADMAP and the temporary debt ledger;
+- add one narrow contract test grounded in actual workflow/source metadata;
+- do not change runners, corpus data, thresholds or product/runtime behavior;
+- do not delete historical diagnostic helpers merely because they are non-authoritative.
 
-- `presidio_streamlit.py` user-visible behavior;
-- recognizers/profiles/thresholds;
-- review/export semantics;
-- Scrub Key/reinsert semantics;
-- persistence/external AI paths;
-- dependencies or unrelated Docker hardening;
-- historical patch-script deletion.
+### Acceptance
 
-#### Acceptance
-
-- neither patch script is invoked at runtime startup;
-- direct Streamlit command retains existing server flags;
-- focused/current startup contracts are green;
+- one release regression gate is unambiguous: exact-SHA full `Tests` workflow;
+- capability suites remain first-class evidence without competing merge authority;
+- recall benchmark/report is supplemental diagnostic evidence;
+- WP22/WP23/WP24 chain is supplemental/historical diagnostic, not release authority;
+- no production threshold or safety claim is introduced;
 - full exact-head `python -m pytest -q tests` is green;
-- changed-file scope remains root-cause narrow;
 - fresh independent `governance_release_assurance` returns PASS before merge;
 - post-merge exact-main Tests and GitHub→HF sync are verified.
 
-### Candidate next package — validation hierarchy clarification
+---
 
-After WP-CONVERGENCE-02, verify and document which existing validation paths are:
+## Candidate next package — current GitHub issue/state reconciliation
 
-```text
-CANONICAL RELEASE VALIDATION
-SUPPLEMENTAL DIAGNOSTIC
-HISTORICAL / SUPERSEDED
-```
+After WP-CONVERGENCE-03, reconstruct stale open Premium/governance issues against actual `main`; close only what current machine/assurance evidence proves complete. Preserve the residual consolidated deployed verification gate for #105/#96 unless actual evidence proves it was performed.
 
-Expected scope includes recognizer-backed recall workflow, Phase-6 E2E, Zorg evidence, Scrub Key/document suites, Premium AppTests and older scorecard/residual-risk helpers. Build **no new Evidence Framework** and invent no arbitrary production threshold.
+## Candidate later package — dormant patch-artifact retirement
 
-### Candidate next package — current GitHub issue/state reconciliation
-
-Reconstruct stale open Premium/governance issues against actual `main`; close only what current machine/assurance evidence proves complete. Preserve the residual consolidated deployed verification gate for #105/#96 unless actual evidence proves it was performed.
+`fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py` are no longer runtime startup dependencies after WP-CONVERGENCE-02. Their actual files and historical patch-specific tests may be retired only after a separate evidence review proves there is no remaining diagnostic/current-contract value. Do not mass-delete by filename pattern.
 
 ### Stage 2 boundary — not Stage 1 cleanup by default
 
