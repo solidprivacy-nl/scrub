@@ -1,6 +1,6 @@
 # Workpackage claim — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION
 
-Status: `RELEASE_CANDIDATE_READY — final handover-complete exact-head Tests still required`  
+Status: `RELEASE_CANDIDATE_READY — current-truth correction applied; final handover-complete exact-head Tests still required`  
 Role: `implementation_operations`  
 Issue: #119  
 PR: #124  
@@ -43,7 +43,10 @@ Reason: PR #104 V2, PR #108 and PR #111 technical repair chains are independentl
 #79 #81 #84 #86 #88 #89
 #98 #100 #105
 #106 #107 #109 #112
+#123
 ```
+
+#123 is the completed recovery-assurance dispatch for PR #122. Its explicit PASS procedure intentionally stopped after closing recovery issue #121, so #123 correctly remained open at that time. Now that recovery is complete and WP04 is specifically reconciling current GitHub issue state, leaving #123 open would itself be stale governance state. Closing it here preserves all PASS provenance in the issue/Git history and does not reuse recovery assurance as WP04 authority.
 
 The closures mean those individual candidate/repair/assurance cycles are no longer current open work. They do not erase historical PASS/FAIL/INDETERMINATE provenance and do not claim #96's live verification occurred.
 
@@ -59,12 +62,14 @@ exact candidate on 14baceb...
 → fresh blind PASS
 → guarded merge exact reviewed head
 → exact-main Tests + GitHub→HF verification
-→ only then close the 17 reviewed issues and reconcile #96 body while keeping it OPEN
+→ only then close the 18 reviewed issues and reconcile #96 body while keeping it OPEN
 → readback all issue states
 → close #119 only after confirmed administrative outcome
 ```
 
 The post-merge exact-main verification prerequisite is intentionally stronger than merely requiring PASS before issue mutation. It prevents the same ordering class from recurring.
+
+The active assurance dispatch issue created for the final frozen candidate is not part of the pre-verdict close set; that assurance issue closes itself only after its own PASS procedure and WP04 administrative closeout complete.
 
 ## Repository scope
 
@@ -114,7 +119,7 @@ result: 1 failed, 1277 passed in 15.25s
 
 The remaining test looked for the abstract phrase `issue mutation` inside the fenced action-order block, while the block deliberately names the concrete action `close the 17 reviewed issues`. The parser was tightened to the concrete action. The governance fence itself was not weakened.
 
-### Pre-handover green
+### Pre-handover green before current-truth correction
 
 ```text
 head: bd44baaebd5a800fe38151495d7591db4eab78ac
@@ -124,18 +129,21 @@ synthetic merge candidate: c1d9df47f91bc08eb2559d606e25d528fcada162
 result: SUCCESS — 1278 passed in 14.88s
 ```
 
-The mandatory implementation handover is committed after this pre-handover green run. Therefore one final complete `Tests` run on the handover-complete exact PR head remains mandatory before assurance dispatch. That final head must not move after the run.
+A later implementation self-audit reconstructed the actual open issue inventory and found completed recovery-assurance issue #123 still open. That is a genuine current-truth defect for WP04, so the prior freeze was intentionally broken before independent assurance. The exact disposition is now 18-close/1-keep and requires a new full-suite green candidate plus a new exact-SHA assurance dispatch.
+
+The mandatory implementation handover is updated after this correction. Therefore one final complete `Tests` run on the handover-complete exact PR head remains mandatory before assurance dispatch. That final head must not move after the run.
 
 ## Acceptance
 
 1. Exact base is `14baceb97b274de6ef35c42ce48441c4e74c5f08`.
 2. Recovery PR #122 is factual completed history, not current execution authority.
 3. Exactly one current executable package is WP-CONVERGENCE-04.
-4. Contract freezes exactly keep `{96}` and close `{74,75,76,77,79,81,84,86,88,89,98,100,105,106,107,109,112}`.
-5. #96 is excluded from closures and `remains unproven` is explicit.
-6. Stage 2 stays blocked and mandatory human review remains preserved.
-7. No runtime/product path is changed.
-8. Full final exact-head `Tests` is green.
-9. Fresh blind assurance PASS precedes merge.
-10. Exact-main Tests/HF evidence is confirmed after guarded merge and before target issue mutation.
-11. Final issue readback confirms 17 closures and #96 OPEN/current residual wording.
+4. Contract freezes exactly keep `{96}` and close `{74,75,76,77,79,81,84,86,88,89,98,100,105,106,107,109,112,123}`.
+5. #123 is classified as completed recovery-assurance administration, not a residual gate and not WP04 assurance authority.
+6. #96 is excluded from closures and `remains unproven` is explicit.
+7. Stage 2 stays blocked and mandatory human review remains preserved.
+8. No runtime/product path is changed.
+9. Full final exact-head `Tests` is green.
+10. Fresh blind assurance PASS precedes merge.
+11. Exact-main Tests/HF evidence is confirmed after guarded merge and before target issue mutation.
+12. Final issue readback confirms 18 historical closures and #96 OPEN/current residual wording.
