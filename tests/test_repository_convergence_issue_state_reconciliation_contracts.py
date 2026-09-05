@@ -11,6 +11,10 @@ def read(name: str) -> str:
     return (ROOT / name).read_text(encoding="utf-8")
 
 
+def _first_fenced_block(text: str) -> str:
+    return text.split("```text", 1)[1].split("```", 1)[0]
+
+
 def test_validation_hierarchy_package_is_recorded_as_completed() -> None:
     workpackages = read("WORKPACKAGES.md")
     changelog = read("CHANGELOG.md")
@@ -74,13 +78,13 @@ def test_issue_disposition_keeps_exactly_one_residual_premium_gate() -> None:
     }
 
     disposition = ledger.split("## WP-CONVERGENCE-04 reviewed issue-disposition candidate", 1)[1]
-    keep_open = disposition.split("### Keep open", 1)[1].split("### Close after", 1)[0]
-    close_block = disposition.split("### Close after WP04 independent PASS", 1)[1].split(
+    keep_section = disposition.split("### Keep open", 1)[1].split("### Close after", 1)[0]
+    close_section = disposition.split("### Close after WP04 independent PASS", 1)[1].split(
         "Evidence basis:", 1
     )[0]
 
-    kept_numbers = {int(value) for value in re.findall(r"#(\d+)", keep_open)}
-    close_numbers = {int(value) for value in re.findall(r"#(\d+)", close_block)}
+    kept_numbers = {int(value) for value in re.findall(r"#(\d+)", _first_fenced_block(keep_section))}
+    close_numbers = {int(value) for value in re.findall(r"#(\d+)", _first_fenced_block(close_section))}
 
     assert kept_numbers == {96}
     assert close_numbers == expected_close
