@@ -154,7 +154,13 @@ The user misses a sensitive value, changes state without realizing downstream ou
 
 Controls include staged Premium workspace, Standard/Expert over shared authoritative state, generation-bound review/export state, fail-closed stale export, explicit re-completion, source-versus-processed review and direct/manual correction.
 
-Current gap: parent Premium live-verification issues contain stale/unfinished closeout state; deployed behavior must be reconciled against merged marker/address repairs before those historical gates are declared closed.
+Current evidence:
+
+- the old PR #85 source/state assurance conflict was superseded by independently PASSed and merged PR #104 V2;
+- the live marker/compact-placeholder regression found after PR #104 was independently repaired/assured/merged in PR #108;
+- the live Dutch-address span overcapture was independently repaired/assured/merged in PR #111.
+
+Current gap: the **consolidated deployed live-app retest after both PR #108 and PR #111 remains unproven**. Issue #96 is the residual current gate. Do not infer that merged code, exact-main CI or HF synchronization alone closes that user-visible verification requirement.
 
 ---
 
@@ -184,10 +190,11 @@ Risk:
 Multiple benchmark/report generations are mistaken for equivalent safety evidence, or diagnostic metrics are presented as production-readiness/individual-document safety scores.
 ```
 
-Current convergence requirement:
+Current authority after independently assured/merged D045:
 
 ```text
-CANONICAL RELEASE VALIDATION
+RELEASE REGRESSION GATE
+CAPABILITY REGRESSION EVIDENCE
 SUPPLEMENTAL DIAGNOSTIC
 HISTORICAL / SUPERSEDED
 ```
@@ -255,9 +262,11 @@ Current mitigation:
 - Repository Convergence is active;
 - exact pre-convergence SHA is preserved;
 - bootstrap PR #114 PASSed/merged with exact-main Tests and HF sync green;
+- runtime startup authority was simplified by independently PASSed/merged PR #116;
+- validation authority was clarified by independently PASSed/merged PR #118 / D045;
 - one current roadmap/workpackage model is in place;
 - temporary debt ledger is explicitly non-authoritative after convergence;
-- stale issue/evidence hierarchy reconciliation remains required;
+- WP-CONVERGENCE-04 is reconciling stale GitHub issue state against actual merged/assured evidence;
 - normal feature work remains paused until `SCRUB_REPOSITORY_CONVERGED`.
 
 Exit: one clean exact SHA whose source, tests, active issues and canonical docs materially agree.
@@ -275,20 +284,15 @@ Risk:
 Historical source-patch machinery remains in or near the runtime path and can be mistaken for current product authority or accidentally reactivated.
 ```
 
-Accepted-main finding before current workpackage:
+Resolved runtime finding:
 
-- Docker invoked `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py`;
-- current Premium/direct-source markers caused both to exit without source mutation.
-
-Current PR #116 candidate mitigation:
-
-- Docker no longer invokes either historical source-patch script;
+- independently PASSed/merged PR #116 removed `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf_text_reinsert.py` from Docker startup;
 - Streamlit starts the existing `presidio_streamlit.py` directly with the previous server flags unchanged;
-- tests are being rebound from historical patch-order assertions to direct-source/no-runtime-mutation contracts;
-- the two historical mutation scripts still remain in the repository and therefore remain separate `RETIRE` candidates.
+- current runtime no longer gives those scripts pre-start mutation authority.
 
 Residual risk:
 
+- the two historical scripts still exist as dormant repository artifacts and separate `RETIRE` candidates;
 - dormant historical patch code can still be mistaken for current authority or accidentally reintroduced;
 - script/test retirement must be evidence-based rather than a mass deletion.
 
