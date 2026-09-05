@@ -8,17 +8,18 @@ def read(name: str) -> str:
     return (ROOT / name).read_text(encoding="utf-8")
 
 
-def test_recovery_is_current_and_issue_reconciliation_is_blocked() -> None:
+def test_recovery_is_completed_and_fresh_wp04_is_current() -> None:
     workpackages = read("WORKPACKAGES.md")
 
-    assert "WP-CONVERGENCE-04R — Governance sequencing recovery — CURRENT" in workpackages
+    assert "WP-CONVERGENCE-04R — Governance sequencing recovery — COMPLETED" in workpackages
     assert "SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION_GOVERNANCE_RECOVERY" in workpackages
-    assert "Issue: #121" in workpackages
-    assert "WP-CONVERGENCE-04 — GitHub issue/current-state reconciliation — BLOCKED ON 04R" in workpackages
+    assert "Issue: #121 — closed" in workpackages
+    assert "14baceb97b274de6ef35c42ce48441c4e74c5f08" in workpackages
+    assert "WP-CONVERGENCE-04 — GitHub issue/current-state reconciliation — CURRENT" in workpackages
     assert "Issue: #119 — open" in workpackages
 
 
-def test_recovery_preserves_pre_action_assurance_boundary() -> None:
+def test_recovery_preserves_pre_action_assurance_boundary_as_history() -> None:
     combined = "\n".join(
         [
             read("WORKPACKAGES.md"),
@@ -30,28 +31,22 @@ def test_recovery_preserves_pre_action_assurance_boundary() -> None:
 
     assert "fd69294c67a59bb150f5d4a637daad2607c14077" in combined
     assert "GOVERNANCE FAIL" in read("CHANGELOG.md")
-    assert "before" in combined.lower() and "independent" in combined.lower()
-    assert "#74 has been reopened" in combined or "issue #74 has been reopened" in combined
-    assert "no force reset" in combined.lower()
+    assert "8565af4e9f579b3a975c6122668f6511a9df627a" in combined
+    assert "14baceb97b274de6ef35c42ce48441c4e74c5f08" in combined
+    assert "#74" in combined and "OPEN" in combined
+    assert "no force reset" in combined.lower() or "no force-reset" in combined.lower()
 
 
-def test_failed_wp04_artifacts_are_not_active_authority() -> None:
-    assert not (ROOT / "tests" / "test_repository_convergence_issue_state_reconciliation_contracts.py").exists()
-    assert not (
-        ROOT
-        / "workpackage_claims"
-        / "SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION.md"
-    ).exists()
-    assert not (
-        ROOT
-        / "handover"
-        / "workpackages"
-        / "20260905_0212_repository_convergence_issue_state_reconciliation.md"
-    ).exists()
-
+def test_recovery_pass_does_not_become_wp04_action_authority() -> None:
     ledger = read("REPOSITORY_CONVERGENCE_DEBT_LEDGER.md")
-    assert "not current action authority" in ledger
-    assert "new WP04 candidate" in ledger
+    claim = read(
+        "workpackage_claims/"
+        "SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION.md"
+    )
+
+    assert "PR #122 recovery PASS is not WP04 assurance" in ledger
+    assert "recovery PR #122 PASS" in claim
+    assert "not reused as release authority" in claim
 
 
 def test_valid_pre_wp04_truth_and_residual_live_gate_are_preserved() -> None:
