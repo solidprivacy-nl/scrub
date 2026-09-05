@@ -96,9 +96,12 @@ Recovery outcome:
 - #96 remains OPEN;
 - #119 remains OPEN;
 - issue #121 is closed/completed;
+- issue #123 contains the successful recovery assurance and remains OPEN only because that issue's explicit PASS procedure required closing #121 and then stopping;
 - failed PR #120 candidate-specific active authority was removed while Git history remains intact;
-- no 17-issue reconciliation was executed during recovery;
+- no WP04 issue reconciliation was executed during recovery;
 - PR #122 recovery PASS is not WP04 assurance and cannot substitute for a new WP04 exact-head review.
+
+Because WP04 now reconciles the live GitHub issue inventory, completed recovery-assurance issue #123 is historical administration and belongs in the WP04 closure candidate. Closing #123 after new WP04 PASS/merge/exact-main confirmation does not alter or reuse its assurance verdict.
 
 ## Fresh WP-CONVERGENCE-04 retry — current evidence candidate
 
@@ -125,6 +128,7 @@ Reason: PR #104 V2 independently PASSed and merged, PR #108 independently PASSed
 #79 #81 #84 #86 #88 #89
 #98 #100 #105
 #106 #107 #109 #112
+#123
 ```
 
 Evidence basis:
@@ -135,7 +139,8 @@ Evidence basis:
 - #98/#100 are the first App Shell state-repair/assurance cycle; their failed/unmerged state was superseded by V2 PR #104;
 - #105 contains the V2 PASS plus later live-regression discovery; the technical repairs were split into #106/#107 and later independently assured/merged;
 - #106/#109 marker/compact-display implementation/assurance are complete and PR #108 merged;
-- #107/#112 Dutch-address implementation/assurance are complete and PR #111 merged.
+- #107/#112 Dutch-address implementation/assurance are complete and PR #111 merged;
+- #123 is the completed PR #122 recovery-assurance dispatch; its open state is procedural residue from the explicit stop rule, not a current unresolved gate.
 
 This candidate does not execute those closures. Required action order is:
 
@@ -150,6 +155,8 @@ new exact candidate
 ```
 
 No target issue mutation is authorized before the exact-main verification step completes.
+
+The active assurance-dispatch issue for the final frozen WP04 candidate is procedural current work and must close itself only after its own PASS/post-merge administrative closeout; it is not part of the pre-verdict historical close set.
 
 ## Current capability/path ledger
 
