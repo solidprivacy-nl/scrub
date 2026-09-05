@@ -14,7 +14,7 @@ Git and `CHANGELOG.md` are the historical provenance layers. This file must not 
 
 ## D045 — 2026-09-05 — One exact-SHA regression gate; capability suites and benchmark reports have subordinate evidence roles
 
-Status: **accepted validation-authority direction; candidate remains subject to independent assurance**
+Status: **accepted, independently assured and merged validation-authority direction**
 
 Decision:
 
