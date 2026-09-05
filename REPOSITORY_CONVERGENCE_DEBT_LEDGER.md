@@ -8,7 +8,8 @@ Date: 2026-09-05
 Repository: `solidprivacy-nl/scrub`  
 Pre-convergence baseline: `54c73e0ebf5a3a3ed7039a50596fb57694add3cd`  
 Last governance-valid pre-WP04 main: `268d967db95d923a73a3979ffce2d0cab586e499`  
-Current recovery base after premature PR #120 merge: `fd69294c67a59bb150f5d4a637daad2607c14077`
+Premature PR #120 merge: `fd69294c67a59bb150f5d4a637daad2607c14077`  
+Governed recovery main / fresh WP04 base: `14baceb97b274de6ef35c42ce48441c4e74c5f08`
 
 ## Classification model
 
@@ -60,9 +61,9 @@ RELEASE REGRESSION GATE
 
 Focused capability suites remain product/domain regression evidence inside the full suite. Recognizer-backed recall reporting and WP22/WP23/WP24 remain supplemental diagnostics, not release/production score gates.
 
-## WP-CONVERGENCE-04 governance sequencing failure and recovery
+## WP-CONVERGENCE-04 governance sequencing failure and governed recovery
 
-The substantive WP04 reconstruction was prepared in PR #120 at frozen head:
+The first WP04 candidate was prepared in PR #120 at frozen head:
 
 ```text
 1c5ff96f5551e7d82c8ab9c01a80ffa9c97c195a
@@ -76,30 +77,86 @@ fd69294c67a59bb150f5d4a637daad2607c14077
 
 and issue #74 was closed before the fresh independent assurance verdict. The later fresh blind assurance returned `FAIL` because independent assurance is a pre-action ordering control and cannot be retroactively supplied by green post-merge CI.
 
-Recovery status:
-
-- issue #74 has been reopened with explicit governance-recovery provenance;
-- no other historical issue has been closed by this recovery;
-- #96 remains open;
-- the old PR #120 issue-disposition section is **not current action authority**;
-- the old PR #120 claim/test/handover are preserved in Git history but removed from the active recovery tree;
-- recovery issue #121 / WP-CONVERGENCE-04R is the sole current package;
-- a new WP04 candidate may be created only after recovery independently PASSes, merges normally and is exact-main verified.
-
-The earlier substantive issue reconstruction remains useful **evidence only** for the future retry:
+Governed recovery PR #122 then followed the correct lifecycle:
 
 ```text
-keep open finding:
-#96
+recovery frozen head
+8565af4e9f579b3a975c6122668f6511a9df627a
 
-potential future close set requiring a new fresh WP04 PASS:
+fresh PASS before merge
+→ guarded merge
+14baceb97b274de6ef35c42ce48441c4e74c5f08
+→ exact-main Tests 33966351441 / 1272 passed
+→ exact-main GitHub→HF sync 33966351286 / SUCCESS
+```
+
+Recovery outcome:
+
+- issue #74 is OPEN/reopened with explicit governance-recovery provenance;
+- #96 remains OPEN;
+- #119 remains OPEN;
+- issue #121 is closed/completed;
+- issue #123 contains the successful recovery assurance and remains OPEN only because that issue's explicit PASS procedure required closing #121 and then stopping;
+- failed PR #120 candidate-specific active authority was removed while Git history remains intact;
+- no WP04 issue reconciliation was executed during recovery;
+- PR #122 recovery PASS is not WP04 assurance and cannot substitute for a new WP04 exact-head review.
+
+Because WP04 now reconciles the live GitHub issue inventory, completed recovery-assurance issue #123 is historical administration and belongs in the WP04 closure candidate. Closing #123 after new WP04 PASS/merge/exact-main confirmation does not alter or reuse its assurance verdict.
+
+## Fresh WP-CONVERGENCE-04 retry — current evidence candidate
+
+A new WP04 implementation candidate starts from exact governed recovery main:
+
+```text
+14baceb97b274de6ef35c42ce48441c4e74c5f08
+```
+
+The earlier substantive reconstruction remains useful evidence, but the action authority must be newly earned.
+
+### Keep open
+
+```text
+#96
+```
+
+Reason: PR #104 V2 independently PASSed and merged, PR #108 independently PASSed and merged the marker/compact-placeholder repair, and PR #111 independently PASSed and merged the Dutch-address precision repair. The required consolidated deployed live-app retest after both repairs **remains unproven**. #96 therefore remains the residual current Premium/App-Shell live-verification gate.
+
+### Close only after new WP04 PASS + guarded merge + exact-main verification
+
+```text
 #74 #75 #76 #77
 #79 #81 #84 #86 #88 #89
 #98 #100 #105
 #106 #107 #109 #112
+#123
 ```
 
-The required consolidated deployed live-app retest after PR #108 and PR #111 **remains unproven**. Do not infer it from PR #120 CI, merge, or HF synchronization.
+Evidence basis:
+
+- #74/#75/#76 are superseded PR #73 review/repair dispatches; #77 records the final exact-head PASS/authorization cycle for the PR #73 head that subsequently merged;
+- #79/#81 contract and assurance cycle is implemented/merged and no longer current work;
+- #84/#86/#88/#89 are historical Premium App Shell/staged-workspace candidate cycles superseded by later integrated repairs/current source;
+- #98/#100 are the first App Shell state-repair/assurance cycle; their failed/unmerged state was superseded by V2 PR #104;
+- #105 contains the V2 PASS plus later live-regression discovery; the technical repairs were split into #106/#107 and later independently assured/merged;
+- #106/#109 marker/compact-display implementation/assurance are complete and PR #108 merged;
+- #107/#112 Dutch-address implementation/assurance are complete and PR #111 merged;
+- #123 is the completed PR #122 recovery-assurance dispatch; its open state is procedural residue from the explicit stop rule, not a current unresolved gate.
+
+This candidate does not execute those closures. Required action order is:
+
+```text
+new exact candidate
+→ full Tests
+→ fresh blind PASS
+→ guarded merge
+→ exact-main Tests + GitHub→HF verification
+→ then issue mutation
+→ readback
+```
+
+No target issue mutation is authorized before the exact-main verification step completes.
+
+The active assurance-dispatch issue for the final frozen WP04 candidate is procedural current work and must close itself only after its own PASS/post-merge administrative closeout; it is not part of the pre-verdict historical close set.
 
 ## Current capability/path ledger
 
@@ -122,7 +179,7 @@ The required consolidated deployed live-app retest after PR #108 and PR #111 **r
 | Content-bearing prompt print in `create_fake_data()` | Synthesis helper prints content-bearing prompt. | `RECONCILE` / Private blocker | Remove with Stage-2 external-synthesis cleanup; add narrow no-content-log contract. |
 | `fix_streamlit_nested_expanders.py` historical mutation implementation | Dormant after PR #116. | `RETIRE` candidate | Evidence-based later retirement only. |
 | `fix_streamlit_pdf_text_reinsert.py` historical mutation implementation | Dormant after PR #116. | `RETIRE` candidate | Evidence-based later retirement only. |
-| GitHub issue state from Premium/governance cycles | Substantive disposition was reconstructed, but PR #120 action authority is invalid due ordering failure. | `RECONCILE` | Finish governance recovery first; then create a new exact-base WP04 candidate and fresh assurance. |
+| GitHub issue state from Premium/governance cycles | Substantive disposition is reconstructed and recovery is complete; the retry still requires a new exact-head PASS and ordered action. | `RECONCILE` | Finish fresh WP04 candidate/assurance, then mutate issues only after exact-main verification. |
 | HF workflow path-ignore churn | Governance-only changes can trigger unnecessary but successful HF sync. | `RECONCILE` / low operational priority | Address only if repeated churn creates real cost. |
 
 ## Current validation hierarchy
@@ -161,4 +218,4 @@ The required consolidated deployed live-app retest after PR #108 and PR #111 **r
 
 ## Execution boundary
 
-This temporary ledger does not authorize implementation or issue mutation by itself. Consequential changes or administrative mutations require an exact candidate, full validation appropriate to the change, and fresh independent assurance **before** merge/action. At convergence closeout this file becomes historical/non-authoritative evidence.
+This temporary ledger does not authorize implementation or issue mutation by itself. Consequential changes or administrative mutations require an exact candidate, full validation appropriate to the change, and fresh independent assurance before merge/action. For the WP04 retry, exact-main post-merge verification is an additional explicit prerequisite before the reviewed issue mutations. At convergence closeout this file becomes historical/non-authoritative evidence.

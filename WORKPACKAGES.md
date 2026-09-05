@@ -111,7 +111,7 @@ Outcome:
 
 ---
 
-## WP-CONVERGENCE-04R — Governance sequencing recovery — CURRENT
+## WP-CONVERGENCE-04R — Governance sequencing recovery — COMPLETED
 
 Canonical title:
 
@@ -119,55 +119,36 @@ Canonical title:
 SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION_GOVERNANCE_RECOVERY
 ```
 
-Role: `implementation_operations`  
-Issue: #121  
-Branch: `wp/repository-convergence-issue-state-reconciliation-governance-recovery`  
-Base/current main at start: `fd69294c67a59bb150f5d4a637daad2607c14077`  
-Status: **IMPLEMENTATION IN PROGRESS**.
+Issue: #121 — closed  
+Assurance issue: #123 — PASS recorded; intentionally left open by its stop rule and now classified as completed historical administration for WP04 reconciliation  
+PR: #122 — merged  
+Reviewed frozen head: `8565af4e9f579b3a975c6122668f6511a9df627a`  
+Merge/main SHA: `14baceb97b274de6ef35c42ce48441c4e74c5f08`  
+Status: **PASS → MERGED → exact-main verified**.
 
-### Proven governance defect
+Outcome:
 
-PR #120 contained the intended WP04 issue-state reconciliation candidate, but the required release order was violated:
+- the premature PR #120 merge remains preserved in Git history rather than force-reset;
+- issue #74 was restored to OPEN before recovery assurance;
+- failed PR #120 candidate-specific active authority was removed while history was preserved;
+- accepted PR #118/D045 truth was retained;
+- #96 remained OPEN and its consolidated deployed live-app retest remained unproven;
+- no WP04 issue reconciliation was executed during recovery.
+
+Exact-main recovery evidence:
 
 ```text
-candidate 1c5ff96f5551e7d82c8ab9c01a80ffa9c97c195a
-→ merged prematurely as fd69294c67a59bb150f5d4a637daad2607c14077
-→ issue #74 closed prematurely
-→ fresh blind assurance later returned FAIL
+Tests run 33966351441 / job 101307057966
+1272 passed in 14.44s
+SUCCESS
+
+GitHub → Hugging Face sync run 33966351286 / job 101307057815
+SUCCESS on exact main 14baceb97b274de6ef35c42ce48441c4e74c5f08
 ```
-
-The assurance finding is about the missing **pre-merge/pre-mutation independent PASS**. Green PR/main CI and technically correct merge parents cannot retroactively satisfy that ordering control.
-
-### Recovery already applied outside the candidate
-
-Issue #74 has been reopened with explicit governance-recovery provenance. This only restores truthful pre-reconciliation administrative state; it does not rewrite the historical PR #73 assurance evidence or declare #74 substantively current work.
-
-### Smallest complete repository recovery
-
-- preserve Git history; no force reset/force push;
-- preserve accepted PR #118/D045 facts;
-- remove the prematurely adopted WP04-specific claim/test/handover from the active tree while Git retains provenance;
-- remove the failed PR #120 issue-disposition model as current executable authority;
-- record the sequencing FAIL and this recovery in current-control docs;
-- keep #96 open as the residual unproven live-app gate;
-- run full exact-head Tests;
-- require fresh blind independent PASS **before** merging this recovery candidate.
-
-### Acceptance
-
-- exactly one current executable workpackage is this recovery package;
-- issue #74 remains open until a later properly assured reconciliation acts on it;
-- no other historical issue is mutated by recovery;
-- D045 remains accepted/independently assured/merged;
-- #96 remains open and the consolidated deployed live-app retest remains unproven;
-- no product/runtime/UI behavior changes;
-- full exact-head `Tests` is green;
-- fresh blind `governance_release_assurance` PASS precedes recovery merge;
-- post-merge exact-main evidence is verified before any new WP04 candidate is created.
 
 ---
 
-## WP-CONVERGENCE-04 — GitHub issue/current-state reconciliation — BLOCKED ON 04R
+## WP-CONVERGENCE-04 — GitHub issue/current-state reconciliation — CURRENT
 
 Canonical title:
 
@@ -175,28 +156,84 @@ Canonical title:
 SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION
 ```
 
-Issue: #119 — open.
+Role: `implementation_operations`  
+Issue: #119 — open  
+Branch: `wp/repository-convergence-issue-state-reconciliation-v2`  
+Exact starting main/base: `14baceb97b274de6ef35c42ce48441c4e74c5f08`  
+Status: **IMPLEMENTATION IN PROGRESS — current open-issue inventory corrected before assurance**.
 
-The substantive reconstruction remains a useful finding, not current action authority:
+### Proven current-truth defect
+
+After the governed recovery, GitHub still exposes historical Premium/governance worker/candidate issues as open. The substantive evidence reconstruction from the failed PR #120 cycle remains useful evidence, but PR #120 has no pre-action assurance authority and cannot be reused as the release decision for this retry.
+
+A fresh current-issue inventory also shows recovery-assurance issue #123 still OPEN. That is factually consistent with #123's explicit PASS stop rule, but once recovery is complete it is no longer current executable work. Because WP04 exists specifically to reconcile current GitHub issue state, #123 belongs in the evidence-backed historical closure set rather than being left as stale open governance state.
+
+Current reviewed target:
 
 ```text
 KEEP OPEN
 #96 — residual Premium/App-Shell deployed live-verification gate
 
-POTENTIAL FUTURE CLOSE SET
+CLOSE AS COMPLETED / HISTORICAL-SUPERSEDED AFTER NEW WP04 PASS + MERGE + EXACT-MAIN VERIFICATION
 #74 #75 #76 #77
 #79 #81 #84 #86 #88 #89
 #98 #100 #105
 #106 #107 #109 #112
+#123
 ```
 
-A **new** WP04 candidate must be created from the post-recovery exact `main` after WP-CONVERGENCE-04R receives independent PASS, merges normally and is exact-main verified. PR #120 and its post-merge CI may remain provenance but may not be reused as the pre-action assurance decision for that future candidate.
+#96 must remain open. Its description may be reconciled to current truth only after the new WP04 candidate has independently PASSed, merged, and exact-main verification succeeds. Current technical truth remains:
 
-Safety boundary:
+- PR #104 V2 independently PASSed and merged, superseding the old PR #85 exact-head source/state conflict at the repaired implementation level;
+- PR #108 marker/compact-placeholder repair independently PASSed and merged;
+- PR #111 Dutch-address precision repair independently PASSed and merged;
+- the consolidated deployed live-app retest after both repairs **remains unproven**.
+
+### Action fence
+
+No target issue mutation is authorized during implementation or pre-verdict assurance.
+
+Required order for this retry:
+
+```text
+new exact WP04 candidate on 14baceb...
+→ full exact-head Tests
+→ fresh blind governance_release_assurance
+→ PASS
+→ guarded merge of the exact reviewed head
+→ exact-main Tests + GitHub→HF sync/path-ignore verification
+→ only then execute the reviewed issue disposition
+→ read back #74/#75/#76/#77/#79/#81/#84/#86/#88/#89/#98/#100/#105/#106/#107/#109/#112/#123 as closed
+→ read back #96 as open with current residual-gate wording
+→ close #119 only after administrative outcome confirmation
+```
+
+The active assurance-dispatch issue for the final frozen candidate is procedural current work, not part of this pre-verdict historical close set; it closes itself only after its own PASS/post-merge closeout procedure completes.
+
+This sequence deliberately makes post-merge exact-main confirmation a prerequisite for issue mutation, preventing recurrence of the PR #120 ordering defect.
+
+### Safety boundary
 
 - do not close #96 without actual consolidated post-repair live-app evidence;
-- do not close any of the 17 issues before a future fresh WP04 PASS;
-- issue closure never erases historical FAIL/INDETERMINATE/PASS provenance.
+- do not mutate any of the 18 target issue states before the new exact candidate receives fresh PASS and merges;
+- issue closure never erases historical FAIL/INDETERMINATE/PASS provenance;
+- no product/runtime/UI/recognizer/review/export/Scrub Key/reinsert semantics change;
+- no Stage-2 persistence/egress work;
+- no new permanent issue ledger or tracking framework.
+
+### Acceptance
+
+- recovery PR #122 is independently confirmed complete and is not treated as WP04 assurance;
+- exactly one current executable workpackage is WP-CONVERGENCE-04;
+- exact 18-close/1-keep disposition is contract-checked;
+- completed recovery-assurance issue #123 is classified as historical administration, not current release authority;
+- #96 remains excluded from the closure set and its consolidated live-app gate remains explicitly unproven;
+- full exact-head `Tests` is green;
+- a genuinely fresh blind `governance_release_assurance` PASSes the new candidate before merge;
+- guarded merge uses the exact reviewed head;
+- post-merge exact-main Tests and HF sync/path-ignore behavior are verified before any target issue mutation;
+- final issue-state readback matches the reviewed disposition;
+- no runtime/product semantics change.
 
 ---
 

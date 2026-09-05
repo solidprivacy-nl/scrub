@@ -264,11 +264,12 @@ Current mitigation/evidence:
 - bootstrap PR #114 PASSed/merged with exact-main Tests and HF sync green;
 - runtime startup authority was simplified by independently PASSed/merged PR #116;
 - validation authority was clarified by independently PASSed/merged PR #118 / D045;
-- PR #120 then violated the mandatory sequencing control by merging before its fresh independent assurance verdict;
-- the later fresh blind PR #120 assurance returned `FAIL` on that ordering defect;
-- issue #74, which had been prematurely closed during the unauthorized reconciliation action, has been reopened with explicit recovery provenance;
-- recovery issue #121 / WP-CONVERGENCE-04R is the sole current executable package;
-- no remaining historical issue reconciliation mutation is authorized until recovery PASSes/merges and a new WP04 candidate subsequently receives its own fresh pre-action PASS;
+- PR #120 violated the mandatory sequencing control by merging before its fresh independent assurance verdict and later received `FAIL` on that ordering defect;
+- governed recovery PR #122 then received fresh exact-head PASS before merge and merged as `14baceb97b274de6ef35c42ce48441c4e74c5f08`;
+- recovery exact-main Tests and GitHub→HF sync succeeded;
+- issue #74 is OPEN/reopened, #96 is OPEN and #119 is OPEN after recovery;
+- WP-CONVERGENCE-04 is now being rebuilt as a new candidate from recovery main rather than reusing PR #120 assurance;
+- the retry requires PASS → guarded merge → exact-main verification **before** any target issue mutation;
 - normal feature work remains paused until `SCRUB_REPOSITORY_CONVERGED`.
 
 Exit: one clean exact SHA whose source, tests, active issues and canonical docs materially agree **and whose consequential release lifecycle was executed in the required order**.
