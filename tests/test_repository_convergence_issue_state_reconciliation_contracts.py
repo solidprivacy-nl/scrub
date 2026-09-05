@@ -62,6 +62,7 @@ def test_fresh_wp04_disposition_is_exact_and_excludes_96_from_closure() -> None:
         107,
         109,
         112,
+        123,
     }
     assert kept.isdisjoint(closed)
 
@@ -96,7 +97,7 @@ def test_wp04_requires_pass_merge_and_exact_main_verification_before_issue_mutat
         "guarded merge",
         "exact-main tests",
         "only then",
-        "close the 17 reviewed issues",
+        "close the 18 reviewed issues",
         "readback",
     ]
     positions = [action_block.index(marker) for marker in ordered_markers]
@@ -115,6 +116,18 @@ def test_residual_live_gate_and_safety_boundaries_remain_binding() -> None:
     assert "mandatory human review" in combined
     assert "stage 2 — scrub private application — blocked" in combined
     assert "no new permanent issue ledger" in workpackages.lower()
+
+
+def test_recovery_assurance_issue_is_historical_not_a_residual_gate() -> None:
+    ledger = read("REPOSITORY_CONVERGENCE_DEBT_LEDGER.md")
+    workpackages = read("WORKPACKAGES.md")
+    combined = ledger + "\n" + workpackages
+
+    assert "#123" in combined
+    assert "recovery assurance" in combined.lower()
+    assert "completed" in combined.lower()
+    assert "#96" in combined
+    assert "residual" in combined.lower()
 
 
 def test_recovery_and_failed_pr120_are_provenance_not_reused_assurance() -> None:
