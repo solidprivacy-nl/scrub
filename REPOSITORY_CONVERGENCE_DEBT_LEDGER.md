@@ -98,7 +98,7 @@ This section freezes the proposed administrative action for independent assuranc
 #96
 ```
 
-Reason: PR #104 V2 independently PASSed and merged, technically superseding the old PR #85 exact-head PASS/FAIL conflict. PR #108 independently PASSed and merged the marker/compact-placeholder repair. PR #111 independently PASSed and merged the Dutch-address precision repair. **No evidence reconstructed in WP04 proves the required consolidated deployed live-app retest after both repairs.** #96 therefore remains the single current Premium/App-Shell live-verification gate.
+Reason: PR #104 V2 independently PASSed and merged, technically superseding the old PR #85 exact-head PASS/FAIL conflict. PR #108 independently PASSed and merged the marker/compact-placeholder repair. PR #111 independently PASSed and merged the Dutch-address precision repair. **The required consolidated deployed live-app retest after both repairs remains unproven; no evidence reconstructed in WP04 proves that retest occurred.** #96 therefore remains the single current Premium/App-Shell live-verification gate.
 
 ### Close after WP04 independent PASS
 
