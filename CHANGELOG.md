@@ -18,14 +18,72 @@ The archived file is historical provenance only; it must not be interpreted as a
 
 ---
 
+## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION
+
+Status: `RELEASE CANDIDATE`; independent assurance required before merge or issue-state mutation.  
+Role: `implementation_operations`  
+Issue: #119  
+PR: #120  
+Branch: `wp/repository-convergence-issue-state-reconciliation`  
+Base: `268d967db95d923a73a3979ffce2d0cab586e499`
+
+### Root cause
+
+The live GitHub issue set still exposes 18 historical/current Premium/governance tickets as open. Most describe candidate states that were later failed, superseded, independently PASSed, repaired or merged. This stale issue state competes with accepted `main` and the one-current-queue convergence model.
+
+### Evidence-derived target
+
+Repository/issue/PR reconstruction supports one narrow current end-state, subject to fresh independent assurance before any issue mutation:
+
+- keep #96 open as the single residual Premium/App-Shell deployed live-verification gate;
+- close #74/#75/#76/#77, #79/#81/#84/#86/#88/#89, #98/#100/#105, #106/#107/#109/#112 as completed or historical/superseded cycles with evidence-aware closeout comments;
+- update #96 so the old source-state PASS/FAIL conflict is no longer presented as current: PR #104 V2 independently PASSed and merged; PR #108 marker/compact-display repair independently PASSed and merged; PR #111 Dutch-address precision repair independently PASSed and merged;
+- preserve the only unproven requirement: one consolidated deployed live-app retest after both live-regression repairs.
+
+No product/runtime code is changed and no final live verification is claimed by this package.
+
+### Validation history
+
+Three red CI cycles were retained as evidence rather than hidden:
+
+```text
+33931758642 / 101211615952
+1 failed, 1271 passed in 8.98s
+→ test parser incorrectly included explanatory PR references in the keep-open issue set
+
+33931829877 / 101211823357
+1 failed, 1271 passed in 8.61s
+→ residual-gate wording differed between current-control files
+
+33931948111 / 101212181362
+1 failed, 1271 passed in 14.43s
+→ ledger expressed absence of proof but did not explicitly state the gate `remains unproven`
+```
+
+All three remediations stayed inside governance/current-truth contracts. The exact reviewed issue disposition remained unchanged and no application/runtime code was modified.
+
+Pre-final green evidence:
+
+```text
+head b33b7e765ede9b9d99586b82b846035143d3782a
+Tests run 33932036674
+job 101212447162
+1272 passed in 14.68s
+SUCCESS
+```
+
+The mandatory implementation handover is committed after this evidence; therefore a final exact-head full regression on the handover-complete candidate remains required before assurance dispatch.
+
+---
+
 ## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_VALIDATION_HIERARCHY_CLARIFICATION
 
-Status: `RELEASE CANDIDATE PREPARATION`; independent assurance required before merge.  
+Status: `PASS → MERGED → exact-main verified`.  
 Role: `implementation_operations`  
-Issue: #117  
-PR: #118  
-Branch: `wp/repository-convergence-validation-hierarchy`  
-Base: `7e4f5491fa6616f9f1b08649a4ed9dfd80de0d84`
+Issue: #117 — closed  
+PR: #118 — merged  
+Reviewed frozen head: `37de6859ed5b17f4767c463f6db73085ce0d4b56`  
+Merge/main SHA: `268d967db95d923a73a3979ffce2d0cab586e499`
 
 ### Root cause
 
@@ -45,13 +103,13 @@ Source reconstruction established that:
 - ROADMAP validation wording is aligned to D045;
 - the temporary convergence ledger classifies the evidence generations explicitly;
 - one narrow contract test validates actual workflow/source metadata plus the binding decision;
-- obsolete bootstrap tests are rebound to current semantic convergence invariants rather than stale wording/status placement;
-- no runner, corpus, recognizer, threshold, workflow implementation or product/runtime behavior is changed;
-- no diagnostic score is promoted to a merge/production gate.
+- obsolete bootstrap tests were rebound to current semantic convergence invariants rather than stale wording/status placement;
+- no runner, corpus, recognizer, threshold, workflow implementation or product/runtime behavior changed;
+- no diagnostic score was promoted to a merge/production gate.
 
-### Validation history before final freeze
+### Validation history
 
-Initial PR candidate run:
+Initial candidate:
 
 ```text
 Tests run 33930040668
@@ -59,14 +117,7 @@ job 101206596706
 4 failed, 1264 passed in 14.74s
 ```
 
-The failures were governance/test-contract drift only:
-
-- `WORKPACKAGES.md` no longer legitimately contains the bootstrap placeholder `WP-CONVERGENCE-02..N` because actual evidence-derived packages now exist;
-- the debt ledger no longer legitimately lists the live Docker startup invocation as unresolved after independently assured PR #116 removed it;
-- the temporary ledger no longer needs duplicate `no new framework` prose when D045 carries the canonical prohibition;
-- the new hierarchy test was incorrectly coupled to Markdown backtick formatting around `.github/workflows/tests.yml`.
-
-The remediation kept the underlying invariants and removed only stale placement/status/format assertions.
+The four failures were stale governance/format contracts: the historical `WP-CONVERGENCE-02..N` placeholder, already-resolved Docker startup debt, duplicate Evidence-Framework prose in the temporary ledger, and a Markdown-format-specific workflow-path assertion. The underlying invariants were retained.
 
 Corrected pre-final candidate:
 
@@ -78,7 +129,21 @@ job 101207097941
 SUCCESS
 ```
 
-The claim closeout, changelog update and mandatory implementation handover are committed after that pre-final green run. A final full regression on the resulting exact head is therefore still required before freeze and fresh blind `governance_release_assurance`.
+Final frozen head:
+
+```text
+37de6859ed5b17f4767c463f6db73085ce0d4b56
+```
+
+received fresh blind `PASS`.
+
+Post-merge evidence on exact main `268d967db95d923a73a3979ffce2d0cab586e499`:
+
+- `Tests` run `33930953130`: SUCCESS, `1268 passed in 11.68s`;
+- GitHub→Hugging Face sync run `33930953103`: SUCCESS;
+- HF remote acknowledged `7e4f549..268d967 HEAD -> main`;
+- app verification: N/A because no application/runtime/UI behavior changed;
+- issue #117 closed after PASS, guarded merge and post-merge evidence.
 
 ---
 
