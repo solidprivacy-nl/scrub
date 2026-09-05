@@ -18,38 +18,103 @@ The archived file is historical provenance only; it must not be interpreted as a
 
 ---
 
+## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION — FRESH RETRY
+
+Status: `IMPLEMENTATION IN PROGRESS`; new exact candidate and fresh independent assurance required before merge or target issue mutation.  
+Role: `implementation_operations`  
+Issue: #119 — open  
+Branch: `wp/repository-convergence-issue-state-reconciliation-v2`  
+Exact starting main/base: `14baceb97b274de6ef35c42ce48441c4e74c5f08`
+
+### Why this is a new candidate
+
+The first WP04 candidate in PR #120 was not rejected for a material content defect, but its merge/issue mutation happened before the required independent assurance verdict. That release-ordering failure invalidated PR #120 as governed action authority.
+
+Governed recovery PR #122 has now independently PASSed, merged, and been exact-main verified. The retry therefore starts from new exact main `14baceb...`; it may reuse evidence findings, but it may not reuse PR #120's candidate identity, merge, CI, or later FAIL as a pre-action PASS.
+
+### Current target
+
+Keep open:
+
+```text
+#96
+```
+
+Potential evidence-backed close set after the new candidate independently PASSes, merges, and exact-main verification succeeds:
+
+```text
+#74 #75 #76 #77
+#79 #81 #84 #86 #88 #89
+#98 #100 #105
+#106 #107 #109 #112
+```
+
+#96 remains excluded because the consolidated deployed live-app retest after PR #108 and PR #111 remains unproven.
+
+### Stricter action ordering
+
+The retry adds one explicit governance fence beyond the minimum contract:
+
+```text
+exact candidate
+→ full Tests
+→ fresh blind PASS
+→ guarded merge
+→ exact-main Tests + GitHub→HF verification
+→ only then target issue mutation
+→ issue-state readback
+```
+
+No product/runtime/UI/recognizer/review/export/Scrub Key/reinsert semantics are changed by this package.
+
+---
+
 ## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION_GOVERNANCE_RECOVERY
 
-Status: `IMPLEMENTATION IN PROGRESS`; fresh independent assurance required before recovery merge.  
+Status: `PASS → MERGED → exact-main verified`.  
 Role: `implementation_operations`  
-Issue: #121  
-Branch: `wp/repository-convergence-issue-state-reconciliation-governance-recovery`  
-Base/current main at start: `fd69294c67a59bb150f5d4a637daad2607c14077`
+Issue: #121 — closed  
+Assurance issue: #123 — exact-head PASS recorded  
+PR: #122 — merged  
+Reviewed frozen head: `8565af4e9f579b3a975c6122668f6511a9df627a`  
+Merge/main SHA: `14baceb97b274de6ef35c42ce48441c4e74c5f08`
 
 ### Trigger
 
 PR #120 was merged before the fresh blind `governance_release_assurance` verdict required by D042 and `SCRUB_RELEASE_ASSURANCE_CONTRACT_V1`. Issue #74 was then closed before that verdict. The later fresh assurance returned formal `FAIL` because independent assurance is a **pre-action ordering control** and cannot be supplied retroactively by green CI or a technically correct merge.
 
-### Recovery action
+### Recovery outcome
 
 - no force reset or history rewrite;
 - issue #74 reopened with explicit governance-recovery provenance;
 - accepted PR #118 / D045 truth preserved;
-- failed PR #120 candidate-specific claim/test/handover removed from the active recovery tree while Git retains full provenance;
-- WP-CONVERGENCE-04R made the sole current executable package;
-- the old WP04 issue-disposition remains evidence for a later retry, not current action authority;
-- #96 remains open and its consolidated deployed live-app retest remains unproven;
-- no product/runtime/UI behavior is changed.
+- failed PR #120 candidate-specific claim/test/handover removed from active recovery authority while Git retains provenance;
+- #96 remained open and its consolidated deployed live-app retest remained unproven;
+- no 17-issue reconciliation was performed;
+- fresh assurance PASS was recorded on exact PR #122 head before merge;
+- PR #122 was guarded-merged without head movement;
+- issue #121 was closed only after exact-main confirmation.
 
-A new issue-state reconciliation candidate may be created only after this recovery receives fresh independent PASS, merges normally and is exact-main verified.
+Exact-main recovery evidence:
+
+```text
+Tests run 33966351441 / job 101307057966
+1272 passed in 14.44s
+SUCCESS
+
+GitHub → Hugging Face sync run 33966351286 / job 101307057815
+SUCCESS
+```
+
+A new WP04 candidate must start from `14baceb...`; recovery assurance does not authorize WP04 issue mutation.
 
 ---
 
-## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION
+## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION — FAILED FIRST RELEASE SEQUENCE
 
-Status: `GOVERNANCE FAIL — PREMATURE MERGE; RECOVERY REQUIRED`.  
+Status: `GOVERNANCE FAIL — PREMATURE MERGE; RECOVERED BY WP-CONVERGENCE-04R`.  
 Role: `implementation_operations`  
-Issue: #119 — remains open  
+Issue: #119 — remains open for the fresh retry  
 PR: #120 — prematurely merged  
 Candidate base: `268d967db95d923a73a3979ffce2d0cab586e499`  
 Frozen candidate head: `1c5ff96f5551e7d82c8ab9c01a80ffa9c97c195a`  
@@ -97,7 +162,7 @@ job 101212872885
 SUCCESS
 ```
 
-The candidate itself was later found materially sound in content, but that does not cure release ordering.
+The candidate content was later found materially sound, but that does not cure release ordering.
 
 ### Governance failure
 
@@ -122,7 +187,7 @@ exact candidate
 
 Post-merge Tests and HF sync on `fd69294...` were technically green, but are not a substitute for the missing pre-action assurance gate.
 
-Only #74 had been mutated when the FAIL stopped further reconciliation. #74 has since been reopened by WP-CONVERGENCE-04R. #96 remains open. The remaining 16 intended closure issues were never closed by this failed action sequence.
+Only #74 had been mutated when the FAIL stopped further reconciliation. #74 was then reopened by WP-CONVERGENCE-04R. #96 remained open. The remaining 16 intended closure issues were never closed by the failed action sequence.
 
 ---
 
