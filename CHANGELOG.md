@@ -20,9 +20,10 @@ The archived file is historical provenance only; it must not be interpreted as a
 
 ## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION — FRESH RETRY
 
-Status: `IMPLEMENTATION IN PROGRESS`; new exact candidate and fresh independent assurance required before merge or target issue mutation.  
+Status: `IMPLEMENTATION IN PROGRESS`; candidate reopened before assurance after live open-issue inventory exposed completed recovery-assurance issue #123 as stale OPEN administration.  
 Role: `implementation_operations`  
 Issue: #119 — open  
+PR: #124 — open/draft  
 Branch: `wp/repository-convergence-issue-state-reconciliation-v2`  
 Exact starting main/base: `14baceb97b274de6ef35c42ce48441c4e74c5f08`
 
@@ -32,7 +33,11 @@ The first WP04 candidate in PR #120 was not rejected for a material content defe
 
 Governed recovery PR #122 has now independently PASSed, merged, and been exact-main verified. The retry therefore starts from new exact main `14baceb...`; it may reuse evidence findings, but it may not reuse PR #120's candidate identity, merge, CI, or later FAIL as a pre-action PASS.
 
-### Current target
+### Current-truth correction before assurance
+
+The first frozen retry head `06198ec05907c32b41ecc2876d8ca1fb0d3554eb` had a green full suite (`1278 passed in 15.12s`) and issue #125 had been created as the fresh assurance dispatch. Before any independent verdict was recorded, implementation re-read the actual open issue inventory and found recovery-assurance issue #123 still OPEN.
+
+That open state was truthful under #123's own PASS procedure, which explicitly required closing #121 and then stopping. But once recovery is complete, #123 is no longer current work. Because WP04's business objective is current GitHub issue-state reconciliation, leaving #123 open would make the candidate incomplete. The candidate was therefore intentionally unfrozen before assurance and the disposition changed from 17-close/1-keep to 18-close/1-keep.
 
 Keep open:
 
@@ -40,20 +45,23 @@ Keep open:
 #96
 ```
 
-Potential evidence-backed close set after the new candidate independently PASSes, merges, and exact-main verification succeeds:
+Potential evidence-backed close set after the corrected candidate independently PASSes, merges, and exact-main verification succeeds:
 
 ```text
 #74 #75 #76 #77
 #79 #81 #84 #86 #88 #89
 #98 #100 #105
 #106 #107 #109 #112
+#123
 ```
+
+#123 is completed recovery-assurance administration; closing it later preserves its PASS provenance and does not make it WP04 assurance authority.
 
 #96 remains excluded because the consolidated deployed live-app retest after PR #108 and PR #111 remains unproven.
 
 ### Stricter action ordering
 
-The retry adds one explicit governance fence beyond the minimum contract:
+The retry keeps the explicit governance fence:
 
 ```text
 exact candidate
@@ -74,7 +82,7 @@ No product/runtime/UI/recognizer/review/export/Scrub Key/reinsert semantics are 
 Status: `PASS → MERGED → exact-main verified`.  
 Role: `implementation_operations`  
 Issue: #121 — closed  
-Assurance issue: #123 — exact-head PASS recorded  
+Assurance issue: #123 — exact-head PASS recorded; intentionally left open by its explicit PASS stop rule  
 PR: #122 — merged  
 Reviewed frozen head: `8565af4e9f579b3a975c6122668f6511a9df627a`  
 Merge/main SHA: `14baceb97b274de6ef35c42ce48441c4e74c5f08`
@@ -90,7 +98,7 @@ PR #120 was merged before the fresh blind `governance_release_assurance` verdict
 - accepted PR #118 / D045 truth preserved;
 - failed PR #120 candidate-specific claim/test/handover removed from active recovery authority while Git retains provenance;
 - #96 remained open and its consolidated deployed live-app retest remained unproven;
-- no 17-issue reconciliation was performed;
+- no WP04 issue reconciliation was performed;
 - fresh assurance PASS was recorded on exact PR #122 head before merge;
 - PR #122 was guarded-merged without head movement;
 - issue #121 was closed only after exact-main confirmation.
