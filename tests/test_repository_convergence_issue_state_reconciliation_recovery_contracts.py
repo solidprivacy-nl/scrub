@@ -42,11 +42,12 @@ def test_recovery_pass_does_not_become_wp04_action_authority() -> None:
     claim = read(
         "workpackage_claims/"
         "SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION.md"
-    )
+    ).lower()
 
     assert "PR #122 recovery PASS is not WP04 assurance" in ledger
-    assert "recovery PR #122 PASS" in claim
-    assert "not reused as release authority" in claim
+    assert "recovery pr #122 pass" in claim
+    assert "reused as release authority" in claim
+    assert "new candidate must earn its own exact-head" in claim
 
 
 def test_valid_pre_wp04_truth_and_residual_live_gate_are_preserved() -> None:
