@@ -46,7 +46,7 @@ def test_workpackages_contains_one_current_queue_not_historical_overrides() -> N
     assert "Current execution status override" not in workpackages
 
     current_wp_headings = re.findall(
-        r"^## (WP-CONVERGENCE-\d+ .+ — CURRENT)$",
+        r"^## (WP-CONVERGENCE-\d+[A-Z]? .+ — CURRENT)$",
         workpackages,
         flags=re.MULTILINE,
     )
