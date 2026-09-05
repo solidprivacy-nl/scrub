@@ -254,22 +254,24 @@ Impact: `high`
 Risk:
 
 ```text
-Workers follow stale ROADMAP/WORKPACKAGES/issues or duplicate already-built functionality because repository documentation and actual main no longer describe one coherent current truth.
+Workers follow stale ROADMAP/WORKPACKAGES/issues or invalid release state because repository documentation, issue state and actual main no longer describe one coherent governed truth.
 ```
 
-Current mitigation:
+Current mitigation/evidence:
 
 - Repository Convergence is active;
 - exact pre-convergence SHA is preserved;
 - bootstrap PR #114 PASSed/merged with exact-main Tests and HF sync green;
 - runtime startup authority was simplified by independently PASSed/merged PR #116;
 - validation authority was clarified by independently PASSed/merged PR #118 / D045;
-- one current roadmap/workpackage model is in place;
-- temporary debt ledger is explicitly non-authoritative after convergence;
-- WP-CONVERGENCE-04 is reconciling stale GitHub issue state against actual merged/assured evidence;
+- PR #120 then violated the mandatory sequencing control by merging before its fresh independent assurance verdict;
+- the later fresh blind PR #120 assurance returned `FAIL` on that ordering defect;
+- issue #74, which had been prematurely closed during the unauthorized reconciliation action, has been reopened with explicit recovery provenance;
+- recovery issue #121 / WP-CONVERGENCE-04R is the sole current executable package;
+- no remaining historical issue reconciliation mutation is authorized until recovery PASSes/merges and a new WP04 candidate subsequently receives its own fresh pre-action PASS;
 - normal feature work remains paused until `SCRUB_REPOSITORY_CONVERGED`.
 
-Exit: one clean exact SHA whose source, tests, active issues and canonical docs materially agree.
+Exit: one clean exact SHA whose source, tests, active issues and canonical docs materially agree **and whose consequential release lifecycle was executed in the required order**.
 
 ---
 
