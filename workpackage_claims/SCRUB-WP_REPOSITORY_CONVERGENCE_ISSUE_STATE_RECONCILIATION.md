@@ -1,8 +1,9 @@
 # Workpackage claim — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION
 
-Status: `IMPLEMENTATION_IN_PROGRESS — FRESH RETRY`  
+Status: `RELEASE_CANDIDATE_READY — final handover-complete exact-head Tests still required`  
 Role: `implementation_operations`  
 Issue: #119  
+PR: #124  
 Branch: `wp/repository-convergence-issue-state-reconciliation-v2`  
 Exact starting main/base: `14baceb97b274de6ef35c42ce48441c4e74c5f08`  
 Started: 2026-09-05 Europe/Amsterdam
@@ -87,6 +88,44 @@ Not authorized:
 - claiming the consolidated deployed live-app retest occurred;
 - creating a new permanent issue ledger/framework.
 
+## Validation history
+
+The fresh retry deliberately retained two red contract-hardening cycles instead of hiding them.
+
+### Red cycle 1 — wording-coupled policy assertions
+
+```text
+head: 4f9e85d87a4040b78b64f6689e23bfb8a67d179d
+Tests run: 33968392839
+job: 101312453646
+result: 3 failed, 1275 passed in 14.22s
+```
+
+The three failures were in the newly added governance tests. They required exact prose fragments even though the candidate already encoded the intended sequencing and non-reuse semantics. No product/runtime code or issue disposition was changed. The tests were rebound to semantic invariants and explicit action ordering.
+
+### Red cycle 2 — action parser used an abstract label absent from the fenced action block
+
+```text
+head: b654a287dd38d46eab6b974766cb68bdb1e031c8
+Tests run: 33968545987
+job: 101312859816
+result: 1 failed, 1277 passed in 15.25s
+```
+
+The remaining test looked for the abstract phrase `issue mutation` inside the fenced action-order block, while the block deliberately names the concrete action `close the 17 reviewed issues`. The parser was tightened to the concrete action. The governance fence itself was not weakened.
+
+### Pre-handover green
+
+```text
+head: bd44baaebd5a800fe38151495d7591db4eab78ac
+Tests run: 33968625302
+job: 101313068109
+synthetic merge candidate: c1d9df47f91bc08eb2559d606e25d528fcada162
+result: SUCCESS — 1278 passed in 14.88s
+```
+
+The mandatory implementation handover is committed after this pre-handover green run. Therefore one final complete `Tests` run on the handover-complete exact PR head remains mandatory before assurance dispatch. That final head must not move after the run.
+
 ## Acceptance
 
 1. Exact base is `14baceb97b274de6ef35c42ce48441c4e74c5f08`.
@@ -96,7 +135,7 @@ Not authorized:
 5. #96 is excluded from closures and `remains unproven` is explicit.
 6. Stage 2 stays blocked and mandatory human review remains preserved.
 7. No runtime/product path is changed.
-8. Full exact-head `Tests` is green.
+8. Full final exact-head `Tests` is green.
 9. Fresh blind assurance PASS precedes merge.
 10. Exact-main Tests/HF evidence is confirmed after guarded merge and before target issue mutation.
 11. Final issue readback confirms 17 closures and #96 OPEN/current residual wording.
