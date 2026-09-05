@@ -1,8 +1,9 @@
 # Workpackage claim — SCRUB-WP_REPOSITORY_CONVERGENCE_LIVE_APP_GATE_ALIGNMENT
 
-Status: `IMPLEMENTATION_IN_PROGRESS`  
+Status: `RELEASE_CANDIDATE_READY — mandatory final handover-complete exact-head Tests still required`  
 Role: `implementation_operations`  
 Parent live gate: #96  
+PR: #127  
 Branch: `wp/repository-convergence-live-app-gate-alignment`  
 Exact starting main/base: `2d4ab0446c20f08ad07576af326ab4b0df0a2af7`  
 Started: 2026-09-06 Europe/Amsterdam
@@ -63,6 +64,31 @@ Explicit exclusions:
 - R1 false negatives, R2 Scrub Key and R10 Zorg remain critical;
 - synthetic or deployed spot verification does not prove perfect anonymisation, perfect recall or production safety;
 - Hugging Face remains an application-validation surface, not confidential-production infrastructure assurance.
+
+## Validation history
+
+### Red cycle — preserved bootstrap marker
+
+```text
+head: f7be406bc2b1288e75cd51c809be53c6c8b382e5
+Tests run: 33998778220
+job: 101393810800
+result: 1 failed, 1281 passed in 10.33s
+```
+
+The only failure was the existing bootstrap contract requiring the exact ledger marker `Runtime startup debt already resolved`. The rewritten ledger preserved the same substantive PR #116 truth but had renamed that heading. The implementation restored the existing marker in the temporary ledger instead of weakening the bootstrap test.
+
+### Pre-handover green
+
+```text
+head: 566ad9a84ea8fcebb6def343114b5a47c344e5a6
+Tests run: 33998886890
+job: 101394093622
+synthetic merge candidate: 5c94831274511607923eb68b1b541b13e4dd9159
+result: SUCCESS — 1282 passed in 14.82s
+```
+
+The mandatory implementation handover is committed after this green run. Therefore one final complete `Tests` run on the handover-complete exact PR head remains mandatory before assurance dispatch. The final reviewed head must not move after that run.
 
 ## Acceptance
 
