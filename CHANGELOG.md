@@ -18,38 +18,55 @@ The archived file is historical provenance only; it must not be interpreted as a
 
 ---
 
+## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION_GOVERNANCE_RECOVERY
+
+Status: `IMPLEMENTATION IN PROGRESS`; fresh independent assurance required before recovery merge.  
+Role: `implementation_operations`  
+Issue: #121  
+Branch: `wp/repository-convergence-issue-state-reconciliation-governance-recovery`  
+Base/current main at start: `fd69294c67a59bb150f5d4a637daad2607c14077`
+
+### Trigger
+
+PR #120 was merged before the fresh blind `governance_release_assurance` verdict required by D042 and `SCRUB_RELEASE_ASSURANCE_CONTRACT_V1`. Issue #74 was then closed before that verdict. The later fresh assurance returned formal `FAIL` because independent assurance is a **pre-action ordering control** and cannot be supplied retroactively by green CI or a technically correct merge.
+
+### Recovery action
+
+- no force reset or history rewrite;
+- issue #74 reopened with explicit governance-recovery provenance;
+- accepted PR #118 / D045 truth preserved;
+- failed PR #120 candidate-specific claim/test/handover removed from the active recovery tree while Git retains full provenance;
+- WP-CONVERGENCE-04R made the sole current executable package;
+- the old WP04 issue-disposition remains evidence for a later retry, not current action authority;
+- #96 remains open and its consolidated deployed live-app retest remains unproven;
+- no product/runtime/UI behavior is changed.
+
+A new issue-state reconciliation candidate may be created only after this recovery receives fresh independent PASS, merges normally and is exact-main verified.
+
+---
+
 ## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION
 
-Status: `RELEASE CANDIDATE`; independent assurance required before merge or issue-state mutation.  
+Status: `GOVERNANCE FAIL — PREMATURE MERGE; RECOVERY REQUIRED`.  
 Role: `implementation_operations`  
-Issue: #119  
-PR: #120  
-Branch: `wp/repository-convergence-issue-state-reconciliation`  
-Base: `268d967db95d923a73a3979ffce2d0cab586e499`
+Issue: #119 — remains open  
+PR: #120 — prematurely merged  
+Candidate base: `268d967db95d923a73a3979ffce2d0cab586e499`  
+Frozen candidate head: `1c5ff96f5551e7d82c8ab9c01a80ffa9c97c195a`  
+Premature merge/main SHA: `fd69294c67a59bb150f5d4a637daad2607c14077`
 
-### Root cause
+### Root cause addressed by the candidate
 
-The live GitHub issue set still exposes 18 historical/current Premium/governance tickets as open. Most describe candidate states that were later failed, superseded, independently PASSed, repaired or merged. This stale issue state competes with accepted `main` and the one-current-queue convergence model.
+The live GitHub issue set exposed 18 historical/current Premium/governance tickets as open. Most describe candidate states later failed, superseded, independently PASSed, repaired or merged. The substantive reconstruction supported keeping #96 open and treating 17 others as future evidence-backed closure candidates.
 
-### Evidence-derived target
+### Candidate validation history
 
-Repository/issue/PR reconstruction supports one narrow current end-state, subject to fresh independent assurance before any issue mutation:
-
-- keep #96 open as the single residual Premium/App-Shell deployed live-verification gate;
-- close #74/#75/#76/#77, #79/#81/#84/#86/#88/#89, #98/#100/#105, #106/#107/#109/#112 as completed or historical/superseded cycles with evidence-aware closeout comments;
-- update #96 so the old source-state PASS/FAIL conflict is no longer presented as current: PR #104 V2 independently PASSed and merged; PR #108 marker/compact-display repair independently PASSed and merged; PR #111 Dutch-address precision repair independently PASSed and merged;
-- preserve the only unproven requirement: one consolidated deployed live-app retest after both live-regression repairs.
-
-No product/runtime code is changed and no final live verification is claimed by this package.
-
-### Validation history
-
-Three red CI cycles were retained as evidence rather than hidden:
+Three red CI cycles were retained as evidence:
 
 ```text
 33931758642 / 101211615952
 1 failed, 1271 passed in 8.98s
-→ test parser incorrectly included explanatory PR references in the keep-open issue set
+→ parser incorrectly included explanatory PR references in the keep-open set
 
 33931829877 / 101211823357
 1 failed, 1271 passed in 8.61s
@@ -57,12 +74,10 @@ Three red CI cycles were retained as evidence rather than hidden:
 
 33931948111 / 101212181362
 1 failed, 1271 passed in 14.43s
-→ ledger expressed absence of proof but did not explicitly state the gate `remains unproven`
+→ absence of live-retest proof was not yet encoded explicitly as `remains unproven`
 ```
 
-All three remediations stayed inside governance/current-truth contracts. The exact reviewed issue disposition remained unchanged and no application/runtime code was modified.
-
-Pre-final green evidence:
+Pre-final green:
 
 ```text
 head b33b7e765ede9b9d99586b82b846035143d3782a
@@ -72,7 +87,42 @@ job 101212447162
 SUCCESS
 ```
 
-The mandatory implementation handover is committed after this evidence; therefore a final exact-head full regression on the handover-complete candidate remains required before assurance dispatch.
+Final frozen candidate:
+
+```text
+head 1c5ff96f5551e7d82c8ab9c01a80ffa9c97c195a
+Tests run 33932180435
+job 101212872885
+1272 passed in 16.24s
+SUCCESS
+```
+
+The candidate itself was later found materially sound in content, but that does not cure release ordering.
+
+### Governance failure
+
+Required order:
+
+```text
+exact candidate
+→ fresh blind independent assurance
+→ PASS
+→ merge / issue mutation
+```
+
+Actual order:
+
+```text
+exact candidate
+→ premature merge fd69294c67a59bb150f5d4a637daad2607c14077
+→ issue #74 prematurely closed
+→ fresh blind assurance
+→ FAIL
+```
+
+Post-merge Tests and HF sync on `fd69294...` were technically green, but are not a substitute for the missing pre-action assurance gate.
+
+Only #74 had been mutated when the FAIL stopped further reconciliation. #74 has since been reopened by WP-CONVERGENCE-04R. #96 remains open. The remaining 16 intended closure issues were never closed by this failed action sequence.
 
 ---
 
@@ -129,13 +179,7 @@ job 101207097941
 SUCCESS
 ```
 
-Final frozen head:
-
-```text
-37de6859ed5b17f4767c463f6db73085ce0d4b56
-```
-
-received fresh blind `PASS`.
+Final frozen head `37de6859ed5b17f4767c463f6db73085ce0d4b56` received fresh blind `PASS`.
 
 Post-merge evidence on exact main `268d967db95d923a73a3979ffce2d0cab586e499`:
 
@@ -164,36 +208,19 @@ Docker still executed `fix_streamlit_nested_expanders.py` and `fix_streamlit_pdf
 
 - Docker now launches `presidio_streamlit.py` directly through Streamlit;
 - existing port/address/XSRF/CORS flags are unchanged;
-- the historical compatibility scripts remain in the repository for a later evidence-based retirement decision;
+- historical compatibility scripts remain for a later evidence-based retirement decision;
 - four Docker-coupled tests were rebound from obsolete startup ordering to current direct-source/no-runtime-mutation invariants;
-- no `presidio_streamlit.py`, recognizer, review, export, Scrub Key, reinsert, persistence, external-AI or dependency behavior changed.
+- no product/runtime semantics beyond obsolete startup invocation changed.
 
-### Validation history
-
-The implementation exposed two useful CI cycles before the final candidate:
-
-```text
-3 failed, 1261 passed
-2 failed, 1262 passed
-```
-
-The first identified historical Docker-order assertions. The second correctly detected that a still-binding shared-surface sequencing rule had been dropped during WORKPACKAGES condensation; that rule was restored rather than weakening the tests.
-
-Final reviewed head:
-
-```text
-cbaaa1e4560670116c41ca788786d80d670dcf34
-```
-
-received fresh blind `PASS`.
+Final reviewed head `cbaaa1e4560670116c41ca788786d80d670dcf34` received fresh blind `PASS`.
 
 Post-merge evidence on exact main `7e4f5491fa6616f9f1b08649a4ed9dfd80de0d84`:
 
 - `Tests` run `33929193443`: SUCCESS, `1264 passed in 15.15s`;
 - GitHub→Hugging Face sync run `33929193466`: SUCCESS;
 - HF remote confirmed `255cd61..7e4f549 HEAD -> main`;
-- public Space health was `Running` and serving the Streamlit app;
-- functional app retest: N/A because the removed startup scripts were semantically obsolete and no product/UI behavior changed.
+- public Space health was Running/serving;
+- functional app retest: N/A because no product/UI behavior changed.
 
 ---
 
@@ -217,17 +244,7 @@ Merge/main SHA: `255cd619d5cf6eab32f9383940eaa4af362cb68c`
 - temporary capability-level convergence ledger established;
 - existing product/evidence architecture preserved rather than rebuilt.
 
-### Assurance history
-
-Two earlier frozen heads received independent `FAIL` verdicts: first for eight red governance/document-location tests, then for stale present-tense debt-ledger rows. Both were remediated without runtime/product changes.
-
-Final reviewed head:
-
-```text
-8028643ed2f11b9f43bf32854e2d4cf86fb387f0
-```
-
-received fresh blind `PASS`.
+Two earlier frozen heads received independent `FAIL` verdicts and were remediated without runtime/product changes. Final reviewed head `8028643ed2f11b9f43bf32854e2d4cf86fb387f0` received fresh blind `PASS`.
 
 Post-merge evidence on exact main `255cd619d5cf6eab32f9383940eaa4af362cb68c`:
 
