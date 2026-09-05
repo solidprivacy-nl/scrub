@@ -120,7 +120,7 @@ SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION_GOVERNANCE_RECOVERY
 ```
 
 Issue: #121 — closed  
-Assurance issue: #123 — PASS recorded, left open per its explicit stop rule  
+Assurance issue: #123 — PASS recorded; intentionally left open by its stop rule and now classified as completed historical administration for WP04 reconciliation  
 PR: #122 — merged  
 Reviewed frozen head: `8565af4e9f579b3a975c6122668f6511a9df627a`  
 Merge/main SHA: `14baceb97b274de6ef35c42ce48441c4e74c5f08`  
@@ -160,11 +160,13 @@ Role: `implementation_operations`
 Issue: #119 — open  
 Branch: `wp/repository-convergence-issue-state-reconciliation-v2`  
 Exact starting main/base: `14baceb97b274de6ef35c42ce48441c4e74c5f08`  
-Status: **IMPLEMENTATION IN PROGRESS**.
+Status: **IMPLEMENTATION IN PROGRESS — current open-issue inventory corrected before assurance**.
 
 ### Proven current-truth defect
 
 After the governed recovery, GitHub still exposes historical Premium/governance worker/candidate issues as open. The substantive evidence reconstruction from the failed PR #120 cycle remains useful evidence, but PR #120 has no pre-action assurance authority and cannot be reused as the release decision for this retry.
+
+A fresh current-issue inventory also shows recovery-assurance issue #123 still OPEN. That is factually consistent with #123's explicit PASS stop rule, but once recovery is complete it is no longer current executable work. Because WP04 exists specifically to reconcile current GitHub issue state, #123 belongs in the evidence-backed historical closure set rather than being left as stale open governance state.
 
 Current reviewed target:
 
@@ -177,6 +179,7 @@ CLOSE AS COMPLETED / HISTORICAL-SUPERSEDED AFTER NEW WP04 PASS + MERGE + EXACT-M
 #79 #81 #84 #86 #88 #89
 #98 #100 #105
 #106 #107 #109 #112
+#123
 ```
 
 #96 must remain open. Its description may be reconciled to current truth only after the new WP04 candidate has independently PASSed, merged, and exact-main verification succeeds. Current technical truth remains:
@@ -200,17 +203,19 @@ new exact WP04 candidate on 14baceb...
 → guarded merge of the exact reviewed head
 → exact-main Tests + GitHub→HF sync/path-ignore verification
 → only then execute the reviewed issue disposition
-→ read back #74/#75/#76/#77/#79/#81/#84/#86/#88/#89/#98/#100/#105/#106/#107/#109/#112 as closed
+→ read back #74/#75/#76/#77/#79/#81/#84/#86/#88/#89/#98/#100/#105/#106/#107/#109/#112/#123 as closed
 → read back #96 as open with current residual-gate wording
 → close #119 only after administrative outcome confirmation
 ```
+
+The active assurance-dispatch issue for the final frozen candidate is procedural current work, not part of this pre-verdict historical close set; it closes itself only after its own PASS/post-merge closeout procedure completes.
 
 This sequence deliberately makes post-merge exact-main confirmation a prerequisite for issue mutation, preventing recurrence of the PR #120 ordering defect.
 
 ### Safety boundary
 
 - do not close #96 without actual consolidated post-repair live-app evidence;
-- do not mutate any of the 17 target issue states before the new exact candidate receives fresh PASS and merges;
+- do not mutate any of the 18 target issue states before the new exact candidate receives fresh PASS and merges;
 - issue closure never erases historical FAIL/INDETERMINATE/PASS provenance;
 - no product/runtime/UI/recognizer/review/export/Scrub Key/reinsert semantics change;
 - no Stage-2 persistence/egress work;
@@ -220,7 +225,8 @@ This sequence deliberately makes post-merge exact-main confirmation a prerequisi
 
 - recovery PR #122 is independently confirmed complete and is not treated as WP04 assurance;
 - exactly one current executable workpackage is WP-CONVERGENCE-04;
-- exact 17-close/1-keep disposition is contract-checked;
+- exact 18-close/1-keep disposition is contract-checked;
+- completed recovery-assurance issue #123 is classified as historical administration, not current release authority;
 - #96 remains excluded from the closure set and its consolidated live-app gate remains explicitly unproven;
 - full exact-head `Tests` is green;
 - a genuinely fresh blind `governance_release_assurance` PASSes the new candidate before merge;
