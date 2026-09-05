@@ -33,7 +33,7 @@ Accepted current truth includes:
 - Hugging Face as synthetic/approved application-validation surface, not confidential-production infrastructure assurance;
 - Local/offline work deferred as recoverable variant-specific history.
 
-### Runtime startup authority — resolved
+## Runtime startup debt already resolved
 
 PR #116 received fresh blind PASS and merged as `7e4f5491fa6616f9f1b08649a4ed9dfd80de0d84`.
 
