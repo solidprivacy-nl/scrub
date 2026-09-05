@@ -1,8 +1,9 @@
 # Workpackage claim — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION_GOVERNANCE_RECOVERY
 
-Status: `IMPLEMENTATION_IN_PROGRESS`  
+Status: `IMPLEMENTATION_IN_PROGRESS — PRE_FINAL_GREEN`  
 Role: `implementation_operations`  
 Issue: #121  
+PR: #122  
 Branch: `wp/repository-convergence-issue-state-reconciliation-governance-recovery`  
 Starting main: `fd69294c67a59bb150f5d4a637daad2607c14077`  
 Started: 2026-09-05 Europe/Amsterdam
@@ -48,8 +49,9 @@ Authorized:
 
 - update `WORKPACKAGES.md`, `CHANGELOG.md`, `RISK_REGISTER.md` and the temporary convergence debt ledger to truthful recovery state;
 - preserve the accepted D045 status in `DECISION_LOG.md` unchanged;
-- remove the prematurally adopted WP04-specific test/claim/handover from the active tree;
+- remove the prematurely adopted WP04-specific test/claim/handover from the active tree;
 - minimally generalize the existing one-current-workpackage contract to accept the explicit recovery suffix `04R` while retaining the exactly-one invariant;
+- add a narrow recovery contract for the sequencing/current-authority invariants;
 - add this recovery claim and mandatory recovery handover;
 - open a draft recovery PR and run full exact-head Tests.
 
@@ -63,6 +65,26 @@ Not authorized:
 - start Stage 2;
 - merge the recovery candidate before fresh blind independent PASS.
 
+## Pre-final validation
+
+PR #122 pre-handover head:
+
+```text
+dd73077e1fadba4bae876335b30ac1bf99190b6b
+```
+
+Full release regression evidence:
+
+```text
+Tests run 33965249347
+job 101304111851
+synthetic merge candidate 8409ba5dcec69b7b8382948e515dd39ba007d6e4
+1272 passed in 15.67s
+SUCCESS
+```
+
+This is pre-final evidence only. The mandatory handover is committed after this run, and a new full Tests run on that handover-complete exact SHA is required before assurance dispatch.
+
 ## Acceptance
 
 1. Issue #74 is open again with truthful recovery provenance.
@@ -71,6 +93,6 @@ Not authorized:
 4. PR #118/D045 remains represented as independently PASSed, merged and exact-main verified.
 5. The failed PR #120 issue-disposition model is no longer executable current authority.
 6. #96 remains the explicit residual unproven deployed live-app gate.
-7. Full exact-head `Tests` is green.
+7. Full final exact-head `Tests` is green.
 8. Fresh blind `governance_release_assurance` PASSes the recovery candidate before any recovery merge.
 9. Only after guarded recovery merge and exact-main verification may a new WP04 issue-reconciliation candidate be created from the new main.
