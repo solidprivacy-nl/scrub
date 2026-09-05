@@ -87,7 +87,20 @@ def test_wp04_requires_pass_merge_and_exact_main_verification_before_issue_mutat
         assert fragment.lower() in combined.lower()
 
     assert "zero target issue mutations" in claim
-    assert "before PASS + merge + exact-main verification" in claim
+
+    action_block = claim.split("Required action order:", 1)[1].split("```", 2)[1].lower()
+    ordered_markers = [
+        "exact candidate",
+        "full tests",
+        "fresh blind pass",
+        "guarded merge",
+        "exact-main tests",
+        "only then",
+        "issue mutation",
+        "readback",
+    ]
+    positions = [action_block.index(marker) for marker in ordered_markers]
+    assert positions == sorted(positions)
 
 
 def test_residual_live_gate_and_safety_boundaries_remain_binding() -> None:
@@ -111,11 +124,19 @@ def test_recovery_and_failed_pr120_are_provenance_not_reused_assurance() -> None
         "workpackage_claims/"
         "SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION.md"
     )
+    claim_lower = claim.lower()
 
     assert "1c5ff96f5551e7d82c8ab9c01a80ffa9c97c195a" in changelog
     assert "14baceb97b274de6ef35c42ce48441c4e74c5f08" in ledger
     assert "not WP04 assurance" in ledger
-    assert "not reused as release authority" in claim
+    assert "reused as release authority" in claim_lower
+    for historical_authority in [
+        "pr #120 candidate identity",
+        "pr #120 merge",
+        "pr #120 ci",
+        "recovery pr #122 pass",
+    ]:
+        assert historical_authority in claim_lower
 
 
 def test_candidate_scope_claim_explicitly_excludes_product_runtime_changes() -> None:
