@@ -1,98 +1,90 @@
 # Workpackage claim — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION_GOVERNANCE_RECOVERY
 
-Status: `IMPLEMENTATION_IN_PROGRESS — PRE_FINAL_GREEN`  
-Role: `implementation_operations`  
-Issue: #121  
-PR: #122  
+Status: `PASS → MERGED → exact-main verified`  
+Implementation role: `implementation_operations`  
+Independent assurance role: `governance_release_assurance`  
+Issue: #121 — closed/completed  
+Assurance issue: #123 — exact-head PASS recorded; left open per its explicit stop rule  
+PR: #122 — merged  
 Branch: `wp/repository-convergence-issue-state-reconciliation-governance-recovery`  
 Starting main: `fd69294c67a59bb150f5d4a637daad2607c14077`  
-Started: 2026-09-05 Europe/Amsterdam
+Reviewed frozen head: `8565af4e9f579b3a975c6122668f6511a9df627a`  
+Merge/main: `14baceb97b274de6ef35c42ce48441c4e74c5f08`
 
 ## Trigger
 
 Fresh blind `governance_release_assurance` for PR #120 returned `FAIL` because PR #120 had already merged and issue #74 had already been closed before the required independent pre-action verdict.
 
-This is a release-ordering/governance defect. The reviewed eight-file PR #120 content was not found materially defective.
+This was a release-ordering/governance defect. The reviewed PR #120 content was not found materially defective.
 
-## Exact recovery objective
+## Recovery objective achieved
 
-Restore a truthful pre-reconciliation authority state without rewriting Git history or force-resetting `main`:
+The recovery restored truthful pre-reconciliation authority without rewriting Git history or force-resetting `main`:
 
-1. restore the prematurely mutated issue #74 to open state with explicit recovery provenance;
-2. remove prematurely adopted WP04 candidate-specific claim/test/handover artifacts from the active tree while preserving them in Git history;
-3. keep independently proven PR #118 / D045 validation-authority facts current;
-4. represent this recovery package as the single current executable Repository Convergence workpackage;
-5. record the premature PR #120 merge and assurance FAIL as current/history facts;
-6. leave #96 open and explicitly unproven;
-7. do not perform any further issue reconciliation until a new WP04 candidate later receives a fresh independent PASS.
+1. issue #74 was restored to OPEN with explicit recovery provenance;
+2. prematurely adopted WP04 candidate-specific claim/test/handover authority was removed from the active recovery tree while Git preserved provenance;
+3. independently proven PR #118 / D045 validation-authority facts remained current;
+4. recovery became the sole current package until independently assured;
+5. the premature PR #120 merge and assurance FAIL remained visible in current/history documentation;
+6. #96 remained open and explicitly unproven;
+7. no 17-issue WP04 reconciliation was performed during recovery.
 
-## Proven current state at claim start
+## Exact recovery lifecycle
 
 ```text
-pre-WP04 governance-valid main:
-268d967db95d923a73a3979ffce2d0cab586e499
-
-premature PR #120 head:
-1c5ff96f5551e7d82c8ab9c01a80ffa9c97c195a
-
-premature merge / current main:
+recovery base
 fd69294c67a59bb150f5d4a637daad2607c14077
+
+frozen recovery head
+8565af4e9f579b3a975c6122668f6511a9df627a
+
+fresh independent PASS
+→ guarded merge
+14baceb97b274de6ef35c42ce48441c4e74c5f08
+→ exact-main confirmation
 ```
 
-PR #120 merge parents are exactly the pre-WP04 main and frozen candidate above.
+## Validation
 
-Issue #74 was prematurely closed as `completed` after the merge. It has been reopened with a recovery note before repository recovery implementation continued.
-
-## Scope
-
-Authorized:
-
-- update `WORKPACKAGES.md`, `CHANGELOG.md`, `RISK_REGISTER.md` and the temporary convergence debt ledger to truthful recovery state;
-- preserve the accepted D045 status in `DECISION_LOG.md` unchanged;
-- remove the prematurely adopted WP04-specific test/claim/handover from the active tree;
-- minimally generalize the existing one-current-workpackage contract to accept the explicit recovery suffix `04R` while retaining the exactly-one invariant;
-- add a narrow recovery contract for the sequencing/current-authority invariants;
-- add this recovery claim and mandatory recovery handover;
-- open a draft recovery PR and run full exact-head Tests.
-
-Not authorized:
-
-- force-reset or force-push `main`;
-- alter product/runtime/UI/recognizer/review/export/Scrub Key/reinsert behavior;
-- close any of the 17 historical issue candidates;
-- close or weaken #96;
-- perform the final consolidated live-app retest;
-- start Stage 2;
-- merge the recovery candidate before fresh blind independent PASS.
-
-## Pre-final validation
-
-PR #122 pre-handover head:
+Pre-final recovery candidate:
 
 ```text
-dd73077e1fadba4bae876335b30ac1bf99190b6b
-```
-
-Full release regression evidence:
-
-```text
-Tests run 33965249347
-job 101304111851
-synthetic merge candidate 8409ba5dcec69b7b8382948e515dd39ba007d6e4
+head dd73077e1fadba4bae876335b30ac1bf99190b6b
+Tests run 33965249347 / job 101304111851
 1272 passed in 15.67s
 SUCCESS
 ```
 
-This is pre-final evidence only. The mandatory handover is committed after this run, and a new full Tests run on that handover-complete exact SHA is required before assurance dispatch.
+Final frozen recovery head:
 
-## Acceptance
+```text
+head 8565af4e9f579b3a975c6122668f6511a9df627a
+Tests run 33965354552 / job 101304393076
+1272 passed in 14.19s
+SUCCESS
+```
 
-1. Issue #74 is open again with truthful recovery provenance.
-2. Git history still records the premature PR #120 merge and later FAIL.
-3. Exactly one current executable workpackage exists: WP-CONVERGENCE-04R recovery.
-4. PR #118/D045 remains represented as independently PASSed, merged and exact-main verified.
-5. The failed PR #120 issue-disposition model is no longer executable current authority.
-6. #96 remains the explicit residual unproven deployed live-app gate.
-7. Full final exact-head `Tests` is green.
-8. Fresh blind `governance_release_assurance` PASSes the recovery candidate before any recovery merge.
-9. Only after guarded recovery merge and exact-main verification may a new WP04 issue-reconciliation candidate be created from the new main.
+Post-merge exact-main:
+
+```text
+main 14baceb97b274de6ef35c42ce48441c4e74c5f08
+Tests run 33966351441 / job 101307057966
+1272 passed in 14.44s
+SUCCESS
+
+GitHub → Hugging Face sync run 33966351286 / job 101307057815
+SUCCESS
+```
+
+## Final state fence
+
+After recovery confirmation:
+
+```text
+#74 OPEN/reopened
+#96 OPEN
+#119 OPEN
+#121 CLOSED/completed
+```
+
+No WP04 issue reconciliation occurred. Recovery assurance does not authorize a future WP04 candidate; that candidate must start from exact post-recovery main and receive its own fresh assurance.
