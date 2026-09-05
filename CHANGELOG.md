@@ -20,9 +20,10 @@ The archived file is historical provenance only; it must not be interpreted as a
 
 ## 2026-09-05 — SCRUB-WP_REPOSITORY_CONVERGENCE_ISSUE_STATE_RECONCILIATION
 
-Status: `IMPLEMENTATION IN PROGRESS`; independent assurance required before merge or issue-state mutation.  
+Status: `RELEASE CANDIDATE`; independent assurance required before merge or issue-state mutation.  
 Role: `implementation_operations`  
 Issue: #119  
+PR: #120  
 Branch: `wp/repository-convergence-issue-state-reconciliation`  
 Base: `268d967db95d923a73a3979ffce2d0cab586e499`
 
@@ -40,6 +41,38 @@ Repository/issue/PR reconstruction supports one narrow current end-state, subjec
 - preserve the only unproven requirement: one consolidated deployed live-app retest after both live-regression repairs.
 
 No product/runtime code is changed and no final live verification is claimed by this package.
+
+### Validation history
+
+Three red CI cycles were retained as evidence rather than hidden:
+
+```text
+33931758642 / 101211615952
+1 failed, 1271 passed in 8.98s
+→ test parser incorrectly included explanatory PR references in the keep-open issue set
+
+33931829877 / 101211823357
+1 failed, 1271 passed in 8.61s
+→ residual-gate wording differed between current-control files
+
+33931948111 / 101212181362
+1 failed, 1271 passed in 14.43s
+→ ledger expressed absence of proof but did not explicitly state the gate `remains unproven`
+```
+
+All three remediations stayed inside governance/current-truth contracts. The exact reviewed issue disposition remained unchanged and no application/runtime code was modified.
+
+Pre-final green evidence:
+
+```text
+head b33b7e765ede9b9d99586b82b846035143d3782a
+Tests run 33932036674
+job 101212447162
+1272 passed in 14.68s
+SUCCESS
+```
+
+The mandatory implementation handover is committed after this evidence; therefore a final exact-head full regression on the handover-complete candidate remains required before assurance dispatch.
 
 ---
 
