@@ -96,7 +96,7 @@ def test_wp04_requires_pass_merge_and_exact_main_verification_before_issue_mutat
         "guarded merge",
         "exact-main tests",
         "only then",
-        "issue mutation",
+        "close the 17 reviewed issues",
         "readback",
     ]
     positions = [action_block.index(marker) for marker in ordered_markers]
