@@ -160,7 +160,7 @@ Current evidence:
 - the live marker/compact-placeholder regression found after PR #104 was independently repaired/assured/merged in PR #108;
 - the live Dutch-address span overcapture was independently repaired/assured/merged in PR #111.
 
-Current gap: the **consolidated deployed live-app retest after both PR #108 and PR #111 remains unproven**. Issue #96 is the residual current gate. Do not infer that merged code, exact-main CI or HF synchronization alone closes that user-visible verification requirement.
+Current gap: the **consolidated deployed live-app retest after both PR #108 and PR #111 remains unproven**. Issue #96 is the sole remaining product-facing Repository Convergence gate. Do not infer that merged code, exact-main CI or HF synchronization alone closes that user-visible verification requirement.
 
 ---
 
@@ -264,12 +264,15 @@ Current mitigation/evidence:
 - bootstrap PR #114 PASSed/merged with exact-main Tests and HF sync green;
 - runtime startup authority was simplified by independently PASSed/merged PR #116;
 - validation authority was clarified by independently PASSed/merged PR #118 / D045;
-- PR #120 violated the mandatory sequencing control by merging before its fresh independent assurance verdict and later received `FAIL` on that ordering defect;
-- governed recovery PR #122 then received fresh exact-head PASS before merge and merged as `14baceb97b274de6ef35c42ce48441c4e74c5f08`;
-- recovery exact-main Tests and GitHub→HF sync succeeded;
-- issue #74 is OPEN/reopened, #96 is OPEN and #119 is OPEN after recovery;
-- WP-CONVERGENCE-04 is now being rebuilt as a new candidate from recovery main rather than reusing PR #120 assurance;
-- the retry requires PASS → guarded merge → exact-main verification **before** any target issue mutation;
+- PR #120 remains historical evidence of a governance ordering failure and was not retroactively reclassified as PASS;
+- governed recovery PR #122 PASSed before merge and restored a valid release sequence;
+- fresh WP04 PR #124 then received independent exact-head PASS, guarded merge and exact-main verification before issue mutation;
+- PR #124 merged as `2d4ab0446c20f08ad07576af326ab4b0df0a2af7`;
+- exact-main Tests run `33997889522` passed `1279` tests in `14.51s`;
+- exact-main GitHub→Hugging Face sync run `33997889554` succeeded on the same SHA;
+- the 18 reviewed historical issues, #119 and assurance #126 are closed after ordered readback;
+- issue #96 is the sole remaining open product-facing issue and is intentionally not closed because the consolidated deployed live-app retest remains unproven;
+- WP-CONVERGENCE-05 now aligns the current queue to that residual live gate;
 - normal feature work remains paused until `SCRUB_REPOSITORY_CONVERGED`.
 
 Exit: one clean exact SHA whose source, tests, active issues and canonical docs materially agree **and whose consequential release lifecycle was executed in the required order**.
